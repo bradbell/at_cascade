@@ -18,5 +18,7 @@ as possible. The following information is missing:
 2. Covariate reference for every covariate (in the world database)
    and every node (that we are prediciting for). If we include all covariates,
    this can be done once for all diseases.
-3. A list of which integrand are not really input data and should only
+3. Cause specific mortality for every node, so that we can compute other cause
+   mortailty (all cause mortality minus cause specific mortality).
+4. A list of which integrand are not really input data and should only
    be used to help initialization of the fit.
