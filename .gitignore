@@ -1,0 +1,25 @@
+# ------------------
+# files at top level
+# ------------------
+# use to make git commits
+/git_commit.sh
+# ------------------------
+# directories at top level
+# ------------------------
+# used to build this project
+/build/
+# used to store and install external packages
+/external/
+# used to cache local changes (instead of using git cache)
+/new/
+/new.*/
+# -------------------------------- 
+# file extensions in any directory 
+# -------------------------------- 
+# vim swap files
+*.swp
+# ----------------------
+# files in any directory
+# ----------------------
+temp
+temp.*
