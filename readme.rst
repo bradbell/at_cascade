@@ -1,4 +1,4 @@
-Cascade AT
+AT Cascade
 **********
 
 .. _dismod_at: https://bradbell.github.io/dismod_at/doc/dismod_at.htm
@@ -14,8 +14,9 @@ Input Data
 Use a dismod_at data for the world level to provided for as much information
 as possible. The following information is missing:
 
-1. All cause mortality for every node.
+1. All cause mortality for every node. This can be done once for all diseases.
 2. Covariate reference for every covariate (in the world database)
-   and every node (that we are prediciting for).
+   and every node (that we are prediciting for). If we include all covariates,
+   this can be done once for all diseases.
 3. A list of which integrand are not really input data and should only
    be used to help initialization of the fit.
