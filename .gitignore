@@ -3,6 +3,8 @@
 # ------------------
 # use to make git commits
 /git_commit.sh
+# created by running aspell on readme.rst
+/readme.rst.bak
 # ------------------------
 # directories at top level
 # ------------------------
@@ -13,9 +15,9 @@
 # used to cache local changes (instead of using git cache)
 /new/
 /new.*/
-# -------------------------------- 
-# file extensions in any directory 
-# -------------------------------- 
+# --------------------------------
+# file extensions in any directory
+# --------------------------------
 # vim swap files
 *.swp
 # ----------------------

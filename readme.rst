@@ -37,6 +37,13 @@ i.e., it is the fit_node.
 4. Subgroups are not used; i.e., there is one group and one subgroup
    corresponding to all the data.
 5. The option table parent_node in this database specifies the world_node.
+6. The covariate table reference values must be the same as the other database
+   reference values for the world_node. The max difference is set to infinity
+   for all covariates (see next item).
+7. The node table is used to control splits by any covariate at any level.
+   For example, the world_node could correspond to both sexes. The next
+   level below could be the female / male split of that node. All levels below
+   a female (male) node would be female (male) nodes.
 
 Other Database
 ==============
