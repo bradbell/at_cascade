@@ -19,10 +19,12 @@ mtspecific      Cause specific mortality data
 mtother         Other cause mortality data
 omega           The model rate for other cause mortality
 omega_grid      A single age-time grid used for omega constraints
+sex_level       Level below world_node where fits split by sex
 ============    ==================================================
 
 Input Data
 ##########
+Th
 
 World Database
 ==============
@@ -38,12 +40,7 @@ i.e., it is the fit_node.
    corresponding to all the data.
 5. The option table parent_node in this database specifies the world_node.
 6. The covariate table reference values must be the same as the other database
-   reference values for the world_node. The max difference is set to infinity
-   for all covariates (see next item).
-7. The node table is used to control splits by any covariate at any level.
-   For example, the world_node could correspond to both sexes. The next
-   level below could be the female / male split of that node. All levels below
-   a female (male) node would be female (male) nodes.
+   reference values for the world_node.
 
 Other Database
 ==============
@@ -59,6 +56,12 @@ a database with the following information will also be needed:
 3. Covariate reference for every covariate in the world_node database
    and every node that we are predicting for. If this includes all covariates,
    the same table could be used for all diseases.
+4. An option table that applies to the cascade, but not individual fits.
+
+   - Is this a drill and if so which node, below the world_node,
+     are we drilling down to.
+   - The sex_level. If the world_node corresponds to one sex,
+     sex_level would be zero; i.e., there is no sex split.
 
 Program Plan
 ############
@@ -69,10 +72,7 @@ Program Plan
    running a node includes running its child nodes.
    There will be an abstract interface for launching parallel jobs so
    it can run on a cluster or a single computer.
-5. There will be a drill option where a drill_node is specified
-   and only the ancestors of the drill_node, up to the world node, are run
-   as the fit_node
-6. The world database only specifies priors when fit_node is world_node.
+5. The world database only specifies priors when fit_node is world_node.
    If *node* is not the world_node, the value priors when fit_node is *node*
    are computed using the posterior distributions for the fit where fit_node
    is the parent of *node*. The difference priors are the same as for the
