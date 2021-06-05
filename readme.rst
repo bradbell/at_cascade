@@ -35,9 +35,9 @@ i.e., it is the fit_node.
    is the parent of *node*.
 3. The priors on omega and mtother data are ignored.
 4. For each fit, the values in the node_id column of the avgint table are
-   changed to correspond to thhe fit_node. In addition, the covariate
+   changed to correspond to the fit_node. In addition, the covariate
    values are changed to the reference value for the fit_node.
-   This makes the predict table yield predicitons for the fit_node.
+   This makes the predict table yield predictions for the fit_node.
 5. Subgroups are not used; i.e., there is one group and one subgroup
    corresponding to all the data.
 
@@ -68,7 +68,7 @@ Program Plan
 3. Use python for the program and sphinx/rst for the documentation.
 4. Run fit_nodes at the same level in parallel where
    running a node includes running its child nodes.
-   There will be an abstract interface for lanuching parallel jobs so
+   There will be an abstract interface for launching parallel jobs so
    it can run on a cluster or a single computer.
 5. There will be a drill option where a drill_node is specified
    and only the ancestors of the drill_node, up to the world node, are run
