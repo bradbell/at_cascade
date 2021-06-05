@@ -16,6 +16,7 @@ world_node      The top level node at which the cascade starts
 fit_node        Is the parent node in a dismod_at fit
 mtall           All cause mortality data
 mtspecific      Cause specific mortality data
+mtother         Other cause mortality data
 omega           The model rate for other cause mortality
 ============    ==============================================
 
@@ -25,13 +26,20 @@ Input Data
 Dismod_at Data
 ==============
 A dismod_at database were the world_node is the parent in the option table;
-see dismod_at_input_\ .
+i.e., it is the fit_node.
 
 1. The mtall data in this database is not used.
 2. This database specifies the priors when the fit_node is the world_node.
    If *node* is not the world_node, the priors when the fit_node is *node*
    are computed using the posterior distributions for the fit where fit_node
    is the parent of *node*.
+3. The priors on omega and mtother data are ignored.
+4. For each fit, the values in the node_id column of the avgint table are
+   changed to correspond to thhe fit_node. In addition, the covariate
+   values are changed to the reference value for the fit_node.
+   This makes the predict table yield predicitons for the fit_node.
+5. Subgroups are not used; i.e., there is one group and one subgroup
+   corresponding to all the data.
 
 
 Other Data
@@ -48,6 +56,10 @@ a database with the following information will also be needed:
 3. Covariate reference for every covariate in the world_node database
    and every node that we are predicting for. If this includes all covariates,
    the same table could be used for all diseases.
+4. Option settings that are just for the cascade. For example:
+
+   - a random seed
+   - a maximum number of data points per integrand
 
 Program Plan
 ############
@@ -61,3 +73,13 @@ Program Plan
 5. There will be a drill option where a drill_node is specified
    and only the ancestors of the drill_node, up to the world node, are run
    as the fit_node
+
+Output Data
+###########
+For each fit_node, the corresponding log table will tell if the fit
+completed successfully and it not what the error was.
+If it did complete successfully,
+or it it reached the maximum number of iterations,
+samples corresponding to the avgint table will be in the predict table.
+One will be able to continue the fits that terminated due to the
+maximum number of iterations being reached.
