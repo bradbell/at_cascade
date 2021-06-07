@@ -6,13 +6,16 @@ AT Cascade Plan
 
 Purpose
 #######
-Run dismod_at_ starting at the root of the node tree and ending at a leaf.
-The prior for a non-root node uses the prior for the root node
-plus the fit for the parent of the non-root node.
+Run a dismod_at_ fit starting at start_node and ending at end_node.
+If end_node is ``all``, all the descendents of start node are fit
+(this is called a cascade).
+Otherwise, only the descendents between start_node and end_node are fit
+(this is called a drill).
 
 =============   ==================================================
 **Notation**    **Meaning**
 start_node      The top level node for this cascade
+end_node        This is either ``all`` or a node below start_node
 fit_node        The option table parent node for a dismod_at fit
 mtall           All cause mortality data
 mtspecific      Cause specific mortality data
@@ -63,8 +66,7 @@ a database with the following information will also be needed:
    the same table could be used for all diseases.
 4. An option table that applies to the cascade, but not individual fits.
 
-   - Is this a drill and if so which node, below the start_node,
-     are we drilling down to.
+   - The end_node.
    - The sex_level. If the start_node corresponds to one sex,
      sex_level would be zero; i.e., there is no sex split.
 
