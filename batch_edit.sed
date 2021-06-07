@@ -30,16 +30,5 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-/World Database/! b one
-# ------------------------------------------
-N
-s|.*|Start Node Database\
-===================|
-b end
-# ------------------------------------------
-: one
-s|world_node|start_node|g
-s|world database|start_node database|g
-s|The top level node at which the cascade starts|The top level node for this cascade|
-# ------------------------------------------
-:end
+s|^[1-9]\.|-|
+s|^   |  |
