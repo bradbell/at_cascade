@@ -7,10 +7,6 @@ AT Cascade Plan
 Purpose
 #######
 Run a dismod_at_ fit starting at start_node and ending at end_node.
-If end_node is ``all``, all the descendents of start node are fit
-(this is called a cascade).
-Otherwise, only the descendents between start_node and end_node are fit
-(this is called a drill).
 
 =============   ==================================================
 **Notation**    **Meaning**
@@ -24,10 +20,10 @@ omega           The model rate for other cause mortality
 omega_grid      A single age-time grid used for omega constraints
 sex_level       Level below start_node where fits split by sex
 top_directory   Directory where the input data is located
+cascade         Fit all descendents of start_node (end_node is ``all``)
+drill           Only fit the nodes between start_node and end_node
 =============   ==================================================
 
-We also use the notation start_node_id and fit_node_id for the
-node_id of the corresponding node.
 
 Input Data
 ##########
@@ -102,13 +98,13 @@ Output Data
 
 Directories
 ===========
+We also use the notation start_node_id and fit_node_id for the
+node_id of the corresponding to start_node and fit_node.
 The results for start_node are stored in
 
    top_directory/start_node_id/dismod.db
 
-where start_node_id is the node id for start_node and dismod.db is a
-dismod_at database.
-The results for other nodes are stored in
+The results for other fit_nodes are stored in
 
    parent_node_id/fit_node_id/dismod.db
 
