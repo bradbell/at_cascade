@@ -110,5 +110,11 @@ The results for other fit_nodes are stored in
 
 dismod.db
 =========
-For each fit_node, the corresponding log table will tell if the fit
-completed successfully and it not what warning or error occurred.
+
+===========    ==================================================
+**Table**      **Information**
+log            warnings and error messages
+predict        results corresponding to fit_node and avgint table
+fixed_trace    optimizer trace for optimizing the fixed effects
+sample         Posterior samples of the fixed and random effects
+===========    ==================================================
