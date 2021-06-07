@@ -12,40 +12,40 @@ plus the fit for the parent of the non-root node.
 
 =============   ==================================================
 **Notation**    **Meaning**
-world_node      The top level node at which the cascade starts
+start_node      The top level node for this cascade
 fit_node        The option table parent node for a dismod_at fit
 mtall           All cause mortality data
 mtspecific      Cause specific mortality data
 mtother         Other cause mortality data
 omega           The model rate for other cause mortality
 omega_grid      A single age-time grid used for omega constraints
-sex_level       Level below world_node where fits split by sex
+sex_level       Level below start_node where fits split by sex
 top_directory   Directory where the input data is located
 =============   ==================================================
 
-We also use the notation world_node_id and fit_node_id for the
+We also use the notation start_node_id and fit_node_id for the
 node_id of the corresponding node.
 
 Input Data
 ##########
-We are using a dismod_at world_node data base so we can use its specifications
+We are using a dismod_at start_node data base so we can use its specifications
 and so that the the current cascade can be used to download a lot of the data.
 Eventually, the two databases below should probably be joined into one.
 
-World Database
-==============
-A dismod_at database were the world_node is the parent in the option table;
+Start Node Database
+===================
+A dismod_at database were the start_node is the parent in the option table;
 i.e., it is the fit_node.
 
 1. There is no mtall or mtother data in this database.
 2. There is no prior or grid for omega in this database.
 3. The avgint table covariate values are null.
-   The avgint node_id values correspond to the world_node.
+   The avgint node_id values correspond to the start_node.
 4. Subgroups are not used; i.e., there is one group and one subgroup
    corresponding to all the data.
-5. The option table parent_node in this database specifies the world_node.
+5. The option table parent_node in this database specifies the start_node.
 6. The covariate table reference values must be the same as the other database
-   reference values for the world_node.
+   reference values for the start_node.
 
 Other Database
 ==============
@@ -58,14 +58,14 @@ a database with the following information will also be needed:
    Note that mtspecific is different for each disease.
    For each node and grid point, the omega constraints are computed using
    omega = mtall - mtspecific.
-3. Covariate reference for every covariate in the world_node database
+3. Covariate reference for every covariate in the start_node database
    and every node that we are predicting for. If this includes all covariates,
    the same table could be used for all diseases.
 4. An option table that applies to the cascade, but not individual fits.
 
-   - Is this a drill and if so which node, below the world_node,
+   - Is this a drill and if so which node, below the start_node,
      are we drilling down to.
-   - The sex_level. If the world_node corresponds to one sex,
+   - The sex_level. If the start_node corresponds to one sex,
      sex_level would be zero; i.e., there is no sex split.
 
 Program Plan
@@ -77,11 +77,11 @@ Program Plan
    running a node includes running its child nodes.
    There will be an abstract interface for launching parallel jobs so
    it can run on a cluster or a single computer.
-5. The world database only specifies priors when fit_node is world_node.
-   If *node* is not the world_node, the value priors when fit_node is *node*
+5. The start_node database only specifies priors when fit_node is start_node.
+   If *node* is not the start_node, the value priors when fit_node is *node*
    are computed using the posterior distributions for the fit where fit_node
    is the parent of *node*. The difference priors are the same as for the
-   world_node.
+   start_node.
 6. The avgint node_id column will be set to the fit_node.
    This makes the predict table yield predictions for the fit_node.
 7. If a fit terminates with an error, the corresponding predictions are not
@@ -96,11 +96,11 @@ Output Data
 
 Directories
 ===========
-The results for world_node are stored in
+The results for start_node are stored in
 
-    top_directory/world_node_id/dismod.db
+    top_directory/start_node_id/dismod.db
 
-where world_node_id is the node id for world_node and dismod.db is a
+where start_node_id is the node id for start_node and dismod.db is a
 dismod_at database.
 The results for other nodes are stored in
 
