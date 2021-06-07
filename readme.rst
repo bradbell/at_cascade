@@ -72,13 +72,17 @@ a database with the following information will also be needed:
 
 Program Plan
 ############
-- Use cascade_ode and fit_ihme.py to get ideas for the design the algorithm.
+- Use cascade_ode, fit_ihme.py, cascade_at,
+  to get ideas for the design the algorithm.
 - Test using a data simulator with at least two levels of random effects.
 - Use python for the program and sphinx/rst for the documentation.
-- Run fit_nodes at the same level in parallel where
+- For a cascade, fit nodes at the same level in parallel where
   running a node includes running its child nodes.
   There will be an abstract interface for launching parallel jobs so
   it can run on a cluster or a single computer.
+- For a drill, fit will run sequentially (not launch other processes).
+  This will be easier to debug and should give the same result as a cascade
+  (for all of the nodes in the drill).
 - The start_node database only specifies priors when fit_node is start_node.
   If *node* is not the start_node, the value priors when fit_node is *node*
   are computed using the posterior distributions for the fit where fit_node
