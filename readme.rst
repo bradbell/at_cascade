@@ -70,7 +70,7 @@ a database with the following information will also be needed:
     nodes at the same level are fit in parallel.
     Here fitting a node includes fitting its child nodes that are required
     by the end_node_set.
-    If *parallel* is false, the fititng will be done sequentially.
+    If *parallel* is false, the fitting will be done sequentially.
     This should be easier to debug and should give the same results.
 
 Program Plan
@@ -119,7 +119,7 @@ log            warnings and error messages
 predict        results corresponding to fit_node and avgint table
 fixed_trace    optimizer trace for optimizing the fixed effects
 sample         Posterior samples of the fixed and random effects
-predict        Avgint results correspsonding sample table and this fit_node
+predict        Avgint results corresponding sample table and this fit_node
 ===========    ============================================================
 
 Dismod_at Wish List
@@ -134,3 +134,6 @@ would make its output easier to understand, or would make it more robust.
 - Option to to use a particular density for all data; e.g., students.
 - Automatically remove variables at bounds from asymptotic statistics.
 - Implement a Jacobian, instead of Hessian, version of asymptotic statistics.
+
+These changes will be made in a backward compatible way so that
+current code that uses dismod_at still works.
