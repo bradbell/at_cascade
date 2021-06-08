@@ -124,11 +124,13 @@ predict        Avgint results correspsonding sample table and this fit_node
 
 Dismod_at Wish List
 ###################
-The following changes to dismod_at would make at_cascade easier to implement
-and would make its output easier to understand:
+The following changes to dismod_at would make at_cascade easier to implement,
+would make its output easier to understand, or would make it more robust.
 
 - Change the dismod_at option table parent_node to fit_node.
 - Option to hold out all integrands that require the ode
 - Option to hold out individual integrands
 - Option to randomly sub-sample data for an integrand.
 - Option to to use a particular density for all data; e.g., students.
+- Automatically remove variables at bounds from asymptotic statistics.
+- Implement a Jacobian, instead of Hessian, version of asymptotic statistics.
