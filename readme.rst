@@ -6,12 +6,14 @@ AT Cascade Plan
 
 Purpose
 #######
-Run a dismod_at_ fit starting at start_node and ending at end_node.
+Run a dismod_at_ fit starting at start_node and ending at
+and all the nodes in end_node_set.
+All of the nodes between start_node and and element of end_node_set are fit.
 
 =============   ==================================================
 **Notation**    **Meaning**
 start_node      The top level node for this cascade
-end_node        This is either ``all`` or a node below start_node
+end_node_set    This is a set of nodes below start_node
 fit_node        The option table parent node for a dismod_at fit
 mtall           All cause mortality data
 mtspecific      Cause specific mortality data
@@ -20,15 +22,16 @@ omega           The model rate for other cause mortality
 omega_grid      A single age-time grid used for omega constraints
 sex_level       Level below start_node where fits split by sex
 top_directory   Directory where the input data is located
-cascade         Fit all descendents of start_node (end_node is ``all``)
-drill           Only fit the nodes between start_node and end_node
+cascade         end_node_set has more than one element
+drill           end_note_set has only one element
 =============   ==================================================
 
 
 Input Data
 ##########
-We are using a dismod_at start_node data base so we can use its specifications
-and so that the the current cascade can be used to download a lot of the data.
+We are using a dismod_at start_node database so we can use the dismod_at
+database specifications.
+In addition, current cascade_at can be used to download a lot of the data.
 Eventually, the two databases below should probably be joined into one.
 
 Start Node Database
@@ -62,7 +65,7 @@ a database with the following information will also be needed:
   the same table could be used for all diseases.
 - An option table that applies to the cascade, but not individual fits.
 
-  - The end_node.
+  - The end_node_set.
   - The sex_level. If the start_node corresponds to one sex,
     sex_level would be zero; i.e., there is no sex split.
 
