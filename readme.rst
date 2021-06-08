@@ -15,7 +15,7 @@ are also fit.
 **Notation**    **Meaning**
 start_node      The top level node for this cascade
 end_node_set    This is a set of nodes below start_node
-fit_node        The option table parent node for a dismod_at fit
+fit_node        Is the dismod_at option table parent node
 mtall           All cause mortality data
 mtspecific      Cause specific mortality data
 mtother         Other cause mortality data
@@ -104,6 +104,10 @@ The results for start_node are stored in
 The results for other fit_nodes are stored in
 
    parent_node_id/fit_node_id/dismod.db
+
+where parent_node is the parent corresponding to fit_node.
+Do not confuse this with the the parent_node in the dismod_at option table
+which is the fit_node in this context.
 
 dismod.db
 =========
