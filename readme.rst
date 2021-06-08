@@ -110,11 +110,14 @@ The results for other fit_nodes are stored in
 
 dismod.db
 =========
+This database contains the information listed below
+for the corresponding $icode fit_node_id$$:
 
-===========    ==================================================
+===========    ============================================================
 **Table**      **Information**
 log            warnings and error messages
 predict        results corresponding to fit_node and avgint table
 fixed_trace    optimizer trace for optimizing the fixed effects
 sample         Posterior samples of the fixed and random effects
-===========    ==================================================
+predict        Avgint results correspsonding sample table and this fit_node
+===========    ============================================================
