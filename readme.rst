@@ -6,9 +6,10 @@ AT Cascade Plan
 
 Purpose
 #######
-Run a dismod_at_ fit starting at start_node and ending at
-and all the nodes in end_node_set.
-All of the nodes between start_node and and element of end_node_set are fit.
+Run a dismod_at_ fit starting at start_node and including
+all the nodes in end_node_set.
+All of the nodes between start_node and each element of end_node_set
+are also fit.
 
 =============   ==================================================
 **Notation**    **Meaning**
@@ -22,8 +23,6 @@ omega           The model rate for other cause mortality
 omega_grid      A single age-time grid used for omega constraints
 sex_level       Level below start_node where fits split by sex
 top_directory   Directory where the input data is located
-cascade         end_node_set has more than one element
-drill           end_note_set has only one element
 =============   ==================================================
 
 
