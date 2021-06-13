@@ -72,6 +72,8 @@ a database with the following information will also be needed:
     by the end_node_set.
     If *parallel* is false, the fitting will be done sequentially.
     This should be easier to debug and should give the same results.
+  - The *min_interval*. Compress to a single point all age and time intervals
+    in data table that are less than or equal this value.
 
 Program Plan
 ############
@@ -117,7 +119,7 @@ for the corresponding fit_node_id:
 **Table**      **Information**
 log            warnings and error messages
 predict        results corresponding to fit_node and avgint table
-fixed_trace    optimizer trace for optimizing the fixed effects
+trace_fixed    optimizer trace for optimizing the fixed effects
 sample         Posterior samples of the fixed and random effects
 predict        Avgint results corresponding sample table and this fit_node
 ===========    ============================================================
@@ -128,7 +130,7 @@ The following changes to dismod_at would make at_cascade easier to implement,
 would make its output easier to understand, or would make it more robust.
 
 - Change the dismod_at option table parent_node to fit_node.
-- Option to randomly sub-sample data for an integrand.
+- Option to compress age and time intervals less than a certain length.
 - Option to to use a particular density for all data; e.g., students.
 - Automatically remove variables at bounds from asymptotic statistics.
 - Implement a Jacobian, instead of Hessian, version of asymptotic statistics.
