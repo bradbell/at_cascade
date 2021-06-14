@@ -34,16 +34,16 @@ Eventually, the two databases below should probably be joined into one.
 
 Start Node Database
 ===================
-A dismod_at database were the start_node is the parent in the option table;
-i.e., it is the fit_node.
+A dismod_at database corresponding to fitting the start_node;
+i.e., the start_node is the fit_node
 
+- The option table parent_node in this database must be the start_node.
 - There is no mtall or mtother data in this database.
 - There is no prior or grid for omega in this database.
 - The avgint table covariate values are null.
   The avgint node_id values correspond to the start_node.
 - Subgroups are not used; i.e., there is one group and one subgroup
   corresponding to all the data.
-- The option table parent_node in this database specifies the start_node.
 - The covariate table reference values must be the same as the other database
   reference values for the start_node.
 
@@ -63,6 +63,7 @@ a database with the following information will also be needed:
   the same table could be used for all diseases.
 - An option table that applies to the cascade, but not individual fits.
 
+  - The *start_node*.
   - The *end_node_set*.
   - The *sex_level*. If the start_node corresponds to one sex,
     sex_level would be zero; i.e., there is no sex split.
@@ -129,7 +130,6 @@ Dismod_at Wish List
 The following changes to dismod_at would make at_cascade easier to implement,
 would make its output easier to understand, or would make it more robust.
 
-- Change the dismod_at option table parent_node to fit_node.
 - Option to compress age and time intervals less than a certain length.
 - Option to to use a particular density for all data; e.g., students.
 - Automatically remove variables at bounds from asymptotic statistics.
