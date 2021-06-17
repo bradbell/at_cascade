@@ -91,6 +91,8 @@ Program Plan
   This makes the predict table yield predictions for the fit_node.
 - If a fit terminates with an error, the corresponding predictions are not
   calculated, none of its child nodes are fit, and the fit can't be continued.
+- If there is no data for a fit_node, no fit is necessary and the predictions
+  can be done using the prior means.
 
 Output Data
 ###########
@@ -130,7 +132,6 @@ Dismod_at Wish List
 The following changes to dismod_at would make at_cascade easier to implement,
 would make its output easier to understand, or would make it more robust.
 
-- Option to compress age and time intervals less than a certain length.
 - Option to to use a particular density for all data; e.g., students.
 - Automatically remove variables at bounds from asymptotic statistics.
 - Implement a Jacobian, instead of Hessian, version of asymptotic statistics.
