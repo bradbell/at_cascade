@@ -132,8 +132,7 @@ Dismod_at Wish List
 The following changes to dismod_at would make at_cascade easier to implement,
 would make its output easier to understand, or would make it more robust.
 
-- Option to set maximum covariate effect
-- Option to to use a particular density for all data; e.g., students.
+- Option to use a particular density for all data; e.g., students.
 - Automatically remove variables at bounds from asymptotic statistics.
 - Implement a Jacobian, instead of Hessian, version of asymptotic statistics.
 
