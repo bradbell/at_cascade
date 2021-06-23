@@ -49,6 +49,7 @@ i.e., the start_node is the fit_node
 
 Other Database
 ==============
+
 In addition to the dismod_at database,
 a database with the following information will also be needed:
 
@@ -61,6 +62,8 @@ a database with the following information will also be needed:
 - Covariate reference for every covariate in the start_node database
   and every node that we are predicting for. If this includes all covariates,
   the same table could be used for all diseases.
+- Nodes that do not have mtall, mtspecific, or the covariate references
+  will not be included in the analysis (nor with children of such nodes).
 - An option table that applies to the cascade, but not individual fits.
 
   - The *start_node*.
