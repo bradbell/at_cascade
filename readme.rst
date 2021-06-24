@@ -62,8 +62,6 @@ a database with the following information will also be needed:
 - Covariate reference for every covariate in the start_node database
   and every node that we are predicting for. If this includes all covariates,
   the same table could be used for all diseases.
-- Nodes that do not have mtall, mtspecific, or the covariate references
-  will not be included in the analysis (nor will children of such nodes).
 - An option table that applies to the cascade, but not individual fits.
 
   - The *start_node*.
@@ -83,6 +81,8 @@ Program Plan
 ############
 - Use cascade_ode, fit_ihme.py, cascade_at,
   to get ideas for the design the algorithm.
+- Nodes that do not have mtall, mtspecific, or the covariate references
+  will not be included in the analysis (nor will children of such nodes).
 - Test using a data simulator with at least two levels of random effects.
 - Use python for the program and sphinx/rst for the documentation.
 - The start_node database only specifies priors when fit_node is start_node.
@@ -135,7 +135,6 @@ Dismod_at Wish List
 The following changes to dismod_at would make at_cascade easier to implement,
 would make its output easier to understand, or would make it more robust.
 
-- Option to use a particular density for all data; e.g., students.
 - Automatically remove variables at bounds from asymptotic statistics.
 - Implement a Jacobian, instead of Hessian, version of asymptotic statistics.
 
