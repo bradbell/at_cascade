@@ -38,8 +38,10 @@ A dismod_at database corresponding to fitting the start_node;
 i.e., the start_node is the fit_node
 
 - The option table parent_node in this database must be the start_node.
-- There is no mtall or mtother data in this database.
-- There is no prior or grid for omega in this database.
+- There is no mtall or mtspecific data in this database
+  (because the other database has this information for every node).
+- There is no prior or grid for omega in this database
+  (because it is computed using mtall - mtspecific).
 - The avgint table covariate values are null.
   The avgint node_id values correspond to the start_node.
 - Subgroups are not used; i.e., there is one group and one subgroup
@@ -81,8 +83,11 @@ Program Plan
 ############
 - Use cascade_ode, fit_ihme.py, cascade_at,
   to get ideas for the design the algorithm.
-- Nodes that do not have mtall, mtspecific, or the covariate references
+- Nodes that do not have mtall, or the covariate references
   will not be included in the analysis (nor will children of such nodes).
+- Nodes that do not have mtspecific data will approximate the omega
+  constraint using just mtall.
+  We should indicate which nodes are missing mtspecific data.
 - Test using a data simulator with at least two levels of random effects.
 - Use python for the program and sphinx/rst for the documentation.
 - The start_node database only specifies priors when fit_node is start_node.
