@@ -93,17 +93,19 @@ Program Plan
   We should indicate which nodes are missing mtspecific data.
 - Test using a data simulator with at least two levels of random effects.
 - Use python for the program and sphinx/rst for the documentation.
-- The start_node database only specifies priors when fit_node is start_node.
+- The start_node database only specifies differnce priors for all the fits.
+- The start_node database value priors are only used for the start_node.
   If *node* is not the start_node, the value priors when fit_node is *node*
   are computed using the posterior distributions for the fit where fit_node
-  is the parent of *node*. The difference priors are the same as for the
-  start_node.
+  is the parent of *node*.
 - The avgint node_id column will be set to the fit_node.
   This makes the predict table yield predictions for the fit_node.
-- If a fit terminates with an error, the corresponding predictions are not
-  calculated, none of its child nodes are fit, and the fit can't be continued.
 - If there is no data for a fit_node, no fit is necessary and the predictions
   can be done using the prior means.
+- If a fit terminates with an error, the corresponding predictions are not
+  calculated, none of its child nodes are fit. The fit could be continued by
+  making the fit_node the start_node for a new cascade and changing some of
+  the settings; e.g., values in the option table.
 
 Output Data
 ###########
