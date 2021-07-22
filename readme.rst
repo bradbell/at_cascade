@@ -56,11 +56,11 @@ In addition to the dismod_at database,
 a database with the following information will also be needed:
 
 - A specification of the age and time points in the rectangular omega grid.
-  Omega will be constrained on this grid and bilinearly interpolated between
+  Omega will be constrained on this grid and bi-linearly interpolated between
   points in the grid.
 - The mtall data for every node and every (age, time) point in the omega_grid.
   The same table could be used to hold this information for all diseases.
-- The mtspecific data for every node and every (age, time) pont in the
+- The mtspecific data for every node and every (age, time) point in the
   omega_grid. Note that mtspecific is different for each disease.
   For each node and omega grid point, the omega constraints are computed using
   omega = mtall - mtspecific.
@@ -145,6 +145,9 @@ would make its output easier to understand, or would make it more robust.
 
 - Automatically remove variables at bounds from asymptotic statistics.
 - Implement a Jacobian, instead of Hessian, version of asymptotic statistics.
+  There is a problem with this idea because the number of independent samples,
+  and rank of the information matrix estimate, is bounded by the number of
+  child nodes.
 
 These changes will be made in a backward compatible way so that
 current code that uses dismod_at still works.
