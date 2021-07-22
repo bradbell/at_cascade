@@ -55,11 +55,14 @@ Other Database
 In addition to the dismod_at database,
 a database with the following information will also be needed:
 
-- The mtall data for every node on the omega_grid.
+- A specification of the age and time points in the rectangular omega grid.
+  Omega will be constrained on this grid and bilinearly interpolated between
+  points in the grid.
+- The mtall data for every node and every (age, time) point in the omega_grid.
   The same table could be used to hold this information for all diseases.
-- The mtspecific data for every node on the omega_grid.
-  Note that mtspecific is different for each disease.
-  For each node and grid point, the omega constraints are computed using
+- The mtspecific data for every node and every (age, time) pont in the
+  omega_grid. Note that mtspecific is different for each disease.
+  For each node and omega grid point, the omega constraints are computed using
   omega = mtall - mtspecific.
 - Covariate reference for every covariate in the start_node database
   and every node that we are predicting for. If this includes all covariates,
