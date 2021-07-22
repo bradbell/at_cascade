@@ -129,14 +129,15 @@ dismod.db
 This database contains the information listed below
 for the corresponding fit_node_id:
 
-===========    ============================================================
+===========    ==============================================================
 **Table**      **Information**
 log            warnings and error messages
-predict        results corresponding to fit_node and avgint table
+fit_var        optimal fixed and random effects for this fit_node
+predict_fit    predictions corresponding to fit_var fixed and random effects
 trace_fixed    optimizer trace for optimizing the fixed effects
-sample         Posterior samples of the fixed and random effects
-predict        Avgint results corresponding sample table and this fit_node
-===========    ============================================================
+sample         posterior samples of the fixed and random effects for fit_node
+predict_sam    predictions corresponding to sampled fixed and random effects
+===========    ==============================================================
 
 Dismod_at Wish List
 ###################
