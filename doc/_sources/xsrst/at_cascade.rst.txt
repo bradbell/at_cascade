@@ -1,0 +1,63 @@
+!!!!!!!!!!
+at_cascade
+!!!!!!!!!!
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   plan
+
+.. include:: ../preamble.rst
+
+.. meta::
+   :keywords: at_cascade, cascading, dismod_at, analysis, from, parent, to, child, regions
+
+.. index:: at_cascade, cascading, dismod_at, analysis, from, parent, to, child, regions
+
+.. _at_cascade:
+
+Cascading Dismod_at Analysis From Parent To Child Regions
+=========================================================
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: version, 2021.8.8
+
+.. index:: version, 2021.8.8
+
+.. _at_cascade.version_2021.8.8:
+
+Version 2021.8.8
+****************
+
+.. meta::
+   :keywords: git, repository
+
+.. index:: git, repository
+
+.. _at_cascade.git_repository:
+
+Git Repository
+**************
+https://github.com/bradbell/at_cascade
+
+.. meta::
+   :keywords: children
+
+.. index:: children
+
+.. _at_cascade.children:
+
+Children
+********
+.. csv-table::
+    :header:  "Name", "Title"
+    :widths: 20, 80
+
+    "plan", :ref:`plan`
+
+----
+
+xsrst input file: ``doc.xsrst``
