@@ -1,3 +1,8 @@
+# Directory where gh-pages branch stores documentation.
+# This entry is (is not) commented out on the gh-pages (master) branch.
+# All the other entries in this file are the same on both branches.
+/doc/
+#
 # ------------------
 # files at top level
 # ------------------
