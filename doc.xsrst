@@ -1,0 +1,32 @@
+-----------------------------------------------------------------------------
+at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
+          Copyright (C) 2021-21 University of Washington
+             (Bradley M. Bell bradbell@uw.edu)
+
+This program is distributed under the terms of the
+    GNU Affero General Public License version 3.0 or later
+see http://www.gnu.org/licenses/agpl.txt
+-----------------------------------------------------------------------------
+{xsrst_begin at_cascade}
+{xsrst_spell
+}
+
+.. include:: ../preamble.rst
+
+Cascading Dismod_at Analysis From Parent To Child Regions
+=========================================================
+
+Version 2021.8.8
+****************
+
+Git Repository
+**************
+https://github.com/bradbell/at_cascade
+
+Children
+********
+{xsrst_child_table
+    plan.xsrst
+}
+
+{xsrst_end at_cascade}

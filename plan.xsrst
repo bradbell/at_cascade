@@ -1,3 +1,8 @@
+{xsrst_begin plan}
+{xsrst_spell
+    var
+}}
+
 AT Cascade Plan
 ***************
 
@@ -93,7 +98,7 @@ Program Plan
   We should indicate which nodes are missing mtspecific data.
 - Test using a data simulator with at least two levels of random effects.
 - Use python for the program and sphinx/rst for the documentation.
-- The start_node database only specifies differnce priors for all the fits.
+- The start_node database only specifies difference priors for all the fits.
 - The start_node database value priors are only used for the start_node.
   If *node* is not the start_node, the value priors when fit_node is *node*
   are computed using the posterior distributions for the fit where fit_node
@@ -123,7 +128,7 @@ The results for other fit_nodes are stored in
    parent_node_id/fit_node_id/dismod.db
 
 where parent_node is the parent corresponding to fit_node.
-Do not confuse this with the the parent_node in the dismod_at option table
+Do not confuse this with the parent_node in the dismod_at option table
 which is the fit_node in this context.
 
 dismod.db
@@ -154,3 +159,5 @@ would make its output easier to understand, or would make it more robust.
 
 These changes will be made in a backward compatible way so that
 current code that uses dismod_at still works.
+
+{xsrst_end plan}

@@ -3,15 +3,17 @@
 # ------------------
 # use to make git commits
 /git_commit.sh
-# created by running aspell on readme.rst
-/readme.rst.bak
 # ------------------------
 # directories at top level
 # ------------------------
-# used to build this project
-/build/
+# used to build documentation
+/sphinx/_build/
+/sphinx/xsrst/
+/sphinx/_static/
+#
 # used to store and install external packages
 /external/
+#
 # used to cache local changes (instead of using git cache)
 /new/
 /new.*/

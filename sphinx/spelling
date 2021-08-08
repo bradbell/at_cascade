@@ -1,0 +1,18 @@
+#
+# words in xsrst commands
+xsrst
+rst
+#
+# words in sphinx commands
+#
+# special words for this package
+# BEGIN_SORT_THIS_LINE_PLUS_1
+avgint
+dismod
+ihme
+mtall
+mtother
+mtspecific
+optimizer
+py
+# END_SORT_THIS_LINE_MINUS_1
