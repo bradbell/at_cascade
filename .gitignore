@@ -1,0 +1,34 @@
+# Directory where gh-pages branch stores documentation.
+# This entry is (is not) commented out on the gh-pages (master) branch.
+# All the other entries in this file are the same on both branches.
+# /doc/
+#
+# ------------------
+# files at top level
+# ------------------
+# use to make git commits
+/git_commit.sh
+# ------------------------
+# directories at top level
+# ------------------------
+# used to build documentation
+/sphinx/_build/
+/sphinx/xsrst/
+/sphinx/_static/
+#
+# used to store and install external packages
+/external/
+#
+# used to cache local changes (instead of using git cache)
+/new/
+/new.*/
+# --------------------------------
+# file extensions in any directory
+# --------------------------------
+# vim swap files
+*.swp
+# ----------------------
+# files in any directory
+# ----------------------
+temp
+temp.*
