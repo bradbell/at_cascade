@@ -12,6 +12,7 @@
 # directories at top level
 # ------------------------
 # used to build documentation
+/build/
 /sphinx/_build/
 /sphinx/xsrst/
 /sphinx/_static/
