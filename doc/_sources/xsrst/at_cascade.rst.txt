@@ -6,7 +6,9 @@ at_cascade
    :maxdepth: 1
    :hidden:
 
+   glossary
    plan
+   xam_level2_leaf4
 
 .. include:: ../preamble.rst
 
@@ -23,13 +25,13 @@ Cascading Dismod_at Analysis From Parent To Child Regions
    :local:
 
 .. meta::
-   :keywords: version, 2021.8.8
+   :keywords: version, 2021.8.9
 
-.. index:: version, 2021.8.8
+.. index:: version, 2021.8.9
 
-.. _at_cascade.version_2021.8.8:
+.. _at_cascade.version_2021.8.9:
 
-Version 2021.8.8
+Version 2021.8.9
 ****************
 
 .. meta::
@@ -56,7 +58,9 @@ Children
     :header:  "Name", "Title"
     :widths: 20, 80
 
+    "glossary", :ref:`glossary`
     "plan", :ref:`plan`
+    "xam_level2_leaf4", :ref:`xam_level2_leaf4`
 
 ----
 

@@ -1,0 +1,206 @@
+!!!!!!!!
+glossary
+!!!!!!!!
+
+.. meta::
+   :keywords: glossary, glossary
+
+.. index:: glossary, glossary
+
+.. _glossary:
+
+Glossary
+########
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: fit_node
+
+.. index:: fit_node
+
+.. _glossary.fit_node:
+
+fit_node
+********
+For a dismod_at run, *fit_node* is
+the parent node in the dismod_at option table.
+
+.. meta::
+   :keywords: in_parallel
+
+.. index:: in_parallel
+
+.. _glossary.in_parallel:
+
+in_parallel
+***********
+If *in_parallel* is true nodes at the same level are fit in parallel.
+Here fitting a node includes fitting its child nodes that are required
+by the *leaf_node_set*.
+If *in_parallel* is false, the fitting will be done sequentially.
+This should be easier to debug and should give the same results.
+
+.. meta::
+   :keywords: iota
+
+.. index:: iota
+
+.. _glossary.iota:
+
+iota
+****
+The model rate for incidence,
+relative to the susceptible population, as a function of age and time.
+
+.. meta::
+   :keywords: leaf_node_set
+
+.. index:: leaf_node_set
+
+.. _glossary.leaf_node_set:
+
+leaf_node_set
+*************
+This is the set of nodes below *root_node* that will be fit.
+Note that all the nodes between the root node and the leaf nodes
+will also be fit.
+
+.. meta::
+   :keywords: meas_noise
+
+.. index:: meas_noise
+
+.. _glossary.meas_noise:
+
+meas_noise
+**********
+The abbreviation used for measurement noise covariate multiplier.
+
+.. meta::
+   :keywords: min_interval
+
+.. index:: min_interval
+
+.. _glossary.min_interval:
+
+min_interval
+************
+This is the minimum age or time interval size.
+Age (time) intervals in the data file that are smaller than this size
+will be approximated by the interval midpoint value.
+
+.. meta::
+   :keywords: mtall
+
+.. index:: mtall
+
+.. _glossary.mtall:
+
+mtall
+*****
+The abbreviation used for all cause mortality data.
+
+.. meta::
+   :keywords: mtother
+
+.. index:: mtother
+
+.. _glossary.mtother:
+
+mtother
+*******
+The abbreviation used for Other cause mortality data.
+
+.. meta::
+   :keywords: mtspecific
+
+.. index:: mtspecific
+
+.. _glossary.mtspecific:
+
+mtspecific
+**********
+The abbreviation used for cause specific mortality data.
+
+.. meta::
+   :keywords: omega
+
+.. index:: omega
+
+.. _glossary.omega:
+
+omega
+*****
+The model rate for other cause mortality as a function of age and time.
+
+.. meta::
+   :keywords: omega_grid
+
+.. index:: omega_grid
+
+.. _glossary.omega_grid:
+
+omega_grid
+**********
+A single age-time grid used for the *omega* constraints.
+
+.. meta::
+   :keywords: rate_value
+
+.. index:: rate_value
+
+.. _glossary.rate_value:
+
+rate_value
+**********
+The abbreviation used for rate value covariate multiplier.
+
+.. meta::
+   :keywords: root_node
+
+.. index:: root_node
+
+.. _glossary.root_node:
+
+root_node
+*********
+The top level node for this cascade.
+
+.. meta::
+   :keywords: sex_level
+
+.. index:: sex_level
+
+.. _glossary.sex_level:
+
+sex_level
+*********
+Level below the *root_node* where the cascade splits by sex.
+
+.. meta::
+   :keywords: sincidence
+
+.. index:: sincidence
+
+.. _glossary.sincidence:
+
+Sincidence
+**********
+The abbreviation used for the susceptible incidence integrand.
+This corresponds to a directly measurement of :ref:`glossary.iota`.
+
+.. meta::
+   :keywords: top_directory
+
+.. index:: top_directory
+
+.. _glossary.top_directory:
+
+top_directory
+*************
+Directory where the input data is located.
+
+----
+
+xsrst input file: ``xsrst/glossary.xsrst``

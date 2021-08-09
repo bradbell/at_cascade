@@ -8,9 +8,10 @@
   <meta content="plan, at, cascade, plan" name="keywords" />
 <meta content="purpose" name="keywords" />
 <meta content="input, data" name="keywords" />
-<meta content="start, node, database" name="keywords" />
+<meta content="root, node, database" name="keywords" />
 <meta content="other, database" name="keywords" />
 <meta content="program, plan" name="keywords" />
+<meta content="documentation" name="keywords" />
 <meta content="output, data" name="keywords" />
 <meta content="directories" name="keywords" />
 <meta content="dismod.db" name="keywords" />
@@ -35,6 +36,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -46,7 +48,8 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="at_cascade" href="at_cascade.html" /> 
+    <link rel="next" title="xam_level2_leaf4" href="xam_level2_leaf4.html" />
+    <link rel="prev" title="glossary" href="glossary.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -94,7 +97,9 @@
 <li class="toctree-l1"><a class="reference internal" href="xsrst_automatic.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="xsrst_automatic.html#link-to-index">Link to Index</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="at_cascade.html">at_cascade</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="glossary.html">glossary</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xam_level2_leaf4.html">xam_level2_leaf4</a></li>
 </ul>
 </li>
 </ul>
@@ -172,123 +177,82 @@
 <li><p><a class="reference internal" href="#purpose" id="id2">Purpose</a></p></li>
 <li><p><a class="reference internal" href="#input-data" id="id3">Input Data</a></p>
 <ul>
-<li><p><a class="reference internal" href="#start-node-database" id="id4">Start Node Database</a></p></li>
+<li><p><a class="reference internal" href="#root-node-database" id="id4">Root Node Database</a></p></li>
 <li><p><a class="reference internal" href="#other-database" id="id5">Other Database</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#program-plan" id="id6">Program Plan</a></p></li>
-<li><p><a class="reference internal" href="#output-data" id="id7">Output Data</a></p>
+<li><p><a class="reference internal" href="#program-plan" id="id6">Program Plan</a></p>
 <ul>
-<li><p><a class="reference internal" href="#directories" id="id8">Directories</a></p></li>
-<li><p><a class="reference internal" href="#dismod-db" id="id9">dismod.db</a></p></li>
+<li><p><a class="reference internal" href="#documentation" id="id7">Documentation</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#dismod-at-wish-list" id="id10">Dismod_at Wish List</a></p></li>
+<li><p><a class="reference internal" href="#output-data" id="id8">Output Data</a></p>
+<ul>
+<li><p><a class="reference internal" href="#directories" id="id9">Directories</a></p></li>
+<li><p><a class="reference internal" href="#dismod-db" id="id10">dismod.db</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#dismod-at-wish-list" id="id11">Dismod_at Wish List</a></p></li>
 </ul>
 </div>
 <div class="section" id="purpose">
 <span id="plan-purpose"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Purpose</a><a class="headerlink" href="#purpose" title="Permalink to this headline">¶</a></h3>
-<p>Run a <a class="reference external" href="https://bradbell.github.io/dismod_at/doc/dismod_at.htm">dismod_at</a> fit starting at start_node and including
-all the nodes in end_node_set.
-All of the nodes between start_node and each element of end_node_set
+<p>Run a <a class="reference external" href="https://bradbell.github.io/dismod_at/doc/dismod_at.htm">dismod_at</a> fit starting at <a class="reference internal" href="glossary.html#glossary-root-node"><span class="std std-ref">root_node</span></a> and including
+all the nodes in <a class="reference internal" href="glossary.html#glossary-leaf-node-set"><span class="std std-ref">leaf_node_set</span></a>.
+All of the nodes between <em>root_node</em> and each element of <em>leaf_node_set</em>
 are also fit.</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 21%" />
-<col style="width: 79%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>Notation</strong></p></td>
-<td><p><strong>Meaning</strong></p></td>
-</tr>
-<tr class="row-even"><td><p>start_node</p></td>
-<td><p>The top level node for this cascade</p></td>
-</tr>
-<tr class="row-odd"><td><p>end_node_set</p></td>
-<td><p>This is a set of nodes below start_node</p></td>
-</tr>
-<tr class="row-even"><td><p>fit_node</p></td>
-<td><p>Is the dismod_at option table parent node</p></td>
-</tr>
-<tr class="row-odd"><td><p>mtall</p></td>
-<td><p>All cause mortality data</p></td>
-</tr>
-<tr class="row-even"><td><p>mtspecific</p></td>
-<td><p>Cause specific mortality data</p></td>
-</tr>
-<tr class="row-odd"><td><p>mtother</p></td>
-<td><p>Other cause mortality data</p></td>
-</tr>
-<tr class="row-even"><td><p>omega</p></td>
-<td><p>The model rate for other cause mortality</p></td>
-</tr>
-<tr class="row-odd"><td><p>omega_grid</p></td>
-<td><p>A single age-time grid used for omega constraints</p></td>
-</tr>
-<tr class="row-even"><td><p>sex_level</p></td>
-<td><p>Level below start_node where fits split by sex</p></td>
-</tr>
-<tr class="row-odd"><td><p>top_directory</p></td>
-<td><p>Directory where the input data is located</p></td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="section" id="input-data">
 <span id="plan-input-data"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">Input Data</a><a class="headerlink" href="#input-data" title="Permalink to this headline">¶</a></h3>
-<p>We are using a dismod_at start_node database so we can use the dismod_at
+<p>We are using a dismod_at <em>root_node</em> database so we can use the dismod_at
 database specifications.
 In addition, current cascade_at can be used to download a lot of the data.
 Eventually, the two databases below should probably be joined into one.</p>
-<div class="section" id="start-node-database">
-<span id="plan-input-data-start-node-database"></span><span id="index-3"></span><h4><a class="toc-backref" href="#id4">Start Node Database</a><a class="headerlink" href="#start-node-database" title="Permalink to this headline">¶</a></h4>
-<p>A dismod_at database corresponding to fitting the start_node;
-i.e., the start_node is the fit_node</p>
+<div class="section" id="root-node-database">
+<span id="plan-input-data-root-node-database"></span><span id="index-3"></span><h4><a class="toc-backref" href="#id4">Root Node Database</a><a class="headerlink" href="#root-node-database" title="Permalink to this headline">¶</a></h4>
+<p>A dismod_at database corresponding to fitting the <em>root_node</em>;
+i.e., the <em>root_node</em> is the <a class="reference internal" href="glossary.html#glossary-fit-node"><span class="std std-ref">fit_node</span></a>.</p>
 <ul class="simple">
-<li><p>The option table parent_node in this database must be the start_node.</p></li>
-<li><p>There is no mtall or mtspecific data in this database
-(because the other database has this information for every node).</p></li>
-<li><p>There is no prior or grid for omega in this database
-(because it is computed using mtall - mtspecific).</p></li>
-<li><p>The avgint table covariate values are null.
-The avgint node_id values correspond to the start_node.</p></li>
+<li><p>The option table parent_node in this database must be the <em>root_node</em>.</p></li>
+<li><p>There is no <a class="reference internal" href="glossary.html#glossary-mtall"><span class="std std-ref">mtall</span></a> or <a class="reference internal" href="glossary.html#glossary-mtspecific"><span class="std std-ref">mtspecific</span></a> data in
+this database because the other database has this information for every node.</p></li>
+<li><p>There is no prior or grid for <a class="reference internal" href="glossary.html#glossary-omega"><span class="std std-ref">omega</span></a> in this database
+because it is computed using <em>mtall</em> - <em>mtspecific</em>.</p></li>
+<li><p>The avgint table covariate values are null and
+the avgint node_id values correspond to the <em>root_node</em>.</p></li>
 <li><p>Subgroups are not used; i.e., there is one group and one subgroup
 corresponding to all the data.</p></li>
 <li><p>The covariate table reference values must be the same as the other database
-reference values for the start_node.</p></li>
+reference values for the <em>root_node</em>.</p></li>
 </ul>
 </div>
 <div class="section" id="other-database">
 <span id="plan-input-data-other-database"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">Other Database</a><a class="headerlink" href="#other-database" title="Permalink to this headline">¶</a></h4>
 <p>In addition to the dismod_at database,
-a database with the following information will also be needed:</p>
+a database with the following information will also be used:</p>
 <ul class="simple">
-<li><p>A specification of the age and time points in the rectangular omega grid.
-Omega will be constrained on this grid and bi-linearly interpolated between
+<li><p>A specification of the age and time points in the rectangular <em>omega</em> grid.
+<em>Omega</em> will be constrained on this grid and bi-linearly interpolated between
 points in the grid.</p></li>
-<li><p>The mtall data for every node and every (age, time) point in the omega_grid.
+<li><p>The <em>mtall</em> data for every node and every (age, time) point in the
+<a class="reference internal" href="glossary.html#glossary-omega-grid"><span class="std std-ref">omega_grid</span></a>.
 The same table could be used to hold this information for all diseases.</p></li>
-<li><p>The mtspecific data for every node and every (age, time) point in the
-omega_grid. Note that mtspecific is different for each disease.
-For each node and omega grid point, the omega constraints are computed using
-omega = mtall - mtspecific.</p></li>
-<li><p>Covariate reference for every covariate in the start_node database
+<li><p>The <em>mtspecific</em> data for every node and every (age, time) point in the
+<em>omega_grid</em>. Note that <em>mtspecific</em> is different for each disease.
+For each node and <em>omega</em> grid point, the <em>omega</em> constraints are
+computed using <em>omega</em> = <em>mtall</em> - <em>mtspecific</em>.</p></li>
+<li><p>Covariate reference for every covariate in the <em>root_node</em> database
 and every node that we are predicting for. If this includes all covariates,
 the same table could be used for all diseases.</p></li>
-<li><p>An option table that applies to the cascade, but not individual fits.</p>
+<li><p>An option table that applies to the cascade, not individual fits, and
+contains the following information:</p>
 <ul>
-<li><p>The <em>start_node</em>.</p></li>
-<li><p>The <em>end_node_set</em>.</p></li>
-<li><p>The <em>sex_level</em>. If the start_node corresponds to one sex,
-sex_level would be zero; i.e., there is no sex split.</p></li>
-<li><p>Run in <em>parallel</em>. If this is true,
-nodes at the same level are fit in parallel.
-Here fitting a node includes fitting its child nodes that are required
-by the end_node_set.
-If <em>parallel</em> is false, the fitting will be done sequentially.
-This should be easier to debug and should give the same results.</p></li>
-<li><p>The <em>min_interval</em>. Compress to a single point all age and time intervals
-in data table that are less than or equal this value.</p></li>
+<li><p>The <em>root_node</em>.</p></li>
+<li><p>The <em>leaf_node_set</em>.</p></li>
+<li><p>The <a class="reference internal" href="glossary.html#glossary-sex-level"><span class="std std-ref">sex_level</span></a>. If the <em>root_node</em> corresponds to one sex,
+<em>sex_level</em> would be zero; i.e., there is no sex split.</p></li>
+<li><p>Run <a class="reference internal" href="glossary.html#glossary-in-parallel"><span class="std std-ref">in_parallel</span></a>.</p></li>
+<li><p>The <a class="reference internal" href="glossary.html#glossary-min-interval"><span class="std std-ref">min_interval</span></a>.</p></li>
 </ul>
 </li>
 </ul>
@@ -299,50 +263,57 @@ in data table that are less than or equal this value.</p></li>
 <ul class="simple">
 <li><p>Use cascade_ode, fit_ihme.py, cascade_at,
 to get ideas for the design the algorithm.</p></li>
-<li><p>Nodes that do not have mtall, or the covariate references
+<li><p>Nodes that do not have <em>mtall</em> data, or the covariate references
 will not be included in the analysis (nor will children of such nodes).</p></li>
-<li><p>Nodes that do not have mtspecific data will approximate the omega
-constraint using just mtall.
-We should indicate which nodes are missing mtspecific data.</p></li>
-<li><p>Test using a data simulator with at least two levels of random effects.</p></li>
-<li><p>Use python for the program and sphinx/rst for the documentation.</p></li>
-<li><p>The start_node database only specifies difference priors for all the fits.</p></li>
-<li><p>The start_node database value priors are only used for the start_node.
-If <em>node</em> is not the start_node, the value priors when fit_node is <em>node</em>
-are computed using the posterior distributions for the fit where fit_node
-is the parent of <em>node</em>.</p></li>
-<li><p>The avgint node_id column will be set to the fit_node.
-This makes the predict table yield predictions for the fit_node.</p></li>
-<li><p>If there is no data for a fit_node, no fit is necessary and the predictions
+<li><p>Nodes that do not have <em>mtspecific</em> data will approximate the <em>omega</em>
+constraint using just <em>mtall</em>.
+(We should indicate which nodes are missing <em>mtspecific</em> data ?)</p></li>
+<li><p>Test using a data simulator with multiple levels of random effects.</p></li>
+<li><p>Use python for the program.</p></li>
+<li><p>The <em>root_node</em> database specifies difference priors for all the fits.</p></li>
+<li><p>The <em>root_node</em> database value priors are only used for the <em>root_node</em>.
+The value priors for the where <em>fit_node</em> = <em>node</em>,
+where <em>node</em> is not <em>root_node</em>,
+are computed using the posterior distributions for the fit where
+<em>fit_node</em> is the parent of <em>node</em>.</p></li>
+<li><p>The avgint node_id column will be set to the <em>fit_node</em>.
+This makes the predict table yield predictions for the <em>fit_node</em>.</p></li>
+<li><p>If there is no data for a <em>fit_node</em>, no fit is necessary and the predictions
 can be done using the prior means.</p></li>
 <li><p>If a fit terminates with an error, the corresponding predictions are not
-calculated, none of its child nodes are fit. The fit could be continued by
-making the fit_node the start_node for a new cascade and changing some of
+calculated and none of its child nodes are fit. The fit could be continued by
+making the fit_node the root_node for a new cascade and changing some of
 the settings; e.g., values in the option table.</p></li>
 </ul>
+<div class="section" id="documentation">
+<span id="plan-program-plan-documentation"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id7">Documentation</a><a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h4>
+<p>Use <code class="docutils literal notranslate"><span class="pre">xsrst.py</span></code> to extract sphinx-rst documentation from the source code.
+Use the following order for heading underline characters in each web page:
+<code class="docutils literal notranslate"><span class="pre">#</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">=</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">^</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;</span></code>.</p>
+</div>
 </div>
 <div class="section" id="output-data">
-<span id="plan-output-data"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id7">Output Data</a><a class="headerlink" href="#output-data" title="Permalink to this headline">¶</a></h3>
+<span id="plan-output-data"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id8">Output Data</a><a class="headerlink" href="#output-data" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="directories">
-<span id="plan-output-data-directories"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id8">Directories</a><a class="headerlink" href="#directories" title="Permalink to this headline">¶</a></h4>
-<p>We also use the notation start_node_id and fit_node_id for the
-node_id of the corresponding to start_node and fit_node.
-The results for start_node are stored in</p>
+<span id="plan-output-data-directories"></span><span id="index-8"></span><h4><a class="toc-backref" href="#id9">Directories</a><a class="headerlink" href="#directories" title="Permalink to this headline">¶</a></h4>
+<p>We use the notation <em>root_node_id</em> and <em>fit_node_id</em> for the
+node id of the corresponding to <em>root_node</em> and <em>fit_node</em>.
+The results for <em>root_node</em> are stored in</p>
 <blockquote>
-<div><p>top_directory/start_node_id/dismod.db</p>
+<div><p><em>top_directory</em>/<em>root_node_id</em>/dismod.db</p>
 </div></blockquote>
-<p>The results for other fit_nodes are stored in</p>
+<p>The results for other <em>fit_nodes</em> are stored in</p>
 <blockquote>
-<div><p>parent_node_id/fit_node_id/dismod.db</p>
+<div><p><em>top_directory</em>/…/<em>parent_node_id</em>/<em>fit_node_id</em>/dismod.db</p>
 </div></blockquote>
-<p>where parent_node is the parent corresponding to fit_node.
+<p>where <em>parent_node_id</em> is the node id corresponding to parent of <em>fit_node</em>.
 Do not confuse this with the parent_node in the dismod_at option table
-which is the fit_node in this context.</p>
+which is the <em>fit_node</em> in this context.</p>
 </div>
 <div class="section" id="dismod-db">
-<span id="plan-output-data-dismod-db"></span><span id="index-8"></span><h4><a class="toc-backref" href="#id9">dismod.db</a><a class="headerlink" href="#dismod-db" title="Permalink to this headline">¶</a></h4>
+<span id="plan-output-data-dismod-db"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id10">dismod.db</a><a class="headerlink" href="#dismod-db" title="Permalink to this headline">¶</a></h4>
 <p>This database contains the information listed below
-for the corresponding fit_node_id:</p>
+for the corresponding <em>fit_node</em>:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 15%" />
@@ -359,7 +330,7 @@ for the corresponding fit_node_id:</p>
 <td><p>optimal fixed and random effects for this fit_node</p></td>
 </tr>
 <tr class="row-even"><td><p>predict_fit</p></td>
-<td><p>predictions corresponding to fit_var fixed and random effects</p></td>
+<td><p>predictions corresponding to this fit_node location.</p></td>
 </tr>
 <tr class="row-odd"><td><p>trace_fixed</p></td>
 <td><p>optimizer trace for optimizing the fixed effects</p></td>
@@ -368,14 +339,15 @@ for the corresponding fit_node_id:</p>
 <td><p>posterior samples of the fixed and random effects for fit_node</p></td>
 </tr>
 <tr class="row-odd"><td><p>predict_sam</p></td>
-<td><p>predictions corresponding to sampled fixed and random effects</p></td>
+<td><p>predictions, for this fit_node,  corresponding to sampled
+fixed and random effects</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="section" id="dismod-at-wish-list">
-<span id="plan-dismod-at-wish-list"></span><span id="index-9"></span><h3><a class="toc-backref" href="#id10">Dismod_at Wish List</a><a class="headerlink" href="#dismod-at-wish-list" title="Permalink to this headline">¶</a></h3>
+<span id="plan-dismod-at-wish-list"></span><span id="index-10"></span><h3><a class="toc-backref" href="#id11">Dismod_at Wish List</a><a class="headerlink" href="#dismod-at-wish-list" title="Permalink to this headline">¶</a></h3>
 <p>The following changes to dismod_at would make at_cascade easier to implement,
 would make its output easier to understand, or would make it more robust.</p>
 <ul class="simple">
@@ -388,7 +360,7 @@ child nodes.</p></li>
 <p>These changes will be made in a backward compatible way so that
 current code that uses dismod_at still works.</p>
 <hr class="docutils" />
-<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">plan.xsrst</span></code></p>
+<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">xsrst/plan.xsrst</span></code></p>
 </div>
 </div>
 </div>
@@ -401,8 +373,10 @@ current code that uses dismod_at still works.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="xam_level2_leaf4.html" class="btn btn-neutral float-right" title="xam_level2_leaf4" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="at_cascade.html" class="btn btn-neutral float-left" title="at_cascade" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="glossary.html" class="btn btn-neutral float-left" title="glossary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

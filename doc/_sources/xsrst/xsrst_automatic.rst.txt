@@ -6,7 +6,11 @@ Table of Contents
 *****************
 :ref:`at_cascade`
 
-| :ref:`1<plan>` AT Cascade Plan
+|
+| :ref:`1<glossary>` Glossary
+| :ref:`2<plan>` AT Cascade Plan
+| :ref:`3<xam_level2_leaf4>` Example with Two Random Effects Levels and Four Leaf Nodes
+|
 
 Link to Index
 *************
