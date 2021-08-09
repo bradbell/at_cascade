@@ -23,10 +23,11 @@ version_files='
 # All other names are relavie paths somewhere below the top source directory.
 ignore_files='
     .gitignore
-    batch_edit.sed
-    bin/devel.sh
-    readme.rst
-    preamble.rst
+    /batch_edit.sed
+    /bin/devel.sh
+    /readme.rst
+    /sphinx/preamble.rst
+    /sphinx/spelling
 '
 # ----------------------------------------------------------------------------
 echo "copyright_owner=$copyright_owner"
