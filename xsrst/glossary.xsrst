@@ -1,0 +1,78 @@
+-----------------------------------------------------------------------------
+at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
+          Copyright (C) 2021-21 University of Washington
+             (Bradley M. Bell bradbell@uw.edu)
+
+This program is distributed under the terms of the
+    GNU Affero General Public License version 3.0 or later
+see http://www.gnu.org/licenses/agpl.txt
+-----------------------------------------------------------------------------
+
+{xsrst_begin glossary}
+
+Glossary
+########
+
+fit_node
+********
+For a dismod_at run, *fit_node* is
+the parent node in the dismod_at option table.
+
+in_parallel
+***********
+If *in_parallel* is true nodes at the same level are fit in parallel.
+Here fitting a node includes fitting its child nodes that are required
+by the *leaf_node_set*.
+If *in_parallel* is false, the fitting will be done sequentially.
+This should be easier to debug and should give the same results.
+
+iota
+****
+The model rate for incidence,
+relative to the susceptible population, as a function of age and time.
+
+leaf_node_set
+*************
+This is the set of nodes below *root_node* that will be fit.
+Note that all the nodes between the root node and the leaf nodes
+will also be fit.
+
+min_interval
+************
+This is the minimum age or time interval size.
+Age (time) intervals in the data file that are smaller than this size
+will be approximated by the interval midpoint value.
+
+mtall
+*****
+The abbreviation used for all cause mortality data.
+
+mtother
+*******
+The abbreviation used for Other cause mortality data.
+
+mtspecific
+**********
+The abbreviation used for cause specific mortality data.
+
+omega
+*****
+The model rate for other cause mortality as a function of age and time.
+
+omega_grid
+**********
+A single age-time grid used for the *omega* constraints.
+
+root_node
+*********
+The top level node for this cascade.
+
+sex_level
+*********
+Level below the *root_node* where the cascade splits by sex.
+
+top_directory
+*************
+Directory where the input data is located.
+
+{xsrst_end glossary}

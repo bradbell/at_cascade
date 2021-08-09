@@ -26,7 +26,9 @@ https://github.com/bradbell/at_cascade
 Children
 ********
 {xsrst_child_table
-    plan.xsrst
+    xsrst/glossary.xsrst
+    xsrst/plan.xsrst
+    example/level2_leaf4.py
 }
 
 {xsrst_end at_cascade}

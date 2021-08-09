@@ -26,6 +26,7 @@ ignore_files='
     batch_edit.sed
     bin/devel.sh
     readme.rst
+    preamble.rst
 '
 # ----------------------------------------------------------------------------
 echo "copyright_owner=$copyright_owner"

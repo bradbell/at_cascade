@@ -9,6 +9,9 @@
 # -----------------------------------------------------------------------------
 '''
 {xsrst_begin xam_level2_leaf4}
+{xsrst_spell
+    delim
+}
 
 A Simple Example with Two Levels and Four Leaf Nodes
 ====================================================
@@ -23,8 +26,22 @@ The following is a diagram of the node tree for this example::
       /     \        /     \
     n111   n112    n121   n122
 
-We refer to n1 as the *start_node* and
-n111, n112, n121, n122 as the leaf nodes.
+For this example, n1 is the :ref:`glossary.root_node` and
+n111, n112, n121, n122 re in the :ref:`glossary.leaf_node_set`.
+
+Statistical Model
+*****************
+
+.. list-table:: Notation
+    :widths: 10, 5, 50
+    :header-rows: 1
+
+    *   - Name
+        - Symbol
+        - Description
+    *   - *iota_r*
+        - :math:`\iota_r(a,t)`
+        - :ref:`glossary.iota` for *root_node* as a function of age and time.
 
 
 {xsrst_end xam_level2_leaf4}
