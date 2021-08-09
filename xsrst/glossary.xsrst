@@ -9,6 +9,9 @@ see http://www.gnu.org/licenses/agpl.txt
 -----------------------------------------------------------------------------
 
 {xsrst_begin glossary}
+{xsrst_spell
+    meas
+}
 
 Glossary
 ########
@@ -37,6 +40,10 @@ This is the set of nodes below *root_node* that will be fit.
 Note that all the nodes between the root node and the leaf nodes
 will also be fit.
 
+meas_noise
+**********
+The abbreviation used for measurement noise covariate multiplier.
+
 min_interval
 ************
 This is the minimum age or time interval size.
@@ -63,6 +70,10 @@ omega_grid
 **********
 A single age-time grid used for the *omega* constraints.
 
+rate_value
+**********
+The abbreviation used for rate value covariate multiplier.
+
 root_node
 *********
 The top level node for this cascade.
@@ -70,6 +81,11 @@ The top level node for this cascade.
 sex_level
 *********
 Level below the *root_node* where the cascade splits by sex.
+
+Sincidence
+**********
+The abbreviation used for the susceptible incidence integrand.
+This corresponds to a directly measurement of :ref:`glossary.iota`.
 
 top_directory
 *************

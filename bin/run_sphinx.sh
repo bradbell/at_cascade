@@ -1,4 +1,4 @@
-# /bin/bash -e
+#! /bin/bash -e
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
 #           Copyright (C) 2021-21 University of Washington
