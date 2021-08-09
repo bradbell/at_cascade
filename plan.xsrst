@@ -21,48 +21,48 @@ AT Cascade Plan
 
 Purpose
 #######
-Run a dismod_at_ fit starting at start_node and including
-all the nodes in end_node_set.
-All of the nodes between start_node and each element of end_node_set
+Run a dismod_at_ fit starting at root_node and including
+all the nodes in leaf_node_set.
+All of the nodes between root_node and each element of leaf_node_set
 are also fit.
 
 =============   ==================================================
 **Notation**    **Meaning**
-start_node      The top level node for this cascade
-end_node_set    This is a set of nodes below start_node
+root_node       The top level node for this cascade
+leaf_node_set   This is a set of nodes below root_node
 fit_node        Is the dismod_at option table parent node
 mtall           All cause mortality data
 mtspecific      Cause specific mortality data
 mtother         Other cause mortality data
 omega           The model rate for other cause mortality
 omega_grid      A single age-time grid used for omega constraints
-sex_level       Level below start_node where fits split by sex
+sex_level       Level below root_node where fits split by sex
 top_directory   Directory where the input data is located
 =============   ==================================================
 
 Input Data
 ##########
-We are using a dismod_at start_node database so we can use the dismod_at
+We are using a dismod_at root_node database so we can use the dismod_at
 database specifications.
 In addition, current cascade_at can be used to download a lot of the data.
 Eventually, the two databases below should probably be joined into one.
 
 Start Node Database
 ===================
-A dismod_at database corresponding to fitting the start_node;
-i.e., the start_node is the fit_node
+A dismod_at database corresponding to fitting the root_node;
+i.e., the root_node is the fit_node
 
-- The option table parent_node in this database must be the start_node.
+- The option table parent_node in this database must be the root_node.
 - There is no mtall or mtspecific data in this database
   (because the other database has this information for every node).
 - There is no prior or grid for omega in this database
   (because it is computed using mtall - mtspecific).
 - The avgint table covariate values are null.
-  The avgint node_id values correspond to the start_node.
+  The avgint node_id values correspond to the root_node.
 - Subgroups are not used; i.e., there is one group and one subgroup
   corresponding to all the data.
 - The covariate table reference values must be the same as the other database
-  reference values for the start_node.
+  reference values for the root_node.
 
 Other Database
 ==============
@@ -79,19 +79,19 @@ a database with the following information will also be needed:
   omega_grid. Note that mtspecific is different for each disease.
   For each node and omega grid point, the omega constraints are computed using
   omega = mtall - mtspecific.
-- Covariate reference for every covariate in the start_node database
+- Covariate reference for every covariate in the root_node database
   and every node that we are predicting for. If this includes all covariates,
   the same table could be used for all diseases.
 - An option table that applies to the cascade, but not individual fits.
 
-  - The *start_node*.
-  - The *end_node_set*.
-  - The *sex_level*. If the start_node corresponds to one sex,
+  - The *root_node*.
+  - The *leaf_node_set*.
+  - The *sex_level*. If the root_node corresponds to one sex,
     sex_level would be zero; i.e., there is no sex split.
   - Run in *parallel*. If this is true,
     nodes at the same level are fit in parallel.
     Here fitting a node includes fitting its child nodes that are required
-    by the end_node_set.
+    by the leaf_node_set.
     If *parallel* is false, the fitting will be done sequentially.
     This should be easier to debug and should give the same results.
   - The *min_interval*. Compress to a single point all age and time intervals
@@ -108,9 +108,9 @@ Program Plan
   We should indicate which nodes are missing mtspecific data.
 - Test using a data simulator with at least two levels of random effects.
 - Use python for the program and sphinx/rst for the documentation.
-- The start_node database only specifies difference priors for all the fits.
-- The start_node database value priors are only used for the start_node.
-  If *node* is not the start_node, the value priors when fit_node is *node*
+- The root_node database only specifies difference priors for all the fits.
+- The root_node database value priors are only used for the root_node.
+  If *node* is not the root_node, the value priors when fit_node is *node*
   are computed using the posterior distributions for the fit where fit_node
   is the parent of *node*.
 - The avgint node_id column will be set to the fit_node.
@@ -119,7 +119,7 @@ Program Plan
   can be done using the prior means.
 - If a fit terminates with an error, the corresponding predictions are not
   calculated, none of its child nodes are fit. The fit could be continued by
-  making the fit_node the start_node for a new cascade and changing some of
+  making the fit_node the root_node for a new cascade and changing some of
   the settings; e.g., values in the option table.
 
 Output Data
@@ -127,11 +127,11 @@ Output Data
 
 Directories
 ===========
-We also use the notation start_node_id and fit_node_id for the
-node_id of the corresponding to start_node and fit_node.
-The results for start_node are stored in
+We also use the notation root_node_id and fit_node_id for the
+node_id of the corresponding to root_node and fit_node.
+The results for root_node are stored in
 
-   top_directory/start_node_id/dismod.db
+   top_directory/root_node_id/dismod.db
 
 The results for other fit_nodes are stored in
 
