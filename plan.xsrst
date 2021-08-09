@@ -1,3 +1,13 @@
+-----------------------------------------------------------------------------
+at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
+          Copyright (C) 2021-21 University of Washington
+             (Bradley M. Bell bradbell@uw.edu)
+
+This program is distributed under the terms of the
+    GNU Affero General Public License version 3.0 or later
+see http://www.gnu.org/licenses/agpl.txt
+-----------------------------------------------------------------------------
+
 {xsrst_begin plan}
 {xsrst_spell
     var
@@ -125,7 +135,7 @@ The results for start_node are stored in
 
 The results for other fit_nodes are stored in
 
-   parent_node_id/fit_node_id/dismod.db
+   top_directory/.../parent_node_id/fit_node_id/dismod.db
 
 where parent_node is the parent corresponding to fit_node.
 Do not confuse this with the parent_node in the dismod_at option table
@@ -140,10 +150,11 @@ for the corresponding fit_node_id:
 **Table**      **Information**
 log            warnings and error messages
 fit_var        optimal fixed and random effects for this fit_node
-predict_fit    predictions corresponding to fit_var fixed and random effects
+predict_fit    predictions corresponding to this fit_node location.
 trace_fixed    optimizer trace for optimizing the fixed effects
 sample         posterior samples of the fixed and random effects for fit_node
-predict_sam    predictions corresponding to sampled fixed and random effects
+predict_sam    predictions, for this fit_node,  corresponding to sampled
+               fixed and random effects
 ===========    ==============================================================
 
 Dismod_at Wish List
