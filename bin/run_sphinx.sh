@@ -21,8 +21,7 @@ then
 fi
 # -----------------------------------------------------------------------------
 echo_eval xsrst.py html doc.xsrst sphinx spelling keyword
-cd sphinx
-echo_eval sphinx-build -b html . _build/html
+echo_eval sphinx-build -b html sphinx doc
 # -----------------------------------------------------------------------------
 echo 'run_sphinx.sh: OK'
 exit 0
