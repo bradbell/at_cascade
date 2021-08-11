@@ -16,6 +16,13 @@ see http://www.gnu.org/licenses/agpl.txt
 Glossary
 ########
 
+eta
+***
+This is an offset in a log transformation; i.e., a mapping of the form
+:math:`x \rightarrow \log(x + \eta )`.
+Note that this transformation is finite valued at :math:`x` equal to zero.
+
+
 fit_node
 ********
 For a dismod_at run, *fit_node* is
@@ -33,6 +40,7 @@ iota
 ****
 The model rate for incidence,
 relative to the susceptible population, as a function of age and time.
+This is also denoted by :math:`\iota(a, t)`.
 
 leaf_node_set
 *************
@@ -65,6 +73,7 @@ The abbreviation used for cause specific mortality data.
 omega
 *****
 The model rate for other cause mortality as a function of age and time.
+This is also denoted by :math:`\omega(a, t)`.
 
 omega_grid
 **********
