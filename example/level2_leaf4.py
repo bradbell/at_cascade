@@ -107,6 +107,7 @@ the i-th measurement is simulated as
 where *a_i* is the age,
 *n_i* is the node,
 and *I_i* is the income for the i-th measurement.
+The data is modeled as having noise even though there is no simulated noise.
 
 n_i
 ===
@@ -172,8 +173,8 @@ age and one time point in this smoothing.
 
 Value Prior
 ===========
-This value prior is uniform with lower limit *-alpha_true*,
-upper limit *+alpha_true* and mean zero.
+This value prior is uniform with lower limit *-|alpha_true|*,
+upper limit *+|alpha_true|* and mean zero.
 (The mean is used to initialize the optimization.)
 
 
@@ -232,7 +233,7 @@ def root_node_db(file_name) :
             'mean':    0.0,
             'std':     1.0,
             'eta':     iota_true(0) * 1e-3,
-        },{ # prior_iota_no_child
+        },{ # prior_iota_child
             'name':    'prior_iota_child',
             'density': 'gaussian',
             'mean':    0.0,
@@ -245,6 +246,36 @@ def root_node_db(file_name) :
             'mean':    0.0,
         },
     ]
+    #
+    # smooth_table
+    smooth_table = list()
+    #
+    # smooth_iota_n0_value
+    fun = lambda (a, t) : ('prior_iota_n0_value', 'prior_iota_dage', None)
+    smooth_table.append({
+        'name':       'smooth_iota_n0_value',
+        'age_id':     range( len(age_grid) ),
+        'time_id':    [0],
+        'fun':        fun,
+    })
+    #
+    # smooth_iota_child
+    fun = lambda (a, t) : ('prior_iota_child', None, None)
+    smooth_table.append({
+        'name':       'smooth_iota_child',
+        'age_id':     [0],
+        'time_id':    [0],
+        'fun':        fun,
+    })
+    #
+    # smooth_alpha_n0
+    fun = lambda (a, t) : ('prior_alpha_n0', None, None)
+    smooth_table.append({
+        'name':       'smooth_alpha_n0',
+        'age_id':     [0],
+        'time_id':    [0],
+        'fun':        fun,
+    })
     #
     # node_table
     node_table = [
@@ -260,8 +291,8 @@ def root_node_db(file_name) :
     # rate_table
     rate_table = [ {
         'name':
-        'parent_smooth':  'smooth_iota_n0'        ,
-        'child_smooth':   'smooth_iota_n1_and_n2' ,
+        'parent_smooth':  'smooth_iota_n0'    ,
+        'child_smooth':   'smooth_iota_child' ,
     } ]
     #
     # covariate_table
@@ -271,19 +302,103 @@ def root_node_db(file_name) :
     ]
     #
     # mulcov_table
-    mulcov_table = [
-        { # alpha
+    mulcov_table = [ {
+        # alpha
         'covariate':  'income',
         'type':       'rate_value',
         'effected':   'Sincidence',
         'group':      'world',
-        'smooth':     'smooth_alpha',
-        },{ # gamma
-        'covariate':  'one',
-        'type':       'mes_noise',
-        'effected':   'Sincidence',
-        'group':      'world',
-        'smooth':     'smooth_gamma'
+        'smooth':     'smooth_alpha_n0',
     } ]
     #
-    # prior_table
+    # subgroup_table
+    subgroup_table = [ {'subgroup': 'world', 'group':'world'} ]
+    #
+    # integrand_table
+	integrand_table = [ {'name':'Sincidence'}, {'name':'mulcov_1'} ]
+    #
+    # avgint_table
+    avgint_table = list()
+    row = {
+        'node':         'n0',
+        'subgroup':     'world',
+        'weight':       '',
+        'time_lower':   2000.0,
+        'time_upper':   2000.0,
+        'income':       None,
+    }
+    for age_id in range( len(age_grid) ) :
+        row['integrand'] = 'Sincidence'
+        age = age_grid[age_id]
+        row['age_lower'] = age
+        row['age_upper'] = age
+        avgint_table.append(( copy.copy(row) )
+    #
+    # data_table
+    leaf_node_set = { 'n3', 'n4', 'n5', 'n6' }
+    row = {
+        'node':         'n0',
+        'subgroup':     'world',
+        'weight':       '',
+        'time_lower':   2000.0,
+        'time_upper':   2000.0,
+        'income':       None,
+    }
+    for (age_id, age) in enumerate( age_grid ) :
+        node in leaf_node_set :
+            for income in income_grid :
+                meas_value = iota_true(age, node, income)
+                meas_std   = meas_value # model for noise not actual noise
+                row['node'] = node
+                row['meas_value'] = meas_value
+                row['meas_std']   = meas_std
+                row['age_lower']  = age
+                row['age_upper']  = age
+                row['income']     = income
+                data_table.append( copy.copy(row) )
+    #
+	# weight table:
+	weight_table = list()
+	# nslist_table
+	nslist_table = dict()
+	# option_table
+	option_table = [
+		{ 'name':'parent_node_name',      'value':'n0'},
+		{ 'name':'rate_case',             'value':'iota_pos_rho_zero'},
+		{ 'name': 'zero_sum_child_rate',  'value':'iota'},
+		{ 'name':'quasi_fixed',           'value':'false'},
+		{ 'name':'max_num_iter_fixed',    'value':'50'},
+		{ 'name':'print_level_fixed',     'value':'5'},
+		{ 'name':'tolerance_fixed',       'value':'1e-8'},
+	]
+	# ----------------------------------------------------------------------
+	# create database
+	dismod_at.create_database(
+		file_name,
+		age_list,
+		time_list,
+		integrand_table,
+		node_table,
+		subgroup_table,
+		weight_table,
+		covariate_table,
+		avgint_table,
+		data_table,
+		prior_table,
+		smooth_table,
+		nslist_table,
+		rate_table,
+		mulcov_table,
+		option_table
+	)
+# ---------------------------------------------------------------------------
+# Step 1: Create root_node.db
+file_name  = 'root_node.db'
+root_node_db(file_name)
+#
+# Step 2: init root_node.db
+program = '../../devel/dismod_at'
+dismod_at.system_command_prc( [ program, file_name, 'init' ] )
+#
+# Step 3: fit root_node.db
+dismod_at.system_command_prc( [ program, file_name, 'fit', 'both' ] )
