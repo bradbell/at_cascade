@@ -41,21 +41,21 @@ i.e., the *root_node* is the :ref:`glossary.fit_node`.
 
 - The option table parent_node in this database must be the *root_node*.
 - There is no :ref:`glossary.mtall` or :ref:`glossary.mtspecific` data in
-  this database because the other database has this information for every node.
+  this database because the *all_node* database has this information.
 - There is no prior or grid for :ref:`glossary.omega` in this database
   because it is computed using *mtall* - *mtspecific*.
 - The avgint table covariate values are null and
   the avgint node_id values correspond to the *root_node*.
 - Subgroups are not used; i.e., there is one group and one subgroup
   corresponding to all the data.
-- The covariate table reference values must be the same as the other database
-  reference values for the *root_node*.
+- The covariate table reference values must be the same as the *all_node*
+  database reference values for the *root_node*.
 
-Other Database
-==============
+All Node Database
+=================
 
-In addition to the dismod_at database,
-a database with the following information will also be used:
+In addition to the root node database,
+an *all_node* database with the following information will also be used:
 
 - A specification of the age and time points in the rectangular *omega* grid.
   *Omega* will be constrained on this grid and bi-linearly interpolated between

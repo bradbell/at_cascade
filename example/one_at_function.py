@@ -8,15 +8,15 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin xam_level2_leaf4}
+{xsrst_begin one_at_function_py}
 {xsrst_spell
     avg
     dage
     dtime
 }
 
-Example with Two Random Effects Levels and Four Leaf Nodes
-##########################################################
+Example That Directly Measures One Age Time Function
+####################################################
 
 Under Construction
 ******************
@@ -38,7 +38,9 @@ For this example the :ref:`glossary.root_node` is n0 and
 Rates
 *****
 The only non-zero dismod_at rate for this example is
-:ref:`glossary.iota`.
+:ref:`glossary.iota`; i.e.,
+we choose *iota* to represent the function that we are estimating.
+(We could have used any of the dismod_at rates.)
 We use :math:`\iota_n(a, t)` and *iota_n* to denote the value for *iota*
 as a function of age and time at node number *n*.
 
@@ -100,8 +102,11 @@ This is the true value for *iota* in node *n* at age *a* and income *I*:
 
 y_i
 ===
-The only simulated integrand for this example is :ref:`glossary.sincidence`.
-In addition, it is simulated with any noise; i.e.,
+The only simulated integrand for this example is :ref:`glossary.sincidence`
+which is a direct measurement of *iota*.
+(If we had used a different rate to represent the fucntion we are estimating,
+we would use the corresponding direct measurement of that rate.)
+This data is simulated with any noise; i.e.,
 the i-th measurement is simulated as
 *y_i = iota_true(a_i, n_i, I_i)*
 where *a_i* is the age,
@@ -178,7 +183,7 @@ upper limit *+|alpha_true|* and mean zero.
 (The mean is used to initialize the optimization.)
 
 
-{xsrst_end xam_level2_leaf4}
+{xsrst_end one_at_function_py}
 '''
 import sys
 import os

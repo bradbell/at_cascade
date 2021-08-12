@@ -28,7 +28,7 @@ Children
 {xsrst_child_table
     xsrst/glossary.xsrst
     xsrst/plan.xsrst
-    example/level2_leaf4.py
+    example/one_at_function.py
 }
 
 {xsrst_end at_cascade}
