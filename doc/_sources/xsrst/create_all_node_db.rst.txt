@@ -1,0 +1,242 @@
+!!!!!!!!!!!!!!!!!!
+create_all_node_db
+!!!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: create_all_node_db, create, an, all, node, database
+
+.. index:: create_all_node_db, create, an, all, node, database
+
+.. _create_all_node_db:
+
+Create an All Node Database
+###########################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _create_all_node_db.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/all_node_database.py
+    :lines: 226-237
+    :language: py
+
+.. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _create_all_node_db.all_node_database:
+
+all_node_database
+*****************
+is a ``str`` containing the name of the
+:ref:`glossary.all_node_database` that is created by this call.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: root_node_database
+
+.. index:: root_node_database
+
+.. _create_all_node_db.root_node_database:
+
+root_node_database
+******************
+is a python string containing the name of the name of the
+:ref:`glossary.root_node_database`.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: covariate_reference
+
+.. index:: covariate_reference
+
+.. _create_all_node_db.covariate_reference:
+
+covariate_reference
+*******************
+This is a python dictionary with a key equal to the node name for
+each node in the node table in *root_node_database*.
+If *node* is a node name,
+*covariate_reference[node]* is a python dictionary with a key equal to the
+covariate name for each covariate in the *root_node_database*.
+If *covariate* is an covariate name,
+*covariate_reference[node][covariate]*
+is the reference values for the specified node and covariate.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: omega_grid
+
+.. index:: omega_grid
+
+.. _create_all_node_db.omega_grid:
+
+omega_grid
+**********
+Not yet specified.
+
+.. meta::
+   :keywords: default
+
+.. index:: default
+
+.. _create_all_node_db.omega_grid.default:
+
+default
+=======
+If this argument in ``None``, *omega* will be constrained to zero.
+In this case none of the integrands in the *root_node_database* can
+be an :ref:`glossary.ode_integrand`.
+
+.. meta::
+   :keywords: mtall_data
+
+.. index:: mtall_data
+
+.. _create_all_node_db.mtall_data:
+
+mtall_data
+**********
+Not yet specified.
+
+.. meta::
+   :keywords: default
+
+.. index:: default
+
+.. _create_all_node_db.mtall_data.default:
+
+default
+=======
+If this argument in ``None``, *omega* will be constrained to zero.
+In this case none of the integrands in the *root_node_database* can
+be an :ref:`glossary.ode_integrand`.
+
+.. meta::
+   :keywords: mtspecific_data
+
+.. index:: mtspecific_data
+
+.. _create_all_node_db.mtspecific_data:
+
+mtspecific_data
+***************
+Not yet specified.
+
+.. meta::
+   :keywords: default
+
+.. index:: default
+
+.. _create_all_node_db.mtspecific_data.default:
+
+default
+=======
+If this argument in ``None``, *omega* will be constrained to equal to
+the *mtall_data*.
+
+.. meta::
+   :keywords: leaf_node_set
+
+.. index:: leaf_node_set
+
+.. _create_all_node_db.leaf_node_set:
+
+leaf_node_set
+*************
+This is a python set equal to the :ref:`glossary.leaf_node_set`
+where each element is represented by its node name.
+
+.. meta::
+   :keywords: default
+
+.. index:: default
+
+.. _create_all_node_db.leaf_node_set.default:
+
+default
+=======
+If this argument is ``None``, all of the nodes from the *root_node*
+down will be fit.
+
+.. meta::
+   :keywords: sex_level
+
+.. index:: sex_level
+
+.. _create_all_node_db.sex_level:
+
+sex_level
+*********
+Not yet specified.
+
+.. meta::
+   :keywords: default
+
+.. index:: default
+
+.. _create_all_node_db.sex_level.default:
+
+default
+=======
+If this argument is ``None``, there will be no sex split between
+*root_node* and the leaf nodes.
+
+.. meta::
+   :keywords: in_parallel
+
+.. index:: in_parallel
+
+.. _create_all_node_db.in_parallel:
+
+in_parallel
+***********
+Not yet specified.
+
+.. meta::
+   :keywords: default
+
+.. index:: default
+
+.. _create_all_node_db.in_parallel.default:
+
+default
+=======
+If this argument is ``None``, the cascade will be run sequentially; i.e.,
+not in parallel.
+
+.. meta::
+   :keywords: min_interval
+
+.. index:: min_interval
+
+.. _create_all_node_db.min_interval:
+
+min_interval
+************
+Not yet specified.
+
+.. meta::
+   :keywords: default
+
+.. index:: default
+
+.. _create_all_node_db.min_interval.default:
+
+default
+=======
+If this argument is ``None``, all age and time averages will
+approximated by the value at the midpoint of the intervals.
+
+----
+
+xsrst input file: ``at_cascade/all_node_database.py``

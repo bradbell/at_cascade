@@ -1,0 +1,236 @@
+!!!!!!!!!!!!!!!!!
+all_node_database
+!!!!!!!!!!!!!!!!!
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   create_all_node_db
+
+.. meta::
+   :keywords: all_node_database, the, all, node, database
+
+.. index:: all_node_database, the, all, node, database
+
+.. _all_node_database:
+
+The All Node DataBase
+#####################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: covariate_reference_table
+
+.. index:: covariate_reference_table
+
+.. _all_node_database.covariate_reference_table:
+
+covariate_reference_table
+*************************
+This table specifies the reference value for every covariate
+and node in the *root_node_database*.
+It has the following columns:
+
+.. meta::
+   :keywords: covariate_reference_id
+
+.. index:: covariate_reference_id
+
+.. _all_node_database.covariate_reference_table.covariate_reference_id:
+
+covariate_reference_id
+======================
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+.. meta::
+   :keywords: node_id
+
+.. index:: node_id
+
+.. _all_node_database.covariate_reference_table.node_id:
+
+node_id
+=======
+This column has type ``integer`` and is specifies
+the node for this reference
+by the primary key in the *root_node_database* node table
+
+.. meta::
+   :keywords: covariate_id
+
+.. index:: covariate_id
+
+.. _all_node_database.covariate_reference_table.covariate_id:
+
+covariate_id
+============
+This column has type ``integer`` and is specifies
+the covariate, for this reference,
+by the primary key in the *root_node_database* covariate table
+
+.. meta::
+   :keywords: reference
+
+.. index:: reference
+
+.. _all_node_database.covariate_reference_table.reference:
+
+reference
+=========
+This column has type ``real`` and it specifies the reference value
+for this covariate and node.
+
+.. meta::
+   :keywords: leaf_node_table
+
+.. index:: leaf_node_table
+
+.. _all_node_database.leaf_node_table:
+
+leaf_node_table
+***************
+This table specifies the *leaf_node_set*.
+It the following columns:
+
+.. meta::
+   :keywords: leaf_node_id
+
+.. index:: leaf_node_id
+
+.. _all_node_database.leaf_node_table.leaf_node_id:
+
+leaf_node_id
+============
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+.. meta::
+   :keywords: node_id
+
+.. index:: node_id
+
+.. _all_node_database.leaf_node_table.node_id:
+
+node_id
+=======
+This column has type ``integer`` and is specifies
+a node by the primary key in the *root_node_database* node table
+
+.. meta::
+   :keywords: option_table
+
+.. index:: option_table
+
+.. _all_node_database.option_table:
+
+option_table
+************
+This table specifies certain at_cascade options
+
+.. meta::
+   :keywords: table, format
+
+.. index:: table, format
+
+.. _all_node_database.option_table.table_format:
+
+Table Format
+============
+
+.. meta::
+   :keywords: option_id
+
+.. index:: option_id
+
+.. _all_node_database.option_table.table_format.option_id:
+
+option_id
+---------
+This column of the option table has type ``integer`` and is the primary key.
+Its initial value is zero and it increments by one for each row.
+
+.. meta::
+   :keywords: option_name
+
+.. index:: option_name
+
+.. _all_node_database.option_table.table_format.option_name:
+
+option_name
+-----------
+This column of the option table has type ``text``.
+It specifies a name that is attached to each option value.
+
+.. meta::
+   :keywords: option_value
+
+.. index:: option_value
+
+.. _all_node_database.option_table.table_format.option_value:
+
+option_value
+------------
+This column of the option table has type ``text``.
+It specifies a value that is attached to each option name.
+
+.. meta::
+   :keywords: options
+
+.. index:: options
+
+.. _all_node_database.option_table.options:
+
+Options
+=======
+
+.. meta::
+   :keywords: sex_level
+
+.. index:: sex_level
+
+.. _all_node_database.option_table.options.sex_level:
+
+sex_level
+---------
+If this *option_name* appears, the corresponding *option_value*
+is not yet specified.
+Otherwise, there will be no sex split in this cascade.
+
+.. meta::
+   :keywords: in_parallel
+
+.. index:: in_parallel
+
+.. _all_node_database.option_table.options.in_parallel:
+
+in_parallel
+-----------
+If this *option_name* appears, the corresponding *option_value*
+is not yet specified.
+Otherwise, the cascade will be run sequentially.
+
+.. meta::
+   :keywords: min_interval
+
+.. index:: min_interval
+
+.. _all_node_database.option_table.options.min_interval:
+
+min_interval
+------------
+If this *option_name* appears, the corresponding *option_value*
+is not yet specified.
+Otherwise, all age and time averages will
+approximated by the value at the midpoint of the intervals.
+
+.. toctree::
+   :maxdepth: 1
+
+   create_all_node_db
+
+----
+
+xsrst input file: ``at_cascade/all_node_database.py``

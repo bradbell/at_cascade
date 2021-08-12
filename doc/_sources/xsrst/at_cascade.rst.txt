@@ -8,7 +8,8 @@ at_cascade
 
    glossary
    plan
-   xam_level2_leaf4
+   one_at_function_py
+   all_node_database
 
 .. include:: ../preamble.rst
 
@@ -25,13 +26,13 @@ Cascading Dismod_at Analysis From Parent To Child Regions
    :local:
 
 .. meta::
-   :keywords: version, 2021.8.11
+   :keywords: version, 2021.8.12
 
-.. index:: version, 2021.8.11
+.. index:: version, 2021.8.12
 
-.. _at_cascade.version_2021.8.11:
+.. _at_cascade.version_2021.8.12:
 
-Version 2021.8.11
+Version 2021.8.12
 ******************
 
 .. meta::
@@ -60,7 +61,8 @@ Children
 
     "glossary", :ref:`glossary`
     "plan", :ref:`plan`
-    "xam_level2_leaf4", :ref:`xam_level2_leaf4`
+    "one_at_function_py", :ref:`one_at_function_py`
+    "all_node_database", :ref:`all_node_database`
 
 ----
 

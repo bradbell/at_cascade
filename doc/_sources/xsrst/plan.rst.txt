@@ -59,28 +59,28 @@ i.e., the *root_node* is the :ref:`glossary.fit_node`.
 
 - The option table parent_node in this database must be the *root_node*.
 - There is no :ref:`glossary.mtall` or :ref:`glossary.mtspecific` data in
-  this database because the other database has this information for every node.
+  this database because the *all_node* database has this information.
 - There is no prior or grid for :ref:`glossary.omega` in this database
   because it is computed using *mtall* - *mtspecific*.
 - The avgint table covariate values are null and
   the avgint node_id values correspond to the *root_node*.
 - Subgroups are not used; i.e., there is one group and one subgroup
   corresponding to all the data.
-- The covariate table reference values must be the same as the other database
-  reference values for the *root_node*.
+- The covariate table reference values must be the same as the *all_node*
+  database reference values for the *root_node*.
 
 .. meta::
-   :keywords: other, database
+   :keywords: all, node, database
 
-.. index:: other, database
+.. index:: all, node, database
 
-.. _plan.input_data.other_database:
+.. _plan.input_data.all_node_database:
 
-Other Database
-==============
+All Node Database
+=================
 
-In addition to the dismod_at database,
-a database with the following information will also be used:
+In addition to the root node database,
+an *all_node* database with the following information will also be used:
 
 - A specification of the age and time points in the rectangular *omega* grid.
   *Omega* will be constrained on this grid and bi-linearly interpolated between
@@ -88,13 +88,20 @@ a database with the following information will also be used:
 - The *mtall* data for every node and every (age, time) point in the
   :ref:`glossary.omega_grid`.
   The same table could be used to hold this information for all diseases.
+  If this information is not available for a node, *omega* will be zero
+  for that node. This will be an error there is any :ref:`glossary.mtother`
+  data or data that requires the dismod_at ode for that node.
 - The *mtspecific* data for every node and every (age, time) point in the
   *omega_grid*. Note that *mtspecific* is different for each disease.
   For each node and *omega* grid point, the *omega* constraints are
   computed using *omega* = *mtall* - *mtspecific*.
+  Nodes that do not have *mtspecific* data will approximate the *omega*
+  constraint using just *mtall*.
 - Covariate reference for every covariate in the *root_node* database
   and every node that we are predicting for. If this includes all covariates,
   the same table could be used for all diseases.
+  It will be an error if this information is not available for a node
+  between the *root_node* and the *leaf_node_set*.
 - An option table that applies to the cascade, not individual fits, and
   contains the following information:
 
@@ -116,11 +123,6 @@ Program Plan
 ************
 - Use cascade_ode, fit_ihme.py, cascade_at,
   to get ideas for the design the algorithm.
-- Nodes that do not have *mtall* data, or the covariate references
-  will not be included in the analysis (nor will children of such nodes).
-- Nodes that do not have *mtspecific* data will approximate the *omega*
-  constraint using just *mtall*.
-  (We should indicate which nodes are missing *mtspecific* data ?)
 - Test using a data simulator with multiple levels of random effects.
 - Use python for the program.
 - The *root_node* database specifies difference priors for all the fits.

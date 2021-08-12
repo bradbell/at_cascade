@@ -6,6 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="glossary, glossary" name="keywords" />
+<meta content="all_node_database" name="keywords" />
 <meta content="eta" name="keywords" />
 <meta content="fit_node" name="keywords" />
 <meta content="in_parallel" name="keywords" />
@@ -16,10 +17,12 @@
 <meta content="mtall" name="keywords" />
 <meta content="mtother" name="keywords" />
 <meta content="mtspecific" name="keywords" />
+<meta content="ode_integrand" name="keywords" />
 <meta content="omega" name="keywords" />
 <meta content="omega_grid" name="keywords" />
 <meta content="rate_value" name="keywords" />
 <meta content="root_node" name="keywords" />
+<meta content="root_node_database" name="keywords" />
 <meta content="sex_level" name="keywords" />
 <meta content="sincidence" name="keywords" />
 <meta content="top_directory" name="keywords" />
@@ -106,7 +109,8 @@
 <li class="toctree-l1 current"><a class="reference internal" href="at_cascade.html">at_cascade</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">glossary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
-<li class="toctree-l2"><a class="reference internal" href="xam_level2_leaf4.html">xam_level2_leaf4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="one_at_function_py.html">one_at_function_py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="all_node_database.html">all_node_database</a></li>
 </ul>
 </li>
 </ul>
@@ -181,38 +185,46 @@
 <span id="id2"></span><h2>Glossary<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#eta" id="id3">eta</a></p></li>
-<li><p><a class="reference internal" href="#fit-node" id="id4">fit_node</a></p></li>
-<li><p><a class="reference internal" href="#in-parallel" id="id5">in_parallel</a></p></li>
-<li><p><a class="reference internal" href="#iota" id="id6">iota</a></p></li>
-<li><p><a class="reference internal" href="#leaf-node-set" id="id7">leaf_node_set</a></p></li>
-<li><p><a class="reference internal" href="#meas-noise" id="id8">meas_noise</a></p></li>
-<li><p><a class="reference internal" href="#min-interval" id="id9">min_interval</a></p></li>
-<li><p><a class="reference internal" href="#mtall" id="id10">mtall</a></p></li>
-<li><p><a class="reference internal" href="#mtother" id="id11">mtother</a></p></li>
-<li><p><a class="reference internal" href="#mtspecific" id="id12">mtspecific</a></p></li>
-<li><p><a class="reference internal" href="#omega" id="id13">omega</a></p></li>
-<li><p><a class="reference internal" href="#omega-grid" id="id14">omega_grid</a></p></li>
-<li><p><a class="reference internal" href="#rate-value" id="id15">rate_value</a></p></li>
-<li><p><a class="reference internal" href="#root-node" id="id16">root_node</a></p></li>
-<li><p><a class="reference internal" href="#sex-level" id="id17">sex_level</a></p></li>
-<li><p><a class="reference internal" href="#sincidence" id="id18">Sincidence</a></p></li>
-<li><p><a class="reference internal" href="#top-directory" id="id19">top_directory</a></p></li>
+<li><p><a class="reference internal" href="#all-node-database" id="id3">all_node_database</a></p></li>
+<li><p><a class="reference internal" href="#eta" id="id4">eta</a></p></li>
+<li><p><a class="reference internal" href="#fit-node" id="id5">fit_node</a></p></li>
+<li><p><a class="reference internal" href="#in-parallel" id="id6">in_parallel</a></p></li>
+<li><p><a class="reference internal" href="#iota" id="id7">iota</a></p></li>
+<li><p><a class="reference internal" href="#leaf-node-set" id="id8">leaf_node_set</a></p></li>
+<li><p><a class="reference internal" href="#meas-noise" id="id9">meas_noise</a></p></li>
+<li><p><a class="reference internal" href="#min-interval" id="id10">min_interval</a></p></li>
+<li><p><a class="reference internal" href="#mtall" id="id11">mtall</a></p></li>
+<li><p><a class="reference internal" href="#mtother" id="id12">mtother</a></p></li>
+<li><p><a class="reference internal" href="#mtspecific" id="id13">mtspecific</a></p></li>
+<li><p><a class="reference internal" href="#ode-integrand" id="id14">ode_integrand</a></p></li>
+<li><p><a class="reference internal" href="#omega" id="id15">omega</a></p></li>
+<li><p><a class="reference internal" href="#omega-grid" id="id16">omega_grid</a></p></li>
+<li><p><a class="reference internal" href="#rate-value" id="id17">rate_value</a></p></li>
+<li><p><a class="reference internal" href="#root-node" id="id18">root_node</a></p></li>
+<li><p><a class="reference internal" href="#root-node-database" id="id19">root_node_database</a></p></li>
+<li><p><a class="reference internal" href="#sex-level" id="id20">sex_level</a></p></li>
+<li><p><a class="reference internal" href="#sincidence" id="id21">Sincidence</a></p></li>
+<li><p><a class="reference internal" href="#top-directory" id="id22">top_directory</a></p></li>
 </ul>
 </div>
+<div class="section" id="all-node-database">
+<span id="glossary-all-node-database"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id3">all_node_database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h3>
+<p>This is a database that contains information for the
+<em>root_node</em>; see <a class="reference internal" href="plan.html#plan-input-data-all-node-database"><span class="std std-ref">All Node Database</span></a>.</p>
+</div>
 <div class="section" id="eta">
-<span id="glossary-eta"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id3">eta</a><a class="headerlink" href="#eta" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-eta"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id4">eta</a><a class="headerlink" href="#eta" title="Permalink to this headline">¶</a></h3>
 <p>This is an offset in a log transformation; i.e., a mapping of the form
 <span class="math notranslate nohighlight">\(x \rightarrow \log(x + \eta )\)</span>.
 Note that this transformation is finite valued at <span class="math notranslate nohighlight">\(x\)</span> equal to zero.</p>
 </div>
 <div class="section" id="fit-node">
-<span id="glossary-fit-node"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id4">fit_node</a><a class="headerlink" href="#fit-node" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-fit-node"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id5">fit_node</a><a class="headerlink" href="#fit-node" title="Permalink to this headline">¶</a></h3>
 <p>For a dismod_at run, <em>fit_node</em> is
 the parent node in the dismod_at option table.</p>
 </div>
 <div class="section" id="in-parallel">
-<span id="glossary-in-parallel"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id5">in_parallel</a><a class="headerlink" href="#in-parallel" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-in-parallel"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id6">in_parallel</a><a class="headerlink" href="#in-parallel" title="Permalink to this headline">¶</a></h3>
 <p>If <em>in_parallel</em> is true nodes at the same level are fit in parallel.
 Here fitting a node includes fitting its child nodes that are required
 by the <em>leaf_node_set</em>.
@@ -220,67 +232,78 @@ If <em>in_parallel</em> is false, the fitting will be done sequentially.
 This should be easier to debug and should give the same results.</p>
 </div>
 <div class="section" id="iota">
-<span id="glossary-iota"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id6">iota</a><a class="headerlink" href="#iota" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-iota"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id7">iota</a><a class="headerlink" href="#iota" title="Permalink to this headline">¶</a></h3>
 <p>The model rate for incidence,
 relative to the susceptible population, as a function of age and time.
 This is also denoted by <span class="math notranslate nohighlight">\(\iota(a, t)\)</span>.</p>
 </div>
 <div class="section" id="leaf-node-set">
-<span id="glossary-leaf-node-set"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id7">leaf_node_set</a><a class="headerlink" href="#leaf-node-set" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-leaf-node-set"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id8">leaf_node_set</a><a class="headerlink" href="#leaf-node-set" title="Permalink to this headline">¶</a></h3>
 <p>This is the set of nodes below <em>root_node</em> that will be fit.
 Note that all the nodes between the root node and the leaf nodes
 will also be fit.</p>
 </div>
 <div class="section" id="meas-noise">
-<span id="glossary-meas-noise"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id8">meas_noise</a><a class="headerlink" href="#meas-noise" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-meas-noise"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id9">meas_noise</a><a class="headerlink" href="#meas-noise" title="Permalink to this headline">¶</a></h3>
 <p>The abbreviation used for measurement noise covariate multiplier.</p>
 </div>
 <div class="section" id="min-interval">
-<span id="glossary-min-interval"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id9">min_interval</a><a class="headerlink" href="#min-interval" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-min-interval"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id10">min_interval</a><a class="headerlink" href="#min-interval" title="Permalink to this headline">¶</a></h3>
 <p>This is the minimum age or time interval size.
 Age (time) intervals in the data file that are smaller than this size
 will be approximated by the interval midpoint value.</p>
 </div>
 <div class="section" id="mtall">
-<span id="glossary-mtall"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id10">mtall</a><a class="headerlink" href="#mtall" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-mtall"></span><span id="index-9"></span><h3><a class="toc-backref" href="#id11">mtall</a><a class="headerlink" href="#mtall" title="Permalink to this headline">¶</a></h3>
 <p>The abbreviation used for all cause mortality data.</p>
 </div>
 <div class="section" id="mtother">
-<span id="glossary-mtother"></span><span id="index-9"></span><h3><a class="toc-backref" href="#id11">mtother</a><a class="headerlink" href="#mtother" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-mtother"></span><span id="index-10"></span><h3><a class="toc-backref" href="#id12">mtother</a><a class="headerlink" href="#mtother" title="Permalink to this headline">¶</a></h3>
 <p>The abbreviation used for Other cause mortality data.</p>
 </div>
 <div class="section" id="mtspecific">
-<span id="glossary-mtspecific"></span><span id="index-10"></span><h3><a class="toc-backref" href="#id12">mtspecific</a><a class="headerlink" href="#mtspecific" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-mtspecific"></span><span id="index-11"></span><h3><a class="toc-backref" href="#id13">mtspecific</a><a class="headerlink" href="#mtspecific" title="Permalink to this headline">¶</a></h3>
 <p>The abbreviation used for cause specific mortality data.</p>
 </div>
+<div class="section" id="ode-integrand">
+<span id="glossary-ode-integrand"></span><span id="index-12"></span><h3><a class="toc-backref" href="#id14">ode_integrand</a><a class="headerlink" href="#ode-integrand" title="Permalink to this headline">¶</a></h3>
+<p>The following integrands requires solving the dismod_at ode to model
+and hence each of them is called an <em>ode_integrand</em>:
+susceptible, withC, prevalence, Tprevalence, mtspecific, mtall, mtstandard.</p>
+</div>
 <div class="section" id="omega">
-<span id="glossary-omega"></span><span id="index-11"></span><h3><a class="toc-backref" href="#id13">omega</a><a class="headerlink" href="#omega" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-omega"></span><span id="index-13"></span><h3><a class="toc-backref" href="#id15">omega</a><a class="headerlink" href="#omega" title="Permalink to this headline">¶</a></h3>
 <p>The model rate for other cause mortality as a function of age and time.
 This is also denoted by <span class="math notranslate nohighlight">\(\omega(a, t)\)</span>.</p>
 </div>
 <div class="section" id="omega-grid">
-<span id="glossary-omega-grid"></span><span id="index-12"></span><h3><a class="toc-backref" href="#id14">omega_grid</a><a class="headerlink" href="#omega-grid" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-omega-grid"></span><span id="index-14"></span><h3><a class="toc-backref" href="#id16">omega_grid</a><a class="headerlink" href="#omega-grid" title="Permalink to this headline">¶</a></h3>
 <p>A single age-time grid used for the <em>omega</em> constraints.</p>
 </div>
 <div class="section" id="rate-value">
-<span id="glossary-rate-value"></span><span id="index-13"></span><h3><a class="toc-backref" href="#id15">rate_value</a><a class="headerlink" href="#rate-value" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-rate-value"></span><span id="index-15"></span><h3><a class="toc-backref" href="#id17">rate_value</a><a class="headerlink" href="#rate-value" title="Permalink to this headline">¶</a></h3>
 <p>The abbreviation used for rate value covariate multiplier.</p>
 </div>
 <div class="section" id="root-node">
-<span id="glossary-root-node"></span><span id="index-14"></span><h3><a class="toc-backref" href="#id16">root_node</a><a class="headerlink" href="#root-node" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-root-node"></span><span id="index-16"></span><h3><a class="toc-backref" href="#id18">root_node</a><a class="headerlink" href="#root-node" title="Permalink to this headline">¶</a></h3>
 <p>The top level node for this cascade.</p>
 </div>
+<div class="section" id="root-node-database">
+<span id="glossary-root-node-database"></span><span id="index-17"></span><h3><a class="toc-backref" href="#id19">root_node_database</a><a class="headerlink" href="#root-node-database" title="Permalink to this headline">¶</a></h3>
+<p>This is a database that contains information for all the nodes; see
+<a class="reference internal" href="plan.html#plan-input-data-root-node-database"><span class="std std-ref">Root Node Database</span></a>.</p>
+</div>
 <div class="section" id="sex-level">
-<span id="glossary-sex-level"></span><span id="index-15"></span><h3><a class="toc-backref" href="#id17">sex_level</a><a class="headerlink" href="#sex-level" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-sex-level"></span><span id="index-18"></span><h3><a class="toc-backref" href="#id20">sex_level</a><a class="headerlink" href="#sex-level" title="Permalink to this headline">¶</a></h3>
 <p>Level below the <em>root_node</em> where the cascade splits by sex.</p>
 </div>
 <div class="section" id="sincidence">
-<span id="glossary-sincidence"></span><span id="index-16"></span><h3><a class="toc-backref" href="#id18">Sincidence</a><a class="headerlink" href="#sincidence" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-sincidence"></span><span id="index-19"></span><h3><a class="toc-backref" href="#id21">Sincidence</a><a class="headerlink" href="#sincidence" title="Permalink to this headline">¶</a></h3>
 <p>The abbreviation used for the susceptible incidence integrand.
 This corresponds to a directly measurement of <a class="reference internal" href="#glossary-iota"><span class="std std-ref">iota</span></a>.</p>
 </div>
 <div class="section" id="top-directory">
-<span id="glossary-top-directory"></span><span id="index-17"></span><h3><a class="toc-backref" href="#id19">top_directory</a><a class="headerlink" href="#top-directory" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-top-directory"></span><span id="index-20"></span><h3><a class="toc-backref" href="#id22">top_directory</a><a class="headerlink" href="#top-directory" title="Permalink to this headline">¶</a></h3>
 <p>Directory where the input data is located.</p>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">xsrst/glossary.xsrst</span></code></p>

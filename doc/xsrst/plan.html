@@ -9,7 +9,7 @@
 <meta content="purpose" name="keywords" />
 <meta content="input, data" name="keywords" />
 <meta content="root, node, database" name="keywords" />
-<meta content="other, database" name="keywords" />
+<meta content="all, node, database" name="keywords" />
 <meta content="program, plan" name="keywords" />
 <meta content="documentation" name="keywords" />
 <meta content="output, data" name="keywords" />
@@ -48,7 +48,7 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="xam_level2_leaf4" href="xam_level2_leaf4.html" />
+    <link rel="next" title="one_at_function_py" href="one_at_function_py.html" />
     <link rel="prev" title="glossary" href="glossary.html" /> 
 </head>
 
@@ -99,7 +99,8 @@
 <li class="toctree-l1 current"><a class="reference internal" href="at_cascade.html">at_cascade</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="glossary.html">glossary</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">plan</a></li>
-<li class="toctree-l2"><a class="reference internal" href="xam_level2_leaf4.html">xam_level2_leaf4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="one_at_function_py.html">one_at_function_py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="all_node_database.html">all_node_database</a></li>
 </ul>
 </li>
 </ul>
@@ -178,7 +179,7 @@
 <li><p><a class="reference internal" href="#input-data" id="id3">Input Data</a></p>
 <ul>
 <li><p><a class="reference internal" href="#root-node-database" id="id4">Root Node Database</a></p></li>
-<li><p><a class="reference internal" href="#other-database" id="id5">Other Database</a></p></li>
+<li><p><a class="reference internal" href="#all-node-database" id="id5">All Node Database</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#program-plan" id="id6">Program Plan</a></p>
@@ -215,35 +216,42 @@ i.e., the <em>root_node</em> is the <a class="reference internal" href="glossary
 <ul class="simple">
 <li><p>The option table parent_node in this database must be the <em>root_node</em>.</p></li>
 <li><p>There is no <a class="reference internal" href="glossary.html#glossary-mtall"><span class="std std-ref">mtall</span></a> or <a class="reference internal" href="glossary.html#glossary-mtspecific"><span class="std std-ref">mtspecific</span></a> data in
-this database because the other database has this information for every node.</p></li>
+this database because the <em>all_node</em> database has this information.</p></li>
 <li><p>There is no prior or grid for <a class="reference internal" href="glossary.html#glossary-omega"><span class="std std-ref">omega</span></a> in this database
 because it is computed using <em>mtall</em> - <em>mtspecific</em>.</p></li>
 <li><p>The avgint table covariate values are null and
 the avgint node_id values correspond to the <em>root_node</em>.</p></li>
 <li><p>Subgroups are not used; i.e., there is one group and one subgroup
 corresponding to all the data.</p></li>
-<li><p>The covariate table reference values must be the same as the other database
-reference values for the <em>root_node</em>.</p></li>
+<li><p>The covariate table reference values must be the same as the <em>all_node</em>
+database reference values for the <em>root_node</em>.</p></li>
 </ul>
 </div>
-<div class="section" id="other-database">
-<span id="plan-input-data-other-database"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">Other Database</a><a class="headerlink" href="#other-database" title="Permalink to this headline">¶</a></h4>
-<p>In addition to the dismod_at database,
-a database with the following information will also be used:</p>
+<div class="section" id="all-node-database">
+<span id="plan-input-data-all-node-database"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">All Node Database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h4>
+<p>In addition to the root node database,
+an <em>all_node</em> database with the following information will also be used:</p>
 <ul class="simple">
 <li><p>A specification of the age and time points in the rectangular <em>omega</em> grid.
 <em>Omega</em> will be constrained on this grid and bi-linearly interpolated between
 points in the grid.</p></li>
 <li><p>The <em>mtall</em> data for every node and every (age, time) point in the
 <a class="reference internal" href="glossary.html#glossary-omega-grid"><span class="std std-ref">omega_grid</span></a>.
-The same table could be used to hold this information for all diseases.</p></li>
+The same table could be used to hold this information for all diseases.
+If this information is not available for a node, <em>omega</em> will be zero
+for that node. This will be an error there is any <a class="reference internal" href="glossary.html#glossary-mtother"><span class="std std-ref">mtother</span></a>
+data or data that requires the dismod_at ode for that node.</p></li>
 <li><p>The <em>mtspecific</em> data for every node and every (age, time) point in the
 <em>omega_grid</em>. Note that <em>mtspecific</em> is different for each disease.
 For each node and <em>omega</em> grid point, the <em>omega</em> constraints are
-computed using <em>omega</em> = <em>mtall</em> - <em>mtspecific</em>.</p></li>
+computed using <em>omega</em> = <em>mtall</em> - <em>mtspecific</em>.
+Nodes that do not have <em>mtspecific</em> data will approximate the <em>omega</em>
+constraint using just <em>mtall</em>.</p></li>
 <li><p>Covariate reference for every covariate in the <em>root_node</em> database
 and every node that we are predicting for. If this includes all covariates,
-the same table could be used for all diseases.</p></li>
+the same table could be used for all diseases.
+It will be an error if this information is not available for a node
+between the <em>root_node</em> and the <em>leaf_node_set</em>.</p></li>
 <li><p>An option table that applies to the cascade, not individual fits, and
 contains the following information:</p>
 <ul>
@@ -263,11 +271,6 @@ contains the following information:</p>
 <ul class="simple">
 <li><p>Use cascade_ode, fit_ihme.py, cascade_at,
 to get ideas for the design the algorithm.</p></li>
-<li><p>Nodes that do not have <em>mtall</em> data, or the covariate references
-will not be included in the analysis (nor will children of such nodes).</p></li>
-<li><p>Nodes that do not have <em>mtspecific</em> data will approximate the <em>omega</em>
-constraint using just <em>mtall</em>.
-(We should indicate which nodes are missing <em>mtspecific</em> data ?)</p></li>
 <li><p>Test using a data simulator with multiple levels of random effects.</p></li>
 <li><p>Use python for the program.</p></li>
 <li><p>The <em>root_node</em> database specifies difference priors for all the fits.</p></li>
@@ -373,7 +376,7 @@ current code that uses dismod_at still works.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="xam_level2_leaf4.html" class="btn btn-neutral float-right" title="xam_level2_leaf4" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="one_at_function_py.html" class="btn btn-neutral float-right" title="one_at_function_py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="glossary.html" class="btn btn-neutral float-left" title="glossary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

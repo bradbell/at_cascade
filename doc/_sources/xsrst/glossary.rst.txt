@@ -15,6 +15,18 @@ Glossary
    :local:
 
 .. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _glossary.all_node_database:
+
+all_node_database
+*****************
+This is a database that contains information for the
+*root_node*; see :ref:`plan.input_data.all_node_database`.
+
+.. meta::
    :keywords: eta
 
 .. index:: eta
@@ -138,6 +150,19 @@ mtspecific
 The abbreviation used for cause specific mortality data.
 
 .. meta::
+   :keywords: ode_integrand
+
+.. index:: ode_integrand
+
+.. _glossary.ode_integrand:
+
+ode_integrand
+**************
+The following integrands requires solving the dismod_at ode to model
+and hence each of them is called an *ode_integrand*:
+susceptible, withC, prevalence, Tprevalence, mtspecific, mtall, mtstandard.
+
+.. meta::
    :keywords: omega
 
 .. index:: omega
@@ -181,6 +206,18 @@ The abbreviation used for rate value covariate multiplier.
 root_node
 *********
 The top level node for this cascade.
+
+.. meta::
+   :keywords: root_node_database
+
+.. index:: root_node_database
+
+.. _glossary.root_node_database:
+
+root_node_database
+******************
+This is a database that contains information for all the nodes; see
+:ref:`plan.input_data.root_node_database`.
 
 .. meta::
    :keywords: sex_level
