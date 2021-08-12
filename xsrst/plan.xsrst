@@ -63,13 +63,20 @@ an *all_node* database with the following information will also be used:
 - The *mtall* data for every node and every (age, time) point in the
   :ref:`glossary.omega_grid`.
   The same table could be used to hold this information for all diseases.
+  If this information is not available for a node, *omega* will be zero
+  for that node. This will be an error there is any :ref:`glossary.mtother`
+  data or data that requies the dismod_at ode for that node.
 - The *mtspecific* data for every node and every (age, time) point in the
   *omega_grid*. Note that *mtspecific* is different for each disease.
   For each node and *omega* grid point, the *omega* constraints are
   computed using *omega* = *mtall* - *mtspecific*.
+  Nodes that do not have *mtspecific* data will approximate the *omega*
+  constraint using just *mtall*.
 - Covariate reference for every covariate in the *root_node* database
   and every node that we are predicting for. If this includes all covariates,
   the same table could be used for all diseases.
+  It will be an error if this information is not available for a node
+  between the *root_node* and the *leaf_node_set*.
 - An option table that applies to the cascade, not individual fits, and
   contains the following information:
 
@@ -84,11 +91,6 @@ Program Plan
 ************
 - Use cascade_ode, fit_ihme.py, cascade_at,
   to get ideas for the design the algorithm.
-- Nodes that do not have *mtall* data, or the covariate references
-  will not be included in the analysis (nor will children of such nodes).
-- Nodes that do not have *mtspecific* data will approximate the *omega*
-  constraint using just *mtall*.
-  (We should indicate which nodes are missing *mtspecific* data ?)
 - Test using a data simulator with multiple levels of random effects.
 - Use python for the program.
 - The *root_node* database specifies difference priors for all the fits.
