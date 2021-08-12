@@ -11,10 +11,16 @@ see http://www.gnu.org/licenses/agpl.txt
 {xsrst_begin glossary}
 {xsrst_spell
     meas
+    integrands
 }
 
 Glossary
 ########
+
+all_node_database
+*****************
+This is a database that contains information for the
+*root_node*; see :ref:`plan.input_data.all_node_database`.
 
 eta
 ***
@@ -70,6 +76,12 @@ mtspecific
 **********
 The abbreviation used for cause specific mortality data.
 
+ode_integrand
+**************
+The following integrands requires solving the dismod_at ode to model
+and hence each of them is called an *ode_integrand*:
+susceptible, withC, prevalence, Tprevalence, mtspecific, mtall, mtstandard.
+
 omega
 *****
 The model rate for other cause mortality as a function of age and time.
@@ -86,6 +98,11 @@ The abbreviation used for rate value covariate multiplier.
 root_node
 *********
 The top level node for this cascade.
+
+root_node_database
+******************
+This is a database that contains information for all the nodes; see
+:ref:`plan.input_data.root_node_database`.
 
 sex_level
 *********

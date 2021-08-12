@@ -65,7 +65,7 @@ an *all_node* database with the following information will also be used:
   The same table could be used to hold this information for all diseases.
   If this information is not available for a node, *omega* will be zero
   for that node. This will be an error there is any :ref:`glossary.mtother`
-  data or data that requies the dismod_at ode for that node.
+  data or data that requires the dismod_at ode for that node.
 - The *mtspecific* data for every node and every (age, time) point in the
   *omega_grid*. Note that *mtspecific* is different for each disease.
   For each node and *omega* grid point, the *omega* constraints are

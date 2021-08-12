@@ -29,6 +29,7 @@ Children
     xsrst/glossary.xsrst
     xsrst/plan.xsrst
     example/one_at_function.py
+    at_cascade/all_node_database.py
 }
 
 {xsrst_end at_cascade}
