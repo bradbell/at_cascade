@@ -188,7 +188,7 @@ import dismod_at
 from math import exp
 #
 # BEGIN alpha_true
-alpha_true = - 0.10
+alpha_true = - 0.1
 # END alpha_true
 #
 # BEGIN avg_income
@@ -199,11 +199,13 @@ avg_income['n0'] = ( avg_income['n1'] + avg_income['n2'] ) / 2.0
 # END avg_income
 #
 # BEGIN sum_random_effect
-sum_random       = { 'n0':0.0, 'n1':0.0 + 0.2, 'n2':0.0 - 0.2 }
-sum_random['n3'] = sum_random['n1'] + 0.2;
-sum_random['n4'] = sum_random['n1'] - 0.2;
-sum_random['n5'] = sum_random['n2'] + 0.2;
-sum_random['n6'] = sum_random['n2'] - 0.2;
+size_level1      = 0.2
+size_level2      = 0.2
+sum_random       = { 'n0': 0.0, 'n1': size_level1, 'n2': -size_level1 }
+sum_random['n3'] = sum_random['n1'] + size_level2;
+sum_random['n4'] = sum_random['n1'] - size_level2;
+sum_random['n5'] = sum_random['n2'] + size_level2;
+sum_random['n6'] = sum_random['n2'] - size_level2;
 # END sum_random_effect
 #
 # BEGIN age_grid
@@ -218,9 +220,11 @@ def iota_true(a, n = 'n0', I = avg_income['n0'] ) :
 # END iota_true
 #
 # BEGIN income_grid
-income_grid = dict()
+number_income = 5
+income_grid   = dict()
 for node in [ 'n3', 'n4', 'n5', 'n6' ] :
-    income_grid[node] = [ 2.0 * j * avg_income[node] / 6.0 for j in range(7) ]
+    delta_income      = 2.0 * avg_income[node] / (number_income - 1)
+    income_grid[node] = [ j * delta_income for j in range(number_income) ]
 # END income_grid
 #
 def root_node_db(file_name) :
@@ -361,7 +365,8 @@ def root_node_db(file_name) :
                 row['age_upper']  = age
                 row['income']     = income
                 # model for the measurement noise
-                row['meas_std']   = meas_value / 10.0
+                # actual measruement noise is zero
+                row['meas_std']   = meas_value / 2.0
                 data_table.append( copy.copy(row) )
     #
     # time_grid
