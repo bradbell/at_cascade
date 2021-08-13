@@ -29,14 +29,6 @@ fit_node
 For a dismod_at run, *fit_node* is
 the parent node in the dismod_at option table.
 
-in_parallel
-***********
-If *in_parallel* is true nodes at the same level are fit in parallel.
-Here fitting a node includes fitting its child nodes that are required
-by the *leaf_node_set*.
-If *in_parallel* is false, the fitting will be done sequentially.
-This should be easier to debug and should give the same results.
-
 iota
 ****
 The model rate for incidence,
@@ -52,12 +44,6 @@ will also be fit.
 meas_noise
 **********
 The abbreviation used for measurement noise covariate multiplier.
-
-min_interval
-************
-This is the minimum age or time interval size.
-Age (time) intervals in the data file that are smaller than this size
-will be approximated by the interval midpoint value.
 
 mtall
 *****
@@ -98,10 +84,6 @@ root_node_database
 ******************
 This is a database that contains information for all the nodes; see
 :ref:`plan.input_data.root_node_database`.
-
-sex_level
-*********
-Level below the *root_node* where the cascade splits by sex.
 
 Sincidence
 **********
