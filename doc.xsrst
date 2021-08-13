@@ -28,8 +28,9 @@ Children
 {xsrst_child_table
     xsrst/glossary.xsrst
     xsrst/plan.xsrst
+    xsrst/database.xsrst
     example/one_at_function.py
-    at_cascade/all_node_database.py
+    at_cascade/create_all_node_db.py
 }
 
 {xsrst_end at_cascade}

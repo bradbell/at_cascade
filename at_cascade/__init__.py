@@ -7,4 +7,4 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
-from .all_node_database import create_all_node_db
+from .create_all_node_db import create_all_node_db
