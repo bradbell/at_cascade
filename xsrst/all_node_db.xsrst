@@ -7,46 +7,56 @@ This program is distributed under the terms of the
     GNU Affero General Public License version 3.0 or later
 see http://www.gnu.org/licenses/agpl.txt
 -----------------------------------------------------------------------------
-{xsrst_begin all_node_database}
+{xsrst_begin_parent all_node_db}
 
 The All Node DataBase
 #####################
+This data base contains information for all the nodes between the
+:ref:`glossary.root_node` and the :ref:`glossary.leaf_node_set`.
 
-covariate_reference_table
-*************************
+{xsrst_end all_node_db}
+------------------------------------------------------------------------------
+{xsrst_begin covariate_reference_table}
+
+All Node Database Covariate Reference Table
+###########################################
 This table specifies the reference value for every covariate
 and node in the *root_node_database*.
 It has the following columns:
 
 covariate_reference_id
-======================
+**********************
 This column has type ``integer`` and is the primary key for this table.
 Its initial value is zero and it increments by one for each row.
 
 node_id
-=======
+*******
 This column has type ``integer`` and is specifies
 the node for this reference
 by the primary key in the *root_node_database* node table
 
 covariate_id
-============
+************
 This column has type ``integer`` and is specifies
 the covariate, for this reference,
 by the primary key in the *root_node_database* covariate table
 
 reference
-=========
+*********
 This column has type ``real`` and it specifies the reference value
 for this covariate and node.
 
-leaf_node_table
-***************
-This table specifies the *leaf_node_set*.
+{xsrst_end covariate_reference_table}
+------------------------------------------------------------------------------
+{xsrst_begin leaf_node_table}
+
+All Node Database Leaf Node Table
+#################################
+This table specifies the :ref:`glossary.leaf_node_set`.
 It the following columns:
 
 leaf_node_id
-============
+************
 This column has type ``integer`` and is the primary key for this table.
 Its initial value is zero and it increments by one for each row.
 
@@ -55,48 +65,49 @@ node_id
 This column has type ``integer`` and is specifies
 a node by the primary key in the *root_node_database* node table
 
-option_table
-************
+{xsrst_end leaf_node_table}
+------------------------------------------------------------------------------
+{xsrst_begin option_table}
+
+All Node Database option_table
+##############################
 This table specifies certain at_cascade options
 
 Table Format
-============
+************
 
 option_id
----------
+=========
 This column of the option table has type ``integer`` and is the primary key.
 Its initial value is zero and it increments by one for each row.
 
 option_name
------------
+===========
 This column of the option table has type ``text``.
 It specifies a name that is attached to each option value.
 
 option_value
-------------
+============
 This column of the option table has type ``text``.
 It specifies a value that is attached to each option name.
 
-Options
-=======
-
 sex_level
----------
+*********
 If this *option_name* appears, the corresponding *option_value*
 is not yet specified.
 Otherwise, there will be no sex split in this cascade.
 
 in_parallel
------------
+***********
 If this *option_name* appears, the corresponding *option_value*
 is not yet specified.
 Otherwise, the cascade will be run sequentially.
 
 min_interval
-------------
+************
 If this *option_name* appears, the corresponding *option_value*
 is not yet specified.
 Otherwise, all age and time averages will
 approximated by the value at the midpoint of the intervals.
 
-{xsrst_end all_node_database}
+{xsrst_end option_table}
