@@ -101,6 +101,12 @@ This column has type ``integer`` and specifies the time for a grid point
 by the corresponding *omega_time_id* in the
 :ref:`omega_grid.omega_time_table`.
 
+mtall_value
+***********
+This column has type ``real`` and is the value of *mtall*
+at the corresponding node, age, and time.
+
+
 
 {xsrst_end mtall_table}
 ------------------------------------------------------------------------------
@@ -139,6 +145,11 @@ This column has type ``integer`` and specifies the time for a grid point
 by the corresponding *omega_time_id* in the
 :ref:`omega_grid.omega_time_table`.
 
+mtspecific_value
+****************
+This column has type ``real`` and is the value of *mtspecific*
+at the corresponding node, age, and time.
+
 {xsrst_end   mtspecific_table}
 ------------------------------------------------------------------------------
 {xsrst_begin omega_grid}
@@ -150,28 +161,28 @@ omega_age_table and omega_time_table.
 
 omega_age_table
 ***************
-This table has two columns, *omega_age_id* and *omega_age*:
+This table has two columns, *omega_age_id* and *age_value*:
 
 omega_age_id
 ============
 This column has type ``integer`` and is the primary key for this table.
 Its initial value is zero and it increments by one for each row.
 
-omega_age
+age_value
 =========
 This column has type ``real`` and specifies the age grid points.
 It is monotone increasing with *omega_age_id*.
 
 omega_time_table
 ****************
-This table has two columns, *omega_time_id* and *omega_time*:
+This table has two columns, *omega_time_id* and *time_value*:
 
 omega_time_id
 =============
 This column has type ``integer`` and is the primary key for this table.
 Its initial value is zero and it increments by one for each row.
 
-omega_time
+time_value
 ==========
 This column has type ``real`` and specifies the time grid points.
 It is monotone increasing with *omega_time_id*.

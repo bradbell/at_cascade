@@ -220,5 +220,45 @@ def create_all_node_db(
         all_connection, tbl_name, col_name, col_type, row_list
     )
     #
+    # empty omega_age table
+    tbl_name = 'omega_age'
+    col_name = [ 'age_value'  ]
+    col_type = [ 'real' ]
+    row_list = list()
+    dismod_at.create_table(
+        all_connection, tbl_name, col_name, col_type, row_list
+    );
+    #
+    # empty omega_time table
+    tbl_name = 'omega_time'
+    col_name = [ 'time_value'  ]
+    col_type = [ 'real' ]
+    row_list = list()
+    dismod_at.create_table(
+        all_connection, tbl_name, col_name, col_type, row_list
+    );
+    #
+    # empty mtall table
+    tbl_name = 'mtall'
+    col_name = [
+        'node_id', 'omega_age_id', 'omega_time_id', 'mtall_value'
+    ]
+    col_type = [ 'integer', 'integer', 'integer', 'real'     ]
+    row_list = list()
+    dismod_at.create_table(
+        all_connection, tbl_name, col_name, col_type, row_list
+    );
+    #
+    # empty mtspecific table
+    tbl_name = 'mtspecific'
+    col_name = [
+        'node_id', 'omega_age_id', 'omega_time_id', 'mtspecific_value'
+    ]
+    col_type = [ 'integer', 'integer',  'integer', 'real' ]
+    row_list = list()
+    dismod_at.create_table(
+        all_connection, tbl_name, col_name, col_type, row_list
+    );
+    #
     # close
     all_connection.close()
