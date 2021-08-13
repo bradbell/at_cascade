@@ -53,39 +53,8 @@ i.e., the *root_node* is the :ref:`glossary.fit_node`.
 
 All Node Database
 =================
-
 In addition to the root node database,
-an *all_node* database with the following information will also be used:
-
-- A specification of the age and time points in the rectangular *omega* grid.
-  *Omega* will be constrained on this grid and bi-linearly interpolated between
-  points in the grid.
-- The *mtall* data for every node and every (age, time) point in the
-  :ref:`glossary.omega_grid`.
-  The same table could be used to hold this information for all diseases.
-  If this information is not available for a node, *omega* will be zero
-  for that node. This will be an error there is any :ref:`glossary.mtother`
-  data or data that requires the dismod_at ode for that node.
-- The *mtspecific* data for every node and every (age, time) point in the
-  *omega_grid*. Note that *mtspecific* is different for each disease.
-  For each node and *omega* grid point, the *omega* constraints are
-  computed using *omega* = *mtall* - *mtspecific*.
-  Nodes that do not have *mtspecific* data will approximate the *omega*
-  constraint using just *mtall*.
-- Covariate reference for every covariate in the *root_node* database
-  and every node that we are predicting for. If this includes all covariates,
-  the same table could be used for all diseases.
-  It will be an error if this information is not available for a node
-  between the *root_node* and the *leaf_node_set*.
-- An option table that applies to the cascade, not individual fits, and
-  contains the following information:
-
-  - The *root_node*.
-  - The *leaf_node_set*.
-  - The :ref:`glossary.sex_level`. If the *root_node* corresponds to one sex,
-    *sex_level* would be zero; i.e., there is no sex split.
-  - Run :ref:`glossary.in_parallel`.
-  - The :ref:`glossary.min_interval`.
+the input includes the :ref:`all_node_db`.
 
 Program Plan
 ************

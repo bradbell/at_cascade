@@ -26,7 +26,7 @@ Syntax
 all_node_database
 *****************
 is a ``str`` containing the name of the
-:ref:`glossary.all_node_database` that is created by this call.
+:ref:`all_node_db` that is created by this call.
 This argument can't be ``None``.
 
 root_node_database

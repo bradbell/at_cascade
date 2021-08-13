@@ -18,8 +18,8 @@ This data base contains information for all the nodes between the
 ------------------------------------------------------------------------------
 {xsrst_begin covariate_reference_table}
 
-All Node Database Covariate Reference Table
-###########################################
+All Node Covariate Reference Table
+##################################
 This table specifies the reference value for every covariate
 and node in the *root_node_database*.
 It has the following columns:
@@ -50,8 +50,8 @@ for this covariate and node.
 ------------------------------------------------------------------------------
 {xsrst_begin leaf_node_table}
 
-All Node Database Leaf Node Table
-#################################
+All Node Leaf Node Table
+########################
 This table specifies the :ref:`glossary.leaf_node_set`.
 It the following columns:
 
@@ -61,16 +61,127 @@ This column has type ``integer`` and is the primary key for this table.
 Its initial value is zero and it increments by one for each row.
 
 node_id
-=======
+*******
 This column has type ``integer`` and is specifies
 a node by the primary key in the *root_node_database* node table
 
 {xsrst_end leaf_node_table}
 ------------------------------------------------------------------------------
+{xsrst_begin mtall_table}
+
+All Node mtall Table
+####################
+This table specifies the value of :ref:`glossary.mtall` for each
+age, time point in the :ref:`omega_grid` and every node.
+
+mtall_id
+********
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+node_id
+*******
+This column has type ``integer`` and specifies a node by its *node_id*
+value in the *root_node_database* node table.
+If a particular *node_id* does not appear,
+*omega* is set to zero for that node.
+If a *node_id* does appear, there must be one and only one row
+that has that *node_id* and each possible combination of
+*omega_age_id*, *omega_time_id*.
+
+omega_age_id
+************
+This column has type ``integer`` and specifies the age for a grid point
+by the corresponding *omega_age_id* in the
+:ref:`omega_grid.omega_age_table`.
+
+omega_time_id
+*************
+This column has type ``integer`` and specifies the time for a grid point
+by the corresponding *omega_time_id* in the
+:ref:`omega_grid.omega_time_table`.
+
+
+{xsrst_end mtall_table}
+------------------------------------------------------------------------------
+{xsrst_begin mtspecific_table}
+
+All Node mtspecific Table
+#########################
+This table specifies the value of :ref:`glossary.mtspecific` for each
+age, time point in the :ref:`omega_grid` and every node.
+
+mtspecific_id
+*************
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+node_id
+*******
+This column has type ``integer`` and specifies a node by its *node_id*
+value in the *root_node_database* node table.
+If a particular *node_id* does not appear,
+*omega* is set to *mtall* for that node.
+If a *node_id* does appear, there must be one and only one row
+that has that *node_id* and each possible combination of
+*omega_age_id*, *omega_time_id*.
+In this case *omega* for the node is set to *mtall - mtspecific*.
+
+omega_age_id
+************
+This column has type ``integer`` and specifies the age for a grid point
+by the corresponding *omega_age_id* in the
+:ref:`omega_grid.omega_age_table`.
+
+omega_time_id
+*************
+This column has type ``integer`` and specifies the time for a grid point
+by the corresponding *omega_time_id* in the
+:ref:`omega_grid.omega_time_table`.
+
+{xsrst_end   mtspecific_table}
+------------------------------------------------------------------------------
+{xsrst_begin omega_grid}
+
+All Node Omega Grid
+###################
+The :ref:`glossary.omega` grid is specified by the
+omega_age_table and omega_time_table.
+
+omega_age_table
+***************
+This table has two columns, *omega_age_id* and *omega_age*:
+
+omega_age_id
+============
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+omega_age
+=========
+This column has type ``real`` and specifies the age grid points.
+It is monotone increasing with *omega_age_id*.
+
+omega_time_table
+****************
+This table has two columns, *omega_time_id* and *omega_time*:
+
+omega_time_id
+=============
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+omega_time
+==========
+This column has type ``real`` and specifies the time grid points.
+It is monotone increasing with *omega_time_id*.
+
+{xsrst_end omega_grid}
+------------------------------------------------------------------------------
 {xsrst_begin option_table}
 
-All Node Database option_table
-##############################
+All Node Option Table
+#####################
 This table specifies certain at_cascade options
 
 Table Format

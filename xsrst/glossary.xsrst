@@ -17,11 +17,6 @@ see http://www.gnu.org/licenses/agpl.txt
 Glossary
 ########
 
-all_node_database
-*****************
-This is a database that contains information for the
-*root_node*; see :ref:`plan.input_data.all_node_database`.
-
 eta
 ***
 This is an offset in a log transformation; i.e., a mapping of the form
