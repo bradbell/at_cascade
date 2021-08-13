@@ -1,0 +1,73 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!
+covariate_reference_table
+!!!!!!!!!!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: covariate_reference_table, all, node, covariate, reference, table
+
+.. index:: covariate_reference_table, all, node, covariate, reference, table
+
+.. _covariate_reference_table:
+
+All Node Covariate Reference Table
+##################################
+.. contents::
+   :local:
+
+This table specifies the reference value for every covariate
+and node in the *root_node_database*.
+It has the following columns:
+
+.. meta::
+   :keywords: covariate_reference_id
+
+.. index:: covariate_reference_id
+
+.. _covariate_reference_table.covariate_reference_id:
+
+covariate_reference_id
+**********************
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+.. meta::
+   :keywords: node_id
+
+.. index:: node_id
+
+.. _covariate_reference_table.node_id:
+
+node_id
+*******
+This column has type ``integer`` and is specifies
+the node for this reference
+by the primary key in the *root_node_database* node table
+
+.. meta::
+   :keywords: covariate_id
+
+.. index:: covariate_id
+
+.. _covariate_reference_table.covariate_id:
+
+covariate_id
+************
+This column has type ``integer`` and is specifies
+the covariate, for this reference,
+by the primary key in the *root_node_database* covariate table
+
+.. meta::
+   :keywords: reference
+
+.. index:: reference
+
+.. _covariate_reference_table.reference:
+
+reference
+*********
+This column has type ``real`` and it specifies the reference value
+for this covariate and node.
+
+----
+
+xsrst input file: ``xsrst/all_node_db.xsrst``

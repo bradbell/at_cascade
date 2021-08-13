@@ -87,7 +87,7 @@ We use *r_n* for the reference value of *income* at node *n*.
 The code below sets this reference using the name avg_income:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 200-203
+    :lines: 212-215
     :language: py
 
 .. meta::
@@ -105,7 +105,7 @@ This multiplier affects the value of *iota*.
 The true value for *alpha* (used which simulating the data) is
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 196-196
+    :lines: 208-208
     :language: py
 
 .. meta::
@@ -134,7 +134,7 @@ We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 207-213
+    :lines: 219-225
     :language: py
 
 .. meta::
@@ -161,7 +161,7 @@ iota_true(a, n, I)
 This is the true value for *iota* in node *n* at age *a* and income *I*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 221-224
+    :lines: 233-236
     :language: py
 
 .. meta::
@@ -209,7 +209,7 @@ a_i
 For each leaf node, data is generated on the following *age_grid*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 217-217
+    :lines: 229-229
     :language: py
 
 .. meta::
@@ -225,7 +225,7 @@ For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 228-232
+    :lines: 240-244
     :language: py
 
 .. meta::

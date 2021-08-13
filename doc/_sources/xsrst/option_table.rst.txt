@@ -1,0 +1,107 @@
+!!!!!!!!!!!!
+option_table
+!!!!!!!!!!!!
+
+.. meta::
+   :keywords: option_table, all, node, option, table
+
+.. index:: option_table, all, node, option, table
+
+.. _option_table:
+
+All Node Option Table
+#####################
+.. contents::
+   :local:
+
+This table specifies certain at_cascade options
+
+.. meta::
+   :keywords: table, format
+
+.. index:: table, format
+
+.. _option_table.table_format:
+
+Table Format
+************
+
+.. meta::
+   :keywords: option_id
+
+.. index:: option_id
+
+.. _option_table.table_format.option_id:
+
+option_id
+=========
+This column of the option table has type ``integer`` and is the primary key.
+Its initial value is zero and it increments by one for each row.
+
+.. meta::
+   :keywords: option_name
+
+.. index:: option_name
+
+.. _option_table.table_format.option_name:
+
+option_name
+===========
+This column of the option table has type ``text``.
+It specifies a name that is attached to each option value.
+
+.. meta::
+   :keywords: option_value
+
+.. index:: option_value
+
+.. _option_table.table_format.option_value:
+
+option_value
+============
+This column of the option table has type ``text``.
+It specifies a value that is attached to each option name.
+
+.. meta::
+   :keywords: sex_level
+
+.. index:: sex_level
+
+.. _option_table.sex_level:
+
+sex_level
+*********
+If this *option_name* appears, the corresponding *option_value*
+is not yet specified.
+Otherwise, there will be no sex split in this cascade.
+
+.. meta::
+   :keywords: in_parallel
+
+.. index:: in_parallel
+
+.. _option_table.in_parallel:
+
+in_parallel
+***********
+If this *option_name* appears, the corresponding *option_value*
+is not yet specified.
+Otherwise, the cascade will be run sequentially.
+
+.. meta::
+   :keywords: min_interval
+
+.. index:: min_interval
+
+.. _option_table.min_interval:
+
+min_interval
+************
+If this *option_name* appears, the corresponding *option_value*
+is not yet specified.
+Otherwise, all age and time averages will
+approximated by the value at the midpoint of the intervals.
+
+----
+
+xsrst input file: ``xsrst/all_node_db.xsrst``

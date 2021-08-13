@@ -8,8 +8,9 @@ at_cascade
 
    glossary
    plan
+   all_node_db
    one_at_function_py
-   all_node_database
+   create_all_node_db
 
 .. include:: ../preamble.rst
 
@@ -26,13 +27,13 @@ Cascading Dismod_at Analysis From Parent To Child Regions
    :local:
 
 .. meta::
-   :keywords: version, 2021.8.12
+   :keywords: version, 2021.8.13
 
-.. index:: version, 2021.8.12
+.. index:: version, 2021.8.13
 
-.. _at_cascade.version_2021.8.12:
+.. _at_cascade.version_2021.8.13:
 
-Version 2021.8.12
+Version 2021.8.13
 ******************
 
 .. meta::
@@ -56,13 +57,14 @@ https://github.com/bradbell/at_cascade
 Children
 ********
 .. csv-table::
-    :header:  "Name", "Title"
+    :header:  "Child", "Title"
     :widths: 20, 80
 
     "glossary", :ref:`glossary`
     "plan", :ref:`plan`
+    "all_node_db", :ref:`all_node_db`
     "one_at_function_py", :ref:`one_at_function_py`
-    "all_node_database", :ref:`all_node_database`
+    "create_all_node_db", :ref:`create_all_node_db`
 
 ----
 

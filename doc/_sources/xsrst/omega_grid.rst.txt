@@ -1,0 +1,92 @@
+!!!!!!!!!!
+omega_grid
+!!!!!!!!!!
+
+.. meta::
+   :keywords: omega_grid, all, node, omega, grid
+
+.. index:: omega_grid, all, node, omega, grid
+
+.. _omega_grid:
+
+All Node Omega Grid
+###################
+.. contents::
+   :local:
+
+The :ref:`glossary.omega` grid is specified by the
+omega_age_table and omega_time_table.
+
+.. meta::
+   :keywords: omega_age_table
+
+.. index:: omega_age_table
+
+.. _omega_grid.omega_age_table:
+
+omega_age_table
+***************
+This table has two columns, *omega_age_id* and *omega_age*:
+
+.. meta::
+   :keywords: omega_age_id
+
+.. index:: omega_age_id
+
+.. _omega_grid.omega_age_table.omega_age_id:
+
+omega_age_id
+============
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+.. meta::
+   :keywords: omega_age
+
+.. index:: omega_age
+
+.. _omega_grid.omega_age_table.omega_age:
+
+omega_age
+=========
+This column has type ``real`` and specifies the age grid points.
+It is monotone increasing with *omega_age_id*.
+
+.. meta::
+   :keywords: omega_time_table
+
+.. index:: omega_time_table
+
+.. _omega_grid.omega_time_table:
+
+omega_time_table
+****************
+This table has two columns, *omega_time_id* and *omega_time*:
+
+.. meta::
+   :keywords: omega_time_id
+
+.. index:: omega_time_id
+
+.. _omega_grid.omega_time_table.omega_time_id:
+
+omega_time_id
+=============
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+.. meta::
+   :keywords: omega_time
+
+.. index:: omega_time
+
+.. _omega_grid.omega_time_table.omega_time:
+
+omega_time
+==========
+This column has type ``real`` and specifies the time grid points.
+It is monotone increasing with *omega_time_id*.
+
+----
+
+xsrst input file: ``xsrst/all_node_db.xsrst``

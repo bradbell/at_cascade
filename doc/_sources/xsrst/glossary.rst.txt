@@ -15,18 +15,6 @@ Glossary
    :local:
 
 .. meta::
-   :keywords: all_node_database
-
-.. index:: all_node_database
-
-.. _glossary.all_node_database:
-
-all_node_database
-*****************
-This is a database that contains information for the
-*root_node*; see :ref:`plan.input_data.all_node_database`.
-
-.. meta::
    :keywords: eta
 
 .. index:: eta
@@ -50,21 +38,6 @@ fit_node
 ********
 For a dismod_at run, *fit_node* is
 the parent node in the dismod_at option table.
-
-.. meta::
-   :keywords: in_parallel
-
-.. index:: in_parallel
-
-.. _glossary.in_parallel:
-
-in_parallel
-***********
-If *in_parallel* is true nodes at the same level are fit in parallel.
-Here fitting a node includes fitting its child nodes that are required
-by the *leaf_node_set*.
-If *in_parallel* is false, the fitting will be done sequentially.
-This should be easier to debug and should give the same results.
 
 .. meta::
    :keywords: iota
@@ -102,19 +75,6 @@ will also be fit.
 meas_noise
 **********
 The abbreviation used for measurement noise covariate multiplier.
-
-.. meta::
-   :keywords: min_interval
-
-.. index:: min_interval
-
-.. _glossary.min_interval:
-
-min_interval
-************
-This is the minimum age or time interval size.
-Age (time) intervals in the data file that are smaller than this size
-will be approximated by the interval midpoint value.
 
 .. meta::
    :keywords: mtall
@@ -218,17 +178,6 @@ root_node_database
 ******************
 This is a database that contains information for all the nodes; see
 :ref:`plan.input_data.root_node_database`.
-
-.. meta::
-   :keywords: sex_level
-
-.. index:: sex_level
-
-.. _glossary.sex_level:
-
-sex_level
-*********
-Level below the *root_node* where the cascade splits by sex.
 
 .. meta::
    :keywords: sincidence

@@ -1,0 +1,46 @@
+!!!!!!!!!!!!!!!
+leaf_node_table
+!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: leaf_node_table, all, node, leaf, node, table
+
+.. index:: leaf_node_table, all, node, leaf, node, table
+
+.. _leaf_node_table:
+
+All Node Leaf Node Table
+########################
+.. contents::
+   :local:
+
+This table specifies the :ref:`glossary.leaf_node_set`.
+It the following columns:
+
+.. meta::
+   :keywords: leaf_node_id
+
+.. index:: leaf_node_id
+
+.. _leaf_node_table.leaf_node_id:
+
+leaf_node_id
+************
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+.. meta::
+   :keywords: node_id
+
+.. index:: node_id
+
+.. _leaf_node_table.node_id:
+
+node_id
+*******
+This column has type ``integer`` and is specifies
+a node by the primary key in the *root_node_database* node table
+
+----
+
+xsrst input file: ``xsrst/all_node_db.xsrst``

@@ -24,8 +24,8 @@ Create an All Node Database
 Syntax
 ******
 
-.. literalinclude:: ../../at_cascade/all_node_database.py
-    :lines: 226-237
+.. literalinclude:: ../../at_cascade/create_all_node_db.py
+    :lines: 132-143
     :language: py
 
 .. meta::
@@ -38,7 +38,7 @@ Syntax
 all_node_database
 *****************
 is a ``str`` containing the name of the
-:ref:`glossary.all_node_database` that is created by this call.
+:ref:`all_node_db` that is created by this call.
 This argument can't be ``None``.
 
 .. meta::
@@ -239,4 +239,4 @@ approximated by the value at the midpoint of the intervals.
 
 ----
 
-xsrst input file: ``at_cascade/all_node_database.py``
+xsrst input file: ``at_cascade/create_all_node_db.py``
