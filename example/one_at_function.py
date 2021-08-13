@@ -185,12 +185,24 @@ upper limit *+|alpha_true|* and mean zero.
 
 {xsrst_end one_at_function_py}
 '''
+# ----------------------------------------------------------------------------
+# imports
+# ----------------------------------------------------------------------------
 import sys
 import os
 import copy
 import distutils.dir_util
 import dismod_at
 from math import exp
+#
+# import at_cascade with a preference current directory version
+current_directory = os.getcwd()
+if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
+    sys.path.insert(0, current_directory)
+import at_cascade
+# -----------------------------------------------------------------------------
+# globals
+# -----------------------------------------------------------------------------
 #
 # BEGIN alpha_true
 alpha_true = - 0.1
@@ -231,7 +243,9 @@ for node in [ 'n3', 'n4', 'n5', 'n6' ] :
     delta_income      = 2.0 * avg_income[node] / (number_income - 1)
     income_grid[node] = [ j * delta_income for j in range(number_income) ]
 # END income_grid
-#
+# ----------------------------------------------------------------------------
+# functions
+# ----------------------------------------------------------------------------
 def root_node_db(file_name) :
     #
     # prior_table
@@ -412,22 +426,51 @@ def root_node_db(file_name) :
         mulcov_table,
         option_table
     )
-# ---------------------------------------------------------------------------
-# change into the build/example directory
-distutils.dir_util.mkpath('build/example')
-os.chdir('build/example')
+
+# ----------------------------------------------------------------------------
+# main
+# ----------------------------------------------------------------------------
+def main() :
+    # -------------------------------------------------------------------------
+    # change into the build/example directory
+    distutils.dir_util.mkpath('build/example')
+    os.chdir('build/example')
+    #
+    # Create root_node.db
+    root_file_name  = 'root_node.db'
+    root_node_db(root_file_name)
+    # ----------------------------------------------------------------------
+    # Create all_node_db
+    all_file_name = 'all_node.db'
+    #
+    # covariate_name
+    covariate_name = 'income'
+    #
+    # covariate_reference
+    covariate_reference = dict()
+    for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
+        covariate_reference[node_name] = {
+            covariate_name : avg_income[node_name]
+        }
+    #
+    at_cascade.create_all_node_db(
+        all_node_database   = all_file_name   ,
+        root_node_database  = root_file_name  ,
+        covariate_reference = covariate_reference ,
+    )
+    # ----------------------------------------------------------------------
+    #
+    # init root_node.db
+    dismod_at.system_command_prc( [ 'dismod_at', root_file_name, 'init' ] )
+    #
+    # fit root_node.db
+    dismod_at.system_command_prc(
+        [ 'dismod_at', root_file_name, 'fit', 'both' ]
+    )
+    #
+    dismod_at.system_command_prc( [ 'dismodat.py', root_file_name, 'db2csv' ] )
+    #
 #
-# Create root_node.db
-file_name  = 'root_node.db'
-root_node_db(file_name)
-#
-# init root_node.db
-dismod_at.system_command_prc( [ 'dismod_at', file_name, 'init' ] )
-#
-# fit root_node.db
-dismod_at.system_command_prc( [ 'dismod_at', file_name, 'fit', 'both' ] )
-#
-dismod_at.system_command_prc( [ 'dismodat.py', file_name, 'db2csv' ] )
-#
-print('level2_leaf4: OK')
+main()
+print('one_at_function: OK')
 sys.exit(0)

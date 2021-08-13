@@ -22,6 +22,9 @@
 # used to cache local changes (instead of using git cache)
 /new/
 /new.*/
+#
+# python compiled files
+/at_cascade/__pycache__
 # --------------------------------
 # file extensions in any directory
 # --------------------------------

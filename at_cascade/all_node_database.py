@@ -210,6 +210,7 @@ approximated by the value at the midpoint of the intervals.
 
 {xsrst_end create_all_node_db}
 '''
+import dismod_at
 # ----------------------------------------------------------------------------
 # is_descendant
 def is_descendant(node_table, ancestor_node_id, this_node_id) :
@@ -302,7 +303,7 @@ def create_all_node_db(
     row_list = list()
     if leaf_node_set is None :
         for node_id in range( len(node_table) ):
-            if is_decendant(node_table, root_node_id, node_id)
+            if is_descendant(node_table, root_node_id, node_id) :
                 row = [ node_id ]
                 row_list.append( row )
     else :
