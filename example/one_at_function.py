@@ -18,10 +18,6 @@
 Example That Directly Measures One Age Time Function
 ####################################################
 
-Under Construction
-******************
-This example is under construction.
-
 Nodes
 *****
 The following is a diagram of the node tree for this example::
@@ -439,26 +435,23 @@ def main() :
     # Create root_node.db
     root_file_name  = 'root_node.db'
     root_node_db(root_file_name)
-    # ----------------------------------------------------------------------
-    # Create all_node_db
-    all_file_name = 'all_node.db'
-    #
-    # covariate_name
-    covariate_name = 'income'
     #
     # covariate_reference
     covariate_reference = dict()
+    covariate_name      = 'income'
     for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
         covariate_reference[node_name] = {
             covariate_name : avg_income[node_name]
         }
     #
+    # Create all_node.db
+    # We could get covariate_reference from here, but we do not need to
+    all_file_name = 'all_node.db'
     at_cascade.create_all_node_db(
         all_node_database   = all_file_name   ,
         root_node_database  = root_file_name  ,
         covariate_reference = covariate_reference ,
     )
-    # ----------------------------------------------------------------------
     #
     # init root_node.db
     dismod_at.system_command_prc( [ 'dismod_at', root_file_name, 'init' ] )
@@ -468,7 +461,16 @@ def main() :
         [ 'dismod_at', root_file_name, 'fit', 'both' ]
     )
     #
-    dismod_at.system_command_prc( [ 'dismodat.py', root_file_name, 'db2csv' ] )
+    # root_connection
+    new             = False
+    root_connection = dismod_at.create_connection(root_file_name, new)
+    #
+    # var_table
+    var_table     = dismod_at.get_table_dict(root_connection, 'var')
+    fit_var_table = dismod_at.get_table_dict(root_connection, 'fit_var')
+    for (var_id, row) in enumerate(var_table) :
+        print(row, fit_var_table[var_id]['fit_var_value'] )
+
     #
 #
 main()

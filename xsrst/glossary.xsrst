@@ -29,6 +29,18 @@ fit_node
 For a dismod_at run, *fit_node* is
 the parent node in the dismod_at option table.
 
+fit_node_database
+*****************
+This is a dismod_at database where the following tables are the same
+as in the :ref:`glossary.root_node_database`:
+covariate table,
+density table,
+integrand table,
+node table,
+subgroup table,
+weight table,
+weight grid table.
+
 iota
 ****
 The model rate for incidence,
@@ -57,6 +69,10 @@ mtspecific
 **********
 The abbreviation used for cause specific mortality data.
 
+node_name
+*********
+Is the *node_name* for a node in the *root_node_database* node table.
+
 ode_integrand
 **************
 The following integrands requires solving the dismod_at ode to model
@@ -82,7 +98,8 @@ The top level node for this cascade.
 
 root_node_database
 ******************
-This is a database that contains information for all the nodes; see
+This is a dismod_at database where the *root_node* is the
+parent node in the dismod_at option table; see
 :ref:`plan.input_data.root_node_database`.
 
 Sincidence
