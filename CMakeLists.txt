@@ -9,4 +9,4 @@
 # -----------------------------------------------------------------------------
 # Just used to store package name and version number
 PROJECT(at_cascade)
-SET(at_cascade_version "2021.8.14")
+SET(at_cascade_version "2021.8.16")
