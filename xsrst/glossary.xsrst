@@ -33,13 +33,16 @@ fit_node_database
 *****************
 This is a dismod_at database where the following tables are the same
 as in the :ref:`glossary.root_node_database`:
-covariate table,
-density table,
-integrand table,
-node table,
-subgroup table,
-weight table,
-weight grid table.
+covariate,
+density,
+integrand,
+node,
+subgroup,
+weight,
+weight grid.
+In addition, its option table is the same as in the *root_node_database*
+except for the value of *parent_node_name*.
+(The value of *parent_node_id* does not appear in the option table.)
 
 iota
 ****
