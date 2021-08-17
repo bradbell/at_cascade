@@ -82,8 +82,10 @@ in the new avgint table
 {xsrst_end create_child_avgint}
 '''
 # ----------------------------------------------------------------------------
+import dismod_at
+# ----------------------------------------------------------------------------
 def table_name2id(table, col_name, row_name) :
-    for (row_id, row) in emumerate(table) :
+    for (row_id, row) in enumerate(table) :
         if row[col_name] == row_name :
             return row_id
     assert False
@@ -113,6 +115,7 @@ def create_child_avgint(
         'covariate',
         'integrand',
         'node',
+        'option',
         'rate',
         'smooth_grid',
         'time',
@@ -136,20 +139,18 @@ def create_child_avgint(
         if row['option_name'] == 'parent_node_name' :
             parent_node_name = row['option_value']
     assert parent_node_name is not None
-    parent_node_id = table_name2id(
-        node_table, 'parent_node_name', parent_node_name
-    )
+    parent_node_id = table_name2id(node_table, 'node_name', parent_node_name)
     #
     # child_covariate_reference
     child_covariate_reference = dict()
     for (node_id, row) in enumerate(node_table) :
         if row['parent'] == parent_node_id :
             reference = n_covariate * [0.0]
-            for row in covariate_reference :
+            for row in covariate_reference_table :
                 if row['node_id'] == node_id :
                     covariate_id = row['covariate_id']
                     reference[covariate_id] = row['reference']
-            child_covariate_reference['node_id'] = reference
+            child_covariate_reference[node_id] = reference
     #
     # tbl_name
     tbl_name = 'avgint'
@@ -186,7 +187,7 @@ def create_child_avgint(
     # add the smooting grid columns to col_name and col_type
     col_name += [ 'c_rate_id', 'c_node_id', 'c_age_id', 'c_time_id',
     ]
-    col_type += 4 * ['real']
+    col_type += 4 * ['integer']
     #
     # name_rate2integrand
     name_rate2integrand = {
@@ -206,7 +207,7 @@ def create_child_avgint(
         #
         # parent_smooth_id
         parent_smooth_id = rate_table[rate_id]['parent_smooth_id']
-        if parent_smooth_id in not None:
+        if not parent_smooth_id is None :
             #
             # integrand_id
             integrand_name  = name_rate2integrand[rate_name]
@@ -233,6 +234,8 @@ def create_child_avgint(
                     for node_id in child_covariate_reference :
                         #
                         # row
+                        subgroup_id = 0
+                        weight_id   = None
                         row = [
                             integrand_id,
                             node_id,
@@ -261,4 +264,4 @@ def create_child_avgint(
     command       = 'DROP TABLE IF EXISTS ' + tbl_name
     dismod_at.sql_command(connection, command)
     dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
-    connection.clost()
+    connection.close()
