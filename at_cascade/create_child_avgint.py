@@ -59,32 +59,6 @@ avgint Table
 The new avgint table has all the standard dismod_at columns
 plus the following extra columns:
 
-c_mulcov_id
-===========
-If this column is not null,
-it identifies the covariate multiplier that this prediction is for.
-All of the covariate multipliers,
-except for ones that have null for the group_smooth_id in the
-mulcov table in the *parent_node_database*,
-are represented the new avgint table.
-
-
-c_rate_id
-=========
-If this column is not null,
-it identifies which rate a prediction is for.
-(Either *c_mulcov_id* or *c_rate_id* is null but not both.)
-All the rates, except omega and rates that do not do not have null for the
-parent_smooth_id in the rate table in the *parent_node_database*,
-are represented the new avgint table.
-
-c_node_id
-=========
-If this is a rate prediction,
-this column identifies which child a prediction is for
-(otherwise this column is null).
-All the children of the parent node are represented in the new avgint table.
-
 c_age_id
 ========
 This column identifies the age,
@@ -209,10 +183,8 @@ def create_child_avgint(
         col_type.append( 'real' )
     #
     # add the smoothing grid columns to col_name and col_type
-    col_name += [
-        'c_mulcov_id', 'c_rate_id', 'c_node_id', 'c_age_id', 'c_time_id',
-    ]
-    col_type += 5 * ['integer']
+    col_name += [ 'c_age_id', 'c_time_id' ]
+    col_type += 2 * ['integer']
     #
     # name_rate2integrand
     name_rate2integrand = {
@@ -256,7 +228,6 @@ def create_child_avgint(
                     time_upper = time_lower
                     #
                     # row
-                    rate_id     = None
                     node_id     = None
                     subgroup_id = 0
                     weight_id   = None
@@ -271,13 +242,7 @@ def create_child_avgint(
                         time_upper,
                     ]
                     row += n_covariate * [ None ]
-                    row += [
-                        mulcov_id,
-                        rate_id,
-                        node_id,
-                        age_id,
-                        time_id,
-                    ]
+                    row += [ age_id, time_id, ]
                     #
                     # add to row_list
                     row_list.append( row )
@@ -317,7 +282,6 @@ def create_child_avgint(
                     for node_id in child_covariate_reference :
                         #
                         # row
-                        mulcov_id   = None
                         subgroup_id = 0
                         weight_id   = None
                         row = [
@@ -331,13 +295,7 @@ def create_child_avgint(
                             time_upper,
                         ]
                         row += child_covariate_reference[node_id]
-                        row += [
-                            mulcov_id,
-                            rate_id,
-                            node_id,
-                            age_id,
-                            time_id,
-                        ]
+                        row += [ age_id, time_id, ]
                         #
                         # add to row_list
                         row_list.append( row )

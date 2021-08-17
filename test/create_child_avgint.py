@@ -306,7 +306,7 @@ def main() :
             rate_id = table_name2id(table['rate'], 'rate_name', 'iota')
             #
             # node_name
-            node_id = avgint_row['c_node_id']
+            node_id = avgint_row['node_id']
             assert node_id in [ 1, 2 ]
             node_name = table['node'][node_id]['node_name']
             #
