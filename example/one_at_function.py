@@ -465,18 +465,31 @@ def main() :
     # init
     dismod_at.system_command_prc( [ 'dismod_at', fit_node_database, 'init' ] )
     #
-    # fit both
+    # fit
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'fit', 'both' ]
     )
     #
+    # sample
+    dismod_at.system_command_prc(
+        [ 'dismod_at', fit_node_database, 'sample', 'asymptotic', 'both', '20' ]
+    )
+    #
     # predict
     dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
+        [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
-    new        = False
-    connection = dismod_at.create_connection(fit_node_database, new)
     #
+    # creater child node databases
+    child_node_databases = {
+        'n1' : 'n1.db',
+        'n2' : 'n2.db',
+    }
+    at_cascade.create_child_node_db(
+        all_node_database,
+        fit_node_database,
+        child_node_databases
+    )
 #
 main()
 print('one_at_function: OK')
