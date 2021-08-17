@@ -64,9 +64,13 @@ mtall
 *****
 The abbreviation used for all cause mortality data.
 
+mtexcess
+********
+The abbreviation used for excess mortality data.
+
 mtother
 *******
-The abbreviation used for Other cause mortality data.
+The abbreviation used for other cause mortality data.
 
 mtspecific
 **********
@@ -94,6 +98,16 @@ A single age-time grid used for the *omega* constraints.
 rate_value
 **********
 The abbreviation used for rate value covariate multiplier.
+
+remission
+*********
+The abbreviation used for the remission integrand.
+This corresponds to a directly measurement of *rho*
+
+rho
+***
+The mode rate for remission as a function of age an time.
+This is also denoted by :math:`\rho(a, t)`.
 
 root_node
 *********
