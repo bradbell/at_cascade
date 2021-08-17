@@ -213,7 +213,11 @@ def root_node_db(file_name) :
         mulcov_table,
         option_table
     )
-
+def table_name2id(table, col_name, row_name) :
+    for (row_id, row) in enumerate(table) :
+        if row[col_name] == row_name :
+            return row_id
+    assert False
 # ----------------------------------------------------------------------------
 # main
 # ----------------------------------------------------------------------------
@@ -266,6 +270,7 @@ def main() :
     table      = dict()
     for table_name in [
         'avgint',
+        'integrand',
         'node',
         'predict',
         'rate',
@@ -281,28 +286,41 @@ def main() :
         # avgint_row
         avgint_row = table['avgint'][avgint_id]
         #
-        # rate_id
-        rate_id = avgint_row['c_rate_id']
-        assert table['rate'][rate_id]['rate_name'] == 'iota'
-        #
-        # node_name
-        node_id = avgint_row['c_node_id']
-        assert node_id in [ 1, 2 ]
-        node_name = table['node'][node_id]['node_name']
-        #
-        # age
-        age_id = avgint_row['c_age_id']
-        age    = age_grid[age_id]
-        #
-        # income
-        income = avg_income[node_name]
-        #
         # predict_value
         predict_value = predict_row['avg_integrand']
         #
-        # true_value
-        true_value = iota_true(age, node_name, income)
+        # integrand_name
+        integrand_id   = avgint_row['integrand_id']
+        integrand_name = table['integrand'][integrand_id]['integrand_name']
         #
+        # mulcov_id
+        mulcov_id = None
+        if integrand_name.startswith('mulcov_') :
+            mulcov_id = int( integrand_name[7:] )
+            assert mulcov_id == 0
+            true_value = alpha_true
+        #
+        # rate_id
+        rate_id = None
+        if integrand_name == 'Sincidence' :
+            rate_id = table_name2id(table['rate'], 'rate_name', 'iota')
+            #
+            # node_name
+            node_id = avgint_row['c_node_id']
+            assert node_id in [ 1, 2 ]
+            node_name = table['node'][node_id]['node_name']
+            #
+            # age
+            age_id = avgint_row['c_age_id']
+            age    = age_grid[age_id]
+            #
+            # income
+            income = avg_income[node_name]
+            #
+            # true_value
+            true_value = iota_true(age, node_name, income)
+        #
+        # print(integrand_name, predict_value)
         relative_err = 1.0 - predict_value / true_value
         assert abs( relative_err ) < 1e-7
 #
