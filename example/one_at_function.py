@@ -423,6 +423,31 @@ def root_node_db(file_name) :
         mulcov_table,
         option_table
     )
+# ----------------------------------------------------------------------------
+def fit_node(all_node_database, fit_node_database) :
+    #
+    # replace avgint table
+    at_cascade.create_child_avgint(all_node_database, fit_node_database)
+    #
+    # init
+    dismod_at.system_command_prc( [ 'dismod_at', fit_node_database, 'init' ] )
+    #
+    # fit
+    dismod_at.system_command_prc(
+        [ 'dismod_at', fit_node_database, 'fit', 'both' ]
+    )
+    #
+    # sample
+    dismod_at.system_command_prc(
+        [ 'dismod_at', fit_node_database, 'sample', 'asymptotic', 'both', '20' ]
+    )
+    # predict
+    dismod_at.system_command_prc(
+        [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
+    )
+    # db2csv
+    dismod_at.system_command_prc(
+        [ 'dismodat.py', fit_node_database, 'db2csv' ] )
 
 # ----------------------------------------------------------------------------
 # main
@@ -453,41 +478,24 @@ def main() :
         root_node_database  = root_node_database  ,
         covariate_reference = covariate_reference ,
     )
+    #
+    # node_table
+    new        = False
+    connection = dismod_at.create_connection(root_node_database, new)
+    node_table = dismod_at.get_table_dict(connection, 'node')
+    connection.close()
     # ------------------------------------------------------------------------
     # n0/dismod.db
-    # ------------------------------------------------------------------------
     if not os.path.exists('n0') :
         os.makedirs('n0')
     fit_node_database = 'n0/dismod.db'
     shutil.copyfile(root_node_database, fit_node_database)
-    #
-    # replace avgint table
-    at_cascade.create_child_avgint(all_node_database, fit_node_database)
-    #
-    # init
-    dismod_at.system_command_prc( [ 'dismod_at', fit_node_database, 'init' ] )
-    #
-    # fit
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'fit', 'both' ]
-    )
-    #
-    # sample
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'sample', 'asymptotic', 'both', '20' ]
-    )
-    #
-    # predict
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
-    )
-    dismod_at.system_command_prc(
-        [ 'dismodat.py', fit_node_database, 'db2csv' ] )
+    fit_node(all_node_database, fit_node_database)
     # -------------------------------------------------------------------------
     # n0/n1/dismod.db
     # n0/n2/dismod.db
-    # -------------------------------------------------------------------------
-    # creater child node databases
+    #
+    # create child node databases
     child_node_databases = {
         'n1' : 'n0/n1/dismod.db',
         'n2' : 'n0/n2/dismod.db',
@@ -501,30 +509,10 @@ def main() :
         fit_node_database,
         child_node_databases
     )
+    # fit child node databases
     for node_name in child_node_databases :
         fit_node_database = child_node_databases[node_name]
-        # replace avgint table
-        at_cascade.create_child_avgint(all_node_database, fit_node_database)
-        # init
-        dismod_at.system_command_prc( [ 'dismod_at', fit_node_database,
-            'init'
-        ])
-        # fit
-        dismod_at.system_command_prc( [ 'dismod_at', fit_node_database,
-            'fit', 'both'
-        ] )
-        # sample
-        dismod_at.system_command_prc( [ 'dismod_at', fit_node_database,
-            'sample', 'asymptotic', 'both', '20'
-        ] )
-        # sample
-        dismod_at.system_command_prc( [ 'dismod_at', fit_node_database,
-            'predict', 'sample'
-        ] )
-        # db2csv
-        dismod_at.system_command_prc(
-            [ 'dismodat.py', fit_node_database, 'db2csv' ]
-        )
+        fit_node(all_node_database, fit_node_database)
 #
 main()
 print('one_at_function: OK')
