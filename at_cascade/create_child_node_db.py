@@ -63,12 +63,23 @@ def table_name2id(table, col_name, row_name) :
             return row_id
     assert False
 # ----------------------------------------------------------------------------
-def add_number_to_row_name(tbl_name, table) :
-    column_name = tbl_name + '_name'
-    row_id      = len(table) - 1
-    row_name    = table[row_id][column_name]
-    row_name   += '_' + str(row_id)
-    table[row_id][column_name] = row_name
+def add_child_prior(
+    child_tables,
+    parent_prior_row,
+    gaussian_density_id,
+    mean,
+    std,
+) :
+    import copy
+    #
+    child_prior_row                = copy.copy( parent_prior_row )
+    child_prior_row['mean']        = mean
+    child_prior_row['std']         = std
+    child_prior_row['density_id']  = gaussian_density_id
+    child_prior_id                 = len( child_tables['prior'] )
+    child_prior_row['prior_name'] += '_' + str(child_prior_id)
+    child_tables['prior'].append( child_prior_row )
+    return child_prior_id
 # ----------------------------------------------------------------------------
 def create_child_node_db(
 # BEGIN syntax
@@ -252,13 +263,13 @@ def create_child_node_db(
                         std  = statistics.stdev(parent_sample[key])
                         #
                         # update: child_tables['prior'], child_prior_id
-                        child_prior_row         = copy.copy( parent_prior_row )
-                        child_prior_row['mean'] = mean
-                        child_prior_row['std']  = std
-                        child_prior_row['density_id'] = gaussian_density_id
-                        child_prior_id = len(child_tables['prior'])
-                        child_tables['prior'].append( child_prior_row )
-                        add_number_to_row_name('prior', child_tables['prior'])
+                        child_prior_id = add_child_prior(
+                            child_tables,
+                            parent_prior_row,
+                            gaussian_density_id,
+                            mean,
+                            std
+                        )
                         #
                         # update: child_tables['smooth_grid']
                         child_grid_row = copy.copy( parent_grid_row )
@@ -320,13 +331,13 @@ def create_child_node_db(
                         std  = statistics.stdev(parent_sample[key])
                         #
                         # update: child_tables['prior'], child_prior_id
-                        child_prior_row         = copy.copy( parent_prior_row )
-                        child_prior_row['mean'] = mean
-                        child_prior_row['std']  = std
-                        child_prior_row['density_id'] = gaussian_density_id
-                        child_prior_id = len(child_tables['prior'])
-                        child_tables['prior'].append( child_prior_row )
-                        add_number_to_row_name('prior', child_tables['prior'])
+                        child_prior_id = add_child_prior(
+                            child_tables,
+                            parent_prior_row,
+                            gaussian_density_id,
+                            mean,
+                            std
+                        )
                         #
                         # update: child_tables['smooth_grid']
                         child_grid_row = copy.copy( parent_grid_row )

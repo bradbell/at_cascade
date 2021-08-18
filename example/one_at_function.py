@@ -228,7 +228,7 @@ import at_cascade
 # -----------------------------------------------------------------------------
 #
 # BEGIN random_seed
-random_seed = 0
+random_seed = 1629319311
 if random_seed == 0 :
     random_seed = int( time.time() )
 print('random_seed = ', random_seed)
