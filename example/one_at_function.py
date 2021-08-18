@@ -202,7 +202,7 @@ import at_cascade
 # -----------------------------------------------------------------------------
 #
 # BEGIN alpha_true
-alpha_true = - 0.1
+alpha_true = - 0.2
 # END alpha_true
 #
 # BEGIN avg_income
@@ -255,7 +255,7 @@ def root_node_db(file_name) :
             'mean':    iota_true(50),
         },{ # prior_iota_dage
             'name':    'prior_iota_dage',
-            'density': 'log_gaussian',
+            'density': 'uniform',
             'mean':    0.0,
             'std':     1.0,
             'eta':     iota_true(0) * 1e-3,
@@ -263,7 +263,7 @@ def root_node_db(file_name) :
             'name':    'prior_iota_child',
             'density': 'gaussian',
             'mean':    0.0,
-            'std':     1.0,
+            'std':     10.0,
         },{ # prior_alpha_n0
             'name':    'prior_alpha_n0',
             'density': 'uniform',
@@ -454,9 +454,11 @@ def main() :
         covariate_reference = covariate_reference ,
     )
     # ------------------------------------------------------------------------
-    # n0.db
+    # n0/dismod.db
     # ------------------------------------------------------------------------
-    fit_node_database = 'n0.db'
+    if not os.path.exists('n0') :
+        os.makedirs('n0')
+    fit_node_database = 'n0/dismod.db'
     shutil.copyfile(root_node_database, fit_node_database)
     #
     # replace avgint table
@@ -479,17 +481,30 @@ def main() :
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
-    #
+    dismod_at.system_command_prc(
+        [ 'dismodat.py', fit_node_database, 'db2csv' ] )
+    # -------------------------------------------------------------------------
+    # n0/n1/dismod.db
+    # n0/n2/dismod.db
+    # -------------------------------------------------------------------------
     # creater child node databases
     child_node_databases = {
-        'n1' : 'n1.db',
-        'n2' : 'n2.db',
+        'n1' : 'n0/n1/dismod.db',
+        'n2' : 'n0/n2/dismod.db',
     }
+    for node_name in child_node_databases :
+        subdir = 'n0/' + node_name
+        if not os.path.exists(subdir) :
+            os.makedirs(subdir)
     at_cascade.create_child_node_db(
         all_node_database,
         fit_node_database,
         child_node_databases
     )
+    for node_name in child_node_databases :
+        database = child_node_databases[node_name]
+        dismod_at.system_command_prc([ 'dismod_at', database, 'init' ] )
+        dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ] )
 #
 main()
 print('one_at_function: OK')
