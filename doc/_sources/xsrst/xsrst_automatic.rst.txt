@@ -18,8 +18,13 @@ Table of Contents
 |  |space| :ref:`3.5<omega_grid>` All Node Omega Grid
 |  |space| :ref:`3.6<option_table>` All Node Option Table
 |
-| :ref:`4<one_at_function_py>` Example That Directly Measures One Age Time Function
-| :ref:`5<create_all_node_db>` Create an All Node Database
+| :ref:`4<one_at_function>` Example That Directly Measures One Age Time Function
+|  |space| :ref:`4.1<one_at_function_py>` one_at_function: Python Source Code
+| :ref:`5<module>` The at_cascade Python Module
+|
+|  |space| :ref:`5.1<create_all_node_db>` Create an All Node Database
+|  |space| :ref:`5.2<create_child_avgint>` Create avgint Table That Predicts Rates for Child Nodes
+|  |space| :ref:`5.3<create_child_node_db>` Create Child Database From Fit in Parent Database
 |
 
 Link to Index

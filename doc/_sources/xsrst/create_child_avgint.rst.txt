@@ -1,0 +1,134 @@
+!!!!!!!!!!!!!!!!!!!
+create_child_avgint
+!!!!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: create_child_avgint, create, avgint, table, that, predicts, rates, for, child, nodes
+
+.. index:: create_child_avgint, create, avgint, table, that, predicts, rates, for, child, nodes
+
+.. _create_child_avgint:
+
+Create avgint Table That Predicts Rates for Child Nodes
+#######################################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _create_child_avgint.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/create_child_avgint.py
+    :lines: 92-95
+    :language: py
+
+.. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _create_child_avgint.all_node_database:
+
+all_node_database
+*****************
+is a python string containing the name of the :ref:`all_node_db`.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: parent_node_database
+
+.. index:: parent_node_database
+
+.. _create_child_avgint.parent_node_database:
+
+parent_node_database
+********************
+is a python string containing the name of a :ref:`glossary.fit_node_database`
+that will be the parent node for this predictions.
+The avgint table will be placed in this database.
+The previous avgint table in this database is lost.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: parent_node
+
+.. index:: parent_node
+
+.. _create_child_avgint.parent_node_database.parent_node:
+
+parent_node
+===========
+We use *parent_node* to refer to the parent node in the
+dismod_at option table in the *parent_node_database*.
+
+.. meta::
+   :keywords: integrand_table
+
+.. index:: integrand_table
+
+.. _create_child_avgint.parent_node_database.integrand_table:
+
+integrand_table
+===============
+The integrand table in the *parent_node_database* must include the following:
+:ref:`glossary.Sincidence`,
+:ref:`glossary.remission`,
+:ref:`glossary.mtexcess`.
+Integrands with a null parent smoothing id need not be included.
+In addition, the integrand table must include all the covariate multipliers;
+i.e., ``mulcov_``\ *mulcov_id* where *mulcov_id* is the id
+for any covariate multiplier.
+Integrands with a null group smoothing id need not be included.
+
+.. meta::
+   :keywords: avgint, table
+
+.. index:: avgint, table
+
+.. _create_child_avgint.avgint_table:
+
+avgint Table
+************
+The new avgint table has all the standard dismod_at columns
+plus the following extra columns:
+
+.. meta::
+   :keywords: c_age_id
+
+.. index:: c_age_id
+
+.. _create_child_avgint.avgint_table.c_age_id:
+
+c_age_id
+========
+This column identifies the age,
+in the *parent_node_database*, that this prediction are for.
+
+c_time_id
+_========
+This column identifies the time,
+in the *parent_node_database*, that this prediction are for.
+
+.. meta::
+   :keywords: rectangular, grid
+
+.. index:: rectangular, grid
+
+.. _create_child_avgint.avgint_table.rectangular_grid:
+
+Rectangular Grid
+================
+For each rate (or covariate multiplier) that has a non-null
+parent smoothing (group smoothing) in the *parent_node_database*,
+all of the age time pairs in the smoothing are represented
+in the new avgint table
+
+----
+
+xsrst input file: ``at_cascade/create_child_avgint.py``

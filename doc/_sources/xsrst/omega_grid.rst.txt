@@ -26,7 +26,7 @@ omega_age_table and omega_time_table.
 
 omega_age_table
 ***************
-This table has two columns, *omega_age_id* and *omega_age*:
+This table has two columns, *omega_age_id* and *age_value*:
 
 .. meta::
    :keywords: omega_age_id
@@ -41,13 +41,13 @@ This column has type ``integer`` and is the primary key for this table.
 Its initial value is zero and it increments by one for each row.
 
 .. meta::
-   :keywords: omega_age
+   :keywords: age_value
 
-.. index:: omega_age
+.. index:: age_value
 
-.. _omega_grid.omega_age_table.omega_age:
+.. _omega_grid.omega_age_table.age_value:
 
-omega_age
+age_value
 =========
 This column has type ``real`` and specifies the age grid points.
 It is monotone increasing with *omega_age_id*.
@@ -61,7 +61,7 @@ It is monotone increasing with *omega_age_id*.
 
 omega_time_table
 ****************
-This table has two columns, *omega_time_id* and *omega_time*:
+This table has two columns, *omega_time_id* and *time_value*:
 
 .. meta::
    :keywords: omega_time_id
@@ -76,13 +76,13 @@ This column has type ``integer`` and is the primary key for this table.
 Its initial value is zero and it increments by one for each row.
 
 .. meta::
-   :keywords: omega_time
+   :keywords: time_value
 
-.. index:: omega_time
+.. index:: time_value
 
-.. _omega_grid.omega_time_table.omega_time:
+.. _omega_grid.omega_time_table.time_value:
 
-omega_time
+time_value
 ==========
 This column has type ``real`` and specifies the time grid points.
 It is monotone increasing with *omega_time_id*.

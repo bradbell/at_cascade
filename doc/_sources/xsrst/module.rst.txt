@@ -1,0 +1,35 @@
+!!!!!!
+module
+!!!!!!
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   create_all_node_db
+   create_child_avgint
+   create_child_node_db
+
+.. meta::
+   :keywords: module, the, at_cascade, python, module
+
+.. index:: module, the, at_cascade, python, module
+
+.. _module:
+
+The at_cascade Python Module
+****************************
+.. contents::
+   :local:
+
+.. csv-table::
+    :header:  "Child", "Title"
+    :widths: 20, 80
+
+    "create_all_node_db", :ref:`create_all_node_db`
+    "create_child_avgint", :ref:`create_child_avgint`
+    "create_child_node_db", :ref:`create_child_node_db`
+
+----
+
+xsrst input file: ``at_cascade/__init__.py``
