@@ -8,7 +8,7 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin one_at_function_py}
+{xsrst_begin_parent one_at_function}
 {xsrst_spell
     avg
     dage
@@ -36,7 +36,7 @@ Rates
 The only non-zero dismod_at rate for this example is
 :ref:`glossary.iota`; i.e.,
 we choose *iota* to represent the function that we are estimating.
-(We could have used any of the dismod_at rates.)
+(We could have used *rho* or *chi* but not *omega* for this purpose.)
 We use :math:`\iota_n(a, t)` and *iota_n* to denote the value for *iota*
 as a function of age and time at node number *n*.
 
@@ -58,7 +58,8 @@ The code below sets this reference using the name avg_income:
 alpha
 =====
 We use *alpha* and :math:`\alpha`
-for the :ref:`glossary.rate_value` that multipliers *income*.
+for the :ref:`glossary.rate_value` covariate multiplier
+that multipliers *income*.
 This multiplier affects the value of *iota*.
 The true value for *alpha* (used which simulating the data) is
 {xsrst_file
@@ -70,7 +71,7 @@ The true value for *alpha* (used which simulating the data) is
 Random Effects
 **************
 For each node, there is a random effect on *iota* that is constant
-in age and time. Note leaf nodes have the random effect for the node
+in age and time. Note that the leaf nodes have random effect for the node
 above them as well as their own random effect.
 
 s_n
@@ -114,6 +115,8 @@ n_i
 ===
 Data is only simulated for the leaf nodes; i.e.,
 each *n_i* is in the set { n3, n4, n5, n6 }.
+Since the data does not have any nose, the data residuals are a measure
+of how good the fit is for the leaf nodes.
 
 a_i
 ===
@@ -178,9 +181,21 @@ This value prior is uniform with lower limit *-|alpha_true|*,
 upper limit *+|alpha_true|* and mean zero.
 (The mean is used to initialize the optimization.)
 
+{xsrst_end one_at_function}
+------------------------------------------------------------------------------
+{xsrst_begin one_at_function_py}
+
+one_at_function: Python Source Code
+###################################
+
+{xsrst_file
+    BEGIN one_at_function source code
+    END one_at_function source code
+}
 
 {xsrst_end one_at_function_py}
 '''
+# BEGIN one_at_function source code
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
@@ -255,7 +270,7 @@ def root_node_db(file_name) :
             'mean':    iota_true(50),
         },{ # prior_iota_dage
             'name':    'prior_iota_dage',
-            'density': 'uniform',
+            'density': 'log_gaussian',
             'mean':    0.0,
             'std':     1.0,
             'eta':     iota_true(0) * 1e-3,
@@ -437,7 +452,7 @@ def node_table_name2id(node_table, row_name) :
             return node_id
     assert False
 # ----------------------------------------------------------------------------
-def fit_node(all_node_database, fit_node_database, node_table) :
+def cascade_fit_node(all_node_database, fit_node_database, node_table) :
     #
     # fit_node_name
     path_list = fit_node_database.split('/')
@@ -496,7 +511,7 @@ def fit_node(all_node_database, fit_node_database, node_table) :
     # fit child node databases
     for node_name in child_node_databases :
         fit_node_database = child_node_databases[node_name]
-        fit_node(all_node_database, fit_node_database, node_table)
+        cascade_fit_node(all_node_database, fit_node_database, node_table)
 
 # ----------------------------------------------------------------------------
 # main
@@ -533,14 +548,16 @@ def main() :
     connection = dismod_at.create_connection(root_node_database, new)
     node_table = dismod_at.get_table_dict(connection, 'node')
     connection.close()
-    # ------------------------------------------------------------------------
-    # n0/dismod.db
-    if not os.path.exists('n0') :
-        os.makedirs('n0')
-    fit_node_database = 'n0/dismod.db'
+    #
+    # cascade starting at n0
+    fit_node_name = 'n0'
+    if not os.path.exists(fit_node_name) :
+        os.makedirs(fit_node_name )
+    fit_node_database =  fit_node_name + '/dismod.db'
     shutil.copyfile(root_node_database, fit_node_database)
-    fit_node(all_node_database, fit_node_database, node_table)
+    cascade_fit_node(all_node_database, fit_node_database, node_table)
 #
 main()
 print('one_at_function: OK')
 sys.exit(0)
+# END one_at_function source code
