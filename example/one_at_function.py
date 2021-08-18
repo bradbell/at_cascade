@@ -502,9 +502,29 @@ def main() :
         child_node_databases
     )
     for node_name in child_node_databases :
-        database = child_node_databases[node_name]
-        dismod_at.system_command_prc([ 'dismod_at', database, 'init' ] )
-        dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ] )
+        fit_node_database = child_node_databases[node_name]
+        # replace avgint table
+        at_cascade.create_child_avgint(all_node_database, fit_node_database)
+        # init
+        dismod_at.system_command_prc( [ 'dismod_at', fit_node_database,
+            'init'
+        ])
+        # fit
+        dismod_at.system_command_prc( [ 'dismod_at', fit_node_database,
+            'fit', 'both'
+        ] )
+        # sample
+        dismod_at.system_command_prc( [ 'dismod_at', fit_node_database,
+            'sample', 'asymptotic', 'both', '20'
+        ] )
+        # sample
+        dismod_at.system_command_prc( [ 'dismod_at', fit_node_database,
+            'predict', 'sample'
+        ] )
+        # db2csv
+        dismod_at.system_command_prc(
+            [ 'dismodat.py', fit_node_database, 'db2csv' ]
+        )
 #
 main()
 print('one_at_function: OK')
