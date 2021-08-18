@@ -88,6 +88,16 @@ Simulated Data
 For this example everything is constant in time so the
 functions below do not depend on time.
 
+Random Seed
+===========
+The random seed can be used to reproduce results.
+If the original value of this setting is zero, the clock is used get
+a random seed. The actual value or *random_seed* is always printed.
+{xsrst_file
+    # BEGIN random_seed
+    # END random_seed
+}
+
 iota_true(a, n, I)
 ==================
 This is the true value for *iota* in node *n* at age *a* and income *I*:
@@ -202,6 +212,7 @@ one_at_function: Python Source Code
 import sys
 import os
 import copy
+import time
 import shutil
 import distutils.dir_util
 import dismod_at
@@ -215,6 +226,13 @@ import at_cascade
 # -----------------------------------------------------------------------------
 # globals
 # -----------------------------------------------------------------------------
+#
+# BEGIN random_seed
+random_seed = 0
+if random_seed == 0 :
+    random_seed = int( time.time() )
+print('random_seed = ', random_seed)
+# END random_seed
 #
 # BEGIN alpha_true
 alpha_true = - 0.2
@@ -417,6 +435,7 @@ def root_node_db(file_name) :
         { 'name':'quasi_fixed',           'value':'false'},
         { 'name':'max_num_iter_fixed',    'value':'50'},
         { 'name':'tolerance_fixed',       'value':'1e-8'},
+        { 'name':'random_seed',           'value':str(random_seed)},
     ]
     # ----------------------------------------------------------------------
     # create database

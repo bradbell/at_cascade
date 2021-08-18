@@ -159,6 +159,19 @@ def create_child_node_db(
         # create child_node_databases[child_name]
         # ---------------------------------------------------------------------
         #
+        # child_node_tables
+        child_tables = dict()
+        for name in [
+            'covariate',
+            'mulcov',
+            'option',
+            'prior',
+            'rate',
+            'smooth',
+            'smooth_grid',
+        ] :
+            child_tables[name] = copy.deepcopy(parent_tables[name])
+        #
         # child_node_id
         child_node_id = table_name2id(node_table, 'node_name', child_name)
         assert node_table[child_node_id]['parent'] == parent_node_id
@@ -171,39 +184,34 @@ def create_child_node_db(
         new        = False
         child_connection = dismod_at.create_connection(child_database, new)
         #
-        # child_option_table
-        child_option_table = copy.deepcopy(parent_tables['option'])
-        for row in child_option_table :
+        # child_tables['option']
+        for row in child_tables['option'] :
             if row['option_name'] == 'parent_node_name' :
                 row['option_value'] = child_name
         tbl_name = 'option'
-        dismod_at.replace_table(child_connection, tbl_name, child_option_table)
         #
-        # child_covariate_table
-        child_covariate_table = copy.deepcopy(parent_tables['covariate'])
-        for child_row in child_covariate_table :
+        # child_tables['covariate']
+        for child_row in child_tables['covariate'] :
             child_row['reference'] = None
         for row in covariate_reference_table :
             if row['node_id'] == child_node_id :
                 covariate_id           = row['covariate_id']
-                child_row              = child_covariate_table[covariate_id]
+                child_row              = child_tables['covariate'][covariate_id]
                 child_row['reference'] = row['reference']
-        for child_row in child_covariate_table :
+        for child_row in child_tables['covariate'] :
             assert not child_row['reference'] is None
         #
         # --------------------------------------------------------------------
         # initilaize child smooth and smooth_grid tables as empty
-        child_smooth_table      = list()
-        child_smooth_grid_table = list()
+        child_tables['smooth']      = list()
+        child_tables['smooth_grid'] = list()
         #
-        # initialize child_prior_table
-        child_prior_table = copy.deepcopy( parent_tables['prior'] )
+        # initialize child_tables['prior']
         # --------------------------------------------------------------------
-        # child_mulcov_table
+        # child_tables['mulcov']
         # and corresponding entries in the following child tables:
         # smooth, smooth_grid, and prior
-        child_mulcov_table = copy.deepcopy( parent_tables['mulcov'] )
-        for (mulcov_id, child_mulcov_row) in enumerate(child_mulcov_table) :
+        for (mulcov_id, child_mulcov_row) in enumerate(child_tables['mulcov']) :
             assert child_mulcov_row['subgroup_smooth_id'] is None
             parent_smooth_id = child_mulcov_row['group_smooth_id']
             if not parent_smooth_id is None :
@@ -216,17 +224,17 @@ def create_child_node_db(
                 smooth_row = parent_tables['smooth'][parent_smooth_id]
                 smooth_row = copy.copy(smooth_row)
                 #
-                # update: child_smooth_table
+                # update: child_tables['smooth']
                 assert smooth_row['mulstd_value_prior_id'] is None
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
-                child_smooth_id = len(child_smooth_table)
-                child_smooth_table.append(smooth_row)
+                child_smooth_id = len(child_tables['smooth'])
+                child_tables['smooth'].append(smooth_row)
                 #
-                # change child_mulcov_table to use the new smoothing
+                # change child_tables['mulcov'] to use the new smoothing
                 child_mulcov_row['group_smooth_id'] = child_smooth_id
                 #
-                # add rows for this smoothing to child_smooth_grid_table
+                # add rows for this smoothing to child_tables['smooth_grid']
                 for parent_grid_row in parent_tables['smooth_grid'] :
                     if parent_grid_row['smooth_id'] == parent_smooth_id :
                         #
@@ -243,26 +251,25 @@ def create_child_node_db(
                         mean = statistics.mean(parent_sample[key])
                         std  = statistics.stdev(parent_sample[key])
                         #
-                        # update: child_prior_table, child_prior_id
+                        # update: child_tables['prior'], child_prior_id
                         child_prior_row         = copy.copy( parent_prior_row )
                         child_prior_row['mean'] = mean
                         child_prior_row['std']  = std
                         child_prior_row['density_id'] = gaussian_density_id
-                        child_prior_id = len(child_prior_table)
-                        child_prior_table.append( child_prior_row )
-                        add_number_to_row_name('prior', child_prior_table)
+                        child_prior_id = len(child_tables['prior'])
+                        child_tables['prior'].append( child_prior_row )
+                        add_number_to_row_name('prior', child_tables['prior'])
                         #
-                        # update: child_smooth_grid_table
+                        # update: child_tables['smooth_grid']
                         child_grid_row = copy.copy( parent_grid_row )
                         child_grid_row['value_prior_id'] = child_prior_id
                         child_grid_row['smooth_id']      = child_smooth_id
-                        child_smooth_grid_table.append( child_grid_row )
+                        child_tables['smooth_grid'].append( child_grid_row )
         # --------------------------------------------------------------------
-        # child_rate_table
+        # child_tables['rate']
         # and corresponding entries in the following child tables:
         # smooth, smooth_grid, and prior
-        child_rate_table = copy.deepcopy( parent_tables['rate'] )
-        for child_rate_row in child_rate_table :
+        for child_rate_row in child_tables['rate'] :
             rate_name        = child_rate_row['rate_name']
             #
             # parent_smooth_id
@@ -286,15 +293,16 @@ def create_child_node_db(
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
                 #
-                # update: child_smooth_table for case where its is the parent
-                child_smooth_id = len(child_smooth_table)
-                child_smooth_table.append(smooth_row)
+                # update: child_tables['smooth']
+                # for case where its is the parent
+                child_smooth_id = len(child_tables['smooth'])
+                child_tables['smooth'].append(smooth_row)
                 #
                 #
-                # change child_rate_table to use the new smoothing
+                # change child_tables['rate'] to use the new smoothing
                 child_rate_row['parent_smooth_id'] = child_smooth_id
                 #
-                # add rows for this smoothing to child_smooth_grid_table
+                # add rows for this smoothing to child_tables['smooth_grid']
                 for parent_grid_row in parent_tables['smooth_grid'] :
                     if parent_grid_row['smooth_id'] == parent_smooth_id :
                         #
@@ -311,20 +319,20 @@ def create_child_node_db(
                         mean = statistics.mean(parent_sample[key])
                         std  = statistics.stdev(parent_sample[key])
                         #
-                        # update: child_prior_table, child_prior_id
+                        # update: child_tables['prior'], child_prior_id
                         child_prior_row         = copy.copy( parent_prior_row )
                         child_prior_row['mean'] = mean
                         child_prior_row['std']  = std
                         child_prior_row['density_id'] = gaussian_density_id
-                        child_prior_id = len(child_prior_table)
-                        child_prior_table.append( child_prior_row )
-                        add_number_to_row_name('prior', child_prior_table)
+                        child_prior_id = len(child_tables['prior'])
+                        child_tables['prior'].append( child_prior_row )
+                        add_number_to_row_name('prior', child_tables['prior'])
                         #
-                        # update: child_smooth_grid_table
+                        # update: child_tables['smooth_grid']
                         child_grid_row = copy.copy( parent_grid_row )
                         child_grid_row['value_prior_id'] = child_prior_id
                         child_grid_row['smooth_id']      = child_smooth_id
-                        child_smooth_grid_table.append( child_grid_row )
+                        child_tables['smooth_grid'].append( child_grid_row )
             #
             # parent_smooth_id
             parent_smooth_id = None
@@ -339,33 +347,23 @@ def create_child_node_db(
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
                 #
-                # update: child_smooth_table for case where its is the parent
-                child_smooth_id = len(child_smooth_table)
-                child_smooth_table.append(smooth_row)
+                # update: child_tables['smooth']
+                # for case where its is the parent
+                child_smooth_id = len(child_tables['smooth'])
+                child_tables['smooth'].append(smooth_row)
                 #
-                # change child_rate_table to use the new smoothing
+                # change child_tables['rate'] to use the new smoothing
                 child_rate_row['child_smooth_id'] = child_smooth_id
                 #
-                # add rows for this smoothing to child_smooth_grid_table
+                # add rows for this smoothing to child_tables['smooth_grid']
                 for parent_grid_row in parent_tables['smooth_grid'] :
                     if parent_grid_row['smooth_id'] == parent_smooth_id :
                         #
-                        # update: child_smooth_grid_table
+                        # update: child_tables['smooth_grid']
                         child_grid_row = copy.copy( parent_grid_row )
                         child_grid_row['smooth_id']      = child_smooth_id
-                        child_smooth_grid_table.append( child_grid_row )
-        dismod_at.replace_table(
-                child_connection, 'mulcov', child_mulcov_table
-        )
-        dismod_at.replace_table(
-                child_connection, 'rate', child_rate_table
-        )
-        dismod_at.replace_table(
-                child_connection, 'prior', child_prior_table
-        )
-        dismod_at.replace_table(
-            child_connection, 'smooth', child_smooth_table
-        )
-        dismod_at.replace_table(
-            child_connection, 'smooth_grid', child_smooth_grid_table
-        )
+                        child_tables['smooth_grid'].append( child_grid_row )
+        for name in child_tables :
+            dismod_at.replace_table(
+                child_connection, name, child_tables[name]
+            )
