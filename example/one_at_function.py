@@ -424,7 +424,32 @@ def root_node_db(file_name) :
         option_table
     )
 # ----------------------------------------------------------------------------
-def fit_node(all_node_database, fit_node_database) :
+def child_node_id_list(node_table, parent_node_id) :
+    result = list()
+    for (node_id, row) in enumerate(node_table) :
+        if row['parent'] == parent_node_id :
+            result.append(node_id)
+    return result
+# ----------------------------------------------------------------------------
+def node_table_name2id(node_table, row_name) :
+    for (node_id, row) in enumerate(node_table) :
+        if row['node_name'] == row_name :
+            return node_id
+    assert False
+# ----------------------------------------------------------------------------
+def fit_node(all_node_database, fit_node_database, node_table) :
+    #
+    # fit_node_name
+    path_list = fit_node_database.split('/')
+    assert len(path_list) >= 2
+    assert path_list[-1] == 'dismod.db'
+    fit_node_name = path_list[-2]
+    #
+    # fit_node_id
+    fit_node_id = node_table_name2id(node_table, fit_node_name)
+    #
+    # fit_node_dir
+    fit_node_dir = fit_node_database[ : - len('dismod.db') - 1 ]
     #
     # replace avgint table
     at_cascade.create_child_avgint(all_node_database, fit_node_database)
@@ -448,6 +473,30 @@ def fit_node(all_node_database, fit_node_database) :
     # db2csv
     dismod_at.system_command_prc(
         [ 'dismodat.py', fit_node_database, 'db2csv' ] )
+    #
+    # child_node_list
+    child_node_list = child_node_id_list(node_table, fit_node_id)
+    #
+    # child_node_databases
+    child_node_databases = dict()
+    for node_id in child_node_list :
+        node_name = node_table[node_id]['node_name']
+        subdir    = fit_node_dir + '/' + node_name
+        if not os.path.exists(subdir) :
+            os.makedirs(subdir)
+        child_node_databases[node_name] = subdir + '/dismod.db'
+    #
+    # create child node databases
+    at_cascade.create_child_node_db(
+        all_node_database,
+        fit_node_database,
+        child_node_databases
+    )
+    #
+    # fit child node databases
+    for node_name in child_node_databases :
+        fit_node_database = child_node_databases[node_name]
+        fit_node(all_node_database, fit_node_database, node_table)
 
 # ----------------------------------------------------------------------------
 # main
@@ -490,29 +539,7 @@ def main() :
         os.makedirs('n0')
     fit_node_database = 'n0/dismod.db'
     shutil.copyfile(root_node_database, fit_node_database)
-    fit_node(all_node_database, fit_node_database)
-    # -------------------------------------------------------------------------
-    # n0/n1/dismod.db
-    # n0/n2/dismod.db
-    #
-    # create child node databases
-    child_node_databases = {
-        'n1' : 'n0/n1/dismod.db',
-        'n2' : 'n0/n2/dismod.db',
-    }
-    for node_name in child_node_databases :
-        subdir = 'n0/' + node_name
-        if not os.path.exists(subdir) :
-            os.makedirs(subdir)
-    at_cascade.create_child_node_db(
-        all_node_database,
-        fit_node_database,
-        child_node_databases
-    )
-    # fit child node databases
-    for node_name in child_node_databases :
-        fit_node_database = child_node_databases[node_name]
-        fit_node(all_node_database, fit_node_database)
+    fit_node(all_node_database, fit_node_database, node_table)
 #
 main()
 print('one_at_function: OK')
