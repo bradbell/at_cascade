@@ -213,6 +213,7 @@ import sys
 import os
 import copy
 import time
+import csv
 import shutil
 import distutils.dir_util
 import dismod_at
@@ -228,7 +229,7 @@ import at_cascade
 # -----------------------------------------------------------------------------
 #
 # BEGIN random_seed
-# random_seed = 1629319311
+# random_seed = 1629371067
 random_seed = 0
 if random_seed == 0 :
     random_seed = int( time.time() )
@@ -268,7 +269,7 @@ def iota_true(a, n = 'n0', I = avg_income['n0'] ) :
 # END iota_true
 #
 # BEGIN income_grid
-number_income = 5
+number_income = 3
 income_grid   = dict()
 for node in [ 'n3', 'n4', 'n5', 'n6' ] :
     delta_income      = 2.0 * avg_income[node] / (number_income - 1)
@@ -291,7 +292,7 @@ def root_node_db(file_name) :
             'name':    'prior_iota_dage',
             'density': 'log_gaussian',
             'mean':    0.0,
-            'std':     1.0,
+            'std':     3.0,
             'eta':     iota_true(0) * 1e-3,
         },{ # prior_iota_child
             'name':    'prior_iota_child',
@@ -548,7 +549,39 @@ def cascade_fit_node(all_node_database, fit_node_database, node_table) :
     for node_name in child_node_databases :
         fit_node_database = child_node_databases[node_name]
         cascade_fit_node(all_node_database, fit_node_database, node_table)
-
+# ----------------------------------------------------------------------------
+def check_fit(leaf_node_database) :
+    #
+    # leaf_node_name
+    path_list = leaf_node_database.split('/')
+    assert len(path_list) >= 2
+    assert path_list[-1] == 'dismod.db'
+    leaf_node_name = path_list[-2]
+    #
+    # leaf_node_dir
+    leaf_node_dir = leaf_node_database[ : - len('dismod.db') - 1 ]
+    #
+    # variable_csv
+    fp     = open( leaf_node_dir + '/variable.csv' )
+    reader = csv.DictReader(fp)
+    variable_csv = list()
+    for row in reader :
+        variable_csv.append( row )
+    #
+    # check value of iota
+    for row in variable_csv :
+        if row['var_type'] == 'rate' :
+            assert row['rate'] == 'iota'
+            assert row['node'] == leaf_node_name
+            assert row['fixed'] == 'true'
+            income      = avg_income[leaf_node_name]
+            age         = float(row['age'])
+            fit_value   = float(row['fit_value'])
+            check_value = iota_true(age, leaf_node_name, income)
+            rel_error   = 1.0 - fit_value / check_value
+            assert abs(rel_error) < 2e-3
+        else :
+            assert row['var_type'] == 'mulcov_rate_value'
 # ----------------------------------------------------------------------------
 # main
 # ----------------------------------------------------------------------------
@@ -592,6 +625,16 @@ def main() :
     fit_node_database =  fit_node_name + '/dismod.db'
     shutil.copyfile(root_node_database, fit_node_database)
     cascade_fit_node(all_node_database, fit_node_database, node_table)
+    #
+    # check results
+    for leaf_node_database in [
+        'n0/n1/n3/dismod.db',
+        'n0/n1/n4/dismod.db',
+        'n0/n2/n5/dismod.db',
+        'n0/n2/n6/dismod.db',
+    ] :
+        check_fit(leaf_node_database)
+
 #
 main()
 print('one_at_function: OK')
