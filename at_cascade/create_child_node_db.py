@@ -76,7 +76,9 @@ def add_child_grid_row(
 ) :
     import copy
     import statistics
-    #
+    # -----------------------------------------------------------------------
+    # value_prior
+    # -----------------------------------------------------------------------
     # parent_prior_row
     parent_prior_id  = parent_grid_row['value_prior_id']
     parent_prior_row = parent_tables['prior'][parent_prior_id]
@@ -96,16 +98,42 @@ def add_child_grid_row(
     child_prior_row['density_id']  = gaussian_density_id
     #
     # child_tables['prior']
-    child_prior_id                 = len( child_tables['prior'] )
-    child_prior_row['prior_name'] += '_' + str(child_prior_id)
+    child_value_prior_id           = len( child_tables['prior'] )
+    child_prior_row['prior_name'] += '_' + str(child_value_prior_id)
     child_tables['prior'].append( child_prior_row )
-    #
+    # -----------------------------------------------------------------------
+    # dage_prior
+    # -----------------------------------------------------------------------
+    parent_prior_id       = parent_grid_row['dage_prior_id']
+    if parent_prior_id == None :
+        child_dage_prior_id = None
+    else :
+        parent_prior_row      = parent_tables['prior'][parent_prior_id]
+        child_prior_row       = copy.copy( parent_prior_row )
+        child_dage_prior_id   = len( child_tables['prior'] )
+        child_prior_row['prior_name'] += '_' + str(child_dage_prior_id)
+        child_tables['prior'].append( child_prior_row )
+    # -----------------------------------------------------------------------
+    # dtime_prior
+    # -----------------------------------------------------------------------
+    parent_prior_id       = parent_grid_row['dtime_prior_id']
+    if parent_prior_id == None :
+        child_dtime_prior_id = None
+    else :
+        parent_prior_row       = parent_tables['prior'][parent_prior_id]
+        child_prior_row        = copy.copy( parent_prior_row )
+        child_dtime_prior_id   = len( child_tables['prior'] )
+        child_prior_row['prior_name'] += '_' + str(child_dtime_prior_id)
+        child_tables['prior'].append( child_prior_row )
+    # -----------------------------------------------------------------------
     # child_grid_row
     child_grid_row = copy.copy( parent_grid_row )
-    child_grid_row['value_prior_id'] = child_prior_id
-    child_grid_row['smooth_id']      = len( child_tables['smooth'] ) - 1
+    child_grid_row['value_prior_id']  = child_value_prior_id
+    child_grid_row['dage_prior_id']   = child_dage_prior_id
+    child_grid_row['dtime_prior_id']  = child_dtime_prior_id
     #
     # child_tables['smooth_grid']
+    child_grid_row['smooth_id']     = len( child_tables['smooth'] ) - 1
     child_tables['smooth_grid'].append( child_grid_row )
 # ----------------------------------------------------------------------------
 def create_child_node_db(
@@ -203,12 +231,12 @@ def create_child_node_db(
             'covariate',
             'mulcov',
             'option',
-            'prior',
             'rate',
-            'smooth',
-            'smooth_grid',
         ] :
             child_tables[name] = copy.deepcopy(parent_tables[name])
+        child_tables['prior']       = list()
+        child_tables['smooth']      = list()
+        child_tables['smooth_grid'] = list()
         #
         # child_node_id
         child_node_id = table_name2id(node_table, 'node_name', child_name)
@@ -239,12 +267,6 @@ def create_child_node_db(
         for child_row in child_tables['covariate'] :
             assert not child_row['reference'] is None
         #
-        # --------------------------------------------------------------------
-        # initilaize child smooth and smooth_grid tables as empty
-        child_tables['smooth']      = list()
-        child_tables['smooth_grid'] = list()
-        #
-        # initialize child_tables['prior']
         # --------------------------------------------------------------------
         # child_tables['mulcov']
         # and corresponding entries in the following child tables:
@@ -362,6 +384,20 @@ def create_child_node_db(
                         #
                         # update: child_tables['smooth_grid']
                         child_grid_row = copy.copy( parent_grid_row )
+                        #
+                        for ty in [
+                            'value_prior_id', 'dage_prior_id', 'dtime_prior_id'
+                         ] :
+                            prior_id  = parent_grid_row[ty]
+                            if prior_id is None :
+                                child_grid_row[ty] = None
+                            else :
+                                prior_row = parent_tables['prior'][prior_id]
+                                prior_row = copy.copy(prior_row)
+                                prior_id  = len( child_tables['prior'] )
+                                prior_row['prior_name'] += '_' + str(prior_id)
+                                child_tables['prior'].append( prior_row )
+                                child_grid_row[ty] = prior_id
                         child_grid_row['smooth_id']      = child_smooth_id
                         child_tables['smooth_grid'].append( child_grid_row )
         for name in child_tables :
