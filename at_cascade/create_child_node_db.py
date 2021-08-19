@@ -63,23 +63,50 @@ def table_name2id(table, col_name, row_name) :
             return row_id
     assert False
 # ----------------------------------------------------------------------------
-def add_child_prior(
+# The smoothing for the new child_tables['smooth_grid'] row is the most
+# recent smoothing added to child_tables['smooth']; i.e., its smoothing_id
+# is len( child_tables['smooth'] ) - 1.
+def add_child_grid_row(
+    parent_sample,
+    parent_tables,
     child_tables,
-    parent_prior_row,
+    parent_grid_row,
+    integrand_id,
     gaussian_density_id,
-    mean,
-    std,
 ) :
     import copy
+    import statistics
     #
+    # parent_prior_row
+    parent_prior_id  = parent_grid_row['value_prior_id']
+    parent_prior_row = parent_tables['prior'][parent_prior_id]
+    #
+    # key
+    age_id    = parent_grid_row['age_id']
+    time_id   = parent_grid_row['time_id']
+    key       = (integrand_id, age_id, time_id)
+    #
+    mean = statistics.mean(parent_sample[key])
+    std  = statistics.stdev(parent_sample[key])
+    #
+    # child_prior_row
     child_prior_row                = copy.copy( parent_prior_row )
     child_prior_row['mean']        = mean
     child_prior_row['std']         = std
     child_prior_row['density_id']  = gaussian_density_id
+    #
+    # child_tables['prior']
     child_prior_id                 = len( child_tables['prior'] )
     child_prior_row['prior_name'] += '_' + str(child_prior_id)
     child_tables['prior'].append( child_prior_row )
-    return child_prior_id
+    #
+    # child_grid_row
+    child_grid_row = copy.copy( parent_grid_row )
+    child_grid_row['value_prior_id'] = child_prior_id
+    child_grid_row['smooth_id']      = len( child_tables['smooth'] ) - 1
+    #
+    # child_tables['smooth_grid']
+    child_tables['smooth_grid'].append( child_grid_row )
 # ----------------------------------------------------------------------------
 def create_child_node_db(
 # BEGIN syntax
@@ -239,43 +266,26 @@ def create_child_node_db(
                 assert smooth_row['mulstd_value_prior_id'] is None
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
+                #
                 child_smooth_id = len(child_tables['smooth'])
                 child_tables['smooth'].append(smooth_row)
                 #
                 # change child_tables['mulcov'] to use the new smoothing
                 child_mulcov_row['group_smooth_id'] = child_smooth_id
                 #
-                # add rows for this smoothing to child_tables['smooth_grid']
+                # add rows for this smoothing to
+                # child_tables['smooth_grid']
                 for parent_grid_row in parent_tables['smooth_grid'] :
                     if parent_grid_row['smooth_id'] == parent_smooth_id :
-                        #
-                        # parent_prior_row
-                        prior_id         = parent_grid_row['value_prior_id']
-                        parent_prior_row = parent_tables['prior'][prior_id]
-                        #
-                        # key
-                        age_id    = parent_grid_row['age_id']
-                        time_id   = parent_grid_row['time_id']
-                        key       = (integrand_id, age_id, time_id)
-                        #
-                        #
-                        mean = statistics.mean(parent_sample[key])
-                        std  = statistics.stdev(parent_sample[key])
-                        #
-                        # update: child_tables['prior'], child_prior_id
-                        child_prior_id = add_child_prior(
+                        add_child_grid_row(
+                            parent_sample,
+                            parent_tables,
                             child_tables,
-                            parent_prior_row,
-                            gaussian_density_id,
-                            mean,
-                            std
+                            parent_grid_row,
+                            integrand_id,
+                            gaussian_density_id
                         )
-                        #
-                        # update: child_tables['smooth_grid']
-                        child_grid_row = copy.copy( parent_grid_row )
-                        child_grid_row['value_prior_id'] = child_prior_id
-                        child_grid_row['smooth_id']      = child_smooth_id
-                        child_tables['smooth_grid'].append( child_grid_row )
+
         # --------------------------------------------------------------------
         # child_tables['rate']
         # and corresponding entries in the following child tables:
@@ -309,41 +319,21 @@ def create_child_node_db(
                 child_smooth_id = len(child_tables['smooth'])
                 child_tables['smooth'].append(smooth_row)
                 #
-                #
                 # change child_tables['rate'] to use the new smoothing
                 child_rate_row['parent_smooth_id'] = child_smooth_id
                 #
-                # add rows for this smoothing to child_tables['smooth_grid']
+                # add rows for this smoothing to
+                # child_tables['smooth_grid']
                 for parent_grid_row in parent_tables['smooth_grid'] :
                     if parent_grid_row['smooth_id'] == parent_smooth_id :
-                        #
-                        # parent_prior_row
-                        prior_id         = parent_grid_row['value_prior_id']
-                        parent_prior_row = parent_tables['prior'][prior_id]
-                        #
-                        # key
-                        age_id    = parent_grid_row['age_id']
-                        time_id   = parent_grid_row['time_id']
-                        key       = (integrand_id, age_id, time_id)
-                        #
-                        #
-                        mean = statistics.mean(parent_sample[key])
-                        std  = statistics.stdev(parent_sample[key])
-                        #
-                        # update: child_tables['prior'], child_prior_id
-                        child_prior_id = add_child_prior(
+                        add_child_grid_row(
+                            parent_sample,
+                            parent_tables,
                             child_tables,
-                            parent_prior_row,
-                            gaussian_density_id,
-                            mean,
-                            std
+                            parent_grid_row,
+                            integrand_id,
+                            gaussian_density_id
                         )
-                        #
-                        # update: child_tables['smooth_grid']
-                        child_grid_row = copy.copy( parent_grid_row )
-                        child_grid_row['value_prior_id'] = child_prior_id
-                        child_grid_row['smooth_id']      = child_smooth_id
-                        child_tables['smooth_grid'].append( child_grid_row )
             #
             # parent_smooth_id
             parent_smooth_id = None
