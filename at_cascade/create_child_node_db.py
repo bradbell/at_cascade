@@ -11,6 +11,7 @@
 {xsrst_begin create_child_node_db}
 {xsrst_spell
     var
+    init
 }
 
 Create Child Database From Fit in Parent Database
@@ -56,10 +57,11 @@ The value *child_node_databases[child_name]* is the name of
 a *fit_node_database* that is created by this command.
 In this database, *child_name* will be the parent node in
 the dismod_at option table.
-This database will only have the dismod_at input tables.
 The value priors for the variables in the model will be constructed using
 the samples in the *parent_node_database*.
 Other priors will be the same as in the *parent_node_database*
+Only the dismod_at input tables are significant in the child node databases;
+i.e., an init command should be executed any other dismod_at commands.
 
 {xsrst_end create_child_node_db}
 '''
