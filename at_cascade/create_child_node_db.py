@@ -57,6 +57,16 @@ Other priors will be the same as in the *parent_node_database*
 {xsrst_end create_child_node_db}
 '''
 # ----------------------------------------------------------------------------
+def add_index_to_name(table, name_col) :
+    row   = table[-1]
+    name  = row[name_col]
+    ch    = name[-1]
+    while name != '' and name[-1] in '0123456789' :
+        name = name[: -1]
+    if name[-1] == '_' :
+        name = name[: -1]
+    row[name_col] = name + '_' + str( len(table) )
+# ----------------------------------------------------------------------------
 def table_name2id(table, col_name, row_name) :
     for (row_id, row) in enumerate(table) :
         if row[col_name] == row_name :
@@ -99,8 +109,8 @@ def add_child_grid_row(
     #
     # child_tables['prior']
     child_value_prior_id           = len( child_tables['prior'] )
-    child_prior_row['prior_name'] += '_' + str(child_value_prior_id)
     child_tables['prior'].append( child_prior_row )
+    add_index_to_name( child_tables['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # dage_prior
     # -----------------------------------------------------------------------
@@ -111,8 +121,8 @@ def add_child_grid_row(
         parent_prior_row      = parent_tables['prior'][parent_prior_id]
         child_prior_row       = copy.copy( parent_prior_row )
         child_dage_prior_id   = len( child_tables['prior'] )
-        child_prior_row['prior_name'] += '_' + str(child_dage_prior_id)
         child_tables['prior'].append( child_prior_row )
+        add_index_to_name( child_tables['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # dtime_prior
     # -----------------------------------------------------------------------
@@ -123,8 +133,8 @@ def add_child_grid_row(
         parent_prior_row       = parent_tables['prior'][parent_prior_id]
         child_prior_row        = copy.copy( parent_prior_row )
         child_dtime_prior_id   = len( child_tables['prior'] )
-        child_prior_row['prior_name'] += '_' + str(child_dtime_prior_id)
         child_tables['prior'].append( child_prior_row )
+        add_index_to_name( child_tables['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # child_grid_row
     child_grid_row = copy.copy( parent_grid_row )
@@ -395,8 +405,10 @@ def create_child_node_db(
                                 prior_row = parent_tables['prior'][prior_id]
                                 prior_row = copy.copy(prior_row)
                                 prior_id  = len( child_tables['prior'] )
-                                prior_row['prior_name'] += '_' + str(prior_id)
                                 child_tables['prior'].append( prior_row )
+                                add_index_to_name(
+                                    child_tables['prior'], 'prior_name'
+                                )
                                 child_grid_row[ty] = prior_id
                         child_grid_row['smooth_id']      = child_smooth_id
                         child_tables['smooth_grid'].append( child_grid_row )
