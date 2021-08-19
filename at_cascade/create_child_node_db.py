@@ -36,10 +36,10 @@ the results of a dismod_at sample command for both the fixed and random effects.
 The predict table contains
 The results of a predict command using the sample table
 and the avgint table corresponding to :ref:`create_child_avgint`.
-The predict_fit_var table contains
+The c_predict table contains
 the results of a dismod_at sample command with the fit_var option
-(and then moving the predict table to predict_fit_var and renaming the
-column predict_id to predict_fit_var_id).
+and then moving the predict table to c_predict and renaming the
+column predict_id to c_predict_id.
 The two predict tables
 are used to create priors in the child node databases.
 
@@ -193,7 +193,7 @@ def create_child_node_db(
         'option',
         'prior',
         'predict',
-        'predict_fit_var',
+        'c_predict',
         'rate',
         'sample',
         'smooth',
@@ -212,7 +212,7 @@ def create_child_node_db(
     #
     # parent_fit_var
     parent_fit_var = dict()
-    for predict_row in parent_tables['predict_fit_var'] :
+    for predict_row in parent_tables['c_predict'] :
         avgint_id          = predict_row['avgint_id']
         avgint_row         = parent_tables['avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']

@@ -518,15 +518,15 @@ def cascade_fit_node(all_node_database, fit_node_database, node_table) :
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
     )
-    # move predict -> predict_fitvar
+    # move predict -> c_predict
     new        = False
     connection = dismod_at.create_connection(fit_node_database, new)
-    command     = 'DROP TABLE IF EXISTS predict_fit_var'
+    command     = 'DROP TABLE IF EXISTS c_predict'
     dismod_at.sql_command(connection, command)
     command     = 'ALTER TABLE predict RENAME COLUMN '
-    command    += 'predict_id TO predict_fit_var_id'
+    command    += 'predict_id TO c_predict_id'
     dismod_at.sql_command(connection, command)
-    command     = 'ALTER TABLE predict RENAME TO predict_fit_var'
+    command     = 'ALTER TABLE predict RENAME TO c_predict'
     dismod_at.sql_command(connection, command)
     connection.close()
     #
