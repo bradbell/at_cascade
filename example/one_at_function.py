@@ -228,7 +228,8 @@ import at_cascade
 # -----------------------------------------------------------------------------
 #
 # BEGIN random_seed
-random_seed = 1629319311
+# random_seed = 1629319311
+random_seed = 0
 if random_seed == 0 :
     random_seed = int( time.time() )
 print('random_seed = ', random_seed)
@@ -415,7 +416,7 @@ def root_node_db(file_name) :
                 row['income']     = income
                 # model for the measurement noise
                 # actual measruement noise is zero
-                row['meas_std']   = meas_value / 2.0
+                row['meas_std']   = meas_value / 10.0
                 data_table.append( copy.copy(row) )
     #
     # time_grid
@@ -500,6 +501,22 @@ def cascade_fit_node(all_node_database, fit_node_database, node_table) :
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'sample', 'asymptotic', 'both', '20' ]
     )
+    # predict fit_var
+    dismod_at.system_command_prc(
+        [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
+    )
+    # move predict -> predict_fitvar
+    new        = False
+    connection = dismod_at.create_connection(fit_node_database, new)
+    command     = 'DROP TABLE IF EXISTS predict_fit_var'
+    dismod_at.sql_command(connection, command)
+    command     = 'ALTER TABLE predict RENAME COLUMN '
+    command    += 'predict_id TO predict_fit_var_id'
+    dismod_at.sql_command(connection, command)
+    command     = 'ALTER TABLE predict RENAME TO predict_fit_var'
+    dismod_at.sql_command(connection, command)
+    connection.close()
+    #
     # predict
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
