@@ -49,7 +49,14 @@ This argument can't be ``None``.
 
 omega_grid
 **********
-Not yet specified.
+is a dictionary with two keys ``age`` and ``time``.
+The value *omega*\ [``age``] is a list containing the
+age_id values for the :ref:``omega_grid``; i.e.,
+These are indices in the root node database age table.
+The value *omega*\ [``time``] is a list containing the
+time_id values for the omega grid.
+We use the notation *n_age* (*n_time*) for the length
+of the age (time) list.
 
 default
 =======
@@ -59,13 +66,18 @@ be an :ref:`glossary.ode_integrand`.
 
 mtall_data
 **********
-Not yet specified.
+This is a python dictionary with a key for each node name
+for the root node and its descendant.
+The value *mtall_data[node_name]* is a list.
+For *i* equal 0, ..., *n_age*-1 and *j* equal 0, ..., *n_time*-1,
+*mtall_data[node_name][ i * n_time + j ]
+is the value of *mtall* at the specified node,
+the age corresponding to index *i* in *omega_grid*\ [``age``],
+and time corresponding to index *j* in *omega_grid*\ [``time``].
 
 default
 =======
 If this argument in ``None``, *omega* will be constrained to zero.
-In this case none of the integrands in the *root_node_database* can
-be an :ref:`glossary.ode_integrand`.
 
 mtspecific_data
 ***************
@@ -150,6 +162,14 @@ def create_all_node_db(
     new             = False
     root_connection = dismod_at.create_connection(root_node_database, new)
     #
+    # age_table
+    tbl_name  = 'age'
+    age_table = dismod_at.get_table_dict(root_connection, tbl_name)
+    #
+    # time_table
+    tbl_name   = 'time'
+    time_table = dismod_at.get_table_dict(root_connection, tbl_name)
+    #
     # covariate_table
     tbl_name        = 'covariate'
     covariate_table = dismod_at.get_table_dict(root_connection, tbl_name)
@@ -220,20 +240,34 @@ def create_all_node_db(
         all_connection, tbl_name, col_name, col_type, row_list
     )
     #
-    # empty omega_age table
+    # omega_age table
     tbl_name = 'omega_age'
     col_name = [ 'age_value'  ]
     col_type = [ 'real' ]
     row_list = list()
+    n_age    = 0
+    if not omega_grid is None :
+        n_age = len( omega_grid['age'] )
+        for age_id in omega_grid['age'] :
+            assert age_id < len(age_table)
+            assert 0 <= age_id
+            row_list.append( [ age_id ] )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     );
     #
-    # empty omega_time table
+    # omega_time table
     tbl_name = 'omega_time'
     col_name = [ 'time_value'  ]
     col_type = [ 'real' ]
     row_list = list()
+    n_time   = 0
+    if not omega_grid is None :
+        n_time = len( omega_grid['time'] )
+        for time_id in omega_grid['time'] :
+            assert time_id < len(time_table)
+            assert 0 <= time_id
+            row_list.append( [ time_id ] )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     );
@@ -245,6 +279,17 @@ def create_all_node_db(
     ]
     col_type = [ 'integer', 'integer', 'integer', 'real'     ]
     row_list = list()
+    if not mtall_data is None :
+        for node_name in mtall_data :
+            node_id = table_name2id(node_table, 'node_name', node_name)
+            assert len(mtall_data[node_name]) == n_age * n_time
+            for i in range(n_age) :
+                for i in range(n_time) :
+                    omega_age_id  = i
+                    omega_time_id = j
+                    mtall_value   = mtall_data[node_name][ i * n_time + j]
+                    row  = [node_id, omega_age_id, omega_time_id, mtall_vaule]
+                    row_list.append( row )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     );
