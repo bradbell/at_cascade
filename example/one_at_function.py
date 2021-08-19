@@ -144,6 +144,8 @@ data is generated for the following *income_grid*:
     # BEGIN income_grid
     # END income_grid
 }
+Note that the check of the fit for the leaf nodes expects much more accuracy
+when the income grid is not chosen randomly.
 
 Parent Smoothing
 ****************
@@ -214,6 +216,7 @@ import os
 import copy
 import time
 import csv
+import random
 import shutil
 import distutils.dir_util
 import dismod_at
@@ -233,6 +236,7 @@ import at_cascade
 random_seed = 0
 if random_seed == 0 :
     random_seed = int( time.time() )
+    random.seed(random_seed)
 print('random_seed = ', random_seed)
 # END random_seed
 #
@@ -269,11 +273,19 @@ def iota_true(a, n = 'n0', I = avg_income['n0'] ) :
 # END iota_true
 #
 # BEGIN income_grid
+random_income = True
 number_income = 3
 income_grid   = dict()
 for node in [ 'n3', 'n4', 'n5', 'n6' ] :
-    delta_income      = 2.0 * avg_income[node] / (number_income - 1)
-    income_grid[node] = [ j * delta_income for j in range(number_income) ]
+    max_income  = 2.0 * avg_income[node]
+    income_grid[node] = list()
+    for j in range(number_income) :
+        if random_income :
+            income = random.uniform(0.0, max_income)
+        else :
+            income = j * max_income / (number_income - 1)
+        income_grid[node].append(income)
+    income_grid[node] = sorted( income_grid[node] )
 # END income_grid
 # ----------------------------------------------------------------------------
 # functions
@@ -577,9 +589,14 @@ def check_fit(leaf_node_database) :
             income      = avg_income[leaf_node_name]
             age         = float(row['age'])
             fit_value   = float(row['fit_value'])
+            sam_std     = float(row['sam_std'])
             check_value = iota_true(age, leaf_node_name, income)
             rel_error   = 1.0 - fit_value / check_value
-            assert abs(rel_error) < 2e-3
+            if random_income :
+                assert abs(rel_error) < 1e-1
+            else :
+                assert abs(rel_error) < 1e-3
+            assert abs(fit_value - check_value) < 2.0 * sam_std
         else :
             assert row['var_type'] == 'mulcov_rate_value'
 # ----------------------------------------------------------------------------

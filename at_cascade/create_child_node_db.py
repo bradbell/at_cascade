@@ -9,6 +9,9 @@
 # -----------------------------------------------------------------------------
 '''
 {xsrst_begin create_child_node_db}
+{xsrst_spell
+    var
+}
 
 Create Child Database From Fit in Parent Database
 #################################################
