@@ -37,8 +37,8 @@ The only non-zero dismod_at rate for this example is
 :ref:`glossary.iota`; i.e.,
 we choose *iota* to represent the function that we are estimating.
 (We could have used *rho* or *chi* but not *omega* for this purpose.)
-We use :math:`\iota_n(a, t)` and *iota_n* to denote the value for *iota*
-as a function of age and time at node number *n*.
+We use :math:`\iota_n(a, n, I)` and *iota_n* to denote the value for *iota*
+as a function of age *a* node number *n* and income *I*.
 
 Covariate
 *********
@@ -389,20 +389,6 @@ def root_node_db(file_name) :
     #
     # avgint_table
     avgint_table = list()
-    row = {
-        'node':         'n0',
-        'subgroup':     'world',
-        'weight':       '',
-        'time_lower':   2000.0,
-        'time_upper':   2000.0,
-        'income':       None,
-    }
-    for age_id in range( len(age_grid) ) :
-        row['integrand'] = 'Sincidence'
-        age = age_grid[age_id]
-        row['age_lower'] = age
-        row['age_upper'] = age
-        avgint_table.append( copy.copy(row) )
     #
     # data_table
     data_table    = list()
@@ -427,8 +413,9 @@ def root_node_db(file_name) :
                 row['age_lower']  = age
                 row['age_upper']  = age
                 row['income']     = income
-                # model for the measurement noise
-                # actual measruement noise is zero
+                # The model for the measurement noise is small so a few
+                # data points act like lots of real data points.
+                # The actual measruement noise is zero.
                 row['meas_std']   = meas_value / 10.0
                 data_table.append( copy.copy(row) )
     #

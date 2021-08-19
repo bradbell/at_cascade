@@ -62,6 +62,8 @@ the samples in the *parent_node_database*.
 Other priors will be the same as in the *parent_node_database*
 Only the dismod_at input tables are significant in the child node databases;
 i.e., an init command should be executed any other dismod_at commands.
+The following tables are the same as in the parent node database:
+age, data, density, integrand, node, subgroup, time, weight, weight_grid.
 
 {xsrst_end create_child_node_db}
 '''

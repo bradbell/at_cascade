@@ -95,6 +95,11 @@ omega_grid
 **********
 A single age-time grid used for the *omega* constraints.
 
+prevalence
+**********
+This is the ratio the number of people with the condition
+divided by the number of people currently alive.
+
 rate_value
 **********
 The abbreviation used for rate value covariate multiplier.
