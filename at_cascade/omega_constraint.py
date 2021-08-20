@@ -73,6 +73,7 @@ None of the other tables in the database are modified.
 {xsrst_end omega_constraint}
 '''
 # ----------------------------------------------------------------------------
+import math
 import dismod_at
 # ----------------------------------------------------------------------------
 def table_name2id(table, col_name, row_name) :
@@ -170,8 +171,8 @@ def omega_constraint(
     for i in range( n_omega_age * n_omega_time ) :
         parent_matall[i] = all_mtall[all_mtall_id + i ]
     #
-    # smooth_id
-    smooth_id  = len(fit_tables['smooth_table'])
+    # parent_smooth_id
+    parent_smooth_id  = len(fit_tables['smooth_table'])
     #
     # fit_tables['sooth_table']
     row           = null_row( fit_tables['smooth_table'] )
@@ -187,7 +188,7 @@ def omega_constraint(
             time_id = all_tables['omega_time'][j]['time_id']
             row['age_id']      = age_id
             row['time_id']     = time_id
-            row['smooth_id']   = smooth_id
+            row['smooth_id']   = parent_smooth_id
             row['const_value'] = parent_mtall[i * n_omega_time + j]
             fit_tables['smooth_grid'].append( row )
     #
@@ -210,6 +211,11 @@ def omega_constraint(
             child_mtall   = list()
             for i in range( n_omega_age * n_omega_time ) :
                child_matall[i] = all_mtall[all_mtall_id + i ]
+        #
+        # random_effect
+        random_effect = list()
+        for i in range( n_omega_age * n_omega_time ) :
+            random_effect = math.log( child_mtall[i] / parent_mtall[i] )
         #
         # smooth_id
         smooth_id = len( fit_tables['smooth_tables'] )
@@ -236,7 +242,24 @@ def omega_constraint(
                 row['age_id']      = age_id
                 row['time_id']     = time_id
                 row['smooth_id']   = smooth_id
-                row['const_value'] = parent_mtall[i * n_omega_time + j]
+                row['const_value'] = random_effect[i * n_omega_time + j]
                 fit_tables['smooth_grid'].append( row )
+    #
+    # fit_tables['rate']
+    for row in fit_tables['rate'] :
+        if row['rate_name'] == 'omega' :
+            row['parent_smooth_id'] = parent_smooth_id
+            row['child_nslist_id']  = child_nslist_id
+    #
+    # replace these fit tables
+    for name in [
+        'nlist',
+        'nlist_pair',
+        'option'
+        'rate',
+        'smooth',
+        'smooth_grid',
+    ] :
+        dismod_at.replace_table(connection, name, fit_tables[name])
     #
     connection.close()
