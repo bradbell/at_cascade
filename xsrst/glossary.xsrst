@@ -12,6 +12,8 @@ see http://www.gnu.org/licenses/agpl.txt
 {xsrst_spell
     meas
     integrands
+    nslist
+    smoothings
 }
 
 Glossary
@@ -43,6 +45,12 @@ weight grid.
 In addition, its option table is the same as in the *root_node_database*
 except for the value of *parent_node_name*.
 (The value of *parent_node_id* does not appear in the option table.)
+The subgroup table must have one row; i.e., there is one subgroup, one group
+and they correspond to all the nodes.
+The following tables in this database must be empty:
+nslist, nslist_pair.
+The rate table must have null entries for the
+omega parent and child smoothings.
 
 iota
 ****
