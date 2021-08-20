@@ -67,6 +67,43 @@ a node by the primary key in the *root_node_database* node table
 
 {xsrst_end leaf_node_table}
 ------------------------------------------------------------------------------
+{xsrst_begin omega_grid}
+
+All Node Omega Grid
+###################
+The :ref:`glossary.omega` grid is specified by the
+omega_age_table and omega_time_table.
+
+omega_age_table
+***************
+This table has two columns, *omega_age_id* and *age_value*:
+
+omega_age_id
+============
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+age_value
+=========
+This column has type ``real`` and specifies the age grid points.
+It is monotone increasing with *omega_age_id*.
+
+omega_time_table
+****************
+This table has two columns, *omega_time_id* and *time_value*:
+
+omega_time_id
+=============
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+time_value
+==========
+This column has type ``real`` and specifies the time grid points.
+It is monotone increasing with *omega_time_id*.
+
+{xsrst_end omega_grid}
+------------------------------------------------------------------------------
 {xsrst_begin mtall_table}
 
 All Node mtall Table
@@ -151,43 +188,6 @@ This column has type ``real`` and is the value of *mtspecific*
 at the corresponding node, age, and time.
 
 {xsrst_end   mtspecific_table}
-------------------------------------------------------------------------------
-{xsrst_begin omega_grid}
-
-All Node Omega Grid
-###################
-The :ref:`glossary.omega` grid is specified by the
-omega_age_table and omega_time_table.
-
-omega_age_table
-***************
-This table has two columns, *omega_age_id* and *age_value*:
-
-omega_age_id
-============
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
-
-age_value
-=========
-This column has type ``real`` and specifies the age grid points.
-It is monotone increasing with *omega_age_id*.
-
-omega_time_table
-****************
-This table has two columns, *omega_time_id* and *time_value*:
-
-omega_time_id
-=============
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
-
-time_value
-==========
-This column has type ``real`` and specifies the time grid points.
-It is monotone increasing with *omega_time_id*.
-
-{xsrst_end omega_grid}
 ------------------------------------------------------------------------------
 {xsrst_begin option_table}
 
