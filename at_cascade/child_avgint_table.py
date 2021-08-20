@@ -95,11 +95,11 @@ def child_avgint_table(
 # )
 # END syntax
 ) :
-    # covariate_reference_table
+    # all_cov_reference_table
     new        = False
     connection = dismod_at.create_connection(all_node_database, new)
-    covariate_reference_table = dismod_at.get_table_dict(
-        connection, 'covariate_reference'
+    all_cov_reference_table = dismod_at.get_table_dict(
+        connection, 'all_cov_reference'
     )
     connection.close()
     #
@@ -139,16 +139,16 @@ def child_avgint_table(
     assert parent_node_name is not None
     parent_node_id = table_name2id(node_table, 'node_name', parent_node_name)
     #
-    # child_covariate_reference
-    child_covariate_reference = dict()
+    # child_all_cov_reference
+    child_all_cov_reference = dict()
     for (node_id, row) in enumerate(node_table) :
         if row['parent'] == parent_node_id :
             reference = n_covariate * [0.0]
-            for row in covariate_reference_table :
+            for row in all_cov_reference_table :
                 if row['node_id'] == node_id :
                     covariate_id = row['covariate_id']
                     reference[covariate_id] = row['reference']
-            child_covariate_reference[node_id] = reference
+            child_all_cov_reference[node_id] = reference
     #
     # tbl_name
     tbl_name = 'avgint'
@@ -279,7 +279,7 @@ def child_avgint_table(
                     time_upper = time_lower
                     #
                     # node_id
-                    for node_id in child_covariate_reference :
+                    for node_id in child_all_cov_reference :
                         #
                         # row
                         subgroup_id = 0
@@ -294,7 +294,7 @@ def child_avgint_table(
                             time_lower,
                             time_upper,
                         ]
-                        row += child_covariate_reference[node_id]
+                        row += child_all_cov_reference[node_id]
                         row += [ age_id, time_id, ]
                         #
                         # add to row_list

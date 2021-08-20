@@ -35,15 +35,15 @@ is a python string containing the name of the name of the
 :ref:`glossary.root_node_database`.
 This argument can't be ``None``.
 
-covariate_reference
-*******************
+all_cov_reference
+*****************
 This is a python dictionary with a key equal to the node name for
 each node in the node table in *root_node_database*.
 If *node* is a node name,
-*covariate_reference[node]* is a python dictionary with a key equal to the
+*all_cov_reference[node]* is a python dictionary with a key equal to the
 covariate name for each covariate in the *root_node_database*.
 If *covariate* is an covariate name,
-*covariate_reference[node][covariate]*
+*all_cov_reference[node][covariate]*
 is the reference values for the specified node and covariate.
 This argument can't be ``None``.
 
@@ -144,7 +144,7 @@ def create_all_node_db(
 # at_cascade.create_all_node_db(
     all_node_database   = None,
     root_node_database  = None,
-    covariate_reference = None,
+    all_cov_reference   = None,
     omega_grid          = None,
     mtall_data          = None,
     mtspecific_data     = None,
@@ -205,8 +205,8 @@ def create_all_node_db(
     new             = True
     all_connection  = dismod_at.create_connection(all_node_database, new)
     #
-    # covariate_reference table
-    tbl_name = 'covariate_reference'
+    # all_cov_reference table
+    tbl_name = 'all_cov_reference'
     col_name = [ 'node_id',  'covariate_id', 'reference' ]
     col_type = [ 'integer',  'integer',       'real'      ]
     row_list = list()
@@ -214,7 +214,7 @@ def create_all_node_db(
         for covariate_id in range( len(covariate_table) ) :
             node_name      = node_table[node_id]['node_name']
             covariate_name = covariate_table[covariate_id]['covariate_name']
-            reference      = covariate_reference[node_name][covariate_name]
+            reference      = all_cov_reference[node_name][covariate_name]
             row            = [ node_id, covariate_id, reference ]
             row_list.append( row )
     dismod_at.create_table(

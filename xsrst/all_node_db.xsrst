@@ -16,7 +16,7 @@ This data base contains information for all the nodes between the
 
 {xsrst_end all_node_db}
 ------------------------------------------------------------------------------
-{xsrst_begin covariate_reference_table}
+{xsrst_begin all_cov_reference_table}
 
 All Node Covariate Reference Table
 ##################################
@@ -24,8 +24,8 @@ This table specifies the reference value for every covariate
 and node in the *root_node_database*.
 It has the following columns:
 
-covariate_reference_id
-**********************
+all_cov_reference_id
+********************
 This column has type ``integer`` and is the primary key for this table.
 Its initial value is zero and it increments by one for each row.
 
@@ -46,7 +46,7 @@ reference
 This column has type ``real`` and it specifies the reference value
 for this covariate and node.
 
-{xsrst_end covariate_reference_table}
+{xsrst_end all_cov_reference_table}
 ------------------------------------------------------------------------------
 {xsrst_begin leaf_node_table}
 

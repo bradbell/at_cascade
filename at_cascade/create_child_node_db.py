@@ -174,11 +174,11 @@ def create_child_node_db(
     import statistics
     import dismod_at
     # ------------------------------------------------------------------------
-    # covariate_reference_table
+    # all_cov_reference_table
     new        = False
     connection = dismod_at.create_connection(all_node_database, new)
-    covariate_reference_table = dismod_at.get_table_dict(
-        connection, 'covariate_reference'
+    all_cov_reference_table = dismod_at.get_table_dict(
+        connection, 'all_cov_reference'
     )
     connection.close()
     #
@@ -298,7 +298,7 @@ def create_child_node_db(
         # child_tables['covariate']
         for child_row in child_tables['covariate'] :
             child_row['reference'] = None
-        for row in covariate_reference_table :
+        for row in all_cov_reference_table :
             if row['node_id'] == child_node_id :
                 covariate_id           = row['covariate_id']
                 child_row              = child_tables['covariate'][covariate_id]
