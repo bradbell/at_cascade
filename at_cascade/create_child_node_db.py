@@ -36,7 +36,7 @@ The sample table contains
 the results of a dismod_at sample command for both the fixed and random effects.
 The predict table contains
 The results of a predict command using the sample table
-and the avgint table corresponding to :ref:`create_child_avgint`.
+and the avgint table corresponding to :ref:`child_avgint_table`.
 The c_predict table contains
 the results of a dismod_at sample command with the fit_var option
 and then moving the predict table to c_predict and renaming the

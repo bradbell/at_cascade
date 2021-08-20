@@ -13,14 +13,19 @@
 The at_cascade Python Module
 ****************************
 
+.. BEGIN_SORT_THIS_LINE_PLUS_2
 {xsrst_child_table
+    at_cascade/child_avgint_table.py
     at_cascade/create_all_node_db.py
-    at_cascade/create_child_avgint.py
     at_cascade/create_child_node_db.py
 }
+.. END_SORT_THIS_LINE_MINUS_2
 
 {xsrst_end module}
 '''
+
+# BEGIN_SORT_THIS_LINE_PLUS_1
+from .child_avgint_table    import child_avgint_table
 from .create_all_node_db    import create_all_node_db
-from .create_child_avgint   import create_child_avgint
 from .create_child_node_db  import create_child_node_db
+# END_SORT_THIS_LINE_MINUS_1

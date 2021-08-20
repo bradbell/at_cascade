@@ -487,7 +487,7 @@ def cascade_fit_node(all_node_database, fit_node_database, node_table) :
     fit_node_dir = fit_node_database[ : - len('dismod.db') - 1 ]
     #
     # replace avgint table
-    at_cascade.create_child_avgint(all_node_database, fit_node_database)
+    at_cascade.child_avgint_table(all_node_database, fit_node_database)
     #
     # init
     dismod_at.system_command_prc( [ 'dismod_at', fit_node_database, 'init' ] )

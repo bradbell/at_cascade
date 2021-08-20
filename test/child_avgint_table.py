@@ -249,7 +249,7 @@ def main() :
     )
     #
     # replace avgint table
-    at_cascade.create_child_avgint(all_node_database, root_node_database)
+    at_cascade.child_avgint_table(all_node_database, root_node_database)
     #
     # init
     dismod_at.system_command_prc( [ 'dismod_at', root_node_database, 'init' ] )
@@ -325,5 +325,5 @@ def main() :
         assert abs( relative_err ) < 1e-7
 #
 main()
-print('create_child_avgint.py: OK')
+print('child_avgint_table.py: OK')
 sys.exit(0)

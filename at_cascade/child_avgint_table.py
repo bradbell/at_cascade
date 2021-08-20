@@ -8,7 +8,7 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin create_child_avgint}
+{xsrst_begin child_avgint_table}
 {xsrst_spell
     integrands
     mulcov
@@ -76,7 +76,7 @@ parent smoothing (group smoothing) in the *parent_node_database*,
 all of the age time pairs in the smoothing are represented
 in the new avgint table
 
-{xsrst_end create_child_avgint}
+{xsrst_end child_avgint_table}
 '''
 # ----------------------------------------------------------------------------
 import dismod_at
@@ -87,9 +87,9 @@ def table_name2id(table, col_name, row_name) :
             return row_id
     assert False
 # ----------------------------------------------------------------------------
-def create_child_avgint(
+def child_avgint_table(
 # BEGIN syntax
-# at_cascade.create_child_avgint(
+# at_cascade.child_avgint_table(
     all_node_database    = None ,
     parent_node_database = None ,
 # )

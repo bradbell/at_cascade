@@ -10,6 +10,9 @@
 '''
 {xsrst_begin_parent simple_ode}
 {xsrst_spell
+    avg
+    dtime
+    dage
 }
 
 Simple Case Where The ODE is Used to Model The Data
@@ -155,7 +158,7 @@ Parent Smoothing
 
 omega
 =====
-The parent smooting constrains *omega* to be equal to
+The parent smoothing constrains *omega* to be equal to
 :math:`\omega(a, n)` where  *a* is each value in the age grid and
 *n* is the current node.
 
@@ -184,7 +187,7 @@ Child Smoothing
 
 omega
 =====
-The child smooting constrains *omega* to be equal to
+The child smoothing constrains *omega* to be equal to
 :math:`\omega(a, n)` where  *a* is each value in the age grid and
 *n* is the current node.
 
@@ -532,7 +535,7 @@ def cascade_fit_node(all_node_database, fit_node_database, node_table) :
     fit_node_dir = fit_node_database[ : - len('dismod.db') - 1 ]
     #
     # replace avgint table
-    at_cascade.create_child_avgint(all_node_database, fit_node_database)
+    at_cascade.child_avgint_table(all_node_database, fit_node_database)
     #
     # init
     dismod_at.system_command_prc( [ 'dismod_at', fit_node_database, 'init' ] )
