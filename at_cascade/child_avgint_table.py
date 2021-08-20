@@ -29,10 +29,9 @@ all_node_database
 is a python string containing the name of the :ref:`all_node_db`.
 This argument can't be ``None``.
 
-parent_node_database
-********************
-is a python string containing the name of a :ref:`glossary.fit_node_database`
-that will be the parent node for this predictions.
+fit_node_database
+*****************
+is a python string containing the name of a :ref:`glossary.fit_node_database`.
 The avgint table will be placed in this database.
 The previous avgint table in this database is lost.
 This argument can't be ``None``.
@@ -40,19 +39,21 @@ This argument can't be ``None``.
 parent_node
 ===========
 We use *parent_node* to refer to the parent node in the
-dismod_at option table in the *parent_node_database*.
+dismod_at option table in the *fit_node_database*.
 
 integrand_table
 ===============
-The integrand table in the *parent_node_database* must include the following:
+The integrand table in the *fit_node_database* must include the following:
 :ref:`glossary.Sincidence`,
 :ref:`glossary.remission`,
 :ref:`glossary.mtexcess`.
-Integrands with a null parent smoothing id need not be included.
+Integrands corresponding to rates with null parent smoothing id
+need not be included.
 In addition, the integrand table must include all the covariate multipliers;
 i.e., ``mulcov_``\ *mulcov_id* where *mulcov_id* is the id
 for any covariate multiplier.
-Integrands with a null group smoothing id need not be included.
+Integrands corresponding to covariate multipliers
+with a null group smoothing id need not be included.
 
 avgint Table
 ************
@@ -62,17 +63,17 @@ plus the following extra columns:
 c_age_id
 ========
 This column identifies the age,
-in the *parent_node_database*, that this prediction are for.
+in the *fit_node_database*, that this prediction are for.
 
 c_time_id
 _========
 This column identifies the time,
-in the *parent_node_database*, that this prediction are for.
+in the *fit_node_database*, that this prediction are for.
 
 Rectangular Grid
 ================
 For each rate (or covariate multiplier) that has a non-null
-parent smoothing (group smoothing) in the *parent_node_database*,
+parent smoothing (group smoothing) in the *fit_node_database*,
 all of the age time pairs in the smoothing are represented
 in the new avgint table
 
@@ -91,7 +92,7 @@ def child_avgint_table(
 # BEGIN syntax
 # at_cascade.child_avgint_table(
     all_node_database    = None ,
-    parent_node_database = None ,
+    fit_node_database = None ,
 # )
 # END syntax
 ) :
@@ -103,10 +104,10 @@ def child_avgint_table(
     )
     connection.close()
     #
-    # parent_tables
+    # fit_tables
     new           = False
-    connection    = dismod_at.create_connection(parent_node_database, new)
-    parent_tables = dict()
+    connection    = dismod_at.create_connection(fit_node_database, new)
+    fit_tables = dict()
     for name in [
         'age',
         'covariate',
@@ -118,21 +119,21 @@ def child_avgint_table(
         'smooth_grid',
         'time',
     ] :
-        parent_tables[name] = dismod_at.get_table_dict(connection, name)
+        fit_tables[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
     #
     # rate_table
-    rate_table = parent_tables['rate']
+    rate_table = fit_tables['rate']
     #
     # node_table
-    node_table = parent_tables['node']
+    node_table = fit_tables['node']
     #
     # n_covariate
-    n_covariate = len( parent_tables['covariate'] )
+    n_covariate = len( fit_tables['covariate'] )
     #
     # parent_node_id
     parent_node_name = None
-    for row in parent_tables['option'] :
+    for row in fit_tables['option'] :
         assert row['option_name'] != 'parent_node_id'
         if row['option_name'] == 'parent_node_name' :
             parent_node_name = row['option_value']
@@ -197,10 +198,10 @@ def child_avgint_table(
     row_list = list()
     #
     # mulcov_id
-    for mulcov_id in range( len( parent_tables['mulcov'] ) ) :
+    for mulcov_id in range( len( fit_tables['mulcov'] ) ) :
         #
         # mulcov_row
-        mulcov_row = parent_tables['mulcov'][mulcov_id]
+        mulcov_row = fit_tables['mulcov'][mulcov_id]
         #
         # group_smooth_id
         group_smooth_id = mulcov_row['group_smooth_id']
@@ -208,23 +209,23 @@ def child_avgint_table(
             #
             # integrand_id
             integrand_name  = 'mulcov_' + str(mulcov_id)
-            integrand_table = parent_tables['integrand']
+            integrand_table = fit_tables['integrand']
             integrand_id    = table_name2id(
                 integrand_table, 'integrand_name', integrand_name
             )
             #
             # grid_row
-            for grid_row in parent_tables['smooth_grid'] :
+            for grid_row in fit_tables['smooth_grid'] :
                 if grid_row['smooth_id'] == group_smooth_id :
                     #
                     # age_id
                     age_id    = grid_row['age_id']
-                    age_lower = parent_tables['age'][age_id]['age']
+                    age_lower = fit_tables['age'][age_id]['age']
                     age_upper = age_lower
                     #
                     # time_id
                     time_id    = grid_row['time_id']
-                    time_lower = parent_tables['time'][time_id]['time']
+                    time_lower = fit_tables['time'][time_id]['time']
                     time_upper = time_lower
                     #
                     # row
@@ -259,23 +260,23 @@ def child_avgint_table(
             #
             # integrand_id
             integrand_name  = name_rate2integrand[rate_name]
-            integrand_table = parent_tables['integrand']
+            integrand_table = fit_tables['integrand']
             integrand_id    = table_name2id(
                 integrand_table, 'integrand_name', integrand_name
             )
             #
             # grid_row
-            for grid_row in parent_tables['smooth_grid'] :
+            for grid_row in fit_tables['smooth_grid'] :
                 if grid_row['smooth_id'] == parent_smooth_id :
                     #
                     # age_id
                     age_id    = grid_row['age_id']
-                    age_lower = parent_tables['age'][age_id]['age']
+                    age_lower = fit_tables['age'][age_id]['age']
                     age_upper = age_lower
                     #
                     # time_id
                     time_id    = grid_row['time_id']
-                    time_lower = parent_tables['time'][time_id]['time']
+                    time_lower = fit_tables['time'][time_id]['time']
                     time_upper = time_lower
                     #
                     # node_id
@@ -300,9 +301,9 @@ def child_avgint_table(
                         # add to row_list
                         row_list.append( row )
     #
-    # put new avgint table in parent_node_database
+    # put new avgint table in fit_node_database
     new           = False
-    connection    = dismod_at.create_connection(parent_node_database, new)
+    connection    = dismod_at.create_connection(fit_node_database, new)
     command       = 'DROP TABLE IF EXISTS ' + tbl_name
     dismod_at.sql_command(connection, command)
     dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
