@@ -241,13 +241,13 @@ def create_all_node_db(
     )
     #
     # omega_age_grid table
-    tbl_name = 'omega_age_grid'
-    col_name = [ 'age_id'  ]
-    col_type = [ 'integer' ]
-    row_list = list()
-    n_age    = 0
+    tbl_name    = 'omega_age_grid'
+    col_name    = [ 'age_id'  ]
+    col_type    = [ 'integer' ]
+    row_list    = list()
+    n_omega_age = None
     if not omega_grid is None :
-        n_age = len( omega_grid['age'] )
+        n_omega_age = len( omega_grid['age'] )
         for age_id in omega_grid['age'] :
             assert age_id < len(age_table)
             assert 0 <= age_id
@@ -257,13 +257,13 @@ def create_all_node_db(
     );
     #
     # omega_time_grid table
-    tbl_name = 'omega_time_grid'
-    col_name = [ 'time_id'  ]
-    col_type = [ 'integer' ]
-    row_list = list()
-    n_time   = 0
+    tbl_name     = 'omega_time_grid'
+    col_name     = [ 'time_id'  ]
+    col_type     = [ 'integer' ]
+    row_list     = list()
+    n_omega_time = None
     if not omega_grid is None :
-        n_time = len( omega_grid['time'] )
+        n_omega_time = len( omega_grid['time'] )
         for time_id in omega_grid['time'] :
             assert time_id < len(time_table)
             assert 0 <= time_id
@@ -272,35 +272,53 @@ def create_all_node_db(
         all_connection, tbl_name, col_name, col_type, row_list
     );
     #
-    # empty mtall table
-    tbl_name = 'mtall'
-    col_name = [
-        'node_id', 'omega_age_id', 'omega_time_id', 'mtall_value'
-    ]
-    col_type = [ 'integer', 'integer', 'integer', 'real'     ]
-    row_list = list()
+    # all_mtall table
+    tbl_name  = 'all_mtall'
+    col_name  = [ 'all_mtall_value' ]
+    col_type  = [  'real' ]
+    row_list  = list()
     if not mtall_data is None :
-        for node_name in mtall_data :
+        node_list = mtall_data.keys()
+        for node_name in node_list :
             node_id = table_name2id(node_table, 'node_name', node_name)
-            assert len(mtall_data[node_name]) == n_age * n_time
-            for i in range(n_age) :
-                for i in range(n_time) :
-                    omega_age_id  = i
-                    omega_time_id = j
-                    mtall_value   = mtall_data[node_name][ i * n_time + j]
-                    row  = [node_id, omega_age_id, omega_time_id, mtall_vaule]
+            assert len(mtall_data[node_name]) == n_omega_age * n_omega_time
+            for i in range(n_omega_age) :
+                for i in range(n_omega_time) :
+                    value   = mtall_data[node_name][ i * n_omega_time + j]
+                    row     = [ value ]
                     row_list.append( row )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     );
     #
+    # all_mtall_index table
+    tbl_name  = 'all_mtall_index'
+    col_name  = [ 'node_id', 'all_mtall_id' ]
+    col_type  = [ 'integer', 'integer' ]
+    row_list  = list()
+    if not mtall_data is None :
+        all_mtall_id = 0
+        for node_name in node_list :
+            node_id = table_name2id(node_table, 'node_name', node_name)
+            row     = [ node_id, all_mtall_id ]
+            row_list.append( row )
+            all_mtall_id += n_omega_age * n_omega_time
+    dismod_at.create_table(
+        all_connection, tbl_name, col_name, col_type, row_list
+    );
+    #
     # empty mtspecific table
-    tbl_name = 'mtspecific'
-    col_name = [
-        'node_id', 'omega_age_id', 'omega_time_id', 'mtspecific_value'
-    ]
-    col_type = [ 'integer', 'integer',  'integer', 'real' ]
-    row_list = list()
+    tbl_name  = 'all_mtspecific'
+    col_name  = [ 'all_mtspecific_value' ]
+    col_type  = [  'real' ]
+    row_list  = list()
+    dismod_at.create_table(
+        all_connection, tbl_name, col_name, col_type, row_list
+    );
+    tbl_name  = 'all_mtspecific_index'
+    col_name  = [ 'node_id', 'all_mtspecific_id' ]
+    col_type  = [ 'integer', 'integer' ]
+    row_list  = list()
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     );

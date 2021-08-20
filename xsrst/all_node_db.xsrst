@@ -78,6 +78,10 @@ omega_age_grid Table
 ********************
 This table has two columns, *omega_age_grid_id* and *age_id*:
 
+n_omega_age
+===========
+We use the notation *n_omega_age* for the number of values in this table.
+
 omega_age_grid_id
 =================
 This column has type ``integer`` and is the primary key for this table.
@@ -93,6 +97,10 @@ omega_time_grid Table
 *********************
 This table has two columns, *omega_time_grid_id* and *time_id*:
 
+n_omega_time
+============
+We use the notation *n_omega_time* for the number of values in this table.
+
 omega_time_grid_id
 ==================
 This column has type ``integer`` and is the primary key for this table.
@@ -104,95 +112,127 @@ This column has type ``integer`` and specifies the time grid points
 by their index in the *root_node_database* time table.
 This column is monotone increasing with *omega_time_grid_id*.
 
-
 {xsrst_end omega_grid}
 ------------------------------------------------------------------------------
-{xsrst_begin mtall_table}
+{xsrst_begin all_mtall}
 
-All Node mtall Table
-####################
+All Node mtall Values
+#####################
+The values of :ref:`glossary.mtall` for all the nodes is specified by the
+all_mtall and mtall_index tables.
+
+all_mtall Table
+***************
 This table specifies the value of :ref:`glossary.mtall` for each
 age, time point in the :ref:`omega_grid` and every node.
+If *mtall* is not specified for a node, it will use the same *mtall*
+values as its parent node.
+If this table is empty, *mtall* will be zero for all nodes.
 
-mtall_id
-********
+all_mtall_id
+============
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+all_mtall_value
+===============
+This column has type ``real`` and is the value of *mtall*
+for a specific node, age, and time; see mtall_index table below.
+
+mtall_index Table
+*****************
+This table specifies the all_mtall_id at which the mtall values
+for a particular node begin.
+In addition, specifications for which age and time points
+correspond to each all_mtall_id are included.
+
+mtall_index_id
+==============
 This column has type ``integer`` and is the primary key for this table.
 Its initial value is zero and it increments by one for each row.
 
 node_id
-*******
-This column has type ``integer`` and specifies a node by its *node_id*
-value in the *root_node_database* node table.
-If a particular *node_id* does not appear,
-*omega* is set to zero for that node.
-If a *node_id* does appear, there must be one and only one row
-that has that *node_id* and each possible combination of
-*omega_age_id*, *omega_time_id*.
+=======
+This column has type ``integer`` and specifies a node by its index
+in the root node database node table.
 
-omega_age_id
-************
-This column has type ``integer`` and specifies the age for a grid point
-by the corresponding *omega_age_id* in the
-:ref:`omega_grid.omega_age_table`.
+all_mtall_id
+============
+This column has type ``integer`` and specifies the index in the
+all_mtall table where the mtall values for this node begin.
+For *i* equal 0 through
+:ref:`n_omega_age-1<omega_grid.omega_age_grid_table.n_omega_age>`
+and *j* equal 0 through
+:ref:`n_omega_time-1<omega_grid.omega_time_grid_table.n_omega_time>`
 
-omega_time_id
-*************
-This column has type ``integer`` and specifies the time for a grid point
-by the corresponding *omega_time_id* in the
-:ref:`omega_grid.omega_time_table`.
+| all_mtall_id + i * n_omega_time + j
 
-mtall_value
-***********
-This column has type ``real`` and is the value of *mtall*
-at the corresponding node, age, and time.
+Is the index in the all_mtall table of the value for this node,
+the *i*-th age in the omega_grid,
+and the *j*-th time in the omega_grid.
 
-
-
-{xsrst_end mtall_table}
+{xsrst_end all_mtall}
 ------------------------------------------------------------------------------
-{xsrst_begin mtspecific_table}
+{xsrst_begin all_mtspecific}
 
-All Node mtspecific Table
-#########################
+All Node mtspecific Values
+##########################
+The values of :ref:`glossary.mtspecific` for all the nodes is specified by the
+all_mtspecific and mtspecific_index tables.
+
+all_mtspecific Table
+********************
 This table specifies the value of :ref:`glossary.mtspecific` for each
 age, time point in the :ref:`omega_grid` and every node.
+If *mtspecific* is not specified for a node, it will use the same *mtspecific*
+values as its parent node.
+If this table is empty, *mtspecific* will be zero for all nodes.
 
-mtspecific_id
-*************
+all_mtspecific_id
+=================
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+all_mtspecific_value
+====================
+This column has type ``real`` and is the value of *mtspecific*
+for a specific node, age, and time; see mtspecific_index table below.
+
+mtspecific_index Table
+**********************
+This table specifies the all_mtspecific_id at which the mtspecific values
+for a particular node begin.
+In addition, specifications for which age and time points
+correspond to each all_mtspecific_id are included.
+
+mtspecific_index_id
+===================
 This column has type ``integer`` and is the primary key for this table.
 Its initial value is zero and it increments by one for each row.
 
 node_id
-*******
-This column has type ``integer`` and specifies a node by its *node_id*
-value in the *root_node_database* node table.
-If a particular *node_id* does not appear,
-*omega* is set to *mtall* for that node.
-If a *node_id* does appear, there must be one and only one row
-that has that *node_id* and each possible combination of
-*omega_age_id*, *omega_time_id*.
-In this case *omega* for the node is set to *mtall - mtspecific*.
+=======
+This column has type ``integer`` and specifies a node by its index
+in the root node database node table.
 
-omega_age_id
-************
-This column has type ``integer`` and specifies the age for a grid point
-by the corresponding *omega_age_id* in the
-:ref:`omega_grid.omega_age_table`.
+all_mtspecific_id
+=================
+This column has type ``integer`` and specifies the index in the
+all_mtspecific table where the mtspecific values for this node begin.
+For *i* equal 0 through
+:ref:`n_omega_age-1<omega_grid.omega_age_grid_table.n_omega_age>`
+and *j* equal 0 through
+:ref:`n_omega_time-1<omega_grid.omega_time_grid_table.n_omega_time>`
 
-omega_time_id
-*************
-This column has type ``integer`` and specifies the time for a grid point
-by the corresponding *omega_time_id* in the
-:ref:`omega_grid.omega_time_table`.
+| all_mtspecific_id + i * n_omega_time + j
 
-mtspecific_value
-****************
-This column has type ``real`` and is the value of *mtspecific*
-at the corresponding node, age, and time.
+Is the index in the all_mtspecific table of the value for this node,
+the *i*-th age in the omega_grid,
+and the *j*-th time in the omega_grid.
 
-{xsrst_end   mtspecific_table}
+{xsrst_end all_mtspecific}
 ------------------------------------------------------------------------------
-{xsrst_begin option_table}
+{xsrst_begin all_option_table}
 
 All Node Option Table
 #####################
@@ -201,8 +241,8 @@ This table specifies certain at_cascade options
 Table Format
 ************
 
-option_id
-=========
+all_option_id
+=============
 This column of the option table has type ``integer`` and is the primary key.
 Its initial value is zero and it increments by one for each row.
 
@@ -235,4 +275,5 @@ is not yet specified.
 Otherwise, all age and time averages will
 approximated by the value at the midpoint of the intervals.
 
-{xsrst_end option_table}
+{xsrst_end all_option_table}
+------------------------------------------------------------------------------
