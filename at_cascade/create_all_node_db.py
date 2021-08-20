@@ -240,10 +240,10 @@ def create_all_node_db(
         all_connection, tbl_name, col_name, col_type, row_list
     )
     #
-    # omega_age table
-    tbl_name = 'omega_age'
-    col_name = [ 'age_value'  ]
-    col_type = [ 'real' ]
+    # omega_age_grid table
+    tbl_name = 'omega_age_grid'
+    col_name = [ 'age_id'  ]
+    col_type = [ 'integer' ]
     row_list = list()
     n_age    = 0
     if not omega_grid is None :
@@ -256,10 +256,10 @@ def create_all_node_db(
         all_connection, tbl_name, col_name, col_type, row_list
     );
     #
-    # omega_time table
-    tbl_name = 'omega_time'
-    col_name = [ 'time_value'  ]
-    col_type = [ 'real' ]
+    # omega_time_grid table
+    tbl_name = 'omega_time_grid'
+    col_name = [ 'time_id'  ]
+    col_type = [ 'integer' ]
     row_list = list()
     n_time   = 0
     if not omega_grid is None :
