@@ -165,11 +165,11 @@ all_mtall table where the mtall values for this node begin.
 For *i* equal 0 through
 :ref:`n_omega_age-1<omega_grid.omega_age_grid_table.n_omega_age>`
 and *j* equal 0 through
-:ref:`n_omega_time-1<omega_grid.omega_time_grid_table.n_omega_time>`
+:ref:`n_omega_time-1<omega_grid.omega_time_grid_table.n_omega_time>` ::
 
-| all_mtall_id + i * n_omega_time + j
+    all_mtall_id + i * n_omega_time + j
 
-Is the index in the all_mtall table of the value for this node,
+is the index in the all_mtall table of the value for this node,
 the *i*-th age in the omega_grid,
 and the *j*-th time in the omega_grid.
 

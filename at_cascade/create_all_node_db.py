@@ -55,7 +55,7 @@ age_id values for the :ref:``omega_grid``; i.e.,
 These are indices in the root node database age table.
 The value *omega*\ [``time``] is a list containing the
 time_id values for the omega grid.
-We use the notation *n_age* (*n_time*) for the length
+We use the notation *n_omega_age* (*n_omega_time*) for the length
 of the age (time) list.
 
 default
@@ -69,8 +69,8 @@ mtall_data
 This is a python dictionary with a key for each node name
 for the root node and its descendant.
 The value *mtall_data[node_name]* is a list.
-For *i* equal 0, ..., *n_age*-1 and *j* equal 0, ..., *n_time*-1,
-*mtall_data[node_name][ i * n_time + j ]
+For *i* equal 0, ..., *n_omega_age*-1 and *j* equal 0, ..., *n_omega_time*-1,
+*mtall_data[node_name][ i * n_omega_time + j ]
 is the value of *mtall* at the specified node,
 the age corresponding to index *i* in *omega_grid*\ [``age``],
 and time corresponding to index *j* in *omega_grid*\ [``time``].
@@ -138,6 +138,12 @@ def is_descendant(node_table, ancestor_node_id, this_node_id) :
         if this_node_id == ancestor_node_id :
             return True
     return False
+# ----------------------------------------------------------------------------
+def table_name2id(table, col_name, row_name) :
+    for (row_id, row) in enumerate(table) :
+        if row[col_name] == row_name :
+            return row_id
+    assert False
 # ----------------------------------------------------------------------------
 def create_all_node_db(
 # BEGIN syntax
@@ -283,7 +289,7 @@ def create_all_node_db(
             node_id = table_name2id(node_table, 'node_name', node_name)
             assert len(mtall_data[node_name]) == n_omega_age * n_omega_time
             for i in range(n_omega_age) :
-                for i in range(n_omega_time) :
+                for j in range(n_omega_time) :
                     value   = mtall_data[node_name][ i * n_omega_time + j]
                     row     = [ value ]
                     row_list.append( row )
@@ -291,8 +297,8 @@ def create_all_node_db(
         all_connection, tbl_name, col_name, col_type, row_list
     );
     #
-    # all_mtall_index table
-    tbl_name  = 'all_mtall_index'
+    # mtall_index table
+    tbl_name  = 'mtall_index'
     col_name  = [ 'node_id', 'all_mtall_id' ]
     col_type  = [ 'integer', 'integer' ]
     row_list  = list()

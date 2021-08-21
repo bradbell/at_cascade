@@ -76,8 +76,9 @@ None of the other tables in the database are modified.
 {xsrst_end omega_constraint}
 '''
 # ----------------------------------------------------------------------------
-import math
+import copy
 import dismod_at
+from math import log
 # ----------------------------------------------------------------------------
 def table_name2id(table, col_name, row_name) :
     for (row_id, row) in enumerate(table) :
@@ -85,11 +86,12 @@ def table_name2id(table, col_name, row_name) :
             return row_id
     assert False
 # ----------------------------------------------------------------------------
-def null_row(table) :
-    key_list = table[0].keys()
+def null_row(connection, tbl_name) :
+    (col_name, col_type) = dismod_at.get_name_type(connection, tbl_name)
     row = dict()
-    for key in key_list :
+    for key in col_name :
         row[key] = None
+    return row
 # ----------------------------------------------------------------------------
 def child_node_id_list(node_table, parent_node_id) :
     result = list()
@@ -101,7 +103,7 @@ def child_node_id_list(node_table, parent_node_id) :
 def omega_constraint(
 # BEGIN syntax
 # at_cascade.omega_constraint(
-    all_node_database    = None ,
+    all_node_database = None ,
     fit_node_database = None ,
 # )
 # END syntax
@@ -128,19 +130,21 @@ def omega_constraint(
     connection    = dismod_at.create_connection(fit_node_database, new)
     #
     # fit_tables
-    fit_tables = dict()
+    fit_tables   = dict()
+    fit_null_row = dict()
     for name in [
-        'nlist',
-        'nlist_pair',
-        'node_table',
-        'option'
+        'nslist',
+        'nslist_pair',
+        'node',
+        'option',
         'rate',
         'smooth',
         'smooth_grid',
     ] :
-        fit_tables[name] = dismod_at.get_table_dict(connection, name)
-    assert len( fit_tables['nlist'] ) == 0
-    assert len( fit_tables['nlist_pair'] ) == 0
+        fit_tables[name]   = dismod_at.get_table_dict(connection, name)
+        fit_null_row[name] = null_row(connection, name)
+    assert len( fit_tables['nslist'] ) == 0
+    assert len( fit_tables['nslist_pair'] ) == 0
     for row in fit_tables['rate'] :
         if row['rate_name'] == 'omega' :
             assert row['parent_smooth_id'] is None
@@ -154,42 +158,45 @@ def omega_constraint(
         if row['option_name'] == 'parent_node_name' :
             parent_node_name = row['option_value']
     assert parent_node_name is not None
-    parent_node_id = table_name2id(node_table, 'node_name', parent_node_name)
+    parent_node_id = table_name2id(
+        fit_tables['node'], 'node_name', parent_node_name
+    )
     #
-    # mtall_node_list
-    node_id2index = dict()
-    for (mall_index_id, row) in enumerate( all_tables['mtall_index'] ) :
-        node_id2index[ row['node_id'] ] = mtall_index_id
+    # node_id2all_mtall_id
+    node_id2all_mtall_id = dict()
+    for row in all_tables['mtall_index'] :
+        node_id2all_mtall_id[ row['node_id'] ] = row['all_mtall_id']
     #
     # ancestor_node_id
     ancestor_node_id = parent_node_id
-    while not ancestor_node_id in node_id2index :
+    while not ancestor_node_id in node_id2all_mtall_id :
         ancestor_node_id = fit_tables['node'][ancestor_node_id]['parent']
         if ancestor_node_id is None :
             return
     #
     # parent_mtall
-    mtall_index_id = node_id2index[ancestor_node_id]
+    mtall_index_id = node_id2all_mtall_id[ancestor_node_id]
     all_mtall_id   = all_tables['mtall_index'][mtall_index_id]['all_mtall_id']
     parent_mtall   = list()
     for i in range( n_omega_age * n_omega_time ) :
-        parent_matall[i] = all_mtall[all_mtall_id + i ]
+        row             = all_tables['all_mtall'][all_mtall_id + i ]
+        parent_mtall.append( row['all_mtall_value'] )
     #
     # parent_smooth_id
-    parent_smooth_id  = len(fit_tables['smooth_table'])
+    parent_smooth_id  = len(fit_tables['smooth'])
     #
     # fit_tables['sooth_table']
-    row           = null_row( fit_tables['smooth_table'] )
+    row           = copy.copy( fit_null_row['smooth'] )
     row['n_age']  = n_omega_age
     row['n_time'] = n_omega_time
-    fit_tables['smooth_table'].append( row )
+    fit_tables['smooth'].append( row )
     #
     # fit_tables['smooth_grid']
     for i in range( n_omega_age ) :
         for j in range( n_omega_time ) :
-            row     = null_row( fit_tables['smooth_grid'] )
-            age_id  = all_tables['omega_age'][i]['age_id']
-            time_id = all_tables['omega_time'][j]['time_id']
+            row     = copy.copy( fit_null_row['smooth_grid'] )
+            age_id  = all_tables['omega_age_grid'][i]['age_id']
+            time_id = all_tables['omega_time_grid'][j]['time_id']
             row['age_id']      = age_id
             row['time_id']     = time_id
             row['smooth_id']   = parent_smooth_id
@@ -199,67 +206,71 @@ def omega_constraint(
     # child_node_list
     child_node_list = child_node_id_list(fit_tables['node'], parent_node_id)
     #
-    # child_nslist_id
-    child_nslist_id = len( fit_tables['child_nslist'] )
+    # nslist_id
+    nslist_id = len( fit_tables['nslist'] )
     #
     # child_node_id
     for child_node_id in child_node_list :
         #
         # child_mtall
-        if not child_node_id in node2index :
+        if not child_node_id in node_id2all_mtall_id :
             child_mtall = parent_mtall
         else :
-            mtall_index = node_id2index[child_node_id]
-            all_mtall_id   = \
-                all_tables['mtall_index'][mtall_index_id]['all_mtall_id']
-            child_mtall   = list()
+            all_mtall_id = node_id2all_mtall_id[child_node_id]
+            child_mtall  = list()
             for i in range( n_omega_age * n_omega_time ) :
-               child_matall[i] = all_mtall[all_mtall_id + i ]
+               row             = all_tables['all_mtall'][all_mtall_id + i ]
+               child_mtall.append( row['all_mtall_value'] )
         #
         # random_effect
         random_effect = list()
         for i in range( n_omega_age * n_omega_time ) :
-            random_effect = math.log( child_mtall[i] / parent_mtall[i] )
+            random_effect.append( log( child_mtall[i] / parent_mtall[i] ) )
         #
         # smooth_id
-        smooth_id = len( fit_tables['smooth_tables'] )
+        smooth_id = len( fit_tables['smooth'] )
         #
         # fit_tables['nslist_pair']
-        row              = null_row( fit_tables['nslist_pair'] )
-        row['nslist_id'] = child_nslist_id
+        row              = copy.copy( fit_null_row['nslist_pair'] )
+        row['nslist_id'] = nslist_id
         row['node_id']   = child_node_id
         row['smooth_id'] = smooth_id
         fit_tables['nslist_pair'].append( row )
         #
         # fit_tables['smooth']
-        row           = null_row( fit_tables['smooth_table'] )
+        row           = copy.copy( fit_null_row['smooth'] )
         row['n_age']  = n_omega_age
         row['n_time'] = n_omega_time
-        fit_tables['smooth_table'].append( row )
+        fit_tables['smooth'].append( row )
         #
         # fit_tables['smooth_grid']
         for i in range( n_omega_age ) :
             for j in range( n_omega_time ) :
-                row     = null_row( fit_tables['smooth_grid'] )
-                age_id  = all_tables['omega_age'][i]['age_id']
-                time_id = all_tables['omega_time'][j]['time_id']
+                row     = copy.copy( fit_null_row['smooth_grid'] )
+                age_id  = all_tables['omega_age_grid'][i]['age_id']
+                time_id = all_tables['omega_time_grid'][j]['time_id']
                 row['age_id']      = age_id
                 row['time_id']     = time_id
                 row['smooth_id']   = smooth_id
                 row['const_value'] = random_effect[i * n_omega_time + j]
                 fit_tables['smooth_grid'].append( row )
     #
+    # fit_tables['nslist']
+    row                = copy.copy( fit_null_row['nslist'] )
+    row['nslist_name'] = 'child_omega'
+    fit_tables['nslist'].append( row )
+    #
     # fit_tables['rate']
     for row in fit_tables['rate'] :
         if row['rate_name'] == 'omega' :
             row['parent_smooth_id'] = parent_smooth_id
-            row['child_nslist_id']  = child_nslist_id
+            row['child_nslist_id']  = nslist_id
     #
     # replace these fit tables
     for name in [
-        'nlist',
-        'nlist_pair',
-        'option'
+        'nslist',
+        'nslist_pair',
+        'option',
         'rate',
         'smooth',
         'smooth_grid',
