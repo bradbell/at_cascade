@@ -260,7 +260,7 @@ def create_all_node_db(
             row_list.append( [ age_id ] )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
-    );
+    )
     #
     # omega_time_grid table
     tbl_name     = 'omega_time_grid'
@@ -276,7 +276,7 @@ def create_all_node_db(
             row_list.append( [ time_id ] )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
-    );
+    )
     #
     # all_mtall table
     tbl_name  = 'all_mtall'
@@ -295,7 +295,7 @@ def create_all_node_db(
                     row_list.append( row )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
-    );
+    )
     #
     # mtall_index table
     tbl_name  = 'mtall_index'
@@ -311,7 +311,7 @@ def create_all_node_db(
             all_mtall_id += n_omega_age * n_omega_time
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
-    );
+    )
     #
     # empty mtspecific table
     tbl_name  = 'all_mtspecific'
@@ -320,14 +320,14 @@ def create_all_node_db(
     row_list  = list()
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
-    );
+    )
     tbl_name  = 'all_mtspecific_index'
     col_name  = [ 'node_id', 'all_mtspecific_id' ]
     col_type  = [ 'integer', 'integer' ]
     row_list  = list()
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
-    );
+    )
     #
     # close
     all_connection.close()

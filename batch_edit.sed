@@ -30,4 +30,4 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|covariate_reference|all_cov_reference|g
+s|); *$|)|
