@@ -32,16 +32,7 @@ This argument can't be ``None``.
 parent_node_database
 ********************
 is a python string containing the name of a :ref:`glossary.fit_node_database`.
-The sample table contains
-the results of a dismod_at sample command for both the fixed and random effects.
-The predict table contains
-The results of a predict command using the sample table
-and the avgint table corresponding to :ref:`child_avgint_table`.
-The c_predict table contains
-the results of a dismod_at sample command with the fit_var option
-and then moving the predict table to c_predict and renaming the
-column predict_id to c_predict_id.
-The two predict tables
+The two predict tables (mentioned below)
 are used to create priors in the child node databases.
 
 parent_node
@@ -49,21 +40,45 @@ parent_node
 We use *parent_node* to refer to the parent node in the
 dismod_at option table in the *parent_node_database*.
 
+sample Table
+============
+The sample table contains
+the results of a dismod_at sample command for both the fixed and random effects.
+
+predict Table
+=============
+The predict table contains
+The results of a predict command using the sample table
+and the avgint table corresponding to :ref:`child_avgint_table`.
+
+c_predict Table
+===============
+The c_predict table contains
+the results of a dismod_at sample command with the fit_var option
+and then moving the predict table to c_predict and renaming the
+column predict_id to c_predict_id.
+
+
 child_node_databases
 ********************
 is a python dictionary and if *child_name* is a key for *child_node_databases*,
 *child_name* is a :ref:`glossary.node_name` and a child of the *parent_node*.
-The value *child_node_databases[child_name]* is the name of
-a *fit_node_database* that is created by this command.
-In this database, *child_name* will be the parent node in
-the dismod_at option table.
-The value priors for the variables in the model will be constructed using
-the samples in the *parent_node_database*.
-Other priors will be the same as in the *parent_node_database*
-Only the dismod_at input tables are significant in the child node databases;
-i.e., an init command should be executed any other dismod_at commands.
-The following tables are the same as in the parent node database:
-age, data, density, integrand, node, subgroup, time, weight, weight_grid.
+
+-   For each *child_name*, *child_node_databases[child_name]* is the name of
+    *fit_node_database* that is created by this command.
+-   In this database, *child_name* will be the parent node in
+    the dismod_at option table.
+-   The rate table is changed to have null priors for omega;
+    see :ref:`omega_constraint` for properly setting these priors.
+-   The value priors rates other than omega are constructed using
+    the predict tables in the *parent_node_database*.
+-   Priors of covariate multipliers are the same as in the
+    *parent_node_database*
+-   Only the dismod_at input tables are significant in the child node databases;
+    e.g., an init command should be executed before any other dismod_at
+    commands (except possibly a set command).
+-   The following tables are the same as in the parent node database:
+    age, data, density, integrand, node, subgroup, time, weight, weight_grid.
 
 {xsrst_end create_child_node_db}
 '''
@@ -363,6 +378,12 @@ def create_child_node_db(
             if rate_name in name_rate2integrand :
                 assert child_rate_row['child_nslist_id'] is None
                 parent_smooth_id = child_rate_row['parent_smooth_id']
+            else :
+                # proper priors for omega are set by omega_constraint routine
+                assert rate_name == 'omega'
+                child_rate_row['parent_smooth_id'] = None
+                child_rate_row['child_smooth_id']  = None
+                child_rate_row['child_nslist_id']  = None
             if not parent_smooth_id is None :
                 #
                 # integrand_id
