@@ -122,6 +122,14 @@ def child_avgint_table(
         fit_tables[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
     #
+    # minimum_age_id
+    minimum_age_id = 0
+    minimum_age    = fit_tables['age'][minimum_age_id]['age']
+    for (age_id, row) in enumerate(fit_tables['age']) :
+        if row['age'] < minimum_age :
+            minimum_age_id = age_id
+            minimum_age    = row['age']
+    #
     # rate_table
     rate_table = fit_tables['rate']
     #
@@ -189,6 +197,7 @@ def child_avgint_table(
     #
     # name_rate2integrand
     name_rate2integrand = {
+        'pini':   'prevalence',
         'iota':   'Sincidence',
         'rho':    'remission',
         'chi':    'mtexcess',
@@ -273,6 +282,10 @@ def child_avgint_table(
                     age_id    = grid_row['age_id']
                     age_lower = fit_tables['age'][age_id]['age']
                     age_upper = age_lower
+                    #
+                    # prior for pini must use age index zero
+                    if rate_name == 'pini' :
+                        assert age_id == minimum_age_id
                     #
                     # time_id
                     time_id    = grid_row['time_id']

@@ -209,6 +209,7 @@ def create_child_node_db(
     #
     # name_rate2integrand
     name_rate2integrand = {
+        'pini'  : 'prevalence',
         'iota'  : 'Sincidence',
         'rho'   : 'remission',
         'chi'   : 'mtexcess',
@@ -413,6 +414,8 @@ def create_child_node_db(
                 assert smooth_row['mulstd_value_prior_id'] is None
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
+                if rate_name == 'pini' :
+                    assert smooth_row['n_age'] == 1
                 #
                 # update: child_tables['smooth']
                 # for case where its is the parent
