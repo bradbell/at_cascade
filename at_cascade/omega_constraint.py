@@ -16,6 +16,11 @@
 
 Set Omega Constraints in a Fit Node Database
 ############################################
+This routine uses the *mtall* data for the closest ancestor of a node
+and constrains *omega* to be equal to the *mtall* data.
+If there is no such *mtall* data
+for the :ref:`omega_constraint.fit_node_database.parent_node`,
+no tables are changed by this routine.
 
 Syntax
 ******
@@ -33,9 +38,6 @@ fit_node_database
 *****************
 is a python string containing the name of a :ref:`glossary.fit_node_database`.
 This argument can't be ``None``.
-If there is no mtall data in the *all_node_database*
-for the *parent_node* or any of its ancestors,
-none of the tables are changed by this routine.
 
 parent_node
 ===========
