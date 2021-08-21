@@ -126,8 +126,10 @@ all_mtall Table
 This table specifies the value of :ref:`glossary.mtall` for each
 age, time point in the :ref:`omega_grid` and every node.
 If *mtall* is not specified for a node, it will use the same *mtall*
-values as its parent node.
-If this table is empty, *mtall* will be zero for all nodes.
+values as its nearest ancestor node.
+If non of its ancestors have *mtall* values,
+there is no *mtall* data for this node and its omega will be constrained
+to zero.
 
 all_mtall_id
 ============
@@ -185,8 +187,10 @@ all_mtspecific Table
 This table specifies the value of :ref:`glossary.mtspecific` for each
 age, time point in the :ref:`omega_grid` and every node.
 If *mtspecific* is not specified for a node, it will use the same *mtspecific*
-values as its parent node.
-If this table is empty, *mtspecific* will be zero for all nodes.
+values as its nearest ancestor node.
+If non of its ancestors have *mtspecific* values,
+there is no *mtspecific* data for this node and its omega will be constrained
+to be equal to its *mtall* data.
 
 all_mtspecific_id
 =================

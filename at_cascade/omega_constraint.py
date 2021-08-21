@@ -33,6 +33,9 @@ fit_node_database
 *****************
 is a python string containing the name of a :ref:`glossary.fit_node_database`.
 This argument can't be ``None``.
+If there is no mtall data in the *all_node_database*
+for the *parent_node* or any of its ancestors,
+none of the tables are changed by this routine.
 
 parent_node
 ===========
@@ -162,7 +165,8 @@ def omega_constraint(
     ancestor_node_id = parent_node_id
     while not ancestor_node_id in node_id2index :
         ancestor_node_id = fit_tables['node'][ancestor_node_id]['parent']
-        assert not ancestor_node_id is None
+        if ancestor_node_id is None :
+            return
     #
     # parent_mtall
     mtall_index_id = node_id2index[ancestor_node_id]

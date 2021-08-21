@@ -24,7 +24,8 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
     sys.path.insert(0, current_directory)
 import at_cascade
 # -----------------------------------------------------------------------------
-#
+# global variables
+# -----------------------------------------------------------------------------
 # alpha_true
 alpha_true = - 0.1
 #
@@ -38,21 +39,20 @@ sum_random       = { 'n0': 0.0, 'n1': 0.2, 'n2': -0.2 }
 # age_grid
 age_grid = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
 #
-# iota_true
-def iota_true(a, n = 'n0', I = avg_income['n0'] ) :
-    s_n = sum_random[n]
-    r_0 = avg_income['n0']
-    return (1 + a / 100) * 1e-2 * exp( s_n + alpha_true * ( I - r_0 ) )
-#
 # income_grid
 number_income = 5
 income_grid   = dict()
 for node in [ 'n1', 'n2' ] :
     delta_income      = 2.0 * avg_income[node] / (number_income - 1)
     income_grid[node] = [ j * delta_income for j in range(number_income) ]
-#
 # ----------------------------------------------------------------------------
 # functions
+# ----------------------------------------------------------------------------
+# iota_true
+def iota_true(a, n = 'n0', I = avg_income['n0'] ) :
+    s_n = sum_random[n]
+    r_0 = avg_income['n0']
+    return (1 + a / 100) * 1e-2 * exp( s_n + alpha_true * ( I - r_0 ) )
 # ----------------------------------------------------------------------------
 def root_node_db(file_name) :
     #

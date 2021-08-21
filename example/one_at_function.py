@@ -228,16 +228,15 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
     sys.path.insert(0, current_directory)
 import at_cascade
 # -----------------------------------------------------------------------------
-# globals
+# global varables
 # -----------------------------------------------------------------------------
-#
 # BEGIN random_seed
 # random_seed = 1629371067
 random_seed = 0
 if random_seed == 0 :
     random_seed = int( time.time() )
     random.seed(random_seed)
-print('random_seed = ', random_seed)
+print('one_at_function: random_seed = ', random_seed)
 # END random_seed
 #
 # BEGIN alpha_true
@@ -265,13 +264,6 @@ sum_random['n6'] = sum_random['n2'] - size_level2;
 age_grid = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
 # END age_grid
 #
-# BEGIN iota_true
-def iota_true(a, n = 'n0', I = avg_income['n0'] ) :
-    s_n = sum_random[n]
-    r_0 = avg_income['n0']
-    return (1 + a / 100) * 1e-2 * exp( s_n + alpha_true * ( I - r_0 ) )
-# END iota_true
-#
 # BEGIN income_grid
 random_income = True
 number_income = 3
@@ -289,6 +281,13 @@ for node in [ 'n3', 'n4', 'n5', 'n6' ] :
 # END income_grid
 # ----------------------------------------------------------------------------
 # functions
+# ----------------------------------------------------------------------------
+# BEGIN iota_true
+def iota_true(a, n = 'n0', I = avg_income['n0'] ) :
+    s_n = sum_random[n]
+    r_0 = avg_income['n0']
+    return (1 + a / 100) * 1e-2 * exp( s_n + alpha_true * ( I - r_0 ) )
+# END iota_true
 # ----------------------------------------------------------------------------
 def root_node_db(file_name) :
     #
