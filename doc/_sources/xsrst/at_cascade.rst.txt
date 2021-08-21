@@ -9,7 +9,7 @@ at_cascade
    glossary
    plan
    all_node_db
-   one_at_function
+   example
    module
 
 .. include:: ../preamble.rst
@@ -38,13 +38,13 @@ Under Construction
 This package is under construction and not yet usable.
 
 .. meta::
-   :keywords: version, 2021.8.18
+   :keywords: version, 2021.8.21
 
-.. index:: version, 2021.8.18
+.. index:: version, 2021.8.21
 
-.. _at_cascade.version_2021.8.18:
+.. _at_cascade.version_2021.8.21:
 
-Version 2021.8.18
+Version 2021.8.21
 ******************
 
 .. meta::
@@ -74,7 +74,7 @@ Children
     "glossary", :ref:`glossary`
     "plan", :ref:`plan`
     "all_node_db", :ref:`all_node_db`
-    "one_at_function", :ref:`one_at_function`
+    "example", :ref:`example`
     "module", :ref:`module`
 
 ----

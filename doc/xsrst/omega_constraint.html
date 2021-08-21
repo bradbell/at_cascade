@@ -1,0 +1,313 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta content="omega_constraint, set, omega, constraints, in, fit, node, database" name="keywords" />
+<meta content="syntax" name="keywords" />
+<meta content="all_node_database" name="keywords" />
+<meta content="fit_node_database" name="keywords" />
+<meta content="parent_node" name="keywords" />
+<meta content="rate_table" name="keywords" />
+<meta content="smooth, table" name="keywords" />
+<meta content="smooth_grid, table" name="keywords" />
+<meta content="nslist, table" name="keywords" />
+<meta content="nslist_pair, table" name="keywords" />
+<meta content="other, tables" name="keywords" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>omega_constraint &mdash; cppad_py  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="create_child_node_db" href="create_child_node_db.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> cppad_py
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="xsrst_automatic.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xsrst_automatic.html#link-to-index">Link to Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="at_cascade.html">at_cascade</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="glossary.html">glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">example</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="module.html">module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="child_avgint_table.html">child_avgint_table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create_all_node_db.html">create_all_node_db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create_child_node_db.html">create_child_node_db</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">omega_constraint</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">cppad_py</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="at_cascade.html">at_cascade</a> &raquo;</li>
+        
+          <li><a href="module.html">module</a> &raquo;</li>
+        
+      <li>omega_constraint</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/xsrst/omega_constraint.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="omega-constraint">
+<h1>omega_constraint<a class="headerlink" href="#omega-constraint" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="set-omega-constraints-in-a-fit-node-database">
+<span id="id1"></span><h2>Set Omega Constraints in a Fit Node Database<a class="headerlink" href="#set-omega-constraints-in-a-fit-node-database" title="Permalink to this headline">¶</a></h2>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#syntax" id="id2">Syntax</a></p></li>
+<li><p><a class="reference internal" href="#all-node-database" id="id3">all_node_database</a></p></li>
+<li><p><a class="reference internal" href="#fit-node-database" id="id4">fit_node_database</a></p>
+<ul>
+<li><p><a class="reference internal" href="#parent-node" id="id5">parent_node</a></p></li>
+<li><p><a class="reference internal" href="#rate-table" id="id6">rate_table</a></p></li>
+<li><p><a class="reference internal" href="#smooth-table" id="id7">smooth Table</a></p></li>
+<li><p><a class="reference internal" href="#smooth-grid-table" id="id8">smooth_grid Table</a></p></li>
+<li><p><a class="reference internal" href="#nslist-table" id="id9">nslist Table</a></p></li>
+<li><p><a class="reference internal" href="#nslist-pair-table" id="id10">nslist_pair Table</a></p></li>
+<li><p><a class="reference internal" href="#other-tables" id="id11">Other Tables</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>This routine uses the <em>mtall</em> data for the closest ancestor of a node
+and constrains <em>omega</em> to be equal to the <em>mtall</em> data.
+If there is no such <em>mtall</em> data
+for the <a class="reference internal" href="#omega-constraint-fit-node-database-parent-node"><span class="std std-ref">parent_node</span></a>,
+no tables are changed by this routine.</p>
+<div class="section" id="syntax">
+<span id="omega-constraint-syntax"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># at_cascade.omega_constraint(</span>
+    <span class="n">all_node_database</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
+    <span class="n">fit_node_database</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
+<span class="c1"># )</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="all-node-database">
+<span id="omega-constraint-all-node-database"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">all_node_database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h3>
+<p>is a python string containing the name of the <a class="reference internal" href="all_node_db.html#id1"><span class="std std-ref">The All Node DataBase</span></a>.
+This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</div>
+<div class="section" id="fit-node-database">
+<span id="omega-constraint-fit-node-database"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">fit_node_database</a><a class="headerlink" href="#fit-node-database" title="Permalink to this headline">¶</a></h3>
+<p>is a python string containing the name of a <a class="reference internal" href="glossary.html#glossary-fit-node-database"><span class="std std-ref">fit_node_database</span></a>.
+This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<div class="section" id="parent-node">
+<span id="omega-constraint-fit-node-database-parent-node"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">parent_node</a><a class="headerlink" href="#parent-node" title="Permalink to this headline">¶</a></h4>
+<p>We use <em>parent_node</em> to refer to the parent node in the
+dismod_at option table in the <em>fit_node_database</em>.</p>
+</div>
+<div class="section" id="rate-table">
+<span id="omega-constraint-fit-node-database-rate-table"></span><span id="index-5"></span><h4><a class="toc-backref" href="#id6">rate_table</a><a class="headerlink" href="#rate-table" title="Permalink to this headline">¶</a></h4>
+<p>On input, the parent and child smoothing for omega must be null.
+On return, they will be set to smoothings that yield the omega constraints.</p>
+</div>
+<div class="section" id="smooth-table">
+<span id="omega-constraint-fit-node-database-smooth-table"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id7">smooth Table</a><a class="headerlink" href="#smooth-table" title="Permalink to this headline">¶</a></h4>
+<p>Extra rows for the omega constraints will be added at the
+end of the smooth table so that existing smoothings are preserved.</p>
+</div>
+<div class="section" id="smooth-grid-table">
+<span id="omega-constraint-fit-node-database-smooth-grid-table"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id8">smooth_grid Table</a><a class="headerlink" href="#smooth-grid-table" title="Permalink to this headline">¶</a></h4>
+<p>Extra rows for the omega constraints will be added at the
+end of the smooth_grid table so existing smoothings are preserved.</p>
+</div>
+<div class="section" id="nslist-table">
+<span id="omega-constraint-fit-node-database-nslist-table"></span><span id="index-8"></span><h4><a class="toc-backref" href="#id9">nslist Table</a><a class="headerlink" href="#nslist-table" title="Permalink to this headline">¶</a></h4>
+<p>On input, this table must be empty.
+Upon return, it will contain entries that implement the omega constraints
+for the children of the parent_node.</p>
+</div>
+<div class="section" id="nslist-pair-table">
+<span id="omega-constraint-fit-node-database-nslist-pair-table"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id10">nslist_pair Table</a><a class="headerlink" href="#nslist-pair-table" title="Permalink to this headline">¶</a></h4>
+<p>On input, this table must be empty.
+Upon return, it will contain entries that implement the omega constraints
+for the children of the parent_node.</p>
+</div>
+<div class="section" id="other-tables">
+<span id="omega-constraint-fit-node-database-other-tables"></span><span id="index-10"></span><h4><a class="toc-backref" href="#id11">Other Tables</a><a class="headerlink" href="#other-tables" title="Permalink to this headline">¶</a></h4>
+<p>None of the other tables in the database are modified.</p>
+<hr class="docutils" />
+<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/omega_constraint.py</span></code></p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="create_child_node_db.html" class="btn btn-neutral float-left" title="create_child_node_db" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -5,10 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta content="create_child_avgint, create, avgint, table, that, predicts, rates, for, child, nodes" name="keywords" />
+  <meta content="child_avgint_table, create, avgint, table, that, predicts, rates, for, child, nodes" name="keywords" />
 <meta content="syntax" name="keywords" />
 <meta content="all_node_database" name="keywords" />
-<meta content="parent_node_database" name="keywords" />
+<meta content="fit_node_database" name="keywords" />
 <meta content="parent_node" name="keywords" />
 <meta content="integrand_table" name="keywords" />
 <meta content="avgint, table" name="keywords" />
@@ -17,7 +17,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>create_child_avgint &mdash; cppad_py  documentation</title>
+  <title>child_avgint_table &mdash; cppad_py  documentation</title>
   
 
   
@@ -46,8 +46,8 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="create_child_node_db" href="create_child_node_db.html" />
-    <link rel="prev" title="create_all_node_db" href="create_all_node_db.html" /> 
+    <link rel="next" title="create_all_node_db" href="create_all_node_db.html" />
+    <link rel="prev" title="module" href="module.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -98,11 +98,12 @@
 <li class="toctree-l2"><a class="reference internal" href="glossary.html">glossary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
-<li class="toctree-l2"><a class="reference internal" href="one_at_function.html">one_at_function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">example</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="module.html">module</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">child_avgint_table</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_all_node_db.html">create_all_node_db</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">create_child_avgint</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_child_node_db.html">create_child_node_db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="omega_constraint.html">omega_constraint</a></li>
 </ul>
 </li>
 </ul>
@@ -156,13 +157,13 @@
         
           <li><a href="module.html">module</a> &raquo;</li>
         
-      <li>create_child_avgint</li>
+      <li>child_avgint_table</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/xsrst/create_child_avgint.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/xsrst/child_avgint_table.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -175,15 +176,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="create-child-avgint">
-<h1>create_child_avgint<a class="headerlink" href="#create-child-avgint" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="child-avgint-table">
+<h1>child_avgint_table<a class="headerlink" href="#child-avgint-table" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="create-avgint-table-that-predicts-rates-for-child-nodes">
 <span id="id1"></span><h2>Create avgint Table That Predicts Rates for Child Nodes<a class="headerlink" href="#create-avgint-table-that-predicts-rates-for-child-nodes" title="Permalink to this headline">¶</a></h2>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#syntax" id="id2">Syntax</a></p></li>
 <li><p><a class="reference internal" href="#all-node-database" id="id3">all_node_database</a></p></li>
-<li><p><a class="reference internal" href="#parent-node-database" id="id4">parent_node_database</a></p>
+<li><p><a class="reference internal" href="#fit-node-database" id="id4">fit_node_database</a></p>
 <ul>
 <li><p><a class="reference internal" href="#parent-node" id="id5">parent_node</a></p></li>
 <li><p><a class="reference internal" href="#integrand-table" id="id6">integrand_table</a></p></li>
@@ -198,65 +199,66 @@
 </ul>
 </div>
 <div class="section" id="syntax">
-<span id="create-child-avgint-syntax"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># at_cascade.create_child_avgint(</span>
+<span id="child-avgint-table-syntax"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># at_cascade.child_avgint_table(</span>
     <span class="n">all_node_database</span>    <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
-    <span class="n">parent_node_database</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
+    <span class="n">fit_node_database</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
 <span class="c1"># )</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="all-node-database">
-<span id="create-child-avgint-all-node-database"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">all_node_database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h3>
+<span id="child-avgint-table-all-node-database"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">all_node_database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h3>
 <p>is a python string containing the name of the <a class="reference internal" href="all_node_db.html#id1"><span class="std std-ref">The All Node DataBase</span></a>.
 This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </div>
-<div class="section" id="parent-node-database">
-<span id="create-child-avgint-parent-node-database"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">parent_node_database</a><a class="headerlink" href="#parent-node-database" title="Permalink to this headline">¶</a></h3>
-<p>is a python string containing the name of a <a class="reference internal" href="glossary.html#glossary-fit-node-database"><span class="std std-ref">fit_node_database</span></a>
-that will be the parent node for this predictions.
+<div class="section" id="fit-node-database">
+<span id="child-avgint-table-fit-node-database"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">fit_node_database</a><a class="headerlink" href="#fit-node-database" title="Permalink to this headline">¶</a></h3>
+<p>is a python string containing the name of a <a class="reference internal" href="glossary.html#glossary-fit-node-database"><span class="std std-ref">fit_node_database</span></a>.
 The avgint table will be placed in this database.
 The previous avgint table in this database is lost.
 This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <div class="section" id="parent-node">
-<span id="create-child-avgint-parent-node-database-parent-node"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">parent_node</a><a class="headerlink" href="#parent-node" title="Permalink to this headline">¶</a></h4>
+<span id="child-avgint-table-fit-node-database-parent-node"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">parent_node</a><a class="headerlink" href="#parent-node" title="Permalink to this headline">¶</a></h4>
 <p>We use <em>parent_node</em> to refer to the parent node in the
-dismod_at option table in the <em>parent_node_database</em>.</p>
+dismod_at option table in the <em>fit_node_database</em>.</p>
 </div>
 <div class="section" id="integrand-table">
-<span id="create-child-avgint-parent-node-database-integrand-table"></span><span id="index-5"></span><h4><a class="toc-backref" href="#id6">integrand_table</a><a class="headerlink" href="#integrand-table" title="Permalink to this headline">¶</a></h4>
-<p>The integrand table in the <em>parent_node_database</em> must include the following:
+<span id="child-avgint-table-fit-node-database-integrand-table"></span><span id="index-5"></span><h4><a class="toc-backref" href="#id6">integrand_table</a><a class="headerlink" href="#integrand-table" title="Permalink to this headline">¶</a></h4>
+<p>The integrand table in the <em>fit_node_database</em> must include the following:
 <a class="reference internal" href="glossary.html#glossary-sincidence"><span class="std std-ref">Sincidence</span></a>,
 <a class="reference internal" href="glossary.html#glossary-remission"><span class="std std-ref">remission</span></a>,
 <a class="reference internal" href="glossary.html#glossary-mtexcess"><span class="std std-ref">mtexcess</span></a>.
-Integrands with a null parent smoothing id need not be included.
+Integrands corresponding to rates with null parent smoothing id
+need not be included.
 In addition, the integrand table must include all the covariate multipliers;
 i.e., <code class="docutils literal notranslate"><span class="pre">mulcov_</span></code><em>mulcov_id</em> where <em>mulcov_id</em> is the id
 for any covariate multiplier.
-Integrands with a null group smoothing id need not be included.</p>
+Integrands corresponding to covariate multipliers
+with a null group smoothing id need not be included.</p>
 </div>
 </div>
 <div class="section" id="avgint-table">
-<span id="create-child-avgint-avgint-table"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id7">avgint Table</a><a class="headerlink" href="#avgint-table" title="Permalink to this headline">¶</a></h3>
+<span id="child-avgint-table-avgint-table"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id7">avgint Table</a><a class="headerlink" href="#avgint-table" title="Permalink to this headline">¶</a></h3>
 <p>The new avgint table has all the standard dismod_at columns
 plus the following extra columns:</p>
 <div class="section" id="c-age-id">
-<span id="create-child-avgint-avgint-table-c-age-id"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id8">c_age_id</a><a class="headerlink" href="#c-age-id" title="Permalink to this headline">¶</a></h4>
+<span id="child-avgint-table-avgint-table-c-age-id"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id8">c_age_id</a><a class="headerlink" href="#c-age-id" title="Permalink to this headline">¶</a></h4>
 <p>This column identifies the age,
-in the <em>parent_node_database</em>, that this prediction are for.</p>
+in the <em>fit_node_database</em>, that this prediction are for.</p>
 <p>c_time_id
 _========
 This column identifies the time,
-in the <em>parent_node_database</em>, that this prediction are for.</p>
+in the <em>fit_node_database</em>, that this prediction are for.</p>
 </div>
 <div class="section" id="rectangular-grid">
-<span id="create-child-avgint-avgint-table-rectangular-grid"></span><span id="index-8"></span><h4><a class="toc-backref" href="#id9">Rectangular Grid</a><a class="headerlink" href="#rectangular-grid" title="Permalink to this headline">¶</a></h4>
+<span id="child-avgint-table-avgint-table-rectangular-grid"></span><span id="index-8"></span><h4><a class="toc-backref" href="#id9">Rectangular Grid</a><a class="headerlink" href="#rectangular-grid" title="Permalink to this headline">¶</a></h4>
 <p>For each rate (or covariate multiplier) that has a non-null
-parent smoothing (group smoothing) in the <em>parent_node_database</em>,
+parent smoothing (group smoothing) in the <em>fit_node_database</em>,
 all of the age time pairs in the smoothing are represented
 in the new avgint table</p>
 <hr class="docutils" />
-<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/create_child_avgint.py</span></code></p>
+<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/child_avgint_table.py</span></code></p>
 </div>
 </div>
 </div>
@@ -270,10 +272,10 @@ in the new avgint table</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="create_child_node_db.html" class="btn btn-neutral float-right" title="create_child_node_db" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="create_all_node_db.html" class="btn btn-neutral float-right" title="create_all_node_db" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="create_all_node_db.html" class="btn btn-neutral float-left" title="create_all_node_db" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="module.html" class="btn btn-neutral float-left" title="module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

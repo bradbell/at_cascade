@@ -1,0 +1,148 @@
+!!!!!!!!!!!!!!!!
+omega_constraint
+!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: omega_constraint, set, omega, constraints, in, fit, node, database
+
+.. index:: omega_constraint, set, omega, constraints, in, fit, node, database
+
+.. _omega_constraint:
+
+Set Omega Constraints in a Fit Node Database
+############################################
+.. contents::
+   :local:
+
+This routine uses the *mtall* data for the closest ancestor of a node
+and constrains *omega* to be equal to the *mtall* data.
+If there is no such *mtall* data
+for the :ref:`omega_constraint.fit_node_database.parent_node`,
+no tables are changed by this routine.
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _omega_constraint.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/omega_constraint.py
+    :lines: 107-110
+    :language: py
+
+.. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _omega_constraint.all_node_database:
+
+all_node_database
+*****************
+is a python string containing the name of the :ref:`all_node_db`.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: fit_node_database
+
+.. index:: fit_node_database
+
+.. _omega_constraint.fit_node_database:
+
+fit_node_database
+*****************
+is a python string containing the name of a :ref:`glossary.fit_node_database`.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: parent_node
+
+.. index:: parent_node
+
+.. _omega_constraint.fit_node_database.parent_node:
+
+parent_node
+===========
+We use *parent_node* to refer to the parent node in the
+dismod_at option table in the *fit_node_database*.
+
+.. meta::
+   :keywords: rate_table
+
+.. index:: rate_table
+
+.. _omega_constraint.fit_node_database.rate_table:
+
+rate_table
+==========
+On input, the parent and child smoothing for omega must be null.
+On return, they will be set to smoothings that yield the omega constraints.
+
+.. meta::
+   :keywords: smooth, table
+
+.. index:: smooth, table
+
+.. _omega_constraint.fit_node_database.smooth_table:
+
+smooth Table
+============
+Extra rows for the omega constraints will be added at the
+end of the smooth table so that existing smoothings are preserved.
+
+.. meta::
+   :keywords: smooth_grid, table
+
+.. index:: smooth_grid, table
+
+.. _omega_constraint.fit_node_database.smooth_grid_table:
+
+smooth_grid Table
+=================
+Extra rows for the omega constraints will be added at the
+end of the smooth_grid table so existing smoothings are preserved.
+
+.. meta::
+   :keywords: nslist, table
+
+.. index:: nslist, table
+
+.. _omega_constraint.fit_node_database.nslist_table:
+
+nslist Table
+============
+On input, this table must be empty.
+Upon return, it will contain entries that implement the omega constraints
+for the children of the parent_node.
+
+.. meta::
+   :keywords: nslist_pair, table
+
+.. index:: nslist_pair, table
+
+.. _omega_constraint.fit_node_database.nslist_pair_table:
+
+nslist_pair Table
+=================
+On input, this table must be empty.
+Upon return, it will contain entries that implement the omega constraints
+for the children of the parent_node.
+
+.. meta::
+   :keywords: other, tables
+
+.. index:: other, tables
+
+.. _omega_constraint.fit_node_database.other_tables:
+
+Other Tables
+============
+None of the other tables in the database are modified.
+
+----
+
+xsrst input file: ``at_cascade/omega_constraint.py``

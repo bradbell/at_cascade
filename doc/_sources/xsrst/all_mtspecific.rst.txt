@@ -1,0 +1,123 @@
+!!!!!!!!!!!!!!
+all_mtspecific
+!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: all_mtspecific, all, node, mtspecific, values
+
+.. index:: all_mtspecific, all, node, mtspecific, values
+
+.. _all_mtspecific:
+
+All Node mtspecific Values
+##########################
+.. contents::
+   :local:
+
+The values of :ref:`glossary.mtspecific` for all the nodes is specified by the
+all_mtspecific and mtspecific_index tables.
+
+.. meta::
+   :keywords: all_mtspecific, table
+
+.. index:: all_mtspecific, table
+
+.. _all_mtspecific.all_mtspecific_table:
+
+all_mtspecific Table
+********************
+This table specifies the value of :ref:`glossary.mtspecific` for each
+age, time point in the :ref:`omega_grid` and every node.
+If *mtspecific* is not specified for a node, it will use the same *mtspecific*
+values as its nearest ancestor node.
+If non of its ancestors have *mtspecific* values,
+there is no *mtspecific* data for this node and its omega will be constrained
+to be equal to its *mtall* data.
+
+.. meta::
+   :keywords: all_mtspecific_id
+
+.. index:: all_mtspecific_id
+
+.. _all_mtspecific.all_mtspecific_table.all_mtspecific_id:
+
+all_mtspecific_id
+=================
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+.. meta::
+   :keywords: all_mtspecific_value
+
+.. index:: all_mtspecific_value
+
+.. _all_mtspecific.all_mtspecific_table.all_mtspecific_value:
+
+all_mtspecific_value
+====================
+This column has type ``real`` and is the value of *mtspecific*
+for a specific node, age, and time; see mtspecific_index table below.
+
+.. meta::
+   :keywords: mtspecific_index, table
+
+.. index:: mtspecific_index, table
+
+.. _all_mtspecific.mtspecific_index_table:
+
+mtspecific_index Table
+**********************
+This table specifies the all_mtspecific_id at which the mtspecific values
+for a particular node begin.
+In addition, specifications for which age and time points
+correspond to each all_mtspecific_id are included.
+
+.. meta::
+   :keywords: mtspecific_index_id
+
+.. index:: mtspecific_index_id
+
+.. _all_mtspecific.mtspecific_index_table.mtspecific_index_id:
+
+mtspecific_index_id
+===================
+This column has type ``integer`` and is the primary key for this table.
+Its initial value is zero and it increments by one for each row.
+
+.. meta::
+   :keywords: node_id
+
+.. index:: node_id
+
+.. _all_mtspecific.mtspecific_index_table.node_id:
+
+node_id
+=======
+This column has type ``integer`` and specifies a node by its index
+in the root node database node table.
+
+.. meta::
+   :keywords: all_mtspecific_id
+
+.. index:: all_mtspecific_id
+
+.. _all_mtspecific.mtspecific_index_table.all_mtspecific_id:
+
+all_mtspecific_id
+=================
+This column has type ``integer`` and specifies the index in the
+all_mtspecific table where the mtspecific values for this node begin.
+For *i* equal 0 through
+:ref:`n_omega_age-1<omega_grid.omega_age_grid_table.n_omega_age>`
+and *j* equal 0 through
+:ref:`n_omega_time-1<omega_grid.omega_time_grid_table.n_omega_time>`
+
+| all_mtspecific_id + i * n_omega_time + j
+
+Is the index in the all_mtspecific table of the value for this node,
+the *i*-th age in the omega_grid,
+and the *j*-th time in the omega_grid.
+
+----
+
+xsrst input file: ``xsrst/all_node_db.xsrst``

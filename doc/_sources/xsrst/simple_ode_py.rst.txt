@@ -1,0 +1,24 @@
+!!!!!!!!!!!!!
+simple_ode_py
+!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: simple_ode_py, simple_ode:, python, source, code
+
+.. index:: simple_ode_py, simple_ode:, python, source, code
+
+.. _simple_ode_py:
+
+simple_ode: Python Source Code
+##############################
+.. contents::
+   :local:
+
+
+.. literalinclude:: ../../example/simple_ode.py
+    :lines: 235-712
+    :language: py
+
+----
+
+xsrst input file: ``example/simple_ode.py``

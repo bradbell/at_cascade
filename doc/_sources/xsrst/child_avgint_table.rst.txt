@@ -1,13 +1,13 @@
-!!!!!!!!!!!!!!!!!!!
-create_child_avgint
-!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!
+child_avgint_table
+!!!!!!!!!!!!!!!!!!
 
 .. meta::
-   :keywords: create_child_avgint, create, avgint, table, that, predicts, rates, for, child, nodes
+   :keywords: child_avgint_table, create, avgint, table, that, predicts, rates, for, child, nodes
 
-.. index:: create_child_avgint, create, avgint, table, that, predicts, rates, for, child, nodes
+.. index:: child_avgint_table, create, avgint, table, that, predicts, rates, for, child, nodes
 
-.. _create_child_avgint:
+.. _child_avgint_table:
 
 Create avgint Table That Predicts Rates for Child Nodes
 #######################################################
@@ -19,13 +19,13 @@ Create avgint Table That Predicts Rates for Child Nodes
 
 .. index:: syntax
 
-.. _create_child_avgint.syntax:
+.. _child_avgint_table.syntax:
 
 Syntax
 ******
 
-.. literalinclude:: ../../at_cascade/create_child_avgint.py
-    :lines: 92-95
+.. literalinclude:: ../../at_cascade/child_avgint_table.py
+    :lines: 93-96
     :language: py
 
 .. meta::
@@ -33,7 +33,7 @@ Syntax
 
 .. index:: all_node_database
 
-.. _create_child_avgint.all_node_database:
+.. _child_avgint_table.all_node_database:
 
 all_node_database
 *****************
@@ -41,16 +41,15 @@ is a python string containing the name of the :ref:`all_node_db`.
 This argument can't be ``None``.
 
 .. meta::
-   :keywords: parent_node_database
+   :keywords: fit_node_database
 
-.. index:: parent_node_database
+.. index:: fit_node_database
 
-.. _create_child_avgint.parent_node_database:
+.. _child_avgint_table.fit_node_database:
 
-parent_node_database
-********************
-is a python string containing the name of a :ref:`glossary.fit_node_database`
-that will be the parent node for this predictions.
+fit_node_database
+*****************
+is a python string containing the name of a :ref:`glossary.fit_node_database`.
 The avgint table will be placed in this database.
 The previous avgint table in this database is lost.
 This argument can't be ``None``.
@@ -60,38 +59,40 @@ This argument can't be ``None``.
 
 .. index:: parent_node
 
-.. _create_child_avgint.parent_node_database.parent_node:
+.. _child_avgint_table.fit_node_database.parent_node:
 
 parent_node
 ===========
 We use *parent_node* to refer to the parent node in the
-dismod_at option table in the *parent_node_database*.
+dismod_at option table in the *fit_node_database*.
 
 .. meta::
    :keywords: integrand_table
 
 .. index:: integrand_table
 
-.. _create_child_avgint.parent_node_database.integrand_table:
+.. _child_avgint_table.fit_node_database.integrand_table:
 
 integrand_table
 ===============
-The integrand table in the *parent_node_database* must include the following:
+The integrand table in the *fit_node_database* must include the following:
 :ref:`glossary.Sincidence`,
 :ref:`glossary.remission`,
 :ref:`glossary.mtexcess`.
-Integrands with a null parent smoothing id need not be included.
+Integrands corresponding to rates with null parent smoothing id
+need not be included.
 In addition, the integrand table must include all the covariate multipliers;
 i.e., ``mulcov_``\ *mulcov_id* where *mulcov_id* is the id
 for any covariate multiplier.
-Integrands with a null group smoothing id need not be included.
+Integrands corresponding to covariate multipliers
+with a null group smoothing id need not be included.
 
 .. meta::
    :keywords: avgint, table
 
 .. index:: avgint, table
 
-.. _create_child_avgint.avgint_table:
+.. _child_avgint_table.avgint_table:
 
 avgint Table
 ************
@@ -103,32 +104,32 @@ plus the following extra columns:
 
 .. index:: c_age_id
 
-.. _create_child_avgint.avgint_table.c_age_id:
+.. _child_avgint_table.avgint_table.c_age_id:
 
 c_age_id
 ========
 This column identifies the age,
-in the *parent_node_database*, that this prediction are for.
+in the *fit_node_database*, that this prediction are for.
 
 c_time_id
 _========
 This column identifies the time,
-in the *parent_node_database*, that this prediction are for.
+in the *fit_node_database*, that this prediction are for.
 
 .. meta::
    :keywords: rectangular, grid
 
 .. index:: rectangular, grid
 
-.. _create_child_avgint.avgint_table.rectangular_grid:
+.. _child_avgint_table.avgint_table.rectangular_grid:
 
 Rectangular Grid
 ================
 For each rate (or covariate multiplier) that has a non-null
-parent smoothing (group smoothing) in the *parent_node_database*,
+parent smoothing (group smoothing) in the *fit_node_database*,
 all of the age time pairs in the smoothing are represented
 in the new avgint table
 
 ----
 
-xsrst input file: ``at_cascade/create_child_avgint.py``
+xsrst input file: ``at_cascade/child_avgint_table.py``

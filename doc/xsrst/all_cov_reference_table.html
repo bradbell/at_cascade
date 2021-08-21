@@ -5,16 +5,15 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta content="mtall_table, all, node, mtall, table" name="keywords" />
-<meta content="mtall_id" name="keywords" />
+  <meta content="all_cov_reference_table, all, node, covariate, reference, table" name="keywords" />
+<meta content="all_cov_reference_id" name="keywords" />
 <meta content="node_id" name="keywords" />
-<meta content="omega_age_id" name="keywords" />
-<meta content="omega_time_id" name="keywords" />
-<meta content="mtall_value" name="keywords" />
+<meta content="covariate_id" name="keywords" />
+<meta content="reference" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>mtall_table &mdash; cppad_py  documentation</title>
+  <title>all_cov_reference_table &mdash; cppad_py  documentation</title>
   
 
   
@@ -43,8 +42,8 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="mtspecific_table" href="mtspecific_table.html" />
-    <link rel="prev" title="leaf_node_table" href="leaf_node_table.html" /> 
+    <link rel="next" title="leaf_node_table" href="leaf_node_table.html" />
+    <link rel="prev" title="all_node_db" href="all_node_db.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -95,15 +94,15 @@
 <li class="toctree-l2"><a class="reference internal" href="glossary.html">glossary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="all_node_db.html">all_node_db</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="covariate_reference_table.html">covariate_reference_table</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">all_cov_reference_table</a></li>
 <li class="toctree-l3"><a class="reference internal" href="leaf_node_table.html">leaf_node_table</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">mtall_table</a></li>
-<li class="toctree-l3"><a class="reference internal" href="mtspecific_table.html">mtspecific_table</a></li>
 <li class="toctree-l3"><a class="reference internal" href="omega_grid.html">omega_grid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="option_table.html">option_table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_mtall.html">all_mtall</a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_mtspecific.html">all_mtspecific</a></li>
+<li class="toctree-l3"><a class="reference internal" href="all_option_table.html">all_option_table</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="one_at_function.html">one_at_function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
 </ul>
 </li>
@@ -156,13 +155,13 @@
         
           <li><a href="all_node_db.html">all_node_db</a> &raquo;</li>
         
-      <li>mtall_table</li>
+      <li>all_cov_reference_table</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/xsrst/mtall_table.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/xsrst/all_cov_reference_table.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -175,52 +174,42 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="mtall-table">
-<h1>mtall_table<a class="headerlink" href="#mtall-table" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="all-node-mtall-table">
-<span id="id1"></span><h2>All Node mtall Table<a class="headerlink" href="#all-node-mtall-table" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="all-cov-reference-table">
+<h1>all_cov_reference_table<a class="headerlink" href="#all-cov-reference-table" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="all-node-covariate-reference-table">
+<span id="id1"></span><h2>All Node Covariate Reference Table<a class="headerlink" href="#all-node-covariate-reference-table" title="Permalink to this headline">¶</a></h2>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#mtall-id" id="id2">mtall_id</a></p></li>
+<li><p><a class="reference internal" href="#all-cov-reference-id" id="id2">all_cov_reference_id</a></p></li>
 <li><p><a class="reference internal" href="#node-id" id="id3">node_id</a></p></li>
-<li><p><a class="reference internal" href="#omega-age-id" id="id4">omega_age_id</a></p></li>
-<li><p><a class="reference internal" href="#omega-time-id" id="id5">omega_time_id</a></p></li>
-<li><p><a class="reference internal" href="#mtall-value" id="id6">mtall_value</a></p></li>
+<li><p><a class="reference internal" href="#covariate-id" id="id4">covariate_id</a></p></li>
+<li><p><a class="reference internal" href="#reference" id="id5">reference</a></p></li>
 </ul>
 </div>
-<p>This table specifies the value of <a class="reference internal" href="glossary.html#glossary-mtall"><span class="std std-ref">mtall</span></a> for each
-age, time point in the <a class="reference internal" href="omega_grid.html#id1"><span class="std std-ref">All Node Omega Grid</span></a> and every node.</p>
-<div class="section" id="mtall-id">
-<span id="mtall-table-mtall-id"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">mtall_id</a><a class="headerlink" href="#mtall-id" title="Permalink to this headline">¶</a></h3>
+<p>This table specifies the reference value for every covariate
+and node in the <em>root_node_database</em>.
+It has the following columns:</p>
+<div class="section" id="all-cov-reference-id">
+<span id="all-cov-reference-table-all-cov-reference-id"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">all_cov_reference_id</a><a class="headerlink" href="#all-cov-reference-id" title="Permalink to this headline">¶</a></h3>
 <p>This column has type <code class="docutils literal notranslate"><span class="pre">integer</span></code> and is the primary key for this table.
 Its initial value is zero and it increments by one for each row.</p>
 </div>
 <div class="section" id="node-id">
-<span id="mtall-table-node-id"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">node_id</a><a class="headerlink" href="#node-id" title="Permalink to this headline">¶</a></h3>
-<p>This column has type <code class="docutils literal notranslate"><span class="pre">integer</span></code> and specifies a node by its <em>node_id</em>
-value in the <em>root_node_database</em> node table.
-If a particular <em>node_id</em> does not appear,
-<em>omega</em> is set to zero for that node.
-If a <em>node_id</em> does appear, there must be one and only one row
-that has that <em>node_id</em> and each possible combination of
-<em>omega_age_id</em>, <em>omega_time_id</em>.</p>
+<span id="all-cov-reference-table-node-id"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">node_id</a><a class="headerlink" href="#node-id" title="Permalink to this headline">¶</a></h3>
+<p>This column has type <code class="docutils literal notranslate"><span class="pre">integer</span></code> and is specifies
+the node for this reference
+by the primary key in the <em>root_node_database</em> node table</p>
 </div>
-<div class="section" id="omega-age-id">
-<span id="mtall-table-omega-age-id"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">omega_age_id</a><a class="headerlink" href="#omega-age-id" title="Permalink to this headline">¶</a></h3>
-<p>This column has type <code class="docutils literal notranslate"><span class="pre">integer</span></code> and specifies the age for a grid point
-by the corresponding <em>omega_age_id</em> in the
-<a class="reference internal" href="omega_grid.html#omega-grid-omega-age-table"><span class="std std-ref">omega_age_table</span></a>.</p>
+<div class="section" id="covariate-id">
+<span id="all-cov-reference-table-covariate-id"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">covariate_id</a><a class="headerlink" href="#covariate-id" title="Permalink to this headline">¶</a></h3>
+<p>This column has type <code class="docutils literal notranslate"><span class="pre">integer</span></code> and is specifies
+the covariate, for this reference,
+by the primary key in the <em>root_node_database</em> covariate table</p>
 </div>
-<div class="section" id="omega-time-id">
-<span id="mtall-table-omega-time-id"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id5">omega_time_id</a><a class="headerlink" href="#omega-time-id" title="Permalink to this headline">¶</a></h3>
-<p>This column has type <code class="docutils literal notranslate"><span class="pre">integer</span></code> and specifies the time for a grid point
-by the corresponding <em>omega_time_id</em> in the
-<a class="reference internal" href="omega_grid.html#omega-grid-omega-time-table"><span class="std std-ref">omega_time_table</span></a>.</p>
-</div>
-<div class="section" id="mtall-value">
-<span id="mtall-table-mtall-value"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id6">mtall_value</a><a class="headerlink" href="#mtall-value" title="Permalink to this headline">¶</a></h3>
-<p>This column has type <code class="docutils literal notranslate"><span class="pre">real</span></code> and is the value of <em>mtall</em>
-at the corresponding node, age, and time.</p>
+<div class="section" id="reference">
+<span id="all-cov-reference-table-reference"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id5">reference</a><a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h3>
+<p>This column has type <code class="docutils literal notranslate"><span class="pre">real</span></code> and it specifies the reference value
+for this covariate and node.</p>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">xsrst/all_node_db.xsrst</span></code></p>
 </div>
@@ -235,10 +224,10 @@ at the corresponding node, age, and time.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="mtspecific_table.html" class="btn btn-neutral float-right" title="mtspecific_table" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="leaf_node_table.html" class="btn btn-neutral float-right" title="leaf_node_table" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="leaf_node_table.html" class="btn btn-neutral float-left" title="leaf_node_table" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="all_node_db.html" class="btn btn-neutral float-left" title="all_node_db" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

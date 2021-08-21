@@ -20,6 +20,7 @@
 <meta content="ode_integrand" name="keywords" />
 <meta content="omega" name="keywords" />
 <meta content="omega_grid" name="keywords" />
+<meta content="prevalence" name="keywords" />
 <meta content="rate_value" name="keywords" />
 <meta content="remission" name="keywords" />
 <meta content="rho" name="keywords" />
@@ -111,7 +112,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">glossary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
-<li class="toctree-l2"><a class="reference internal" href="one_at_function.html">one_at_function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
 </ul>
 </li>
@@ -201,13 +202,14 @@
 <li><p><a class="reference internal" href="#ode-integrand" id="id14">ode_integrand</a></p></li>
 <li><p><a class="reference internal" href="#omega" id="id15">omega</a></p></li>
 <li><p><a class="reference internal" href="#omega-grid" id="id16">omega_grid</a></p></li>
-<li><p><a class="reference internal" href="#rate-value" id="id17">rate_value</a></p></li>
-<li><p><a class="reference internal" href="#remission" id="id18">remission</a></p></li>
-<li><p><a class="reference internal" href="#rho" id="id19">rho</a></p></li>
-<li><p><a class="reference internal" href="#root-node" id="id20">root_node</a></p></li>
-<li><p><a class="reference internal" href="#root-node-database" id="id21">root_node_database</a></p></li>
-<li><p><a class="reference internal" href="#sincidence" id="id22">Sincidence</a></p></li>
-<li><p><a class="reference internal" href="#top-directory" id="id23">top_directory</a></p></li>
+<li><p><a class="reference internal" href="#prevalence" id="id17">prevalence</a></p></li>
+<li><p><a class="reference internal" href="#rate-value" id="id18">rate_value</a></p></li>
+<li><p><a class="reference internal" href="#remission" id="id19">remission</a></p></li>
+<li><p><a class="reference internal" href="#rho" id="id20">rho</a></p></li>
+<li><p><a class="reference internal" href="#root-node" id="id21">root_node</a></p></li>
+<li><p><a class="reference internal" href="#root-node-database" id="id22">root_node_database</a></p></li>
+<li><p><a class="reference internal" href="#sincidence" id="id23">Sincidence</a></p></li>
+<li><p><a class="reference internal" href="#top-directory" id="id24">top_directory</a></p></li>
 </ul>
 </div>
 <div class="section" id="eta">
@@ -231,10 +233,21 @@ integrand,
 node,
 subgroup,
 weight,
-weight grid.
-In addition, its option table is the same as in the <em>root_node_database</em>
-except for the value of <em>parent_node_name</em>.
-(The value of <em>parent_node_id</em> does not appear in the option table.)</p>
+weight grid.</p>
+<ul class="simple">
+<li><p>The <em>fit_node_database</em> option table is the same as in the
+<em>root_node_database</em> except for the value of <em>parent_node_name</em>.
+(The value of <em>parent_node_id</em> does not appear in the option table.)</p></li>
+<li><p>The subgroup table must have one row; i.e., there is one subgroup,
+one group and they correspond to all the nodes.</p></li>
+<li><p>The following tables in this database must be empty:
+nslist, nslist_pair.</p></li>
+<li><p>The rate table must have null entries for the
+omega parent and child smoothings.</p></li>
+<li><p>The rate table smoothing for pini must be null the corresponding
+smooth_grid entries must use the age_id corresponding to the smallest
+age in the age table.</p></li>
+</ul>
 </div>
 <div class="section" id="iota">
 <span id="glossary-iota"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id6">iota</a><a class="headerlink" href="#iota" title="Permalink to this headline">¶</a></h3>
@@ -287,37 +300,42 @@ This is also denoted by <span class="math notranslate nohighlight">\(\omega(a, t
 <span id="glossary-omega-grid"></span><span id="index-14"></span><h3><a class="toc-backref" href="#id16">omega_grid</a><a class="headerlink" href="#omega-grid" title="Permalink to this headline">¶</a></h3>
 <p>A single age-time grid used for the <em>omega</em> constraints.</p>
 </div>
+<div class="section" id="prevalence">
+<span id="glossary-prevalence"></span><span id="index-15"></span><h3><a class="toc-backref" href="#id17">prevalence</a><a class="headerlink" href="#prevalence" title="Permalink to this headline">¶</a></h3>
+<p>This is the ratio the number of people with the condition
+divided by the number of people currently alive.</p>
+</div>
 <div class="section" id="rate-value">
-<span id="glossary-rate-value"></span><span id="index-15"></span><h3><a class="toc-backref" href="#id17">rate_value</a><a class="headerlink" href="#rate-value" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-rate-value"></span><span id="index-16"></span><h3><a class="toc-backref" href="#id18">rate_value</a><a class="headerlink" href="#rate-value" title="Permalink to this headline">¶</a></h3>
 <p>The abbreviation used for rate value covariate multiplier.</p>
 </div>
 <div class="section" id="remission">
-<span id="glossary-remission"></span><span id="index-16"></span><h3><a class="toc-backref" href="#id18">remission</a><a class="headerlink" href="#remission" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-remission"></span><span id="index-17"></span><h3><a class="toc-backref" href="#id19">remission</a><a class="headerlink" href="#remission" title="Permalink to this headline">¶</a></h3>
 <p>The abbreviation used for the remission integrand.
 This corresponds to a directly measurement of <em>rho</em></p>
 </div>
 <div class="section" id="rho">
-<span id="glossary-rho"></span><span id="index-17"></span><h3><a class="toc-backref" href="#id19">rho</a><a class="headerlink" href="#rho" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-rho"></span><span id="index-18"></span><h3><a class="toc-backref" href="#id20">rho</a><a class="headerlink" href="#rho" title="Permalink to this headline">¶</a></h3>
 <p>The mode rate for remission as a function of age an time.
 This is also denoted by <span class="math notranslate nohighlight">\(\rho(a, t)\)</span>.</p>
 </div>
 <div class="section" id="root-node">
-<span id="glossary-root-node"></span><span id="index-18"></span><h3><a class="toc-backref" href="#id20">root_node</a><a class="headerlink" href="#root-node" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-root-node"></span><span id="index-19"></span><h3><a class="toc-backref" href="#id21">root_node</a><a class="headerlink" href="#root-node" title="Permalink to this headline">¶</a></h3>
 <p>The top level node for this cascade.</p>
 </div>
 <div class="section" id="root-node-database">
-<span id="glossary-root-node-database"></span><span id="index-19"></span><h3><a class="toc-backref" href="#id21">root_node_database</a><a class="headerlink" href="#root-node-database" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-root-node-database"></span><span id="index-20"></span><h3><a class="toc-backref" href="#id22">root_node_database</a><a class="headerlink" href="#root-node-database" title="Permalink to this headline">¶</a></h3>
 <p>This is a dismod_at database where the <em>root_node</em> is the
 parent node in the dismod_at option table; see
 <a class="reference internal" href="plan.html#plan-input-data-root-node-database"><span class="std std-ref">Root Node Database</span></a>.</p>
 </div>
 <div class="section" id="sincidence">
-<span id="glossary-sincidence"></span><span id="index-20"></span><h3><a class="toc-backref" href="#id22">Sincidence</a><a class="headerlink" href="#sincidence" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-sincidence"></span><span id="index-21"></span><h3><a class="toc-backref" href="#id23">Sincidence</a><a class="headerlink" href="#sincidence" title="Permalink to this headline">¶</a></h3>
 <p>The abbreviation used for the susceptible incidence integrand.
 This corresponds to a directly measurement of <a class="reference internal" href="#glossary-iota"><span class="std std-ref">iota</span></a>.</p>
 </div>
 <div class="section" id="top-directory">
-<span id="glossary-top-directory"></span><span id="index-21"></span><h3><a class="toc-backref" href="#id23">top_directory</a><a class="headerlink" href="#top-directory" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-top-directory"></span><span id="index-22"></span><h3><a class="toc-backref" href="#id24">top_directory</a><a class="headerlink" href="#top-directory" title="Permalink to this headline">¶</a></h3>
 <p>Directory where the input data is located.</p>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">xsrst/glossary.xsrst</span></code></p>

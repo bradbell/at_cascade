@@ -1,13 +1,13 @@
-!!!!!!!!!!!!!!!!!!!!!!!!!
-covariate_reference_table
-!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!
+all_cov_reference_table
+!!!!!!!!!!!!!!!!!!!!!!!
 
 .. meta::
-   :keywords: covariate_reference_table, all, node, covariate, reference, table
+   :keywords: all_cov_reference_table, all, node, covariate, reference, table
 
-.. index:: covariate_reference_table, all, node, covariate, reference, table
+.. index:: all_cov_reference_table, all, node, covariate, reference, table
 
-.. _covariate_reference_table:
+.. _all_cov_reference_table:
 
 All Node Covariate Reference Table
 ##################################
@@ -19,14 +19,14 @@ and node in the *root_node_database*.
 It has the following columns:
 
 .. meta::
-   :keywords: covariate_reference_id
+   :keywords: all_cov_reference_id
 
-.. index:: covariate_reference_id
+.. index:: all_cov_reference_id
 
-.. _covariate_reference_table.covariate_reference_id:
+.. _all_cov_reference_table.all_cov_reference_id:
 
-covariate_reference_id
-**********************
+all_cov_reference_id
+********************
 This column has type ``integer`` and is the primary key for this table.
 Its initial value is zero and it increments by one for each row.
 
@@ -35,7 +35,7 @@ Its initial value is zero and it increments by one for each row.
 
 .. index:: node_id
 
-.. _covariate_reference_table.node_id:
+.. _all_cov_reference_table.node_id:
 
 node_id
 *******
@@ -48,7 +48,7 @@ by the primary key in the *root_node_database* node table
 
 .. index:: covariate_id
 
-.. _covariate_reference_table.covariate_id:
+.. _all_cov_reference_table.covariate_id:
 
 covariate_id
 ************
@@ -61,7 +61,7 @@ by the primary key in the *root_node_database* covariate table
 
 .. index:: reference
 
-.. _covariate_reference_table.reference:
+.. _all_cov_reference_table.reference:
 
 reference
 *********

@@ -25,7 +25,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_all_node_db.py
-    :lines: 132-143
+    :lines: 150-161
     :language: py
 
 .. meta::
@@ -55,21 +55,21 @@ is a python string containing the name of the name of the
 This argument can't be ``None``.
 
 .. meta::
-   :keywords: covariate_reference
+   :keywords: all_cov_reference
 
-.. index:: covariate_reference
+.. index:: all_cov_reference
 
-.. _create_all_node_db.covariate_reference:
+.. _create_all_node_db.all_cov_reference:
 
-covariate_reference
-*******************
+all_cov_reference
+*****************
 This is a python dictionary with a key equal to the node name for
 each node in the node table in *root_node_database*.
 If *node* is a node name,
-*covariate_reference[node]* is a python dictionary with a key equal to the
+*all_cov_reference[node]* is a python dictionary with a key equal to the
 covariate name for each covariate in the *root_node_database*.
 If *covariate* is an covariate name,
-*covariate_reference[node][covariate]*
+*all_cov_reference[node][covariate]*
 is the reference values for the specified node and covariate.
 This argument can't be ``None``.
 
@@ -82,7 +82,14 @@ This argument can't be ``None``.
 
 omega_grid
 **********
-Not yet specified.
+is a dictionary with two keys ``age`` and ``time``.
+The value *omega*\ [``age``] is a list containing the
+age_id values for the :ref:``omega_grid``; i.e.,
+These are indices in the root node database age table.
+The value *omega*\ [``time``] is a list containing the
+time_id values for the omega grid.
+We use the notation *n_omega_age* (*n_omega_time*) for the length
+of the age (time) list.
 
 .. meta::
    :keywords: default
@@ -106,7 +113,14 @@ be an :ref:`glossary.ode_integrand`.
 
 mtall_data
 **********
-Not yet specified.
+This is a python dictionary with a key for each node name
+for the root node and its descendant.
+The value *mtall_data[node_name]* is a list.
+For *i* equal 0, ..., *n_omega_age*-1 and *j* equal 0, ..., *n_omega_time*-1,
+*mtall_data[node_name][ i * n_omega_time + j ]
+is the value of *mtall* at the specified node,
+the age corresponding to index *i* in *omega_grid*\ [``age``],
+and time corresponding to index *j* in *omega_grid*\ [``time``].
 
 .. meta::
    :keywords: default
@@ -118,8 +132,6 @@ Not yet specified.
 default
 =======
 If this argument in ``None``, *omega* will be constrained to zero.
-In this case none of the integrands in the *root_node_database* can
-be an :ref:`glossary.ode_integrand`.
 
 .. meta::
    :keywords: mtspecific_data

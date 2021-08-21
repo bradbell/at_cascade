@@ -9,7 +9,7 @@
 <meta content="syntax" name="keywords" />
 <meta content="all_node_database" name="keywords" />
 <meta content="root_node_database" name="keywords" />
-<meta content="covariate_reference" name="keywords" />
+<meta content="all_cov_reference" name="keywords" />
 <meta content="omega_grid" name="keywords" />
 <meta content="default" name="keywords" />
 <meta content="mtall_data" name="keywords" />
@@ -56,8 +56,8 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="create_child_avgint" href="create_child_avgint.html" />
-    <link rel="prev" title="module" href="module.html" /> 
+    <link rel="next" title="create_child_node_db" href="create_child_node_db.html" />
+    <link rel="prev" title="child_avgint_table" href="child_avgint_table.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -108,11 +108,12 @@
 <li class="toctree-l2"><a class="reference internal" href="glossary.html">glossary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
-<li class="toctree-l2"><a class="reference internal" href="one_at_function.html">one_at_function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">example</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="module.html">module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="child_avgint_table.html">child_avgint_table</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">create_all_node_db</a></li>
-<li class="toctree-l3"><a class="reference internal" href="create_child_avgint.html">create_child_avgint</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_child_node_db.html">create_child_node_db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="omega_constraint.html">omega_constraint</a></li>
 </ul>
 </li>
 </ul>
@@ -194,7 +195,7 @@
 <li><p><a class="reference internal" href="#syntax" id="id8">Syntax</a></p></li>
 <li><p><a class="reference internal" href="#all-node-database" id="id9">all_node_database</a></p></li>
 <li><p><a class="reference internal" href="#root-node-database" id="id10">root_node_database</a></p></li>
-<li><p><a class="reference internal" href="#covariate-reference" id="id11">covariate_reference</a></p></li>
+<li><p><a class="reference internal" href="#all-cov-reference" id="id11">all_cov_reference</a></p></li>
 <li><p><a class="reference internal" href="#omega-grid" id="id12">omega_grid</a></p>
 <ul>
 <li><p><a class="reference internal" href="#default" id="id13">default</a></p></li>
@@ -237,7 +238,7 @@
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># at_cascade.create_all_node_db(</span>
     <span class="n">all_node_database</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">root_node_database</span>  <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">covariate_reference</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">all_cov_reference</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">omega_grid</span>          <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">mtall_data</span>          <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">mtspecific_data</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -261,21 +262,28 @@ This argument can’t be <code class="docutils literal notranslate"><span class=
 <a class="reference internal" href="glossary.html#glossary-root-node-database"><span class="std std-ref">root_node_database</span></a>.
 This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </div>
-<div class="section" id="covariate-reference">
-<span id="create-all-node-db-covariate-reference"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id11">covariate_reference</a><a class="headerlink" href="#covariate-reference" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="all-cov-reference">
+<span id="create-all-node-db-all-cov-reference"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id11">all_cov_reference</a><a class="headerlink" href="#all-cov-reference" title="Permalink to this headline">¶</a></h3>
 <p>This is a python dictionary with a key equal to the node name for
 each node in the node table in <em>root_node_database</em>.
 If <em>node</em> is a node name,
-<em>covariate_reference[node]</em> is a python dictionary with a key equal to the
+<em>all_cov_reference[node]</em> is a python dictionary with a key equal to the
 covariate name for each covariate in the <em>root_node_database</em>.
 If <em>covariate</em> is an covariate name,
-<em>covariate_reference[node][covariate]</em>
+<em>all_cov_reference[node][covariate]</em>
 is the reference values for the specified node and covariate.
 This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </div>
 <div class="section" id="omega-grid">
 <span id="create-all-node-db-omega-grid"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id12">omega_grid</a><a class="headerlink" href="#omega-grid" title="Permalink to this headline">¶</a></h3>
-<p>Not yet specified.</p>
+<p>is a dictionary with two keys <code class="docutils literal notranslate"><span class="pre">age</span></code> and <code class="docutils literal notranslate"><span class="pre">time</span></code>.
+The value <em>omega</em>[<code class="docutils literal notranslate"><span class="pre">age</span></code>] is a list containing the
+age_id values for the :ref:<code class="docutils literal notranslate"><span class="pre">omega_grid</span></code>; i.e.,
+These are indices in the root node database age table.
+The value <em>omega</em>[<code class="docutils literal notranslate"><span class="pre">time</span></code>] is a list containing the
+time_id values for the omega grid.
+We use the notation <em>n_omega_age</em> (<em>n_omega_time</em>) for the length
+of the age (time) list.</p>
 <div class="section" id="default">
 <span id="create-all-node-db-omega-grid-default"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id13">default</a><a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h4>
 <p>If this argument in <code class="docutils literal notranslate"><span class="pre">None</span></code>, <em>omega</em> will be constrained to zero.
@@ -285,12 +293,17 @@ be an <a class="reference internal" href="glossary.html#glossary-ode-integrand">
 </div>
 <div class="section" id="mtall-data">
 <span id="create-all-node-db-mtall-data"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id14">mtall_data</a><a class="headerlink" href="#mtall-data" title="Permalink to this headline">¶</a></h3>
-<p>Not yet specified.</p>
+<p>This is a python dictionary with a key for each node name
+for the root node and its descendant.
+The value <em>mtall_data[node_name]</em> is a list.
+For <em>i</em> equal 0, …, <em>n_omega_age</em>-1 and <em>j</em> equal 0, …, <em>n_omega_time</em>-1,
+<em>mtall_data[node_name][ i * n_omega_time + j ]
+is the value of *mtall</em> at the specified node,
+the age corresponding to index <em>i</em> in <em>omega_grid</em>[<code class="docutils literal notranslate"><span class="pre">age</span></code>],
+and time corresponding to index <em>j</em> in <em>omega_grid</em>[<code class="docutils literal notranslate"><span class="pre">time</span></code>].</p>
 <div class="section" id="create-all-node-db-mtall-data-default">
 <span id="index-8"></span><span id="id2"></span><h4><a class="toc-backref" href="#id15">default</a><a class="headerlink" href="#create-all-node-db-mtall-data-default" title="Permalink to this headline">¶</a></h4>
-<p>If this argument in <code class="docutils literal notranslate"><span class="pre">None</span></code>, <em>omega</em> will be constrained to zero.
-In this case none of the integrands in the <em>root_node_database</em> can
-be an <a class="reference internal" href="glossary.html#glossary-ode-integrand"><span class="std std-ref">ode_integrand</span></a>.</p>
+<p>If this argument in <code class="docutils literal notranslate"><span class="pre">None</span></code>, <em>omega</em> will be constrained to zero.</p>
 </div>
 </div>
 <div class="section" id="mtspecific-data">
@@ -352,10 +365,10 @@ approximated by the value at the midpoint of the intervals.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="create_child_avgint.html" class="btn btn-neutral float-right" title="create_child_avgint" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="create_child_node_db.html" class="btn btn-neutral float-right" title="create_child_node_db" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="module.html" class="btn btn-neutral float-left" title="module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="child_avgint_table.html" class="btn btn-neutral float-left" title="child_avgint_table" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
