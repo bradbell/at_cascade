@@ -245,10 +245,11 @@ import copy
 import time
 import csv
 import random
+import numpy
 import shutil
 import distutils.dir_util
 import dismod_at
-from math import exp
+import math
 #
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
@@ -293,7 +294,7 @@ age_grid = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
 # END age_grid
 #
 # BEGIN income_grid
-random_income = True
+random_income = False
 number_income = 3
 income_grid   = dict()
 for node in [ 'n3', 'n4', 'n5', 'n6' ] :
@@ -314,14 +315,14 @@ for node in [ 'n3', 'n4', 'n5', 'n6' ] :
 def iota_true(a, n = 'n0', I = avg_income['n0'] ) :
     s_n = sum_random[n]
     r_0 = avg_income['n0']
-    return (1 + a / 100) * 1e-3 * exp( s_n + alpha_true * ( I - r_0 ) )
+    return (1 + a / 100) * 1e-3 * math.exp( s_n + alpha_true * ( I - r_0 ) )
 # END iota_true
 # ----------------------------------------------------------------------------
 # BEGIN omega_true
-def omega_true(a, n = 'n0' ) :
+def omega_true(a, n ) :
     r_0 = avg_income['n0']
     r_n = avg_income[n]
-    return (1 + a / 100) * 1e-2 * exp( alpha_true * ( r_n - r_0 ) )
+    return (1 + a / 100) * 1e-2 * math.exp( alpha_true * ( r_n - r_0 ) )
 # END omega_true
 # ----------------------------------------------------------------------------
 def average_integrand(integrand_name, age, node_name, income) :
@@ -329,9 +330,8 @@ def average_integrand(integrand_name, age, node_name, income) :
         return iota_true(a, node_name, income)
     def omega(a, t) :
         return omega_true(a, node_name)
-    rate           = { 'iota' : iota  ,             'omega' : omega }
-    grid           = { 'age' : age_grid ,           'time' : [2000.0] }
-    noise          = { 'density_name' : 'gaussian', 'meas_std' : 0.0  }
+    rate           = { 'iota': iota,     'omega': omega }
+    grid           = { 'age' : [age],    'time': [2000.0] }
     abs_tol        = 1e-5
     avg_integrand   = dismod_at.average_integrand(
         rate, integrand_name, grid,  abs_tol
@@ -352,13 +352,13 @@ def root_node_db(file_name) :
             'name':    'prior_iota_dage',
             'density': 'log_gaussian',
             'mean':    0.0,
-            'std':     3.0,
+            'std':     1.0,
             'eta':     iota_true(0) * 1e-3,
         },{ # prior_iota_child
             'name':    'prior_iota_child',
             'density': 'gaussian',
             'mean':    0.0,
-            'std':     10.0,
+            'std':     1.0,
         },{ # prior_alpha_n0
             'name':    'prior_alpha_n0',
             'density': 'uniform',
@@ -456,8 +456,10 @@ def root_node_db(file_name) :
         'density':      'gaussian',
         'hold_out':     False,
     }
-    for (age_id, age) in enumerate( age_grid ) :
-        for node in leaf_node_set :
+    for node in leaf_node_set :
+        row_list       = list()
+        max_meas_value = 0.0
+        for (age_id, age) in enumerate( age_grid ) :
             for income in income_grid[node] :
                 meas_value = average_integrand(
                     integrand_name, age, node, income
@@ -467,11 +469,15 @@ def root_node_db(file_name) :
                 row['age_lower']  = age
                 row['age_upper']  = age
                 row['income']     = income
-                # The model for the measurement noise is small so a few
-                # data points act like lots of real data points.
-                # The actual measruement noise is zero.
-                row['meas_std']   = meas_value / 10.0
-                data_table.append( copy.copy(row) )
+                max_meas_value    = max(meas_value, max_meas_value)
+                row_list.append( copy.copy(row) )
+        for row in row_list :
+            # The model for the measurement noise is small so a few
+            # data points act like lots of real data points.
+            # The actual measruement noise is zero.
+            row['meas_std'] = max_meas_value / 10.0
+        #
+        data_table += row_list
     #
     # time_grid
     time_grid = [ 2000.0 ]
@@ -488,8 +494,9 @@ def root_node_db(file_name) :
         { 'name':'rate_case',             'value':'iota_pos_rho_zero'},
         { 'name': 'zero_sum_child_rate',  'value':'iota'},
         { 'name':'quasi_fixed',           'value':'false'},
+        { 'name':'print_level_fixed',     'value':'5'},
         { 'name':'max_num_iter_fixed',    'value':'50'},
-        { 'name':'tolerance_fixed',       'value':'1e-8'},
+        { 'name':'tolerance_fixed',       'value':'1e-10'},
         { 'name':'random_seed',           'value':str(random_seed)},
     ]
     # ----------------------------------------------------------------------
@@ -617,30 +624,69 @@ def check_fit(leaf_node_database) :
     # leaf_node_dir
     leaf_node_dir = leaf_node_database[ : - len('dismod.db') - 1 ]
     #
-    # variable_csv
-    fp     = open( leaf_node_dir + '/variable.csv' )
-    reader = csv.DictReader(fp)
-    variable_csv = list()
-    for row in reader :
-        variable_csv.append( row )
+    # table
+    table      = dict()
+    new        = False
+    connection = dismod_at.create_connection(leaf_node_database, new)
+    for name in [
+        'age',
+        'fit_var',
+        'node',
+        'rate',
+        'sample',
+        'var',
+    ] :
+        table[name] = dismod_at.get_table_dict(connection, name)
+    connection.close()
+    #
+    # sample_std
+    n_var      = len( table['var'] )
+    assert len( table['sample'] ) % n_var == 0
+    n_sample   = len( table['sample'] ) / n_var
+    sample_std = n_var * [ 0.0 ]
+    for row in table['sample'] :
+        var_id              = row['var_id']
+        sample_value        = row['var_value']
+        fit_value           = table['fit_var'][var_id]['fit_var_value']
+        sample_std[var_id] += (sample_value - fit_value)**2
+    for var_id in range(n_var) :
+        sample_std[var_id] = math.sqrt( sample_std[var_id] / n_sample )
     #
     # check value of iota
-    for row in variable_csv :
+    for (var_id, row) in enumerate( table['var'] ) :
         if row['var_type'] == 'rate' :
-            assert row['rate'] == 'iota'
-            assert row['node'] == leaf_node_name
-            assert row['fixed'] == 'true'
-            income      = avg_income[leaf_node_name]
-            age         = float(row['age'])
-            fit_value   = float(row['fit_value'])
-            sam_std     = float(row['sam_std'])
-            check_value = iota_true(age, leaf_node_name, income)
+            #
+            # rate_name
+            rate_id   = row['rate_id']
+            rate_name = table['rate'][rate_id]['rate_name']
+            #
+            # node_name
+            node_id   = row['node_id']
+            node_name = table['node'][node_id]['node_name']
+            assert node_name == leaf_node_name
+            #
+            # income
+            income      = avg_income[node_name]
+            #
+            # age
+            age_id      = row['age_id']
+            age         = table['age'][age_id]['age']
+            #
+            # fit_value
+            fit_value   = table['fit_var'][var_id]['fit_var_value']
+            #
+            # sam_std
+            sam_std     = sample_std[var_id]
+            #
+            if rate_name == 'iota' :
+                check_value = iota_true(age, leaf_node_name, income)
+                tolerance   = 1e-1
+            elif rate_name == 'omega' :
+                check_value = omega_true(age, leaf_node_name)
+                tolerance   = 99.0 * numpy.finfo(float).eps
             rel_error   = 1.0 - fit_value / check_value
-            print(leaf_node_name, fit_value, check_value, rel_err)
-            if random_income :
-                assert abs(rel_error) < 1e-1
-            else :
-                assert abs(rel_error) < 1e-3
+            print(node_name, rate_name, age, fit_value, check_value, rel_error, sam_std)
+            assert abs(rel_error) < tolerance
             assert abs(fit_value - check_value) < 2.0 * sam_std
         else :
             assert row['var_type'] == 'mulcov_rate_value'
@@ -672,7 +718,7 @@ def main() :
     #
     # mtall_data
     integrand_name = 'mtall'
-    mtall_data = dict()
+    mtall_data     = dict()
     for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
         mtall_data[node_name] = list()
         income                = avg_income[node_name]

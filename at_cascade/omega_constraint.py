@@ -177,8 +177,7 @@ def omega_constraint(
             return
     #
     # parent_mtall
-    mtall_index_id = node_id2all_mtall_id[ancestor_node_id]
-    all_mtall_id   = all_tables['mtall_index'][mtall_index_id]['all_mtall_id']
+    all_mtall_id = node_id2all_mtall_id[ancestor_node_id]
     parent_mtall   = list()
     for i in range( n_omega_age * n_omega_time ) :
         row             = all_tables['all_mtall'][all_mtall_id + i ]

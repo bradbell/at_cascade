@@ -292,6 +292,8 @@ def create_child_node_db(
         child_tables['prior']       = list()
         child_tables['smooth']      = list()
         child_tables['smooth_grid'] = list()
+        child_tables['nslist']      = list()
+        child_tables['nslist_pair'] = list()
         #
         # child_node_id
         child_node_id = table_name2id(node_table, 'node_name', child_name)
