@@ -18,6 +18,10 @@
 Simple Case Where The ODE is Used to Model The Data
 ###################################################
 
+Under Construction
+******************
+This test is not yet passing.
+
 Nodes
 *****
 The following is a diagram of the node tree for this example::
@@ -179,7 +183,7 @@ The mean is *iota_true(50)*
 Dage Prior
 -----------
 The prior for age differences is log Gaussian with mean zero,
-standard deviation one, and :ref:`glossary.eta` equal to
+standard deviation 3.0, and :ref:`glossary.eta` equal to
 *iota_true(50)/1000* .
 
 Child Smoothing
@@ -202,7 +206,7 @@ age and one time point.
 
 Value Prior
 -----------
-This value prior is gaussian with mean zero and standard deviation one.
+This value prior is gaussian with mean zero and standard deviation 10.0.
 There are no upper or lower limits in this prior.
 
 Alpha Smoothing
@@ -213,8 +217,8 @@ age and one time point in this smoothing.
 
 Value Prior
 ===========
-This value prior is uniform with lower limit *-|alpha_true|*,
-upper limit *+|alpha_true|* and mean zero.
+This value prior is uniform with lower limit *-10\*|alpha_true|*,
+upper limit *+10\*|alpha_true|* and mean zero.
 (The mean is used to initialize the optimization.)
 
 {xsrst_end simple_ode}
@@ -314,13 +318,13 @@ def iota_true(a, n = 'n0', I = avg_income['n0'] ) :
 # END iota_true
 # ----------------------------------------------------------------------------
 # BEGIN omega_true
-def iota_true(a, n = 'n0' ) :
+def omega_true(a, n = 'n0' ) :
     r_0 = avg_income['n0']
     r_n = avg_income[n]
     return (1 + a / 100) * 1e-2 * exp( alpha_true * ( r_n - r_0 ) )
 # END omega_true
 # ----------------------------------------------------------------------------
-def compute_integrand(integrand_name, age, node_name, income) :
+def average_integrand(integrand_name, age, node_name, income) :
     def iota(a, t) :
         return iota_true(a, node_name, income)
     def omega(a, t) :
@@ -329,10 +333,10 @@ def compute_integrand(integrand_name, age, node_name, income) :
     grid           = { 'age' : age_grid ,           'time' : [2000.0] }
     noise          = { 'density_name' : 'gaussian', 'meas_std' : 0.0  }
     abs_tol        = 1e-5
-    meas_value = dismod_at.sim_data(
-        rate, integrand_name, grid, noise, abs_tol
+    avg_integrand   = dismod_at.average_integrand(
+        rate, integrand_name, grid,  abs_tol
     )
-    return meas_value
+    return avg_integrand
 # ----------------------------------------------------------------------------
 def root_node_db(file_name) :
     #
@@ -358,8 +362,8 @@ def root_node_db(file_name) :
         },{ # prior_alpha_n0
             'name':    'prior_alpha_n0',
             'density': 'uniform',
-            'lower':   -abs(alpha_true) * 10,
-            'upper':   +abs(alpha_true) * 10,
+            'lower':   - 10 * abs(alpha_true),
+            'upper':   + 10 * abs(alpha_true),
             'mean':    0.0,
         },
     ]
@@ -429,7 +433,11 @@ def root_node_db(file_name) :
     subgroup_table = [ {'subgroup': 'world', 'group':'world'} ]
     #
     # integrand_table
-    integrand_table = [ {'name':'Sincidence'}, {'name':'mulcov_0'} ]
+    integrand_table = [
+        {'name': 'Sincidence'},
+        {'name': 'prevalence'},
+        {'name': 'mulcov_0'}
+    ]
     #
     # avgint_table
     avgint_table = list()
@@ -439,7 +447,6 @@ def root_node_db(file_name) :
     leaf_node_set  = { 'n3', 'n4', 'n5', 'n6' }
     integrand_name = 'prevalence'
     row = {
-        'node':         'n0',
         'subgroup':     'world',
         'weight':       '',
         'time_lower':   2000.0,
@@ -452,7 +459,7 @@ def root_node_db(file_name) :
     for (age_id, age) in enumerate( age_grid ) :
         for node in leaf_node_set :
             for income in income_grid[node] :
-                meas_value = compute_integrand(
+                meas_value = average_integrand(
                     integrand_name, age, node, income
                 )
                 row['node']       = node
@@ -473,8 +480,8 @@ def root_node_db(file_name) :
     weight_table = list()
     #
     # nslist_table
-    #
     nslist_table = dict()
+    #
     # option_table
     option_table = [
         { 'name':'parent_node_name',      'value':'n0'},
@@ -533,6 +540,9 @@ def cascade_fit_node(all_node_database, fit_node_database, node_table) :
     # fit_node_dir
     fit_node_dir = fit_node_database[ : - len('dismod.db') - 1 ]
     #
+    # add omega to model
+    at_cascade.omega_constraint(all_node_database, fit_node_database)
+    #
     # replace avgint table
     at_cascade.child_avgint_table(all_node_database, fit_node_database)
     #
@@ -564,7 +574,7 @@ def cascade_fit_node(all_node_database, fit_node_database, node_table) :
     dismod_at.sql_command(connection, command)
     connection.close()
     #
-    # predict
+    # predict sample
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
@@ -626,6 +636,7 @@ def check_fit(leaf_node_database) :
             sam_std     = float(row['sam_std'])
             check_value = iota_true(age, leaf_node_name, income)
             rel_error   = 1.0 - fit_value / check_value
+            print(leaf_node_name, fit_value, check_value, rel_err)
             if random_income :
                 assert abs(rel_error) < 1e-1
             else :
@@ -656,7 +667,7 @@ def main() :
     #
     # omega_grid
     omega_grid = dict()
-    omega_grid['age']  = age_grid
+    omega_grid['age']  = range( len(age_grid) )
     omega_grid['time'] = [ 0 ]
     #
     # mtall_data
@@ -664,13 +675,12 @@ def main() :
     mtall_data = dict()
     for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
         mtall_data[node_name] = list()
-        income                = average_income[node_name]
+        income                = avg_income[node_name]
         for age_id in omega_grid['age'] :
             age  = age_grid[age_id]
             time = 2000.0
-            mtall = compute_integrand(integrand_name, age, node_name, income)
+            mtall = average_integrand(integrand_name, age, node_name, income)
             mtall_data[node_name].append(mtall)
-    #
     #
     # Create all_node.db
     # We could get all_cov_reference from here, but we do not need to

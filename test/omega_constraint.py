@@ -29,11 +29,6 @@ import at_cascade
 # -----------------------------------------------------------------------------
 # global variables
 # -----------------------------------------------------------------------------
-random_seed = 0
-if random_seed == 0 :
-    random_seed = int( time.time() )
-    random.seed(random_seed)
-print('simple_ode: random_seed = ', random_seed)
 #
 # age_grid
 age_grid   = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
@@ -116,7 +111,6 @@ def root_node_db(file_name) :
         { 'name':'quasi_fixed',           'value':'false'},
         { 'name':'max_num_iter_fixed',    'value':'50'},
         { 'name':'tolerance_fixed',       'value':'1e-8'},
-        { 'name':'random_seed',           'value':str(random_seed)},
     ]
     # ----------------------------------------------------------------------
     # create database

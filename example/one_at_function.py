@@ -164,7 +164,7 @@ The mean is *iota_true(50)*
 Dage Prior
 ==========
 The prior for age differences is log Gaussian with mean zero,
-standard deviation one, and :ref:`glossary.eta` equal to
+standard deviation 3.0, and :ref:`glossary.eta` equal to
 *iota_true(50)/1000* .
 
 Child Smoothing
@@ -178,7 +178,7 @@ age and one time point.
 
 Value Prior
 ===========
-This value prior is gaussian with mean zero and standard deviation one.
+This value prior is gaussian with mean zero and standard deviation 10.0.
 There are no upper or lower limits in this prior.
 
 Alpha Smoothing
@@ -189,8 +189,8 @@ age and one time point in this smoothing.
 
 Value Prior
 ===========
-This value prior is uniform with lower limit *-|alpha_true|*,
-upper limit *+|alpha_true|* and mean zero.
+This value prior is uniform with lower limit *-10\*|alpha_true|*,
+upper limit *+10\*|alpha_true|* and mean zero.
 (The mean is used to initialize the optimization.)
 
 {xsrst_end one_at_function}
@@ -231,7 +231,6 @@ import at_cascade
 # global varables
 # -----------------------------------------------------------------------------
 # BEGIN random_seed
-# random_seed = 1629371067
 random_seed = 0
 if random_seed == 0 :
     random_seed = int( time.time() )
@@ -313,8 +312,8 @@ def root_node_db(file_name) :
         },{ # prior_alpha_n0
             'name':    'prior_alpha_n0',
             'density': 'uniform',
-            'lower':   -abs(alpha_true) * 10,
-            'upper':   +abs(alpha_true) * 10,
+            'lower':   - 10 * abs(alpha_true),
+            'upper':   + 10 * abs(alpha_true),
             'mean':    0.0,
         },
     ]
@@ -425,8 +424,8 @@ def root_node_db(file_name) :
     weight_table = list()
     #
     # nslist_table
-    #
     nslist_table = dict()
+    #
     # option_table
     option_table = [
         { 'name':'parent_node_name',      'value':'n0'},
@@ -516,7 +515,7 @@ def cascade_fit_node(all_node_database, fit_node_database, node_table) :
     dismod_at.sql_command(connection, command)
     connection.close()
     #
-    # predict
+    # predict sample
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
