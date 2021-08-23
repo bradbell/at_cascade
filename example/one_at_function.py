@@ -265,18 +265,17 @@ age_grid = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
 #
 # BEGIN income_grid
 random_income = True
-number_income = 3
 income_grid   = dict()
 for node in [ 'n3', 'n4', 'n5', 'n6' ] :
     max_income  = 2.0 * avg_income[node]
-    income_grid[node] = list()
-    for j in range(number_income) :
-        if random_income :
-            income = random.uniform(0.0, max_income)
-        else :
-            income = j * max_income / (number_income - 1)
-        income_grid[node].append(income)
-    income_grid[node] = sorted( income_grid[node] )
+    if random_income :
+        n_grid = 10
+        income_grid[node] = \
+            [ random.uniform(0.0, max_income) for j in range(n_grid) ]
+        income_grid[node] = sorted( income_grid[node] )
+    else :
+        n_grid = 2
+        income_grid[node] = [ j * max_income for j in range(n_grid) ]
 # END income_grid
 # ----------------------------------------------------------------------------
 # functions
@@ -577,8 +576,9 @@ def check_fit(leaf_node_database) :
             sam_std     = float(row['sam_std'])
             check_value = iota_true(age, leaf_node_name, income)
             rel_error   = 1.0 - fit_value / check_value
+            # print(age, rel_error, check_value - fit_value, sam_std)
             if random_income :
-                assert abs(rel_error) < 1e-1
+                assert abs(rel_error) < 5e-2
             else :
                 assert abs(rel_error) < 1e-3
             assert abs(fit_value - check_value) < 2.0 * sam_std
