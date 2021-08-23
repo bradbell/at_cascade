@@ -320,10 +320,10 @@ def root_node_db(file_name) :
     # smooth_table
     smooth_table = list()
     #
-    # smooth_iota_n0_value
+    # smooth_iota_n0
     fun = lambda a, t : ('prior_iota_n0_value', 'prior_iota_dage', None)
     smooth_table.append({
-        'name':       'smooth_iota_n0_value',
+        'name':       'smooth_iota_n0',
         'age_id':     range( len(age_grid) ),
         'time_id':    [0],
         'fun':        fun,
@@ -361,7 +361,7 @@ def root_node_db(file_name) :
     # rate_table
     rate_table = [ {
         'name':           'iota',
-        'parent_smooth':  'smooth_iota_n0_value',
+        'parent_smooth':  'smooth_iota_n0',
         'child_smooth':   'smooth_iota_child' ,
     } ]
     #
