@@ -117,28 +117,33 @@ def add_child_grid_row(
     # -----------------------------------------------------------------------
     # value_prior
     # -----------------------------------------------------------------------
-    # parent_prior_row
-    parent_prior_id  = parent_grid_row['value_prior_id']
-    parent_prior_row = parent_tables['prior'][parent_prior_id]
-    #
-    # key
-    age_id    = parent_grid_row['age_id']
-    time_id   = parent_grid_row['time_id']
-    key       = (integrand_id, child_node_id, age_id, time_id)
-    #
-    mean = parent_fit_var[key]
-    std  = statistics.stdev(parent_sample[key], xbar=mean)
-    #
-    # child_prior_row
-    child_prior_row                = copy.copy( parent_prior_row )
-    child_prior_row['mean']        = mean
-    child_prior_row['std']         = std
-    child_prior_row['density_id']  = gaussian_density_id
-    #
-    # child_tables['prior']
-    child_value_prior_id           = len( child_tables['prior'] )
-    child_tables['prior'].append( child_prior_row )
-    add_index_to_name( child_tables['prior'], 'prior_name' )
+    # parent_constant_value, child_value_prior_id
+    parent_prior_id    = parent_grid_row['value_prior_id']
+    parent_const_value = parent_grid_row['const_value']
+    if parent_const_value is None :
+        # parent_prior_row
+        parent_prior_row = parent_tables['prior'][parent_prior_id]
+        #
+        # key
+        age_id    = parent_grid_row['age_id']
+        time_id   = parent_grid_row['time_id']
+        key       = (integrand_id, child_node_id, age_id, time_id)
+        #
+        mean = parent_fit_var[key]
+        std  = statistics.stdev(parent_sample[key], xbar=mean)
+        #
+        # child_prior_row
+        child_prior_row                = copy.copy( parent_prior_row )
+        child_prior_row['mean']        = mean
+        child_prior_row['std']         = std
+        child_prior_row['density_id']  = gaussian_density_id
+        #
+        # child_tables['prior']
+        child_value_prior_id           = len( child_tables['prior'] )
+        child_tables['prior'].append( child_prior_row )
+        add_index_to_name( child_tables['prior'], 'prior_name' )
+    else :
+        child_value_prior_id = None
     # -----------------------------------------------------------------------
     # dage_prior
     # -----------------------------------------------------------------------
@@ -167,6 +172,7 @@ def add_child_grid_row(
     # child_grid_row
     child_grid_row = copy.copy( parent_grid_row )
     child_grid_row['value_prior_id']  = child_value_prior_id
+    child_grid_row['const_value']     = parent_const_value
     child_grid_row['dage_prior_id']   = child_dage_prior_id
     child_grid_row['dtime_prior_id']  = child_dtime_prior_id
     #

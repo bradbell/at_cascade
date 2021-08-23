@@ -47,9 +47,10 @@ as a function of age *a* and node number *n*.
 
 Covariate
 *********
-The only covariate for this example is *income*.
-Its reference value is the average income corresponding
+There are two covariates for this example is *income* and *one*.
+The reference value for *income* is the average income corresponding
 to the :ref:`glossary.fit_node`.
+The *one* covariate is always equal to 1 and its reference is always zero.
 
 r_n
 ===
@@ -64,13 +65,21 @@ alpha
 =====
 We use *alpha* and :math:`\alpha`
 for the :ref:`glossary.rate_value` covariate multiplier
-that multipliers *income*.
+which multiplies *income*.
 This multiplier affects the value of *iota*.
 The true value for *alpha* (used which simulating the data) is
 {xsrst_file
     # BEGIN alpha_true
     # END alpha_true
 }
+
+gamma
+=====
+We use *gamma*
+for the :ref:`glossary.meas_noise` covariate multiplier
+which multiplies *one*.
+This multiplier add to the nose level for prevalence in log space,
+because the density for the prevalence data is log Gaussian.
 
 
 Random Effects
@@ -123,7 +132,7 @@ This is the true value for *omega* in node *n* and age *a*:
 y_i
 ===
 The only simulated integrand for this example is :ref:`glossary.prevalence`.
-This data is simulated with any noise; i.e.,
+This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
 *y_i = iota_true(a_i, n_i, I_i)*
 where *a_i* is the age,
@@ -332,7 +341,7 @@ def average_integrand(integrand_name, age, node_name, income) :
         return omega_true(a, node_name)
     rate           = { 'iota': iota,     'omega': omega }
     grid           = { 'age' : [age],    'time': [2000.0] }
-    abs_tol        = 1e-5
+    abs_tol        = 1e-6
     avg_integrand   = dismod_at.average_integrand(
         rate, integrand_name, grid,  abs_tol
     )
@@ -398,6 +407,16 @@ def root_node_db(file_name) :
         'fun':        fun,
     })
     #
+    # smooth_gamma
+    # constrian gamma = 1
+    fun = lambda a, t : (1.0, None, None)
+    smooth_table.append({
+        'name':       'smooth_gamma',
+        'age_id':     [0],
+        'time_id':    [0],
+        'fun':        fun
+    })
+    #
     # node_table
     node_table = [
         { 'name':'n0',        'parent':''   },
@@ -417,16 +436,25 @@ def root_node_db(file_name) :
     } ]
     #
     # covariate_table
-    covariate_table = [ { 'name':'income',   'reference':avg_income['n0'] } ]
+    covariate_table = [
+        { 'name':'income',   'reference':avg_income['n0'] },
+        { 'name':'one',      'reference':0.0              },
+    ]
     #
     # mulcov_table
-    mulcov_table = [ {
-        # alpha
-        'covariate':  'income',
-        'type':       'rate_value',
-        'effected':   'iota',
-        'group':      'world',
-        'smooth':     'smooth_alpha_n0',
+    mulcov_table = [
+        {   # alpha
+            'covariate':  'income',
+            'type':       'rate_value',
+            'effected':   'iota',
+            'group':      'world',
+            'smooth':     'smooth_alpha_n0',
+        },{ # gamma
+            'covariate':  'one',
+            'type':       'meas_noise',
+            'effected':   'prevalence',
+            'group':      'world',
+            'smooth':     'smooth_gamma',
     } ]
     #
     # subgroup_table
@@ -436,7 +464,8 @@ def root_node_db(file_name) :
     integrand_table = [
         {'name': 'Sincidence'},
         {'name': 'prevalence'},
-        {'name': 'mulcov_0'}
+        {'name': 'mulcov_0'},
+        {'name': 'mulcov_1'},
     ]
     #
     # avgint_table
@@ -453,8 +482,9 @@ def root_node_db(file_name) :
         'time_upper':   2000.0,
         'income':       None,
         'integrand':    'prevalence',
-        'density':      'gaussian',
+        'density':      'log_gaussian',
         'hold_out':     False,
+        'one':          1.0,
     }
     for node in leaf_node_set :
         row_list       = list()
@@ -475,7 +505,8 @@ def root_node_db(file_name) :
             # The model for the measurement noise is small so a few
             # data points act like lots of real data points.
             # The actual measruement noise is zero.
-            row['meas_std'] = max_meas_value / 10.0
+            row['meas_std'] = 1e-1 * max_meas_value
+            row['eta']      = 1e-4 * max_meas_value
         #
         data_table += row_list
     #
@@ -681,15 +712,17 @@ def check_fit(leaf_node_database) :
             if rate_name == 'iota' :
                 check_value = iota_true(age, leaf_node_name, income)
                 tolerance   = 1e-1
+                assert abs(fit_value - check_value) < 2.0 * sam_std
             elif rate_name == 'omega' :
                 check_value = omega_true(age, leaf_node_name)
                 tolerance   = 99.0 * numpy.finfo(float).eps
             rel_error   = 1.0 - fit_value / check_value
-            print(node_name, rate_name, age, fit_value, check_value, rel_error, sam_std)
+            abs_err     = check_value - fit_value
+            #   if rate_name == 'iota' :
+            #       print(node_name, age, rel_error, abs_err, sam_std)
             assert abs(rel_error) < tolerance
-            assert abs(fit_value - check_value) < 2.0 * sam_std
         else :
-            assert row['var_type'] == 'mulcov_rate_value'
+            row['var_type'] in [ 'mulcov_rate_value', 'mulcov_mesa_noise' ]
 # ----------------------------------------------------------------------------
 # main
 # ----------------------------------------------------------------------------
@@ -705,10 +738,10 @@ def main() :
     #
     # all_cov_reference
     all_cov_reference = dict()
-    covariate_name      = 'income'
     for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
         all_cov_reference[node_name] = {
-            covariate_name : avg_income[node_name]
+            'income' : avg_income[node_name],
+            'one':     1.0,
         }
     #
     # omega_grid

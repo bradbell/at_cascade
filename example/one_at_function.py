@@ -113,7 +113,7 @@ The only simulated integrand for this example is :ref:`glossary.sincidence`
 which is a direct measurement of *iota*.
 (If we had used a different rate to represent the function we are estimating,
 we would use the corresponding direct measurement of that rate.)
-This data is simulated with any noise; i.e.,
+This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
 *y_i = iota_true(a_i, n_i, I_i)*
 where *a_i* is the age,
