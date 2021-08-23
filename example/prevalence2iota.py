@@ -8,19 +8,15 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin_parent simple_ode}
+{xsrst_begin_parent prevalence2iota}
 {xsrst_spell
     avg
     dtime
     dage
 }
 
-Simple Case Where The ODE is Used to Model The Data
-###################################################
-
-Under Construction
-******************
-This test is not yet passing.
+Example Estimation of iota From Prevalence Data
+###############################################
 
 Nodes
 *****
@@ -230,21 +226,21 @@ This value prior is uniform with lower limit *-10\*|alpha_true|*,
 upper limit *+10\*|alpha_true|* and mean zero.
 (The mean is used to initialize the optimization.)
 
-{xsrst_end simple_ode}
+{xsrst_end prevalence2iota}
 ------------------------------------------------------------------------------
-{xsrst_begin simple_ode_py}
+{xsrst_begin prevalence2iota_py}
 
-simple_ode: Python Source Code
-##############################
+prevalence2iota: Python Source Code
+###################################
 
 {xsrst_file
-    BEGIN simple_ode source code
-    END simple_ode source code
+    BEGIN prevalence2iota source code
+    END prevalence2iota source code
 }
 
-{xsrst_end simple_ode_py}
+{xsrst_end prevalence2iota_py}
 '''
-# BEGIN simple_ode source code
+# BEGIN prevalence2iota source code
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
@@ -274,7 +270,7 @@ random_seed = 0
 if random_seed == 0 :
     random_seed = int( time.time() )
     random.seed(random_seed)
-print('simple_ode: random_seed = ', random_seed)
+print('prevalence2iota: random_seed = ', random_seed)
 # END random_seed
 #
 # BEGIN alpha_true
@@ -797,6 +793,6 @@ def main() :
 
 #
 main()
-print('simple_ode: OK')
+print('prevalence2iota: OK')
 sys.exit(0)
-# END simple_ode source code
+# END prevalence2iota source code

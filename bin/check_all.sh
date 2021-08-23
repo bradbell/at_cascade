@@ -21,9 +21,16 @@ then
 fi
 # -----------------------------------------------------------------------------
 echo_eval bin/run_sphinx.sh
-echo_eval python3 example/one_at_function.py
-echo_eval python3 test/child_avgint_table.py
-echo_eval python3 test/omega_constraint.py
+list='
+    example/one_at_function.py
+    example/prevalence2iota.py
+    test/child_avgint_table.py
+    test/omega_constraint.py
+'
+for script in $list
+do
+    echo_eval python3 $script
+done
 # -----------------------------------------------------------------------------
 echo 'check_all.sh: OK'
 exit 0

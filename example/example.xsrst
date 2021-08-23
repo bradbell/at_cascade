@@ -14,7 +14,7 @@ The at_cascade Examples
 
 {xsrst_child_table
     example/one_at_function.py
-    example/simple_ode.py
+    example/prevalence2iota.py
 }
 
 {xsrst_end example}
