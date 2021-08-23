@@ -392,7 +392,7 @@ def root_node_db(file_name) :
         'weight':       '',
         'time_lower':   2000.0,
         'time_upper':   2000.0,
-        'income':       None,
+       'income':       None,
         'integrand':    'Sincidence',
     }
     for age in age_grid :

@@ -465,17 +465,29 @@ def root_node_db(file_name) :
     #
     # avgint_table
     avgint_table = list()
-    #
-    # data_table
-    data_table     = list()
-    leaf_node_set  = { 'n3', 'n4', 'n5', 'n6' }
-    integrand_name = 'prevalence'
     row = {
+        'node':         'n0',
         'subgroup':     'world',
         'weight':       '',
         'time_lower':   2000.0,
         'time_upper':   2000.0,
         'income':       None,
+        'integrand':    'Sincidence',
+        'one':          1.0,
+    }
+    for age in age_grid :
+        row['age_lower'] = age
+        row['age_upper'] = age
+        avgint_table.append( copy.copy(row) )
+    #
+    # data_table
+    data_table     = list()
+    leaf_node_set  = { 'n3', 'n4', 'n5', 'n6' }
+    row = {
+        'subgroup':     'world',
+        'weight':       '',
+        'time_lower':   2000.0,
+        'time_upper':   2000.0,
         'integrand':    'prevalence',
         'density':      'log_gaussian',
         'hold_out':     False,
@@ -486,6 +498,7 @@ def root_node_db(file_name) :
         max_meas_value = 0.0
         for (age_id, age) in enumerate( age_grid ) :
             for income in income_grid[node] :
+                integrand_name = 'prevalence'
                 meas_value = average_integrand(
                     integrand_name, age, node, income
                 )

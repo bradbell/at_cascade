@@ -176,12 +176,11 @@ def cascade_fit_node(
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'sample', 'asymptotic', 'both', '20' ]
     )
-    # predict fit_var
+    # c_predict_fit_var
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
     )
-    # move predict -> c_predict
-    move_table(connection, 'predict', 'c_predict')
+    move_table(connection, 'predict', 'c_predict_fit_var')
     #
     # predict sample using child_avgint_table version of avgint
     dismod_at.system_command_prc(
@@ -213,6 +212,13 @@ def cascade_fit_node(
     # node_id for predictions for fit_node
     set_avgint_node_id(connection, fit_node_id)
     #
+    # c_predict_fit_var
+    dismod_at.system_command_prc(
+        [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
+    )
+    move_table(connection, 'predict', 'predict_fit_var')
+    #
+    # predict
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
