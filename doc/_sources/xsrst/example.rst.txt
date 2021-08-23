@@ -7,7 +7,7 @@ example
    :hidden:
 
    one_at_function
-   simple_ode
+   prevalence2iota
 
 .. meta::
    :keywords: example, the, at_cascade, examples
@@ -26,7 +26,7 @@ The at_cascade Examples
     :widths: 20, 80
 
     "one_at_function", :ref:`one_at_function`
-    "simple_ode", :ref:`simple_ode`
+    "prevalence2iota", :ref:`prevalence2iota`
 
 ----
 

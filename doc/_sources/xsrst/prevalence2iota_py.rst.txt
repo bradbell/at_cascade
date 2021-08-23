@@ -1,0 +1,24 @@
+!!!!!!!!!!!!!!!!!!
+prevalence2iota_py
+!!!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: prevalence2iota_py, prevalence2iota:, python, source, code
+
+.. index:: prevalence2iota_py, prevalence2iota:, python, source, code
+
+.. _prevalence2iota_py:
+
+prevalence2iota: Python Source Code
+###################################
+.. contents::
+   :local:
+
+
+.. literalinclude:: ../../example/prevalence2iota.py
+    :lines: 244-797
+    :language: py
+
+----
+
+xsrst input file: ``example/prevalence2iota.py``

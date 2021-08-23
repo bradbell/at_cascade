@@ -22,8 +22,8 @@ Table of Contents
 |
 |  |space| :ref:`4.1<one_at_function>` Example That Directly Measures One Age Time Function
 |  |space|  |space| :ref:`4.1.1<one_at_function_py>` one_at_function: Python Source Code
-|  |space| :ref:`4.2<simple_ode>` Simple Case Where The ODE is Used to Model The Data
-|  |space|  |space| :ref:`4.2.1<simple_ode_py>` simple_ode: Python Source Code
+|  |space| :ref:`4.2<prevalence2iota>` Example Estimation of iota From Prevalence Data
+|  |space|  |space| :ref:`4.2.1<prevalence2iota_py>` prevalence2iota: Python Source Code
 |
 | :ref:`5<module>` The at_cascade Python Module
 |

@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="simple_ode" href="simple_ode.html" />
+    <link rel="next" title="prevalence2iota" href="prevalence2iota.html" />
     <link rel="prev" title="one_at_function" href="one_at_function.html" /> 
 </head>
 
@@ -95,7 +95,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">one_at_function_py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="simple_ode.html">simple_ode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prevalence2iota.html">prevalence2iota</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
@@ -198,7 +198,6 @@
 <span class="c1"># global varables</span>
 <span class="c1"># -----------------------------------------------------------------------------</span>
 <span class="c1"># BEGIN random_seed</span>
-<span class="c1"># random_seed = 1629371067</span>
 <span class="n">random_seed</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">if</span> <span class="n">random_seed</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
     <span class="n">random_seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="p">)</span>
@@ -280,8 +279,8 @@
         <span class="p">},{</span> <span class="c1"># prior_alpha_n0</span>
             <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;prior_alpha_n0&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span>
-            <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="o">+</span><span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
+            <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
             <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">]</span>
@@ -392,8 +391,8 @@
     <span class="n">weight_table</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="c1">#</span>
     <span class="c1"># nslist_table</span>
-    <span class="c1">#</span>
     <span class="n">nslist_table</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="c1">#</span>
     <span class="c1"># option_table</span>
     <span class="n">option_table</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;parent_node_name&#39;</span><span class="p">,</span>      <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;n0&#39;</span><span class="p">},</span>
@@ -483,7 +482,7 @@
     <span class="n">dismod_at</span><span class="o">.</span><span class="n">sql_command</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
     <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="c1">#</span>
-    <span class="c1"># predict</span>
+    <span class="c1"># predict sample</span>
     <span class="n">dismod_at</span><span class="o">.</span><span class="n">system_command_prc</span><span class="p">(</span>
         <span class="p">[</span> <span class="s1">&#39;dismod_at&#39;</span><span class="p">,</span> <span class="n">fit_node_database</span><span class="p">,</span> <span class="s1">&#39;predict&#39;</span><span class="p">,</span> <span class="s1">&#39;sample&#39;</span> <span class="p">]</span>
     <span class="p">)</span>
@@ -624,7 +623,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="simple_ode.html" class="btn btn-neutral float-right" title="simple_ode" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="prevalence2iota.html" class="btn btn-neutral float-right" title="prevalence2iota" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="one_at_function.html" class="btn btn-neutral float-left" title="one_at_function" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -82,7 +82,7 @@ We use *r_n* for the reference value of *income* at node *n*.
 The code below sets this reference using the name avg_income:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 247-250
+    :lines: 246-249
     :language: py
 
 .. meta::
@@ -101,7 +101,7 @@ This multiplier affects the value of *iota*.
 The true value for *alpha* (used which simulating the data) is
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 243-243
+    :lines: 242-242
     :language: py
 
 .. meta::
@@ -130,7 +130,7 @@ We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 254-260
+    :lines: 253-259
     :language: py
 
 .. meta::
@@ -159,7 +159,7 @@ If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 234-239
+    :lines: 234-238
     :language: py
 
 .. meta::
@@ -174,7 +174,7 @@ iota_true(a, n, I)
 This is the true value for *iota* in node *n* at age *a* and income *I*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 286-289
+    :lines: 285-288
     :language: py
 
 .. meta::
@@ -190,7 +190,7 @@ The only simulated integrand for this example is :ref:`glossary.sincidence`
 which is a direct measurement of *iota*.
 (If we had used a different rate to represent the function we are estimating,
 we would use the corresponding direct measurement of that rate.)
-This data is simulated with any noise; i.e.,
+This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
 *y_i = iota_true(a_i, n_i, I_i)*
 where *a_i* is the age,
@@ -224,7 +224,7 @@ a_i
 For each leaf node, data is generated on the following *age_grid*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 264-264
+    :lines: 263-263
     :language: py
 
 .. meta::
@@ -240,7 +240,7 @@ For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 268-280
+    :lines: 267-279
     :language: py
 
 Note that the check of the fit for the leaf nodes expects much more accuracy
@@ -284,7 +284,7 @@ The mean is *iota_true(50)*
 Dage Prior
 ==========
 The prior for age differences is log Gaussian with mean zero,
-standard deviation one, and :ref:`glossary.eta` equal to
+standard deviation 3.0, and :ref:`glossary.eta` equal to
 *iota_true(50)/1000* .
 
 .. meta::
@@ -312,7 +312,7 @@ age and one time point.
 
 Value Prior
 ===========
-This value prior is gaussian with mean zero and standard deviation one.
+This value prior is gaussian with mean zero and standard deviation 10.0.
 There are no upper or lower limits in this prior.
 
 .. meta::
@@ -337,8 +337,8 @@ age and one time point in this smoothing.
 
 Value Prior
 ===========
-This value prior is uniform with lower limit *-|alpha_true|*,
-upper limit *+|alpha_true|* and mean zero.
+This value prior is uniform with lower limit *-10\*|alpha_true|*,
+upper limit *+10\*|alpha_true|* and mean zero.
 (The mean is used to initialize the optimization.)
 
 .. csv-table::
