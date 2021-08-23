@@ -64,6 +64,9 @@ called the child node name.
 
 {xsrst_end cascade_fit_node}
 '''
+import os
+import dismod_at
+import at_cascade
 # ----------------------------------------------------------------------------
 def child_node_id_list(node_table, parent_node_id) :
     result = list()
@@ -78,6 +81,17 @@ def node_table_name2id(node_table, row_name) :
             return node_id
     assert False
 # ----------------------------------------------------------------------------
+def move_table(connection, src_name, dst_name) :
+    #
+    # move predict -> c_predict
+    command     = 'DROP TABLE IF EXISTS ' + dst_name
+    dismod_at.sql_command(connection, command)
+    command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
+    command    += src_name + '_id TO ' + dst_name + '_id'
+    dismod_at.sql_command(connection, command)
+    command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
+    dismod_at.sql_command(connection, command)
+# ----------------------------------------------------------------------------
 def cascade_fit_node(
 # BEGIN syntax
 # at_cascade.cascade_fit_node(
@@ -87,9 +101,6 @@ def cascade_fit_node(
 # )
 # END syntax
 ) :
-    import dismod_at
-    import at_cascade
-    import os
     #
     # all_node_dir
     path_list = all_node_database.split('/')
@@ -108,10 +119,15 @@ def cascade_fit_node(
     # fit_node_id
     fit_node_id = node_table_name2id(node_table, fit_node_name)
     #
-    # fit_node_dir
+    # fit_node_dir, fit_node_database
     fit_node_dir = fit_node_database[ : - len('dismod.db') - 1 ]
     if all_node_dir != '.' :
-        fit_node_dir = all_node_dir + '/' + fit_node_dir
+        fit_node_dir      = all_node_dir + '/' + fit_node_dir
+        fit_node_database = all_node_dir + '/' + fit_node_database
+    #
+    # connection
+    new        = False
+    connection = dismod_at.create_connection(fit_node_database, new)
     #
     # add omega to model
     at_cascade.omega_constraint(all_node_database, fit_node_database)
@@ -136,16 +152,7 @@ def cascade_fit_node(
         [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
     )
     # move predict -> c_predict
-    new        = False
-    connection = dismod_at.create_connection(fit_node_database, new)
-    command     = 'DROP TABLE IF EXISTS c_predict'
-    dismod_at.sql_command(connection, command)
-    command     = 'ALTER TABLE predict RENAME COLUMN '
-    command    += 'predict_id TO c_predict_id'
-    dismod_at.sql_command(connection, command)
-    command     = 'ALTER TABLE predict RENAME TO c_predict'
-    dismod_at.sql_command(connection, command)
-    connection.close()
+    move_table(connection, 'predict', 'c_predict')
     #
     # predict sample
     dismod_at.system_command_prc(
@@ -178,3 +185,6 @@ def cascade_fit_node(
     for node_name in child_node_databases :
         fit_node_database = child_node_databases[node_name]
         cascade_fit_node(all_node_database, fit_node_database, node_table)
+    #
+    # connection
+    connection.close()
