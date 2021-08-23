@@ -211,6 +211,7 @@ one_at_function: Python Source Code
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
+import math
 import sys
 import os
 import copy
@@ -392,7 +393,7 @@ def root_node_db(file_name) :
         'weight':       '',
         'time_lower':   2000.0,
         'time_upper':   2000.0,
-       'income':       None,
+        'income':       None,
         'integrand':    'Sincidence',
     }
     for age in age_grid :
@@ -469,42 +470,101 @@ def root_node_db(file_name) :
 # ----------------------------------------------------------------------------
 def check_fit(leaf_node_database) :
     #
+    # connection
+    new        = False
+    connection = dismod_at.create_connection(leaf_node_database, new)
+    #
     # leaf_node_name
     path_list = leaf_node_database.split('/')
     assert len(path_list) >= 2
     assert path_list[-1] == 'dismod.db'
     leaf_node_name = path_list[-2]
     #
-    # leaf_node_dir
-    leaf_node_dir = leaf_node_database[ : - len('dismod.db') - 1 ]
+    # table
+    table = dict()
+    for name in [
+        'avgint',
+        'age',
+        'integrand',
+        'node',
+        'predict',
+        'c_predict_fit_var',
+    ] :
+        table[name] = dismod_at.get_table_dict(connection, name)
     #
-    # variable_csv
-    fp     = open( leaf_node_dir + '/variable.csv' )
-    reader = csv.DictReader(fp)
-    variable_csv = list()
-    for row in reader :
-        variable_csv.append( row )
+    n_avgint  = len(table['avgint'])
+    n_predict = len(table['predict'])
+    n_sample  = int( n_predict / n_avgint )
     #
-    # check value of iota
-    for row in variable_csv :
-        if row['var_type'] == 'rate' :
-            assert row['rate'] == 'iota'
-            assert row['node'] == leaf_node_name
-            assert row['fixed'] == 'true'
-            income      = avg_income[leaf_node_name]
-            age         = float(row['age'])
-            fit_value   = float(row['fit_value'])
-            sam_std     = float(row['sam_std'])
-            check_value = iota_true(age, leaf_node_name, income)
-            rel_error   = 1.0 - fit_value / check_value
-            # print(age, rel_error, check_value - fit_value, sam_std)
-            if random_income :
-                assert abs(rel_error) < 5e-2
-            else :
-                assert abs(rel_error) < 1e-3
-            assert abs(fit_value - check_value) < 2.0 * sam_std
+    assert n_avgint == len( table['c_predict_fit_var'] )
+    assert n_predict % n_avgint == 0
+    #
+    # sumsq
+    sumsq = n_avgint * [0.0]
+    for (predict_id, predict_row) in enumerate( table['predict'] ) :
+        # avgint_row
+        avgint_id  = predict_row['avgint_id']
+        avgint_row = table['avgint'][avgint_id]
+        assert avgint_id == predict_id % n_avgint
+        #
+        # sample_index
+        sample_index = predict_row['sample_index']
+        assert sample_index * n_avgint + avgint_id == predict_id
+        #
+        # integrand_name
+        integrand_id = avgint_row['integrand_id']
+        integrand_name = table['integrand'][integrand_id]['integrand_name']
+        assert integrand_name == 'Sincidence'
+        #
+        # node_name
+        node_id   = avgint_row['node_id']
+        node_name = table['node'][node_id]['node_name']
+        assert node_name == leaf_node_name
+        #
+        # age
+        age = avgint_row['age_lower']
+        assert age == avgint_row['age_upper']
+        #
+        # avg_integrand
+        avg_integrand = table['c_predict_fit_var'][avgint_id]['avg_integrand']
+        #
+        # sample_value
+        sample_value = predict_row['avg_integrand']
+        #
+        # sumsq
+        sumsq[avgint_id] += (sample_value - avg_integrand)**2
+    #
+    # income
+    income  = avg_income[leaf_node_name]
+    #
+    # (avgint_id, row)
+    for (avgint_id, row) in enumerate(table['c_predict_fit_var']) :
+        assert avgint_id == row['avgint_id']
+        #
+        # avgint_row
+        avgint_row = table['avgint'][avgint_id]
+        #
+        # age
+        age = avgint_row['age_lower']
+        #
+        # avg_integrand
+        avg_integrand = row['avg_integrand']
+        #
+        # sample_std
+        sample_std = math.sqrt( sumsq[avgint_id] )
+        #
+        # check_value
+        check_value = iota_true(age, leaf_node_name, income)
+        #
+        rel_error   = 1.0 - avg_integrand / check_value
+        #
+        # check the fit
+        # print(age, rel_error, check_value - avg_integrand, sample_std)
+        if random_income :
+            assert abs(rel_error) < 5e-2
         else :
-            assert row['var_type'] == 'mulcov_rate_value'
+            assert abs(rel_error) < 1e-3
+        assert abs(avg_integrand - check_value) < 2.0 * sample_std
 # ----------------------------------------------------------------------------
 # main
 # ----------------------------------------------------------------------------

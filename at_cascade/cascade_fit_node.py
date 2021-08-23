@@ -79,10 +79,15 @@ distribution for the model variables for the fit node.
 
 predict
 =======
-The predict table contains sample predictions corresponding to the
+The predict table contains predictions corresponding to the sample table and the
 avgint table in the root node database except that the node_id column
 has been replaced by the node_id for this fit node.
 
+c_predict_fit_var
+=================
+The c_predict_fit_var table contains predictions corresponding to the
+fit_var table and the avgint table in the root node database except that
+the node_id column has been replaced by the node_id for this fit node.
 
 {xsrst_end cascade_fit_node}
 '''
@@ -216,7 +221,7 @@ def cascade_fit_node(
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
     )
-    move_table(connection, 'predict', 'predict_fit_var')
+    move_table(connection, 'predict', 'c_predict_fit_var')
     #
     # predict
     dismod_at.system_command_prc(
