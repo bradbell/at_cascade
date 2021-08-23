@@ -27,10 +27,11 @@ Table of Contents
 |
 | :ref:`5<module>` The at_cascade Python Module
 |
-|  |space| :ref:`5.1<child_avgint_table>` Create avgint Table That Predicts Rates for Child Nodes
-|  |space| :ref:`5.2<create_all_node_db>` Create an All Node Database
-|  |space| :ref:`5.3<create_child_node_db>` Create Child Database From Fit in Parent Database
-|  |space| :ref:`5.4<omega_constraint>` Set Omega Constraints in a Fit Node Database
+|  |space| :ref:`5.1<cascade_fit_node>` Cascade a Fit Starting at a Node
+|  |space| :ref:`5.2<child_avgint_table>` Create avgint Table That Predicts Rates for Child Nodes
+|  |space| :ref:`5.3<create_all_node_db>` Create an All Node Database
+|  |space| :ref:`5.4<create_child_node_db>` Create Child Database From Fit in Parent Database
+|  |space| :ref:`5.5<omega_constraint>` Set Omega Constraints in a Fit Node Database
 |
 
 Link to Index

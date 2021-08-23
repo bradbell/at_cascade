@@ -369,18 +369,17 @@ of how good the fit is for the leaf nodes.</p>
 <p>For each leaf node and each age in <em>age_grid</em>,
 data is generated for the following <em>income_grid</em>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">random_income</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">number_income</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">income_grid</span>   <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">]</span> <span class="p">:</span>
     <span class="n">max_income</span>  <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">avg_income</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
-    <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_income</span><span class="p">)</span> <span class="p">:</span>
-        <span class="k">if</span> <span class="n">random_income</span> <span class="p">:</span>
-            <span class="n">income</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_income</span><span class="p">)</span>
-        <span class="k">else</span> <span class="p">:</span>
-            <span class="n">income</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">max_income</span> <span class="o">/</span> <span class="p">(</span><span class="n">number_income</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">income</span><span class="p">)</span>
-    <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">random_income</span> <span class="p">:</span>
+        <span class="n">n_grid</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="p">[</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_income</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_grid</span><span class="p">)</span> <span class="p">]</span>
+        <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="p">)</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">n_grid</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="n">j</span> <span class="o">*</span> <span class="n">max_income</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_grid</span><span class="p">)</span> <span class="p">]</span>
 </pre></div>
 </div>
 <p>Note that the check of the fit for the leaf nodes expects much more accuracy

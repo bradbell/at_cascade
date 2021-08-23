@@ -1,0 +1,121 @@
+!!!!!!!!!!!!!!!!
+cascade_fit_node
+!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: cascade_fit_node, cascade, fit, starting, at, node
+
+.. index:: cascade_fit_node, cascade, fit, starting, at, node
+
+.. _cascade_fit_node:
+
+Cascade a Fit Starting at a Node
+################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _cascade_fit_node.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/cascade_fit_node.py
+    :lines: 97-101
+    :language: py
+
+.. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _cascade_fit_node.all_node_database:
+
+all_node_database
+*****************
+is a python string specifying the location of the all node database
+relative to the current working directory.
+
+.. meta::
+   :keywords: all_node_dir
+
+.. index:: all_node_dir
+
+.. _cascade_fit_node.all_node_database.all_node_dir:
+
+all_node_dir
+============
+is the directory where the all node database is located.
+
+.. meta::
+   :keywords: fit_node_database
+
+.. index:: fit_node_database
+
+.. _cascade_fit_node.fit_node_database:
+
+fit_node_database
+*****************
+is a python string specifying the location of the
+:ref:`glossary.fit_node_database` relative to *all_node_dir*.
+This must be a valid :ref:`glossary.root_node_database`.
+
+.. meta::
+   :keywords: fit_node
+
+.. index:: fit_node
+
+.. _cascade_fit_node.fit_node_database.fit_node:
+
+fit_node
+========
+The *fit_node_database* must be *fit_node*\ ``/dismod.db``,
+or end with the text ``/``\ *fit_node*\ ``/dismod.db``
+where *fit_node* is the name of the :ref:`glossary.fit_node` for this database.
+
+.. meta::
+   :keywords: fit_node_dir
+
+.. index:: fit_node_dir
+
+.. _cascade_fit_node.fit_node_database.fit_node_dir:
+
+fit_node_dir
+============
+is the directory where the fit node database is located.
+
+.. meta::
+   :keywords: node_table
+
+.. index:: node_table
+
+.. _cascade_fit_node.node_table:
+
+node_table
+**********
+This is a python list where
+*node_table*[*node_id*] is a python dictionary representation of the
+corresponding row of the dismod_at node table.
+This node table is the same as the node table in *fit_node_database*.
+(It is the same for all the fits and this avoids reading it each time.)
+
+.. meta::
+   :keywords: results
+
+.. index:: results
+
+.. _cascade_fit_node.node_table.results:
+
+Results
+=======
+The results for this fit are in files in the *fit_node_dir* directory.
+In addition, for each child node of *fit_node_name* are in a sub-directory
+called the child node name.
+
+----
+
+xsrst input file: ``at_cascade/cascade_fit_node.py``

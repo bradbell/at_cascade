@@ -174,7 +174,7 @@ iota_true(a, n, I)
 This is the true value for *iota* in node *n* at age *a* and income *I*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 285-288
+    :lines: 284-287
     :language: py
 
 .. meta::
@@ -240,7 +240,7 @@ For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 267-279
+    :lines: 267-278
     :language: py
 
 Note that the check of the fit for the leaf nodes expects much more accuracy

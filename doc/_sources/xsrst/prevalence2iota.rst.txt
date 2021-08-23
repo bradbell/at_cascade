@@ -190,7 +190,7 @@ iota_true(a, n, I)
 This is the true value for *iota* in node *n* at age *a* and income *I*:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 320-323
+    :lines: 319-322
     :language: py
 
 .. meta::
@@ -205,7 +205,7 @@ omega_true(a, n)
 This is the true value for *omega* in node *n* and age *a*:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 327-330
+    :lines: 326-329
     :language: py
 
 .. meta::
@@ -268,7 +268,7 @@ For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 302-314
+    :lines: 302-313
     :language: py
 
 Note that the check of the fit for the leaf nodes expects much more accuracy
@@ -335,8 +335,8 @@ The mean is *iota_true(50)*
 Dage Prior
 -----------
 The prior for age differences is log Gaussian with mean zero,
-standard deviation 3.0, and :ref:`glossary.eta` equal to
-*iota_true(50)/1000* .
+standard deviation 1.0, and :ref:`glossary.eta` equal to
+*iota_true(0)/1000* .
 
 .. meta::
    :keywords: child, smoothing
@@ -386,7 +386,7 @@ age and one time point.
 
 Value Prior
 -----------
-This value prior is gaussian with mean zero and standard deviation 10.0.
+This value prior is gaussian with mean zero and standard deviation 1.0.
 There are no upper or lower limits in this prior.
 
 .. meta::

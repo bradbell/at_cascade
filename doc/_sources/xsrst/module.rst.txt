@@ -6,6 +6,7 @@ module
    :maxdepth: 1
    :hidden:
 
+   cascade_fit_node
    child_avgint_table
    create_all_node_db
    create_child_node_db
@@ -28,6 +29,7 @@ The at_cascade Python Module
     :header:  "Child", "Title"
     :widths: 20, 80
 
+    "cascade_fit_node", :ref:`cascade_fit_node`
     "child_avgint_table", :ref:`child_avgint_table`
     "create_all_node_db", :ref:`create_all_node_db`
     "create_child_node_db", :ref:`create_child_node_db`
