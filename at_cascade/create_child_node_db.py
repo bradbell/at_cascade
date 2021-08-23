@@ -51,6 +51,11 @@ The predict table contains
 The results of a predict command using the sample table
 and the avgint table corresponding to :ref:`child_avgint_table`.
 
+avgint Table
+============
+The avgint table predicts for the child nodes
+and comes from :ref:`child_avgint_table`.
+
 c_predict Table
 ===============
 The c_predict table contains
@@ -58,6 +63,11 @@ the results of a dismod_at sample command with the fit_var option
 and then moving the predict table to c_predict and renaming the
 column predict_id to c_predict_id.
 
+c_avgint Table
+==============
+The c_avgint table contains the original version of the avgint table
+that predicts for the parent node and is a version of the root node database
+avgint table with only the node_id column modified.
 
 child_node_databases
 ********************
@@ -77,11 +87,18 @@ is a python dictionary and if *child_name* is a key for *child_node_databases*,
 -   Only the dismod_at input tables are significant in the child node databases;
     e.g., an init command should be executed before any other dismod_at
     commands (except possibly a set command).
+-   The avgint table is a copy of the c_avgint table in the parent node
+    database with the node_id replaced by the corresponding child node id.
 -   The following tables are the same as in the parent node database:
     age, data, density, integrand, node, subgroup, time, weight, weight_grid.
 
 {xsrst_end create_child_node_db}
 '''
+# ----------------------------------------------------------------------------
+import copy
+import shutil
+import statistics
+import dismod_at
 # ----------------------------------------------------------------------------
 def add_index_to_name(table, name_col) :
     row   = table[-1]
@@ -99,6 +116,15 @@ def table_name2id(table, col_name, row_name) :
             return row_id
     assert False
 # ----------------------------------------------------------------------------
+def move_table(connection, src_name, dst_name) :
+    command     = 'DROP TABLE IF EXISTS ' + dst_name
+    dismod_at.sql_command(connection, command)
+    command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
+    command    += src_name + '_id TO ' + dst_name + '_id'
+    dismod_at.sql_command(connection, command)
+    command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
+    dismod_at.sql_command(connection, command)
+# ----------------------------------------------------------------------------
 # The smoothing for the new child_tables['smooth_grid'] row is the most
 # recent smoothing added to child_tables['smooth']; i.e., its smoothing_id
 # is len( child_tables['smooth'] ) - 1.
@@ -112,8 +138,6 @@ def add_child_grid_row(
     child_node_id,
     gaussian_density_id,
 ) :
-    import copy
-    import statistics
     # -----------------------------------------------------------------------
     # value_prior
     # -----------------------------------------------------------------------
@@ -190,11 +214,6 @@ def create_child_node_db(
 # END syntax
 ) :
     # ------------------------------------------------------------------------
-    import copy
-    import shutil
-    import statistics
-    import dismod_at
-    # ------------------------------------------------------------------------
     # all_cov_reference_table
     new        = False
     connection = dismod_at.create_connection(all_node_database, new)
@@ -209,6 +228,8 @@ def create_child_node_db(
     parent_tables = dict()
     for name in [
         'avgint',
+        'c_avgint',
+        'c_predict',
         'covariate',
         'density',
         'fit_var',
@@ -218,7 +239,6 @@ def create_child_node_db(
         'option',
         'prior',
         'predict',
-        'c_predict',
         'rate',
         'sample',
         'smooth',
@@ -289,6 +309,7 @@ def create_child_node_db(
         # child_node_tables
         child_tables = dict()
         for name in [
+            'c_avgint',
             'covariate',
             'mulcov',
             'option',
@@ -478,7 +499,19 @@ def create_child_node_db(
                                 child_grid_row[ty] = prior_id
                         child_grid_row['smooth_id']      = child_smooth_id
                         child_tables['smooth_grid'].append( child_grid_row )
+        #
+        # child_tables['c_avgint']
+        for row in child_tables['c_avgint'] :
+            row['node_id'] = child_node_id
+        #
+        # replace child_tables
         for name in child_tables :
             dismod_at.replace_table(
                 child_connection, name, child_tables[name]
             )
+        #
+        # move c_avgint -> avgint
+        move_table(child_connection, 'c_avgint', 'avgint')
+        #
+        # child_connection
+        child_connection.close()

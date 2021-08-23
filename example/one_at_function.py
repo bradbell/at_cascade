@@ -386,10 +386,6 @@ def root_node_db(file_name) :
     #
     # avgint_table
     avgint_table = list()
-    #
-    # data_table
-    data_table    = list()
-    leaf_node_set = { 'n3', 'n4', 'n5', 'n6' }
     row = {
         'node':         'n0',
         'subgroup':     'world',
@@ -397,6 +393,21 @@ def root_node_db(file_name) :
         'time_lower':   2000.0,
         'time_upper':   2000.0,
         'income':       None,
+        'integrand':    'Sincidence',
+    }
+    for age in age_grid :
+        row['age_lower'] = age
+        row['age_upper'] = age
+        avgint_table.append( copy.copy(row) )
+    #
+    # data_table
+    data_table    = list()
+    leaf_node_set = { 'n3', 'n4', 'n5', 'n6' }
+    row = {
+        'subgroup':     'world',
+        'weight':       '',
+        'time_lower':   2000.0,
+        'time_upper':   2000.0,
         'integrand':    'Sincidence',
         'density':      'gaussian',
         'hold_out':     False,

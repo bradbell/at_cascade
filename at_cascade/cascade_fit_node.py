@@ -11,6 +11,8 @@
 {xsrst_begin cascade_fit_node}
 {xsrst_spell
     dir
+    csv
+    var
 }
 
 Cascade a Fit Starting at a Node
@@ -56,11 +58,31 @@ corresponding row of the dismod_at node table.
 This node table is the same as the node table in *fit_node_database*.
 (It is the same for all the fits and this avoids reading it each time.)
 
-Results
+dismod.db
+*********
+The results for this fit are in the
+*fit_node_dir*\ ``/dismod.db`` dismod_at database.
+The corresponding *fit_node_dir/\*.csv* , create by the
+dismod_at db2csv command, are also the *fit_node_dir* directory.
+Furthermore there is a sub-directory, for each child node of *fit_node_name*,
+with the results for that child node.
+
+fit_var
 =======
-The results for this fit are in files in the *fit_node_dir* directory.
-In addition, for each child node of *fit_node_name* are in a sub-directory
-called the child node name.
+The fit_var table correspond to the posterior
+mean for the model variables for the fit node.
+
+sample
+======
+The sample table contains the corresponding samples from the posterior
+distribution for the model variables for the fit node.
+
+predict
+=======
+The predict table contains sample predictions corresponding to the
+avgint table in the root node database except that the node_id column
+has been replaced by the node_id for this fit node.
+
 
 {xsrst_end cascade_fit_node}
 '''
@@ -82,8 +104,6 @@ def node_table_name2id(node_table, row_name) :
     assert False
 # ----------------------------------------------------------------------------
 def move_table(connection, src_name, dst_name) :
-    #
-    # move predict -> c_predict
     command     = 'DROP TABLE IF EXISTS ' + dst_name
     dismod_at.sql_command(connection, command)
     command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
@@ -91,6 +111,12 @@ def move_table(connection, src_name, dst_name) :
     dismod_at.sql_command(connection, command)
     command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
     dismod_at.sql_command(connection, command)
+# ----------------------------------------------------------------------------
+def set_avgint_node_id(connection, fit_node_id) :
+    avgint_table = dismod_at.get_table_dict(connection, 'avgint')
+    for row in avgint_table :
+        row['node_id'] = fit_node_id
+    dismod_at.replace_table(connection, 'avgint', avgint_table)
 # ----------------------------------------------------------------------------
 def cascade_fit_node(
 # BEGIN syntax
@@ -132,7 +158,10 @@ def cascade_fit_node(
     # add omega to model
     at_cascade.omega_constraint(all_node_database, fit_node_database)
     #
-    # replace avgint table
+    # move avgint -> c_avgint
+    move_table(connection, 'avgint', 'c_avgint')
+    #
+    # avgint table for child predictions
     at_cascade.child_avgint_table(all_node_database, fit_node_database)
     #
     # init
@@ -154,13 +183,10 @@ def cascade_fit_node(
     # move predict -> c_predict
     move_table(connection, 'predict', 'c_predict')
     #
-    # predict sample
+    # predict sample using child_avgint_table version of avgint
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
-    # db2csv
-    dismod_at.system_command_prc(
-        [ 'dismodat.py', fit_node_database, 'db2csv' ] )
     #
     # child_node_list
     child_node_list = child_node_id_list(node_table, fit_node_id)
@@ -180,6 +206,19 @@ def cascade_fit_node(
         fit_node_database,
         child_node_databases
     )
+    #
+    # move c_avgint -> avgint (original version of this table)
+    move_table(connection, 'c_avgint', 'avgint')
+    #
+    # node_id for predictions for fit_node
+    set_avgint_node_id(connection, fit_node_id)
+    #
+    dismod_at.system_command_prc(
+        [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
+    )
+    # db2csv
+    dismod_at.system_command_prc(
+        [ 'dismodat.py', fit_node_database, 'db2csv' ] )
     #
     # fit child node databases
     for node_name in child_node_databases :
