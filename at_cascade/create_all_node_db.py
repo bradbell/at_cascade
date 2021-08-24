@@ -88,9 +88,9 @@ default
 If this argument in ``None``, *omega* will be constrained to equal to
 the *mtall_data*.
 
-leaf_node_set
-*************
-This is a python set equal to the :ref:`glossary.leaf_node_set`
+fit_leaf_set
+************
+This is a python set equal to the :ref:`glossary.fit_leaf_set`
 where each element is represented by its node name.
 
 default
@@ -154,7 +154,7 @@ def create_all_node_db(
     omega_grid          = None,
     mtall_data          = None,
     mtspecific_data     = None,
-    leaf_node_set       = None,
+    fit_leaf_set        = None,
     sex_level           = None,
     in_parallel         = None,
     min_interval        = None,
@@ -227,18 +227,18 @@ def create_all_node_db(
         all_connection, tbl_name, col_name, col_type, row_list
     )
     #
-    # leaf_node table
-    tbl_name = 'leaf_node'
+    # fit_leaf table
+    tbl_name = 'fit_leaf'
     col_name = [ 'node_id' ]
     col_type = [ 'integer' ]
     row_list = list()
-    if leaf_node_set is None :
+    if fit_leaf_set is None :
         for node_id in range( len(node_table) ):
             if is_descendant(node_table, root_node_id, node_id) :
                 row = [ node_id ]
                 row_list.append( row )
     else :
-        for node_name in leaf_node_set :
+        for node_name in fit_leaf_set :
             node_id = node_name2id[node_name]
             row     = [ node_id ]
             row_list.append( row )

@@ -29,7 +29,7 @@ The following is a diagram of the node tree for this example::
      n3    n4        n5    n6
 
 For this example the :ref:`glossary.root_node` is n0 and
-{ n3, n4, n5, n6 } is the :ref:`glossary.leaf_node_set`.
+{ n3, n4, n5, n6 } is the :ref:`glossary.fit_leaf_set`.
 
 Rates
 *****
@@ -491,7 +491,7 @@ def root_node_db(file_name) :
     #
     # data_table
     data_table     = list()
-    leaf_node_set  = { 'n3', 'n4', 'n5', 'n6' }
+    fit_leaf_set  = { 'n3', 'n4', 'n5', 'n6' }
     row = {
         'subgroup':     'world',
         'weight':       '',
@@ -502,7 +502,7 @@ def root_node_db(file_name) :
         'hold_out':     False,
         'one':          1.0,
     }
-    for node in leaf_node_set :
+    for node in fit_leaf_set :
         row_list       = list()
         max_meas_value = 0.0
         for (age_id, age) in enumerate( age_grid ) :
@@ -568,17 +568,17 @@ def root_node_db(file_name) :
         option_table
     )
 # ----------------------------------------------------------------------------
-def check_fit(leaf_node_database) :
+def check_fit(leaf_database) :
     #
     # connection
     new        = False
-    connection = dismod_at.create_connection(leaf_node_database, new)
+    connection = dismod_at.create_connection(leaf_database, new)
     #
-    # leaf_node_name
-    path_list = leaf_node_database.split('/')
+    # leaf_name
+    path_list = leaf_database.split('/')
     assert len(path_list) >= 2
     assert path_list[-1] == 'dismod.db'
-    leaf_node_name = path_list[-2]
+    leaf_name = path_list[-2]
     #
     # table
     table = dict()
@@ -619,7 +619,7 @@ def check_fit(leaf_node_database) :
         # node_name
         node_id   = avgint_row['node_id']
         node_name = table['node'][node_id]['node_name']
-        assert node_name == leaf_node_name
+        assert node_name == leaf_name
         #
         # age
         age = avgint_row['age_lower']
@@ -635,7 +635,7 @@ def check_fit(leaf_node_database) :
         sumsq[avgint_id] += (sample_value - avg_integrand)**2
     #
     # income
-    income  = avg_income[leaf_node_name]
+    income  = avg_income[leaf_name]
     #
     # (avgint_id, row)
     for (avgint_id, row) in enumerate(table['c_predict_fit_var']) :
@@ -654,7 +654,7 @@ def check_fit(leaf_node_database) :
         sample_std = math.sqrt( sumsq[avgint_id] )
         #
         # check_value
-        check_value = iota_true(age, leaf_node_name, income)
+        check_value = iota_true(age, leaf_name, income)
         #
         rel_error   = 1.0 - avg_integrand / check_value
         #
@@ -728,13 +728,13 @@ def main() :
     )
     #
     # check results
-    for leaf_node_database in [
+    for leaf_database in [
         'n0/n1/n3/dismod.db',
         'n0/n1/n4/dismod.db',
         'n0/n2/n5/dismod.db',
         'n0/n2/n6/dismod.db',
     ] :
-        check_fit(leaf_node_database)
+        check_fit(leaf_database)
 
 #
 main()

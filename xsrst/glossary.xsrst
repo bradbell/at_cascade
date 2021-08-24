@@ -26,6 +26,12 @@ This is an offset in a log transformation; i.e., a mapping of the form
 :math:`x \rightarrow \log(x + \eta )`.
 Note that this transformation is finite valued at :math:`x` equal to zero.
 
+fit_leaf_set
+************
+This is the set of nodes that we need a fit for.
+Each node in this set must be the *root_node* or a descendant of the root node.
+Note that all the nodes between the root node and the leaf nodes
+are also be fit.
 
 fit_node
 ********
@@ -62,12 +68,6 @@ iota
 The model rate for incidence,
 relative to the susceptible population, as a function of age and time.
 This is also denoted by :math:`\iota(a, t)`.
-
-leaf_node_set
-*************
-This is the set of nodes below *root_node* that will be fit.
-Note that all the nodes between the root node and the leaf nodes
-will also be fit.
 
 meas_noise
 **********
