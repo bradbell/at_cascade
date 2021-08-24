@@ -193,6 +193,15 @@ This value prior is uniform with lower limit *-10\*|alpha_true|*,
 upper limit *+10\*|alpha_true|* and mean zero.
 (The mean is used to initialize the optimization.)
 
+Checking The Fit
+****************
+The results of the fit are in the
+:ref:`cascade_fit_node.dismod_db.predict` and
+:ref:`cascade_fit_node.dismod_db.c_predict_fit_var`
+tables of the fit_node_database corresponding to each node.
+The ``check_fit`` routine uses these tables to check that fit
+against the truth.
+
 {xsrst_end one_at_function}
 ------------------------------------------------------------------------------
 {xsrst_begin one_at_function_py}
