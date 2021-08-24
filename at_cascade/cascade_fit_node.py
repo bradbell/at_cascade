@@ -29,6 +29,7 @@ all_node_database
 *****************
 is a python string specifying the location of the all node database
 relative to the current working directory.
+This argument can't be ``None``.
 
 all_node_dir
 ============
@@ -39,6 +40,7 @@ fit_node_database
 is a python string specifying the location of the
 :ref:`glossary.fit_node_database` relative to *all_node_dir*.
 This must be a valid :ref:`glossary.root_node_database`.
+This argument can't be ``None``.
 
 fit_node
 ========
@@ -56,7 +58,8 @@ This is a python list where
 *node_table*[*node_id*] is a python dictionary representation of the
 corresponding row of the dismod_at node table.
 This node table is the same as the node table in *fit_node_database*.
-(It is the same for all the fits and this avoids reading it each time.)
+It is the same for all the fits and this avoids reading it each time.)
+This argument can't be ``None``.
 
 dismod.db
 *********

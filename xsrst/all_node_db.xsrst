@@ -50,10 +50,13 @@ for this covariate and node.
 ------------------------------------------------------------------------------
 {xsrst_begin leaf_node_table}
 
-All Node Leaf Node Table
-########################
+Leaf Node Table
+###############
 This table specifies the :ref:`glossary.leaf_node_set`.
-It the following columns:
+If it is empty, all of the descendants of the *root_node* are fit.
+Otherwise, only the nodes in the leaf node set,
+and their ancestors up to the *root_node* are fit.
+This table has the following columns:
 
 leaf_node_id
 ************

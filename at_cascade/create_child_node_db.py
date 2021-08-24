@@ -34,6 +34,7 @@ parent_node_database
 is a python string containing the name of a :ref:`glossary.fit_node_database`.
 The two predict tables (mentioned below)
 are used to create priors in the child node databases.
+This argument can't be ``None``.
 
 parent_node
 ===========
@@ -91,6 +92,8 @@ is a python dictionary and if *child_name* is a key for *child_node_databases*,
     database with the node_id replaced by the corresponding child node id.
 -   The following tables are the same as in the parent node database:
     age, data, density, integrand, node, subgroup, time, weight, weight_grid.
+
+This argument can't be ``None``.
 
 {xsrst_end create_child_node_db}
 '''
