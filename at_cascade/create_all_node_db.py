@@ -161,6 +161,10 @@ def create_all_node_db(
 # )
 # END syntax
 ):
+    # so far only None is implemented for these options
+    assert sex_level is None
+    assert in_parallel is None
+    assert min_interval is None
     # -------------------------------------------------------------------------
     # Read root node database
     # -------------------------------------------------------------------------
@@ -201,6 +205,9 @@ def create_all_node_db(
         elif row['option_name'] == 'parent_node_name' :
             root_node_id = node_name2id[ row['option_value'] ]
     assert root_node_id is not None
+    #
+    # root_node_name
+    root_node_name = node_table[root_node_id]['node_name']
     #
     # close
     root_connection.close()
@@ -325,6 +332,17 @@ def create_all_node_db(
     col_name  = [ 'node_id', 'all_mtspecific_id' ]
     col_type  = [ 'integer', 'integer' ]
     row_list  = list()
+    dismod_at.create_table(
+        all_connection, tbl_name, col_name, col_type, row_list
+    )
+    #
+    # option table
+    tbl_name = 'all_option'
+    col_name = [ 'option_name', 'option_value' ]
+    col_type = [ 'text',        'text']
+    row_list = [
+        ['root_node_name', root_node_name ]
+    ]
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )

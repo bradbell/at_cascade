@@ -42,7 +42,7 @@ containing the dismod_at node table.
 
 fit_children
 ************
-The return value *fit_children* is a python list of pythons lists.
+The return value *fit_children* is a python list of python lists.
 For each valid node_id, *fit_children[node_id]* is a list of child_node_id.
 Each child_node_id is a child of node_id and is between the root node and the
 fit leaf set inclusive.

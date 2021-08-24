@@ -263,6 +263,12 @@ option_value
 This column of the option table has type ``text``.
 It specifies a value that is attached to each option name.
 
+root_node_name
+**************
+This *option_name* must appear and the corresponding *option_value*
+is the name of the root node in the node table of the *root_node_database*
+(the node table is the same for all the dismod_at databases).
+
 sex_level
 *********
 If this *option_name* appears, the corresponding *option_value*

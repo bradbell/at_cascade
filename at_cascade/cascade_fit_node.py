@@ -61,6 +61,19 @@ This node table is the same as the node table in *fit_node_database*.
 It is the same for all the fits and this avoids reading it each time.)
 This argument can't be ``None``.
 
+fit_children
+************
+is a python list of python lists.
+For each valid node_id, *fit_children[node_id]* is a list of child_node_id.
+Each child_node_id is a child of node_id and is between the root node and the
+fit leaf set inclusive.
+These are the children of node_id that must be fit to get to the leaf nodes.
+
+default
+=======
+If *fit_children* is None, it will be computed by ``cascade_fit_node``
+and reused by recursive calls to this routine.
+
 dismod.db
 *********
 The results for this fit are in the
@@ -132,9 +145,26 @@ def cascade_fit_node(
     all_node_database = None,
     fit_node_database = None,
     node_table        = None,
+    fit_children      = None,
 # )
 # END syntax
 ) :
+    # fit_children
+    if fit_children is None :
+        new              = False
+        connection       = dismod_at.create_connection(all_node_database, new)
+        all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+        fit_leaf_table   = dismod_at.get_table_dict(connection, 'fit_leaf')
+        connection.close()
+        root_node_name   = None
+        for row in all_option_table :
+            if row['option_name'] == 'root_node_name' :
+                root_node_name = row['option_value']
+        assert not root_node_name is None
+        root_node_id = node_table_name2id(node_table, root_node_name)
+        fit_children = at_cascade.get_fit_children(
+            root_node_id, fit_leaf_table, node_table
+        )
     #
     # all_node_dir
     path_list = all_node_database.split('/')
@@ -196,7 +226,7 @@ def cascade_fit_node(
     )
     #
     # child_node_list
-    child_node_list = child_node_id_list(node_table, fit_node_id)
+    child_node_list = fit_children[fit_node_id]
     #
     # child_node_databases
     child_node_databases = dict()
