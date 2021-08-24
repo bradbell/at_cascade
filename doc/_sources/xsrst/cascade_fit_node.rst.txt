@@ -25,7 +25,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/cascade_fit_node.py
-    :lines: 97-101
+    :lines: 145-150
     :language: py
 
 .. meta::
@@ -39,6 +39,7 @@ all_node_database
 *****************
 is a python string specifying the location of the all node database
 relative to the current working directory.
+This argument can't be ``None``.
 
 .. meta::
    :keywords: all_node_dir
@@ -60,9 +61,10 @@ is the directory where the all node database is located.
 
 fit_node_database
 *****************
-is a python string specifying the location of the
-:ref:`glossary.fit_node_database` relative to *all_node_dir*.
+is a python string specifying the location of the root node database
+relative to the current working directory.
 This must be a valid :ref:`glossary.root_node_database`.
+This argument can't be ``None``.
 
 .. meta::
    :keywords: fit_node
@@ -101,20 +103,102 @@ This is a python list where
 *node_table*[*node_id*] is a python dictionary representation of the
 corresponding row of the dismod_at node table.
 This node table is the same as the node table in *fit_node_database*.
-(It is the same for all the fits and this avoids reading it each time.)
+It is the same for all the fits and this avoids reading it each time.)
+This argument can't be ``None``.
 
 .. meta::
-   :keywords: results
+   :keywords: fit_children
 
-.. index:: results
+.. index:: fit_children
 
-.. _cascade_fit_node.node_table.results:
+.. _cascade_fit_node.fit_children:
 
-Results
+fit_children
+************
+is a python list of python lists.
+For each valid node_id, *fit_children[node_id]* is a list of child_node_id.
+Each child_node_id is a child of node_id and is between the root node and the
+fit goal set inclusive.
+These are the children of node_id that must be fit to
+obtain of fit of all the goal nodes.
+
+.. meta::
+   :keywords: default
+
+.. index:: default
+
+.. _cascade_fit_node.fit_children.default:
+
+default
 =======
-The results for this fit are in files in the *fit_node_dir* directory.
-In addition, for each child node of *fit_node_name* are in a sub-directory
-called the child node name.
+If *fit_children* is None, it will be computed by ``cascade_fit_node``
+and reused by recursive calls to this routine.
+
+.. meta::
+   :keywords: dismod.db
+
+.. index:: dismod.db
+
+.. _cascade_fit_node.dismod_db:
+
+dismod.db
+*********
+The results for this fit are in the
+*fit_node_dir*\ ``/dismod.db`` dismod_at database.
+The corresponding *fit_node_dir/\*.csv* , create by the
+dismod_at db2csv command, are also the *fit_node_dir* directory.
+Furthermore there is a sub-directory, for each child node of *fit_node_name*,
+with the results for that child node.
+
+.. meta::
+   :keywords: fit_var
+
+.. index:: fit_var
+
+.. _cascade_fit_node.dismod_db.fit_var:
+
+fit_var
+=======
+The fit_var table correspond to the posterior
+mean for the model variables for the fit node.
+
+.. meta::
+   :keywords: sample
+
+.. index:: sample
+
+.. _cascade_fit_node.dismod_db.sample:
+
+sample
+======
+The sample table contains the corresponding samples from the posterior
+distribution for the model variables for the fit node.
+
+.. meta::
+   :keywords: predict
+
+.. index:: predict
+
+.. _cascade_fit_node.dismod_db.predict:
+
+predict
+=======
+The predict table contains predictions corresponding to the sample table and the
+avgint table in the root node database except that the node_id column
+has been replaced by the node_id for this fit node.
+
+.. meta::
+   :keywords: c_predict_fit_var
+
+.. index:: c_predict_fit_var
+
+.. _cascade_fit_node.dismod_db.c_predict_fit_var:
+
+c_predict_fit_var
+=================
+The c_predict_fit_var table contains predictions corresponding to the
+fit_var table and the avgint table in the root node database except that
+the node_id column has been replaced by the node_id for this fit node.
 
 ----
 

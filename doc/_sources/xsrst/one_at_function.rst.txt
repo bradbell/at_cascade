@@ -29,16 +29,30 @@ Example That Directly Measures One Age Time Function
 
 Nodes
 *****
-The following is a diagram of the node tree for this example::
+The following is a diagram of the node tree for this example.
+The :ref:`glossary.root_node` is n0,
+the :ref:`glossary.fit_goal_set` is {n3, n4, n2},
+and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
           /-----/\-----\
-        n1              n2
+        n1             (n2)
        /  \            /  \
-     n3    n4        n5    n6
+    (n3)  (n4)       n5    n6
 
-For this example the :ref:`glossary.root_node` is n0 and
-{ n3, n4, n5, n6 } is the :ref:`glossary.leaf_node_set`.
+.. meta::
+   :keywords: fit_goal_set
+
+.. index:: fit_goal_set
+
+.. _one_at_function.nodes.fit_goal_set:
+
+fit_goal_set
+============
+
+.. literalinclude:: ../../example/one_at_function.py
+    :lines: 251-251
+    :language: py
 
 .. meta::
    :keywords: rates
@@ -82,7 +96,7 @@ We use *r_n* for the reference value of *income* at node *n*.
 The code below sets this reference using the name avg_income:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 246-249
+    :lines: 267-270
     :language: py
 
 .. meta::
@@ -101,7 +115,7 @@ This multiplier affects the value of *iota*.
 The true value for *alpha* (used which simulating the data) is
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 242-242
+    :lines: 263-263
     :language: py
 
 .. meta::
@@ -130,7 +144,7 @@ We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 253-259
+    :lines: 274-280
     :language: py
 
 .. meta::
@@ -159,7 +173,7 @@ If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 234-238
+    :lines: 255-259
     :language: py
 
 .. meta::
@@ -174,7 +188,7 @@ iota_true(a, n, I)
 This is the true value for *iota* in node *n* at age *a* and income *I*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 284-287
+    :lines: 305-308
     :language: py
 
 .. meta::
@@ -210,7 +224,7 @@ n_i
 Data is only simulated for the leaf nodes; i.e.,
 each *n_i* is in the set { n3, n4, n5, n6 }.
 Since the data does not have any nose, the data residuals are a measure
-of how good the fit is for the leaf nodes.
+of how good the fit is for the goal nodes.
 
 .. meta::
    :keywords: a_i
@@ -224,7 +238,7 @@ a_i
 For each leaf node, data is generated on the following *age_grid*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 263-263
+    :lines: 284-284
     :language: py
 
 .. meta::
@@ -240,10 +254,10 @@ For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 267-278
+    :lines: 288-299
     :language: py
 
-Note that the check of the fit for the leaf nodes expects much more accuracy
+Note that the check of the fit for the goal nodes expects much more accuracy
 when the income grid is not chosen randomly.
 
 .. meta::
@@ -340,6 +354,22 @@ Value Prior
 This value prior is uniform with lower limit *-10\*|alpha_true|*,
 upper limit *+10\*|alpha_true|* and mean zero.
 (The mean is used to initialize the optimization.)
+
+.. meta::
+   :keywords: checking, the, fit
+
+.. index:: checking, the, fit
+
+.. _one_at_function.checking_the_fit:
+
+Checking The Fit
+****************
+The results of the fit are in the
+:ref:`cascade_fit_node.dismod_db.predict` and
+:ref:`cascade_fit_node.dismod_db.c_predict_fit_var`
+tables of the fit_node_database corresponding to each node.
+The ``check_fit`` routine uses these tables to check that fit
+against the truth.
 
 .. csv-table::
     :header: "Child", "Title"

@@ -10,6 +10,7 @@ module
    child_avgint_table
    create_all_node_db
    create_child_node_db
+   get_fit_children
    omega_constraint
 
 .. meta::
@@ -33,6 +34,7 @@ The at_cascade Python Module
     "child_avgint_table", :ref:`child_avgint_table`
     "create_all_node_db", :ref:`create_all_node_db`
     "create_child_node_db", :ref:`create_child_node_db`
+    "get_fit_children", :ref:`get_fit_children`
     "omega_constraint", :ref:`omega_constraint`
 
 .. END_SORT_THIS_LINE_MINUS_2

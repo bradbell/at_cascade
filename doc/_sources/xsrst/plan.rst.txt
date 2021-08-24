@@ -27,8 +27,8 @@ AT Cascade Plan
 Purpose
 *******
 Run a dismod_at_ fit starting at :ref:`glossary.root_node` and including
-all the nodes in :ref:`glossary.leaf_node_set`.
-All of the nodes between *root_node* and each element of *leaf_node_set*
+all the nodes in :ref:`glossary.fit_goal_set`.
+All of the nodes between *root_node* and each element of *fit_goal_set*
 are also fit.
 
 .. meta::
@@ -63,8 +63,9 @@ i.e., the *root_node* is the :ref:`glossary.fit_node`.
 - There is no prior or grid for :ref:`glossary.omega` in this database
   because it is computed using *mtall* - *mtspecific*.
   In addition, the other rate priors use child_smooth_id (not child_nslist_id).
-- The avgint table covariate values are null and
-  the avgint node_id values correspond to the *root_node*.
+- The avgint table will be used to make prediction for all nodes.
+  Use null for covariates that you want to be at the node reference for these
+  predictions.
 - Subgroups are not used; i.e., there is one group and one subgroup
   corresponding to all the data.
 - The covariate table reference values must be the same as the *all_node*
@@ -161,7 +162,7 @@ which is the *fit_node* in this context.
 
 .. index:: dismod.db
 
-.. _plan.output_data.dismod.db:
+.. _plan.output_data.dismod_db:
 
 dismod.db
 =========

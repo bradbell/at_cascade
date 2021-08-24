@@ -28,6 +28,20 @@ This is an offset in a log transformation; i.e., a mapping of the form
 Note that this transformation is finite valued at :math:`x` equal to zero.
 
 .. meta::
+   :keywords: fit_goal_set
+
+.. index:: fit_goal_set
+
+.. _glossary.fit_goal_set:
+
+fit_goal_set
+************
+This is the set of nodes that we need a fit for.
+Each node in this set must be the *root_node* or a descendant of the root node.
+Note that all the nodes between the root node and the goal nodes
+are also be fit.
+
+.. meta::
    :keywords: fit_node
 
 .. index:: fit_node
@@ -83,19 +97,6 @@ iota
 The model rate for incidence,
 relative to the susceptible population, as a function of age and time.
 This is also denoted by :math:`\iota(a, t)`.
-
-.. meta::
-   :keywords: leaf_node_set
-
-.. index:: leaf_node_set
-
-.. _glossary.leaf_node_set:
-
-leaf_node_set
-*************
-This is the set of nodes below *root_node* that will be fit.
-Note that all the nodes between the root node and the leaf nodes
-will also be fit.
 
 .. meta::
    :keywords: meas_noise

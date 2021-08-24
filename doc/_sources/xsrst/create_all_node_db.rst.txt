@@ -157,15 +157,15 @@ If this argument in ``None``, *omega* will be constrained to equal to
 the *mtall_data*.
 
 .. meta::
-   :keywords: leaf_node_set
+   :keywords: fit_goal_set
 
-.. index:: leaf_node_set
+.. index:: fit_goal_set
 
-.. _create_all_node_db.leaf_node_set:
+.. _create_all_node_db.fit_goal_set:
 
-leaf_node_set
-*************
-This is a python set equal to the :ref:`glossary.leaf_node_set`
+fit_goal_set
+************
+This is a python set equal to the :ref:`glossary.fit_goal_set`
 where each element is represented by its node name.
 
 .. meta::
@@ -173,7 +173,7 @@ where each element is represented by its node name.
 
 .. index:: default
 
-.. _create_all_node_db.leaf_node_set.default:
+.. _create_all_node_db.fit_goal_set.default:
 
 default
 =======
@@ -201,7 +201,7 @@ Not yet specified.
 default
 =======
 If this argument is ``None``, there will be no sex split between
-*root_node* and the leaf nodes.
+*root_node* and the goal nodes.
 
 .. meta::
    :keywords: in_parallel

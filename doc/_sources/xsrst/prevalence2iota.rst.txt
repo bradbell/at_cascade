@@ -29,7 +29,10 @@ Example Estimation of iota From Prevalence Data
 
 Nodes
 *****
-The following is a diagram of the node tree for this example::
+The following is a diagram of the node tree for this example.
+The :ref:`glossary.root_node` is n0,
+the :ref:`glossary.fit_goal_set` is {n1, n5, n6},
+and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
           /-----/\-----\
@@ -37,8 +40,19 @@ The following is a diagram of the node tree for this example::
        /  \            /  \
      n3    n4        n5    n6
 
-For this example the :ref:`glossary.root_node` is n0 and
-{ n3, n4, n5, n6 } is the :ref:`glossary.leaf_node_set`.
+.. meta::
+   :keywords: fit_goal_set
+
+.. index:: fit_goal_set
+
+.. _prevalence2iota.nodes.fit_goal_set:
+
+fit_goal_set
+============
+
+.. literalinclude:: ../../example/prevalence2iota.py
+    :lines: 284-284
+    :language: py
 
 .. meta::
    :keywords: rates
@@ -83,7 +97,7 @@ We use *r_n* for the reference value of *income* at node *n*.
 The code below sets this reference using the name avg_income:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 281-284
+    :lines: 301-304
     :language: py
 
 .. meta::
@@ -102,7 +116,7 @@ This multiplier affects the value of *iota*.
 The true value for *alpha* (used which simulating the data) is
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 277-277
+    :lines: 297-297
     :language: py
 
 .. meta::
@@ -117,7 +131,7 @@ gamma
 We use *gamma*
 for the :ref:`glossary.meas_noise` covariate multiplier
 which multiplies *one*.
-This multiplier add to the nose level for prevalence in log space,
+This multiplier adds to the nose level for prevalence in log space,
 because the density for the prevalence data is log Gaussian.
 
 .. meta::
@@ -146,7 +160,7 @@ We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 288-294
+    :lines: 308-314
     :language: py
 
 .. meta::
@@ -175,7 +189,7 @@ If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 268-273
+    :lines: 288-293
     :language: py
 
 .. meta::
@@ -190,7 +204,7 @@ iota_true(a, n, I)
 This is the true value for *iota* in node *n* at age *a* and income *I*:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 319-322
+    :lines: 339-342
     :language: py
 
 .. meta::
@@ -205,7 +219,7 @@ omega_true(a, n)
 This is the true value for *omega* in node *n* and age *a*:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 326-329
+    :lines: 346-349
     :language: py
 
 .. meta::
@@ -238,7 +252,7 @@ n_i
 Data is only simulated for the leaf nodes; i.e.,
 each *n_i* is in the set { n3, n4, n5, n6 }.
 Since the data does not have any nose, the data residuals are a measure
-of how good the fit is for the leaf nodes.
+of how good the fit is for the goal nodes.
 
 .. meta::
    :keywords: a_i
@@ -252,7 +266,7 @@ a_i
 For each leaf node, data is generated on the following *age_grid*:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 298-298
+    :lines: 318-318
     :language: py
 
 .. meta::
@@ -268,10 +282,10 @@ For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 302-313
+    :lines: 322-333
     :language: py
 
-Note that the check of the fit for the leaf nodes expects much more accuracy
+Note that the check of the fit for the goal nodes expects much more accuracy
 when the income grid is not chosen randomly.
 
 .. meta::
@@ -414,6 +428,22 @@ Value Prior
 This value prior is uniform with lower limit *-10\*|alpha_true|*,
 upper limit *+10\*|alpha_true|* and mean zero.
 (The mean is used to initialize the optimization.)
+
+.. meta::
+   :keywords: checking, the, fit
+
+.. index:: checking, the, fit
+
+.. _prevalence2iota.checking_the_fit:
+
+Checking The Fit
+****************
+The results of the fit are in the
+:ref:`cascade_fit_node.dismod_db.predict` and
+:ref:`cascade_fit_node.dismod_db.c_predict_fit_var`
+tables of the fit_node_database corresponding to each node.
+The ``check_fit`` routine uses these tables to check that fit
+against the truth.
 
 .. csv-table::
     :header: "Child", "Title"

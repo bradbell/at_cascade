@@ -63,6 +63,19 @@ This column of the option table has type ``text``.
 It specifies a value that is attached to each option name.
 
 .. meta::
+   :keywords: root_node_name
+
+.. index:: root_node_name
+
+.. _all_option_table.root_node_name:
+
+root_node_name
+**************
+This *option_name* must appear and the corresponding *option_value*
+is the name of the root node in the node table of the *root_node_database*
+(the node table is the same for all the dismod_at databases).
+
+.. meta::
    :keywords: sex_level
 
 .. index:: sex_level

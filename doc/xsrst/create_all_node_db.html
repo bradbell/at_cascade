@@ -16,7 +16,7 @@
 <meta content="default" name="keywords" />
 <meta content="mtspecific_data" name="keywords" />
 <meta content="default" name="keywords" />
-<meta content="leaf_node_set" name="keywords" />
+<meta content="fit_goal_set" name="keywords" />
 <meta content="default" name="keywords" />
 <meta content="sex_level" name="keywords" />
 <meta content="default" name="keywords" />
@@ -114,6 +114,7 @@
 <li class="toctree-l3"><a class="reference internal" href="child_avgint_table.html">child_avgint_table</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">create_all_node_db</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_child_node_db.html">create_child_node_db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="get_fit_children.html">get_fit_children</a></li>
 <li class="toctree-l3"><a class="reference internal" href="omega_constraint.html">omega_constraint</a></li>
 </ul>
 </li>
@@ -212,9 +213,9 @@
 <li><p><a class="reference internal" href="#create-all-node-db-mtspecific-data-default" id="id17">default</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#leaf-node-set" id="id18">leaf_node_set</a></p>
+<li><p><a class="reference internal" href="#fit-goal-set" id="id18">fit_goal_set</a></p>
 <ul>
-<li><p><a class="reference internal" href="#create-all-node-db-leaf-node-set-default" id="id19">default</a></p></li>
+<li><p><a class="reference internal" href="#create-all-node-db-fit-goal-set-default" id="id19">default</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#sex-level" id="id20">sex_level</a></p>
@@ -243,7 +244,7 @@
     <span class="n">omega_grid</span>          <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">mtall_data</span>          <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">mtspecific_data</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">leaf_node_set</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fit_goal_set</span>        <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">sex_level</span>           <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">in_parallel</span>         <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">min_interval</span>        <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -316,12 +317,12 @@ and time corresponding to index <em>j</em> in <em>omega_grid</em>[<code class="d
 the <em>mtall_data</em>.</p>
 </div>
 </div>
-<div class="section" id="leaf-node-set">
-<span id="create-all-node-db-leaf-node-set"></span><span id="index-11"></span><h3><a class="toc-backref" href="#id18">leaf_node_set</a><a class="headerlink" href="#leaf-node-set" title="Permalink to this headline">¶</a></h3>
-<p>This is a python set equal to the <a class="reference internal" href="glossary.html#glossary-leaf-node-set"><span class="std std-ref">leaf_node_set</span></a>
+<div class="section" id="fit-goal-set">
+<span id="create-all-node-db-fit-goal-set"></span><span id="index-11"></span><h3><a class="toc-backref" href="#id18">fit_goal_set</a><a class="headerlink" href="#fit-goal-set" title="Permalink to this headline">¶</a></h3>
+<p>This is a python set equal to the <a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a>
 where each element is represented by its node name.</p>
-<div class="section" id="create-all-node-db-leaf-node-set-default">
-<span id="index-12"></span><span id="id4"></span><h4><a class="toc-backref" href="#id19">default</a><a class="headerlink" href="#create-all-node-db-leaf-node-set-default" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="create-all-node-db-fit-goal-set-default">
+<span id="index-12"></span><span id="id4"></span><h4><a class="toc-backref" href="#id19">default</a><a class="headerlink" href="#create-all-node-db-fit-goal-set-default" title="Permalink to this headline">¶</a></h4>
 <p>If this argument is <code class="docutils literal notranslate"><span class="pre">None</span></code>, all of the nodes from the <em>root_node</em>
 down will be fit.</p>
 </div>
@@ -332,7 +333,7 @@ down will be fit.</p>
 <div class="section" id="create-all-node-db-sex-level-default">
 <span id="index-14"></span><span id="id5"></span><h4><a class="toc-backref" href="#id21">default</a><a class="headerlink" href="#create-all-node-db-sex-level-default" title="Permalink to this headline">¶</a></h4>
 <p>If this argument is <code class="docutils literal notranslate"><span class="pre">None</span></code>, there will be no sex split between
-<em>root_node</em> and the leaf nodes.</p>
+<em>root_node</em> and the goal nodes.</p>
 </div>
 </div>
 <div class="section" id="in-parallel">

@@ -25,7 +25,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_child_node_db.py
-    :lines: 185-189
+    :lines: 212-216
     :language: py
 
 .. meta::
@@ -52,6 +52,7 @@ parent_node_database
 is a python string containing the name of a :ref:`glossary.fit_node_database`.
 The two predict tables (mentioned below)
 are used to create priors in the child node databases.
+This argument can't be ``None``.
 
 .. meta::
    :keywords: parent_node
@@ -78,6 +79,18 @@ The sample table contains
 the results of a dismod_at sample command for both the fixed and random effects.
 
 .. meta::
+   :keywords: avgint, table
+
+.. index:: avgint, table
+
+.. _create_child_node_db.parent_node_database.avgint_table:
+
+avgint Table
+============
+The avgint table predicts for the child nodes
+and comes from :ref:`child_avgint_table`.
+
+.. meta::
    :keywords: predict, table
 
 .. index:: predict, table
@@ -91,18 +104,31 @@ The results of a predict command using the sample table
 and the avgint table corresponding to :ref:`child_avgint_table`.
 
 .. meta::
-   :keywords: c_predict, table
+   :keywords: c_predict_fit_var, table
 
-.. index:: c_predict, table
+.. index:: c_predict_fit_var, table
 
-.. _create_child_node_db.parent_node_database.c_predict_table:
+.. _create_child_node_db.parent_node_database.c_predict_fit_var_table:
 
-c_predict Table
-===============
-The c_predict table contains
+c_predict_fit_var Table
+=======================
+The c_predict_fit_var table contains
 the results of a dismod_at sample command with the fit_var option
 and then moving the predict table to c_predict and renaming the
 column predict_id to c_predict_id.
+
+.. meta::
+   :keywords: c_avgint, table
+
+.. index:: c_avgint, table
+
+.. _create_child_node_db.parent_node_database.c_avgint_table:
+
+c_avgint Table
+==============
+The c_avgint table contains the original version of the avgint table
+that predicts for the parent node and is a version of the root node database
+avgint table with only the node_id column modified.
 
 .. meta::
    :keywords: child_node_databases
@@ -129,8 +155,12 @@ is a python dictionary and if *child_name* is a key for *child_node_databases*,
 -   Only the dismod_at input tables are significant in the child node databases;
     e.g., an init command should be executed before any other dismod_at
     commands (except possibly a set command).
+-   The avgint table is a copy of the c_avgint table in the parent node
+    database with the node_id replaced by the corresponding child node id.
 -   The following tables are the same as in the parent node database:
     age, data, density, integrand, node, subgroup, time, weight, weight_grid.
+
+This argument can't be ``None``.
 
 ----
 
