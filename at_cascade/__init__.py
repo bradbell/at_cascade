@@ -19,6 +19,7 @@ The at_cascade Python Module
     at_cascade/child_avgint_table.py
     at_cascade/create_all_node_db.py
     at_cascade/create_child_node_db.py
+    at_cascade/get_fit_children.py
     at_cascade/omega_constraint.py
 }
 .. END_SORT_THIS_LINE_MINUS_2
@@ -31,5 +32,6 @@ from .cascade_fit_node      import cascade_fit_node
 from .child_avgint_table    import child_avgint_table
 from .create_all_node_db    import create_all_node_db
 from .create_child_node_db  import create_child_node_db
+from .get_fit_children      import get_fit_children
 from .omega_constraint      import omega_constraint
 # END_SORT_THIS_LINE_MINUS_1

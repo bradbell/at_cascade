@@ -74,7 +74,7 @@ gamma
 We use *gamma*
 for the :ref:`glossary.meas_noise` covariate multiplier
 which multiplies *one*.
-This multiplier add to the nose level for prevalence in log space,
+This multiplier adds to the nose level for prevalence in log space,
 because the density for the prevalence data is log Gaussian.
 
 

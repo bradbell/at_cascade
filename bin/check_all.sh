@@ -26,6 +26,7 @@ list='
     example/prevalence2iota.py
     test/child_avgint_table.py
     test/omega_constraint.py
+    test/get_fit_children.py
 '
 for script in $list
 do

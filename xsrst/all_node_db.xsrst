@@ -50,8 +50,8 @@ for this covariate and node.
 ------------------------------------------------------------------------------
 {xsrst_begin fit_leaf_table}
 
-Leaf Node Table
-###############
+Fit Leaf Table
+##############
 This table specifies the :ref:`glossary.fit_leaf_set`.
 If it is empty, all of the descendants of the *root_node* are fit.
 Otherwise, only the nodes in the fit leaf set,
