@@ -24,15 +24,15 @@ root_node_id
 ************
 This is the node_id in the *node_table* for the root node.
 
-fit_leaf_table
+fit_goal_table
 **************
 This is python list of python dictionaries.
 The length of the list is the size of the
-:ref:`glossary.fit_leaf_set`.
-For each possible *fit_leaf_id*,
-the value *fit_leaf_table[fit_leaf_id]['node_id']* is
-the node_id for an element of the fit leaf set.
-Each leaf node must be the root node or a descendant
+:ref:`glossary.fit_goal_set`.
+For each possible *fit_goal_id*,
+the value *fit_goal_table[fit_goal_id]['node_id']* is
+the node_id for an element of the fit goal set.
+Each goal node must be the root node or a descendant
 of the root node.
 
 node_table
@@ -45,8 +45,9 @@ fit_children
 The return value *fit_children* is a python list of python lists.
 For each valid node_id, *fit_children[node_id]* is a list of child_node_id.
 Each child_node_id is a child of node_id and is between the root node and the
-fit leaf set inclusive.
-These are the children of node_id that must be fit to get to the leaf nodes.
+fit goal set inclusive.
+These are the children of node_id that must be fit to obtain
+a fit for all the goal nodes.
 
 {xsrst_end get_fit_children}
 '''
@@ -57,7 +58,7 @@ def get_fit_children(
 # BEGIN syntax
 # fit_children = at_cascade.get_fit_children(
     root_node_id    = None ,
-    fit_leaf_table  = None ,
+    fit_goal_table  = None ,
     node_table      = None ,
 # )
 # END syntax
@@ -77,16 +78,16 @@ def get_fit_children(
     done_fit_as_child[root_node_id] = True
     #
     # row
-    for row in fit_leaf_table :
-        # leaf node_id, parent_id
-        leaf_node_id   = row['node_id']
-        node_id        = leaf_node_id
+    for row in fit_goal_table :
+        # goal node_id, parent_id
+        goal_node_id   = row['node_id']
+        node_id        = goal_node_id
         parent_id      = node_table[node_id]['parent']
         while not done_fit_as_child[node_id] :
             if parent_id == None :
                 node_id   = row['node_id']
-                leaf_name = node_table[leaf_node_id]['node_name']
-                msg       = 'get_fit_children: leaf node = ' + leaf_name
+                goal_name = node_table[goal_node_id]['node_name']
+                msg       = 'get_fit_children: goal node = ' + goal_name
                 msg      += '\nis not a descendant of the root node = '
                 msg      += node_table[root_node_id]['node_name']
                 sys.exit(msg)

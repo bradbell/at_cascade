@@ -66,8 +66,9 @@ fit_children
 is a python list of python lists.
 For each valid node_id, *fit_children[node_id]* is a list of child_node_id.
 Each child_node_id is a child of node_id and is between the root node and the
-fit leaf set inclusive.
-These are the children of node_id that must be fit to get to the leaf nodes.
+fit goal set inclusive.
+These are the children of node_id that must be fit to
+obtain of fit of all the goal nodes.
 
 default
 =======
@@ -154,7 +155,7 @@ def cascade_fit_node(
         new              = False
         connection       = dismod_at.create_connection(all_node_database, new)
         all_option_table = dismod_at.get_table_dict(connection, 'all_option')
-        fit_leaf_table   = dismod_at.get_table_dict(connection, 'fit_leaf')
+        fit_goal_table   = dismod_at.get_table_dict(connection, 'fit_goal')
         connection.close()
         root_node_name   = None
         for row in all_option_table :
@@ -163,7 +164,7 @@ def cascade_fit_node(
         assert not root_node_name is None
         root_node_id = node_table_name2id(node_table, root_node_name)
         fit_children = at_cascade.get_fit_children(
-            root_node_id, fit_leaf_table, node_table
+            root_node_id, fit_goal_table, node_table
         )
     #
     # all_node_dir

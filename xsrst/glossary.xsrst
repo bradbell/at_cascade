@@ -26,11 +26,11 @@ This is an offset in a log transformation; i.e., a mapping of the form
 :math:`x \rightarrow \log(x + \eta )`.
 Note that this transformation is finite valued at :math:`x` equal to zero.
 
-fit_leaf_set
+fit_goal_set
 ************
 This is the set of nodes that we need a fit for.
 Each node in this set must be the *root_node* or a descendant of the root node.
-Note that all the nodes between the root node and the leaf nodes
+Note that all the nodes between the root node and the goal nodes
 are also be fit.
 
 fit_node

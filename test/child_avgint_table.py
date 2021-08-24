@@ -148,8 +148,8 @@ def root_node_db(file_name) :
     avgint_table = list()
     #
     # data_table
-    data_table    = list()
-    fit_leaf_set = { 'n1', 'n2' }
+    data_table  = list()
+    leaf_set    = { 'n1', 'n2' }
     row = {
         'node':         'n0',
         'subgroup':     'world',
@@ -162,7 +162,7 @@ def root_node_db(file_name) :
         'hold_out':     False,
     }
     for (age_id, age) in enumerate( age_grid ) :
-        for node in fit_leaf_set :
+        for node in leaf_set :
             for income in income_grid[node] :
                 meas_value        = iota_true(age, node, income)
                 row['node']       = node

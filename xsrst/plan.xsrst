@@ -23,8 +23,8 @@ AT Cascade Plan
 Purpose
 *******
 Run a dismod_at_ fit starting at :ref:`glossary.root_node` and including
-all the nodes in :ref:`glossary.fit_leaf_set`.
-All of the nodes between *root_node* and each element of *fit_leaf_set*
+all the nodes in :ref:`glossary.fit_goal_set`.
+All of the nodes between *root_node* and each element of *fit_goal_set*
 are also fit.
 
 

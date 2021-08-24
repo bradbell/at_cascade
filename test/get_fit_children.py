@@ -9,7 +9,7 @@
 # -----------------------------------------------------------------------------
 #
 # Below is a diagram of the node tree for this example.
-# The fit leaf nodes have absolute value bars around them.
+# The fit goal nodes have absolute value bars around them.
 #
 #                 n0
 #           /-----/\-----\
@@ -39,8 +39,8 @@ def main() :
         { 'node_name':'n6',   'parent':2      },
     ]
     #
-    # fit_leaf_table
-    fit_leaf_table = [
+    # fit_goal_table
+    fit_goal_table = [
         { 'node_id' : 3},
         { 'node_id' : 4},
         { 'node_id' : 2},
@@ -51,7 +51,7 @@ def main() :
     #
     # fit_children
     fit_children = at_cascade.get_fit_children(
-        root_node_id, fit_leaf_table, node_table,
+        root_node_id, fit_goal_table, node_table,
     )
     #
     # expected result

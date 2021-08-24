@@ -12,7 +12,7 @@ see http://www.gnu.org/licenses/agpl.txt
 The All Node DataBase
 #####################
 This data base contains information for all the nodes between the
-:ref:`glossary.root_node` and the :ref:`glossary.fit_leaf_set`.
+:ref:`glossary.root_node` and the :ref:`glossary.fit_goal_set`.
 
 {xsrst_end all_node_db}
 ------------------------------------------------------------------------------
@@ -48,17 +48,17 @@ for this covariate and node.
 
 {xsrst_end all_cov_reference_table}
 ------------------------------------------------------------------------------
-{xsrst_begin fit_leaf_table}
+{xsrst_begin fit_goal_table}
 
 Fit Leaf Table
 ##############
-This table specifies the :ref:`glossary.fit_leaf_set`.
+This table specifies the :ref:`glossary.fit_goal_set`.
 If it is empty, all of the descendants of the *root_node* are fit.
-Otherwise, only the nodes in the fit leaf set,
+Otherwise, only the nodes in the fit goal set,
 and their ancestors up to the *root_node* are fit.
 This table has the following columns:
 
-fit_leaf_id
+fit_goal_id
 ***********
 This column has type ``integer`` and is the primary key for this table.
 Its initial value is zero and it increments by one for each row.
@@ -68,7 +68,7 @@ node_id
 This column has type ``integer`` and is specifies
 a node by the primary key in the *root_node_database* node table
 
-{xsrst_end fit_leaf_table}
+{xsrst_end fit_goal_table}
 ------------------------------------------------------------------------------
 {xsrst_begin omega_grid}
 
