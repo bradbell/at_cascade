@@ -37,8 +37,8 @@ is the directory where the all node database is located.
 
 fit_node_database
 *****************
-is a python string specifying the location of the
-:ref:`glossary.fit_node_database` relative to *all_node_dir*.
+is a python string specifying the location of the root node database
+relative to the current working directory.
 This must be a valid :ref:`glossary.root_node_database`.
 This argument can't be ``None``.
 
@@ -167,14 +167,6 @@ def cascade_fit_node(
             root_node_id, fit_goal_table, node_table
         )
     #
-    # all_node_dir
-    path_list = all_node_database.split('/')
-    if len(path_list) == 1 :
-        all_node_dir = '.'
-    else :
-        path_list = path_list[: -1]
-        all_node_dir = '/'.join(path_list)
-    #
     # fit_node_name
     path_list = fit_node_database.split('/')
     assert len(path_list) >= 2
@@ -186,9 +178,6 @@ def cascade_fit_node(
     #
     # fit_node_dir, fit_node_database
     fit_node_dir = fit_node_database[ : - len('dismod.db') - 1 ]
-    if all_node_dir != '.' :
-        fit_node_dir      = all_node_dir + '/' + fit_node_dir
-        fit_node_database = all_node_dir + '/' + fit_node_database
     #
     # connection
     new        = False

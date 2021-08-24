@@ -20,7 +20,10 @@ Example Estimation of iota From Prevalence Data
 
 Nodes
 *****
-The following is a diagram of the node tree for this example::
+The following is a diagram of the node tree for this example.
+The :ref:`glossary.root_node` is n0,
+the :ref:`glossary.fit_goal_set` is {n1, n5, n6},
+and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
           /-----/\-----\
@@ -28,9 +31,12 @@ The following is a diagram of the node tree for this example::
        /  \            /  \
      n3    n4        n5    n6
 
-For this example the :ref:`glossary.root_node` is n0,
-the leaf nodes are { n3, n4, n5, n6 }, and
-{ n3, n4, n5, n6 } is the :ref:`glossary.fit_goal_set`.
+fit_goal_set
+============
+{xsrst_file
+    # BEGIN fit_goal_set
+    # END fit_goal_set
+}
 
 Rates
 *****
@@ -274,6 +280,10 @@ import at_cascade
 # -----------------------------------------------------------------------------
 # global variables
 # -----------------------------------------------------------------------------
+# BEGIN fit_goal_set
+fit_goal_set = { 'n1', 'n5', 'n6' }
+# END fit_goal_set
+#
 # BEGIN random_seed
 # random_seed = 1629371067
 random_seed = 0
@@ -668,9 +678,10 @@ def check_fit(goal_database) :
 # ----------------------------------------------------------------------------
 def main() :
     # -------------------------------------------------------------------------
-    # change into the build/example directory
-    distutils.dir_util.mkpath('build/example')
-    os.chdir('build/example')
+    # wrok_dir
+    work_dir = 'build/example'
+    distutils.dir_util.mkpath(work_dir)
+    os.chdir(work_dir)
     #
     # Create root_node.db
     root_node_database  = 'root_node.db'
@@ -710,6 +721,7 @@ def main() :
         all_cov_reference   = all_cov_reference ,
         omega_grid          = omega_grid,
         mtall_data          = mtall_data,
+        fit_goal_set        = fit_goal_set,
     )
     #
     # node_table
@@ -718,24 +730,33 @@ def main() :
     node_table = dismod_at.get_table_dict(connection, 'node')
     connection.close()
     #
-    # cascade starting at n0
-    fit_node_name = 'n0'
-    if not os.path.exists(fit_node_name) :
-        os.makedirs(fit_node_name )
-    fit_node_database =  fit_node_name + '/dismod.db'
+    # fit_node_dir
+    fit_node_dir = 'n0'
+    if os.path.exists(fit_node_dir) :
+        # rmtree is very dangerous so make sure fit_node_dir is as expected
+        os.chdir('../..')
+        assert work_dir == 'build/example'
+        shutil.rmtree(work_dir + '/' + fit_node_dir)
+        os.chdir(work_dir)
+    os.makedirs(fit_node_dir )
+    #
+    # fit_node_database = root_node_database
+    fit_node_database =  fit_node_dir + '/dismod.db'
     shutil.copyfile(root_node_database, fit_node_database)
+    #
+    # cascade starting at root node
     at_cascade.cascade_fit_node(
         all_node_database, fit_node_database, node_table
     )
     #
     # check results
-    for goal_database in [
-        'n0/n1/n3/dismod.db',
-        'n0/n1/n4/dismod.db',
-        'n0/n2/n5/dismod.db',
-        'n0/n2/n6/dismod.db',
-    ] :
+    for goal_dir in [ 'n0/n1', 'n0/n2/n5', 'n0/n2/n6' ] :
+        goal_database = goal_dir + '/dismod.db'
         check_fit(goal_database)
+    #
+    # check that fits were not run for n3 and n4
+    for not_fit_dir in [ 'n0/n1/n3', 'n0/n1/n4' ] :
+        assert not os.path.exists( not_fit_dir )
 
 #
 main()
