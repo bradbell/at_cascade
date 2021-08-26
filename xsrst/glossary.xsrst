@@ -59,7 +59,7 @@ weight grid.
     nslist, nslist_pair.
 -   The rate table must have null entries for the
     omega parent and child smoothings.
--   The rate table smoothing for pini must be null the corresponding
+-   The rate table smoothing for pini must be null or the corresponding
     smooth_grid entries must use the age_id corresponding to the smallest
     age in the age table.
 

@@ -42,9 +42,9 @@ Rates
 *****
 The only non-zero dismod_at rates for this example are
 :ref:`glossary.iota` and :ref:`glossary.omega`.
-We use :math:`\iota(a, n, I)` and *iota_n* to denote the value for *iota*
+We use *iota(a, n, I)* to denote the value for *iota*
 as a function of age *a*, node number *n*, and income *I*.
-We use :math:`\omega(a, n)` and *iota_n* to denote the value for *omega*
+We use *omega(a, n)* to denote the value for *omega*
 as a function of age *a* and node number *n*.
 
 
@@ -66,7 +66,7 @@ The code below sets this reference using the name avg_income:
 
 alpha
 =====
-We use *alpha* and :math:`\alpha`
+We use *alpha*
 for the :ref:`glossary.rate_value` covariate multiplier
 which multiplies *income*.
 This multiplier affects the value of *iota*.
@@ -135,13 +135,8 @@ This is the true value for *omega* in node *n* and age *a*:
 y_i
 ===
 The only simulated integrand for this example is :ref:`glossary.prevalence`.
-This data is simulated without any noise; i.e.,
-the i-th measurement is simulated as
-*y_i = iota_true(a_i, n_i, I_i)*
-where *a_i* is the age,
-*n_i* is the node,
-and *I_i* is the income for the i-th measurement.
-The data is modeled as having noise even though there is no simulated noise.
+This data is simulated without any noise
+but it is modeled as having noise.
 
 n_i
 ===
@@ -175,13 +170,13 @@ Parent Smoothing
 omega
 =====
 The parent smoothing constrains *omega* to be equal to
-:math:`\omega(a, n)` where  *a* is each value in the age grid and
+*omega(a, n)* where  *a* is each value in the age grid and
 *n* is the current node.
 
 iota
 ====
 This is the smoothing used in the *fit_node* model for *iota*.
-(The :ref:`glossary.fit_node` is the parent node in dismod_at notation.)
+Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
 There are no dtime priors because there is only one time point.
 
@@ -204,8 +199,8 @@ Child Smoothing
 omega
 =====
 The child smoothing constrains *omega* to be equal to
-:math:`\omega(a, n)` where  *a* is each value in the age grid and
-*n* is the current node.
+*omega_true(a, n)* where  *a* is each value in the age grid and
+*n* is the child node.
 
 iota
 ====
@@ -383,8 +378,8 @@ def root_node_db(file_name) :
             'density': 'gaussian',
             'mean':    0.0,
             'std':     1.0,
-        },{ # prior_alpha_n0
-            'name':    'prior_alpha_n0',
+        },{ # prior_alpha_n0_value
+            'name':    'prior_alpha_n0_value',
             'density': 'uniform',
             'lower':   - 10 * abs(alpha_true),
             'upper':   + 10 * abs(alpha_true),
@@ -404,17 +399,17 @@ def root_node_db(file_name) :
         'fun':        fun,
     })
     #
-    # smooth_iota_child
+    # smooth_child
     fun = lambda a, t : ('prior_iota_child', None, None)
     smooth_table.append({
-        'name':       'smooth_iota_child',
+        'name':       'smooth_child',
         'age_id':     [0],
         'time_id':    [0],
         'fun':        fun,
     })
     #
     # smooth_alpha_n0
-    fun = lambda a, t : ('prior_alpha_n0', None, None)
+    fun = lambda a, t : ('prior_alpha_n0_value', None, None)
     smooth_table.append({
         'name':       'smooth_alpha_n0',
         'age_id':     [0],
@@ -423,7 +418,7 @@ def root_node_db(file_name) :
     })
     #
     # smooth_gamma
-    # constrian gamma = 1
+    # constant gamma = 1
     fun = lambda a, t : (1.0, None, None)
     smooth_table.append({
         'name':       'smooth_gamma',
@@ -447,7 +442,7 @@ def root_node_db(file_name) :
     rate_table = [ {
         'name':           'iota',
         'parent_smooth':  'smooth_iota_n0',
-        'child_smooth':   'smooth_iota_child' ,
+        'child_smooth':   'smooth_child' ,
     } ]
     #
     # covariate_table
