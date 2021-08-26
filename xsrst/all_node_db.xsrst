@@ -50,12 +50,12 @@ for this covariate and node.
 ------------------------------------------------------------------------------
 {xsrst_begin fit_goal_table}
 
-Fit Leaf Table
+Fit Goal Table
 ##############
 This table specifies the :ref:`glossary.fit_goal_set`.
 If it is empty, all of the descendants of the *root_node* are fit.
-Otherwise, only the nodes in the fit goal set,
-and their ancestors up to the *root_node* are fit.
+Otherwise, only the nodes in the fit goal table,
+and their ancestors up to the *root_node*, are fit.
 This table has the following columns:
 
 fit_goal_id
@@ -79,7 +79,8 @@ omega_age_grid and omega_time_grid tables.
 
 omega_age_grid Table
 ********************
-This table has two columns, *omega_age_grid_id* and *age_id*:
+This table has two columns, *omega_age_grid_id* and *age_id*.
+If this table is empty, the omega_time_grid table must also be empty.
 
 n_omega_age
 ===========
@@ -94,11 +95,11 @@ age_id
 ======
 This column has type ``integer`` and specifies the age grid points
 by their index in the *root_node_database* age table.
-This column is monotone increasing with *omega_age_grid_id*.
 
 omega_time_grid Table
 *********************
-This table has two columns, *omega_time_grid_id* and *time_id*:
+This table has two columns, *omega_time_grid_id* and *time_id*.
+If this table is empty, the omega_age_grid table must also be empty.
 
 n_omega_time
 ============
@@ -113,7 +114,6 @@ time_id
 =======
 This column has type ``integer`` and specifies the time grid points
 by their index in the *root_node_database* time table.
-This column is monotone increasing with *omega_time_grid_id*.
 
 {xsrst_end omega_grid}
 ------------------------------------------------------------------------------
@@ -121,18 +121,18 @@ This column is monotone increasing with *omega_time_grid_id*.
 
 All Node mtall Values
 #####################
-The values of :ref:`glossary.mtall` for all the nodes is specified by the
-all_mtall and mtall_index tables.
+This table contains the value of :ref:`glossary.mtall`
+for all the nodes that have *mtall* data.
 
 all_mtall Table
 ***************
 This table specifies the value of :ref:`glossary.mtall` for each
 age, time point in the :ref:`omega_grid` and every node.
+This data is used to compute the :ref:`omega_constraint` for each node.
 If *mtall* is not specified for a node, it will use the same *mtall*
 values as its nearest ancestor node.
-If non of its ancestors have *mtall* values,
-there is no *mtall* data for this node and its omega will be constrained
-to zero.
+It is an error if there is no ancestor of a
+:ref:`goal node<glossary.fit_goal_set>` that has *mtall* data.
 
 all_mtall_id
 ============
@@ -182,8 +182,12 @@ and the *j*-th time in the omega_grid.
 
 All Node mtspecific Values
 ##########################
-The values of :ref:`glossary.mtspecific` for all the nodes is specified by the
-all_mtspecific and mtspecific_index tables.
+This table specifies the value of :ref:`glossary.mtspecific` for each
+age, time point in the :ref:`omega_grid` and every node.
+If *mtspecific* is not specified for a node, it will use the same *mtspecific*
+values as its nearest ancestor node.
+If there is no ancestor of a node that has *mtspecific* data,
+*omega* will be approximated as equal to *mtall* for that node.
 
 all_mtspecific Table
 ********************
@@ -191,9 +195,8 @@ This table specifies the value of :ref:`glossary.mtspecific` for each
 age, time point in the :ref:`omega_grid` and every node.
 If *mtspecific* is not specified for a node, it will use the same *mtspecific*
 values as its nearest ancestor node.
-If non of its ancestors have *mtspecific* values,
-there is no *mtspecific* data for this node and its omega will be constrained
-to be equal to its *mtall* data.
+If none of its ancestors have *mtspecific* data,
+*omega* will be constrained to be equal to its *mtall* data for that node.
 
 all_mtspecific_id
 =================
@@ -231,9 +234,9 @@ For *i* equal 0 through
 and *j* equal 0 through
 :ref:`n_omega_time-1<omega_grid.omega_time_grid_table.n_omega_time>`
 
-| all_mtspecific_id + i * n_omega_time + j
+    all_mtspecific_id + i * n_omega_time + j
 
-Is the index in the all_mtspecific table of the value for this node,
+is the index in the all_mtspecific table of the value for this node,
 the *i*-th age in the omega_grid,
 and the *j*-th time in the omega_grid.
 

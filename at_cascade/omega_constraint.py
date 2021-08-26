@@ -16,11 +16,6 @@
 
 Set Omega Constraints in a Fit Node Database
 ############################################
-This routine uses the *mtall* data for the closest ancestor of a node
-and constrains *omega* to be equal to the *mtall* data.
-If there is no such *mtall* data
-for the :ref:`omega_constraint.fit_node_database.parent_node`,
-no tables are changed by this routine.
 
 Syntax
 ******
@@ -33,6 +28,21 @@ all_node_database
 *****************
 is a python string containing the name of the :ref:`all_node_db`.
 This argument can't be ``None``.
+
+Use
+===
+This routine builds the *omega* constraints using the
+:ref:`glossary.mtall` and :ref:`glossary.mtspecific` data in the
+*all_node_database* using the relation
+
+    omega = mtall - mtspecific
+
+If a node does not have *mtall* ( *mtspecific*) data
+it uses the data for the closest ancestor is used.
+If a node does not have an ancestor with *mtspecific* data,
+zero is used for its *mtspecific* data.
+If a node does not have an ancestor with *mtall* data,
+zero is used for its *omega* constraint.
 
 fit_node_database
 *****************
@@ -116,12 +126,23 @@ def omega_constraint(
     all_tables = dict()
     for name in [
         'all_mtall',
+        'all_mtspecific',
         'mtall_index',
+        'mtspecific_index',
         'omega_age_grid',
         'omega_time_grid'
     ] :
         all_tables[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
+    #
+    # case where omega constrained to zero
+    if len( all_tables['omega_time_grid']) == 0 :
+        assert len( all_tables['all_mtall'] ) == 0
+        assert len( all_tables['all_mtspecific'] ) == 0
+        assert len( all_tables['mtall_index'] ) == 0
+        assert len( all_tables['mtspecific_index'] ) == 0
+        assert len( all_tables['omega_age_grid'] ) == 0
+        return
     #
     # n_omega_age, n_omega_time
     n_omega_age  = len( all_tables['omega_age_grid'] )
@@ -169,19 +190,46 @@ def omega_constraint(
     for row in all_tables['mtall_index'] :
         node_id2all_mtall_id[ row['node_id'] ] = row['all_mtall_id']
     #
-    # ancestor_node_id
-    ancestor_node_id = parent_node_id
-    while not ancestor_node_id in node_id2all_mtall_id :
-        ancestor_node_id = fit_tables['node'][ancestor_node_id]['parent']
-        if ancestor_node_id is None :
-            return
+    # node_id2all_mtspecific_id
+    node_id2all_mtspecific_id = dict()
+    for row in all_tables['mtspecific_index'] :
+        node_id2all_mtspecific_id[ row['node_id'] ] = row['all_mtspecific_id']
+    node_id2all_mtspecific_id[None] = None
+    #
+    # mtall_ancestor_node_id
+    node_id = parent_node_id
+    while not node_id in node_id2all_mtall_id :
+        node_id = fit_tables['node'][node_id]['parent']
+        if node_id is None :
+            msg  = 'omega_constraint: no ancestor of ' + parent_node_name
+            msg += ' has mtall data'
+            assert False, msg
+    mtall_ancestor_node_id = node_id
+    assert not mtall_ancestor_node_id is None
+    #
+    # mtspecific_ancestor_node_id
+    node_id = parent_node_id
+    while not node_id in node_id2all_mtspecific_id :
+        node_id = fit_tables['node'][node_id]['parent']
+    mtspecific_ancestor_node_id = node_id
     #
     # parent_mtall
-    all_mtall_id = node_id2all_mtall_id[ancestor_node_id]
+    all_mtall_id = node_id2all_mtall_id[mtall_ancestor_node_id]
     parent_mtall   = list()
-    for i in range( n_omega_age * n_omega_time ) :
-        row             = all_tables['all_mtall'][all_mtall_id + i ]
+    for ij in range( n_omega_age * n_omega_time ) :
+        row  = all_tables['all_mtall'][all_mtall_id + ij ]
         parent_mtall.append( row['all_mtall_value'] )
+    #
+    # parent_mtspecific
+    if mtspecific_ancestor_node_id is None :
+        parent_mtspecific = None
+    else :
+        node_id = mtspecific_ancestor_node_id
+        all_mtspecific_id = node_id2all_mtspecific_id[node_id]
+        parent_mtspecific  = list()
+        for ij in range( n_omega_age * n_omega_time ) :
+            row  = all_tables['all_mtspecific'][all_mtspecific_id + ij ]
+            parent_mtspecific.append( row['all_mtspecific_value'] )
     #
     # parent_smooth_id
     parent_smooth_id  = len(fit_tables['smooth'])
@@ -198,10 +246,15 @@ def omega_constraint(
             row     = copy.copy( fit_null_row['smooth_grid'] )
             age_id  = all_tables['omega_age_grid'][i]['age_id']
             time_id = all_tables['omega_time_grid'][j]['time_id']
+            ij      = i * n_omega_time + j
+            if parent_mtspecific is None :
+                omega   = parent_mtall[ij]
+            else :
+                omega   = parent_mtall[ij] - parent_mtspecific[ij]
             row['age_id']      = age_id
             row['time_id']     = time_id
             row['smooth_id']   = parent_smooth_id
-            row['const_value'] = parent_mtall[i * n_omega_time + j]
+            row['const_value'] = omega
             fit_tables['smooth_grid'].append( row )
     #
     # child_node_list
@@ -219,14 +272,30 @@ def omega_constraint(
         else :
             all_mtall_id = node_id2all_mtall_id[child_node_id]
             child_mtall  = list()
-            for i in range( n_omega_age * n_omega_time ) :
-               row             = all_tables['all_mtall'][all_mtall_id + i ]
+            for ij in range( n_omega_age * n_omega_time ) :
+               row  = all_tables['all_mtall'][all_mtall_id + ij ]
                child_mtall.append( row['all_mtall_value'] )
+        #
+        # child_mtspecific
+        if not child_node_id in node_id2all_mtspecific_id :
+            child_mtspecific = parent_mtspecific
+        else :
+            all_mtspecific_id = node_id2all_mtspecific_id[child_node_id]
+            child_mtspecific  = list()
+            for ij in range( n_omega_age * n_omega_time ) :
+               row   = all_tables['all_mtspecific'][all_mtspecific_id + ij ]
+               child_mtspecific.append( row['all_mtspecific_value'] )
         #
         # random_effect
         random_effect = list()
-        for i in range( n_omega_age * n_omega_time ) :
-            random_effect.append( log( child_mtall[i] / parent_mtall[i] ) )
+        for ij in range( n_omega_age * n_omega_time ) :
+            if parent_mtspecific is None :
+                parent_omega = parent_mtall[ij]
+                child_omega  = child_mtall[ij]
+            else :
+                parent_omega = parent_mtall[ij] - parent_mtspecific[ij]
+                child_omega  = child_mtall[ij] - child_mtspecific[ij]
+            random_effect.append( log( child_omega / parent_omega ) )
         #
         # smooth_id
         smooth_id = len( fit_tables['smooth'] )

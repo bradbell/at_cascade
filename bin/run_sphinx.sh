@@ -24,14 +24,14 @@ echo 'xsrst.py html doc.xsrst sphinx spelling keyword'
 if ! xsrst.py html doc.xsrst sphinx spelling keyword >& run_sphinx.$$
 then
     cat run_sphinx.$$
-    echo 'bin/run_sphinx: aboring to to xsrst errors above'
+    echo 'bin/run_sphinx: aboring due to xsrst errors above'
     rm run_sphinx.$$
     exit 1
 fi
 if grep '^warning:' run_sphinx.$$ > /dev/null
 then
     cat run_sphinx.$$
-    echo 'bin/run_sphinx: aboring to to xsrst warnings above'
+    echo 'bin/run_sphinx: aboring due to xsrst warnings above'
     rm run_sphinx.$$
     exit 1
 fi
@@ -40,14 +40,14 @@ echo 'sphinx-build -b html sphinx doc'
 if ! sphinx-build -b html sphinx doc >& run_sphinx.$$
 then
     cat run_sphinx.$$
-    echo 'bin/run_sphinx: aboring to to sphinx warnings above'
+    echo 'bin/run_sphinx: aboring due to sphinx warnings above'
     rm run_sphinx.$$
     exit 1
 fi
 if grep '^build succeeded,.*warning' run_sphinx.$$ > /dev/null
 then
     cat run_sphinx.$$
-    echo 'bin/run_sphinx: aboring to to sphinx warnings above'
+    echo 'bin/run_sphinx: aboring due to sphinx warnings above'
     rm run_sphinx.$$
     exit 1
 fi

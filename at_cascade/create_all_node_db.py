@@ -10,7 +10,6 @@
 '''
 {xsrst_begin create_all_node_db}
 {xsrst_spell
-    integrands
 }
 
 Create an All Node Database
@@ -27,12 +26,18 @@ all_node_database
 *****************
 is a python string containing the name of the
 :ref:`all_node_db` that is created by this call.
+
+default
+=======
 This argument can't be ``None``.
 
 root_node_database
 ******************
 is a python string containing the name of the name of the
 :ref:`glossary.root_node_database`.
+
+default
+=======
 This argument can't be ``None``.
 
 all_cov_reference
@@ -45,6 +50,9 @@ covariate name for each covariate in the *root_node_database*.
 If *covariate* is an covariate name,
 *all_cov_reference[node][covariate]*
 is the reference values for the specified node and covariate.
+
+default
+=======
 This argument can't be ``None``.
 
 omega_grid
@@ -60,9 +68,7 @@ of the age (time) list.
 
 default
 =======
-If this argument in ``None``, *omega* will be constrained to zero.
-In this case none of the integrands in the *root_node_database* can
-be an :ref:`glossary.ode_integrand`.
+If this argument is ``None``, there is no omega grid.
 
 mtall_data
 **********
@@ -77,16 +83,25 @@ and time corresponding to index *j* in *omega_grid*\ [``time``].
 
 default
 =======
-If this argument in ``None``, *omega* will be constrained to zero.
+This argument is ``None`` if and only if *omega_grid* is ``None``.
 
 mtspecific_data
 ***************
-Not yet specified.
+This is a python dictionary with a key for each node name
+for the root node and its descendant.
+The value *mtspecific_data[node_name]* is a list.
+For *i* equal 0, ..., *n_omega_age*-1 and *j* equal 0, ..., *n_omega_time*-1,
+*mtspecific_data[node_name][ i * n_omega_time + j ]
+is the value of *mtspecific* at the specified node,
+the age corresponding to index *i* in *omega_grid*\ [``age``],
+and time corresponding to index *j* in *omega_grid*\ [``time``].
 
 default
 =======
-If this argument in ``None``, *omega* will be constrained to equal to
-the *mtall_data*.
+If this argument in ``None`` the
+:ref:`all_mtspecific.all_mtspecific_table` and
+:ref:`all_mtspecific.mtspecific_index_table` will be empty.
+If *omega_grid* is ``None``, this argument must also be ``None``.
 
 fit_goal_set
 ************
@@ -161,6 +176,15 @@ def create_all_node_db(
 # )
 # END syntax
 ):
+    assert not all_node_database is None
+    assert not root_node_database is None
+    assert not all_cov_reference is None
+    if omega_grid is None :
+        assert mtall_data is None
+        assert mtspecific_data is None
+    else :
+        assert not mtall_data is None
+    #
     # so far only None is implemented for these options
     assert sex_level is None
     assert in_parallel is None
@@ -320,18 +344,37 @@ def create_all_node_db(
         all_connection, tbl_name, col_name, col_type, row_list
     )
     #
-    # empty mtspecific table
+    # all_mtspecific table
     tbl_name  = 'all_mtspecific'
     col_name  = [ 'all_mtspecific_value' ]
     col_type  = [  'real' ]
     row_list  = list()
+    if not mtspecific_data is None :
+        node_list = mtspecific_data.keys()
+        for node_name in node_list :
+            node_id = table_name2id(node_table, 'node_name', node_name)
+            assert len(mtspecific_data[node_name]) == n_omega_age * n_omega_time
+            for i in range(n_omega_age) :
+                for j in range(n_omega_time) :
+                    value   = mtspecific_data[node_name][ i * n_omega_time + j]
+                    row     = [ value ]
+                    row_list.append( row )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )
-    tbl_name  = 'all_mtspecific_index'
+    #
+    # mtspecific_index table
+    tbl_name  = 'mtspecific_index'
     col_name  = [ 'node_id', 'all_mtspecific_id' ]
     col_type  = [ 'integer', 'integer' ]
     row_list  = list()
+    if not mtspecific_data is None :
+        all_mtspecific_id = 0
+        for node_name in node_list :
+            node_id = table_name2id(node_table, 'node_name', node_name)
+            row     = [ node_id, all_mtspecific_id ]
+            row_list.append( row )
+            all_mtspecific_id += n_omega_age * n_omega_time
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )
