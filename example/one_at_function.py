@@ -285,18 +285,18 @@ age_grid = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
 # END age_grid
 #
 # BEGIN income_grid
-random_income = True
+random_income = False
 income_grid   = dict()
 for node in [ 'n3', 'n4', 'n5', 'n6' ] :
     max_income  = 2.0 * avg_income[node]
     if random_income :
-        n_grid = 10
+        n_income_grid = 10
         income_grid[node] = \
-            [ random.uniform(0.0, max_income) for j in range(n_grid) ]
+            [ random.uniform(0.0, max_income) for j in range(n_income_grid) ]
         income_grid[node] = sorted( income_grid[node] )
     else :
-        n_grid = 2
-        income_grid[node] = [ j * max_income for j in range(n_grid) ]
+        n_income_grid = 2
+        income_grid[node] = [ j * max_income for j in range(n_income_grid) ]
 # END income_grid
 # ----------------------------------------------------------------------------
 # functions
@@ -424,16 +424,16 @@ def root_node_db(file_name) :
     # data_table
     data_table  = list()
     leaf_set    = { 'n3', 'n4', 'n5', 'n6' }
-    row = {
-        'subgroup':     'world',
-        'weight':       '',
-        'time_lower':   2000.0,
-        'time_upper':   2000.0,
-        'integrand':    'Sincidence',
-        'density':      'gaussian',
-        'hold_out':     False,
-    }
     for (age_id, age) in enumerate( age_grid ) :
+        row = {
+            'subgroup':     'world',
+            'weight':       '',
+            'time_lower':   2000.0,
+            'time_upper':   2000.0,
+            'integrand':    'Sincidence',
+            'density':      'gaussian',
+            'hold_out':     False,
+        }
         for node in leaf_set :
             for income in income_grid[node] :
                 meas_value        = iota_true(age, node, income)
@@ -581,7 +581,7 @@ def check_fit(goal_database) :
         # check the fit
         # print(age, rel_error, check_value - avg_integrand, sample_std)
         if random_income :
-            assert abs(rel_error) < 5e-2
+            assert abs(rel_error) < 1e-2
         else :
             assert abs(rel_error) < 1e-3
         assert abs(avg_integrand - check_value) < 2.0 * sample_std

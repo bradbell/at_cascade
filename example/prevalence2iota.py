@@ -314,18 +314,18 @@ age_grid = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
 # END age_grid
 #
 # BEGIN income_grid
-random_income = False
+random_income = True
 income_grid   = dict()
 for node in [ 'n3', 'n4', 'n5', 'n6' ] :
     max_income  = 2.0 * avg_income[node]
     if random_income :
-        n_grid = 10
+        n_income_grid = 10
         income_grid[node] = \
-            [ random.uniform(0.0, max_income) for j in range(n_grid) ]
+            [ random.uniform(0.0, max_income) for j in range(n_income_grid) ]
         income_grid[node] = sorted( income_grid[node] )
     else :
-        n_grid = 2
-        income_grid[node] = [ j * max_income for j in range(n_grid) ]
+        n_income_grid = 2
+        income_grid[node] = [ j * max_income for j in range(n_income_grid) ]
 # END income_grid
 # ----------------------------------------------------------------------------
 # functions
@@ -498,17 +498,17 @@ def root_node_db(file_name) :
     # data_table
     data_table = list()
     leaf_set   = { 'n3', 'n4', 'n5', 'n6' }
-    row = {
-        'subgroup':     'world',
-        'weight':       '',
-        'time_lower':   2000.0,
-        'time_upper':   2000.0,
-        'integrand':    'prevalence',
-        'density':      'log_gaussian',
-        'hold_out':     False,
-        'one':          1.0,
-    }
     for node in leaf_set :
+        row = {
+            'subgroup':     'world',
+            'weight':       '',
+            'time_lower':   2000.0,
+            'time_upper':   2000.0,
+            'integrand':    'prevalence',
+            'density':      'log_gaussian',
+            'hold_out':     False,
+            'one':          1.0,
+        }
         row_list       = list()
         max_meas_value = 0.0
         for (age_id, age) in enumerate( age_grid ) :
