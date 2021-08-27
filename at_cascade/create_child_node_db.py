@@ -374,6 +374,7 @@ def create_child_node_db(
                 assert smooth_row['mulstd_dtime_prior_id'] is None
                 #
                 child_smooth_id = len(child_tables['smooth'])
+                smooth_row['smooth_name'] += f'_{child_smooth_id}'
                 child_tables['smooth'].append(smooth_row)
                 #
                 # change child_tables['mulcov'] to use the new smoothing
@@ -431,6 +432,7 @@ def create_child_node_db(
                 # update: child_tables['smooth']
                 # for case where its is the parent
                 child_smooth_id = len(child_tables['smooth'])
+                smooth_row['smooth_name'] += f'_{child_smooth_id}'
                 child_tables['smooth'].append(smooth_row)
                 #
                 # change child_tables['rate'] to use the new smoothing
@@ -469,6 +471,7 @@ def create_child_node_db(
                 # update: child_tables['smooth']
                 # for case where its is the parent
                 child_smooth_id = len(child_tables['smooth'])
+                smooth_row['smooth_name'] += f'_{child_smooth_id}'
                 child_tables['smooth'].append(smooth_row)
                 #
                 # change child_tables['rate'] to use the new smoothing
