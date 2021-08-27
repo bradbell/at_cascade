@@ -15,6 +15,7 @@
 /build/
 /sphinx/xsrst/
 /sphinx/_static/
+/sphinx/index.rst
 #
 # used to store and install external packages
 /external/

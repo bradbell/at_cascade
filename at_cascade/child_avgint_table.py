@@ -82,11 +82,13 @@ in the new avgint table
 # ----------------------------------------------------------------------------
 import dismod_at
 # ----------------------------------------------------------------------------
-def table_name2id(table, col_name, row_name) :
-    for (row_id, row) in enumerate(table) :
+def table_name2id(tables, tbl_name, row_name) :
+    col_name = f'{tbl_name}_name'
+    for (row_id, row) in enumerate(tables[tbl_name]) :
         if row[col_name] == row_name :
             return row_id
-    assert False
+    msg = f"Can't find {col_name} = {row_name} in table {tbl_name}"
+    assert False, msg
 # ----------------------------------------------------------------------------
 def child_avgint_table(
 # BEGIN syntax
@@ -146,7 +148,7 @@ def child_avgint_table(
         if row['option_name'] == 'parent_node_name' :
             parent_node_name = row['option_value']
     assert parent_node_name is not None
-    parent_node_id = table_name2id(node_table, 'node_name', parent_node_name)
+    parent_node_id = table_name2id(fit_tables, 'node', parent_node_name)
     #
     # child_all_cov_reference
     child_all_cov_reference = dict()
@@ -220,7 +222,7 @@ def child_avgint_table(
             integrand_name  = 'mulcov_' + str(mulcov_id)
             integrand_table = fit_tables['integrand']
             integrand_id    = table_name2id(
-                integrand_table, 'integrand_name', integrand_name
+                fit_tables, 'integrand', integrand_name
             )
             #
             # grid_row
@@ -261,7 +263,7 @@ def child_avgint_table(
     for rate_name in name_rate2integrand :
         #
         # rate_id
-        rate_id = table_name2id(rate_table, 'rate_name', rate_name)
+        rate_id = table_name2id(fit_tables, 'rate', rate_name)
         #
         # parent_smooth_id
         parent_smooth_id = rate_table[rate_id]['parent_smooth_id']
@@ -271,7 +273,7 @@ def child_avgint_table(
             integrand_name  = name_rate2integrand[rate_name]
             integrand_table = fit_tables['integrand']
             integrand_id    = table_name2id(
-                integrand_table, 'integrand_name', integrand_name
+                fit_tables, 'integrand', integrand_name
             )
             #
             # grid_row

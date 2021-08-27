@@ -84,11 +84,11 @@ The true value for *alpha* (used which simulating the data) is
 
 gamma
 =====
-We use *gamma*
+We use *gamma_prevalence* ( *gamma_mtexcess* )
 for the :ref:`glossary.meas_noise` covariate multiplier
-which multiplies *one*.
-This multiplier adds to the nose level for prevalence in log space,
-because the density for the prevalence data is log Gaussian.
+which multiplies *one* add affects prevalence noise ( mtexcess noise) .
+These multipliers adds to the nose level in log space,
+because the corresponding densities are log Gaussian.
 
 
 Random Effects
@@ -484,10 +484,16 @@ def root_node_db(file_name) :
             'effected':   'iota',
             'group':      'world',
             'smooth':     'smooth_alpha_n0',
-        },{ # gamma
+        },{ # gamma_prevalence
             'covariate':  'one',
             'type':       'meas_noise',
             'effected':   'prevalence',
+            'group':      'world',
+            'smooth':     'smooth_gamma',
+        },{ # gamma_mtexcess
+            'covariate':  'one',
+            'type':       'meas_noise',
+            'effected':   'mtexcess',
             'group':      'world',
             'smooth':     'smooth_gamma',
     } ]
@@ -503,6 +509,7 @@ def root_node_db(file_name) :
         {'name': 'mtspecific'},
         {'name': 'mulcov_0'},
         {'name': 'mulcov_1'},
+        {'name': 'mulcov_2'},
     ]
     #
     # avgint_table

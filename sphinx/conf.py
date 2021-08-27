@@ -2,7 +2,7 @@
 import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
-project   = 'cppad_py'
+project   = 'at_cascade'
 copyright = '2021'
 author    = 'Brad Bell'
 
