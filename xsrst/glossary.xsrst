@@ -14,11 +14,15 @@ see http://www.gnu.org/licenses/agpl.txt
     integrands
     nslist
     smoothings
-    pini
 }
 
 Glossary
 ########
+
+chi
+***
+The model rate for excess mortality as a function of age and time.
+This is also denoted by :math:`\chi(a, t)`.
 
 eta
 ***

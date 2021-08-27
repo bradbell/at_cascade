@@ -53,6 +53,11 @@ i.e., the *root_node* is the :ref:`glossary.fit_node`.
   corresponding to all the data.
 - The covariate table reference values must be the same as the *all_node*
   database reference values for the *root_node*.
+- For the list of rates [ pini, iota, rho, chi ]
+  the corresponding integrand names are
+  [ prevalence, Sincidence, remission, mtexcess ].
+  If the parent_smooth_id in the rate table for one of these rates is not null,
+  the corresponding integrand name must be in the integrand table.
 
 All Node Database
 =================
