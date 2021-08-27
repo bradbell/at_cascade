@@ -544,14 +544,16 @@ def root_node_db(file_name) :
     }
     for node in leaf_set :
         row_list       = list()
-        max_meas_value =  { 'prevalence': 0.0, 'mtexcess': 0.0 }
+        max_meas_value =  {
+            'mtexcess': 0.0, 'Sincidence': 0.0
+        }
         for (age_id, age) in enumerate( age_grid ) :
             for income in income_grid[node] :
                 row['node']       = node
                 row['age_lower']  = age
                 row['age_upper']  = age
                 row['income']     = income
-                for integrand in [ 'prevalence', 'mtexcess' ] :
+                for integrand in max_meas_value :
                     meas_value = average_integrand(
                         integrand, age, node, income
                     )
@@ -565,13 +567,10 @@ def root_node_db(file_name) :
             # The model for the measurement noise is small so a few
             # data points act like lots of real data points.
             # The actual measruement noise is zero.
-            if row['integrand'] == 'prevalence' :
-                row['meas_std'] = max_meas_value['prevalence'] / 50.0
-                row['eta']      = 1e-4 * max_meas_value['prevalence']
-            else :
-                assert row['integrand'] == 'mtexcess'
-                row['meas_std'] = max_meas_value['mtexcess'] / 50.0
-                row['eta']      = 1e-4 * max_meas_value['mtexcess']
+            for integrand in max_meas_value :
+                if row['integrand'] == integrand :
+                    row['meas_std'] = max_meas_value[integrand] / 50.0
+                    row['eta']      = 1e-4 * max_meas_value[integrand]
         #
         data_table += row_list
     #
@@ -588,11 +587,14 @@ def root_node_db(file_name) :
     option_table = [
         { 'name':'parent_node_name',      'value':'n0'},
         { 'name':'rate_case',             'value':'iota_pos_rho_zero'},
-        { 'name': 'zero_sum_child_rate',  'value':'iota'},
+        { 'name': 'zero_sum_child_rate',  'value':'iota chi'},
         { 'name':'quasi_fixed',           'value':'false'},
         { 'name':'print_level_fixed',     'value':'5'},
         { 'name':'max_num_iter_fixed',    'value':'50'},
-        { 'name':'tolerance_fixed',       'value':'1e-10'},
+        { 'name':'max_num_iter_random',   'value':'200'},
+        { 'name':'tolerance_fixed',       'value':'1e-8'},
+        { 'name':'tolerance_random',      'value':'1e-8'},
+        { 'name':'bound_random',          'value':1.0},
         { 'name':'random_seed',           'value':str(random_seed)},
     ]
     # ----------------------------------------------------------------------

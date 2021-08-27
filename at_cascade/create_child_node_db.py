@@ -113,11 +113,13 @@ def add_index_to_name(table, name_col) :
         name = name[: -1]
     row[name_col] = name + '_' + str( len(table) )
 # ----------------------------------------------------------------------------
-def table_name2id(table, col_name, row_name) :
-    for (row_id, row) in enumerate(table) :
+def table_name2id(tables, tbl_name, row_name) :
+    col_name = f'{tbl_name}_name'
+    for (row_id, row) in enumerate(tables[tbl_name]) :
         if row[col_name] == row_name :
             return row_id
-    assert False
+    msg = f"Can't find {col_name} = {row_name} in table {tbl_name}"
+    assert False, msg
 # ----------------------------------------------------------------------------
 def move_table(connection, src_name, dst_name) :
     command     = 'DROP TABLE IF EXISTS ' + dst_name
@@ -294,15 +296,11 @@ def create_child_node_db(
             parent_node_name = row['option_value']
     assert parent_node_name is not None
     #
-    # node_table
-    node_table = parent_tables['node']
-    #
     # parent_node_id
-    parent_node_id = table_name2id(node_table, 'node_name', parent_node_name)
+    parent_node_id = table_name2id(parent_tables, 'node', parent_node_name)
     #
     # gaussian_density_id
-    table              = parent_tables['density']
-    gaussian_density_id = table_name2id(table, 'density_name', 'gaussian')
+    gaussian_density_id = table_name2id(parent_tables, 'density', 'gaussian')
     #
     for child_name in child_node_databases :
         # ---------------------------------------------------------------------
@@ -326,8 +324,8 @@ def create_child_node_db(
         child_tables['nslist_pair'] = list()
         #
         # child_node_id
-        child_node_id = table_name2id(node_table, 'node_name', child_name)
-        assert node_table[child_node_id]['parent'] == parent_node_id
+        child_node_id = table_name2id(parent_tables, 'node', child_name)
+        assert parent_tables['node'][child_node_id]['parent'] == parent_node_id
         #
         # child_node_database = parent_node_database
         child_database = child_node_databases[child_name]
@@ -365,8 +363,7 @@ def create_child_node_db(
                 #
                 # integrand_id
                 name         = 'mulcov_' + str(mulcov_id)
-                table        = parent_tables['integrand']
-                integrand_id = table_name2id(table, 'integrand_name', name)
+                integrand_id = table_name2id(parent_tables, 'integrand', name)
                 #
                 smooth_row = parent_tables['smooth'][parent_smooth_id]
                 smooth_row = copy.copy(smooth_row)
@@ -420,9 +417,8 @@ def create_child_node_db(
                 #
                 # integrand_id
                 integrand_name  = name_rate2integrand[rate_name]
-                integrand_table = parent_tables['integrand']
                 integrand_id = table_name2id(
-                    integrand_table, 'integrand_name', integrand_name
+                    parent_tables, 'integrand', integrand_name
                 )
                 #
                 smooth_row = parent_tables['smooth'][parent_smooth_id]

@@ -132,12 +132,6 @@ def child_avgint_table(
             minimum_age_id = age_id
             minimum_age    = row['age']
     #
-    # rate_table
-    rate_table = fit_tables['rate']
-    #
-    # node_table
-    node_table = fit_tables['node']
-    #
     # n_covariate
     n_covariate = len( fit_tables['covariate'] )
     #
@@ -152,7 +146,7 @@ def child_avgint_table(
     #
     # child_all_cov_reference
     child_all_cov_reference = dict()
-    for (node_id, row) in enumerate(node_table) :
+    for (node_id, row) in enumerate(fit_tables['node']) :
         if row['parent'] == parent_node_id :
             reference = n_covariate * [0.0]
             for row in all_cov_reference_table :
@@ -220,7 +214,6 @@ def child_avgint_table(
             #
             # integrand_id
             integrand_name  = 'mulcov_' + str(mulcov_id)
-            integrand_table = fit_tables['integrand']
             integrand_id    = table_name2id(
                 fit_tables, 'integrand', integrand_name
             )
@@ -266,12 +259,11 @@ def child_avgint_table(
         rate_id = table_name2id(fit_tables, 'rate', rate_name)
         #
         # parent_smooth_id
-        parent_smooth_id = rate_table[rate_id]['parent_smooth_id']
+        parent_smooth_id = fit_tables['rate'][rate_id]['parent_smooth_id']
         if not parent_smooth_id is None :
             #
             # integrand_id
             integrand_name  = name_rate2integrand[rate_name]
-            integrand_table = fit_tables['integrand']
             integrand_id    = table_name2id(
                 fit_tables, 'integrand', integrand_name
             )
