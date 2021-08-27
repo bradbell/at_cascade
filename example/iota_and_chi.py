@@ -325,8 +325,9 @@ for node in [ 'n3', 'n4', 'n5', 'n6' ] :
             [ random.uniform(0.0, max_income) for j in range(n_income_grid) ]
         income_grid[node] = sorted( income_grid[node] )
     else :
-        n_income_grid = 2
-        income_grid[node] = [ j * max_income for j in range(n_income_grid) ]
+        n_income_grid = 3
+        d_income_grid = max_income / (n_income_grid - 1)
+        income_grid[node] = [ j * d_income_grid for j in range(n_income_grid) ]
 # END income_grid
 # ----------------------------------------------------------------------------
 # functions
@@ -439,7 +440,7 @@ def root_node_db(file_name) :
     })
     #
     # smooth_gamma
-    # constant gamma = 1
+    # constant gamma = 1.0
     fun = lambda a, t : (1.0, None, None)
     smooth_table.append({
         'name':       'smooth_gamma',
@@ -597,6 +598,7 @@ def root_node_db(file_name) :
         { 'name':'tolerance_fixed',       'value':'1e-8'},
         { 'name':'tolerance_random',      'value':'1e-8'},
         { 'name':'bound_random',          'value':1.0},
+        { 'name':'meas_noise_effect',     'value':'add_std_scale_none'},
         { 'name':'random_seed',           'value':str(random_seed)},
     ]
     # ----------------------------------------------------------------------
@@ -820,7 +822,7 @@ def main() :
         check_fit(goal_database)
     #
     # check that fits were not run for n3 and n4
-    for not_fit_dir in [ 'n0/n1/n3', 'n0/n1/n4' ] :
+    for not_fit_dir in [ ] :
         assert not os.path.exists( not_fit_dir )
 
 #

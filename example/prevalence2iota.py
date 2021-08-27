@@ -324,7 +324,8 @@ for node in [ 'n3', 'n4', 'n5', 'n6' ] :
             [ random.uniform(0.0, max_income) for j in range(n_income_grid) ]
         income_grid[node] = sorted( income_grid[node] )
     else :
-        n_income_grid = 2
+        n_income_grid = 3
+        d_income_grid = max_income / (n_income_grid - 1)
         income_grid[node] = [ j * max_income for j in range(n_income_grid) ]
 # END income_grid
 # ----------------------------------------------------------------------------
