@@ -1,57 +1,68 @@
-!!!!!!!!!!!!!!!
-prevalence2iota
-!!!!!!!!!!!!!!!
+!!!!!!!!!!!!
+iota_and_chi
+!!!!!!!!!!!!
 
 .. toctree::
    :maxdepth: 1
    :hidden:
 
-   prevalence2iota_py
+   iota_and_chi_py
 
 .. meta::
-   :keywords: prevalence2iota, example, estimation, iota, from, prevalence, data
+   :keywords: iota_and_chi, example, estimation, iota, chi
 
-.. index:: prevalence2iota, example, estimation, iota, from, prevalence, data
+.. index:: iota_and_chi, example, estimation, iota, chi
 
-.. _prevalence2iota:
+.. _iota_and_chi:
 
-Example Estimation of iota From Prevalence Data
-###############################################
+Example Estimation of iota and chi
+##################################
 .. contents::
    :local:
+
+.. meta::
+   :keywords: under, construction
+
+.. index:: under, construction
+
+.. _iota_and_chi.under_construction:
+
+Under Construction
+******************
+This example is not yet working.
 
 .. meta::
    :keywords: nodes
 
 .. index:: nodes
 
-.. _prevalence2iota.nodes:
+.. _iota_and_chi.nodes:
 
 Nodes
 *****
 The following is a diagram of the node tree for this example.
 The :ref:`glossary.root_node` is n0,
-the :ref:`glossary.fit_goal_set` is {n1, n5, n6},
-and the leaf nodes are {n3, n4, n5, n6}::
+the :ref:`glossary.fit_goal_set` and the leaf node set
+are both {n3, n4, n5, n6} for this example::
 
                 n0
           /-----/\-----\
         n1              n2
        /  \            /  \
-     n3    n4        n5    n6
+    (n3)  (n4)      (n5)  (n6)
 
 .. meta::
    :keywords: fit_goal_set
 
 .. index:: fit_goal_set
 
-.. _prevalence2iota.nodes.fit_goal_set:
+.. _iota_and_chi.nodes.fit_goal_set:
 
 fit_goal_set
 ============
 
-.. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 279-279
+.. literalinclude:: ../../example/iota_and_chi.py
+    :lines: 280-280
     :language: py
 
 .. meta::
@@ -59,15 +70,16 @@ fit_goal_set
 
 .. index:: rates
 
-.. _prevalence2iota.rates:
+.. _iota_and_chi.rates:
 
 Rates
 *****
-The only non-zero dismod_at rates for this example are
-:ref:`glossary.iota` and :ref:`glossary.omega`.
-We use *iota(a, n, I)* to denote the value for *iota*
+The non-zero dismod_at rates for this example are
+:ref:`glossary.iota`, :ref:`glossary.chi`, and :ref:`glossary.omega`.
+We use *iota(a, n, I)* , *chi(a, n, I)*
+to denote the value for *iota* and *chi*
 as a function of age *a*, node number *n*, and income *I*.
-We use *omega(a, n)* to denote the value for *omega*
+We use *omega(a, n)* and *omega_n* to denote the value for *omega*
 as a function of age *a* and node number *n*.
 
 .. meta::
@@ -75,7 +87,7 @@ as a function of age *a* and node number *n*.
 
 .. index:: covariate
 
-.. _prevalence2iota.covariate:
+.. _iota_and_chi.covariate:
 
 Covariate
 *********
@@ -89,15 +101,15 @@ The *one* covariate is always equal to 1 and its reference is always zero.
 
 .. index:: r_n
 
-.. _prevalence2iota.covariate.r_n:
+.. _iota_and_chi.covariate.r_n:
 
 r_n
 ===
 We use *r_n* for the reference value of *income* at node *n*.
 The code below sets this reference using the name avg_income:
 
-.. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 296-299
+.. literalinclude:: ../../example/iota_and_chi.py
+    :lines: 297-300
     :language: py
 
 .. meta::
@@ -105,7 +117,7 @@ The code below sets this reference using the name avg_income:
 
 .. index:: alpha
 
-.. _prevalence2iota.covariate.alpha:
+.. _iota_and_chi.covariate.alpha:
 
 alpha
 =====
@@ -115,8 +127,8 @@ which multiplies *income*.
 This multiplier affects the value of *iota*.
 The true value for *alpha* (used which simulating the data) is
 
-.. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 292-292
+.. literalinclude:: ../../example/iota_and_chi.py
+    :lines: 293-293
     :language: py
 
 .. meta::
@@ -124,26 +136,26 @@ The true value for *alpha* (used which simulating the data) is
 
 .. index:: gamma
 
-.. _prevalence2iota.covariate.gamma:
+.. _iota_and_chi.covariate.gamma:
 
 gamma
 =====
-We use *gamma*
+We use *gamma_prevalence* ( *gamma_mtexcess* )
 for the :ref:`glossary.meas_noise` covariate multiplier
-which multiplies *one*.
-This multiplier adds to the nose level for prevalence in log space,
-because the density for the prevalence data is log Gaussian.
+which multiplies *one* add affects prevalence noise ( mtexcess noise) .
+These multipliers adds to the nose level in log space,
+because the corresponding densities are log Gaussian.
 
 .. meta::
    :keywords: random, effects
 
 .. index:: random, effects
 
-.. _prevalence2iota.random_effects:
+.. _iota_and_chi.random_effects:
 
 Random Effects
 **************
-For each node, there is a random effect on *iota* that is constant
+For each node, there is a random effect on *iota* and *chi* that is constant
 in age and time. Note that the leaf nodes have random effect for the node
 above them as well as their own random effect.
 
@@ -152,15 +164,15 @@ above them as well as their own random effect.
 
 .. index:: s_n
 
-.. _prevalence2iota.random_effects.s_n:
+.. _iota_and_chi.random_effects.s_n:
 
 s_n
 ===
 We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
 
-.. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 303-309
+.. literalinclude:: ../../example/iota_and_chi.py
+    :lines: 304-310
     :language: py
 
 .. meta::
@@ -168,7 +180,7 @@ The code below sets this sum using the name sum_random:
 
 .. index:: simulated, data
 
-.. _prevalence2iota.simulated_data:
+.. _iota_and_chi.simulated_data:
 
 Simulated Data
 **************
@@ -180,7 +192,7 @@ functions below do not depend on time.
 
 .. index:: random, seed
 
-.. _prevalence2iota.simulated_data.random_seed:
+.. _iota_and_chi.simulated_data.random_seed:
 
 Random Seed
 ===========
@@ -188,38 +200,24 @@ The random seed can be used to reproduce results.
 If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
 
-.. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 283-288
+.. literalinclude:: ../../example/iota_and_chi.py
+    :lines: 284-289
     :language: py
 
 .. meta::
-   :keywords: iota_true(a, , n, , i)
+   :keywords: rate_true(rate, , a, , n, , i)
 
-.. index:: iota_true(a, , n, , i)
+.. index:: rate_true(rate, , a, , n, , i)
 
-.. _prevalence2iota.simulated_data.iota_true(a,_n,_i):
+.. _iota_and_chi.simulated_data.rate_true(rate,_a,_n,_i):
 
-iota_true(a, n, I)
-==================
-This is the true value for *iota* in node *n* at age *a* and income *I*:
+rate_true(rate, a, n, I)
+========================
+For *rate* equal to iota, chi, and omega,
+this is the true value for *rate* in node *n* at age *a* and income *I*:
 
-.. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 334-337
-    :language: py
-
-.. meta::
-   :keywords: omega_true(a, , n)
-
-.. index:: omega_true(a, , n)
-
-.. _prevalence2iota.simulated_data.omega_true(a,_n):
-
-omega_true(a, n)
-================
-This is the true value for *omega* in node *n* and age *a*:
-
-.. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 341-344
+.. literalinclude:: ../../example/iota_and_chi.py
+    :lines: 335-346
     :language: py
 
 .. meta::
@@ -227,12 +225,13 @@ This is the true value for *omega* in node *n* and age *a*:
 
 .. index:: y_i
 
-.. _prevalence2iota.simulated_data.y_i:
+.. _iota_and_chi.simulated_data.y_i:
 
 y_i
 ===
-The only simulated integrand for this example is :ref:`glossary.prevalence`.
-This data is simulated without any noise
+The simulated integrands for this example are
+:ref:`glossary.prevalence` and :ref:`glossary.mtspecific`.
+The data is simulated without any noise
 but it is modeled as having noise.
 
 .. meta::
@@ -240,7 +239,7 @@ but it is modeled as having noise.
 
 .. index:: n_i
 
-.. _prevalence2iota.simulated_data.n_i:
+.. _iota_and_chi.simulated_data.n_i:
 
 n_i
 ===
@@ -254,14 +253,14 @@ of how good the fit is for the goal nodes.
 
 .. index:: a_i
 
-.. _prevalence2iota.simulated_data.a_i:
+.. _iota_and_chi.simulated_data.a_i:
 
 a_i
 ===
 For each leaf node, data is generated on the following *age_grid*:
 
-.. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 313-313
+.. literalinclude:: ../../example/iota_and_chi.py
+    :lines: 314-314
     :language: py
 
 .. meta::
@@ -269,15 +268,15 @@ For each leaf node, data is generated on the following *age_grid*:
 
 .. index:: i_i
 
-.. _prevalence2iota.simulated_data.i_i:
+.. _iota_and_chi.simulated_data.i_i:
 
 I_i
 ===
 For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 
-.. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 317-328
+.. literalinclude:: ../../example/iota_and_chi.py
+    :lines: 318-329
     :language: py
 
 Note that the check of the fit for the goal nodes expects much more accuracy
@@ -288,7 +287,7 @@ when the income grid is not chosen randomly.
 
 .. index:: parent, smoothing
 
-.. _prevalence2iota.parent_smoothing:
+.. _iota_and_chi.parent_smoothing:
 
 Parent Smoothing
 ****************
@@ -298,24 +297,24 @@ Parent Smoothing
 
 .. index:: omega
 
-.. _prevalence2iota.parent_smoothing.omega:
+.. _iota_and_chi.parent_smoothing.omega:
 
 omega
 =====
 The parent smoothing constrains *omega* to be equal to
-*omega(a, n)* where  *a* is each value in the age grid and
-*n* is the current node.
+*rate_true(omega, a, n, I)* where  *a* is each value in the age grid and
+*n* is the current node and *I* is he reference income for that node *r_n*.
 
 .. meta::
-   :keywords: iota
+   :keywords: iota, chi
 
-.. index:: iota
+.. index:: iota, chi
 
-.. _prevalence2iota.parent_smoothing.iota:
+.. _iota_and_chi.parent_smoothing.iota_and_chi:
 
-iota
-====
-This is the smoothing used in the *fit_node* model for *iota*.
+iota and chi
+============
+This is the smoothing used in the *fit_node* model for the rates.
 Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
 There are no dtime priors because there is only one time point.
@@ -325,34 +324,35 @@ There are no dtime priors because there is only one time point.
 
 .. index:: value, prior
 
-.. _prevalence2iota.parent_smoothing.iota.value_prior:
+.. _iota_and_chi.parent_smoothing.iota_and_chi.value_prior:
 
 Value Prior
 -----------
 The *fit_node* value prior is uniform with lower limit
-*iota_true(0)/10* and upper limit *iota_true(100)\*10*.
-The mean is *iota_true(50)*
-(which is used to initialize the optimization.)
+equal to the true rate for the root node at age zero divided by 10.
+The upper limit is the true rate at age 100 time 10
+and the mean is the true rate at age 50.
+The mean is only used to initialize the optimization.
 
 .. meta::
    :keywords: dage, prior
 
 .. index:: dage, prior
 
-.. _prevalence2iota.parent_smoothing.iota.dage_prior:
+.. _iota_and_chi.parent_smoothing.iota_and_chi.dage_prior:
 
 Dage Prior
 -----------
 The prior for age differences is log Gaussian with mean zero,
 standard deviation 1.0, and :ref:`glossary.eta` equal to
-*iota_true(0)/1000* .
+the minimum of the true *chi* and *iota* at age 50 times 1e-3.
 
 .. meta::
    :keywords: child, smoothing
 
 .. index:: child, smoothing
 
-.. _prevalence2iota.child_smoothing:
+.. _iota_and_chi.child_smoothing:
 
 Child Smoothing
 ***************
@@ -362,24 +362,24 @@ Child Smoothing
 
 .. index:: omega
 
-.. _prevalence2iota.child_smoothing.omega:
+.. _iota_and_chi.child_smoothing.omega:
 
 omega
 =====
 The child smoothing constrains *omega* to be equal to
-*omega_true(a, n)* where  *a* is each value in the age grid and
-*n* is the child node.
+*rate_true(omega, a, n, I)* where  *a* is each value in the age grid,
+*n* is the child node, and *I* is the reference income for the child node.
 
 .. meta::
-   :keywords: iota
+   :keywords: iota, chi
 
-.. index:: iota
+.. index:: iota, chi
 
-.. _prevalence2iota.child_smoothing.iota:
+.. _iota_and_chi.child_smoothing.iota_and_chi:
 
-iota
-====
-This is the smoothing used in the model for the *iota*
+iota and chi
+============
+The same smoothing used is used for the *iota* and *chi*
 random effect for each child of the *fit_node*.
 The smoothing only has one age and one time point; i.e.,
 the corresponding function is constant in age and time.
@@ -391,7 +391,7 @@ age and one time point.
 
 .. index:: value, prior
 
-.. _prevalence2iota.child_smoothing.iota.value_prior:
+.. _iota_and_chi.child_smoothing.iota_and_chi.value_prior:
 
 Value Prior
 -----------
@@ -403,7 +403,7 @@ There are no upper or lower limits in this prior.
 
 .. index:: alpha, smoothing
 
-.. _prevalence2iota.alpha_smoothing:
+.. _iota_and_chi.alpha_smoothing:
 
 Alpha Smoothing
 ***************
@@ -416,7 +416,7 @@ age and one time point in this smoothing.
 
 .. index:: value, prior
 
-.. _prevalence2iota.alpha_smoothing.value_prior:
+.. _iota_and_chi.alpha_smoothing.value_prior:
 
 Value Prior
 ===========
@@ -429,7 +429,7 @@ upper limit *+10\*|alpha_true|* and mean zero.
 
 .. index:: checking, the, fit
 
-.. _prevalence2iota.checking_the_fit:
+.. _iota_and_chi.checking_the_fit:
 
 Checking The Fit
 ****************
@@ -444,8 +444,8 @@ against the truth.
     :header: "Child", "Title"
     :widths: 20, 80
 
-    "prevalence2iota_py", :ref:`prevalence2iota_py`
+    "iota_and_chi_py", :ref:`iota_and_chi_py`
 
 ----
 
-xsrst input file: ``example/prevalence2iota.py``
+xsrst input file: ``example/iota_and_chi.py``

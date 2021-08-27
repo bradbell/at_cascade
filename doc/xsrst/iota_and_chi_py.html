@@ -5,11 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta content="one_at_function_py, one_at_function:, python, source, code" name="keywords" />
+  <meta content="iota_and_chi_py, iota_and_chi:, python, source, code" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>one_at_function_py &mdash; at_cascade  documentation</title>
+  <title>iota_and_chi_py &mdash; at_cascade  documentation</title>
   
 
   
@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="prevalence2iota" href="prevalence2iota.html" />
-    <link rel="prev" title="one_at_function" href="one_at_function.html" /> 
+    <link rel="next" title="one_at_function" href="one_at_function.html" />
+    <link rel="prev" title="iota_and_chi" href="iota_and_chi.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,11 +91,11 @@
 <li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="example.html">example</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="iota_and_chi.html">iota_and_chi</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="one_at_function.html">one_at_function</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">one_at_function_py</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="iota_and_chi.html">iota_and_chi</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">iota_and_chi_py</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="one_at_function.html">one_at_function</a></li>
 <li class="toctree-l3"><a class="reference internal" href="prevalence2iota.html">prevalence2iota</a></li>
 </ul>
 </li>
@@ -151,15 +151,15 @@
         
           <li><a href="example.html">example</a> &raquo;</li>
         
-          <li><a href="one_at_function.html">one_at_function</a> &raquo;</li>
+          <li><a href="iota_and_chi.html">iota_and_chi</a> &raquo;</li>
         
-      <li>one_at_function_py</li>
+      <li>iota_and_chi_py</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/xsrst/one_at_function_py.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/xsrst/iota_and_chi_py.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -172,24 +172,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="one-at-function-py">
-<h1>one_at_function_py<a class="headerlink" href="#one-at-function-py" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="one-at-function-python-source-code">
-<span id="id1"></span><h2>one_at_function: Python Source Code<a class="headerlink" href="#one-at-function-python-source-code" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="iota-and-chi-py">
+<h1>iota_and_chi_py<a class="headerlink" href="#iota-and-chi-py" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="iota-and-chi-python-source-code">
+<span id="id1"></span><h2>iota_and_chi: Python Source Code<a class="headerlink" href="#iota-and-chi-python-source-code" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># imports</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
-<span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">distutils.dir_util</span>
 <span class="kn">import</span> <span class="nn">dismod_at</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">exp</span>
+<span class="kn">import</span> <span class="nn">math</span>
 <span class="c1">#</span>
 <span class="c1"># import at_cascade with a preference current directory version</span>
 <span class="n">current_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
@@ -197,18 +197,19 @@
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">current_directory</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">at_cascade</span>
 <span class="c1"># -----------------------------------------------------------------------------</span>
-<span class="c1"># global varables</span>
+<span class="c1"># global variables</span>
 <span class="c1"># -----------------------------------------------------------------------------</span>
 <span class="c1"># BEGIN fit_goal_set</span>
-<span class="n">fit_goal_set</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span> <span class="p">}</span>
+<span class="n">fit_goal_set</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">}</span>
 <span class="c1"># END fit_goal_set</span>
 <span class="c1">#</span>
 <span class="c1"># BEGIN random_seed</span>
+<span class="c1"># random_seed = 1629371067</span>
 <span class="n">random_seed</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">if</span> <span class="n">random_seed</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
     <span class="n">random_seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="p">)</span>
     <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;one_at_function: random_seed = &#39;</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;iota_and_chi: random_seed = &#39;</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">)</span>
 <span class="c1"># END random_seed</span>
 <span class="c1">#</span>
 <span class="c1"># BEGIN alpha_true</span>
@@ -253,34 +254,65 @@
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># functions</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
-<span class="c1"># BEGIN iota_true</span>
-<span class="k">def</span> <span class="nf">iota_true</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span> <span class="n">I</span> <span class="o">=</span> <span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">]</span> <span class="p">)</span> <span class="p">:</span>
-    <span class="n">s_n</span> <span class="o">=</span> <span class="n">sum_random</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
-    <span class="n">r_0</span> <span class="o">=</span> <span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">]</span>
-    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">a</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-2</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span> <span class="n">s_n</span> <span class="o">+</span> <span class="n">alpha_true</span> <span class="o">*</span> <span class="p">(</span> <span class="n">I</span> <span class="o">-</span> <span class="n">r_0</span> <span class="p">)</span> <span class="p">)</span>
-<span class="c1"># END iota_true</span>
+<span class="c1"># BEGIN rate_true</span>
+<span class="k">def</span> <span class="nf">rate_true</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">I</span> <span class="p">)</span> <span class="p">:</span>
+    <span class="n">s_n</span>           <span class="o">=</span> <span class="n">sum_random</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+    <span class="n">r_0</span>           <span class="o">=</span> <span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">]</span>
+    <span class="n">income_effect</span> <span class="o">=</span> <span class="n">alpha_true</span> <span class="o">*</span> <span class="p">(</span> <span class="n">I</span> <span class="o">-</span> <span class="n">r_0</span> <span class="p">)</span>
+    <span class="c1"># The true random effect for iota and chi is the same</span>
+    <span class="k">if</span> <span class="n">rate</span> <span class="o">==</span> <span class="s1">&#39;iota&#39;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">a</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-4</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="n">s_n</span> <span class="o">+</span> <span class="n">income_effect</span>  <span class="p">)</span>
+    <span class="k">if</span> <span class="n">rate</span> <span class="o">==</span> <span class="s1">&#39;chi&#39;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">a</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-1</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="n">s_n</span> <span class="o">+</span> <span class="n">income_effect</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">rate</span> <span class="o">==</span> <span class="s1">&#39;omega&#39;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">a</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="n">income_effect</span> <span class="p">)</span>
+    <span class="k">assert</span> <span class="kc">False</span>
+<span class="c1"># END rate_true</span>
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="k">def</span> <span class="nf">average_integrand</span><span class="p">(</span><span class="n">integrand_name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">def</span> <span class="nf">iota</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">rate_true</span><span class="p">(</span><span class="s1">&#39;iota&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">chi</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">rate_true</span><span class="p">(</span><span class="s1">&#39;chi&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">omega</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">rate_true</span><span class="p">(</span><span class="s1">&#39;omega&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
+    <span class="n">rate</span>           <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;iota&#39;</span><span class="p">:</span> <span class="n">iota</span><span class="p">,</span>  <span class="s1">&#39;chi&#39;</span><span class="p">:</span> <span class="n">chi</span><span class="p">,</span> <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="n">omega</span> <span class="p">}</span>
+    <span class="n">grid</span>           <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;age&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="n">age</span><span class="p">],</span> <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2000.0</span><span class="p">]</span> <span class="p">}</span>
+    <span class="n">abs_tol</span>        <span class="o">=</span> <span class="mf">1e-6</span>
+    <span class="n">avg_integrand</span>   <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">average_integrand</span><span class="p">(</span>
+        <span class="n">rate</span><span class="p">,</span> <span class="n">integrand_name</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span>  <span class="n">abs_tol</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">avg_integrand</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="k">def</span> <span class="nf">root_node_db</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span> <span class="p">:</span>
     <span class="c1">#</span>
     <span class="c1"># prior_table</span>
+    <span class="n">iota_50</span> <span class="o">=</span> <span class="n">rate_true</span><span class="p">(</span><span class="s1">&#39;iota&#39;</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">,</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span> <span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">])</span>
+    <span class="n">chi_50</span>  <span class="o">=</span> <span class="n">rate_true</span><span class="p">(</span><span class="s1">&#39;chi&#39;</span><span class="p">,</span>  <span class="mf">50.0</span><span class="p">,</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span> <span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">])</span>
     <span class="n">prior_table</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span>   <span class="c1"># prior_iota_n0_value</span>
             <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;prior_iota_n0_value&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="n">iota_true</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">,</span>
-            <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="n">iota_true</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">,</span>
-            <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="n">iota_true</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
-        <span class="p">},{</span> <span class="c1"># prior_iota_dage</span>
-            <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;prior_iota_dage&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="n">iota_50</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="n">iota_50</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="n">iota_50</span><span class="p">,</span>
+        <span class="p">},{</span> <span class="c1"># prior_chi_n0_value</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;prior_chi_n0_value&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="n">chi_50</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="n">chi_50</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="n">chi_50</span><span class="p">,</span>
+        <span class="p">},{</span> <span class="c1"># prior_child_dage</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;prior_child_dage&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;log_gaussian&#39;</span><span class="p">,</span>
             <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
-            <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="mf">3.0</span><span class="p">,</span>
-            <span class="s1">&#39;eta&#39;</span><span class="p">:</span>     <span class="n">iota_true</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-3</span><span class="p">,</span>
+            <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s1">&#39;eta&#39;</span><span class="p">:</span>     <span class="nb">min</span><span class="p">(</span><span class="n">iota_50</span> <span class="p">,</span> <span class="n">chi_50</span> <span class="p">)</span> <span class="o">*</span> <span class="mf">1e-3</span><span class="p">,</span>
         <span class="p">},{</span> <span class="c1"># prior_child_value</span>
             <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;prior_child_value&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
             <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
-            <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="mf">1.0</span><span class="p">,</span>
         <span class="p">},{</span> <span class="c1"># prior_alpha_n0_value</span>
             <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;prior_alpha_n0_value&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span>
@@ -294,9 +326,18 @@
     <span class="n">smooth_table</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="c1">#</span>
     <span class="c1"># smooth_iota_n0</span>
-    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;prior_iota_n0_value&#39;</span><span class="p">,</span> <span class="s1">&#39;prior_iota_dage&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;prior_iota_n0_value&#39;</span><span class="p">,</span> <span class="s1">&#39;prior_child_dage&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">smooth_table</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
         <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;smooth_iota_n0&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;age_id&#39;</span><span class="p">:</span>     <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_grid</span><span class="p">)</span> <span class="p">),</span>
+        <span class="s1">&#39;time_id&#39;</span><span class="p">:</span>    <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s1">&#39;fun&#39;</span><span class="p">:</span>        <span class="n">fun</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="c1">#</span>
+    <span class="c1"># smooth_chi_n0</span>
+    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;prior_chi_n0_value&#39;</span><span class="p">,</span> <span class="s1">&#39;prior_child_dage&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">smooth_table</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;smooth_chi_n0&#39;</span><span class="p">,</span>
         <span class="s1">&#39;age_id&#39;</span><span class="p">:</span>     <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_grid</span><span class="p">)</span> <span class="p">),</span>
         <span class="s1">&#39;time_id&#39;</span><span class="p">:</span>    <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="s1">&#39;fun&#39;</span><span class="p">:</span>        <span class="n">fun</span><span class="p">,</span>
@@ -320,6 +361,16 @@
         <span class="s1">&#39;fun&#39;</span><span class="p">:</span>        <span class="n">fun</span><span class="p">,</span>
     <span class="p">})</span>
     <span class="c1">#</span>
+    <span class="c1"># smooth_gamma</span>
+    <span class="c1"># constant gamma = 1</span>
+    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">smooth_table</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;smooth_gamma&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;age_id&#39;</span><span class="p">:</span>     <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s1">&#39;time_id&#39;</span><span class="p">:</span>    <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s1">&#39;fun&#39;</span><span class="p">:</span>        <span class="n">fun</span>
+    <span class="p">})</span>
+    <span class="c1">#</span>
     <span class="c1"># node_table</span>
     <span class="n">node_table</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;n0&#39;</span><span class="p">,</span>        <span class="s1">&#39;parent&#39;</span><span class="p">:</span><span class="s1">&#39;&#39;</span>   <span class="p">},</span>
@@ -333,29 +384,56 @@
     <span class="c1">#</span>
     <span class="c1"># rate_table</span>
     <span class="n">rate_table</span> <span class="o">=</span> <span class="p">[</span> <span class="p">{</span>
-        <span class="s1">&#39;name&#39;</span><span class="p">:</span>           <span class="s1">&#39;iota&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;parent_smooth&#39;</span><span class="p">:</span>  <span class="s1">&#39;smooth_iota_n0&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;child_smooth&#39;</span><span class="p">:</span>   <span class="s1">&#39;smooth_child&#39;</span> <span class="p">,</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span>           <span class="s1">&#39;iota&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;parent_smooth&#39;</span><span class="p">:</span>  <span class="s1">&#39;smooth_iota_n0&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;child_smooth&#39;</span><span class="p">:</span>   <span class="s1">&#39;smooth_child&#39;</span> <span class="p">,</span>
+        <span class="p">},{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span>           <span class="s1">&#39;chi&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;parent_smooth&#39;</span><span class="p">:</span>  <span class="s1">&#39;smooth_chi_n0&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;child_smooth&#39;</span><span class="p">:</span>   <span class="s1">&#39;smooth_child&#39;</span> <span class="p">,</span>
     <span class="p">}</span> <span class="p">]</span>
     <span class="c1">#</span>
     <span class="c1"># covariate_table</span>
-    <span class="n">covariate_table</span> <span class="o">=</span> <span class="p">[</span> <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;income&#39;</span><span class="p">,</span>   <span class="s1">&#39;reference&#39;</span><span class="p">:</span><span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">]</span> <span class="p">}</span> <span class="p">]</span>
+    <span class="n">covariate_table</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;income&#39;</span><span class="p">,</span>   <span class="s1">&#39;reference&#39;</span><span class="p">:</span><span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">]</span> <span class="p">},</span>
+        <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;one&#39;</span><span class="p">,</span>      <span class="s1">&#39;reference&#39;</span><span class="p">:</span><span class="mf">0.0</span>              <span class="p">},</span>
+    <span class="p">]</span>
     <span class="c1">#</span>
     <span class="c1"># mulcov_table</span>
-    <span class="n">mulcov_table</span> <span class="o">=</span> <span class="p">[</span> <span class="p">{</span>
-        <span class="c1"># alpha</span>
-        <span class="s1">&#39;covariate&#39;</span><span class="p">:</span>  <span class="s1">&#39;income&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;type&#39;</span><span class="p">:</span>       <span class="s1">&#39;rate_value&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;effected&#39;</span><span class="p">:</span>   <span class="s1">&#39;iota&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;group&#39;</span><span class="p">:</span>      <span class="s1">&#39;world&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;smooth&#39;</span><span class="p">:</span>     <span class="s1">&#39;smooth_alpha_n0&#39;</span><span class="p">,</span>
+    <span class="n">mulcov_table</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>   <span class="c1"># alpha</span>
+            <span class="s1">&#39;covariate&#39;</span><span class="p">:</span>  <span class="s1">&#39;income&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span>       <span class="s1">&#39;rate_value&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;effected&#39;</span><span class="p">:</span>   <span class="s1">&#39;iota&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;group&#39;</span><span class="p">:</span>      <span class="s1">&#39;world&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;smooth&#39;</span><span class="p">:</span>     <span class="s1">&#39;smooth_alpha_n0&#39;</span><span class="p">,</span>
+        <span class="p">},{</span> <span class="c1"># gamma_prevalence</span>
+            <span class="s1">&#39;covariate&#39;</span><span class="p">:</span>  <span class="s1">&#39;one&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span>       <span class="s1">&#39;meas_noise&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;effected&#39;</span><span class="p">:</span>   <span class="s1">&#39;prevalence&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;group&#39;</span><span class="p">:</span>      <span class="s1">&#39;world&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;smooth&#39;</span><span class="p">:</span>     <span class="s1">&#39;smooth_gamma&#39;</span><span class="p">,</span>
+        <span class="p">},{</span> <span class="c1"># gamma_mtexcess</span>
+            <span class="s1">&#39;covariate&#39;</span><span class="p">:</span>  <span class="s1">&#39;one&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span>       <span class="s1">&#39;meas_noise&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;effected&#39;</span><span class="p">:</span>   <span class="s1">&#39;mtexcess&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;group&#39;</span><span class="p">:</span>      <span class="s1">&#39;world&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;smooth&#39;</span><span class="p">:</span>     <span class="s1">&#39;smooth_gamma&#39;</span><span class="p">,</span>
     <span class="p">}</span> <span class="p">]</span>
     <span class="c1">#</span>
     <span class="c1"># subgroup_table</span>
     <span class="n">subgroup_table</span> <span class="o">=</span> <span class="p">[</span> <span class="p">{</span><span class="s1">&#39;subgroup&#39;</span><span class="p">:</span> <span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">:</span><span class="s1">&#39;world&#39;</span><span class="p">}</span> <span class="p">]</span>
     <span class="c1">#</span>
     <span class="c1"># integrand_table</span>
-    <span class="n">integrand_table</span> <span class="o">=</span> <span class="p">[</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;Sincidence&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;mulcov_0&#39;</span><span class="p">}</span> <span class="p">]</span>
+    <span class="n">integrand_table</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Sincidence&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mtexcess&#39;</span> <span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;prevalence&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mtspecific&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mulcov_0&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mulcov_1&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mulcov_2&#39;</span><span class="p">},</span>
+    <span class="p">]</span>
     <span class="c1">#</span>
     <span class="c1"># avgint_table</span>
     <span class="n">avgint_table</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -366,39 +444,60 @@
         <span class="s1">&#39;time_lower&#39;</span><span class="p">:</span>   <span class="mf">2000.0</span><span class="p">,</span>
         <span class="s1">&#39;time_upper&#39;</span><span class="p">:</span>   <span class="mf">2000.0</span><span class="p">,</span>
         <span class="s1">&#39;income&#39;</span><span class="p">:</span>       <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;integrand&#39;</span><span class="p">:</span>    <span class="s1">&#39;Sincidence&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;one&#39;</span><span class="p">:</span>          <span class="mf">1.0</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">for</span> <span class="n">age</span> <span class="ow">in</span> <span class="n">age_grid</span> <span class="p">:</span>
         <span class="n">row</span><span class="p">[</span><span class="s1">&#39;age_lower&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">age</span>
         <span class="n">row</span><span class="p">[</span><span class="s1">&#39;age_upper&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">age</span>
-        <span class="n">avgint_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="n">integrand</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;Sincidence&#39;</span><span class="p">,</span> <span class="s1">&#39;mtexcess&#39;</span> <span class="p">]</span> <span class="p">:</span>
+            <span class="n">row</span><span class="p">[</span><span class="s1">&#39;integrand&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">integrand</span>
+            <span class="n">avgint_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># data_table</span>
-    <span class="n">data_table</span>  <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="n">leaf_set</span>    <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">}</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">age_id</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">age_grid</span> <span class="p">)</span> <span class="p">:</span>
+    <span class="n">data_table</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">leaf_set</span>   <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">]</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">leaf_set</span> <span class="p">:</span>
         <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;subgroup&#39;</span><span class="p">:</span>     <span class="s1">&#39;world&#39;</span><span class="p">,</span>
             <span class="s1">&#39;weight&#39;</span><span class="p">:</span>       <span class="s1">&#39;&#39;</span><span class="p">,</span>
             <span class="s1">&#39;time_lower&#39;</span><span class="p">:</span>   <span class="mf">2000.0</span><span class="p">,</span>
             <span class="s1">&#39;time_upper&#39;</span><span class="p">:</span>   <span class="mf">2000.0</span><span class="p">,</span>
-            <span class="s1">&#39;integrand&#39;</span><span class="p">:</span>    <span class="s1">&#39;Sincidence&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;density&#39;</span><span class="p">:</span>      <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;density&#39;</span><span class="p">:</span>      <span class="s1">&#39;log_gaussian&#39;</span><span class="p">,</span>
             <span class="s1">&#39;hold_out&#39;</span><span class="p">:</span>     <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;one&#39;</span><span class="p">:</span>          <span class="mf">1.0</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">leaf_set</span> <span class="p">:</span>
+        <span class="n">row_list</span>       <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">max_meas_value</span> <span class="o">=</span>  <span class="p">{</span>
+            <span class="s1">&#39;mtexcess&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;Sincidence&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">age_id</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">age_grid</span> <span class="p">)</span> <span class="p">:</span>
             <span class="k">for</span> <span class="n">income</span> <span class="ow">in</span> <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="p">:</span>
-                <span class="n">meas_value</span>        <span class="o">=</span> <span class="n">iota_true</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
                 <span class="n">row</span><span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">]</span>       <span class="o">=</span> <span class="n">node</span>
-                <span class="n">row</span><span class="p">[</span><span class="s1">&#39;meas_value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meas_value</span>
                 <span class="n">row</span><span class="p">[</span><span class="s1">&#39;age_lower&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">age</span>
                 <span class="n">row</span><span class="p">[</span><span class="s1">&#39;age_upper&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">age</span>
                 <span class="n">row</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">]</span>     <span class="o">=</span> <span class="n">income</span>
-                <span class="c1"># The model for the measurement noise is small so a few</span>
-                <span class="c1"># data points act like lots of real data points.</span>
-                <span class="c1"># The actual measruement noise is zero.</span>
-                <span class="n">row</span><span class="p">[</span><span class="s1">&#39;meas_std&#39;</span><span class="p">]</span>   <span class="o">=</span> <span class="n">meas_value</span> <span class="o">/</span> <span class="mf">10.0</span>
-                <span class="n">data_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="p">)</span>
+                <span class="k">for</span> <span class="n">integrand</span> <span class="ow">in</span> <span class="n">max_meas_value</span> <span class="p">:</span>
+                    <span class="n">meas_value</span> <span class="o">=</span> <span class="n">average_integrand</span><span class="p">(</span>
+                        <span class="n">integrand</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">income</span>
+                    <span class="p">)</span>
+                    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;integrand&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">integrand</span>
+                    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;meas_value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meas_value</span>
+                    <span class="n">max_meas_value</span><span class="p">[</span><span class="n">integrand</span><span class="p">]</span>  <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+                        <span class="n">meas_value</span><span class="p">,</span> <span class="n">max_meas_value</span><span class="p">[</span><span class="n">integrand</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="n">row_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">n_row</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_grid</span><span class="p">)</span> <span class="o">*</span> <span class="n">n_income_grid</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">max_meas_value</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_list</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_row</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">row_list</span> <span class="p">:</span>
+            <span class="c1"># The model for the measurement noise is small so a few</span>
+            <span class="c1"># data points act like lots of real data points.</span>
+            <span class="c1"># The actual measruement noise is zero.</span>
+            <span class="k">for</span> <span class="n">integrand</span> <span class="ow">in</span> <span class="n">max_meas_value</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;integrand&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">integrand</span> <span class="p">:</span>
+                    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;meas_std&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_meas_value</span><span class="p">[</span><span class="n">integrand</span><span class="p">]</span> <span class="o">/</span> <span class="mf">50.0</span>
+                    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;eta&#39;</span><span class="p">]</span>      <span class="o">=</span> <span class="mf">1e-4</span> <span class="o">*</span> <span class="n">max_meas_value</span><span class="p">[</span><span class="n">integrand</span><span class="p">]</span>
+        <span class="c1">#</span>
+        <span class="n">data_table</span> <span class="o">+=</span> <span class="n">row_list</span>
     <span class="c1">#</span>
     <span class="c1"># time_grid</span>
     <span class="n">time_grid</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">2000.0</span> <span class="p">]</span>
@@ -413,10 +512,14 @@
     <span class="n">option_table</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;parent_node_name&#39;</span><span class="p">,</span>      <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;n0&#39;</span><span class="p">},</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;rate_case&#39;</span><span class="p">,</span>             <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;iota_pos_rho_zero&#39;</span><span class="p">},</span>
-        <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;zero_sum_child_rate&#39;</span><span class="p">,</span>  <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;iota&#39;</span><span class="p">},</span>
+        <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;zero_sum_child_rate&#39;</span><span class="p">,</span>  <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;iota chi&#39;</span><span class="p">},</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;quasi_fixed&#39;</span><span class="p">,</span>           <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;false&#39;</span><span class="p">},</span>
+        <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;print_level_fixed&#39;</span><span class="p">,</span>     <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;5&#39;</span><span class="p">},</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;max_num_iter_fixed&#39;</span><span class="p">,</span>    <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;50&#39;</span><span class="p">},</span>
+        <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;max_num_iter_random&#39;</span><span class="p">,</span>   <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;200&#39;</span><span class="p">},</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;tolerance_fixed&#39;</span><span class="p">,</span>       <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;1e-8&#39;</span><span class="p">},</span>
+        <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;tolerance_random&#39;</span><span class="p">,</span>      <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;1e-8&#39;</span><span class="p">},</span>
+        <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;bound_random&#39;</span><span class="p">,</span>          <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">},</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;random_seed&#39;</span><span class="p">,</span>           <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)},</span>
     <span class="p">]</span>
     <span class="c1"># ----------------------------------------------------------------------</span>
@@ -486,7 +589,7 @@
         <span class="c1"># integrand_name</span>
         <span class="n">integrand_id</span> <span class="o">=</span> <span class="n">avgint_row</span><span class="p">[</span><span class="s1">&#39;integrand_id&#39;</span><span class="p">]</span>
         <span class="n">integrand_name</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;integrand&#39;</span><span class="p">][</span><span class="n">integrand_id</span><span class="p">][</span><span class="s1">&#39;integrand_name&#39;</span><span class="p">]</span>
-        <span class="k">assert</span> <span class="n">integrand_name</span> <span class="o">==</span> <span class="s1">&#39;Sincidence&#39;</span>
+        <span class="k">assert</span> <span class="n">integrand_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Sincidence&#39;</span><span class="p">,</span> <span class="s1">&#39;mtexcess&#39;</span><span class="p">]</span>
         <span class="c1">#</span>
         <span class="c1"># node_name</span>
         <span class="n">node_id</span>   <span class="o">=</span> <span class="n">avgint_row</span><span class="p">[</span><span class="s1">&#39;node_id&#39;</span><span class="p">]</span>
@@ -525,18 +628,24 @@
         <span class="c1"># sample_std</span>
         <span class="n">sample_std</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="n">sumsq</span><span class="p">[</span><span class="n">avgint_id</span><span class="p">]</span> <span class="p">)</span>
         <span class="c1">#</span>
-        <span class="c1"># check_value</span>
-        <span class="n">check_value</span> <span class="o">=</span> <span class="n">iota_true</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">goal_name</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
+        <span class="c1"># integrand_name</span>
+        <span class="n">integrand_id</span> <span class="o">=</span> <span class="n">avgint_row</span><span class="p">[</span><span class="s1">&#39;integrand_id&#39;</span><span class="p">]</span>
+        <span class="n">integrand_name</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;integrand&#39;</span><span class="p">][</span><span class="n">integrand_id</span><span class="p">][</span><span class="s1">&#39;integrand_name&#39;</span><span class="p">]</span>
         <span class="c1">#</span>
+        <span class="c1"># check_value</span>
+        <span class="k">if</span> <span class="n">integrand_name</span> <span class="o">==</span> <span class="s1">&#39;Sincidence&#39;</span> <span class="p">:</span>
+            <span class="n">rate</span>        <span class="o">=</span> <span class="s1">&#39;iota&#39;</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">assert</span> <span class="n">integrand_name</span> <span class="o">==</span> <span class="s1">&#39;mtexcess&#39;</span>
+            <span class="n">rate</span>        <span class="o">=</span> <span class="s1">&#39;chi&#39;</span>
+        <span class="c1">#</span>
+        <span class="n">check_value</span> <span class="o">=</span> <span class="n">rate_true</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">goal_name</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
         <span class="n">rel_error</span>   <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">avg_integrand</span> <span class="o">/</span> <span class="n">check_value</span>
         <span class="c1">#</span>
         <span class="c1"># check the fit</span>
-        <span class="c1"># print(age, rel_error, check_value - avg_integrand, sample_std)</span>
-        <span class="k">if</span> <span class="n">random_income</span> <span class="p">:</span>
-            <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rel_error</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-2</span>
-        <span class="k">else</span> <span class="p">:</span>
-            <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rel_error</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-3</span>
-        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">avg_integrand</span> <span class="o">-</span> <span class="n">check_value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">sample_std</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">rel_error</span><span class="p">,</span> <span class="n">check_value</span> <span class="o">-</span> <span class="n">avg_integrand</span><span class="p">,</span> <span class="n">sample_std</span><span class="p">)</span>
+        <span class="c1"># assert abs(rel_error) &lt; 1e-1</span>
+        <span class="c1"># assert abs(avg_integrand - check_value) &lt; 2.0 * sample_std</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># main</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
@@ -553,19 +662,54 @@
     <span class="c1">#</span>
     <span class="c1"># all_cov_reference</span>
     <span class="n">all_cov_reference</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="n">covariate_name</span>      <span class="o">=</span> <span class="s1">&#39;income&#39;</span>
     <span class="k">for</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span> <span class="s1">&#39;n1&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span><span class="p">,</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">]</span> <span class="p">:</span>
         <span class="n">all_cov_reference</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">covariate_name</span> <span class="p">:</span> <span class="n">avg_income</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span>
+            <span class="s1">&#39;income&#39;</span> <span class="p">:</span> <span class="n">avg_income</span><span class="p">[</span><span class="n">node_name</span><span class="p">],</span>
+            <span class="s1">&#39;one&#39;</span><span class="p">:</span>     <span class="mf">1.0</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="c1">#</span>
+    <span class="c1"># omega_grid</span>
+    <span class="n">omega_grid</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">omega_grid</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_grid</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">omega_grid</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+    <span class="c1">#</span>
+    <span class="c1"># mtall_data</span>
+    <span class="n">integrand_name</span> <span class="o">=</span> <span class="s1">&#39;mtall&#39;</span>
+    <span class="n">mtall_data</span>     <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span> <span class="s1">&#39;n1&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span><span class="p">,</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">]</span> <span class="p">:</span>
+        <span class="n">mtall_data</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">income</span>                <span class="o">=</span> <span class="n">avg_income</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">age_id</span> <span class="ow">in</span> <span class="n">omega_grid</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span> <span class="p">:</span>
+            <span class="n">age</span>  <span class="o">=</span> <span class="n">age_grid</span><span class="p">[</span><span class="n">age_id</span><span class="p">]</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="mf">2000.0</span>
+            <span class="n">mtall</span> <span class="o">=</span> <span class="n">average_integrand</span><span class="p">(</span><span class="n">integrand_name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
+            <span class="n">mtall_data</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mtall</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="c1"># mtspecific_data</span>
+    <span class="n">integrand_name</span>  <span class="o">=</span> <span class="s1">&#39;mtspecific&#39;</span>
+    <span class="n">mtspecific_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span> <span class="s1">&#39;n1&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span><span class="p">,</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">]</span> <span class="p">:</span>
+        <span class="n">mtspecific_data</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">income</span>   <span class="o">=</span> <span class="n">avg_income</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">age_id</span> <span class="ow">in</span> <span class="n">omega_grid</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span> <span class="p">:</span>
+            <span class="n">age</span>  <span class="o">=</span> <span class="n">age_grid</span><span class="p">[</span><span class="n">age_id</span><span class="p">]</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="mf">2000.0</span>
+            <span class="n">mtspecific</span> <span class="o">=</span> \
+                <span class="n">average_integrand</span><span class="p">(</span><span class="n">integrand_name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
+            <span class="n">mtspecific_data</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mtspecific</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
     <span class="c1"># Create all_node.db</span>
+    <span class="c1"># We could get all_cov_reference from here, but we do not need to</span>
     <span class="n">all_node_database</span> <span class="o">=</span> <span class="s1">&#39;all_node.db&#39;</span>
     <span class="n">at_cascade</span><span class="o">.</span><span class="n">create_all_node_db</span><span class="p">(</span>
         <span class="n">all_node_database</span>   <span class="o">=</span> <span class="n">all_node_database</span>   <span class="p">,</span>
         <span class="n">root_node_database</span>  <span class="o">=</span> <span class="n">root_node_database</span>  <span class="p">,</span>
         <span class="n">all_cov_reference</span>   <span class="o">=</span> <span class="n">all_cov_reference</span> <span class="p">,</span>
-        <span class="n">fit_goal_set</span>        <span class="o">=</span> <span class="n">fit_goal_set</span>
+        <span class="n">omega_grid</span>          <span class="o">=</span> <span class="n">omega_grid</span><span class="p">,</span>
+        <span class="n">mtall_data</span>          <span class="o">=</span> <span class="n">mtall_data</span><span class="p">,</span>
+        <span class="n">mtspecific_data</span>     <span class="o">=</span> <span class="n">mtspecific_data</span><span class="p">,</span>
+        <span class="n">fit_goal_set</span>        <span class="o">=</span> <span class="n">fit_goal_set</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># node_table</span>
@@ -584,7 +728,7 @@
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">work_dir</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">fit_node_dir</span> <span class="p">)</span>
     <span class="c1">#</span>
-    <span class="c1"># fit_node_database</span>
+    <span class="c1"># fit_node_database = root_node_database</span>
     <span class="n">fit_node_database</span> <span class="o">=</span>  <span class="n">fit_node_dir</span> <span class="o">+</span> <span class="s1">&#39;/dismod.db&#39;</span>
     <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">root_node_database</span><span class="p">,</span> <span class="n">fit_node_database</span><span class="p">)</span>
     <span class="c1">#</span>
@@ -594,21 +738,23 @@
     <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># check results</span>
-    <span class="k">for</span> <span class="n">goal_dir</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0/n1/n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n1/n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n2&#39;</span> <span class="p">]</span> <span class="p">:</span>
+    <span class="k">for</span> <span class="n">goal_dir</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0/n1&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n2/n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n2/n6&#39;</span> <span class="p">]</span> <span class="p">:</span>
         <span class="n">goal_database</span> <span class="o">=</span> <span class="n">goal_dir</span> <span class="o">+</span> <span class="s1">&#39;/dismod.db&#39;</span>
         <span class="n">check_fit</span><span class="p">(</span><span class="n">goal_database</span><span class="p">)</span>
     <span class="c1">#</span>
-    <span class="c1"># check that fits were not run for n5 and n6</span>
-    <span class="k">for</span> <span class="n">not_fit_dir</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0/n2/n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n2/n6&#39;</span> <span class="p">]</span> <span class="p">:</span>
+    <span class="c1"># check that fits were not run for n3 and n4</span>
+    <span class="k">for</span> <span class="n">not_fit_dir</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0/n1/n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n1/n4&#39;</span> <span class="p">]</span> <span class="p">:</span>
         <span class="k">assert</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">not_fit_dir</span> <span class="p">)</span>
+
 <span class="c1">#</span>
 <span class="n">main</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;one_at_function: OK&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;iota_and_chi: OK&#39;</span><span class="p">)</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ncvome</span>
 </pre></div>
 </div>
 <hr class="docutils" />
-<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">example/one_at_function.py</span></code></p>
+<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">example/iota_and_chi.py</span></code></p>
 </div>
 </div>
 
@@ -620,10 +766,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="prevalence2iota.html" class="btn btn-neutral float-right" title="prevalence2iota" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="one_at_function.html" class="btn btn-neutral float-right" title="one_at_function" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="one_at_function.html" class="btn btn-neutral float-left" title="one_at_function" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="iota_and_chi.html" class="btn btn-neutral float-left" title="iota_and_chi" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

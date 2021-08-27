@@ -25,7 +25,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_all_node_db.py
-    :lines: 150-161
+    :lines: 165-176
     :language: py
 
 .. meta::
@@ -39,6 +39,16 @@ all_node_database
 *****************
 is a python string containing the name of the
 :ref:`all_node_db` that is created by this call.
+
+.. meta::
+   :keywords: default
+
+.. index:: default
+
+.. _create_all_node_db.all_node_database.default:
+
+default
+=======
 This argument can't be ``None``.
 
 .. meta::
@@ -52,6 +62,16 @@ root_node_database
 ******************
 is a python string containing the name of the name of the
 :ref:`glossary.root_node_database`.
+
+.. meta::
+   :keywords: default
+
+.. index:: default
+
+.. _create_all_node_db.root_node_database.default:
+
+default
+=======
 This argument can't be ``None``.
 
 .. meta::
@@ -71,6 +91,16 @@ covariate name for each covariate in the *root_node_database*.
 If *covariate* is an covariate name,
 *all_cov_reference[node][covariate]*
 is the reference values for the specified node and covariate.
+
+.. meta::
+   :keywords: default
+
+.. index:: default
+
+.. _create_all_node_db.all_cov_reference.default:
+
+default
+=======
 This argument can't be ``None``.
 
 .. meta::
@@ -100,9 +130,7 @@ of the age (time) list.
 
 default
 =======
-If this argument in ``None``, *omega* will be constrained to zero.
-In this case none of the integrands in the *root_node_database* can
-be an :ref:`glossary.ode_integrand`.
+If this argument is ``None``, there is no omega grid.
 
 .. meta::
    :keywords: mtall_data
@@ -131,7 +159,7 @@ and time corresponding to index *j* in *omega_grid*\ [``time``].
 
 default
 =======
-If this argument in ``None``, *omega* will be constrained to zero.
+This argument is ``None`` if and only if *omega_grid* is ``None``.
 
 .. meta::
    :keywords: mtspecific_data
@@ -142,7 +170,14 @@ If this argument in ``None``, *omega* will be constrained to zero.
 
 mtspecific_data
 ***************
-Not yet specified.
+This is a python dictionary with a key for each node name
+for the root node and its descendant.
+The value *mtspecific_data[node_name]* is a list.
+For *i* equal 0, ..., *n_omega_age*-1 and *j* equal 0, ..., *n_omega_time*-1,
+*mtspecific_data[node_name][ i * n_omega_time + j ]
+is the value of *mtspecific* at the specified node,
+the age corresponding to index *i* in *omega_grid*\ [``age``],
+and time corresponding to index *j* in *omega_grid*\ [``time``].
 
 .. meta::
    :keywords: default
@@ -153,8 +188,10 @@ Not yet specified.
 
 default
 =======
-If this argument in ``None``, *omega* will be constrained to equal to
-the *mtall_data*.
+If this argument in ``None`` the
+:ref:`all_mtspecific.all_mtspecific_table` and
+:ref:`all_mtspecific.mtspecific_index_table` will be empty.
+If *omega_grid* is ``None``, this argument must also be ``None``.
 
 .. meta::
    :keywords: fit_goal_set

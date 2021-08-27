@@ -19,7 +19,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>plan &mdash; cppad_py  documentation</title>
+  <title>plan &mdash; at_cascade  documentation</title>
   
 
   
@@ -63,7 +63,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> cppad_py
+            <a href="../index.html" class="icon icon-home"> at_cascade
           
 
           
@@ -118,7 +118,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">cppad_py</a>
+          <a href="../index.html">at_cascade</a>
         
       </nav>
 
@@ -228,6 +228,13 @@ predictions.</p></li>
 corresponding to all the data.</p></li>
 <li><p>The covariate table reference values must be the same as the <em>all_node</em>
 database reference values for the <em>root_node</em>.</p></li>
+<li><p>For the list of rates [ pini, iota, rho, chi ]
+the corresponding integrand names are
+[ prevalence, Sincidence, remission, mtexcess ].
+If the parent_smooth_id in the rate table for one of these rates is not null,
+the corresponding integrand name must be in the integrand table.</p></li>
+<li><p>For each value covariate multiplier index <em>mulcov_id</em>, the integrand name
+<code class="docutils literal notranslate"><span class="pre">mulcov_</span></code><em>mulcov_id</em> must be in the integrand table.</p></li>
 </ul>
 </div>
 <div class="section" id="all-node-database">

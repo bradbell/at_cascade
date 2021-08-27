@@ -26,7 +26,8 @@ omega_age_grid and omega_time_grid tables.
 
 omega_age_grid Table
 ********************
-This table has two columns, *omega_age_grid_id* and *age_id*:
+This table has two columns, *omega_age_grid_id* and *age_id*.
+If this table is empty, the omega_time_grid table must also be empty.
 
 .. meta::
    :keywords: n_omega_age
@@ -62,7 +63,6 @@ age_id
 ======
 This column has type ``integer`` and specifies the age grid points
 by their index in the *root_node_database* age table.
-This column is monotone increasing with *omega_age_grid_id*.
 
 .. meta::
    :keywords: omega_time_grid, table
@@ -73,7 +73,8 @@ This column is monotone increasing with *omega_age_grid_id*.
 
 omega_time_grid Table
 *********************
-This table has two columns, *omega_time_grid_id* and *time_id*:
+This table has two columns, *omega_time_grid_id* and *time_id*.
+If this table is empty, the omega_age_grid table must also be empty.
 
 .. meta::
    :keywords: n_omega_time
@@ -109,7 +110,6 @@ time_id
 =======
 This column has type ``integer`` and specifies the time grid points
 by their index in the *root_node_database* time table.
-This column is monotone increasing with *omega_time_grid_id*.
 
 ----
 

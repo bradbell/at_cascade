@@ -3,21 +3,21 @@ fit_goal_table
 !!!!!!!!!!!!!!
 
 .. meta::
-   :keywords: fit_goal_table, fit, leaf, table
+   :keywords: fit_goal_table, fit, goal, table
 
-.. index:: fit_goal_table, fit, leaf, table
+.. index:: fit_goal_table, fit, goal, table
 
 .. _fit_goal_table:
 
-Fit Leaf Table
+Fit Goal Table
 ##############
 .. contents::
    :local:
 
 This table specifies the :ref:`glossary.fit_goal_set`.
 If it is empty, all of the descendants of the *root_node* are fit.
-Otherwise, only the nodes in the fit goal set,
-and their ancestors up to the *root_node* are fit.
+Otherwise, only the nodes in the fit goal table,
+and their ancestors up to the *root_node*, are fit.
 This table has the following columns:
 
 .. meta::

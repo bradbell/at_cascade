@@ -14,12 +14,6 @@ Set Omega Constraints in a Fit Node Database
 .. contents::
    :local:
 
-This routine uses the *mtall* data for the closest ancestor of a node
-and constrains *omega* to be equal to the *mtall* data.
-If there is no such *mtall* data
-for the :ref:`omega_constraint.fit_node_database.parent_node`,
-no tables are changed by this routine.
-
 .. meta::
    :keywords: syntax
 
@@ -31,7 +25,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/omega_constraint.py
-    :lines: 107-110
+    :lines: 117-120
     :language: py
 
 .. meta::
@@ -45,6 +39,28 @@ all_node_database
 *****************
 is a python string containing the name of the :ref:`all_node_db`.
 This argument can't be ``None``.
+
+.. meta::
+   :keywords: use
+
+.. index:: use
+
+.. _omega_constraint.all_node_database.use:
+
+Use
+===
+This routine builds the *omega* constraints using the
+:ref:`glossary.mtall` and :ref:`glossary.mtspecific` data in the
+*all_node_database* using the relation
+
+    omega = mtall - mtspecific
+
+If a node does not have *mtall* ( *mtspecific*) data
+it uses the data for the closest ancestor is used.
+If a node does not have an ancestor with *mtspecific* data,
+zero is used for its *mtspecific* data.
+If a node does not have an ancestor with *mtall* data,
+zero is used for its *omega* constraint.
 
 .. meta::
    :keywords: fit_node_database

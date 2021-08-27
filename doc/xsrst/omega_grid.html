@@ -17,7 +17,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>omega_grid &mdash; cppad_py  documentation</title>
+  <title>omega_grid &mdash; at_cascade  documentation</title>
   
 
   
@@ -61,7 +61,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> cppad_py
+            <a href="../index.html" class="icon icon-home"> at_cascade
           
 
           
@@ -124,7 +124,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">cppad_py</a>
+          <a href="../index.html">at_cascade</a>
         
       </nav>
 
@@ -204,7 +204,8 @@
 omega_age_grid and omega_time_grid tables.</p>
 <div class="section" id="omega-age-grid-table">
 <span id="omega-grid-omega-age-grid-table"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id3">omega_age_grid Table</a><a class="headerlink" href="#omega-age-grid-table" title="Permalink to this headline">¶</a></h3>
-<p>This table has two columns, <em>omega_age_grid_id</em> and <em>age_id</em>:</p>
+<p>This table has two columns, <em>omega_age_grid_id</em> and <em>age_id</em>.
+If this table is empty, the omega_time_grid table must also be empty.</p>
 <div class="section" id="n-omega-age">
 <span id="omega-grid-omega-age-grid-table-n-omega-age"></span><span id="index-2"></span><h4><a class="toc-backref" href="#id4">n_omega_age</a><a class="headerlink" href="#n-omega-age" title="Permalink to this headline">¶</a></h4>
 <p>We use the notation <em>n_omega_age</em> for the number of values in this table.</p>
@@ -217,13 +218,13 @@ Its initial value is zero and it increments by one for each row.</p>
 <div class="section" id="age-id">
 <span id="omega-grid-omega-age-grid-table-age-id"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id6">age_id</a><a class="headerlink" href="#age-id" title="Permalink to this headline">¶</a></h4>
 <p>This column has type <code class="docutils literal notranslate"><span class="pre">integer</span></code> and specifies the age grid points
-by their index in the <em>root_node_database</em> age table.
-This column is monotone increasing with <em>omega_age_grid_id</em>.</p>
+by their index in the <em>root_node_database</em> age table.</p>
 </div>
 </div>
 <div class="section" id="omega-time-grid-table">
 <span id="omega-grid-omega-time-grid-table"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id7">omega_time_grid Table</a><a class="headerlink" href="#omega-time-grid-table" title="Permalink to this headline">¶</a></h3>
-<p>This table has two columns, <em>omega_time_grid_id</em> and <em>time_id</em>:</p>
+<p>This table has two columns, <em>omega_time_grid_id</em> and <em>time_id</em>.
+If this table is empty, the omega_age_grid table must also be empty.</p>
 <div class="section" id="n-omega-time">
 <span id="omega-grid-omega-time-grid-table-n-omega-time"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id8">n_omega_time</a><a class="headerlink" href="#n-omega-time" title="Permalink to this headline">¶</a></h4>
 <p>We use the notation <em>n_omega_time</em> for the number of values in this table.</p>
@@ -236,8 +237,7 @@ Its initial value is zero and it increments by one for each row.</p>
 <div class="section" id="time-id">
 <span id="omega-grid-omega-time-grid-table-time-id"></span><span id="index-8"></span><h4><a class="toc-backref" href="#id10">time_id</a><a class="headerlink" href="#time-id" title="Permalink to this headline">¶</a></h4>
 <p>This column has type <code class="docutils literal notranslate"><span class="pre">integer</span></code> and specifies the time grid points
-by their index in the <em>root_node_database</em> time table.
-This column is monotone increasing with <em>omega_time_grid_id</em>.</p>
+by their index in the <em>root_node_database</em> time table.</p>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">xsrst/all_node_db.xsrst</span></code></p>
 </div>

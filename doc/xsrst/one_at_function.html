@@ -32,7 +32,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>one_at_function &mdash; cppad_py  documentation</title>
+  <title>one_at_function &mdash; at_cascade  documentation</title>
   
 
   
@@ -62,7 +62,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="one_at_function_py" href="one_at_function_py.html" />
-    <link rel="prev" title="example" href="example.html" /> 
+    <link rel="prev" title="iota_and_chi_py" href="iota_and_chi_py.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -76,7 +76,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> cppad_py
+            <a href="../index.html" class="icon icon-home"> at_cascade
           
 
           
@@ -114,6 +114,7 @@
 <li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="example.html">example</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="iota_and_chi.html">iota_and_chi</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">one_at_function</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="one_at_function_py.html">one_at_function_py</a></li>
 </ul>
@@ -138,7 +139,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">cppad_py</a>
+          <a href="../index.html">at_cascade</a>
         
       </nav>
 
@@ -272,7 +273,7 @@ and the leaf nodes are {n3, n4, n5, n6}:</p>
 <a class="reference internal" href="glossary.html#glossary-iota"><span class="std std-ref">iota</span></a>; i.e.,
 we choose <em>iota</em> to represent the function that we are estimating.
 (We could have used <em>rho</em> or <em>chi</em> but not <em>omega</em> for this purpose.)
-We use <span class="math notranslate nohighlight">\(\iota_n(a, n, I)\)</span> and <em>iota_n</em> to denote the value for <em>iota</em>
+We use <em>iota_n(a, n, I)</em> to denote the value for <em>iota</em>
 as a function of age <em>a</em> node number <em>n</em> and income <em>I</em>.</p>
 </div>
 <div class="section" id="covariate">
@@ -293,7 +294,7 @@ The code below sets this reference using the name avg_income:</p>
 </div>
 <div class="section" id="alpha">
 <span id="one-at-function-covariate-alpha"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id9">alpha</a><a class="headerlink" href="#alpha" title="Permalink to this headline">¶</a></h4>
-<p>We use <em>alpha</em> and <span class="math notranslate nohighlight">\(\alpha\)</span>
+<p>We use <em>alpha</em>
 for the <a class="reference internal" href="glossary.html#glossary-rate-value"><span class="std std-ref">rate_value</span></a> covariate multiplier
 that multipliers <em>income</em>.
 This multiplier affects the value of <em>iota</em>.
@@ -382,18 +383,18 @@ of how good the fit is for the goal nodes.</p>
 <span id="one-at-function-simulated-data-i-i"></span><span id="index-15"></span><h4><a class="toc-backref" href="#id18">I_i</a><a class="headerlink" href="#i-i" title="Permalink to this headline">¶</a></h4>
 <p>For each leaf node and each age in <em>age_grid</em>,
 data is generated for the following <em>income_grid</em>:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">random_income</span> <span class="o">=</span> <span class="kc">True</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">random_income</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">income_grid</span>   <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">]</span> <span class="p">:</span>
     <span class="n">max_income</span>  <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">avg_income</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">random_income</span> <span class="p">:</span>
-        <span class="n">n_grid</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">n_income_grid</span> <span class="o">=</span> <span class="mi">10</span>
         <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="p">[</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_income</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_grid</span><span class="p">)</span> <span class="p">]</span>
+            <span class="p">[</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_income</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_income_grid</span><span class="p">)</span> <span class="p">]</span>
         <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="p">)</span>
     <span class="k">else</span> <span class="p">:</span>
-        <span class="n">n_grid</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="n">j</span> <span class="o">*</span> <span class="n">max_income</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_grid</span><span class="p">)</span> <span class="p">]</span>
+        <span class="n">n_income_grid</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="n">j</span> <span class="o">*</span> <span class="n">max_income</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_income_grid</span><span class="p">)</span> <span class="p">]</span>
 </pre></div>
 </div>
 <p>Note that the check of the fit for the goal nodes expects much more accuracy
@@ -402,8 +403,8 @@ when the income grid is not chosen randomly.</p>
 </div>
 <div class="section" id="parent-smoothing">
 <span id="one-at-function-parent-smoothing"></span><span id="index-16"></span><h3><a class="toc-backref" href="#id19">Parent Smoothing</a><a class="headerlink" href="#parent-smoothing" title="Permalink to this headline">¶</a></h3>
-<p>This is the smoothing used in the <em>fit_node</em> model for <em>iota</em>.
-(The <a class="reference internal" href="glossary.html#glossary-fit-node"><span class="std std-ref">fit_node</span></a> is the parent node in dismod_at notation.)
+<p>This is the <em>iota</em> smoothing used for the <em>fit_node</em>.
+Note that the value part of this smoothing is only used for the <em>root_node</em>.
 This smoothing uses the <em>age_gird</em> and one time point.
 There are no dtime priors because there is only one time point.</p>
 <div class="section" id="value-prior">
@@ -487,7 +488,7 @@ against the truth.</p>
         <a href="one_at_function_py.html" class="btn btn-neutral float-right" title="one_at_function_py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="example.html" class="btn btn-neutral float-left" title="example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="iota_and_chi_py.html" class="btn btn-neutral float-left" title="iota_and_chi_py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

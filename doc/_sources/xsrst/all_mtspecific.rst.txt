@@ -14,8 +14,12 @@ All Node mtspecific Values
 .. contents::
    :local:
 
-The values of :ref:`glossary.mtspecific` for all the nodes is specified by the
-all_mtspecific and mtspecific_index tables.
+This table specifies the value of :ref:`glossary.mtspecific` for each
+age, time point in the :ref:`omega_grid` and every node.
+If *mtspecific* is not specified for a node, it will use the same *mtspecific*
+values as its nearest ancestor node.
+If there is no ancestor of a node that has *mtspecific* data,
+*omega* will be approximated as equal to *mtall* for that node.
 
 .. meta::
    :keywords: all_mtspecific, table
@@ -30,9 +34,8 @@ This table specifies the value of :ref:`glossary.mtspecific` for each
 age, time point in the :ref:`omega_grid` and every node.
 If *mtspecific* is not specified for a node, it will use the same *mtspecific*
 values as its nearest ancestor node.
-If non of its ancestors have *mtspecific* values,
-there is no *mtspecific* data for this node and its omega will be constrained
-to be equal to its *mtall* data.
+If none of its ancestors have *mtspecific* data,
+*omega* will be constrained to be equal to its *mtall* data for that node.
 
 .. meta::
    :keywords: all_mtspecific_id
@@ -112,9 +115,9 @@ For *i* equal 0 through
 and *j* equal 0 through
 :ref:`n_omega_time-1<omega_grid.omega_time_grid_table.n_omega_time>`
 
-| all_mtspecific_id + i * n_omega_time + j
+    all_mtspecific_id + i * n_omega_time + j
 
-Is the index in the all_mtspecific table of the value for this node,
+is the index in the all_mtspecific table of the value for this node,
 the *i*-th age in the omega_grid,
 and the *j*-th time in the omega_grid.
 

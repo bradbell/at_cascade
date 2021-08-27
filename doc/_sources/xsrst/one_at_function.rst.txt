@@ -67,7 +67,7 @@ The only non-zero dismod_at rate for this example is
 :ref:`glossary.iota`; i.e.,
 we choose *iota* to represent the function that we are estimating.
 (We could have used *rho* or *chi* but not *omega* for this purpose.)
-We use :math:`\iota_n(a, n, I)` and *iota_n* to denote the value for *iota*
+We use *iota_n(a, n, I)* to denote the value for *iota*
 as a function of age *a* node number *n* and income *I*.
 
 .. meta::
@@ -108,7 +108,7 @@ The code below sets this reference using the name avg_income:
 
 alpha
 =====
-We use *alpha* and :math:`\alpha`
+We use *alpha*
 for the :ref:`glossary.rate_value` covariate multiplier
 that multipliers *income*.
 This multiplier affects the value of *iota*.
@@ -269,8 +269,8 @@ when the income grid is not chosen randomly.
 
 Parent Smoothing
 ****************
-This is the smoothing used in the *fit_node* model for *iota*.
-(The :ref:`glossary.fit_node` is the parent node in dismod_at notation.)
+This is the *iota* smoothing used for the *fit_node*.
+Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
 There are no dtime priors because there is only one time point.
 

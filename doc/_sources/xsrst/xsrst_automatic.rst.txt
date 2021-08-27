@@ -12,7 +12,7 @@ Table of Contents
 | :ref:`3<all_node_db>` The All Node DataBase
 |
 |  |space| :ref:`3.1<all_cov_reference_table>` All Node Covariate Reference Table
-|  |space| :ref:`3.2<fit_goal_table>` Fit Leaf Table
+|  |space| :ref:`3.2<fit_goal_table>` Fit Goal Table
 |  |space| :ref:`3.3<omega_grid>` Omega Grid
 |  |space| :ref:`3.4<all_mtall>` All Node mtall Values
 |  |space| :ref:`3.5<all_mtspecific>` All Node mtspecific Values
@@ -20,10 +20,12 @@ Table of Contents
 |
 | :ref:`4<example>` The at_cascade Examples
 |
-|  |space| :ref:`4.1<one_at_function>` Example That Directly Measures One Age Time Function
-|  |space|  |space| :ref:`4.1.1<one_at_function_py>` one_at_function: Python Source Code
-|  |space| :ref:`4.2<prevalence2iota>` Example Estimation of iota From Prevalence Data
-|  |space|  |space| :ref:`4.2.1<prevalence2iota_py>` prevalence2iota: Python Source Code
+|  |space| :ref:`4.1<iota_and_chi>` Example Estimation of iota and chi
+|  |space|  |space| :ref:`4.1.1<iota_and_chi_py>` iota_and_chi: Python Source Code
+|  |space| :ref:`4.2<one_at_function>` Example That Directly Measures One Age Time Function
+|  |space|  |space| :ref:`4.2.1<one_at_function_py>` one_at_function: Python Source Code
+|  |space| :ref:`4.3<prevalence2iota>` Example Estimation of iota From Prevalence Data
+|  |space|  |space| :ref:`4.3.1<prevalence2iota_py>` prevalence2iota: Python Source Code
 |
 | :ref:`5<module>` The at_cascade Python Module
 |
