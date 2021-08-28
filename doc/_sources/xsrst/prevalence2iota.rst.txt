@@ -204,7 +204,7 @@ iota_true(a, n, I)
 This is the true value for *iota* in node *n* at age *a* and income *I*:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 334-337
+    :lines: 335-338
     :language: py
 
 .. meta::
@@ -219,7 +219,7 @@ omega_true(a, n)
 This is the true value for *omega* in node *n* and age *a*:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 341-344
+    :lines: 342-345
     :language: py
 
 .. meta::
@@ -277,7 +277,7 @@ For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 317-328
+    :lines: 317-329
     :language: py
 
 Note that the check of the fit for the goal nodes expects much more accuracy

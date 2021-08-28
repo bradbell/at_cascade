@@ -16,7 +16,7 @@ iota_and_chi: Python Source Code
 
 
 .. literalinclude:: ../../example/iota_and_chi.py
-    :lines: 256-830
+    :lines: 256-837
     :language: py
 
 ----

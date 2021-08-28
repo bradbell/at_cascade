@@ -369,7 +369,7 @@ a random seed. The actual value or <em>random_seed</em> is always printed.</p>
 <span class="n">random_seed</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">if</span> <span class="n">random_seed</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
     <span class="n">random_seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="p">)</span>
-    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;iota_and_chi: random_seed = &#39;</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -428,8 +428,9 @@ data is generated for the following <em>income_grid</em>:</p>
             <span class="p">[</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_income</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_income_grid</span><span class="p">)</span> <span class="p">]</span>
         <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="p">)</span>
     <span class="k">else</span> <span class="p">:</span>
-        <span class="n">n_income_grid</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="n">j</span> <span class="o">*</span> <span class="n">max_income</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_income_grid</span><span class="p">)</span> <span class="p">]</span>
+        <span class="n">n_income_grid</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">d_income_grid</span> <span class="o">=</span> <span class="n">max_income</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_income_grid</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="n">j</span> <span class="o">*</span> <span class="n">d_income_grid</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_income_grid</span><span class="p">)</span> <span class="p">]</span>
 </pre></div>
 </div>
 <p>Note that the check of the fit for the goal nodes expects much more accuracy

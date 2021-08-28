@@ -217,7 +217,7 @@ For *rate* equal to iota, chi, and omega,
 this is the true value for *rate* in node *n* at age *a* and income *I*:
 
 .. literalinclude:: ../../example/iota_and_chi.py
-    :lines: 335-346
+    :lines: 336-347
     :language: py
 
 .. meta::
@@ -276,7 +276,7 @@ For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 
 .. literalinclude:: ../../example/iota_and_chi.py
-    :lines: 318-329
+    :lines: 318-330
     :language: py
 
 Note that the check of the fit for the goal nodes expects much more accuracy

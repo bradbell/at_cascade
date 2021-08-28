@@ -268,10 +268,10 @@ avgint table with only the node_id column modified.</p>
 the dismod_at option table.</p></li>
 <li><p>The rate table is changed to have null priors for omega;
 see <a class="reference internal" href="omega_constraint.html#id1"><span class="std std-ref">Set Omega Constraints in a Fit Node Database</span></a> for properly setting these priors.</p></li>
-<li><p>The value priors rates other than omega are constructed using
-the predict tables in the <em>parent_node_database</em>.</p></li>
-<li><p>Priors of covariate multipliers are the same as in the
-<em>parent_node_database</em></p></li>
+<li><p>The difference priors are the same as in th parent node database.</p></li>
+<li><p>The value priors are similar, the difference is that the mean
+and standard deviation are replaced using the predict tables in
+the <em>parent_node_database</em>.</p></li>
 <li><p>Only the dismod_at input tables are significant in the child node databases;
 e.g., an init command should be executed before any other dismod_at
 commands (except possibly a set command).</p></li>
