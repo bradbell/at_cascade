@@ -74,11 +74,11 @@ Program Plan
 - Test using a data simulator with multiple levels of random effects.
 - Use python for the program.
 - The *root_node* database specifies difference priors for all the fits.
-- The *root_node* database value priors are only used for the *root_node*.
-  The value priors for the where *fit_node* = *node*,
-  where *node* is not *root_node*,
-  are computed using the posterior distributions for the fit where
-  *fit_node* is the parent of *node*.
+- The *root_node* database value priors are used for the *root_node*.
+  They are also used for other nodes except.
+  The mean and standard deviation are for another node are
+  computed using the posterior distributions for the fit where
+  *fit_node* is the parent of the other node.
 - The avgint node_id column will be set to the *fit_node*.
   This makes the predict table yield predictions for the *fit_node*.
 - If there is no data for a *fit_node*, no fit is necessary and the predictions

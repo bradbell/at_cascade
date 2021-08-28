@@ -137,26 +137,12 @@ def move_table(connection, src_name, dst_name) :
 def add_child_grid_row(
     parent_fit_var,
     parent_sample,
-    integrand_mean,
     parent_tables,
     child_tables,
     parent_grid_row,
     integrand_id,
     child_node_id,
 ) :
-    # is_mulcov
-    integrand_name = parent_tables['integrand'][integrand_id]['integrand_name']
-    is_mulcov      = integrand_name.startswith('mulcov_')
-    #
-    # gaussian_density_id
-    gaussian_density_id = table_name2id(
-            parent_tables, 'density', 'gaussian'
-    )
-    #
-    # log_gaussian_density_id
-    log_gaussian_density_id = table_name2id(
-            parent_tables, 'density', 'log_gaussian'
-    )
     # -----------------------------------------------------------------------
     # value_prior
     # -----------------------------------------------------------------------
@@ -175,39 +161,31 @@ def add_child_grid_row(
         # mean
         mean = parent_fit_var[key]
         #
-        # std, eta, density_id
-        if is_mulcov :
-            eta        = None
-            std        = statistics.stdev( parent_sample[key] )
-            density_id = gaussian_density_id
-        else :
-            #
-            # eta
-            eta  = 1e-3 * integrand_mean[integrand_id]
-            assert eta > 0
-            #
-            # density_id
-            density_id = log_gaussian_density_id
+        # std
+        eta        = parent_prior_row['eta']
+        if eta is None :
+            std  = statistics.stdev(parent_sample[key], xbar=mean)
+        else:
+            # The asymptotic statistics were computed in log space
+            # and then transformed to original space.
             #
             # log_sample
             log_sample = list()
             for sample in parent_sample[key] :
-                log_sample.append( math.log(sample + eta) )
+                log_sample.append( math.log( sample + eta ) )
             #
             # log_std
             log_mean = math.log(mean + eta)
-            log_std  = statistics.stdev(log_sample, xbar=log_mean)
+            log_std  = statistics.stdev(log_sample, xbar = log_mean)
             #
-            # std
-            std = (math.exp(log_std) - 1) * (mean + eta)
-        assert( std > 0 )
+            # inverse log transformation
+            std      = (math.exp(log_std) - 1) * (mean + eta)
+        #
         #
         # child_prior_row
         child_prior_row                = copy.copy( parent_prior_row )
         child_prior_row['mean']        = mean
         child_prior_row['std']         = std
-        child_prior_row['density_id']  = density_id
-        child_prior_row['eta']         = eta
         #
         # child_tables['prior']
         child_value_prior_id           = len( child_tables['prior'] )
@@ -317,10 +295,8 @@ def create_child_node_db(
         parent_fit_var[key] = predict_row['avg_integrand']
     #
     # parent_sample
-    parent_sample     = dict()
-    integrand_list    = dict()
+    parent_sample = dict()
     for predict_row in parent_tables['predict'] :
-        avg_integrand      = predict_row['avg_integrand']
         avgint_id          = predict_row['avgint_id']
         avgint_row         = parent_tables['avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']
@@ -330,16 +306,7 @@ def create_child_node_db(
         key                = (integrand_id, node_id, age_id, time_id)
         if not key in parent_sample :
             parent_sample[key] = list()
-        if not integrand_id in integrand_list :
-            integrand_list[integrand_id] = list()
-        parent_sample[key].append( avg_integrand )
-        integrand_list[integrand_id].append( avg_integrand )
-    #
-    # integrand_mean
-    integrand_mean = dict()
-    for integrand_id in integrand_list :
-        integrand_mean[integrand_id] = \
-            statistics.mean( integrand_list[integrand_id] )
+        parent_sample[key].append( predict_row['avg_integrand'] )
     #
     # parent_node_name
     parent_node_name = None
@@ -438,7 +405,6 @@ def create_child_node_db(
                         add_child_grid_row(
                             parent_fit_var,
                             parent_sample,
-                            integrand_mean,
                             parent_tables,
                             child_tables,
                             parent_grid_row,
@@ -495,7 +461,6 @@ def create_child_node_db(
                         add_child_grid_row(
                             parent_fit_var,
                             parent_sample,
-                            integrand_mean,
                             parent_tables,
                             child_tables,
                             parent_grid_row,

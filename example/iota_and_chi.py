@@ -370,17 +370,19 @@ def root_node_db(file_name) :
     prior_table = [
         {   # prior_iota_n0_value
             'name':    'prior_iota_n0_value',
-            'density': 'uniform',
+            'density': 'gaussian',
             'lower':   iota_50 / 10.0,
             'upper':   iota_50 * 10.0,
             'mean':    iota_50,
+            'std' :    iota_50 * 10.0,
             'eta':     iota_50 * 1e-3,
         },{ # prior_chi_n0_value
             'name':    'prior_chi_n0_value',
-            'density': 'uniform',
+            'density': 'gaussian',
             'lower':   chi_50 / 10.0,
             'upper':   chi_50 * 10.0,
             'mean':    chi_50,
+            'std':     chi_50 * 10.0,
             'eta':     chi_50 * 1e-3,
         },{ # prior_child_dage
             'name':    'prior_child_dage',
@@ -395,10 +397,11 @@ def root_node_db(file_name) :
             'std':     1.0,
         },{ # prior_alpha_n0_value
             'name':    'prior_alpha_n0_value',
-            'density': 'uniform',
+            'density': 'gaussian',
             'lower':   - 10 * abs(alpha_true),
             'upper':   + 10 * abs(alpha_true),
             'mean':    0.0,
+            'std':     + 10 * abs(alpha_true),
         },
     ]
     #

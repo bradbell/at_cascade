@@ -315,10 +315,12 @@ def root_node_db(file_name) :
     prior_table = [
         {   # prior_iota_n0_value
             'name':    'prior_iota_n0_value',
-            'density': 'uniform',
+            'density': 'gaussian',
             'lower':   iota_true(0) / 10.0,
             'upper':   iota_true(100) * 10.0,
             'mean':    iota_true(50),
+            'std':     iota_true(50) * 10.0,
+            'eta':     iota_true(50) * 1e-3
         },{ # prior_iota_dage
             'name':    'prior_iota_dage',
             'density': 'log_gaussian',
@@ -332,9 +334,10 @@ def root_node_db(file_name) :
             'std':     10.0,
         },{ # prior_alpha_n0_value
             'name':    'prior_alpha_n0_value',
-            'density': 'uniform',
+            'density': 'gaussian',
             'lower':   - 10 * abs(alpha_true),
             'upper':   + 10 * abs(alpha_true),
+            'std':     + 10 * abs(alpha_true),
             'mean':    0.0,
         },
     ]
