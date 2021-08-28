@@ -484,10 +484,16 @@ def root_node_db(file_name) :
     #
     # mulcov_table
     mulcov_table = [
-        {   # alpha
+        {   # alpha_iota
             'covariate':  'income',
             'type':       'rate_value',
             'effected':   'iota',
+            'group':      'world',
+            'smooth':     'smooth_alpha_n0',
+        },{ # alpha_chi
+            'covariate':  'income',
+            'type':       'rate_value',
+            'effected':   'chi',
             'group':      'world',
             'smooth':     'smooth_alpha_n0',
         },{ # gamma_Sincidence
@@ -516,6 +522,7 @@ def root_node_db(file_name) :
         {'name': 'mulcov_0'},
         {'name': 'mulcov_1'},
         {'name': 'mulcov_2'},
+        {'name': 'mulcov_3'},
     ]
     #
     # avgint_table
