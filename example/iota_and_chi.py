@@ -374,17 +374,19 @@ def root_node_db(file_name) :
             'lower':   iota_50 / 10.0,
             'upper':   iota_50 * 10.0,
             'mean':    iota_50,
+            'eta':     iota_50 * 1e-3,
         },{ # prior_chi_n0_value
             'name':    'prior_chi_n0_value',
             'density': 'uniform',
             'lower':   chi_50 / 10.0,
             'upper':   chi_50 * 10.0,
             'mean':    chi_50,
+            'eta':     chi_50 * 1e-3,
         },{ # prior_child_dage
             'name':    'prior_child_dage',
             'density': 'log_gaussian',
             'mean':    0.0,
-            'std':     1.0,
+            'std':     4.0,
             'eta':     min(iota_50 , chi_50 ) * 1e-3,
         },{ # prior_child_value
             'name':    'prior_child_value',
@@ -485,10 +487,10 @@ def root_node_db(file_name) :
             'effected':   'iota',
             'group':      'world',
             'smooth':     'smooth_alpha_n0',
-        },{ # gamma_prevalence
+        },{ # gamma_Sincidence
             'covariate':  'one',
             'type':       'meas_noise',
-            'effected':   'prevalence',
+            'effected':   'Sincidence',
             'group':      'world',
             'smooth':     'smooth_gamma',
         },{ # gamma_mtexcess
