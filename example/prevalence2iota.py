@@ -284,7 +284,7 @@ fit_goal_set = { 'n1', 'n5', 'n6' }
 random_seed = 0
 if random_seed == 0 :
     random_seed = int( time.time() )
-    random.seed(random_seed)
+random.seed(random_seed)
 print('prevalence2iota: random_seed = ', random_seed)
 # END random_seed
 #

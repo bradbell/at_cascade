@@ -255,7 +255,7 @@ fit_goal_set = { 'n3', 'n4', 'n2' }
 random_seed = 0
 if random_seed == 0 :
     random_seed = int( time.time() )
-    random.seed(random_seed)
+random.seed(random_seed)
 print('one_at_function: random_seed = ', random_seed)
 # END random_seed
 #

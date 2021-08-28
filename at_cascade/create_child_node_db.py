@@ -146,53 +146,66 @@ def add_child_grid_row(
     # -----------------------------------------------------------------------
     # value_prior
     # -----------------------------------------------------------------------
-    # parent_constant_value, child_value_prior_id
+    #
+    # parent_prior_id
     parent_prior_id    = parent_grid_row['value_prior_id']
-    parent_const_value = parent_grid_row['const_value']
-    if parent_const_value is None :
+    #
+    # child_const_value
+    # child_value_prior_id
+    child_const_value    = parent_grid_row['const_value']
+    child_value_prior_id = None
+    if child_const_value is None :
+        #
         # parent_prior_row
         parent_prior_row = parent_tables['prior'][parent_prior_id]
         #
-        # key
-        age_id    = parent_grid_row['age_id']
-        time_id   = parent_grid_row['time_id']
-        key       = (integrand_id, child_node_id, age_id, time_id)
-        #
-        # mean
-        mean = parent_fit_var[key]
-        #
-        # std
-        eta        = parent_prior_row['eta']
-        if eta is None :
-            std  = statistics.stdev(parent_sample[key], xbar=mean)
-        else:
-            # The asymptotic statistics were computed in log space
-            # and then transformed to original space.
+        # child_const_value
+        # child_value_prior_id
+        if parent_prior_row['lower'] == parent_prior_row['upper'] :
+            child_const_value = parent_prior_row['lower']
+            assert child_value_prior_id is None
+        else :
+            assert child_const_value is None
+            child_value_prior_id = len( child_tables['prior'] )
             #
-            # log_sample
-            log_sample = list()
-            for sample in parent_sample[key] :
-                log_sample.append( math.log( sample + eta ) )
+            # child_prior_row
+            child_prior_row  = copy.copy( parent_prior_row )
             #
-            # log_std
-            log_mean = math.log(mean + eta)
-            log_std  = statistics.stdev(log_sample, xbar = log_mean)
+            # key
+            age_id    = parent_grid_row['age_id']
+            time_id   = parent_grid_row['time_id']
+            key       = (integrand_id, child_node_id, age_id, time_id)
             #
-            # inverse log transformation
-            std      = (math.exp(log_std) - 1) * (mean + eta)
-        #
-        #
-        # child_prior_row
-        child_prior_row                = copy.copy( parent_prior_row )
-        child_prior_row['mean']        = mean
-        child_prior_row['std']         = std
-        #
-        # child_tables['prior']
-        child_value_prior_id           = len( child_tables['prior'] )
-        child_tables['prior'].append( child_prior_row )
-        add_index_to_name( child_tables['prior'], 'prior_name' )
-    else :
-        child_value_prior_id = None
+            # mean
+            mean = parent_fit_var[key]
+            #
+            # std
+            eta        = parent_prior_row['eta']
+            if eta is None :
+                std  = statistics.stdev(parent_sample[key], xbar=mean)
+            else:
+                # The asymptotic statistics were computed in log space
+                # and then transformed to original space.
+                #
+                # log_sample
+                log_sample = list()
+                for sample in parent_sample[key] :
+                    log_sample.append( math.log( sample + eta ) )
+                #
+                # log_std
+                log_mean = math.log(mean + eta)
+                log_std  = statistics.stdev(log_sample, xbar = log_mean)
+                #
+                # inverse log transformation
+                std      = (math.exp(log_std) - 1) * (mean + eta)
+            #
+            # child_prior_row
+            child_prior_row['mean']        = mean
+            child_prior_row['std']         = std
+            #
+            # child_tables['prior']
+            child_tables['prior'].append( child_prior_row )
+            add_index_to_name( child_tables['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # dage_prior
     # -----------------------------------------------------------------------
@@ -221,12 +234,12 @@ def add_child_grid_row(
     # child_grid_row
     child_grid_row = copy.copy( parent_grid_row )
     child_grid_row['value_prior_id']  = child_value_prior_id
-    child_grid_row['const_value']     = parent_const_value
+    child_grid_row['const_value']     = child_const_value
     child_grid_row['dage_prior_id']   = child_dage_prior_id
     child_grid_row['dtime_prior_id']  = child_dtime_prior_id
     #
     # child_tables['smooth_grid']
-    child_grid_row['smooth_id']     = len( child_tables['smooth'] ) - 1
+    child_grid_row['smooth_id']  = len( child_tables['smooth'] ) - 1
     child_tables['smooth_grid'].append( child_grid_row )
 # ----------------------------------------------------------------------------
 def create_child_node_db(
