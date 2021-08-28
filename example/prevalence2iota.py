@@ -314,7 +314,7 @@ age_grid = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
 # END age_grid
 #
 # BEGIN income_grid
-random_income = True
+random_income = False
 income_grid   = dict()
 for node in [ 'n3', 'n4', 'n5', 'n6' ] :
     max_income  = 2.0 * avg_income[node]
@@ -326,7 +326,7 @@ for node in [ 'n3', 'n4', 'n5', 'n6' ] :
     else :
         n_income_grid = 3
         d_income_grid = max_income / (n_income_grid - 1)
-        income_grid[node] = [ j * max_income for j in range(n_income_grid) ]
+        income_grid[node] = [ j * d_income_grid for j in range(n_income_grid) ]
 # END income_grid
 # ----------------------------------------------------------------------------
 # functions
