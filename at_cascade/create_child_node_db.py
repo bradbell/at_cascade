@@ -141,7 +141,6 @@ def add_child_grid_row(
     parent_grid_row,
     integrand_id,
     child_node_id,
-    gaussian_density_id,
 ) :
     # -----------------------------------------------------------------------
     # value_prior
@@ -160,6 +159,11 @@ def add_child_grid_row(
         #
         mean = parent_fit_var[key]
         std  = statistics.stdev(parent_sample[key], xbar=mean)
+        #
+        # gaussian_density_id
+        gaussian_density_id = table_name2id(
+            parent_tables, 'density', 'gaussian'
+        )
         #
         # child_prior_row
         child_prior_row                = copy.copy( parent_prior_row )
@@ -299,9 +303,6 @@ def create_child_node_db(
     # parent_node_id
     parent_node_id = table_name2id(parent_tables, 'node', parent_node_name)
     #
-    # gaussian_density_id
-    gaussian_density_id = table_name2id(parent_tables, 'density', 'gaussian')
-    #
     for child_name in child_node_databases :
         # ---------------------------------------------------------------------
         # create child_node_databases[child_name]
@@ -393,7 +394,6 @@ def create_child_node_db(
                             parent_grid_row,
                             integrand_id,
                             node_id,
-                            gaussian_density_id
                         )
 
         # --------------------------------------------------------------------
@@ -450,7 +450,6 @@ def create_child_node_db(
                             parent_grid_row,
                             integrand_id,
                             child_node_id,
-                            gaussian_density_id
                         )
             #
             # parent_smooth_id

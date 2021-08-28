@@ -22,11 +22,11 @@ fi
 # -----------------------------------------------------------------------------
 echo_eval bin/run_sphinx.sh
 list='
-    example/one_at_function.py
-    example/prevalence2iota.py
     test/child_avgint_table.py
     test/omega_constraint.py
     test/get_fit_children.py
+    example/one_at_function.py
+    example/prevalence2iota.py
 '
 for script in $list
 do
