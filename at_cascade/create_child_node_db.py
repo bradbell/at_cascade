@@ -81,10 +81,10 @@ is a python dictionary and if *child_name* is a key for *child_node_databases*,
     the dismod_at option table.
 -   The rate table is changed to have null priors for omega;
     see :ref:`omega_constraint` for properly setting these priors.
--   The value priors rates other than omega are constructed using
-    the predict tables in the *parent_node_database*.
--   Priors of covariate multipliers are the same as in the
-    *parent_node_database*
+-   The difference priors are the same as in th parent node database.
+-   The value priors are similar, the difference is that the mean
+    and standard deviation are replaced using the predict tables in
+    the *parent_node_database*.
 -   Only the dismod_at input tables are significant in the child node databases;
     e.g., an init command should be executed before any other dismod_at
     commands (except possibly a set command).
