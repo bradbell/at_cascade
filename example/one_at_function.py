@@ -51,13 +51,13 @@ as a function of age *a* node number *n* and income *I*.
 
 Covariate
 *********
-The only covariate for this example is *income*.
+The only covariate for this example is income.
 Its reference value is the average income corresponding
 to the :ref:`glossary.fit_node`.
 
 r_n
 ===
-We use *r_n* for the reference value of *income* at node *n*.
+We use *r_n* for the reference value of income at node *n*.
 The code below sets this reference using the name avg_income:
 {xsrst_file
     # BEGIN avg_income
@@ -68,7 +68,7 @@ alpha
 =====
 We use *alpha*
 for the :ref:`glossary.rate_value` covariate multiplier
-that multipliers *income*.
+that multipliers income.
 This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
 {xsrst_file
@@ -158,14 +158,14 @@ when the income grid is not chosen randomly.
 
 Parent Smoothing
 ****************
-This is the iota smoothing used for the *fit_node*.
+This is the iota smoothing used for the fit_node.
 Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
 There are no dtime priors because there is only one time point.
 
 Value Prior
 ===========
-The *fit_node* value prior is uniform with lower limit
+The fit_node value prior is uniform with lower limit
 *iota_true(0)/10* and upper limit *iota_true(100)\*10*.
 The mean is *iota_true(50)*
 (which is used to initialize the optimization.)
@@ -179,7 +179,7 @@ standard deviation 3.0, and :ref:`glossary.eta` equal to
 Child Smoothing
 ***************
 This is the smoothing used in the model for the iota
-random effect for each child of the *fit_node*.
+random effect for each child of the fit_node.
 The smoothing only has one age and one time point; i.e.,
 the corresponding function is constant in age and time.
 There are no dage or dtime priors because there is only one

@@ -56,14 +56,14 @@ as a function of age *a* and node number *n*.
 
 Covariate
 *********
-There are two covariates for this example is *income* and *one*.
-The reference value for *income* is the average income corresponding
+There are two covariates for this example is income and *one*.
+The reference value for income is the average income corresponding
 to the :ref:`glossary.fit_node`.
 The *one* covariate is always equal to 1 and its reference is always zero.
 
 r_n
 ===
-We use *r_n* for the reference value of *income* at node *n*.
+We use *r_n* for the reference value of income at node *n*.
 The code below sets this reference using the name avg_income:
 {xsrst_file
     # BEGIN avg_income
@@ -74,7 +74,7 @@ alpha
 =====
 We use *alpha*
 for the :ref:`glossary.rate_value` covariate multiplier
-which multiplies *income*.
+which multiplies income.
 This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
 {xsrst_file
@@ -175,14 +175,14 @@ The parent smoothing constrains omega to be equal to
 
 iota and chi
 ============
-This is the smoothing used in the *fit_node* model for the rates.
+This is the smoothing used in the fit_node model for the rates.
 Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
 There are no dtime priors because there is only one time point.
 
 Value Prior
 -----------
-The *fit_node* value prior is uniform with lower limit
+The fit_node value prior is uniform with lower limit
 equal to the true rate for the root node at age zero divided by 10.
 The upper limit is the true rate at age 100 time 10
 and the mean is the true rate at age 50.
@@ -206,7 +206,7 @@ The child smoothing constrains omega to be equal to
 iota and chi
 ============
 The same smoothing used is used for the iota and chi
-random effect for each child of the *fit_node*.
+random effect for each child of the fit_node.
 The smoothing only has one age and one time point; i.e.,
 the corresponding function is constant in age and time.
 There are no dage or dtime priors because there is only one
