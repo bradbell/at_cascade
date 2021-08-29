@@ -143,7 +143,7 @@ n_i
 Data is only simulated for the leaf nodes; i.e.,
 each *n_i* is in the set { n3, n4, n5, n6 }.
 Since the data does not have any nose, the data residuals are a measure
-of how good the fit is for the goal nodes.
+of how good the fit is for the nodes in the fit_goal_set.
 
 a_i
 ===
@@ -161,8 +161,8 @@ data is generated for the following *income_grid*:
     # BEGIN income_grid
     # END income_grid
 }
-Note that the check of the fit for the goal nodes expects much more accuracy
-when the income grid is not chosen randomly.
+Note that the check of the fit for the nodes in the fit_goal_set
+expects much more accuracy when the income grid is not chosen randomly.
 
 Parent Smoothing
 ****************
