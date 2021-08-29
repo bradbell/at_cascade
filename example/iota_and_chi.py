@@ -170,8 +170,8 @@ Omega Constraints
 The :ref:`omega_constraint<omega_constraint>` routine is used
 to set the value of omega in the parent and child nodes.
 
-Parent Smoothing
-****************
+Parent Rate Smoothing
+*********************
 The parent smoothings use the true value of iota and chi at age 50
 and in the root_node:
 {xsrst_file
@@ -209,8 +209,8 @@ The following is the dage prior used for the fit_node:
     # END parent_dage_prior
 }
 
-Child Smoothing
-***************
+Child Rate Smoothing
+********************
 This is the smoothing used for the
 random effect for each child of the fit_node.
 There are no :ref:`glossary.dage` or dtime

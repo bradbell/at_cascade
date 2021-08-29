@@ -156,8 +156,8 @@ data is generated for the following *income_grid*:
 Note that the check of the fit for the nodes in the fit_goal_set
 expects much more accuracy when the income grid is not chosen randomly.
 
-Parent Smoothing
-****************
+Parent Rate Smoothing
+*********************
 This is the iota smoothing used for the fit_node.
 This smoothing uses the *age_gird* and one time point.
 There are no :ref:`glossary.dtime`
@@ -182,8 +182,8 @@ The following is the dage prior used for the fit_node:
     # END parent_dage_prior
 }
 
-Child Smoothing
-***************
+Child Rate Smoothing
+********************
 This is the smoothing used for the
 random effect for each child of the fit_node.
 There are no :ref:`glossary.dage` or dtime
