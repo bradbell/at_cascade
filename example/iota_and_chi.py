@@ -367,7 +367,8 @@ def root_node_db(file_name) :
     # prior_table
     iota_50 = rate_true('iota', 50.0, 'n0', avg_income['n0'])
     chi_50  = rate_true('chi',  50.0, 'n0', avg_income['n0'])
-    prior_table = [
+    prior_table = list()
+    prior_table.append(
         {   # prior_iota_n0_value
             'name':    'prior_iota_n0_value',
             'density': 'gaussian',
@@ -376,7 +377,10 @@ def root_node_db(file_name) :
             'mean':    iota_50,
             'std' :    iota_50 * 10.0,
             'eta':     iota_50 * 1e-3,
-        },{ # prior_chi_n0_value
+        }
+    )
+    prior_table.append(
+        { # prior_chi_n0_value
             'name':    'prior_chi_n0_value',
             'density': 'gaussian',
             'lower':   chi_50 / 10.0,
@@ -384,26 +388,35 @@ def root_node_db(file_name) :
             'mean':    chi_50,
             'std':     chi_50 * 10.0,
             'eta':     chi_50 * 1e-3,
-        },{ # prior_child_dage
+        }
+    )
+    prior_table.append(
+        { # prior_child_dage
             'name':    'prior_child_dage',
             'density': 'log_gaussian',
             'mean':    0.0,
             'std':     4.0,
             'eta':     min(iota_50 , chi_50 ) * 1e-3,
-        },{ # prior_child_value
+        }
+    )
+    prior_table.append(
+        { # prior_child_value
             'name':    'prior_child_value',
             'density': 'gaussian',
             'mean':    0.0,
             'std':     1.0,
-        },{ # prior_alpha_n0_value
+        }
+    )
+    prior_table.append(
+        { # prior_alpha_n0_value
             'name':    'prior_alpha_n0_value',
             'density': 'gaussian',
             'lower':   - 10 * abs(alpha_true),
             'upper':   + 10 * abs(alpha_true),
             'mean':    0.0,
             'std':     + 10 * abs(alpha_true),
-        },
-    ]
+        }
+    )
     #
     # smooth_table
     smooth_table = list()

@@ -361,7 +361,8 @@ def average_integrand(integrand_name, age, node_name, income) :
 def root_node_db(file_name) :
     #
     # prior_table
-    prior_table = [
+    prior_table = list()
+    prior_table.append(
         {   # prior_iota_n0_value
             'name':    'prior_iota_n0_value',
             'density': 'gaussian',
@@ -370,26 +371,35 @@ def root_node_db(file_name) :
             'mean':    iota_true(50),
             'std':     iota_true(50) * 10.0,
             'eta':     iota_true(50),
-        },{ # prior_iota_dage
+        }
+    )
+    prior_table.append(
+        { # prior_iota_dage
             'name':    'prior_iota_dage',
             'density': 'log_gaussian',
             'mean':    0.0,
             'std':     4.0,
             'eta':     iota_true(0) * 1e-3,
-        },{ # prior_iota_child
+        }
+    )
+    prior_table.append(
+        { # prior_iota_child
             'name':    'prior_iota_child',
             'density': 'gaussian',
             'mean':    0.0,
             'std':     1.0,
-        },{ # prior_alpha_n0_value
+        }
+    )
+    prior_table.append(
+        { # prior_alpha_n0_value
             'name':    'prior_alpha_n0_value',
             'density': 'gaussian',
             'lower':   - 10 * abs(alpha_true),
             'upper':   + 10 * abs(alpha_true),
             'std':     + 10 * abs(alpha_true),
             'mean':    0.0,
-        },
-    ]
+        }
+    )
     #
     # smooth_table
     smooth_table = list()
