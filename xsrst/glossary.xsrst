@@ -14,6 +14,8 @@ see http://www.gnu.org/licenses/agpl.txt
     integrands
     nslist
     smoothings
+    dage
+    dtime
 }
 
 Glossary
@@ -23,6 +25,18 @@ chi
 ***
 The model rate for excess mortality as a function of age and time.
 This is also denoted by :math:`\chi(a, t)`.
+
+dage
+****
+The abbreviation *dage* is used for differences of a function value
+with rest to age values.
+These are differences and not derivative approximations.
+
+dtime
+*****
+The abbreviation *dtime* is used for finite differences of a function value
+with rest to time values.
+These are differences and not derivative approximations.
 
 eta
 ***

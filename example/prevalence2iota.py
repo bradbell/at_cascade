@@ -177,7 +177,7 @@ iota
 This is the smoothing used in the fit_node model for iota.
 Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
-There are no dtime priors because there is only one time point.
+There are no :ref:`glossary.dtime` priors because there is only one time point.
 
 Value Prior
 ===========
@@ -205,7 +205,7 @@ This is the smoothing used in the model for the iota
 random effect for each child of the fit_node.
 The smoothing only has one age and one time point; i.e.,
 the corresponding function is constant in age and time.
-There are no dage or dtime priors because there is only one
+There are no :ref:`glossary.dage` or dtime priors because there is only one
 age and one time point.
 
 Value Prior
