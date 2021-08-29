@@ -159,16 +159,19 @@ expects much more accuracy when the income grid is not chosen randomly.
 Parent Smoothing
 ****************
 This is the iota smoothing used for the fit_node.
-Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
 There are no dtime priors because there is only one time point.
 
 Value Prior
 ===========
-The fit_node value prior is uniform with lower limit
-*iota_true(0)/10* and upper limit *iota_true(100)\*10*.
-The mean is *iota_true(50)*
-(which is used to initialize the optimization.)
+The following is the value prior used for the fit_node
+{xsrst_file
+    # BEIGN parent_value_prior
+    # END parent_value_prior
+}
+The mean and standard deviation are only used for the root_node.
+The :ref:`create_child_node_db<create_child_node_db>`
+routine replaces them for other nodes.
 
 Dage Prior
 ==========
@@ -316,8 +319,8 @@ def root_node_db(file_name) :
     # prior_table
     prior_table = list()
     prior_table.append(
-        {   # prior_iota_n0_value
-            'name':    'prior_iota_n0_value',
+        # BEIGN parent_value_prior
+        {   'name':    'parent_value_prior',
             'density': 'gaussian',
             'lower':   iota_true(0) / 10.0,
             'upper':   iota_true(100) * 10.0,
@@ -325,6 +328,7 @@ def root_node_db(file_name) :
             'std':     iota_true(50) * 10.0,
             'eta':     iota_true(50) * 1e-3
         }
+        # END parent_value_prior
     )
     prior_table.append(
         { # prior_iota_dage
@@ -358,7 +362,7 @@ def root_node_db(file_name) :
     smooth_table = list()
     #
     # smooth_iota_n0
-    fun = lambda a, t : ('prior_iota_n0_value', 'prior_iota_dage', None)
+    fun = lambda a, t : ('parent_value_prior', 'prior_iota_dage', None)
     smooth_table.append({
         'name':       'smooth_iota_n0',
         'age_id':     range( len(age_grid) ),

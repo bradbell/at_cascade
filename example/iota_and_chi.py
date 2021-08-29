@@ -14,6 +14,7 @@
     dtime
     dage
     integrands
+    smoothings
 }
 
 Example Estimation of iota and chi
@@ -166,6 +167,12 @@ expects much more accuracy when the income grid is not chosen randomly.
 
 Parent Smoothing
 ****************
+The parent smoothings use the true value of iota and chi at age 50
+and in the root_node:
+{xsrst_file
+    # BEGIN iota_chi_50
+    # END iota_chi_50
+}
 
 omega
 =====
@@ -181,12 +188,19 @@ This smoothing uses the *age_gird* and one time point.
 There are no dtime priors because there is only one time point.
 
 Value Prior
------------
-The fit_node value prior is uniform with lower limit
-equal to the true rate for the root node at age zero divided by 10.
-The upper limit is the true rate at age 100 time 10
-and the mean is the true rate at age 50.
-The mean is only used to initialize the optimization.
+===========
+The following is the value prior used for the fit_node
+{xsrst_file
+    # BEGIN parent_iota_value_prior
+    # END parent_iota_value_prior
+}
+{xsrst_file
+    # BEGIN parent_chi_value_prior
+    # END parent_chi_value_prior
+}
+The mean and standard deviation are only used for the root_node.
+The :ref:`create_child_node_db<create_child_node_db>`
+routine replaces them for other nodes.
 
 Dage Prior
 -----------
@@ -363,14 +377,17 @@ def average_integrand(integrand_name, age, node_name, income) :
     return avg_integrand
 # ----------------------------------------------------------------------------
 def root_node_db(file_name) :
-    #
-    # prior_table
+    # BEGIN iota_chi_50
     iota_50 = rate_true('iota', 50.0, 'n0', avg_income['n0'])
     chi_50  = rate_true('chi',  50.0, 'n0', avg_income['n0'])
+    # END iota_chi_50
+    #
+    # prior_table
     prior_table = list()
+    #
     prior_table.append(
-        {   # prior_iota_n0_value
-            'name':    'prior_iota_n0_value',
+        # BEGIN parent_iota_value_prior
+        {   'name':    'parent_iota_value_prior',
             'density': 'gaussian',
             'lower':   iota_50 / 10.0,
             'upper':   iota_50 * 10.0,
@@ -378,10 +395,11 @@ def root_node_db(file_name) :
             'std' :    iota_50 * 10.0,
             'eta':     iota_50 * 1e-3,
         }
+        # END parent_iota_value_prior
     )
     prior_table.append(
-        { # prior_chi_n0_value
-            'name':    'prior_chi_n0_value',
+        # BEGIN parent_chi_value_prior
+        {   'name':    'parent_chi_value_prior',
             'density': 'gaussian',
             'lower':   chi_50 / 10.0,
             'upper':   chi_50 * 10.0,
@@ -389,7 +407,9 @@ def root_node_db(file_name) :
             'std':     chi_50 * 10.0,
             'eta':     chi_50 * 1e-3,
         }
+        # END parent_chi_value_prior
     )
+    #
     prior_table.append(
         { # prior_child_dage
             'name':    'prior_child_dage',
@@ -422,7 +442,7 @@ def root_node_db(file_name) :
     smooth_table = list()
     #
     # smooth_iota_n0
-    fun = lambda a, t : ('prior_iota_n0_value', 'prior_child_dage', None)
+    fun = lambda a, t : ('parent_iota_value_prior', 'prior_child_dage', None)
     smooth_table.append({
         'name':       'smooth_iota_n0',
         'age_id':     range( len(age_grid) ),
@@ -431,7 +451,7 @@ def root_node_db(file_name) :
     })
     #
     # smooth_chi_n0
-    fun = lambda a, t : ('prior_chi_n0_value', 'prior_child_dage', None)
+    fun = lambda a, t : ('parent_chi_value_prior', 'prior_child_dage', None)
     smooth_table.append({
         'name':       'smooth_chi_n0',
         'age_id':     range( len(age_grid) ),
