@@ -48,9 +48,9 @@ Rates
 The non-zero dismod_at rates for this example are
 :ref:`glossary.iota`, :ref:`glossary.chi`, and :ref:`glossary.omega`.
 We use *iota(a, n, I)* , *chi(a, n, I)*
-to denote the value for *iota* and *chi*
+to denote the value for iota and chi
 as a function of age *a*, node number *n*, and income *I*.
-We use *omega(a, n)* and *omega_n* to denote the value for *omega*
+We use *omega(a, n)* and *omega_n* to denote the value for omega
 as a function of age *a* and node number *n*.
 
 
@@ -75,7 +75,7 @@ alpha
 We use *alpha*
 for the :ref:`glossary.rate_value` covariate multiplier
 which multiplies *income*.
-This multiplier affects the value of *iota*.
+This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
 {xsrst_file
     # BEGIN alpha_true
@@ -93,7 +93,7 @@ because the corresponding densities are log Gaussian.
 
 Random Effects
 **************
-For each node, there is a random effect on *iota* and *chi* that is constant
+For each node, there is a random effect on iota and chi that is constant
 in age and time. Note that the leaf nodes have random effect for the node
 above them as well as their own random effect.
 
@@ -169,7 +169,7 @@ Parent Smoothing
 
 omega
 =====
-The parent smoothing constrains *omega* to be equal to
+The parent smoothing constrains omega to be equal to
 *rate_true(omega, a, n, I)* where  *a* is each value in the age grid and
 *n* is the current node and *I* is he reference income for that node *r_n*.
 
@@ -192,20 +192,20 @@ Dage Prior
 -----------
 The prior for age differences is log Gaussian with mean zero,
 standard deviation 1.0, and :ref:`glossary.eta` equal to
-the minimum of the true *chi* and *iota* at age 50 times 1e-3.
+the minimum of the true chi and iota at age 50 times 1e-3.
 
 Child Smoothing
 ***************
 
 omega
 =====
-The child smoothing constrains *omega* to be equal to
+The child smoothing constrains omega to be equal to
 *rate_true(omega, a, n, I)* where  *a* is each value in the age grid,
 *n* is the child node, and *I* is the reference income for the child node.
 
 iota and chi
 ============
-The same smoothing used is used for the *iota* and *chi*
+The same smoothing used is used for the iota and chi
 random effect for each child of the *fit_node*.
 The smoothing only has one age and one time point; i.e.,
 the corresponding function is constant in age and time.

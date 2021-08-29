@@ -42,9 +42,11 @@ Rates
 *****
 The only non-zero dismod_at rate for this example is
 :ref:`glossary.iota`; i.e.,
-we choose *iota* to represent the function that we are estimating.
-(We could have used *rho* or *chi* but not *omega* for this purpose.)
-We use *iota_n(a, n, I)* to denote the value for *iota*
+we choose iota to represent the function that we are estimating.
+(We could have used
+:ref:`glossary.rho` or :ref:`glossary.chi` but not :ref:`glossary.omega`
+for this purpose.)
+We use *iota_n(a, n, I)* to denote the value for iota
 as a function of age *a* node number *n* and income *I*.
 
 Covariate
@@ -67,7 +69,7 @@ alpha
 We use *alpha*
 for the :ref:`glossary.rate_value` covariate multiplier
 that multipliers *income*.
-This multiplier affects the value of *iota*.
+This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
 {xsrst_file
     # BEGIN alpha_true
@@ -77,7 +79,7 @@ The true value for *alpha* (used which simulating the data) is
 
 Random Effects
 **************
-For each node, there is a random effect on *iota* that is constant
+For each node, there is a random effect on iota that is constant
 in age and time. Note that the leaf nodes have random effect for the node
 above them as well as their own random effect.
 
@@ -107,7 +109,7 @@ a random seed. The actual value or *random_seed* is always printed.
 
 iota_true(a, n, I)
 ==================
-This is the true value for *iota* in node *n* at age *a* and income *I*:
+This is the true value for iota in node *n* at age *a* and income *I*:
 {xsrst_file
     # BEGIN iota_true
     # END iota_true
@@ -117,7 +119,7 @@ This is the true value for *iota* in node *n* at age *a* and income *I*:
 y_i
 ===
 The only simulated integrand for this example is :ref:`glossary.sincidence`
-which is a direct measurement of *iota*.
+which is a direct measurement of iota.
 (If we had used a different rate to represent the function we are estimating,
 we would use the corresponding direct measurement of that rate.)
 This data is simulated without any noise; i.e.,
@@ -156,7 +158,7 @@ when the income grid is not chosen randomly.
 
 Parent Smoothing
 ****************
-This is the *iota* smoothing used for the *fit_node*.
+This is the iota smoothing used for the *fit_node*.
 Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
 There are no dtime priors because there is only one time point.
@@ -176,7 +178,7 @@ standard deviation 3.0, and :ref:`glossary.eta` equal to
 
 Child Smoothing
 ***************
-This is the smoothing used in the model for the *iota*
+This is the smoothing used in the model for the iota
 random effect for each child of the *fit_node*.
 The smoothing only has one age and one time point; i.e.,
 the corresponding function is constant in age and time.

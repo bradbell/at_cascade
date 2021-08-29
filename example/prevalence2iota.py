@@ -42,9 +42,9 @@ Rates
 *****
 The only non-zero dismod_at rates for this example are
 :ref:`glossary.iota` and :ref:`glossary.omega`.
-We use *iota(a, n, I)* to denote the value for *iota*
+We use *iota(a, n, I)* to denote the value for iota
 as a function of age *a*, node number *n*, and income *I*.
-We use *omega(a, n)* to denote the value for *omega*
+We use *omega(a, n)* to denote the value for omega
 as a function of age *a* and node number *n*.
 
 
@@ -69,7 +69,7 @@ alpha
 We use *alpha*
 for the :ref:`glossary.rate_value` covariate multiplier
 which multiplies *income*.
-This multiplier affects the value of *iota*.
+This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
 {xsrst_file
     # BEGIN alpha_true
@@ -87,7 +87,7 @@ because the density for the prevalence data is log Gaussian.
 
 Random Effects
 **************
-For each node, there is a random effect on *iota* that is constant
+For each node, there is a random effect on iota that is constant
 in age and time. Note that the leaf nodes have random effect for the node
 above them as well as their own random effect.
 
@@ -117,7 +117,7 @@ a random seed. The actual value or *random_seed* is always printed.
 
 iota_true(a, n, I)
 ==================
-This is the true value for *iota* in node *n* at age *a* and income *I*:
+This is the true value for iota in node *n* at age *a* and income *I*:
 {xsrst_file
     # BEGIN iota_true
     # END iota_true
@@ -125,7 +125,7 @@ This is the true value for *iota* in node *n* at age *a* and income *I*:
 
 omega_true(a, n)
 ================
-This is the true value for *omega* in node *n* and age *a*:
+This is the true value for omega in node *n* and age *a*:
 {xsrst_file
     # BEGIN omega_true
     # END omega_true
@@ -169,13 +169,13 @@ Parent Smoothing
 
 omega
 =====
-The parent smoothing constrains *omega* to be equal to
+The parent smoothing constrains omega to be equal to
 *omega(a, n)* where  *a* is each value in the age grid and
 *n* is the current node.
 
 iota
 ====
-This is the smoothing used in the *fit_node* model for *iota*.
+This is the smoothing used in the *fit_node* model for iota.
 Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
 There are no dtime priors because there is only one time point.
@@ -198,13 +198,13 @@ Child Smoothing
 
 omega
 =====
-The child smoothing constrains *omega* to be equal to
+The child smoothing constrains omega to be equal to
 *omega_true(a, n)* where  *a* is each value in the age grid and
 *n* is the child node.
 
 iota
 ====
-This is the smoothing used in the model for the *iota*
+This is the smoothing used in the model for the iota
 random effect for each child of the *fit_node*.
 The smoothing only has one age and one time point; i.e.,
 the corresponding function is constant in age and time.
