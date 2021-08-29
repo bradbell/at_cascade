@@ -184,17 +184,18 @@ The following is the dage prior used for the fit_node:
 
 Child Smoothing
 ***************
-This is the smoothing used in the model for the iota
+This is the smoothing used for the
 random effect for each child of the fit_node.
-The smoothing only has one age and one time point; i.e.,
-the corresponding function is constant in age and time.
 There are no :ref:`glossary.dage` or dtime
-priors because there is only one age and one time point.
+priors because there is only one age and one time point in this smoothing.
 
 Value Prior
 ===========
-This value prior is gaussian with mean zero and standard deviation 10.0.
-There are no upper or lower limits in this prior.
+The following is the value prior used for the children of the fit_node:
+{xsrst_file
+    # BEGIN child_value_prior
+    # END child_value_prior
+}
 
 Alpha Smoothing
 ***************
@@ -344,12 +345,13 @@ def root_node_db(file_name) :
         # END parent_dage_prior
     )
     prior_table.append(
-        { # prior_child_value
-            'name':    'prior_child_value',
+        # BEGIN child_value_prior
+        {   'name':    'child_value_prior',
             'density': 'gaussian',
             'mean':    0.0,
             'std':     10.0,
         }
+        # END child_value_prior
     )
     prior_table.append(
         { # prior_alpha_n0_value
@@ -375,7 +377,7 @@ def root_node_db(file_name) :
     })
     #
     # smooth_child
-    fun = lambda a, t : ('prior_child_value', None, None)
+    fun = lambda a, t : ('child_value_prior', None, None)
     smooth_table.append({
         'name':       'smooth_child',
         'age_id':     [0],
