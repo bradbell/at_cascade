@@ -19,9 +19,15 @@ then
     echo 'bin/run_sphinx.sh must be run from its parent directory.'
     exit 1
 fi
+if [ "$1" != '' ]
+then
+    line_increment=10
+else
+    line_increment=''
+fi
 # -----------------------------------------------------------------------------
-echo 'xsrst.py html doc.xsrst sphinx spelling keyword'
-if ! xsrst.py html doc.xsrst sphinx spelling keyword >& run_sphinx.$$
+echo "xsrst.py html doc.xsrst sphinx spelling keyword $line_increment"
+if ! xsrst.py html doc.xsrst sphinx spelling keyword $line_increment >& run_sphinx.$$
 then
     cat run_sphinx.$$
     echo 'bin/run_sphinx: aboring due to xsrst errors above'

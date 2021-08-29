@@ -164,14 +164,13 @@ data is generated for the following *income_grid*:
 Note that the check of the fit for the nodes in the fit_goal_set
 expects much more accuracy when the income grid is not chosen randomly.
 
+Omega Constraints
+*****************
+The :ref:`omega_constraint<omega_constraint>` routine is used
+to set the value of omega in the parent and child nodes.
+
 Parent Smoothing
 ****************
-
-omega
-=====
-The parent smoothing constrains omega to be equal to
-*omega(a, n)* where  *a* is each value in the age grid and
-*n* is the current node.
 
 iota
 ====
@@ -199,12 +198,6 @@ standard deviation 1.0, and :ref:`glossary.eta` equal to
 
 Child Smoothing
 ***************
-
-omega
-=====
-The child smoothing constrains omega to be equal to
-*omega_true(a, n)* where  *a* is each value in the age grid and
-*n* is the child node.
 
 iota
 ====

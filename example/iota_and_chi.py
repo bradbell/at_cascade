@@ -165,6 +165,11 @@ data is generated for the following *income_grid*:
 Note that the check of the fit for the nodes in the fit_goal_set
 expects much more accuracy when the income grid is not chosen randomly.
 
+Omega Constraints
+*****************
+The :ref:`omega_constraint<omega_constraint>` routine is used
+to set the value of omega in the parent and child nodes.
+
 Parent Smoothing
 ****************
 The parent smoothings use the true value of iota and chi at age 50
@@ -173,12 +178,6 @@ and in the root_node:
     # BEGIN iota_chi_50
     # END iota_chi_50
 }
-
-omega
-=====
-The parent smoothing constrains omega to be equal to
-*rate_true(omega, a, n, I)* where  *a* is each value in the age grid and
-*n* is the current node and *I* is he reference income for that node *r_n*.
 
 iota and chi
 ============
@@ -210,12 +209,6 @@ the minimum of the true chi and iota at age 50 times 1e-3.
 
 Child Smoothing
 ***************
-
-omega
-=====
-The child smoothing constrains omega to be equal to
-*rate_true(omega, a, n, I)* where  *a* is each value in the age grid,
-*n* is the child node, and *I* is the reference income for the child node.
 
 iota and chi
 ============
