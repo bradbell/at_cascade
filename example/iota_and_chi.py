@@ -18,6 +18,8 @@
 
 Example Estimation of iota and chi
 ##################################
+For this example everything is constant in time so the
+functions below do not depend on time.
 
 Under Construction
 ******************
@@ -108,8 +110,6 @@ The code below sets this sum using the name sum_random:
 
 Simulated Data
 **************
-For this example everything is constant in time so the
-functions below do not depend on time.
 
 Random Seed
 ===========

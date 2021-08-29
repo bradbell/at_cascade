@@ -17,6 +17,8 @@
 
 Example That Directly Measures One Age Time Function
 ####################################################
+For this example everything is constant in time so the
+functions below do not depend on time.
 
 Nodes
 *****
@@ -94,8 +96,6 @@ The code below sets this sum using the name sum_random:
 
 Simulated Data
 **************
-For this example everything is constant in time so the
-functions below do not depend on time.
 
 Random Seed
 ===========
