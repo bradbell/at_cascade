@@ -201,11 +201,13 @@ The mean and standard deviation are only used for the root_node.
 The :ref:`create_child_node_db<create_child_node_db>`
 routine replaces them for other nodes.
 
-Dage Prior
------------
-The prior for age differences is log Gaussian with mean zero,
-standard deviation 1.0, and :ref:`glossary.eta` equal to
-the minimum of the true chi and iota at age 50 times 1e-3.
+dage Prior
+==========
+The following is the dage prior used for the fit_node:
+{xsrst_file
+    # BEGIN parent_dage_prior
+    # END parent_dage_prior
+}
 
 Child Smoothing
 ***************
@@ -288,7 +290,6 @@ fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 # END fit_goal_set
 #
 # BEGIN random_seed
-# random_seed = 1629371067
 random_seed = 0
 if random_seed == 0 :
     random_seed = int( time.time() )
@@ -404,13 +405,14 @@ def root_node_db(file_name) :
     )
     #
     prior_table.append(
-        { # prior_child_dage
-            'name':    'prior_child_dage',
+        # BEGIN parent_dage_prior
+        {   'name':    'parent_dage_prior',
             'density': 'log_gaussian',
             'mean':    0.0,
             'std':     4.0,
             'eta':     min(iota_50 , chi_50 ) * 1e-3,
         }
+        # END parent_dage_prior
     )
     prior_table.append(
         { # prior_child_value
@@ -435,7 +437,7 @@ def root_node_db(file_name) :
     smooth_table = list()
     #
     # smooth_iota_n0
-    fun = lambda a, t : ('parent_iota_value_prior', 'prior_child_dage', None)
+    fun = lambda a, t : ('parent_iota_value_prior', 'parent_dage_prior', None)
     smooth_table.append({
         'name':       'smooth_iota_n0',
         'age_id':     range( len(age_grid) ),
@@ -444,7 +446,7 @@ def root_node_db(file_name) :
     })
     #
     # smooth_chi_n0
-    fun = lambda a, t : ('parent_chi_value_prior', 'prior_child_dage', None)
+    fun = lambda a, t : ('parent_chi_value_prior', 'parent_dage_prior', None)
     smooth_table.append({
         'name':       'smooth_chi_n0',
         'age_id':     range( len(age_grid) ),
@@ -760,9 +762,9 @@ def check_fit(goal_database) :
         rel_error   = 1.0 - avg_integrand / check_value
         #
         # check the fit
-        print(rate, age, rel_error, check_value - avg_integrand, sample_std)
-        # assert abs(rel_error) < 1e-1
-        # assert abs(avg_integrand - check_value) < 2.0 * sample_std
+        # print(rate, age, rel_error, check_value - avg_integrand, sample_std)
+        assert abs(rel_error) < 1e-1
+        assert abs(avg_integrand - check_value) < 2.0 * sample_std
 # ----------------------------------------------------------------------------
 # main
 # ----------------------------------------------------------------------------

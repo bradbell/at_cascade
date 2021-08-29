@@ -174,11 +174,13 @@ The mean and standard deviation are only used for the root_node.
 The :ref:`create_child_node_db<create_child_node_db>`
 routine replaces them for other nodes.
 
-Dage Prior
+dage Prior
 ==========
-The prior for age differences is log Gaussian with mean zero,
-standard deviation 3.0, and :ref:`glossary.eta` equal to
-*iota_true(50)/1000* .
+The following is the dage prior used for the fit_node:
+{xsrst_file
+    # BEGIN parent_dage_prior
+    # END parent_dage_prior
+}
 
 Child Smoothing
 ***************
@@ -332,13 +334,14 @@ def root_node_db(file_name) :
         # END parent_value_prior
     )
     prior_table.append(
-        { # prior_iota_dage
-            'name':    'prior_iota_dage',
+        # BEGIN parent_dage_prior
+        {   'name':    'parent_dage_prior',
             'density': 'log_gaussian',
             'mean':    0.0,
             'std':     3.0,
             'eta':     iota_true(0) * 1e-3,
         }
+        # END parent_dage_prior
     )
     prior_table.append(
         { # prior_child_value
@@ -363,7 +366,7 @@ def root_node_db(file_name) :
     smooth_table = list()
     #
     # smooth_iota_n0
-    fun = lambda a, t : ('parent_value_prior', 'prior_iota_dage', None)
+    fun = lambda a, t : ('parent_value_prior', 'parent_dage_prior', None)
     smooth_table.append({
         'name':       'smooth_iota_n0',
         'age_id':     range( len(age_grid) ),
@@ -602,9 +605,9 @@ def check_fit(goal_database) :
         # check the fit
         # print(age, rel_error, check_value - avg_integrand, sample_std)
         if random_income :
-            assert abs(rel_error) < 1e-2
+            assert abs(rel_error) < 2e-2
         else :
-            assert abs(rel_error) < 1e-3
+            assert abs(rel_error) < 2e-3
         assert abs(avg_integrand - check_value) < 2.0 * sample_std
 # ----------------------------------------------------------------------------
 # main

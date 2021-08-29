@@ -190,11 +190,13 @@ The mean and standard deviation are only used for the root_node.
 The :ref:`create_child_node_db<create_child_node_db>`
 routine replaces them for other nodes.
 
-Dage Prior
------------
-The prior for age differences is log Gaussian with mean zero,
-standard deviation 1.0, and :ref:`glossary.eta` equal to
-*iota_true(0)/1000* .
+dage Prior
+==========
+The following is the dage prior used for the fit_node:
+{xsrst_file
+    # BEGIN parent_dage_prior
+    # END parent_dage_prior
+}
 
 Child Smoothing
 ***************
@@ -372,13 +374,14 @@ def root_node_db(file_name) :
         # END parent_value_prior
     )
     prior_table.append(
-        { # prior_iota_dage
-            'name':    'prior_iota_dage',
+        # BEGIN parent_dage_prior
+        {   'name':    'prior_iota_dage',
             'density': 'log_gaussian',
             'mean':    0.0,
             'std':     4.0,
             'eta':     iota_true(0) * 1e-3,
         }
+        # END parent_dage_prior
     )
     prior_table.append(
         { # prior_iota_child
