@@ -204,7 +204,6 @@
 <span class="c1"># END fit_goal_set</span>
 <span class="c1">#</span>
 <span class="c1"># BEGIN random_seed</span>
-<span class="c1"># random_seed = 1629371067</span>
 <span class="n">random_seed</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">if</span> <span class="n">random_seed</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
     <span class="n">random_seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="p">)</span>
@@ -286,96 +285,118 @@
     <span class="k">return</span> <span class="n">avg_integrand</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="k">def</span> <span class="nf">root_node_db</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span> <span class="p">:</span>
-    <span class="c1">#</span>
-    <span class="c1"># prior_table</span>
+    <span class="c1"># BEGIN iota_chi_50</span>
     <span class="n">iota_50</span> <span class="o">=</span> <span class="n">rate_true</span><span class="p">(</span><span class="s1">&#39;iota&#39;</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">,</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span> <span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">])</span>
     <span class="n">chi_50</span>  <span class="o">=</span> <span class="n">rate_true</span><span class="p">(</span><span class="s1">&#39;chi&#39;</span><span class="p">,</span>  <span class="mf">50.0</span><span class="p">,</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span> <span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">])</span>
-    <span class="n">prior_table</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">{</span>   <span class="c1"># prior_iota_n0_value</span>
-            <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;prior_iota_n0_value&#39;</span><span class="p">,</span>
+    <span class="c1"># END iota_chi_50</span>
+    <span class="c1">#</span>
+    <span class="c1"># prior_table</span>
+    <span class="n">prior_table</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="c1">#</span>
+    <span class="n">prior_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="c1"># BEGIN parent_iota_value_prior</span>
+        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;parent_iota_value_prior&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
             <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="n">iota_50</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">,</span>
             <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="n">iota_50</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">,</span>
             <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="n">iota_50</span><span class="p">,</span>
             <span class="s1">&#39;std&#39;</span> <span class="p">:</span>    <span class="n">iota_50</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">,</span>
             <span class="s1">&#39;eta&#39;</span><span class="p">:</span>     <span class="n">iota_50</span> <span class="o">*</span> <span class="mf">1e-3</span><span class="p">,</span>
-        <span class="p">},{</span> <span class="c1"># prior_chi_n0_value</span>
-            <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;prior_chi_n0_value&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="c1"># END parent_iota_value_prior</span>
+    <span class="p">)</span>
+    <span class="n">prior_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="c1"># BEGIN parent_chi_value_prior</span>
+        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;parent_chi_value_prior&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
             <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="n">chi_50</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">,</span>
             <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="n">chi_50</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">,</span>
             <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="n">chi_50</span><span class="p">,</span>
             <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="n">chi_50</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">,</span>
             <span class="s1">&#39;eta&#39;</span><span class="p">:</span>     <span class="n">chi_50</span> <span class="o">*</span> <span class="mf">1e-3</span><span class="p">,</span>
-        <span class="p">},{</span> <span class="c1"># prior_child_dage</span>
-            <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;prior_child_dage&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="c1"># END parent_chi_value_prior</span>
+    <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">prior_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="c1"># BEGIN parent_dage_prior</span>
+        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;parent_dage_prior&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;log_gaussian&#39;</span><span class="p">,</span>
             <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
             <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="mf">4.0</span><span class="p">,</span>
             <span class="s1">&#39;eta&#39;</span><span class="p">:</span>     <span class="nb">min</span><span class="p">(</span><span class="n">iota_50</span> <span class="p">,</span> <span class="n">chi_50</span> <span class="p">)</span> <span class="o">*</span> <span class="mf">1e-3</span><span class="p">,</span>
-        <span class="p">},{</span> <span class="c1"># prior_child_value</span>
-            <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;prior_child_value&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="c1"># END parent_dage_prior</span>
+    <span class="p">)</span>
+    <span class="n">prior_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="c1"># BEGIN child_value_prior</span>
+        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;child_value_prior&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
             <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
             <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="mf">1.0</span><span class="p">,</span>
-        <span class="p">},{</span> <span class="c1"># prior_alpha_n0_value</span>
-            <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;prior_alpha_n0_value&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="c1"># END child_value_prior</span>
+    <span class="p">)</span>
+    <span class="n">prior_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="c1"># BEGIN alpha_value_prior</span>
+        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;alpha_value_prior&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
             <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
             <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
             <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
             <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
-        <span class="p">},</span>
-    <span class="p">]</span>
+        <span class="p">}</span>
+        <span class="c1"># END alpha_value_prior</span>
+    <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># smooth_table</span>
     <span class="n">smooth_table</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="c1">#</span>
-    <span class="c1"># smooth_iota_n0</span>
-    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;prior_iota_n0_value&#39;</span><span class="p">,</span> <span class="s1">&#39;prior_child_dage&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="c1"># parent_iota_smooth</span>
+    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;parent_iota_value_prior&#39;</span><span class="p">,</span> <span class="s1">&#39;parent_dage_prior&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">smooth_table</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-        <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;smooth_iota_n0&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;parent_iota_smooth&#39;</span><span class="p">,</span>
         <span class="s1">&#39;age_id&#39;</span><span class="p">:</span>     <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_grid</span><span class="p">)</span> <span class="p">),</span>
         <span class="s1">&#39;time_id&#39;</span><span class="p">:</span>    <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="s1">&#39;fun&#39;</span><span class="p">:</span>        <span class="n">fun</span><span class="p">,</span>
     <span class="p">})</span>
     <span class="c1">#</span>
-    <span class="c1"># smooth_chi_n0</span>
-    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;prior_chi_n0_value&#39;</span><span class="p">,</span> <span class="s1">&#39;prior_child_dage&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="c1"># parent_chi_smooth</span>
+    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;parent_chi_value_prior&#39;</span><span class="p">,</span> <span class="s1">&#39;parent_dage_prior&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">smooth_table</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-        <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;smooth_chi_n0&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;parent_chi_smooth&#39;</span><span class="p">,</span>
         <span class="s1">&#39;age_id&#39;</span><span class="p">:</span>     <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_grid</span><span class="p">)</span> <span class="p">),</span>
         <span class="s1">&#39;time_id&#39;</span><span class="p">:</span>    <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="s1">&#39;fun&#39;</span><span class="p">:</span>        <span class="n">fun</span><span class="p">,</span>
     <span class="p">})</span>
     <span class="c1">#</span>
-    <span class="c1"># smooth_child</span>
-    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;prior_child_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="c1"># child_smooth</span>
+    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;child_value_prior&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">smooth_table</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-        <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;smooth_child&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;child_smooth&#39;</span><span class="p">,</span>
         <span class="s1">&#39;age_id&#39;</span><span class="p">:</span>     <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="s1">&#39;time_id&#39;</span><span class="p">:</span>    <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="s1">&#39;fun&#39;</span><span class="p">:</span>        <span class="n">fun</span><span class="p">,</span>
     <span class="p">})</span>
     <span class="c1">#</span>
-    <span class="c1"># smooth_alpha_n0</span>
-    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;prior_alpha_n0_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="c1"># alpha_smooth</span>
+    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;alpha_value_prior&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">smooth_table</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-        <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;smooth_alpha_n0&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;alpha_smooth&#39;</span><span class="p">,</span>
         <span class="s1">&#39;age_id&#39;</span><span class="p">:</span>     <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="s1">&#39;time_id&#39;</span><span class="p">:</span>    <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="s1">&#39;fun&#39;</span><span class="p">:</span>        <span class="n">fun</span><span class="p">,</span>
     <span class="p">})</span>
     <span class="c1">#</span>
-    <span class="c1"># smooth_gamma</span>
-    <span class="c1"># constant gamma = 1.0</span>
+    <span class="c1"># BEGIN gamma_smooth</span>
     <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">smooth_table</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-        <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;smooth_gamma&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;gamma_smooth&#39;</span><span class="p">,</span>
         <span class="s1">&#39;age_id&#39;</span><span class="p">:</span>     <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="s1">&#39;time_id&#39;</span><span class="p">:</span>    <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="s1">&#39;fun&#39;</span><span class="p">:</span>        <span class="n">fun</span>
     <span class="p">})</span>
+    <span class="c1"># END gamma_smooth</span>
     <span class="c1">#</span>
     <span class="c1"># node_table</span>
     <span class="n">node_table</span> <span class="o">=</span> <span class="p">[</span>
@@ -391,12 +412,12 @@
     <span class="c1"># rate_table</span>
     <span class="n">rate_table</span> <span class="o">=</span> <span class="p">[</span> <span class="p">{</span>
             <span class="s1">&#39;name&#39;</span><span class="p">:</span>           <span class="s1">&#39;iota&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;parent_smooth&#39;</span><span class="p">:</span>  <span class="s1">&#39;smooth_iota_n0&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;child_smooth&#39;</span><span class="p">:</span>   <span class="s1">&#39;smooth_child&#39;</span> <span class="p">,</span>
+            <span class="s1">&#39;parent_smooth&#39;</span><span class="p">:</span>  <span class="s1">&#39;parent_iota_smooth&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;child_smooth&#39;</span><span class="p">:</span>   <span class="s1">&#39;child_smooth&#39;</span> <span class="p">,</span>
         <span class="p">},{</span>
             <span class="s1">&#39;name&#39;</span><span class="p">:</span>           <span class="s1">&#39;chi&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;parent_smooth&#39;</span><span class="p">:</span>  <span class="s1">&#39;smooth_chi_n0&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;child_smooth&#39;</span><span class="p">:</span>   <span class="s1">&#39;smooth_child&#39;</span> <span class="p">,</span>
+            <span class="s1">&#39;parent_smooth&#39;</span><span class="p">:</span>  <span class="s1">&#39;parent_chi_smooth&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;child_smooth&#39;</span><span class="p">:</span>   <span class="s1">&#39;child_smooth&#39;</span> <span class="p">,</span>
     <span class="p">}</span> <span class="p">]</span>
     <span class="c1">#</span>
     <span class="c1"># covariate_table</span>
@@ -407,24 +428,30 @@
     <span class="c1">#</span>
     <span class="c1"># mulcov_table</span>
     <span class="n">mulcov_table</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">{</span>   <span class="c1"># alpha</span>
+        <span class="p">{</span>   <span class="c1"># alpha_iota</span>
             <span class="s1">&#39;covariate&#39;</span><span class="p">:</span>  <span class="s1">&#39;income&#39;</span><span class="p">,</span>
             <span class="s1">&#39;type&#39;</span><span class="p">:</span>       <span class="s1">&#39;rate_value&#39;</span><span class="p">,</span>
             <span class="s1">&#39;effected&#39;</span><span class="p">:</span>   <span class="s1">&#39;iota&#39;</span><span class="p">,</span>
             <span class="s1">&#39;group&#39;</span><span class="p">:</span>      <span class="s1">&#39;world&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;smooth&#39;</span><span class="p">:</span>     <span class="s1">&#39;smooth_alpha_n0&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;smooth&#39;</span><span class="p">:</span>     <span class="s1">&#39;alpha_smooth&#39;</span><span class="p">,</span>
+        <span class="p">},{</span> <span class="c1"># alpha_chi</span>
+            <span class="s1">&#39;covariate&#39;</span><span class="p">:</span>  <span class="s1">&#39;income&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span>       <span class="s1">&#39;rate_value&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;effected&#39;</span><span class="p">:</span>   <span class="s1">&#39;chi&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;group&#39;</span><span class="p">:</span>      <span class="s1">&#39;world&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;smooth&#39;</span><span class="p">:</span>     <span class="s1">&#39;alpha_smooth&#39;</span><span class="p">,</span>
         <span class="p">},{</span> <span class="c1"># gamma_Sincidence</span>
             <span class="s1">&#39;covariate&#39;</span><span class="p">:</span>  <span class="s1">&#39;one&#39;</span><span class="p">,</span>
             <span class="s1">&#39;type&#39;</span><span class="p">:</span>       <span class="s1">&#39;meas_noise&#39;</span><span class="p">,</span>
             <span class="s1">&#39;effected&#39;</span><span class="p">:</span>   <span class="s1">&#39;Sincidence&#39;</span><span class="p">,</span>
             <span class="s1">&#39;group&#39;</span><span class="p">:</span>      <span class="s1">&#39;world&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;smooth&#39;</span><span class="p">:</span>     <span class="s1">&#39;smooth_gamma&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;smooth&#39;</span><span class="p">:</span>     <span class="s1">&#39;gamma_smooth&#39;</span><span class="p">,</span>
         <span class="p">},{</span> <span class="c1"># gamma_mtexcess</span>
             <span class="s1">&#39;covariate&#39;</span><span class="p">:</span>  <span class="s1">&#39;one&#39;</span><span class="p">,</span>
             <span class="s1">&#39;type&#39;</span><span class="p">:</span>       <span class="s1">&#39;meas_noise&#39;</span><span class="p">,</span>
             <span class="s1">&#39;effected&#39;</span><span class="p">:</span>   <span class="s1">&#39;mtexcess&#39;</span><span class="p">,</span>
             <span class="s1">&#39;group&#39;</span><span class="p">:</span>      <span class="s1">&#39;world&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;smooth&#39;</span><span class="p">:</span>     <span class="s1">&#39;smooth_gamma&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;smooth&#39;</span><span class="p">:</span>     <span class="s1">&#39;gamma_smooth&#39;</span><span class="p">,</span>
     <span class="p">}</span> <span class="p">]</span>
     <span class="c1">#</span>
     <span class="c1"># subgroup_table</span>
@@ -439,6 +466,7 @@
         <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mulcov_0&#39;</span><span class="p">},</span>
         <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mulcov_1&#39;</span><span class="p">},</span>
         <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mulcov_2&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mulcov_3&#39;</span><span class="p">},</span>
     <span class="p">]</span>
     <span class="c1">#</span>
     <span class="c1"># avgint_table</span>
@@ -650,9 +678,9 @@
         <span class="n">rel_error</span>   <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">avg_integrand</span> <span class="o">/</span> <span class="n">check_value</span>
         <span class="c1">#</span>
         <span class="c1"># check the fit</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">rel_error</span><span class="p">,</span> <span class="n">check_value</span> <span class="o">-</span> <span class="n">avg_integrand</span><span class="p">,</span> <span class="n">sample_std</span><span class="p">)</span>
-        <span class="c1"># assert abs(rel_error) &lt; 1e-1</span>
-        <span class="c1"># assert abs(avg_integrand - check_value) &lt; 2.0 * sample_std</span>
+        <span class="c1"># print(rate, age, rel_error, check_value - avg_integrand, sample_std)</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rel_error</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-1</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">avg_integrand</span> <span class="o">-</span> <span class="n">check_value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">sample_std</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># main</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>

@@ -27,6 +27,32 @@ The model rate for excess mortality as a function of age and time.
 This is also denoted by :math:`\chi(a, t)`.
 
 .. meta::
+   :keywords: dage
+
+.. index:: dage
+
+.. _glossary.dage:
+
+dage
+****
+The abbreviation *dage* is used for differences of a function value
+with rest to age values.
+These are differences and not derivative approximations.
+
+.. meta::
+   :keywords: dtime
+
+.. index:: dtime
+
+.. _glossary.dtime:
+
+dtime
+*****
+The abbreviation *dtime* is used for finite differences of a function value
+with rest to time values.
+These are differences and not derivative approximations.
+
+.. meta::
    :keywords: eta
 
 .. index:: eta

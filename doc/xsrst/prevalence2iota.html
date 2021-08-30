@@ -23,17 +23,16 @@
 <meta content="n_i" name="keywords" />
 <meta content="a_i" name="keywords" />
 <meta content="i_i" name="keywords" />
-<meta content="parent, smoothing" name="keywords" />
-<meta content="omega" name="keywords" />
+<meta content="omega, constraints" name="keywords" />
+<meta content="parent, rate, smoothing" name="keywords" />
 <meta content="iota" name="keywords" />
 <meta content="value, prior" name="keywords" />
 <meta content="dage, prior" name="keywords" />
-<meta content="child, smoothing" name="keywords" />
-<meta content="omega" name="keywords" />
-<meta content="iota" name="keywords" />
+<meta content="child, rate, smoothing" name="keywords" />
 <meta content="value, prior" name="keywords" />
 <meta content="alpha, smoothing" name="keywords" />
 <meta content="value, prior" name="keywords" />
+<meta content="gamma, smoothing" name="keywords" />
 <meta content="checking, the, fit" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -207,66 +206,61 @@
 <span id="id1"></span><h2>Example Estimation of iota From Prevalence Data<a class="headerlink" href="#example-estimation-of-iota-from-prevalence-data" title="Permalink to this headline">¶</a></h2>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#nodes" id="id6">Nodes</a></p>
+<li><p><a class="reference internal" href="#nodes" id="id4">Nodes</a></p>
 <ul>
-<li><p><a class="reference internal" href="#fit-goal-set" id="id7">fit_goal_set</a></p></li>
+<li><p><a class="reference internal" href="#fit-goal-set" id="id5">fit_goal_set</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#rates" id="id8">Rates</a></p></li>
-<li><p><a class="reference internal" href="#covariate" id="id9">Covariate</a></p>
+<li><p><a class="reference internal" href="#rates" id="id6">Rates</a></p></li>
+<li><p><a class="reference internal" href="#covariate" id="id7">Covariate</a></p>
 <ul>
-<li><p><a class="reference internal" href="#r-n" id="id10">r_n</a></p></li>
-<li><p><a class="reference internal" href="#alpha" id="id11">alpha</a></p></li>
-<li><p><a class="reference internal" href="#gamma" id="id12">gamma</a></p></li>
+<li><p><a class="reference internal" href="#r-n" id="id8">r_n</a></p></li>
+<li><p><a class="reference internal" href="#alpha" id="id9">alpha</a></p></li>
+<li><p><a class="reference internal" href="#gamma" id="id10">gamma</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#random-effects" id="id13">Random Effects</a></p>
+<li><p><a class="reference internal" href="#random-effects" id="id11">Random Effects</a></p>
 <ul>
-<li><p><a class="reference internal" href="#s-n" id="id14">s_n</a></p></li>
+<li><p><a class="reference internal" href="#s-n" id="id12">s_n</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#simulated-data" id="id15">Simulated Data</a></p>
+<li><p><a class="reference internal" href="#simulated-data" id="id13">Simulated Data</a></p>
 <ul>
-<li><p><a class="reference internal" href="#random-seed" id="id16">Random Seed</a></p></li>
-<li><p><a class="reference internal" href="#iota-true-a-n-i" id="id17">iota_true(a, n, I)</a></p></li>
-<li><p><a class="reference internal" href="#omega-true-a-n" id="id18">omega_true(a, n)</a></p></li>
-<li><p><a class="reference internal" href="#y-i" id="id19">y_i</a></p></li>
-<li><p><a class="reference internal" href="#n-i" id="id20">n_i</a></p></li>
-<li><p><a class="reference internal" href="#a-i" id="id21">a_i</a></p></li>
-<li><p><a class="reference internal" href="#i-i" id="id22">I_i</a></p></li>
+<li><p><a class="reference internal" href="#random-seed" id="id14">Random Seed</a></p></li>
+<li><p><a class="reference internal" href="#iota-true-a-n-i" id="id15">iota_true(a, n, I)</a></p></li>
+<li><p><a class="reference internal" href="#omega-true-a-n" id="id16">omega_true(a, n)</a></p></li>
+<li><p><a class="reference internal" href="#y-i" id="id17">y_i</a></p></li>
+<li><p><a class="reference internal" href="#n-i" id="id18">n_i</a></p></li>
+<li><p><a class="reference internal" href="#a-i" id="id19">a_i</a></p></li>
+<li><p><a class="reference internal" href="#i-i" id="id20">I_i</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#parent-smoothing" id="id23">Parent Smoothing</a></p>
+<li><p><a class="reference internal" href="#omega-constraints" id="id21">Omega Constraints</a></p></li>
+<li><p><a class="reference internal" href="#parent-rate-smoothing" id="id22">Parent Rate Smoothing</a></p>
 <ul>
-<li><p><a class="reference internal" href="#omega" id="id24">omega</a></p></li>
-<li><p><a class="reference internal" href="#iota" id="id25">iota</a></p>
-<ul>
-<li><p><a class="reference internal" href="#value-prior" id="id26">Value Prior</a></p></li>
-<li><p><a class="reference internal" href="#dage-prior" id="id27">Dage Prior</a></p></li>
+<li><p><a class="reference internal" href="#iota" id="id23">iota</a></p></li>
+<li><p><a class="reference internal" href="#value-prior" id="id24">Value Prior</a></p></li>
+<li><p><a class="reference internal" href="#dage-prior" id="id25">dage Prior</a></p></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#child-smoothing" id="id28">Child Smoothing</a></p>
+<li><p><a class="reference internal" href="#child-rate-smoothing" id="id26">Child Rate Smoothing</a></p>
 <ul>
-<li><p><a class="reference internal" href="#prevalence2iota-child-smoothing-omega" id="id29">omega</a></p></li>
-<li><p><a class="reference internal" href="#prevalence2iota-child-smoothing-iota" id="id30">iota</a></p>
+<li><p><a class="reference internal" href="#prevalence2iota-child-rate-smoothing-value-prior" id="id27">Value Prior</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#alpha-smoothing" id="id28">Alpha Smoothing</a></p>
 <ul>
-<li><p><a class="reference internal" href="#prevalence2iota-child-smoothing-iota-value-prior" id="id31">Value Prior</a></p></li>
+<li><p><a class="reference internal" href="#prevalence2iota-alpha-smoothing-value-prior" id="id29">Value Prior</a></p></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#alpha-smoothing" id="id32">Alpha Smoothing</a></p>
-<ul>
-<li><p><a class="reference internal" href="#prevalence2iota-alpha-smoothing-value-prior" id="id33">Value Prior</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#checking-the-fit" id="id34">Checking The Fit</a></p></li>
+<li><p><a class="reference internal" href="#gamma-smoothing" id="id30">Gamma Smoothing</a></p></li>
+<li><p><a class="reference internal" href="#checking-the-fit" id="id31">Checking The Fit</a></p></li>
 </ul>
 </div>
+<p>For this example everything is constant in time so the
+functions below do not depend on time.</p>
 <div class="section" id="nodes">
-<span id="prevalence2iota-nodes"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id6">Nodes</a><a class="headerlink" href="#nodes" title="Permalink to this headline">¶</a></h3>
+<span id="prevalence2iota-nodes"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id4">Nodes</a><a class="headerlink" href="#nodes" title="Permalink to this headline">¶</a></h3>
 <p>The following is a diagram of the node tree for this example.
 The <a class="reference internal" href="glossary.html#glossary-root-node"><span class="std std-ref">root_node</span></a> is n0,
 the <a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a> is {n1, n5, n6},
@@ -279,30 +273,30 @@ and the leaf nodes are {n3, n4, n5, n6}:</p>
 </pre></div>
 </div>
 <div class="section" id="fit-goal-set">
-<span id="prevalence2iota-nodes-fit-goal-set"></span><span id="index-2"></span><h4><a class="toc-backref" href="#id7">fit_goal_set</a><a class="headerlink" href="#fit-goal-set" title="Permalink to this headline">¶</a></h4>
+<span id="prevalence2iota-nodes-fit-goal-set"></span><span id="index-2"></span><h4><a class="toc-backref" href="#id5">fit_goal_set</a><a class="headerlink" href="#fit-goal-set" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">fit_goal_set</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;n1&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">}</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="rates">
-<span id="prevalence2iota-rates"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id8">Rates</a><a class="headerlink" href="#rates" title="Permalink to this headline">¶</a></h3>
+<span id="prevalence2iota-rates"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id6">Rates</a><a class="headerlink" href="#rates" title="Permalink to this headline">¶</a></h3>
 <p>The only non-zero dismod_at rates for this example are
 <a class="reference internal" href="glossary.html#glossary-iota"><span class="std std-ref">iota</span></a> and <a class="reference internal" href="glossary.html#glossary-omega"><span class="std std-ref">omega</span></a>.
-We use <em>iota(a, n, I)</em> to denote the value for <em>iota</em>
+We use <em>iota(a, n, I)</em> to denote the value for iota
 as a function of age <em>a</em>, node number <em>n</em>, and income <em>I</em>.
-We use <em>omega(a, n)</em> to denote the value for <em>omega</em>
+We use <em>omega(a, n)</em> to denote the value for omega
 as a function of age <em>a</em> and node number <em>n</em>.</p>
 </div>
 <div class="section" id="covariate">
-<span id="prevalence2iota-covariate"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id9">Covariate</a><a class="headerlink" href="#covariate" title="Permalink to this headline">¶</a></h3>
-<p>There are two covariates for this example is <em>income</em> and <em>one</em>.
-The reference value for <em>income</em> is the average income corresponding
+<span id="prevalence2iota-covariate"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id7">Covariate</a><a class="headerlink" href="#covariate" title="Permalink to this headline">¶</a></h3>
+<p>There are two covariates for this example is income and <em>one</em>.
+The reference value for income is the average income corresponding
 to the <a class="reference internal" href="glossary.html#glossary-fit-node"><span class="std std-ref">fit_node</span></a>.
 The <em>one</em> covariate is always equal to 1 and its reference is always zero.</p>
 <div class="section" id="r-n">
-<span id="prevalence2iota-covariate-r-n"></span><span id="index-5"></span><h4><a class="toc-backref" href="#id10">r_n</a><a class="headerlink" href="#r-n" title="Permalink to this headline">¶</a></h4>
-<p>We use <em>r_n</em> for the reference value of <em>income</em> at node <em>n</em>.
+<span id="prevalence2iota-covariate-r-n"></span><span id="index-5"></span><h4><a class="toc-backref" href="#id8">r_n</a><a class="headerlink" href="#r-n" title="Permalink to this headline">¶</a></h4>
+<p>We use <em>r_n</em> for the reference value of income at node <em>n</em>.
 The code below sets this reference using the name avg_income:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">avg_income</span>       <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;n3&#39;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">:</span><span class="mf">2.0</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">:</span><span class="mf">3.0</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span><span class="p">:</span><span class="mf">4.0</span> <span class="p">}</span>
 <span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span> <span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n5&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n6&#39;</span><span class="p">]</span> <span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
@@ -312,18 +306,18 @@ The code below sets this reference using the name avg_income:</p>
 </div>
 </div>
 <div class="section" id="alpha">
-<span id="prevalence2iota-covariate-alpha"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id11">alpha</a><a class="headerlink" href="#alpha" title="Permalink to this headline">¶</a></h4>
+<span id="prevalence2iota-covariate-alpha"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id9">alpha</a><a class="headerlink" href="#alpha" title="Permalink to this headline">¶</a></h4>
 <p>We use <em>alpha</em>
 for the <a class="reference internal" href="glossary.html#glossary-rate-value"><span class="std std-ref">rate_value</span></a> covariate multiplier
-which multiplies <em>income</em>.
-This multiplier affects the value of <em>iota</em>.
+which multiplies income.
+This multiplier affects the value of iota.
 The true value for <em>alpha</em> (used which simulating the data) is</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">alpha_true</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.2</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="gamma">
-<span id="prevalence2iota-covariate-gamma"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id12">gamma</a><a class="headerlink" href="#gamma" title="Permalink to this headline">¶</a></h4>
+<span id="prevalence2iota-covariate-gamma"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id10">gamma</a><a class="headerlink" href="#gamma" title="Permalink to this headline">¶</a></h4>
 <p>We use <em>gamma</em>
 for the <a class="reference internal" href="glossary.html#glossary-meas-noise"><span class="std std-ref">meas_noise</span></a> covariate multiplier
 which multiplies <em>one</em>.
@@ -332,12 +326,12 @@ because the density for the prevalence data is log Gaussian.</p>
 </div>
 </div>
 <div class="section" id="random-effects">
-<span id="prevalence2iota-random-effects"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id13">Random Effects</a><a class="headerlink" href="#random-effects" title="Permalink to this headline">¶</a></h3>
-<p>For each node, there is a random effect on <em>iota</em> that is constant
+<span id="prevalence2iota-random-effects"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id11">Random Effects</a><a class="headerlink" href="#random-effects" title="Permalink to this headline">¶</a></h3>
+<p>For each node, there is a random effect on iota that is constant
 in age and time. Note that the leaf nodes have random effect for the node
 above them as well as their own random effect.</p>
 <div class="section" id="s-n">
-<span id="prevalence2iota-random-effects-s-n"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id14">s_n</a><a class="headerlink" href="#s-n" title="Permalink to this headline">¶</a></h4>
+<span id="prevalence2iota-random-effects-s-n"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id12">s_n</a><a class="headerlink" href="#s-n" title="Permalink to this headline">¶</a></h4>
 <p>We use <em>s_n</em> to denote the sum of the random effects for node <em>n</em>.
 The code below sets this sum using the name sum_random:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">size_level1</span>      <span class="o">=</span> <span class="mf">0.2</span>
@@ -352,11 +346,9 @@ The code below sets this sum using the name sum_random:</p>
 </div>
 </div>
 <div class="section" id="simulated-data">
-<span id="prevalence2iota-simulated-data"></span><span id="index-10"></span><h3><a class="toc-backref" href="#id15">Simulated Data</a><a class="headerlink" href="#simulated-data" title="Permalink to this headline">¶</a></h3>
-<p>For this example everything is constant in time so the
-functions below do not depend on time.</p>
+<span id="prevalence2iota-simulated-data"></span><span id="index-10"></span><h3><a class="toc-backref" href="#id13">Simulated Data</a><a class="headerlink" href="#simulated-data" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="random-seed">
-<span id="prevalence2iota-simulated-data-random-seed"></span><span id="index-11"></span><h4><a class="toc-backref" href="#id16">Random Seed</a><a class="headerlink" href="#random-seed" title="Permalink to this headline">¶</a></h4>
+<span id="prevalence2iota-simulated-data-random-seed"></span><span id="index-11"></span><h4><a class="toc-backref" href="#id14">Random Seed</a><a class="headerlink" href="#random-seed" title="Permalink to this headline">¶</a></h4>
 <p>The random seed can be used to reproduce results.
 If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or <em>random_seed</em> is always printed.</p>
@@ -370,8 +362,8 @@ a random seed. The actual value or <em>random_seed</em> is always printed.</p>
 </div>
 </div>
 <div class="section" id="iota-true-a-n-i">
-<span id="prevalence2iota-simulated-data-iota-true-a-n-i"></span><span id="index-12"></span><h4><a class="toc-backref" href="#id17">iota_true(a, n, I)</a><a class="headerlink" href="#iota-true-a-n-i" title="Permalink to this headline">¶</a></h4>
-<p>This is the true value for <em>iota</em> in node <em>n</em> at age <em>a</em> and income <em>I</em>:</p>
+<span id="prevalence2iota-simulated-data-iota-true-a-n-i"></span><span id="index-12"></span><h4><a class="toc-backref" href="#id15">iota_true(a, n, I)</a><a class="headerlink" href="#iota-true-a-n-i" title="Permalink to this headline">¶</a></h4>
+<p>This is the true value for iota in node <em>n</em> at age <em>a</em> and income <em>I</em>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">iota_true</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span> <span class="n">I</span> <span class="o">=</span> <span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">]</span> <span class="p">)</span> <span class="p">:</span>
     <span class="n">s_n</span> <span class="o">=</span> <span class="n">sum_random</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
     <span class="n">r_0</span> <span class="o">=</span> <span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">]</span>
@@ -380,8 +372,8 @@ a random seed. The actual value or <em>random_seed</em> is always printed.</p>
 </div>
 </div>
 <div class="section" id="omega-true-a-n">
-<span id="prevalence2iota-simulated-data-omega-true-a-n"></span><span id="index-13"></span><h4><a class="toc-backref" href="#id18">omega_true(a, n)</a><a class="headerlink" href="#omega-true-a-n" title="Permalink to this headline">¶</a></h4>
-<p>This is the true value for <em>omega</em> in node <em>n</em> and age <em>a</em>:</p>
+<span id="prevalence2iota-simulated-data-omega-true-a-n"></span><span id="index-13"></span><h4><a class="toc-backref" href="#id16">omega_true(a, n)</a><a class="headerlink" href="#omega-true-a-n" title="Permalink to this headline">¶</a></h4>
+<p>This is the true value for omega in node <em>n</em> and age <em>a</em>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">omega_true</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span> <span class="p">)</span> <span class="p">:</span>
     <span class="n">r_0</span> <span class="o">=</span> <span class="n">avg_income</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">]</span>
     <span class="n">r_n</span> <span class="o">=</span> <span class="n">avg_income</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
@@ -390,27 +382,27 @@ a random seed. The actual value or <em>random_seed</em> is always printed.</p>
 </div>
 </div>
 <div class="section" id="y-i">
-<span id="prevalence2iota-simulated-data-y-i"></span><span id="index-14"></span><h4><a class="toc-backref" href="#id19">y_i</a><a class="headerlink" href="#y-i" title="Permalink to this headline">¶</a></h4>
+<span id="prevalence2iota-simulated-data-y-i"></span><span id="index-14"></span><h4><a class="toc-backref" href="#id17">y_i</a><a class="headerlink" href="#y-i" title="Permalink to this headline">¶</a></h4>
 <p>The only simulated integrand for this example is <a class="reference internal" href="glossary.html#glossary-prevalence"><span class="std std-ref">prevalence</span></a>.
 This data is simulated without any noise
 but it is modeled as having noise.</p>
 </div>
 <div class="section" id="n-i">
-<span id="prevalence2iota-simulated-data-n-i"></span><span id="index-15"></span><h4><a class="toc-backref" href="#id20">n_i</a><a class="headerlink" href="#n-i" title="Permalink to this headline">¶</a></h4>
+<span id="prevalence2iota-simulated-data-n-i"></span><span id="index-15"></span><h4><a class="toc-backref" href="#id18">n_i</a><a class="headerlink" href="#n-i" title="Permalink to this headline">¶</a></h4>
 <p>Data is only simulated for the leaf nodes; i.e.,
 each <em>n_i</em> is in the set { n3, n4, n5, n6 }.
 Since the data does not have any nose, the data residuals are a measure
-of how good the fit is for the goal nodes.</p>
+of how good the fit is for the nodes in the fit_goal_set.</p>
 </div>
 <div class="section" id="a-i">
-<span id="prevalence2iota-simulated-data-a-i"></span><span id="index-16"></span><h4><a class="toc-backref" href="#id21">a_i</a><a class="headerlink" href="#a-i" title="Permalink to this headline">¶</a></h4>
+<span id="prevalence2iota-simulated-data-a-i"></span><span id="index-16"></span><h4><a class="toc-backref" href="#id19">a_i</a><a class="headerlink" href="#a-i" title="Permalink to this headline">¶</a></h4>
 <p>For each leaf node, data is generated on the following <em>age_grid</em>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">age_grid</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">,</span> <span class="mf">100.0</span> <span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="i-i">
-<span id="prevalence2iota-simulated-data-i-i"></span><span id="index-17"></span><h4><a class="toc-backref" href="#id22">I_i</a><a class="headerlink" href="#i-i" title="Permalink to this headline">¶</a></h4>
+<span id="prevalence2iota-simulated-data-i-i"></span><span id="index-17"></span><h4><a class="toc-backref" href="#id20">I_i</a><a class="headerlink" href="#i-i" title="Permalink to this headline">¶</a></h4>
 <p>For each leaf node and each age in <em>age_grid</em>,
 data is generated for the following <em>income_grid</em>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">random_income</span> <span class="o">=</span> <span class="kc">False</span>
@@ -428,76 +420,113 @@ data is generated for the following <em>income_grid</em>:</p>
         <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="n">j</span> <span class="o">*</span> <span class="n">d_income_grid</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_income_grid</span><span class="p">)</span> <span class="p">]</span>
 </pre></div>
 </div>
-<p>Note that the check of the fit for the goal nodes expects much more accuracy
-when the income grid is not chosen randomly.</p>
+<p>Note that the check of the fit for the nodes in the fit_goal_set
+expects much more accuracy when the income grid is not chosen randomly.</p>
 </div>
 </div>
-<div class="section" id="parent-smoothing">
-<span id="prevalence2iota-parent-smoothing"></span><span id="index-18"></span><h3><a class="toc-backref" href="#id23">Parent Smoothing</a><a class="headerlink" href="#parent-smoothing" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="omega">
-<span id="prevalence2iota-parent-smoothing-omega"></span><span id="index-19"></span><h4><a class="toc-backref" href="#id24">omega</a><a class="headerlink" href="#omega" title="Permalink to this headline">¶</a></h4>
-<p>The parent smoothing constrains <em>omega</em> to be equal to
-<em>omega(a, n)</em> where  <em>a</em> is each value in the age grid and
-<em>n</em> is the current node.</p>
+<div class="section" id="omega-constraints">
+<span id="prevalence2iota-omega-constraints"></span><span id="index-18"></span><h3><a class="toc-backref" href="#id21">Omega Constraints</a><a class="headerlink" href="#omega-constraints" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="omega_constraint.html#id1"><span class="std std-ref">omega_constraint</span></a> routine is used
+to set the value of omega in the parent and child nodes.</p>
 </div>
+<div class="section" id="parent-rate-smoothing">
+<span id="prevalence2iota-parent-rate-smoothing"></span><span id="index-19"></span><h3><a class="toc-backref" href="#id22">Parent Rate Smoothing</a><a class="headerlink" href="#parent-rate-smoothing" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="iota">
-<span id="prevalence2iota-parent-smoothing-iota"></span><span id="index-20"></span><h4><a class="toc-backref" href="#id25">iota</a><a class="headerlink" href="#iota" title="Permalink to this headline">¶</a></h4>
-<p>This is the smoothing used in the <em>fit_node</em> model for <em>iota</em>.
+<span id="prevalence2iota-parent-rate-smoothing-iota"></span><span id="index-20"></span><h4><a class="toc-backref" href="#id23">iota</a><a class="headerlink" href="#iota" title="Permalink to this headline">¶</a></h4>
+<p>This is the smoothing used in the fit_node model for iota.
 Note that the value part of this smoothing is only used for the <em>root_node</em>.
 This smoothing uses the <em>age_gird</em> and one time point.
-There are no dtime priors because there is only one time point.</p>
+There are no <a class="reference internal" href="glossary.html#glossary-dtime"><span class="std std-ref">dtime</span></a> priors because there is only one time point.</p>
+</div>
 <div class="section" id="value-prior">
-<span id="prevalence2iota-parent-smoothing-iota-value-prior"></span><span id="index-21"></span><h5><a class="toc-backref" href="#id26">Value Prior</a><a class="headerlink" href="#value-prior" title="Permalink to this headline">¶</a></h5>
-<p>The <em>fit_node</em> value prior is uniform with lower limit
-<em>iota_true(0)/10</em> and upper limit <em>iota_true(100)*10</em>.
-The mean is <em>iota_true(50)</em>
-(which is used to initialize the optimization.)</p>
+<span id="prevalence2iota-parent-rate-smoothing-value-prior"></span><span id="index-21"></span><h4><a class="toc-backref" href="#id24">Value Prior</a><a class="headerlink" href="#value-prior" title="Permalink to this headline">¶</a></h4>
+<p>The following is the value prior used for the fit_node</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span>        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;parent_value_prior&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="n">iota_true</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="n">iota_true</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="n">iota_true</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+            <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="n">iota_true</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s1">&#39;eta&#39;</span><span class="p">:</span>     <span class="n">iota_true</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+<p>The mean and standard deviation are only used for the root_node.
+The <a class="reference internal" href="create_child_node_db.html#id1"><span class="std std-ref">create_child_node_db</span></a>
+routine replaces them for other nodes.</p>
 </div>
 <div class="section" id="dage-prior">
-<span id="prevalence2iota-parent-smoothing-iota-dage-prior"></span><span id="index-22"></span><h5><a class="toc-backref" href="#id27">Dage Prior</a><a class="headerlink" href="#dage-prior" title="Permalink to this headline">¶</a></h5>
-<p>The prior for age differences is log Gaussian with mean zero,
-standard deviation 1.0, and <a class="reference internal" href="glossary.html#glossary-eta"><span class="std std-ref">eta</span></a> equal to
-<em>iota_true(0)/1000</em> .</p>
+<span id="prevalence2iota-parent-rate-smoothing-dage-prior"></span><span id="index-22"></span><h4><a class="toc-backref" href="#id25">dage Prior</a><a class="headerlink" href="#dage-prior" title="Permalink to this headline">¶</a></h4>
+<p>The following is the dage prior used for the fit_node:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span>        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;prior_iota_dage&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;log_gaussian&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="mf">4.0</span><span class="p">,</span>
+            <span class="s1">&#39;eta&#39;</span><span class="p">:</span>     <span class="n">iota_true</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-3</span><span class="p">,</span>
+        <span class="p">}</span>
+</pre></div>
 </div>
 </div>
 </div>
-<div class="section" id="child-smoothing">
-<span id="prevalence2iota-child-smoothing"></span><span id="index-23"></span><h3><a class="toc-backref" href="#id28">Child Smoothing</a><a class="headerlink" href="#child-smoothing" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="prevalence2iota-child-smoothing-omega">
-<span id="index-24"></span><span id="id2"></span><h4><a class="toc-backref" href="#id29">omega</a><a class="headerlink" href="#prevalence2iota-child-smoothing-omega" title="Permalink to this headline">¶</a></h4>
-<p>The child smoothing constrains <em>omega</em> to be equal to
-<em>omega_true(a, n)</em> where  <em>a</em> is each value in the age grid and
-<em>n</em> is the child node.</p>
-</div>
-<div class="section" id="prevalence2iota-child-smoothing-iota">
-<span id="index-25"></span><span id="id3"></span><h4><a class="toc-backref" href="#id30">iota</a><a class="headerlink" href="#prevalence2iota-child-smoothing-iota" title="Permalink to this headline">¶</a></h4>
-<p>This is the smoothing used in the model for the <em>iota</em>
-random effect for each child of the <em>fit_node</em>.
-The smoothing only has one age and one time point; i.e.,
-the corresponding function is constant in age and time.
-There are no dage or dtime priors because there is only one
-age and one time point.</p>
-<div class="section" id="prevalence2iota-child-smoothing-iota-value-prior">
-<span id="index-26"></span><span id="id4"></span><h5><a class="toc-backref" href="#id31">Value Prior</a><a class="headerlink" href="#prevalence2iota-child-smoothing-iota-value-prior" title="Permalink to this headline">¶</a></h5>
-<p>This value prior is gaussian with mean zero and standard deviation 1.0.
-There are no upper or lower limits in this prior.</p>
+<div class="section" id="child-rate-smoothing">
+<span id="prevalence2iota-child-rate-smoothing"></span><span id="index-23"></span><h3><a class="toc-backref" href="#id26">Child Rate Smoothing</a><a class="headerlink" href="#child-rate-smoothing" title="Permalink to this headline">¶</a></h3>
+<p>This is the smoothing used for the
+random effect for each child of the fit_node.
+There are no <a class="reference internal" href="glossary.html#glossary-dage"><span class="std std-ref">dage</span></a> or dtime
+priors because there is only one age and one time point in this smoothing.</p>
+<div class="section" id="prevalence2iota-child-rate-smoothing-value-prior">
+<span id="index-24"></span><span id="id2"></span><h4><a class="toc-backref" href="#id27">Value Prior</a><a class="headerlink" href="#prevalence2iota-child-rate-smoothing-value-prior" title="Permalink to this headline">¶</a></h4>
+<p>The following is the value prior used for the children of the fit_node:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span>        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;child_value_prior&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="mf">1.0</span><span class="p">,</span>
+        <span class="p">}</span>
+</pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="alpha-smoothing">
-<span id="prevalence2iota-alpha-smoothing"></span><span id="index-27"></span><h3><a class="toc-backref" href="#id32">Alpha Smoothing</a><a class="headerlink" href="#alpha-smoothing" title="Permalink to this headline">¶</a></h3>
-<p>This is the smoothing used in the model for <em>alpha</em>.
-There are no dage or dtime priors because there is only one
-age and one time point in this smoothing.</p>
+<span id="prevalence2iota-alpha-smoothing"></span><span id="index-25"></span><h3><a class="toc-backref" href="#id28">Alpha Smoothing</a><a class="headerlink" href="#alpha-smoothing" title="Permalink to this headline">¶</a></h3>
+<p>This is the smoothing used for <em>alpha</em> which multiplies the income covariate.
+There is only one age and one time point in this smoothing
+so it does not have dage or dtime priors.</p>
 <div class="section" id="prevalence2iota-alpha-smoothing-value-prior">
-<span id="index-28"></span><span id="id5"></span><h4><a class="toc-backref" href="#id33">Value Prior</a><a class="headerlink" href="#prevalence2iota-alpha-smoothing-value-prior" title="Permalink to this headline">¶</a></h4>
-<p>This value prior is uniform with lower limit <em>-10*|alpha_true|</em>,
-upper limit <em>+10*|alpha_true|</em> and mean zero.
-(The mean is used to initialize the optimization.)</p>
+<span id="index-26"></span><span id="id3"></span><h4><a class="toc-backref" href="#id29">Value Prior</a><a class="headerlink" href="#prevalence2iota-alpha-smoothing-value-prior" title="Permalink to this headline">¶</a></h4>
+<p>The following is the value prior used for this smoothing:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span>        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;alpha_value_prior&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
+            <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
+            <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
+            <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+<p>The mean and standard deviation are only used for the root_node.
+The create_child_node_db
+routine replaces them for other nodes.</p>
+</div>
+</div>
+<div class="section" id="gamma-smoothing">
+<span id="prevalence2iota-gamma-smoothing"></span><span id="index-27"></span><h3><a class="toc-backref" href="#id30">Gamma Smoothing</a><a class="headerlink" href="#gamma-smoothing" title="Permalink to this headline">¶</a></h3>
+<p>This is the smoothing used for <em>gamma</em> which multiplies the <em>one</em> covariate.
+There is only one age and one time point in this smoothing
+so it does not have dage or dtime priors.
+In addition, the value prior has upper and lower limits equal
+to the constant returned by the lambda function in this smoothing:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span>    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">smooth_table</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;gamma_smooth&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;age_id&#39;</span><span class="p">:</span>     <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s1">&#39;time_id&#39;</span><span class="p">:</span>    <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s1">&#39;fun&#39;</span><span class="p">:</span>        <span class="n">fun</span>
+    <span class="p">})</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="checking-the-fit">
-<span id="prevalence2iota-checking-the-fit"></span><span id="index-29"></span><h3><a class="toc-backref" href="#id34">Checking The Fit</a><a class="headerlink" href="#checking-the-fit" title="Permalink to this headline">¶</a></h3>
+<span id="prevalence2iota-checking-the-fit"></span><span id="index-28"></span><h3><a class="toc-backref" href="#id31">Checking The Fit</a><a class="headerlink" href="#checking-the-fit" title="Permalink to this headline">¶</a></h3>
 <p>The results of the fit are in the
 <a class="reference internal" href="cascade_fit_node.html#cascade-fit-node-dismod-db-predict"><span class="std std-ref">predict</span></a> and
 <a class="reference internal" href="cascade_fit_node.html#cascade-fit-node-dismod-db-c-predict-fit-var"><span class="std std-ref">c_predict_fit_var</span></a>
