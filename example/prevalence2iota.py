@@ -230,6 +230,18 @@ The mean and standard deviation are only used for the root_node.
 The create_child_node_db
 routine replaces them for other nodes.
 
+Gamma Smoothing
+***************
+This is the smoothing used for *gamma* which multiplies the *one* covariate.
+There is only one age and one time point in this smoothing
+so it does not have dage or dtime priors.
+In addition, the value prior has upper and lower limits equal
+to the constant returned by the lambda function in this smoothing:
+{xsrst_file
+    # BEGIN gamma_smooth
+    # END gamma_smooth
+}
+
 Checking The Fit
 ****************
 The results of the fit are in the
@@ -437,7 +449,7 @@ def root_node_db(file_name) :
         'fun':        fun,
     })
     #
-    # gamma_smooth
+    # BEGIN gamma_smooth
     fun = lambda a, t : (1.0, None, None)
     smooth_table.append({
         'name':       'gamma_smooth',
@@ -445,6 +457,7 @@ def root_node_db(file_name) :
         'time_id':    [0],
         'fun':        fun
     })
+    # END gamma_smooth
     #
     # node_table
     node_table = [
