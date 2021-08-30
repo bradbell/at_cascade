@@ -226,15 +226,20 @@ The following is the value prior used for the children of the fit_node:
 
 Alpha Smoothing
 ***************
-This is the smoothing used in the model for *alpha*.
-There are no dage or dtime priors because there is only one
-age and one time point in this smoothing.
+This is the smoothing used for *alpha* which multiplies the income covariate.
+There is only one age and one time point in this smoothing
+so it does not have dage or dtime priors.
 
 Value Prior
 ===========
-This value prior is uniform with lower limit *-10\*|alpha_true|*,
-upper limit *+10\*|alpha_true|* and mean zero.
-(The mean is used to initialize the optimization.)
+The following is the value prior used for this smoothing:
+{xsrst_file
+    # BEGIN alpha_value_prior
+    # END alpha_value_prior
+}
+The mean and standard deviation are only used for the root_node.
+The create_child_node_db
+routine replaces them for other nodes.
 
 Checking The Fit
 ****************
@@ -422,14 +427,15 @@ def root_node_db(file_name) :
         # END child_value_prior
     )
     prior_table.append(
-        { # prior_alpha_n0_value
-            'name':    'prior_alpha_n0_value',
+        # BEGIN alpha_value_prior
+        {   'name':    'alpha_value_prior',
             'density': 'gaussian',
             'lower':   - 10 * abs(alpha_true),
             'upper':   + 10 * abs(alpha_true),
             'mean':    0.0,
             'std':     + 10 * abs(alpha_true),
         }
+        # END alpha_value_prior
     )
     #
     # smooth_table
@@ -463,7 +469,7 @@ def root_node_db(file_name) :
     })
     #
     # smooth_alpha_n0
-    fun = lambda a, t : ('prior_alpha_n0_value', None, None)
+    fun = lambda a, t : ('alpha_value_prior', None, None)
     smooth_table.append({
         'name':       'smooth_alpha_n0',
         'age_id':     [0],
