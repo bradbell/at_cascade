@@ -82,9 +82,9 @@ is a python dictionary and if *child_name* is a key for *child_node_databases*,
 -   The rate table is changed to have null priors for omega;
     see :ref:`omega_constraint` for properly setting these priors.
 -   The difference priors are the same as in th parent node database.
--   The value priors are similar, the difference is that the mean
-    and standard deviation are replaced using the predict tables in
-    the *parent_node_database*.
+-   If the upper and lower limits are equal, the value priors are the same.
+    Otherwise the mean and standard deviation in the values priors
+    are replaced using the predict tables in the *parent_node_database*.
 -   Only the dismod_at input tables are significant in the child node databases;
     e.g., an init command should be executed before any other dismod_at
     commands (except possibly a set command).

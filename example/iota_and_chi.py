@@ -441,47 +441,46 @@ def root_node_db(file_name) :
     # smooth_table
     smooth_table = list()
     #
-    # smooth_iota_n0
+    # parent_iota_smooth
     fun = lambda a, t : ('parent_iota_value_prior', 'parent_dage_prior', None)
     smooth_table.append({
-        'name':       'smooth_iota_n0',
+        'name':       'parent_iota_smooth',
         'age_id':     range( len(age_grid) ),
         'time_id':    [0],
         'fun':        fun,
     })
     #
-    # smooth_chi_n0
+    # parent_chi_smooth
     fun = lambda a, t : ('parent_chi_value_prior', 'parent_dage_prior', None)
     smooth_table.append({
-        'name':       'smooth_chi_n0',
+        'name':       'parent_chi_smooth',
         'age_id':     range( len(age_grid) ),
         'time_id':    [0],
         'fun':        fun,
     })
     #
-    # smooth_child
+    # child_smooth
     fun = lambda a, t : ('child_value_prior', None, None)
     smooth_table.append({
-        'name':       'smooth_child',
+        'name':       'child_smooth',
         'age_id':     [0],
         'time_id':    [0],
         'fun':        fun,
     })
     #
-    # smooth_alpha_n0
+    # alpha_smooth
     fun = lambda a, t : ('alpha_value_prior', None, None)
     smooth_table.append({
-        'name':       'smooth_alpha_n0',
+        'name':       'alpha_smooth',
         'age_id':     [0],
         'time_id':    [0],
         'fun':        fun,
     })
     #
-    # smooth_gamma
-    # constant gamma = 1.0
+    # gamma_smooth
     fun = lambda a, t : (1.0, None, None)
     smooth_table.append({
-        'name':       'smooth_gamma',
+        'name':       'gamma_smooth',
         'age_id':     [0],
         'time_id':    [0],
         'fun':        fun
@@ -501,12 +500,12 @@ def root_node_db(file_name) :
     # rate_table
     rate_table = [ {
             'name':           'iota',
-            'parent_smooth':  'smooth_iota_n0',
-            'child_smooth':   'smooth_child' ,
+            'parent_smooth':  'parent_iota_smooth',
+            'child_smooth':   'child_smooth' ,
         },{
             'name':           'chi',
-            'parent_smooth':  'smooth_chi_n0',
-            'child_smooth':   'smooth_child' ,
+            'parent_smooth':  'parent_chi_smooth',
+            'child_smooth':   'child_smooth' ,
     } ]
     #
     # covariate_table
@@ -522,25 +521,25 @@ def root_node_db(file_name) :
             'type':       'rate_value',
             'effected':   'iota',
             'group':      'world',
-            'smooth':     'smooth_alpha_n0',
+            'smooth':     'alpha_smooth',
         },{ # alpha_chi
             'covariate':  'income',
             'type':       'rate_value',
             'effected':   'chi',
             'group':      'world',
-            'smooth':     'smooth_alpha_n0',
+            'smooth':     'alpha_smooth',
         },{ # gamma_Sincidence
             'covariate':  'one',
             'type':       'meas_noise',
             'effected':   'Sincidence',
             'group':      'world',
-            'smooth':     'smooth_gamma',
+            'smooth':     'gamma_smooth',
         },{ # gamma_mtexcess
             'covariate':  'one',
             'type':       'meas_noise',
             'effected':   'mtexcess',
             'group':      'world',
-            'smooth':     'smooth_gamma',
+            'smooth':     'gamma_smooth',
     } ]
     #
     # subgroup_table
