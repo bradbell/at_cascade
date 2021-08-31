@@ -21,7 +21,7 @@ This data base contains information for all the nodes between the
 All Node Covariate Reference Table
 ##################################
 This table specifies the reference value for every covariate
-and node in the *root_node_database*.
+and node in the :ref:`glossary.root_node_database`.
 It has the following columns:
 
 all_cov_reference_id
@@ -33,13 +33,13 @@ node_id
 *******
 This column has type ``integer`` and is specifies
 the node for this reference
-by the primary key in the *root_node_database* node table
+by the primary key in the root_node_database node table
 
 covariate_id
 ************
 This column has type ``integer`` and is specifies
 the covariate, for this reference,
-by the primary key in the *root_node_database* covariate table
+by the primary key in the root_node_database covariate table
 
 reference
 *********
@@ -53,9 +53,10 @@ for this covariate and node.
 Fit Goal Table
 ##############
 This table specifies the :ref:`glossary.fit_goal_set`.
-If it is empty, all of the descendants of the *root_node* are fit.
+If it is empty, all of the descendants of the
+:ref:`glossary.root_node` are fit.
 Otherwise, only the nodes in the fit goal table,
-and their ancestors up to the *root_node*, are fit.
+and their ancestors up to the root_node, are fit.
 This table has the following columns:
 
 fit_goal_id
@@ -66,7 +67,7 @@ Its initial value is zero and it increments by one for each row.
 node_id
 *******
 This column has type ``integer`` and is specifies
-a node by the primary key in the *root_node_database* node table
+a node by the primary key in the :ref:`glossary.root_node_database` node table
 
 {xsrst_end fit_goal_table}
 ------------------------------------------------------------------------------
@@ -74,17 +75,17 @@ a node by the primary key in the *root_node_database* node table
 
 Omega Grid
 ##########
-The :ref:`glossary.omega` grid is specified by the
+The :ref:`glossary.omega_grid` is specified by the
 omega_age_grid and omega_time_grid tables.
 
 omega_age_grid Table
 ********************
-This table has two columns, *omega_age_grid_id* and *age_id*.
+This table has two columns, *omega_age_grid_id* and age_id.
 If this table is empty, the omega_time_grid table must also be empty.
 
 n_omega_age
 ===========
-We use the notation *n_omega_age* for the number of values in this table.
+We use the notation n_omega_age for the number of values in this table.
 
 omega_age_grid_id
 =================
@@ -94,16 +95,16 @@ Its initial value is zero and it increments by one for each row.
 age_id
 ======
 This column has type ``integer`` and specifies the age grid points
-by their index in the *root_node_database* age table.
+by their index in the :ref:`glossary.root_node_database` age table.
 
 omega_time_grid Table
 *********************
-This table has two columns, *omega_time_grid_id* and *time_id*.
+This table has two columns, *omega_time_grid_id* and time_id.
 If this table is empty, the omega_age_grid table must also be empty.
 
 n_omega_time
 ============
-We use the notation *n_omega_time* for the number of values in this table.
+We use the notation n_omega_time for the number of values in this table.
 
 omega_time_grid_id
 ==================
@@ -113,7 +114,7 @@ Its initial value is zero and it increments by one for each row.
 time_id
 =======
 This column has type ``integer`` and specifies the time grid points
-by their index in the *root_node_database* time table.
+by their index in the root_node_database time table.
 
 {xsrst_end omega_grid}
 ------------------------------------------------------------------------------
@@ -122,17 +123,17 @@ by their index in the *root_node_database* time table.
 All Node mtall Values
 #####################
 This table contains the value of :ref:`glossary.mtall`
-for all the nodes that have *mtall* data.
+for all the nodes that have mtall data.
 
 all_mtall Table
 ***************
 This table specifies the value of :ref:`glossary.mtall` for each
 age, time point in the :ref:`omega_grid` and every node.
 This data is used to compute the :ref:`omega_constraint` for each node.
-If *mtall* is not specified for a node, it will use the same *mtall*
+If mtall is not specified for a node, it will use the same *mtall*
 values as its nearest ancestor node.
 It is an error if there is no ancestor of a
-:ref:`goal node<glossary.fit_goal_set>` that has *mtall* data.
+:ref:`goal node<glossary.fit_goal_set>` that has mtall data.
 
 all_mtall_id
 ============
@@ -141,7 +142,7 @@ Its initial value is zero and it increments by one for each row.
 
 all_mtall_value
 ===============
-This column has type ``real`` and is the value of *mtall*
+This column has type ``real`` and is the value of mtall
 for a specific node, age, and time; see mtall_index table below.
 
 mtall_index Table
@@ -184,19 +185,20 @@ All Node mtspecific Values
 ##########################
 This table specifies the value of :ref:`glossary.mtspecific` for each
 age, time point in the :ref:`omega_grid` and every node.
-If *mtspecific* is not specified for a node, it will use the same *mtspecific*
+If mtspecific is not specified for a node, it will use the same *mtspecific*
 values as its nearest ancestor node.
-If there is no ancestor of a node that has *mtspecific* data,
-*omega* will be approximated as equal to *mtall* for that node.
+If there is no ancestor of a node that has mtspecific data,
+:ref:`glossary.omega` will be approximated as equal to
+:ref:`glossary.mtall` for that node.
 
 all_mtspecific Table
 ********************
 This table specifies the value of :ref:`glossary.mtspecific` for each
 age, time point in the :ref:`omega_grid` and every node.
-If *mtspecific* is not specified for a node, it will use the same *mtspecific*
+If mtspecific is not specified for a node, it will use the same *mtspecific*
 values as its nearest ancestor node.
-If none of its ancestors have *mtspecific* data,
-*omega* will be constrained to be equal to its *mtall* data for that node.
+If none of its ancestors have mtspecific data,
+omega will be constrained to be equal to its mtall data for that node.
 
 all_mtspecific_id
 =================
@@ -205,7 +207,7 @@ Its initial value is zero and it increments by one for each row.
 
 all_mtspecific_value
 ====================
-This column has type ``real`` and is the value of *mtspecific*
+This column has type ``real`` and is the value of mtspecific
 for a specific node, age, and time; see mtspecific_index table below.
 
 mtspecific_index Table
@@ -268,25 +270,26 @@ It specifies a value that is attached to each option name.
 
 root_node_name
 **************
-This *option_name* must appear and the corresponding *option_value*
-is the name of the root node in the node table of the *root_node_database*
+This option_name must appear and the corresponding option_value
+is the name of the root node in the node table of the
+:ref:`glossary.root_node_database`
 (the node table is the same for all the dismod_at databases).
 
 sex_level
 *********
-If this *option_name* appears, the corresponding *option_value*
+If this option_name appears, the corresponding option_value
 is not yet specified.
 Otherwise, there will be no sex split in this cascade.
 
 in_parallel
 ***********
-If this *option_name* appears, the corresponding *option_value*
+If this option_name appears, the corresponding option_value
 is not yet specified.
 Otherwise, the cascade will be run sequentially.
 
 min_interval
 ************
-If this *option_name* appears, the corresponding *option_value*
+If this option_name appears, the corresponding option_value
 is not yet specified.
 Otherwise, all age and time averages will
 approximated by the value at the midpoint of the intervals.
