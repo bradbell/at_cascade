@@ -14,6 +14,13 @@ The All Node DataBase
 This data base contains information for all the nodes between the
 :ref:`glossary.root_node` and the :ref:`glossary.fit_goal_set`.
 
+Primary Key
+***********
+If *tbl_name* is the name of a table in this database,
+the primary key column has name *tbl_name*\ ``_id`` .
+This column has type ``integer`` ,
+its initial value is zero, and it increments by one for each row.
+
 {xsrst_end all_node_db}
 ------------------------------------------------------------------------------
 {xsrst_begin all_cov_reference_table}
@@ -26,8 +33,7 @@ It has the following columns:
 
 all_cov_reference_id
 ********************
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 node_id
 *******
@@ -61,8 +67,7 @@ This table has the following columns:
 
 fit_goal_id
 ***********
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 node_id
 *******
@@ -89,8 +94,7 @@ We use the notation n_omega_age for the number of values in this table.
 
 omega_age_grid_id
 =================
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 age_id
 ======
@@ -108,8 +112,7 @@ We use the notation n_omega_time for the number of values in this table.
 
 omega_time_grid_id
 ==================
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 time_id
 =======
@@ -137,8 +140,7 @@ It is an error if there is no ancestor of a
 
 all_mtall_id
 ============
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 all_mtall_value
 ===============
@@ -154,8 +156,7 @@ correspond to each all_mtall_id are included.
 
 mtall_index_id
 ==============
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 node_id
 =======
@@ -202,8 +203,7 @@ omega will be constrained to be equal to its mtall data for that node.
 
 all_mtspecific_id
 =================
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 all_mtspecific_value
 ====================
@@ -219,8 +219,7 @@ correspond to each all_mtspecific_id are included.
 
 mtspecific_index_id
 ===================
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 node_id
 =======
@@ -255,8 +254,7 @@ Table Format
 
 all_option_id
 =============
-This column of the option table has type ``integer`` and is the primary key.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 option_name
 ===========
