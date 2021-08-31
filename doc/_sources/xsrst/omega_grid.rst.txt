@@ -14,7 +14,7 @@ Omega Grid
 .. contents::
    :local:
 
-The :ref:`glossary.omega` grid is specified by the
+The :ref:`glossary.omega_grid` is specified by the
 omega_age_grid and omega_time_grid tables.
 
 .. meta::
@@ -26,7 +26,7 @@ omega_age_grid and omega_time_grid tables.
 
 omega_age_grid Table
 ********************
-This table has two columns, *omega_age_grid_id* and *age_id*.
+This table has two columns, *omega_age_grid_id* and age_id.
 If this table is empty, the omega_time_grid table must also be empty.
 
 .. meta::
@@ -38,7 +38,7 @@ If this table is empty, the omega_time_grid table must also be empty.
 
 n_omega_age
 ===========
-We use the notation *n_omega_age* for the number of values in this table.
+We use the notation n_omega_age for the number of values in this table.
 
 .. meta::
    :keywords: omega_age_grid_id
@@ -62,7 +62,7 @@ Its initial value is zero and it increments by one for each row.
 age_id
 ======
 This column has type ``integer`` and specifies the age grid points
-by their index in the *root_node_database* age table.
+by their index in the :ref:`glossary.root_node_database` age table.
 
 .. meta::
    :keywords: omega_time_grid, table
@@ -73,7 +73,7 @@ by their index in the *root_node_database* age table.
 
 omega_time_grid Table
 *********************
-This table has two columns, *omega_time_grid_id* and *time_id*.
+This table has two columns, *omega_time_grid_id* and time_id.
 If this table is empty, the omega_age_grid table must also be empty.
 
 .. meta::
@@ -85,7 +85,7 @@ If this table is empty, the omega_age_grid table must also be empty.
 
 n_omega_time
 ============
-We use the notation *n_omega_time* for the number of values in this table.
+We use the notation n_omega_time for the number of values in this table.
 
 .. meta::
    :keywords: omega_time_grid_id
@@ -109,7 +109,7 @@ Its initial value is zero and it increments by one for each row.
 time_id
 =======
 This column has type ``integer`` and specifies the time grid points
-by their index in the *root_node_database* time table.
+by their index in the root_node_database time table.
 
 ----
 

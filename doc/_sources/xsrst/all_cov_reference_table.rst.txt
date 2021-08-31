@@ -15,7 +15,7 @@ All Node Covariate Reference Table
    :local:
 
 This table specifies the reference value for every covariate
-and node in the *root_node_database*.
+and node in the :ref:`glossary.root_node_database`.
 It has the following columns:
 
 .. meta::
@@ -41,7 +41,7 @@ node_id
 *******
 This column has type ``integer`` and is specifies
 the node for this reference
-by the primary key in the *root_node_database* node table
+by the primary key in the root_node_database node table
 
 .. meta::
    :keywords: covariate_id
@@ -54,7 +54,7 @@ covariate_id
 ************
 This column has type ``integer`` and is specifies
 the covariate, for this reference,
-by the primary key in the *root_node_database* covariate table
+by the primary key in the root_node_database covariate table
 
 .. meta::
    :keywords: reference

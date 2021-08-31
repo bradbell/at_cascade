@@ -16,10 +16,11 @@ All Node mtspecific Values
 
 This table specifies the value of :ref:`glossary.mtspecific` for each
 age, time point in the :ref:`omega_grid` and every node.
-If *mtspecific* is not specified for a node, it will use the same *mtspecific*
+If mtspecific is not specified for a node, it will use the same *mtspecific*
 values as its nearest ancestor node.
-If there is no ancestor of a node that has *mtspecific* data,
-*omega* will be approximated as equal to *mtall* for that node.
+If there is no ancestor of a node that has mtspecific data,
+:ref:`glossary.omega` will be approximated as equal to
+:ref:`glossary.mtall` for that node.
 
 .. meta::
    :keywords: all_mtspecific, table
@@ -32,10 +33,10 @@ all_mtspecific Table
 ********************
 This table specifies the value of :ref:`glossary.mtspecific` for each
 age, time point in the :ref:`omega_grid` and every node.
-If *mtspecific* is not specified for a node, it will use the same *mtspecific*
+If mtspecific is not specified for a node, it will use the same *mtspecific*
 values as its nearest ancestor node.
-If none of its ancestors have *mtspecific* data,
-*omega* will be constrained to be equal to its *mtall* data for that node.
+If none of its ancestors have mtspecific data,
+omega will be constrained to be equal to its mtall data for that node.
 
 .. meta::
    :keywords: all_mtspecific_id
@@ -58,7 +59,7 @@ Its initial value is zero and it increments by one for each row.
 
 all_mtspecific_value
 ====================
-This column has type ``real`` and is the value of *mtspecific*
+This column has type ``real`` and is the value of mtspecific
 for a specific node, age, and time; see mtspecific_index table below.
 
 .. meta::

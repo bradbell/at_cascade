@@ -71,8 +71,9 @@ It specifies a value that is attached to each option name.
 
 root_node_name
 **************
-This *option_name* must appear and the corresponding *option_value*
-is the name of the root node in the node table of the *root_node_database*
+This option_name must appear and the corresponding option_value
+is the name of the root node in the node table of the
+:ref:`glossary.root_node_database`
 (the node table is the same for all the dismod_at databases).
 
 .. meta::
@@ -84,7 +85,7 @@ is the name of the root node in the node table of the *root_node_database*
 
 sex_level
 *********
-If this *option_name* appears, the corresponding *option_value*
+If this option_name appears, the corresponding option_value
 is not yet specified.
 Otherwise, there will be no sex split in this cascade.
 
@@ -97,7 +98,7 @@ Otherwise, there will be no sex split in this cascade.
 
 in_parallel
 ***********
-If this *option_name* appears, the corresponding *option_value*
+If this option_name appears, the corresponding option_value
 is not yet specified.
 Otherwise, the cascade will be run sequentially.
 
@@ -110,7 +111,7 @@ Otherwise, the cascade will be run sequentially.
 
 min_interval
 ************
-If this *option_name* appears, the corresponding *option_value*
+If this option_name appears, the corresponding option_value
 is not yet specified.
 Otherwise, all age and time averages will
 approximated by the value at the midpoint of the intervals.
