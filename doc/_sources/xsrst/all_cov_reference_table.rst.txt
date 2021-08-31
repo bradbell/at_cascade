@@ -27,8 +27,7 @@ It has the following columns:
 
 all_cov_reference_id
 ********************
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 .. meta::
    :keywords: node_id

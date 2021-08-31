@@ -43,8 +43,7 @@ It is an error if there is no ancestor of a
 
 all_mtall_id
 ============
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 .. meta::
    :keywords: all_mtall_value
@@ -81,8 +80,7 @@ correspond to each all_mtall_id are included.
 
 mtall_index_id
 ==============
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 .. meta::
    :keywords: node_id

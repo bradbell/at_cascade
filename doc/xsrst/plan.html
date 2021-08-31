@@ -206,36 +206,14 @@ are also fit.</p>
 </div>
 <div class="section" id="input-data">
 <span id="plan-input-data"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">Input Data</a><a class="headerlink" href="#input-data" title="Permalink to this headline">¶</a></h3>
-<p>We are using a dismod_at <em>root_node</em> database so we can use the dismod_at
-database specifications.
-In addition, current cascade_at can be used to download a lot of the data.
-Eventually, the two databases below should probably be joined into one.</p>
 <div class="section" id="root-node-database">
 <span id="plan-input-data-root-node-database"></span><span id="index-3"></span><h4><a class="toc-backref" href="#id4">Root Node Database</a><a class="headerlink" href="#root-node-database" title="Permalink to this headline">¶</a></h4>
-<p>A dismod_at database corresponding to fitting the <em>root_node</em>;
-i.e., the <em>root_node</em> is the <a class="reference internal" href="glossary.html#glossary-fit-node"><span class="std std-ref">fit_node</span></a>.</p>
-<ul class="simple">
-<li><p>The option table parent_node in this database must be the <em>root_node</em>.</p></li>
-<li><p>There is no <a class="reference internal" href="glossary.html#glossary-mtall"><span class="std std-ref">mtall</span></a> or <a class="reference internal" href="glossary.html#glossary-mtspecific"><span class="std std-ref">mtspecific</span></a> data in
-this database because the <em>all_node</em> database has this information.</p></li>
-<li><p>There is no prior or grid for <a class="reference internal" href="glossary.html#glossary-omega"><span class="std std-ref">omega</span></a> in this database
-because it is computed using <em>mtall</em> - <em>mtspecific</em>.
-In addition, the other rate priors use child_smooth_id (not child_nslist_id).</p></li>
-<li><p>The avgint table will be used to make prediction for all nodes.
-Use null for covariates that you want to be at the node reference for these
-predictions.</p></li>
-<li><p>Subgroups are not used; i.e., there is one group and one subgroup
-corresponding to all the data.</p></li>
-<li><p>The covariate table reference values must be the same as the <em>all_node</em>
-database reference values for the <em>root_node</em>.</p></li>
-<li><p>For the list of rates [ pini, iota, rho, chi ]
-the corresponding integrand names are
-[ prevalence, Sincidence, remission, mtexcess ].
-If the parent_smooth_id in the rate table for one of these rates is not null,
-the corresponding integrand name must be in the integrand table.</p></li>
-<li><p>For each value covariate multiplier index <em>mulcov_id</em>, the integrand name
-<code class="docutils literal notranslate"><span class="pre">mulcov_</span></code><em>mulcov_id</em> must be in the integrand table.</p></li>
-</ul>
+<p>We are using a dismod_at
+<a class="reference internal" href="glossary.html#glossary-root-node-database"><span class="std std-ref">root_node_database</span></a> so we can use the dismod_at
+database specifications.
+In addition, the current cascade_at can be used to download a lot of the data.
+Eventually, the root_node_database and <a class="reference internal" href="all_node_db.html#id1"><span class="std std-ref">The All Node DataBase</span></a>
+should probably be joined into one.</p>
 </div>
 <div class="section" id="all-node-database">
 <span id="plan-input-data-all-node-database"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">All Node Database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h4>

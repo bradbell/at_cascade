@@ -28,6 +28,20 @@ The All Node DataBase
 This data base contains information for all the nodes between the
 :ref:`glossary.root_node` and the :ref:`glossary.fit_goal_set`.
 
+.. meta::
+   :keywords: primary, key
+
+.. index:: primary, key
+
+.. _all_node_db.primary_key:
+
+Primary Key
+***********
+If *tbl_name* is the name of a table in this database,
+the primary key column has name *tbl_name*\ ``_id`` .
+This column has type ``integer`` ,
+its initial value is zero, and it increments by one for each row.
+
 .. csv-table::
     :header: "Child", "Title"
     :widths: 20, 80

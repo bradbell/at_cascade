@@ -255,16 +255,11 @@ the parent node in the dismod_at option table.</p>
 </div>
 <div class="section" id="fit-node-database">
 <span id="glossary-fit-node-database"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id9">fit_node_database</a><a class="headerlink" href="#fit-node-database" title="Permalink to this headline">¶</a></h3>
-<p>This is a dismod_at database where the following tables are the same
-as in the <a class="reference internal" href="#glossary-root-node-database"><span class="std std-ref">root_node_database</span></a>:
-covariate,
-density,
-integrand,
-node,
-subgroup,
-weight,
-weight grid.</p>
+<p>This is a dismod_at database with the following properties:</p>
 <ul class="simple">
+<li><p>The following tables are the same as in the
+<a class="reference internal" href="#glossary-root-node-database"><span class="std std-ref">root_node_database</span></a>:
+covariate, density, integrand, node, subgroup, weight, weight grid.</p></li>
 <li><p>The <em>fit_node_database</em> option table is the same as in the
 <em>root_node_database</em> except for the value of <em>parent_node_name</em>.
 (The value of <em>parent_node_id</em> does not appear in the option table.)</p></li>
@@ -277,6 +272,16 @@ omega parent and child smoothings.</p></li>
 <li><p>The rate table smoothing for pini must be null or the corresponding
 smooth_grid entries must use the age_id corresponding to the smallest
 age in the age table.</p></li>
+<li><p>For each covariate, the covariate table reference value must be the
+same as the <a class="reference internal" href="all_cov_reference_table.html#all-cov-reference-table-reference"><span class="std std-ref">reference</span></a> for the
+fit_node in the all_cov_reference table.</p></li>
+<li><p>For the list of rates [ pini, iota, rho, chi ]
+the corresponding integrand names are
+[ prevalence, Sincidence, remission, mtexcess ].
+If the parent_smooth_id in the rate table for one of these rates is
+not null, the corresponding integrand name must be in the integrand table.</p></li>
+<li><p>For each value covariate multiplier index <em>mulcov_id</em>, the integrand name
+<code class="docutils literal notranslate"><span class="pre">mulcov_</span></code><em>mulcov_id</em> must be in the integrand table.</p></li>
 </ul>
 </div>
 <div class="section" id="iota">
@@ -350,8 +355,8 @@ This is also denoted by <span class="math notranslate nohighlight">\(\rho(a, t)\
 <div class="section" id="root-node-database">
 <span id="glossary-root-node-database"></span><span id="index-23"></span><h3><a class="toc-backref" href="#id25">root_node_database</a><a class="headerlink" href="#root-node-database" title="Permalink to this headline">¶</a></h3>
 <p>This is a dismod_at database where the <em>root_node</em> is the
-parent node in the dismod_at option table; see
-<a class="reference internal" href="plan.html#plan-input-data-root-node-database"><span class="std std-ref">Root Node Database</span></a>.</p>
+parent node in the dismod_at option table.
+This must satisfy all the conditions for a <a class="reference internal" href="#glossary-fit-node-database"><span class="std std-ref">fit_node_database</span></a>.</p>
 </div>
 <div class="section" id="sincidence">
 <span id="glossary-sincidence"></span><span id="index-24"></span><h3><a class="toc-backref" href="#id26">Sincidence</a><a class="headerlink" href="#sincidence" title="Permalink to this headline">¶</a></h3>

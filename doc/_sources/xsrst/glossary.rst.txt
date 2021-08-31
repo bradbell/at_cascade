@@ -100,16 +100,11 @@ the parent node in the dismod_at option table.
 
 fit_node_database
 *****************
-This is a dismod_at database where the following tables are the same
-as in the :ref:`glossary.root_node_database`:
-covariate,
-density,
-integrand,
-node,
-subgroup,
-weight,
-weight grid.
+This is a dismod_at database with the following properties:
 
+-   The following tables are the same as in the
+    :ref:`glossary.root_node_database`:
+    covariate, density, integrand, node, subgroup, weight, weight grid.
 -   The *fit_node_database* option table is the same as in the
     *root_node_database* except for the value of *parent_node_name*.
     (The value of *parent_node_id* does not appear in the option table.)
@@ -122,6 +117,16 @@ weight grid.
 -   The rate table smoothing for pini must be null or the corresponding
     smooth_grid entries must use the age_id corresponding to the smallest
     age in the age table.
+-   For each covariate, the covariate table reference value must be the
+    same as the :ref:`all_cov_reference_table.reference` for the
+    fit_node in the all_cov_reference table.
+-   For the list of rates [ pini, iota, rho, chi ]
+    the corresponding integrand names are
+    [ prevalence, Sincidence, remission, mtexcess ].
+    If the parent_smooth_id in the rate table for one of these rates is
+    not null, the corresponding integrand name must be in the integrand table.
+-   For each value covariate multiplier index *mulcov_id*, the integrand name
+    ``mulcov_``\ *mulcov_id* must be in the integrand table.
 
 .. meta::
    :keywords: iota
@@ -306,8 +311,8 @@ The top level node for this cascade.
 root_node_database
 ******************
 This is a dismod_at database where the *root_node* is the
-parent node in the dismod_at option table; see
-:ref:`plan.input_data.root_node_database`.
+parent node in the dismod_at option table.
+This must satisfy all the conditions for a :ref:`glossary.fit_node_database`.
 
 .. meta::
    :keywords: sincidence

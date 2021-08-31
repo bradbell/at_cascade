@@ -6,6 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="all_node_db, the, all, node, database" name="keywords" />
+<meta content="primary, key" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -174,8 +175,19 @@
 </div>
 <div class="section" id="the-all-node-database">
 <span id="id1"></span><h2>The All Node DataBase<a class="headerlink" href="#the-all-node-database" title="Permalink to this headline">¶</a></h2>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#primary-key" id="id2">Primary Key</a></p></li>
+</ul>
+</div>
 <p>This data base contains information for all the nodes between the
 <a class="reference internal" href="glossary.html#glossary-root-node"><span class="std std-ref">root_node</span></a> and the <a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a>.</p>
+<div class="section" id="primary-key">
+<span id="all-node-db-primary-key"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Primary Key</a><a class="headerlink" href="#primary-key" title="Permalink to this headline">¶</a></h3>
+<p>If <em>tbl_name</em> is the name of a table in this database,
+the primary key column has name <em>tbl_name</em><code class="docutils literal notranslate"><span class="pre">_id</span></code> .
+This column has type <code class="docutils literal notranslate"><span class="pre">integer</span></code> ,
+its initial value is zero, and it increments by one for each row.</p>
 <table class="colwidths-given docutils align-default">
 <colgroup>
 <col style="width: 20%" />
@@ -209,6 +221,7 @@
 </table>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">xsrst/all_node_db.xsrst</span></code></p>
+</div>
 </div>
 </div>
 

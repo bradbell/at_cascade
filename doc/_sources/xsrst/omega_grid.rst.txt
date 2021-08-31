@@ -49,8 +49,7 @@ We use the notation n_omega_age for the number of values in this table.
 
 omega_age_grid_id
 =================
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 .. meta::
    :keywords: age_id
@@ -96,8 +95,7 @@ We use the notation n_omega_time for the number of values in this table.
 
 omega_time_grid_id
 ==================
-This column has type ``integer`` and is the primary key for this table.
-Its initial value is zero and it increments by one for each row.
+is the :ref:`all_node_db.primary_key` for this table.
 
 .. meta::
    :keywords: time_id
