@@ -11,8 +11,6 @@ see http://www.gnu.org/licenses/agpl.txt
 {xsrst_begin plan}
 {xsrst_spell
     var
-    nslist
-    mulcov
 }
 
 AT Cascade Plan
@@ -31,36 +29,15 @@ are also fit.
 
 Input Data
 **********
-We are using a dismod_at *root_node* database so we can use the dismod_at
-database specifications.
-In addition, current cascade_at can be used to download a lot of the data.
-Eventually, the two databases below should probably be joined into one.
 
 Root Node Database
 ==================
-A dismod_at database corresponding to fitting the *root_node*;
-i.e., the *root_node* is the :ref:`glossary.fit_node`.
-
-- The option table parent_node in this database must be the *root_node*.
-- There is no :ref:`glossary.mtall` or :ref:`glossary.mtspecific` data in
-  this database because the *all_node* database has this information.
-- There is no prior or grid for :ref:`glossary.omega` in this database
-  because it is computed using *mtall* - *mtspecific*.
-  In addition, the other rate priors use child_smooth_id (not child_nslist_id).
-- The avgint table will be used to make prediction for all nodes.
-  Use null for covariates that you want to be at the node reference for these
-  predictions.
-- Subgroups are not used; i.e., there is one group and one subgroup
-  corresponding to all the data.
-- The covariate table reference values must be the same as the *all_node*
-  database reference values for the *root_node*.
-- For the list of rates [ pini, iota, rho, chi ]
-  the corresponding integrand names are
-  [ prevalence, Sincidence, remission, mtexcess ].
-  If the parent_smooth_id in the rate table for one of these rates is not null,
-  the corresponding integrand name must be in the integrand table.
-- For each value covariate multiplier index *mulcov_id*, the integrand name
-  ``mulcov_``\ *mulcov_id* must be in the integrand table.
+We are using a dismod_at
+:ref:`glossary.root_node_database` so we can use the dismod_at
+database specifications.
+In addition, the current cascade_at can be used to download a lot of the data.
+Eventually, the root_node_database and :ref:`all_node_db`
+should probably be joined into one.
 
 All Node Database
 =================
