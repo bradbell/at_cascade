@@ -27,38 +27,38 @@ Syntax
 
 all_node_database
 *****************
-is a python string specifying the location of the all node database
+is a python string specifying the location of the
+:ref:`all_node_db<all_node_db>`
 relative to the current working directory.
 This argument can't be ``None``.
 
-all_node_dir
-============
-is the directory where the all node database is located.
-
 fit_node_database
 *****************
-is a python string specifying the location of the root node database
+is a python string specifying the location of a
+:ref:`glossary.fit_node_database`
 relative to the current working directory.
-This must be a valid :ref:`glossary.root_node_database`.
 This argument can't be ``None``.
 
 fit_node
 ========
 The *fit_node_database* must be *fit_node*\ ``/dismod.db``,
 or end with the text ``/``\ *fit_node*\ ``/dismod.db``
-where *fit_node* is the name of the :ref:`glossary.fit_node` for this database.
+where *fit_node* is the name of the :ref:`glossary.fit_node`
+for this database.
 
 fit_node_dir
 ============
-is the directory where the fit node database is located.
+is the directory where the fit_node_database is located.
 
 node_table
 **********
 This is a python list where
-*node_table*[*node_id*] is a python dictionary representation of the
+*node_table[node_id]* is a python dictionary representation of the
 corresponding row of the dismod_at node table.
+(The primary key is not included because it is equal to the list index.)
 This node table is the same as the node table in *fit_node_database*.
-It is the same for all the fits and this avoids reading it each time.)
+It is the same for all the fits and
+passing it as an argument avoids reading it each time.
 This argument can't be ``None``.
 
 fit_children
@@ -68,11 +68,11 @@ For each valid node_id, *fit_children[node_id]* is a list of child_node_id.
 Each child_node_id is a child of node_id and is between the root node and the
 fit goal set inclusive.
 These are the children of node_id that must be fit to
-obtain of fit of all the goal nodes.
+obtain of fit of all the nodes in :ref:`glossary.fit_goal_set` .
 
 default
 =======
-If *fit_children* is None, it will be computed by ``cascade_fit_node``
+If *fit_children* is ``None``, it will be computed by ``cascade_fit_node``
 and reused by recursive calls to this routine.
 
 dismod.db
@@ -87,24 +87,26 @@ with the results for that child node.
 fit_var
 =======
 The fit_var table correspond to the posterior
-mean for the model variables for the fit node.
+mean for the model variables for the fit_node.
 
 sample
 ======
 The sample table contains the corresponding samples from the posterior
-distribution for the model variables for the fit node.
+distribution for the model variables for the fit_node.
 
 predict
 =======
-The predict table contains predictions corresponding to the sample table and the
-avgint table in the root node database except that the node_id column
-has been replaced by the node_id for this fit node.
+The predict table contains predictions corresponding to the
+sample table and the avgint table in the
+:ref:`glossary.root_node_database` except that the values in the node_id
+column has been replaced by the node_id for this fit_node.
 
 c_predict_fit_var
 =================
 The c_predict_fit_var table contains predictions corresponding to the
-fit_var table and the avgint table in the root node database except that
-the node_id column has been replaced by the node_id for this fit node.
+fit_var table and the avgint table in the
+root_node_database except that values in the node_id column
+has been replaced by the node_id for this fit_node.
 
 {xsrst_end cascade_fit_node}
 '''
