@@ -8,10 +8,6 @@ This program is distributed under the terms of the
 see http://www.gnu.org/licenses/agpl.txt
 -----------------------------------------------------------------------------
 {xsrst_begin at_cascade}
-{xsrst_spell
-}
-
-.. include:: ../preamble.rst
 
 Cascading Dismod_at Analysis From Parent To Child Regions
 =========================================================
