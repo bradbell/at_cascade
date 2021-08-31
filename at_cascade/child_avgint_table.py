@@ -10,8 +10,6 @@
 '''
 {xsrst_begin child_avgint_table}
 {xsrst_spell
-    integrands
-    mulcov
 }
 
 Create avgint Table That Predicts Rates for Child Nodes
@@ -31,7 +29,7 @@ This argument can't be ``None``.
 
 fit_node_database
 *****************
-is a python string containing the name of a :ref:`glossary.fit_node_database`.
+is a python string containing the name of the :ref:`glossary.fit_node_database`.
 The avgint table will be placed in this database.
 The previous avgint table in this database is lost.
 This argument can't be ``None``.
@@ -39,21 +37,7 @@ This argument can't be ``None``.
 parent_node
 ===========
 We use *parent_node* to refer to the parent node in the
-dismod_at option table in the *fit_node_database*.
-
-integrand_table
-===============
-The integrand table in the *fit_node_database* must include the following:
-:ref:`glossary.Sincidence`,
-:ref:`glossary.remission`,
-:ref:`glossary.mtexcess`.
-Integrands corresponding to rates with null parent smoothing id
-need not be included.
-In addition, the integrand table must include all the covariate multipliers;
-i.e., ``mulcov_``\ *mulcov_id* where *mulcov_id* is the id
-for any covariate multiplier.
-Integrands corresponding to covariate multipliers
-with a null group smoothing id need not be included.
+dismod_at option table in the fit_node_database.
 
 avgint Table
 ************
@@ -62,18 +46,18 @@ plus the following extra columns:
 
 c_age_id
 ========
-This column identifies the age,
-in the *fit_node_database*, that this prediction are for.
+This column identifies a row in the age table of the
+fit_node_database that this prediction is for.
 
 c_time_id
 _========
-This column identifies the time,
-in the *fit_node_database*, that this prediction are for.
+This column identifies a row in the time table of the
+fit_node_database that this prediction is for.
 
 Rectangular Grid
 ================
 For each rate (or covariate multiplier) that has a non-null
-parent smoothing (group smoothing) in the *fit_node_database*,
+parent smoothing (group smoothing) in the fit_node_database,
 all of the age time pairs in the smoothing are represented
 in the new avgint table
 
