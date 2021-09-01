@@ -435,7 +435,9 @@ def root_node_db(file_name) :
     subgroup_table = [ {'subgroup': 'world', 'group':'world'} ]
     #
     # integrand_table
-    integrand_table = [ {'name':'Sincidence'}, {'name':'mulcov_0'} ]
+    integrand_table = [ {'name':'Sincidence'} ]
+    for mulcov_id in range( len(mulcov_table) ) :
+        integrand_table.append( { 'name': f'mulcov_{mulcov_id}' } )
     #
     # avgint_table
     avgint_table = list()

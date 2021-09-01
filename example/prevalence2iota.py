@@ -506,9 +506,9 @@ def root_node_db(file_name) :
     integrand_table = [
         {'name': 'Sincidence'},
         {'name': 'prevalence'},
-        {'name': 'mulcov_0'},
-        {'name': 'mulcov_1'},
     ]
+    for mulcov_id in range( len(mulcov_table) ) :
+        integrand_table.append( { 'name': f'mulcov_{mulcov_id}' } )
     #
     # avgint_table
     avgint_table = list()
