@@ -1,3 +1,5 @@
+.. include:: ../preamble.rst
+
 !!!!!!!!!!
 omega_grid
 !!!!!!!!!!

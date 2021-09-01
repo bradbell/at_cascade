@@ -1,3 +1,5 @@
+.. include:: ../preamble.rst
+
 !!!!!!!!!!!
 all_node_db
 !!!!!!!!!!!

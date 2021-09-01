@@ -1,3 +1,5 @@
+.. include:: ../preamble.rst
+
 !!!!!!!!!!!!!!
 fit_goal_table
 !!!!!!!!!!!!!!

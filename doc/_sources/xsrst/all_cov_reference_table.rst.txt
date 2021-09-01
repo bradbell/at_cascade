@@ -1,3 +1,5 @@
+.. include:: ../preamble.rst
+
 !!!!!!!!!!!!!!!!!!!!!!!
 all_cov_reference_table
 !!!!!!!!!!!!!!!!!!!!!!!

@@ -183,7 +183,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="cascade-fit-node">
+  <p class="hidden"><span class="math notranslate nohighlight">\(\newcommand{\B}[1]{ {\bf #1} }\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\R}[1]{ {\rm #1} }\)</span></p>
+<div class="section" id="cascade-fit-node">
 <h1>cascade_fit_node<a class="headerlink" href="#cascade-fit-node" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="cascade-a-fit-starting-at-a-node">
 <span id="id1"></span><h2>Cascade a Fit Starting at a Node<a class="headerlink" href="#cascade-a-fit-starting-at-a-node" title="Permalink to this headline">¶</a></h2>
@@ -262,12 +264,11 @@ This argument can’t be <code class="docutils literal notranslate"><span class=
 </div>
 <div class="section" id="fit-children">
 <span id="cascade-fit-node-fit-children"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id8">fit_children</a><a class="headerlink" href="#fit-children" title="Permalink to this headline">¶</a></h3>
-<p>is a python list of python lists.
-For each valid node_id, <em>fit_children[node_id]</em> is a list of child_node_id.
-Each child_node_id is a child of node_id and is between the root node and the
-fit goal set inclusive.
-These are the children of node_id that must be fit to
-obtain of fit of all the nodes in <a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a> .</p>
+<p>is the python list of python lists.
+For each valid <em>node_id</em>, <em>fit_children[node_id]</em> is the list of
+children of <em>node</em> that must be fit in order to fit the
+:ref`glossary.goal_node_set`;
+see <a class="reference internal" href="get_fit_children.html#get-fit-children-fit-children"><span class="std std-ref">fit_children</span></a> .</p>
 <div class="section" id="default">
 <span id="cascade-fit-node-fit-children-default"></span><span id="index-8"></span><h4><a class="toc-backref" href="#id9">default</a><a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h4>
 <p>If <em>fit_children</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, it will be computed by <code class="docutils literal notranslate"><span class="pre">cascade_fit_node</span></code>

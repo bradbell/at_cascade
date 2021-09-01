@@ -1,3 +1,5 @@
+.. include:: ../preamble.rst
+
 !!!!!!!!!!!!!!!
 iota_and_chi_py
 !!!!!!!!!!!!!!!

@@ -180,7 +180,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="create-child-node-db">
+  <p class="hidden"><span class="math notranslate nohighlight">\(\newcommand{\B}[1]{ {\bf #1} }\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\R}[1]{ {\rm #1} }\)</span></p>
+<div class="section" id="create-child-node-db">
 <h1>create_child_node_db<a class="headerlink" href="#create-child-node-db" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="create-child-database-from-fit-in-parent-database">
 <span id="id1"></span><h2>Create Child Database From Fit in Parent Database<a class="headerlink" href="#create-child-database-from-fit-in-parent-database" title="Permalink to this headline">¶</a></h2>
@@ -234,8 +236,8 @@ the results of a dismod_at sample command for both the fixed and random effects.
 </div>
 <div class="section" id="avgint-table">
 <span id="create-child-node-db-parent-node-database-avgint-table"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id7">avgint Table</a><a class="headerlink" href="#avgint-table" title="Permalink to this headline">¶</a></h4>
-<p>The avgint table predicts for the child nodes
-and comes from <a class="reference internal" href="child_avgint_table.html#id1"><span class="std std-ref">Create avgint Table That Predicts Rates for Child Nodes</span></a>.</p>
+<p>The avgint table determines which predictions are done for the child nodes
+and should come from <a class="reference internal" href="child_avgint_table.html#id1"><span class="std std-ref">Create avgint Table That Predicts Rates for Child Nodes</span></a>.</p>
 </div>
 <div class="section" id="predict-table">
 <span id="create-child-node-db-parent-node-database-predict-table"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id8">predict Table</a><a class="headerlink" href="#predict-table" title="Permalink to this headline">¶</a></h4>
@@ -253,7 +255,8 @@ column predict_id to c_predict_id.</p>
 <div class="section" id="c-avgint-table">
 <span id="create-child-node-db-parent-node-database-c-avgint-table"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id10">c_avgint Table</a><a class="headerlink" href="#c-avgint-table" title="Permalink to this headline">¶</a></h4>
 <p>The c_avgint table contains the original version of the avgint table
-that predicts for the parent node and is a version of the root node database
+that predicts for the parent node and is a version of the
+<a class="reference internal" href="glossary.html#glossary-root-node-database"><span class="std std-ref">root_node_database</span></a>
 avgint table with only the node_id column modified.</p>
 </div>
 </div>
@@ -263,22 +266,24 @@ avgint table with only the node_id column modified.</p>
 <em>child_name</em> is a <a class="reference internal" href="glossary.html#glossary-node-name"><span class="std std-ref">node_name</span></a> and a child of the <em>parent_node</em>.</p>
 <ul class="simple">
 <li><p>For each <em>child_name</em>, <em>child_node_databases[child_name]</em> is the name of
-<em>fit_node_database</em> that is created by this command.</p></li>
-<li><p>In this database, <em>child_name</em> will be the parent node in
-the dismod_at option table.</p></li>
+a fit_node_database that is created by this command.</p></li>
+<li><p>In this database, <em>child_name</em> will be the <a class="reference internal" href="glossary.html#glossary-fit-node"><span class="std std-ref">fit_node</span></a> .</p></li>
 <li><p>The rate table is changed to have null priors for omega;
 see <a class="reference internal" href="omega_constraint.html#id1"><span class="std std-ref">Set Omega Constraints in a Fit Node Database</span></a> for properly setting these priors.</p></li>
-<li><p>The difference priors are the same as in th parent node database.</p></li>
-<li><p>If the upper and lower limits are equal, the value priors are the same.
+<li><p>The difference priors are the same as in <em>parent_node_database</em>.</p></li>
+<li><p>If the upper and lower limits are equal, the value priors are effectively
+the same.
 Otherwise the mean and standard deviation in the values priors
-are replaced using the predict tables in the <em>parent_node_database</em>.</p></li>
+are replaced using the predict for the child node that are
+in the <em>parent_node_database</em>.</p></li>
+<li><p>The avgint table is a copy of the c_avgint table in the
+<em>parent_node_database</em> with the node_id replaced by the corresponding
+child node id.</p></li>
+<li><p>The following tables are the same as in the root_node_database:
+age, data, density, integrand, node, subgroup, time, weight, weight_grid.</p></li>
 <li><p>Only the dismod_at input tables are significant in the child node databases;
 e.g., an init command should be executed before any other dismod_at
 commands (except possibly a set command).</p></li>
-<li><p>The avgint table is a copy of the c_avgint table in the parent node
-database with the node_id replaced by the corresponding child node id.</p></li>
-<li><p>The following tables are the same as in the parent node database:
-age, data, density, integrand, node, subgroup, time, weight, weight_grid.</p></li>
 </ul>
 <p>This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <hr class="docutils" />
