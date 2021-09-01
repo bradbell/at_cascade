@@ -33,16 +33,16 @@ Use
 ===
 This routine builds the *omega* constraints using the
 :ref:`glossary.mtall` and :ref:`glossary.mtspecific` data in the
-*all_node_database* using the relation
+*all_node_database* and the relation
 
     omega = mtall - mtspecific
 
 If a node does not have *mtall* ( *mtspecific*) data
-it uses the data for the closest ancestor is used.
+it the data for the closest ancestor is used.
 If a node does not have an ancestor with *mtspecific* data,
 zero is used for its *mtspecific* data.
 If a node does not have an ancestor with *mtall* data,
-zero is used for its *omega* constraint.
+zero is used for the *omega* constraint for that node.
 
 fit_node_database
 *****************
@@ -52,7 +52,8 @@ This argument can't be ``None``.
 parent_node
 ===========
 We use *parent_node* to refer to the parent node in the
-dismod_at option table in the *fit_node_database*.
+dismod_at option table in the *fit_node_database*; i.e.,
+the :ref:`glossary.fit_node` .
 
 rate_table
 ==========
@@ -73,13 +74,13 @@ nslist Table
 ============
 On input, this table must be empty.
 Upon return, it will contain entries that implement the omega constraints
-for the children of the parent_node.
+for the children of the *parent_node*.
 
 nslist_pair Table
 =================
 On input, this table must be empty.
 Upon return, it will contain entries that implement the omega constraints
-for the children of the parent_node.
+for the children of the *parent_node*.
 
 Other Tables
 ============
