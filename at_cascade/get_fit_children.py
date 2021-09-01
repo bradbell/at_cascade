@@ -22,18 +22,13 @@ Syntax
 
 root_node_id
 ************
-This is the node_id in the *node_table* for the root node.
+This is the node_id in the node_table for the
+:ref:`glossary.root_node`.
 
 fit_goal_table
 **************
-This is python list of python dictionaries.
-The length of the list is the size of the
-:ref:`glossary.fit_goal_set`.
-For each possible *fit_goal_id*,
-the value *fit_goal_table[fit_goal_id]['node_id']* is
-the node_id for an element of the fit goal set.
-Each goal node must be the root node or a descendant
-of the root node.
+This is python list of python dictionaries containing the
+:ref:`fit_goal_table` .
 
 node_table
 **********
@@ -43,9 +38,10 @@ containing the dismod_at node table.
 fit_children
 ************
 The return value *fit_children* is a python list of python lists.
-For each valid node_id, *fit_children[node_id]* is a list of child_node_id.
-Each child_node_id is a child of node_id and is between the root node and the
-fit goal set inclusive.
+For each *node_id* in the node table,
+*fit_children[node_id]* is a list of child_node_id.
+Each child_node_id is a child of *node_id* and is between the
+root_node and the :ref:`glossary.fit_goal_set` inclusive.
 These are the children of node_id that must be fit to obtain
 a fit for all the goal nodes.
 

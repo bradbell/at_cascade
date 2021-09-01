@@ -63,12 +63,11 @@ This argument can't be ``None``.
 
 fit_children
 ************
-is a python list of python lists.
-For each valid node_id, *fit_children[node_id]* is a list of child_node_id.
-Each child_node_id is a child of node_id and is between the root node and the
-fit goal set inclusive.
-These are the children of node_id that must be fit to
-obtain of fit of all the nodes in :ref:`glossary.fit_goal_set` .
+is the python list of python lists.
+For each valid *node_id*, *fit_children[node_id]* is the list of
+children of *node* that must be fit in order to fit the
+:ref`glossary.goal_node_set`;
+see :ref:`get_fit_children.fit_children` .
 
 default
 =======

@@ -63,11 +63,18 @@ This is a dismod_at database with the following properties:
 
 -   The following tables are the same as in the
     :ref:`glossary.root_node_database`:
-    age, covariate, density, integrand, node, subgroup, time,
+    age, covariate, data, density, integrand, node, subgroup, time,
     weight, weight grid.
 -   The *fit_node_database* option table is the same as in the
     *root_node_database* except for the value of *parent_node_name*.
-    (The value of *parent_node_id* does not appear in the option table.)
+    The value of *parent_node_id* does not appear in the option table.
+-   The age and time points corresponding to the smoothing for the
+    parent rates (except omega)
+    and the covariate multipliers are the same as in the *root_node_database*.
+    In addition, the age and time difference prior corresponding to each
+    age and time point is the same as in the *root_node_database*.
+-   The smoothing for the child rates (except omega) are the same as in the
+    *root_node_database*.
 -   The subgroup table must have one row; i.e., there is one subgroup,
     one group and they correspond to all the nodes.
 -   The following tables in this database must be empty:
@@ -154,7 +161,8 @@ This is also denoted by :math:`\rho(a, t)`.
 
 root_node
 *********
-The top level node for this cascade.
+The top level node for this cascade; see
+:ref:`all_option_table.root_node_name`.
 
 root_node_database
 ******************

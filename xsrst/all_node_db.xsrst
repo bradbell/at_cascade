@@ -269,9 +269,9 @@ It specifies a value that is attached to each option name.
 root_node_name
 **************
 This option_name must appear and the corresponding option_value
-is the name of the root node in the node table of the
-:ref:`glossary.root_node_database`
-(the node table is the same for all the dismod_at databases).
+is the name of the :ref:`glossary.root_node` in the node table of the
+:ref:`glossary.root_node_database` .
+(The node table is the same in all the dismod_at databases.)
 
 sex_level
 *********

@@ -48,8 +48,8 @@ the results of a dismod_at sample command for both the fixed and random effects.
 
 avgint Table
 ============
-The avgint table predicts for the child nodes
-and comes from :ref:`child_avgint_table`.
+The avgint table determines which predictions are done for the child nodes
+and should come from :ref:`child_avgint_table`.
 
 predict Table
 =============
@@ -67,7 +67,8 @@ column predict_id to c_predict_id.
 c_avgint Table
 ==============
 The c_avgint table contains the original version of the avgint table
-that predicts for the parent node and is a version of the root node database
+that predicts for the parent node and is a version of the
+:ref:`glossary.root_node_database`
 avgint table with only the node_id column modified.
 
 child_node_databases
@@ -76,22 +77,24 @@ is a python dictionary and if *child_name* is a key for *child_node_databases*,
 *child_name* is a :ref:`glossary.node_name` and a child of the *parent_node*.
 
 -   For each *child_name*, *child_node_databases[child_name]* is the name of
-    *fit_node_database* that is created by this command.
--   In this database, *child_name* will be the parent node in
-    the dismod_at option table.
+    a fit_node_database that is created by this command.
+-   In this database, *child_name* will be the :ref:`glossary.fit_node` .
 -   The rate table is changed to have null priors for omega;
     see :ref:`omega_constraint` for properly setting these priors.
--   The difference priors are the same as in th parent node database.
--   If the upper and lower limits are equal, the value priors are the same.
+-   The difference priors are the same as in *parent_node_database*.
+-   If the upper and lower limits are equal, the value priors are effectively
+    the same.
     Otherwise the mean and standard deviation in the values priors
-    are replaced using the predict tables in the *parent_node_database*.
+    are replaced using the predict for the child node that are
+    in the *parent_node_database*.
+-   The avgint table is a copy of the c_avgint table in the
+    *parent_node_database* with the node_id replaced by the corresponding
+    child node id.
+-   The following tables are the same as in the root_node_database:
+    age, data, density, integrand, node, subgroup, time, weight, weight_grid.
 -   Only the dismod_at input tables are significant in the child node databases;
     e.g., an init command should be executed before any other dismod_at
     commands (except possibly a set command).
--   The avgint table is a copy of the c_avgint table in the parent node
-    database with the node_id replaced by the corresponding child node id.
--   The following tables are the same as in the parent node database:
-    age, data, density, integrand, node, subgroup, time, weight, weight_grid.
 
 This argument can't be ``None``.
 
