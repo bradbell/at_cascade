@@ -26,117 +26,114 @@ all_node_database
 *****************
 is a python string containing the name of the
 :ref:`all_node_db` that is created by this call.
-
-default
-=======
 This argument can't be ``None``.
 
 root_node_database
 ******************
 is a python string containing the name of the name of the
 :ref:`glossary.root_node_database`.
-
-default
-=======
 This argument can't be ``None``.
 
 all_cov_reference
 *****************
 This is a python dictionary with a key equal to the node name for
-each node in the node table in *root_node_database*.
-If *node* is a node name,
-*all_cov_reference[node]* is a python dictionary with a key equal to the
-covariate name for each covariate in the *root_node_database*.
-If *covariate* is an covariate name,
-*all_cov_reference[node][covariate]*
-is the reference values for the specified node and covariate.
+each node in the node table in root_node_database.
+If *node_name* is a node name,
+*all_cov_reference[node_name]* is a python dictionary with a key equal to the
+covariate name for each covariate in the root_node_database.
+If *covariate_name* is an covariate name,
 
-default
-=======
-This argument can't be ``None``.
+| |tab| *all_cov_reference[node_name][covariate_name]*
+
+is the reference values for the specified node and covariate.
+The argument *all_cov_reference* can't be ``None``.
 
 omega_grid
 **********
 is a dictionary with two keys ``age`` and ``time``.
-The value *omega*\ [``age``] is a list containing the
-age_id values for the :ref:``omega_grid``; i.e.,
-These are indices in the root node database age table.
-The value *omega*\ [``time``] is a list containing the
-time_id values for the omega grid.
-We use the notation *n_omega_age* (*n_omega_time*) for the length
-of the age (time) list.
+If this argument is ``None``,
+the :ref:`omega_grid.omega_age_grid_table` and
+the :ref:`omega_grid.omega_time_grid_table` are empty.
 
-default
-=======
-If this argument is ``None``, there is no omega grid.
+age
+===
+The value *omega*\ [``age``] is a list containing the
+age_id values for the omega_grid.
+These are indices in the root_node_database age table.
+We use the notation *n_omega_age* for the length of the age list.
+
+time
+====
+The value *omega*\ [``time``] is a list containing the
+time_id values for the omega_grid.
+These are indices in the root_node_database time table.
+We use the notation *n_omega_time* for the length of the time list.
 
 mtall_data
 **********
 This is a python dictionary with a key for each node name
-for the root node and its descendant.
+for the :ref:`glossary.root_node` and its descendant.
 The value *mtall_data[node_name]* is a list.
-For *i* equal 0, ..., *n_omega_age*-1 and *j* equal 0, ..., *n_omega_time*-1,
-*mtall_data[node_name][ i * n_omega_time + j ]
+For *i* equal 0, ..., *n_omega_age*-1
+and *j* equal 0, ..., *n_omega_time*-1,
+
+| |tab| *mtall_data[node_name][ i * n_omega_time + j ]*
+
 is the value of *mtall* at the specified node,
 the age corresponding to index *i* in *omega_grid*\ [``age``],
 and time corresponding to index *j* in *omega_grid*\ [``time``].
 
 default
 =======
-This argument is ``None`` if and only if *omega_grid* is ``None``.
+The *mtall_data* argument is ``None`` if and only if *omega_grid* is ``None``.
+If *mtall_data* is ``None`` the
+:ref:`all_mtall.all_mtall_table` and
+:ref:`all_mtall.mtall_index_table` will be empty.
+
 
 mtspecific_data
 ***************
 This is a python dictionary with a key for each node name
-for the root node and its descendant.
+for the :ref:`glossary.root_node` and its descendant.
 The value *mtspecific_data[node_name]* is a list.
-For *i* equal 0, ..., *n_omega_age*-1 and *j* equal 0, ..., *n_omega_time*-1,
-*mtspecific_data[node_name][ i * n_omega_time + j ]
+For *i* equal 0, ..., *n_omega_age*-1
+and *j* equal 0, ..., *n_omega_time*-1,
+
+| |tab| *mtspecific_data[node_name][ i * n_omega_time + j ]*
+
 is the value of *mtspecific* at the specified node,
 the age corresponding to index *i* in *omega_grid*\ [``age``],
 and time corresponding to index *j* in *omega_grid*\ [``time``].
 
 default
 =======
-If this argument in ``None`` the
+If *omega_grid* is ``None``, *mtspecific_data* must also be ``None``.
+If *mtspecific_data* is ``None`` the
 :ref:`all_mtspecific.all_mtspecific_table` and
 :ref:`all_mtspecific.mtspecific_index_table` will be empty.
-If *omega_grid* is ``None``, this argument must also be ``None``.
 
 fit_goal_set
 ************
 This is a python set equal to the :ref:`glossary.fit_goal_set`
 where each element is represented by its node name.
-
-default
-=======
-If this argument is ``None``, all of the nodes from the *root_node*
-down will be fit.
+If this argument is ``None``, the root_node and all of its
+descendants will be fit.
 
 sex_level
 *********
 Not yet specified.
-
-default
-=======
 If this argument is ``None``, there will be no sex split between
-*root_node* and the goal nodes.
+*root_node* and the nodes in the fit_goal_set.
 
 in_parallel
 ***********
 Not yet specified.
-
-default
-=======
 If this argument is ``None``, the cascade will be run sequentially; i.e.,
 not in parallel.
 
 min_interval
 ************
 Not yet specified.
-
-default
-=======
 If this argument is ``None``, all age and time averages will
 approximated by the value at the midpoint of the intervals.
 

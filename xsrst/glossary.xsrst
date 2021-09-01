@@ -63,7 +63,8 @@ This is a dismod_at database with the following properties:
 
 -   The following tables are the same as in the
     :ref:`glossary.root_node_database`:
-    covariate, density, integrand, node, subgroup, weight, weight grid.
+    age, covariate, density, integrand, node, subgroup, time,
+    weight, weight grid.
 -   The *fit_node_database* option table is the same as in the
     *root_node_database* except for the value of *parent_node_name*.
     (The value of *parent_node_id* does not appear in the option table.)
