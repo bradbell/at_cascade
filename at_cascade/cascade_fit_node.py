@@ -174,6 +174,12 @@ def cascade_fit_node(
     assert path_list[-1] == 'dismod.db'
     fit_node_name = path_list[-2]
     #
+    # check fit_node_name
+    msg  = f'last directory in fit_node_database = {fit_node_database}\n'
+    msg += 'is not the same as parent_node_name in its option table'
+    parent_node_name = at_cascade.get_parent_node(fit_node_database)
+    assert fit_node_name == parent_node_name, msg
+    #
     # fit_node_id
     fit_node_id = node_table_name2id(node_table, fit_node_name)
     #

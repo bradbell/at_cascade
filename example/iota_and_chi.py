@@ -87,9 +87,11 @@ The true value for *alpha* (used which simulating the data) is
 
 gamma
 =====
-We use *gamma_prevalence* ( *gamma_mtexcess* )
+We use gamma_\ *integrand*
 for the :ref:`glossary.meas_noise` covariate multiplier
-which multiplies *one* add affects prevalence noise ( mtexcess noise) .
+which multiplies *one* add affects the specified integrand
+where *integrand* is one of the following:
+Sincidence, mtexcess, prevalence.
 These multipliers adds to the nose level in log space,
 because the corresponding densities are log Gaussian.
 
@@ -243,9 +245,8 @@ routine replaces them for other nodes.
 
 Gamma Smoothing
 ***************
-This is the smoothing used for *gamma_Sincidence* ( *gamma_mtexcess)
-which multiplies the *one* covariate and adds noise to the
-model for the Sincidence ( mtexcess) measurements.
+This is the smoothing used for gamma_\ *integrand* where
+*integrand* is Sincidence, mtexcess, or prevalence.
 There is only one age and one time point in this smoothing
 so it does not have dage or dtime priors.
 In addition, the value prior has upper and lower limits equal
@@ -555,6 +556,12 @@ def root_node_db(file_name) :
             'effected':   'mtexcess',
             'group':      'world',
             'smooth':     'gamma_smooth',
+        },{ # gamma_prevalence
+            'covariate':  'one',
+            'type':       'meas_noise',
+            'effected':   'prevalence',
+            'group':      'world',
+            'smooth':     'gamma_smooth',
     } ]
     #
     # subgroup_table
@@ -602,7 +609,7 @@ def root_node_db(file_name) :
         }
         row_list       = list()
         max_meas_value =  {
-            'mtexcess': 0.0, 'Sincidence': 0.0
+            'mtexcess': 0.0, 'Sincidence': 0.0, 'prevalence': 0.0
         }
         for (age_id, age) in enumerate( age_grid ) :
             for income in income_grid[node] :

@@ -50,7 +50,7 @@ This column identifies a row in the age table of the
 fit_node_database that this prediction is for.
 
 c_time_id
-_========
+=========
 This column identifies a row in the time table of the
 fit_node_database that this prediction is for.
 
