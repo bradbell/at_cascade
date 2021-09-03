@@ -1,0 +1,91 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!
+no_ode_fit
+!!!!!!!!!!
+
+.. meta::
+   :keywords: no_ode_fit, do, no, ode, fit, for, one, node
+
+.. index:: no_ode_fit, do, no, ode, fit, for, one, node
+
+.. _no_ode_fit:
+
+Do A No Ode Fit For One Node
+############################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _no_ode_fit.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/no_ode_fit.py
+    :lines: 190-192
+    :language: py
+
+.. meta::
+   :keywords: in_database
+
+.. index:: in_database
+
+.. _no_ode_fit.in_database:
+
+in_database
+***********
+is a python string specifying the location of a
+:ref:`glossary.fit_node_database`
+relative to the current working directory.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: in_dir
+
+.. index:: in_dir
+
+.. _no_ode_fit.in_database.in_dir:
+
+in_dir
+======
+is the directory where the *in_database* is located.
+
+.. meta::
+   :keywords: fit_node
+
+.. index:: fit_node
+
+.. _no_ode_fit.in_database.fit_node:
+
+fit_node
+========
+This is the name of the
+:ref:`glossary.fit_node` for the *in_database* and *out_database*.
+
+.. meta::
+   :keywords: out_database
+
+.. index:: out_database
+
+.. _no_ode_fit.out_database:
+
+out_database
+************
+The return value *out_database* is equal to
+
+    *in_dir*\ /\ *fit_node*\ /dismod.db
+
+which can't be the same file name as *in_database*.
+This is a fit_node_database similar to *in_database*.
+The difference is that the mean value in the priors for the fixed effects
+has been replace by the optimal estimate for fitting with the integrands
+that do not used the ODE.
+
+----
+
+xsrst input file: ``at_cascade/no_ode_fit.py``

@@ -1,0 +1,26 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!
+no_ode_xam_py
+!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: no_ode_xam_py, no_ode_xam:, python, source, code
+
+.. index:: no_ode_xam_py, no_ode_xam:, python, source, code
+
+.. _no_ode_xam_py:
+
+no_ode_xam: Python Source Code
+#################################
+.. contents::
+   :local:
+
+
+.. literalinclude:: ../../example/no_ode_xam.py
+    :lines: 298-914
+    :language: py
+
+----
+
+xsrst input file: ``example/no_ode_xam.py``

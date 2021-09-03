@@ -91,7 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="example.html">example</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="iota_and_chi.html">iota_and_chi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="no_ode_xam.html">no_ode_xam</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="one_at_function.html">one_at_function</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">one_at_function_py</a></li>
 </ul>
@@ -375,7 +375,9 @@
     <span class="n">subgroup_table</span> <span class="o">=</span> <span class="p">[</span> <span class="p">{</span><span class="s1">&#39;subgroup&#39;</span><span class="p">:</span> <span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">:</span><span class="s1">&#39;world&#39;</span><span class="p">}</span> <span class="p">]</span>
     <span class="c1">#</span>
     <span class="c1"># integrand_table</span>
-    <span class="n">integrand_table</span> <span class="o">=</span> <span class="p">[</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;Sincidence&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;mulcov_0&#39;</span><span class="p">}</span> <span class="p">]</span>
+    <span class="n">integrand_table</span> <span class="o">=</span> <span class="p">[</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;Sincidence&#39;</span><span class="p">}</span> <span class="p">]</span>
+    <span class="k">for</span> <span class="n">mulcov_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">mulcov_table</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
+        <span class="n">integrand_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;mulcov_</span><span class="si">{</span><span class="n">mulcov_id</span><span class="si">}</span><span class="s1">&#39;</span> <span class="p">}</span> <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># avgint_table</span>
     <span class="n">avgint_table</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -547,16 +549,16 @@
         <span class="c1">#</span>
         <span class="c1"># check_value</span>
         <span class="n">check_value</span> <span class="o">=</span> <span class="n">iota_true</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">goal_name</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
-        <span class="c1">#</span>
+        <span class="n">error</span>       <span class="o">=</span> <span class="n">check_value</span> <span class="o">-</span> <span class="n">avg_integrand</span>
         <span class="n">rel_error</span>   <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">avg_integrand</span> <span class="o">/</span> <span class="n">check_value</span>
         <span class="c1">#</span>
         <span class="c1"># check the fit</span>
-        <span class="c1"># print(age, rel_error, check_value - avg_integrand, sample_std)</span>
+        <span class="c1"># print(age, rel_error, error, sample_std)</span>
         <span class="k">if</span> <span class="n">random_income</span> <span class="p">:</span>
             <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rel_error</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2e-2</span>
         <span class="k">else</span> <span class="p">:</span>
             <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rel_error</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2e-3</span>
-        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">avg_integrand</span> <span class="o">-</span> <span class="n">check_value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">sample_std</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">sample_std</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># main</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>

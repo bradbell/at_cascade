@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/child_avgint_table.py
-    :lines: 79-82
+    :lines: 80-83
     :language: py
 
 .. meta::
@@ -52,8 +52,9 @@ This argument can't be ``None``.
 fit_node_database
 *****************
 is a python string containing the name of the :ref:`glossary.fit_node_database`.
-The avgint table will be placed in this database.
-The previous avgint table in this database is lost.
+A new avgint table will be placed in this database,
+the previous avgint table in this database is lost,
+and there are no other changes to the database.
 This argument can't be ``None``.
 
 .. meta::
@@ -92,8 +93,15 @@ c_age_id
 This column identifies a row in the age table of the
 fit_node_database that this prediction is for.
 
+.. meta::
+   :keywords: c_time_id
+
+.. index:: c_time_id
+
+.. _child_avgint_table.avgint_table.c_time_id:
+
 c_time_id
-_========
+=========
 This column identifies a row in the time table of the
 fit_node_database that this prediction is for.
 
@@ -109,7 +117,7 @@ Rectangular Grid
 For each rate (or covariate multiplier) that has a non-null
 parent smoothing (group smoothing) in the fit_node_database,
 all of the age time pairs in the smoothing are represented
-in the new avgint table
+in the new avgint table.
 
 ----
 

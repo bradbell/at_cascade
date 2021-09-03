@@ -5,11 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta content="iota_and_chi_py, iota_and_chi:, python, source, code" name="keywords" />
+  <meta content="no_ode_xam_py, no_ode_xam:, python, source, code" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>iota_and_chi_py &mdash; at_cascade  documentation</title>
+  <title>no_ode_xam_py &mdash; at_cascade  documentation</title>
   
 
   
@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="one_at_function" href="one_at_function.html" />
-    <link rel="prev" title="iota_and_chi" href="iota_and_chi.html" /> 
+    <link rel="prev" title="no_ode_xam" href="no_ode_xam.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,8 +91,8 @@
 <li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="example.html">example</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="iota_and_chi.html">iota_and_chi</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">iota_and_chi_py</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="no_ode_xam.html">no_ode_xam</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">no_ode_xam_py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="one_at_function.html">one_at_function</a></li>
@@ -151,15 +151,15 @@
         
           <li><a href="example.html">example</a> &raquo;</li>
         
-          <li><a href="iota_and_chi.html">iota_and_chi</a> &raquo;</li>
+          <li><a href="no_ode_xam.html">no_ode_xam</a> &raquo;</li>
         
-      <li>iota_and_chi_py</li>
+      <li>no_ode_xam_py</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/xsrst/iota_and_chi_py.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/xsrst/no_ode_xam_py.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -174,10 +174,10 @@
             
   <p class="hidden"><span class="math notranslate nohighlight">\(\newcommand{\B}[1]{ {\bf #1} }\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\R}[1]{ {\rm #1} }\)</span></p>
-<div class="section" id="iota-and-chi-py">
-<h1>iota_and_chi_py<a class="headerlink" href="#iota-and-chi-py" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="iota-and-chi-python-source-code">
-<span id="id1"></span><h2>iota_and_chi: Python Source Code<a class="headerlink" href="#iota-and-chi-python-source-code" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="no-ode-xam-py">
+<h1>no_ode_xam_py<a class="headerlink" href="#no-ode-xam-py" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="no-ode-xam-python-source-code">
+<span id="id1"></span><h2>no_ode_xam: Python Source Code<a class="headerlink" href="#no-ode-xam-python-source-code" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># imports</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
@@ -210,7 +210,7 @@
 <span class="k">if</span> <span class="n">random_seed</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
     <span class="n">random_seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="p">)</span>
 <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;iota_and_chi: random_seed = &#39;</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no_ode_xam: random_seed = &#39;</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">)</span>
 <span class="c1"># END random_seed</span>
 <span class="c1">#</span>
 <span class="c1"># BEGIN alpha_true</span>
@@ -265,7 +265,10 @@
     <span class="k">if</span> <span class="n">rate</span> <span class="o">==</span> <span class="s1">&#39;iota&#39;</span> <span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">a</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-4</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="n">s_n</span> <span class="o">+</span> <span class="n">income_effect</span>  <span class="p">)</span>
     <span class="k">if</span> <span class="n">rate</span> <span class="o">==</span> <span class="s1">&#39;chi&#39;</span> <span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">a</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-1</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="n">s_n</span> <span class="o">+</span> <span class="n">income_effect</span> <span class="p">)</span>
+        <span class="c1"># chi is constant up to second age grid point because prevalence</span>
+        <span class="c1"># cannot determine chi at age zero.</span>
+        <span class="n">aa</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">age_grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">aa</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-1</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="n">s_n</span> <span class="o">+</span> <span class="n">income_effect</span> <span class="p">)</span>
     <span class="k">if</span> <span class="n">rate</span> <span class="o">==</span> <span class="s1">&#39;omega&#39;</span> <span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">a</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="n">income_effect</span> <span class="p">)</span>
     <span class="k">assert</span> <span class="kc">False</span>
@@ -367,7 +370,7 @@
     <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;parent_chi_value_prior&#39;</span><span class="p">,</span> <span class="s1">&#39;parent_dage_prior&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">smooth_table</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
         <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;parent_chi_smooth&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;age_id&#39;</span><span class="p">:</span>     <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_grid</span><span class="p">)</span> <span class="p">),</span>
+        <span class="s1">&#39;age_id&#39;</span><span class="p">:</span>     <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_grid</span><span class="p">)</span> <span class="p">),</span>
         <span class="s1">&#39;time_id&#39;</span><span class="p">:</span>    <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="s1">&#39;fun&#39;</span><span class="p">:</span>        <span class="n">fun</span><span class="p">,</span>
     <span class="p">})</span>
@@ -391,7 +394,7 @@
     <span class="p">})</span>
     <span class="c1">#</span>
     <span class="c1"># BEGIN gamma_smooth</span>
-    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span> <span class="p">:</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">smooth_table</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
         <span class="s1">&#39;name&#39;</span><span class="p">:</span>       <span class="s1">&#39;gamma_smooth&#39;</span><span class="p">,</span>
         <span class="s1">&#39;age_id&#39;</span><span class="p">:</span>     <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -454,6 +457,12 @@
             <span class="s1">&#39;effected&#39;</span><span class="p">:</span>   <span class="s1">&#39;mtexcess&#39;</span><span class="p">,</span>
             <span class="s1">&#39;group&#39;</span><span class="p">:</span>      <span class="s1">&#39;world&#39;</span><span class="p">,</span>
             <span class="s1">&#39;smooth&#39;</span><span class="p">:</span>     <span class="s1">&#39;gamma_smooth&#39;</span><span class="p">,</span>
+        <span class="p">},{</span> <span class="c1"># gamma_prevalence</span>
+            <span class="s1">&#39;covariate&#39;</span><span class="p">:</span>  <span class="s1">&#39;one&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span>       <span class="s1">&#39;meas_noise&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;effected&#39;</span><span class="p">:</span>   <span class="s1">&#39;prevalence&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;group&#39;</span><span class="p">:</span>      <span class="s1">&#39;world&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;smooth&#39;</span><span class="p">:</span>     <span class="s1">&#39;gamma_smooth&#39;</span><span class="p">,</span>
     <span class="p">}</span> <span class="p">]</span>
     <span class="c1">#</span>
     <span class="c1"># subgroup_table</span>
@@ -464,12 +473,9 @@
         <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Sincidence&#39;</span><span class="p">},</span>
         <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mtexcess&#39;</span> <span class="p">},</span>
         <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;prevalence&#39;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mtspecific&#39;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mulcov_0&#39;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mulcov_1&#39;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mulcov_2&#39;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mulcov_3&#39;</span><span class="p">},</span>
     <span class="p">]</span>
+    <span class="k">for</span> <span class="n">mulcov_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">mulcov_table</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
+        <span class="n">integrand_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;mulcov_</span><span class="si">{</span><span class="n">mulcov_id</span><span class="si">}</span><span class="s1">&#39;</span> <span class="p">}</span> <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># avgint_table</span>
     <span class="n">avgint_table</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -504,7 +510,7 @@
         <span class="p">}</span>
         <span class="n">row_list</span>       <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="n">max_meas_value</span> <span class="o">=</span>  <span class="p">{</span>
-            <span class="s1">&#39;mtexcess&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;Sincidence&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
+            <span class="s1">&#39;mtexcess&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;Sincidence&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;prevalence&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
         <span class="p">}</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">age_id</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">age_grid</span> <span class="p">)</span> <span class="p">:</span>
             <span class="k">for</span> <span class="n">income</span> <span class="ow">in</span> <span class="n">income_grid</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="p">:</span>
@@ -557,6 +563,7 @@
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;tolerance_random&#39;</span><span class="p">,</span>      <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;1e-8&#39;</span><span class="p">},</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;bound_random&#39;</span><span class="p">,</span>          <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">},</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;meas_noise_effect&#39;</span><span class="p">,</span>     <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;add_std_scale_none&#39;</span><span class="p">},</span>
+        <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;hold_out_integrand&#39;</span><span class="p">,</span>    <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;mtexcess&#39;</span><span class="p">},</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;random_seed&#39;</span><span class="p">,</span>           <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)},</span>
     <span class="p">]</span>
     <span class="c1"># ----------------------------------------------------------------------</span>
@@ -677,12 +684,12 @@
             <span class="n">rate</span>        <span class="o">=</span> <span class="s1">&#39;chi&#39;</span>
         <span class="c1">#</span>
         <span class="n">check_value</span> <span class="o">=</span> <span class="n">rate_true</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">goal_name</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
+        <span class="n">error</span>       <span class="o">=</span> <span class="n">check_value</span> <span class="o">-</span> <span class="n">avg_integrand</span>
         <span class="n">rel_error</span>   <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">avg_integrand</span> <span class="o">/</span> <span class="n">check_value</span>
         <span class="c1">#</span>
-        <span class="c1"># check the fit</span>
-        <span class="c1"># print(rate, age, rel_error, check_value - avg_integrand, sample_std)</span>
+        <span class="c1"># print(rate, age, rel_error, error, sample_std)</span>
         <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rel_error</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-1</span>
-        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">avg_integrand</span> <span class="o">-</span> <span class="n">check_value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">sample_std</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">sample_std</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># main</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
@@ -765,9 +772,10 @@
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">work_dir</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">fit_node_dir</span> <span class="p">)</span>
     <span class="c1">#</span>
-    <span class="c1"># fit_node_database = root_node_database</span>
+    <span class="c1"># fit_node_database</span>
+    <span class="n">out_database</span> <span class="o">=</span> <span class="n">at_cascade</span><span class="o">.</span><span class="n">no_ode_fit</span><span class="p">(</span><span class="n">root_node_database</span><span class="p">)</span>
     <span class="n">fit_node_database</span> <span class="o">=</span>  <span class="n">fit_node_dir</span> <span class="o">+</span> <span class="s1">&#39;/dismod.db&#39;</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">root_node_database</span><span class="p">,</span> <span class="n">fit_node_database</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">out_database</span> <span class="o">==</span> <span class="n">fit_node_database</span>
     <span class="c1">#</span>
     <span class="c1"># cascade starting at root node</span>
     <span class="n">at_cascade</span><span class="o">.</span><span class="n">cascade_fit_node</span><span class="p">(</span>
@@ -785,13 +793,12 @@
 
 <span class="c1">#</span>
 <span class="n">main</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;iota_and_chi: OK&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no_ode_xam: OK&#39;</span><span class="p">)</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">ncvome</span>
 </pre></div>
 </div>
 <hr class="docutils" />
-<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">example/iota_and_chi.py</span></code></p>
+<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">example/no_ode_xam.py</span></code></p>
 </div>
 </div>
 
@@ -806,7 +813,7 @@
         <a href="one_at_function.html" class="btn btn-neutral float-right" title="one_at_function" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="iota_and_chi.html" class="btn btn-neutral float-left" title="iota_and_chi" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="no_ode_xam.html" class="btn btn-neutral float-left" title="no_ode_xam" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

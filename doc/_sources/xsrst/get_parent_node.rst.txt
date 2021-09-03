@@ -1,0 +1,60 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!
+get_parent_node
+!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: get_parent_node, get, parent, node, name, from, option, table
+
+.. index:: get_parent_node, get, parent, node, name, from, option, table
+
+.. _get_parent_node:
+
+Get Parent Node Name From Option Table
+######################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _get_parent_node.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/get_parent_node.py
+    :lines: 41-43
+    :language: py
+
+.. meta::
+   :keywords: database
+
+.. index:: database
+
+.. _get_parent_node.database:
+
+database
+********
+This is a dismod_at database.
+
+.. meta::
+   :keywords: parent_node_name
+
+.. index:: parent_node_name
+
+.. _get_parent_node.parent_node_name:
+
+parent_node_name
+****************
+The return value *parent_node_name* is the *database* option table
+*option_value* for the row where *option_name* is ``parent_node_name``.
+An assert will be generated if no such *option_name* is found in the
+option table.
+
+----
+
+xsrst input file: ``at_cascade/get_parent_node.py``
