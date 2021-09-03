@@ -17,6 +17,7 @@ see http://www.gnu.org/licenses/agpl.txt
     dage
     dtime
     mulcov
+    init
 }
 
 Glossary
@@ -54,13 +55,16 @@ are also be fit.
 
 fit_node
 ********
-For a dismod_at run, *fit_node* is
+For a dismod_at database, *fit_node* is
 the parent node in the dismod_at option table.
 
 fit_node_database
 *****************
 This is a dismod_at database with the following properties:
 
+-   Only the dismod_at input tables are significant in a fit_node_databases;
+    e.g., an init command should be executed before any other dismod_at
+    commands (except possibly a set command).
 -   The following tables are the same as in the
     :ref:`glossary.root_node_database`:
     age, covariate, data, density, integrand, node, subgroup, time,

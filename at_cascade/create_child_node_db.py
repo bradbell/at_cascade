@@ -11,7 +11,6 @@
 {xsrst_begin create_child_node_db}
 {xsrst_spell
     var
-    init
 }
 
 Create Child Database From Fit in Parent Database
@@ -31,9 +30,9 @@ This argument can't be ``None``.
 
 parent_node_database
 ********************
-is a python string containing the name of a :ref:`glossary.fit_node_database`.
-The two predict tables (mentioned below)
-are used to create priors in the child node databases.
+is a python string containing the name of a dismod_at database.
+It has two predict tables (mentioned below)
+that are used to create priors in the child node databases.
 This argument can't be ``None``.
 
 parent_node
@@ -60,9 +59,9 @@ and the avgint table corresponding to :ref:`child_avgint_table`.
 c_predict_fit_var Table
 =======================
 The c_predict_fit_var table contains
-the results of a dismod_at sample command with the fit_var option
-and then moving the predict table to c_predict and renaming the
-column predict_id to c_predict_id.
+the results of a dismod_at predict command with the fit_var option
+and then moving the predict table to c_predict_fit_var and renaming the
+column predict_id to c_predict_fit_var_id.
 
 c_avgint Table
 ==============
@@ -77,24 +76,21 @@ is a python dictionary and if *child_name* is a key for *child_node_databases*,
 *child_name* is a :ref:`glossary.node_name` and a child of the *parent_node*.
 
 -   For each *child_name*, *child_node_databases[child_name]* is the name of
-    a fit_node_database that is created by this command.
+    a :ref:`glossary.fit_node_database` that is created by this command.
 -   In this database, *child_name* will be the :ref:`glossary.fit_node` .
 -   The rate table is changed to have null priors for omega;
     see :ref:`omega_constraint` for properly setting these priors.
 -   The difference priors are the same as in *parent_node_database*.
--   If the upper and lower limits are equal, the value priors are effectively
-    the same.
+-   If the upper and lower limits are equal,
+    the value priors are effectively the same.
     Otherwise the mean and standard deviation in the values priors
-    are replaced using the predict for the child node that are
-    in the *parent_node_database*.
+    are replaced using the predict, in the *parent_node_database*,
+    for the child node.
 -   The avgint table is a copy of the c_avgint table in the
     *parent_node_database* with the node_id replaced by the corresponding
     child node id.
 -   The following tables are the same as in the root_node_database:
     age, data, density, integrand, node, subgroup, time, weight, weight_grid.
--   Only the dismod_at input tables are significant in the child node databases;
-    e.g., an init command should be executed before any other dismod_at
-    commands (except possibly a set command).
 
 This argument can't be ``None``.
 

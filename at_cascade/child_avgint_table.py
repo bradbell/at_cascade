@@ -30,8 +30,9 @@ This argument can't be ``None``.
 fit_node_database
 *****************
 is a python string containing the name of the :ref:`glossary.fit_node_database`.
-The avgint table will be placed in this database.
-The previous avgint table in this database is lost.
+A new avgint table will be placed in this database,
+the previous avgint table in this database is lost,
+and there are no other changes to the database.
 This argument can't be ``None``.
 
 parent_node
@@ -59,7 +60,7 @@ Rectangular Grid
 For each rate (or covariate multiplier) that has a non-null
 parent smoothing (group smoothing) in the fit_node_database,
 all of the age time pairs in the smoothing are represented
-in the new avgint table
+in the new avgint table.
 
 {xsrst_end child_avgint_table}
 '''
