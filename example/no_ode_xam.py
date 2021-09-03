@@ -88,7 +88,7 @@ The true value for these multipliers
 
 gamma
 =====
-We use gamma_\ *integrand*
+We use gamma\_\ *integrand*
 for the :ref:`glossary.meas_noise` covariate multiplier
 which multiplies *one* add affects the specified integrand
 where *integrand* is one of the following:
@@ -257,7 +257,7 @@ routine replaces them for other nodes.
 
 Gamma Smoothing
 ***************
-This is the smoothing used for gamma_\ *integrand* where
+This is the smoothing used for gamma\_\ *integrand* where
 *integrand* is Sincidence, mtexcess, or prevalence.
 There is only one age and one time point in this smoothing
 so it does not have dage or dtime priors.
