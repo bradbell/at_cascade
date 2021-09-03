@@ -372,7 +372,6 @@ def create_child_node_db(
         for row in child_tables['option'] :
             if row['option_name'] == 'parent_node_name' :
                 row['option_value'] = child_name
-        tbl_name = 'option'
         #
         # child_tables['covariate']
         for child_row in child_tables['covariate'] :
@@ -406,6 +405,7 @@ def create_child_node_db(
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
                 #
+                # child_tables['smooth']
                 child_smooth_id = len(child_tables['smooth'])
                 smooth_row['smooth_name'] += f'_{child_smooth_id}'
                 child_tables['smooth'].append(smooth_row)
