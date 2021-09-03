@@ -15,12 +15,12 @@
 # '
 # list of files and or directories that are moved to new names
 # move_paths='
-#   example/simple_ode.py
+#   example/iota_and_chi.py
 # '
 # list of sed commands that map old file and directory names to new names.
 # The characters @s, @d, @n get converted to a space, dollar sign, new line.
 # move_seds='
-#   s|simple_ode|prevalence2iota|
+#   s|iota_and_chi|no_ode_xam|
 # '
 # list of files that get edited by the extra_seds command
 # extra_files='
@@ -32,4 +32,4 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|simple_ode|prevalence2iota|
+s|iota_and_chi|no_ode_xam|g

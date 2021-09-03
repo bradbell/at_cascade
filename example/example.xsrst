@@ -15,7 +15,7 @@ The at_cascade Examples
 .. comment BEGIN_SORT_THIS_LINE_PLUS_3
 
 {xsrst_child_table
-    example/iota_and_chi.py
+    example/no_ode_xam.py
     example/one_at_function.py
     example/prevalence2iota.py
 }

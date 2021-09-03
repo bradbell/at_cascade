@@ -8,7 +8,7 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin_parent iota_and_chi}
+{xsrst_begin_parent no_ode_xam}
 {xsrst_spell
     avg
     dtime
@@ -17,8 +17,13 @@
     smoothings
 }
 
-Example Estimation of iota and chi
-##################################
+Example Using no_ode_fit To Initialize Optimization
+###################################################
+This example uses :ref:`glossary.mtexcess` data during a :ref:`no_ode_fit`
+and then holds it out during the actual estimation.
+This is meant to simulate the case where mtexcess is obtain
+form other data to help initialize the optimization
+(and without this smart initialization the optimization would fail).
 For this example everything is constant in time so the
 functions below do not depend on time.
 
@@ -141,7 +146,7 @@ The simulated integrands for this example are
 The data is simulated without any noise
 but it is modeled as having noise.
 In addition, the mtexcess data is only used for the
-:ref:`no_ode_fit` and is held out during actual fits.
+no_ode_fit and is held out during actual fits.
 This simulates the case where the mtexcess data was constructed from
 the other data in order to help initialize the optimization.
 
@@ -272,21 +277,24 @@ tables of the fit_node_database corresponding to each node.
 The ``check_fit`` routine uses these tables to check that fit
 against the truth.
 
-{xsrst_end iota_and_chi}
+{xsrst_end no_ode_xam}
 ------------------------------------------------------------------------------
-{xsrst_begin iota_and_chi_py}
+{xsrst_begin no_ode_xam_py}
+{xsrst_spell
+    xam
+}
 
-iota_and_chi: Python Source Code
+no_ode_xam: Python Source Code
 #################################
 
 {xsrst_file
-    BEGIN iota_and_chi source code
-    END iota_and_chi source code
+    BEGIN no_ode_xam source code
+    END no_ode_xam source code
 }
 
-{xsrst_end iota_and_chi_py}
+{xsrst_end no_ode_xam_py}
 '''
-# BEGIN iota_and_chi source code
+# BEGIN no_ode_xam source code
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
@@ -319,7 +327,7 @@ random_seed = 0
 if random_seed == 0 :
     random_seed = int( time.time() )
 random.seed(random_seed)
-print('iota_and_chi: random_seed = ', random_seed)
+print('no_ode_xam: random_seed = ', random_seed)
 # END random_seed
 #
 # BEGIN alpha_true
@@ -503,7 +511,7 @@ def root_node_db(file_name) :
     })
     #
     # BEGIN gamma_smooth
-    fun = lambda a, t : (1.0, None, None)
+    fun = lambda a, t : (0.5, None, None)
     smooth_table.append({
         'name':       'gamma_smooth',
         'age_id':     [0],
@@ -902,7 +910,6 @@ def main() :
 
 #
 main()
-print('iota_and_chi: OK')
+print('no_ode_xam: OK')
 sys.exit(0)
-ncvome
-# END iota_and_chi source code
+# END no_ode_xam source code

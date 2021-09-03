@@ -27,6 +27,7 @@ list='
     test/get_fit_children.py
     example/one_at_function.py
     example/prevalence2iota.py
+    example/no_ode_xam.py
 '
 for script in $list
 do
