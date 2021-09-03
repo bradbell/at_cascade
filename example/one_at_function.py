@@ -609,16 +609,16 @@ def check_fit(goal_database) :
         #
         # check_value
         check_value = iota_true(age, goal_name, income)
-        #
+        error       = check_value - avg_integrand
         rel_error   = 1.0 - avg_integrand / check_value
         #
         # check the fit
-        # print(age, rel_error, check_value - avg_integrand, sample_std)
+        # print(age, rel_error, error, sample_std)
         if random_income :
             assert abs(rel_error) < 2e-2
         else :
             assert abs(rel_error) < 2e-3
-        assert abs(avg_integrand - check_value) < 2.0 * sample_std
+        assert abs(error) < 2.0 * sample_std
 # ----------------------------------------------------------------------------
 # main
 # ----------------------------------------------------------------------------

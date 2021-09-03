@@ -22,10 +22,6 @@ Example Estimation of iota and chi
 For this example everything is constant in time so the
 functions below do not depend on time.
 
-Under Construction
-******************
-This example is not yet working.
-
 Nodes
 *****
 The following is a diagram of the node tree for this example.
@@ -53,8 +49,8 @@ The non-zero dismod_at rates for this example are
 We use *iota(a, n, I)* , *chi(a, n, I)*
 to denote the value for iota and chi
 as a function of age *a*, node number *n*, and income *I*.
-We use *omega(a, n)* and *omega_n* to denote the value for omega
-as a function of age *a* and node number *n*.
+We use *omega(a, n)* to denote the value for omega
+as a function of age *a* and node *n*.
 
 
 Covariate
@@ -75,11 +71,11 @@ The code below sets this reference using the name avg_income:
 
 alpha
 =====
-We use *alpha*
+We use *alpha_iota* ( *alpha_chi* )
 for the :ref:`glossary.rate_value` covariate multiplier
-which multiplies income.
-This multiplier affects the value of iota.
-The true value for *alpha* (used which simulating the data) is
+which multiplies income and affects iota (chi).
+The true value for these multipliers
+(used which simulating the data) is
 {xsrst_file
     # BEGIN alpha_true
     # END alpha_true
@@ -132,14 +128,22 @@ this is the true value for *rate* in node *n* at age *a* and income *I*:
     # BEGIN rate_true
     # END rate_true
 }
-
+The true model for chi is constant below the second age grid point
+because it is not possible to determine chi at age zero from Sincidence
+and prevalence measurements.
 
 y_i
 ===
 The simulated integrands for this example are
-:ref:`glossary.prevalence` and :ref:`glossary.mtspecific`.
+:ref:`glossary.mtexcess`,
+:ref:`glossary.Sincidence`, and
+:ref:`glossary.prevalence`.
 The data is simulated without any noise
 but it is modeled as having noise.
+In addition, the mtexcess data is only used for the
+:ref:`no_ode_fit` and is held out during actual fits.
+This simulates the case where the mtexcess data was constructed from
+the other data in order to help initialize the optimization.
 
 n_i
 ===
@@ -187,6 +191,9 @@ This is the smoothing used in the fit_node model for the rates.
 Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
 There are no :ref:`glossary.dtime` priors because there is only one time point.
+The smoothing for chi does not use the first age grid point, age zero,
+because it is not possible to determine chi at age zero from Sincidence
+and prevalence measurements.
 
 Value Prior
 ===========
@@ -367,7 +374,10 @@ def rate_true(rate, a, n, I ) :
     if rate == 'iota' :
         return (1 + a / 100) * 1e-4 * math.exp( s_n + income_effect  )
     if rate == 'chi' :
-        return (1 + a / 100) * 1e-1 * math.exp( s_n + income_effect )
+        # chi is constant up to second age grid point because prevalence
+        # cannot determine chi at age zero.
+        aa = max(a, age_grid[1] )
+        return (1 + aa / 100) * 1e-1 * math.exp( s_n + income_effect )
     if rate == 'omega' :
         return (1 + a / 100) * 1e-2 * math.exp( income_effect )
     assert False
@@ -469,7 +479,7 @@ def root_node_db(file_name) :
     fun = lambda a, t : ('parent_chi_value_prior', 'parent_dage_prior', None)
     smooth_table.append({
         'name':       'parent_chi_smooth',
-        'age_id':     range( len(age_grid) ),
+        'age_id':     range(1, len(age_grid) ),
         'time_id':    [0],
         'fun':        fun,
     })
@@ -662,6 +672,7 @@ def root_node_db(file_name) :
         { 'name':'tolerance_random',      'value':'1e-8'},
         { 'name':'bound_random',          'value':1.0},
         { 'name':'meas_noise_effect',     'value':'add_std_scale_none'},
+        { 'name':'hold_out_integrand',    'value':'mtexcess'},
         { 'name':'random_seed',           'value':str(random_seed)},
     ]
     # ----------------------------------------------------------------------
@@ -782,12 +793,12 @@ def check_fit(goal_database) :
             rate        = 'chi'
         #
         check_value = rate_true(rate, age, goal_name, income)
+        error       = check_value - avg_integrand
         rel_error   = 1.0 - avg_integrand / check_value
         #
-        # check the fit
-        # print(rate, age, rel_error, check_value - avg_integrand, sample_std)
+        # print(rate, age, rel_error, error, sample_std)
         assert abs(rel_error) < 1e-1
-        assert abs(avg_integrand - check_value) < 2.0 * sample_std
+        assert abs(error) < 2.0 * sample_std
 # ----------------------------------------------------------------------------
 # main
 # ----------------------------------------------------------------------------
@@ -870,12 +881,10 @@ def main() :
         os.chdir(work_dir)
     os.makedirs(fit_node_dir )
     #
-    # Note yet working
-    # out_database = at_cascade.no_ode_fit(root_node_database)
-    #
-    # fit_node_database = root_node_database
+    # fit_node_database
+    out_database = at_cascade.no_ode_fit(root_node_database)
     fit_node_database =  fit_node_dir + '/dismod.db'
-    shutil.copyfile(root_node_database, fit_node_database)
+    assert out_database == fit_node_database
     #
     # cascade starting at root node
     at_cascade.cascade_fit_node(

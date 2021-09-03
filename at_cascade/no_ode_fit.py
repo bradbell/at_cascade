@@ -17,9 +17,6 @@
 Do A No Ode Fit For One Node
 ############################
 
-Under Construction
-******************
-
 Syntax
 ******
 {xsrst_file
@@ -64,6 +61,14 @@ import copy
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
+def table_name2id(tables, tbl_name, row_name) :
+    col_name = f'{tbl_name}_name'
+    for (row_id, row) in enumerate(tables[tbl_name]) :
+        if row[col_name] == row_name :
+            return row_id
+    msg = f"Can't find {col_name} = {row_name} in table {tbl_name}"
+    assert False, msg
+# ----------------------------------------------------------------------------
 def add_index_to_name(table, name_col) :
     row   = table[-1]
     name  = row[name_col]
@@ -74,12 +79,15 @@ def add_index_to_name(table, name_col) :
         name = name[: -1]
     row[name_col] = name + '_' + str( len(table) )
 # ----------------------------------------------------------------------------
-def get_var_id(var_table, rate_id, mulcov_id, age_id, time_id) :
+def get_var_id(var_table, fit_node_id, rate_id, mulcov_id, age_id, time_id) :
     for (var_id, row) in enumerate(var_table) :
         match =  row['rate_id'] == rate_id
         match = match and row['mulcov_id'] == mulcov_id
         match = match and row['age_id'] == age_id
         match = match and row['time_id'] == time_id
+        # check that this a fixed effect when matching rates
+        if mulcov_id is None :
+            match = match and row['node_id'] == fit_node_id
         if match :
             return var_id
     assert False
@@ -88,6 +96,7 @@ def get_var_id(var_table, rate_id, mulcov_id, age_id, time_id) :
 # recent smoothing added to out_tables['smooth']; i.e., its smoothing_id
 # is len( out_tables['smooth'] ) - 1.
 def add_out_grid_row(
+    fit_node_id,
     rate_id,
     mulcov_id,
     in_tables,
@@ -127,12 +136,14 @@ def add_out_grid_row(
             time_id   = in_grid_row['time_id']
             var_table = out_tables['var']
             var_id    = get_var_id(
-                var_table, rate_id, mulcov_id, age_id, time_id
+                var_table, fit_node_id, rate_id, mulcov_id, age_id, time_id
             )
             #
             # out_prior_row['mean']
             fit_var_row           = out_tables['fit_var'][var_id]
             fit_var_value         = fit_var_row['fit_var_value']
+            assert fit_var_value <= out_prior_row['upper']
+            assert out_prior_row['lower'] <= fit_var_value
             out_prior_row['mean'] = fit_var_value
             #
             # out_tables['prior']
@@ -189,6 +200,7 @@ def no_ode_fit(
     for name in [
         'integrand',
         'mulcov',
+        'node',
         'option',
         'prior',
         'rate',
@@ -198,16 +210,19 @@ def no_ode_fit(
         in_tables[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
     #
-    # fit_node
-    fit_node = at_cascade.get_parent_node(in_database)
+    # fit_node_name
+    fit_node_name = at_cascade.get_parent_node(in_database)
+    #
+    # fit_node_id
+    fit_node_id   = table_name2id(in_tables, 'node', fit_node_name)
     #
     # out_database
     index = in_database.rfind('/')
     if 0 <= index :
         in_dir       = in_database[: index]
-        out_database = f'{in_dir}/{fit_node}/dismod.db'
+        out_database = f'{in_dir}/{fit_node_name}/dismod.db'
     else :
-        out_database = f'{fit_node}/dismod.db'
+        out_database = f'{fit_node_name}/dismod.db'
     #
     msg   = f'in_database and out_database are equal'
     assert not in_database == out_database, msg
@@ -290,6 +305,7 @@ def no_ode_fit(
             for in_grid_row in in_tables['smooth_grid'] :
                 if in_grid_row['smooth_id'] == in_smooth_id :
                     add_out_grid_row(
+                        fit_node_id,
                         rate_id,
                         mulcov_id,
                         in_tables,
@@ -334,6 +350,7 @@ def no_ode_fit(
             for in_grid_row in in_tables['smooth_grid'] :
                 if in_grid_row['smooth_id'] == in_smooth_id :
                     add_out_grid_row(
+                        fit_node_id,
                         rate_id,
                         mulcov_id,
                         in_tables,
