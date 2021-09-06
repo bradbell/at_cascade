@@ -107,14 +107,20 @@ a random seed. The actual value or *random_seed* is always printed.
     # END random_seed
 }
 
-iota_true(a, n, I)
-==================
-This is the true value for iota in node *n* at age *a* and income *I*:
-{xsrst_file
-    # BEGIN iota_true
-    # END iota_true
-}
 
+rate_true(rate, a, t, n, c)
+===========================
+For *rate* equal to iota,
+this is the true value for *rate*
+in node *n* at age *a*, time *t*, and covariate values *c*.
+The covariate values are a list in the
+same order as the covariate table.
+The value *t* is not used by this function for this example.
+{xsrst_file
+    # BEGIN rate_true
+    # END rate_true
+}
+The value *t* is not used by this function for this example.
 
 y_i
 ===
@@ -124,7 +130,7 @@ which is a direct measurement of iota.
 we would use the corresponding direct measurement of that rate.)
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
-*y_i = iota_true(a_i, n_i, I_i)*
+*y_i = rate_true('iota', a_i, None, n_i, I_i)*
 where *a_i* is the age,
 *n_i* is the node,
 and *I_i* is the income for the i-th measurement.
@@ -316,14 +322,23 @@ for node in [ 'n3', 'n4', 'n5', 'n6' ] :
 # ----------------------------------------------------------------------------
 # functions
 # ----------------------------------------------------------------------------
-# BEGIN iota_true
-def iota_true(a, n = 'n0', I = avg_income['n0'] ) :
-    s_n = sum_random[n]
-    r_0 = avg_income['n0']
-    return (1 + a / 100) * 1e-2 * exp( s_n + alpha_true * ( I - r_0 ) )
-# END iota_true
+# BEGIN rate_true
+def rate_true(rate, a, t, n, c) :
+    income = c[0]
+    s_n    = sum_random[n]
+    r_0    = avg_income['n0']
+    effect = s_n + alpha_true * ( income - r_0 )
+    if rate == 'iota' :
+        return (1 + a / 100) * 1e-2 * exp(effect)
+    return None
+# END rate_true
 # ----------------------------------------------------------------------------
 def root_node_db(file_name) :
+    #
+    # BEGIN iota_50
+    covariate_list = [ avg_income['n0'] ]
+    iota_50        = rate_true('iota', 50.0, None, 'n0', covariate_list)
+    # END iota_50
     #
     # prior_table
     prior_table = list()
@@ -331,11 +346,11 @@ def root_node_db(file_name) :
         # BEGIN parent_value_prior
         {   'name':    'parent_value_prior',
             'density': 'gaussian',
-            'lower':   iota_true(0) / 10.0,
-            'upper':   iota_true(100) * 10.0,
-            'mean':    iota_true(50),
-            'std':     iota_true(50) * 10.0,
-            'eta':     iota_true(50) * 1e-3
+            'lower':   iota_50 / 10.0,
+            'upper':   iota_50 * 10.0,
+            'mean':    iota_50,
+            'std':     iota_50 * 10.0,
+            'eta':     iota_50 * 1e-3
         }
         # END parent_value_prior
     )
@@ -345,7 +360,7 @@ def root_node_db(file_name) :
             'density': 'log_gaussian',
             'mean':    0.0,
             'std':     3.0,
-            'eta':     iota_true(0) * 1e-3,
+            'eta':     iota_50 * 1e-3,
         }
         # END parent_dage_prior
     )
@@ -470,7 +485,9 @@ def root_node_db(file_name) :
         }
         for node in leaf_set :
             for income in income_grid[node] :
-                meas_value        = iota_true(age, node, income)
+                meas_value        = rate_true(
+                    'iota', age, None, node, [ income ]
+                )
                 row['node']       = node
                 row['meas_value'] = meas_value
                 row['age_lower']  = age
@@ -608,7 +625,9 @@ def check_fit(goal_database) :
         sample_std = math.sqrt( sumsq[avgint_id] )
         #
         # check_value
-        check_value = iota_true(age, goal_name, income)
+        check_value = rate_true(
+            'iota', age, None, goal_name, [ income ]
+        )
         error       = check_value - avg_integrand
         rel_error   = 1.0 - avg_integrand / check_value
         #

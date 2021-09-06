@@ -125,10 +125,14 @@ a random seed. The actual value or *random_seed* is always printed.
     # END random_seed
 }
 
-rate_true(rate, a, n, I)
-========================
+rate_true(rate, a, t, n, c)
+===========================
 For *rate* equal to iota, chi, and omega,
-this is the true value for *rate* in node *n* at age *a* and income *I*:
+this is the true value for *rate*
+in node *n* at age *a*, time *t*, and covariate values *c*.
+The covariate values are a list in the
+same order as the covariate table.
+The values *t* and *c[1]* are not used by this function for this example.
 {xsrst_file
     # BEGIN rate_true
     # END rate_true
@@ -374,30 +378,32 @@ for node in [ 'n3', 'n4', 'n5', 'n6' ] :
 # functions
 # ----------------------------------------------------------------------------
 # BEGIN rate_true
-def rate_true(rate, a, n, I ) :
-    s_n           = sum_random[n]
-    r_0           = avg_income['n0']
-    income_effect = alpha_true * ( I - r_0 )
-    # The true random effect for iota and chi is the same
+def rate_true(rate, a, t, n, c) :
+    income   = c[0]
+    one      = c[1]
+    s_n      = sum_random[n]
+    r_0      = avg_income['n0']
+    effect   = s_n + alpha_true * ( income - r_0 )
     if rate == 'iota' :
-        return (1 + a / 100) * 1e-4 * math.exp( s_n + income_effect  )
+        return (1 + a / 100) * 1e-4 * math.exp( effect  )
     if rate == 'chi' :
         # chi is constant up to second age grid point because prevalence
         # cannot determine chi at age zero.
         aa = max(a, age_grid[1] )
-        return (1 + aa / 100) * 1e-1 * math.exp( s_n + income_effect )
+        return (1 + aa / 100) * 1e-1 * math.exp( effect )
     if rate == 'omega' :
-        return (1 + a / 100) * 1e-2 * math.exp( income_effect )
-    assert False
+        return (1 + a / 100) * 1e-2 * math.exp( effect )
+    return None
 # END rate_true
 # ----------------------------------------------------------------------------
 def average_integrand(integrand_name, age, node_name, income) :
+    covariate_list = [ income , None ]
     def iota(a, t) :
-        return rate_true('iota', a, node_name, income)
+        return rate_true('iota', a, t, node_name, covariate_list)
     def chi(a, t) :
-        return rate_true('chi', a, node_name, income)
+        return rate_true('chi', a, t, node_name, covariate_list)
     def omega(a, t) :
-        return rate_true('omega', a, node_name, income)
+        return rate_true('omega', a, t, node_name, covariate_list)
     rate           = { 'iota': iota,  'chi': chi, 'omega': omega }
     grid           = { 'age' : [age], 'time': [2000.0] }
     abs_tol        = 1e-6
@@ -408,8 +414,9 @@ def average_integrand(integrand_name, age, node_name, income) :
 # ----------------------------------------------------------------------------
 def root_node_db(file_name) :
     # BEGIN iota_chi_50
-    iota_50 = rate_true('iota', 50.0, 'n0', avg_income['n0'])
-    chi_50  = rate_true('chi',  50.0, 'n0', avg_income['n0'])
+    covariate_list = [ avg_income['n0'], None ]
+    iota_50        = rate_true('iota', 50.0, None, 'n0', covariate_list )
+    chi_50         = rate_true('chi',  50.0, None, 'n0', covariate_list )
     # END iota_chi_50
     #
     # prior_table
@@ -800,9 +807,10 @@ def check_fit(goal_database) :
             assert integrand_name == 'mtexcess'
             rate        = 'chi'
         #
-        check_value = rate_true(rate, age, goal_name, income)
-        error       = check_value - avg_integrand
-        rel_error   = 1.0 - avg_integrand / check_value
+        covariate_list = [ income, None ]
+        check_value    = rate_true(rate, age, None, goal_name, covariate_list)
+        error          = check_value - avg_integrand
+        rel_error      = 1.0 - avg_integrand / check_value
         #
         # print(rate, age, rel_error, error, sample_std)
         assert abs(rel_error) < 1e-1
