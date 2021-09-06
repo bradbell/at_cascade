@@ -31,8 +31,9 @@ This argument can't be ``None``.
 parent_node_database
 ********************
 is a python string containing the name of a dismod_at database.
-It has two predict tables (mentioned below)
-that are used to create priors in the child node databases.
+This is a :ref:`glossary.fit_node_database` which
+has two predict tables (mentioned below).
+These tables are used to create priors in the child node databases.
 This argument can't be ``None``.
 
 parent_node
@@ -76,11 +77,8 @@ is a python dictionary and if *child_name* is a key for *child_node_databases*,
 *child_name* is a :ref:`glossary.node_name` and a child of the *parent_node*.
 
 -   For each *child_name*, *child_node_databases[child_name]* is the name of
-    a :ref:`glossary.fit_node_database` that is created by this command.
+    a :ref:`glossary.input_node_database` that is created by this command.
 -   In this database, *child_name* will be the :ref:`glossary.fit_node` .
--   The rate table is changed to have null priors for omega;
-    see :ref:`omega_constraint` for properly setting these priors.
--   The difference priors are the same as in *parent_node_database*.
 -   If the upper and lower limits are equal,
     the value priors are effectively the same.
     Otherwise the mean and standard deviation in the values priors
@@ -89,8 +87,6 @@ is a python dictionary and if *child_name* is a key for *child_node_databases*,
 -   The avgint table is a copy of the c_avgint table in the
     *parent_node_database* with the node_id replaced by the corresponding
     child node id.
--   The following tables are the same as in the root_node_database:
-    age, data, density, integrand, node, subgroup, time, weight, weight_grid.
 
 This argument can't be ``None``.
 
