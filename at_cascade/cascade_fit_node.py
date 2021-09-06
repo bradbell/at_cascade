@@ -34,10 +34,14 @@ This argument can't be ``None``.
 
 fit_node_database
 *****************
-is a python string specifying the location of a
-:ref:`glossary.fit_node_database`
+is a python string specifying the location of a dismod_at database
 relative to the current working directory.
+On input, this is an :ref:`glossary.input_node_database`.
+Upon return, it is a :ref:`glossary.fit_node_database` with the
+extra properties listed under
+:ref:`dismod.db<cascade_fit_node.dismod_db>` below.
 This argument can't be ``None``.
+
 
 fit_node
 ========

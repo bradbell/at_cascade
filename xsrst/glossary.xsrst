@@ -62,12 +62,6 @@ fit_node_database
 *****************
 This is a dismod_at database with the following properties:
 
-Input Tables
-============
-Only the dismod_at input tables are significant in a fit_node_databases;
-e.g., an init command should be executed before any other dismod_at
-commands (except possibly a set command).
-
 Constant Tables
 ===============
 The following tables are the same as in the
@@ -103,14 +97,8 @@ Random Effects Smoothing
 The smoothing for the child rates (except omega) are the same as in the
 *root_node_database*.
 
-nslist Table
-============
-The nslist and nslist_pair tables must be empty.
-
 Rate Table
 ==========
-The rate table must have null entries for the
-omega parent and child smoothings.
 The rate table smoothing for pini must be null or the corresponding
 smooth_grid entries must use the age_id corresponding to the smallest
 age in the age table.
@@ -124,6 +112,25 @@ If the parent_smooth_id in the rate table for one of these rates is
 not null, the corresponding integrand name must be in the integrand table.
 For each value covariate multiplier index *mulcov_id*, the integrand name
 ``mulcov_``\ *mulcov_id* must be in the integrand table.
+
+input_node_database
+*******************
+This is a fit_node_database with the following extra properties:
+
+Input Tables
+============
+Only the dismod_at input tables are significant in a fit_node_databases;
+e.g., an init command should be executed before any other dismod_at
+commands (except possibly a set command).
+
+nslist Table
+============
+The nslist and nslist_pair tables must be empty.
+
+Rate Table
+==========
+The rate table must have null entries for the
+omega parent and child smoothings.
 
 iota
 ****
