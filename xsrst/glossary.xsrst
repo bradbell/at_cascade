@@ -62,42 +62,68 @@ fit_node_database
 *****************
 This is a dismod_at database with the following properties:
 
--   Only the dismod_at input tables are significant in a fit_node_databases;
-    e.g., an init command should be executed before any other dismod_at
-    commands (except possibly a set command).
--   The following tables are the same as in the
-    :ref:`glossary.root_node_database`:
-    age, covariate, data, density, integrand, node, subgroup, time,
-    weight, weight grid.
--   The *fit_node_database* option table is the same as in the
-    *root_node_database* except for the value of *parent_node_name*.
-    The value of *parent_node_id* does not appear in the option table.
--   The age and time points corresponding to the smoothing for the
-    parent rates (except omega)
-    and the covariate multipliers are the same as in the *root_node_database*.
-    In addition, the age and time difference prior corresponding to each
-    age and time point is the same as in the *root_node_database*.
--   The smoothing for the child rates (except omega) are the same as in the
-    *root_node_database*.
--   The subgroup table must have one row; i.e., there is one subgroup,
-    one group and they correspond to all the nodes.
--   The following tables in this database must be empty:
-    nslist, nslist_pair.
--   The rate table must have null entries for the
-    omega parent and child smoothings.
--   The rate table smoothing for pini must be null or the corresponding
-    smooth_grid entries must use the age_id corresponding to the smallest
-    age in the age table.
--   For each covariate, the covariate table reference value must be the
-    same as the :ref:`all_cov_reference_table.reference` for the
-    fit_node in the all_cov_reference table.
--   For the list of rates [ pini, iota, rho, chi ]
-    the corresponding integrand names are
-    [ prevalence, Sincidence, remission, mtexcess ].
-    If the parent_smooth_id in the rate table for one of these rates is
-    not null, the corresponding integrand name must be in the integrand table.
--   For each value covariate multiplier index *mulcov_id*, the integrand name
-    ``mulcov_``\ *mulcov_id* must be in the integrand table.
+Input Tables
+============
+Only the dismod_at input tables are significant in a fit_node_databases;
+e.g., an init command should be executed before any other dismod_at
+commands (except possibly a set command).
+
+Constant Tables
+===============
+The following tables are the same as in the
+:ref:`glossary.root_node_database`:
+age, covariate, data, density, integrand, node, subgroup, time,
+weight, weight grid.
+The subgroup table must have one row; i.e., there is one subgroup,
+one group and they correspond to all the nodes.
+
+Option Table
+============
+The *fit_node_database* option table is the same as in the
+*root_node_database* except for the value of *parent_node_name*.
+This node is called the fit_node for the database.
+The value of *parent_node_id* does not appear in the option table.
+
+Covariate Table
+===============
+For each covariate, the covariate table reference value must be the
+same as the :ref:`all_cov_reference_table.reference` for the
+fit_node in the all_cov_reference table.
+
+Fixed Effects Smoothings
+========================
+The age and time points corresponding to the smoothing for the
+parent rates (except omega)
+and the covariate multipliers are the same as in the *root_node_database*.
+In addition, the age and time difference prior corresponding to each
+age and time point is the same as in the *root_node_database*.
+
+Random Effects Smoothing
+========================
+The smoothing for the child rates (except omega) are the same as in the
+*root_node_database*.
+
+nslist Table
+============
+The nslist and nslist_pair tables must be empty.
+
+Rate Table
+==========
+The rate table must have null entries for the
+omega parent and child smoothings.
+The rate table smoothing for pini must be null or the corresponding
+smooth_grid entries must use the age_id corresponding to the smallest
+age in the age table.
+
+Integrand Table
+===============
+For the list of rates [ pini, iota, rho, chi ]
+the corresponding integrand names are
+[ prevalence, Sincidence, remission, mtexcess ].
+If the parent_smooth_id in the rate table for one of these rates is
+not null, the corresponding integrand name must be in the integrand table.
+For each value covariate multiplier index *mulcov_id*, the integrand name
+``mulcov_``\ *mulcov_id* must be in the integrand table.
 
 iota
 ****
