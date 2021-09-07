@@ -83,6 +83,8 @@ Covariate Table
 For each covariate, the covariate table reference value must be the
 same as the :ref:`all_cov_reference_table.reference` for the
 fit_node in the all_cov_reference table.
+The other columns in the covariate table are the same
+as in the root_node_database.
 
 Fixed Effects Smoothings
 ========================

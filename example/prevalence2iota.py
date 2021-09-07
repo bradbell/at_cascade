@@ -245,8 +245,8 @@ to the constant returned by the lambda function in this smoothing:
 Checking The Fit
 ****************
 The results of the fit are in the
-:ref:`cascade_fit_node.dismod_db.predict` and
-:ref:`cascade_fit_node.dismod_db.c_predict_fit_var`
+:ref:`cascade_fit_node.output_dismod_db.predict` and
+:ref:`cascade_fit_node.output_dismod_db.c_predict_fit_var`
 tables of the fit_node_database corresponding to each node.
 The ``check_fit`` routine uses these tables to check that fit
 against the truth.
@@ -357,7 +357,7 @@ def rate_true(rate, a, t, n, c) :
         return (1 + a / 100) * 1e-3 * math.exp(effect)
     if rate == 'omega' :
         return (1 + a / 100) * 1e-2 * math.exp(effect)
-    return None
+    return 0.0
 # END rate_true
 # ----------------------------------------------------------------------------
 def average_integrand(integrand_name, age, node_name, income) :

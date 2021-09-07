@@ -39,7 +39,7 @@ relative to the current working directory.
 On input, this is an :ref:`glossary.input_node_database`.
 Upon return, it is a :ref:`glossary.fit_node_database` with the
 extra properties listed under
-:ref:`dismod.db<cascade_fit_node.dismod_db>` below.
+:ref:`dismod.db<cascade_fit_node.output_dismod_db>` below.
 This argument can't be ``None``.
 
 
@@ -78,8 +78,8 @@ default
 If *fit_children* is ``None``, it will be computed by ``cascade_fit_node``
 and reused by recursive calls to this routine.
 
-dismod.db
-*********
+Output dismod.db
+****************
 The results for this fit are in the
 *fit_node_dir*\ ``/dismod.db`` dismod_at database.
 The corresponding *fit_node_dir/\*.csv* , create by the

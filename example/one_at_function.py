@@ -223,8 +223,8 @@ routine replaces them for other nodes.
 Checking The Fit
 ****************
 The results of the fit are in the
-:ref:`cascade_fit_node.dismod_db.predict` and
-:ref:`cascade_fit_node.dismod_db.c_predict_fit_var`
+:ref:`cascade_fit_node.output_dismod_db.predict` and
+:ref:`cascade_fit_node.output_dismod_db.c_predict_fit_var`
 tables of the fit_node_database corresponding to each node.
 The ``check_fit`` routine uses these tables to check that fit
 against the truth.
@@ -330,7 +330,7 @@ def rate_true(rate, a, t, n, c) :
     effect = s_n + alpha_true * ( income - r_0 )
     if rate == 'iota' :
         return (1 + a / 100) * 1e-2 * exp(effect)
-    return None
+    return 0.0
 # END rate_true
 # ----------------------------------------------------------------------------
 def root_node_db(file_name) :

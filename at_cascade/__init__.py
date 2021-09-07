@@ -16,6 +16,7 @@ The at_cascade Python Module
 .. BEGIN_SORT_THIS_LINE_PLUS_2
 {xsrst_child_table
     at_cascade/cascade_fit_node.py
+    at_cascade/check_rate_fit.py
     at_cascade/child_avgint_table.py
     at_cascade/create_all_node_db.py
     at_cascade/create_child_node_db.py
@@ -31,6 +32,7 @@ The at_cascade Python Module
 
 # BEGIN_SORT_THIS_LINE_PLUS_1
 from .cascade_fit_node      import cascade_fit_node
+from .check_cascade_fit     import check_cascade_fit
 from .child_avgint_table    import child_avgint_table
 from .create_all_node_db    import create_all_node_db
 from .create_child_node_db  import create_child_node_db
