@@ -59,6 +59,10 @@ in the cascade_fit_node documentation.
 {xsrst_end check_cascade_fit}
 '''
 # ----------------------------------------------------------------------------
+import math
+import dismod_at
+import at_cascade
+# ----------------------------------------------------------------------------
 def table_name2id(tables, tbl_name, row_name) :
     col_name = f'{tbl_name}_name'
     for (row_id, row) in enumerate(tables[tbl_name]) :
@@ -129,10 +133,14 @@ def check_cascade_fit(
     #
     # rate_fun
     rate_fun = dict()
-    for name in [ 'pini', 'iota', 'rho', 'omega' ] :
-        def fun(a, t) :
-            return rate_true(name, a, t, fit_node_name, cov_reference_list)
-        rate_fun[rate_name] = fun
+    rate_fun['iota'] = lambda a, t :  \
+            rate_true('iota', a, t, fit_node_name, cov_reference_list)
+    rate_fun['rho'] = lambda a, t :  \
+            rate_true('rho', a, t, fit_node_name, cov_reference_list)
+    rate_fun['chi'] = lambda a, t :  \
+            rate_true('chi', a, t, fit_node_name, cov_reference_list)
+    rate_fun['omega'] = lambda a, t :  \
+            rate_true('omega', a, t, fit_node_name, cov_reference_list)
     #
     # sumsq
     sumsq = n_avgint * [0.0]
@@ -156,7 +164,7 @@ def check_cascade_fit(
         # node_name
         node_id   = avgint_row['node_id']
         node_name = tables['node'][node_id]['node_name']
-        assert node_name == goal_name
+        assert node_name == fit_node_name
         #
         # avg_integrand
         avg_integrand = tables['c_predict_fit_var'][avgint_id]['avg_integrand']
@@ -168,15 +176,15 @@ def check_cascade_fit(
         sumsq[avgint_id] += (sample_value - avg_integrand)**2
     #
     # avgint_id, row
-    for (avgint_id, row) in enumerate(table['c_predict_fit_var']) :
+    for (avgint_id, row) in enumerate(tables['c_predict_fit_var']) :
         assert avgint_id == row['avgint_id']
         #
         # avgint_row
-        avgint_row = table['avgint'][avgint_id]
+        avgint_row = tables['avgint'][avgint_id]
         #
         # integrand_name
         integrand_id   = avgint_row['integrand_id']
-        integrand_name = table['integrand'][integrand_id]
+        integrand_name = tables['integrand'][integrand_id]['integrand_name']
         #
         # age
         age = avgint_row['age_lower']
@@ -196,7 +204,7 @@ def check_cascade_fit(
         grid        = { 'age' : [age], 'time' : [time] }
         abs_tol     = 1e-6
         check_value = dismod_at.average_integrand(
-            rate_dict, integrand_name, grid, abs_tol
+            rate_fun, integrand_name, grid, abs_tol
         )
         #
         # check
