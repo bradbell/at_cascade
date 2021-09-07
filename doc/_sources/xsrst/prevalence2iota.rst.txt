@@ -196,33 +196,23 @@ a random seed. The actual value or *random_seed* is always printed.
     :language: py
 
 .. meta::
-   :keywords: iota_true(a, , n, , i)
+   :keywords: rate_true(rate, , a, , t, , n, , c)
 
-.. index:: iota_true(a, , n, , i)
+.. index:: rate_true(rate, , a, , t, , n, , c)
 
-.. _prevalence2iota.simulated_data.iota_true(a,_n,_i):
+.. _prevalence2iota.simulated_data.rate_true(rate,_a,_t,_n,_c):
 
-iota_true(a, n, I)
-==================
-This is the true value for iota in node *n* at age *a* and income *I*:
-
-.. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 349-352
-    :language: py
-
-.. meta::
-   :keywords: omega_true(a, , n)
-
-.. index:: omega_true(a, , n)
-
-.. _prevalence2iota.simulated_data.omega_true(a,_n):
-
-omega_true(a, n)
-================
-This is the true value for omega in node *n* and age *a*:
+rate_true(rate, a, t, n, c)
+===========================
+For *rate* equal to iota and omega,
+this is the true value for *rate*
+in node *n* at age *a*, time *t*, and covariate values *c*.
+The covariate values are a list in the
+same order as the covariate table.
+The values *t* and *c[1]* are not used by this function for this example.
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 356-359
+    :lines: 349-360
     :language: py
 
 .. meta::
@@ -334,7 +324,12 @@ Value Prior
 The following is the value prior used for the fit_node
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 381-388
+    :lines: 380-381
+    :language: py
+
+
+.. literalinclude:: ../../example/prevalence2iota.py
+    :lines: 388-395
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -353,7 +348,7 @@ dage Prior
 The following is the dage prior used for the fit_node:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 393-398
+    :lines: 400-405
     :language: py
 
 .. meta::
@@ -382,7 +377,7 @@ Value Prior
 The following is the value prior used for the children of the fit_node:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 403-407
+    :lines: 410-414
     :language: py
 
 .. meta::
@@ -410,7 +405,7 @@ Value Prior
 The following is the value prior used for this smoothing:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 412-418
+    :lines: 419-425
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -433,7 +428,7 @@ In addition, the value prior has upper and lower limits equal
 to the constant returned by the lambda function in this smoothing:
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 453-459
+    :lines: 460-466
     :language: py
 
 .. meta::
@@ -446,11 +441,11 @@ to the constant returned by the lambda function in this smoothing:
 Checking The Fit
 ****************
 The results of the fit are in the
-:ref:`cascade_fit_node.dismod_db.predict` and
-:ref:`cascade_fit_node.dismod_db.c_predict_fit_var`
+:ref:`cascade_fit_node.output_dismod_db.predict` and
+:ref:`cascade_fit_node.output_dismod_db.c_predict_fit_var`
 tables of the fit_node_database corresponding to each node.
-The ``check_fit`` routine uses these tables to check that fit
-against the truth.
+The :ref:`check_cascade_fit<check_cascade_fit>`
+routine uses these tables to check that fit against the truth.
 
 .. csv-table::
     :header: "Child", "Title"

@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/cascade_fit_node.py
-    :lines: 146-151
+    :lines: 150-155
     :language: py
 
 .. meta::
@@ -53,9 +53,12 @@ This argument can't be ``None``.
 
 fit_node_database
 *****************
-is a python string specifying the location of a
-:ref:`glossary.fit_node_database`
+is a python string specifying the location of a dismod_at database
 relative to the current working directory.
+On input, this is an :ref:`glossary.input_node_database`.
+Upon return, it is a :ref:`glossary.fit_node_database` with the
+extra properties listed under
+:ref:`dismod.db<cascade_fit_node.output_dismod_db>` below.
 This argument can't be ``None``.
 
 .. meta::
@@ -129,14 +132,14 @@ If *fit_children* is ``None``, it will be computed by ``cascade_fit_node``
 and reused by recursive calls to this routine.
 
 .. meta::
-   :keywords: dismod.db
+   :keywords: output, dismod.db
 
-.. index:: dismod.db
+.. index:: output, dismod.db
 
-.. _cascade_fit_node.dismod_db:
+.. _cascade_fit_node.output_dismod_db:
 
-dismod.db
-*********
+Output dismod.db
+****************
 The results for this fit are in the
 *fit_node_dir*\ ``/dismod.db`` dismod_at database.
 The corresponding *fit_node_dir/\*.csv* , create by the
@@ -149,7 +152,7 @@ with the results for that child node.
 
 .. index:: fit_var
 
-.. _cascade_fit_node.dismod_db.fit_var:
+.. _cascade_fit_node.output_dismod_db.fit_var:
 
 fit_var
 =======
@@ -161,7 +164,7 @@ mean for the model variables for the fit_node.
 
 .. index:: sample
 
-.. _cascade_fit_node.dismod_db.sample:
+.. _cascade_fit_node.output_dismod_db.sample:
 
 sample
 ======
@@ -173,7 +176,7 @@ distribution for the model variables for the fit_node.
 
 .. index:: predict
 
-.. _cascade_fit_node.dismod_db.predict:
+.. _cascade_fit_node.output_dismod_db.predict:
 
 predict
 =======
@@ -187,7 +190,7 @@ column has been replaced by the node_id for this fit_node.
 
 .. index:: c_predict_fit_var
 
-.. _cascade_fit_node.dismod_db.c_predict_fit_var:
+.. _cascade_fit_node.output_dismod_db.c_predict_fit_var:
 
 c_predict_fit_var
 =================

@@ -56,7 +56,7 @@ fit_goal_set
 ============
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 265-265
+    :lines: 271-271
     :language: py
 
 .. meta::
@@ -103,7 +103,7 @@ We use *r_n* for the reference value of income at node *n*.
 The code below sets this reference using the name avg_income:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 281-284
+    :lines: 287-290
     :language: py
 
 .. meta::
@@ -122,7 +122,7 @@ This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 277-277
+    :lines: 283-283
     :language: py
 
 .. meta::
@@ -151,7 +151,7 @@ We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 288-294
+    :lines: 294-300
     :language: py
 
 .. meta::
@@ -178,23 +178,30 @@ If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 269-273
+    :lines: 275-279
     :language: py
 
 .. meta::
-   :keywords: iota_true(a, , n, , i)
+   :keywords: rate_true(rate, , a, , t, , n, , c)
 
-.. index:: iota_true(a, , n, , i)
+.. index:: rate_true(rate, , a, , t, , n, , c)
 
-.. _one_at_function.simulated_data.iota_true(a,_n,_i):
+.. _one_at_function.simulated_data.rate_true(rate,_a,_t,_n,_c):
 
-iota_true(a, n, I)
-==================
-This is the true value for iota in node *n* at age *a* and income *I*:
+rate_true(rate, a, t, n, c)
+===========================
+For *rate* equal to iota,
+this is the true value for *rate*
+in node *n* at age *a*, time *t*, and covariate values *c*.
+The covariate values are a list in the
+same order as the covariate table.
+The value *t* is not used by this function for this example.
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 320-323
+    :lines: 326-333
     :language: py
+
+The value *t* is not used by this function for this example.
 
 .. meta::
    :keywords: y_i
@@ -211,7 +218,7 @@ which is a direct measurement of iota.
 we would use the corresponding direct measurement of that rate.)
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
-*y_i = iota_true(a_i, n_i, I_i)*
+*y_i = rate_true('iota', a_i, None, n_i, I_i)*
 where *a_i* is the age,
 *n_i* is the node,
 and *I_i* is the income for the i-th measurement.
@@ -243,7 +250,7 @@ a_i
 For each leaf node, data is generated on the following *age_grid*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 298-298
+    :lines: 304-304
     :language: py
 
 .. meta::
@@ -259,7 +266,7 @@ For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 302-314
+    :lines: 308-320
     :language: py
 
 Note that the check of the fit for the nodes in the fit_goal_set
@@ -291,7 +298,7 @@ Value Prior
 The following is the value prior used for the fit_node
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 332-339
+    :lines: 347-354
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -310,7 +317,7 @@ dage Prior
 The following is the dage prior used for the fit_node:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 344-349
+    :lines: 359-364
     :language: py
 
 .. meta::
@@ -339,7 +346,7 @@ Value Prior
 The following is the value prior used for the children of the fit_node:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 354-358
+    :lines: 369-373
     :language: py
 
 .. meta::
@@ -367,7 +374,7 @@ Value Prior
 The following is the value prior used for this smoothing:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 363-369
+    :lines: 378-384
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -384,11 +391,11 @@ routine replaces them for other nodes.
 Checking The Fit
 ****************
 The results of the fit are in the
-:ref:`cascade_fit_node.dismod_db.predict` and
-:ref:`cascade_fit_node.dismod_db.c_predict_fit_var`
+:ref:`cascade_fit_node.output_dismod_db.predict` and
+:ref:`cascade_fit_node.output_dismod_db.c_predict_fit_var`
 tables of the fit_node_database corresponding to each node.
-The ``check_fit`` routine uses these tables to check that fit
-against the truth.
+The :ref:`check_cascade_fit<check_cascade_fit>`
+routine uses these tables to check that fit against the truth.
 
 .. csv-table::
     :header: "Child", "Title"

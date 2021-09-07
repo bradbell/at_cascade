@@ -103,20 +103,6 @@ If this option_name appears, the corresponding option_value
 is not yet specified.
 Otherwise, the cascade will be run sequentially.
 
-.. meta::
-   :keywords: min_interval
-
-.. index:: min_interval
-
-.. _all_option_table.min_interval:
-
-min_interval
-************
-If this option_name appears, the corresponding option_value
-is not yet specified.
-Otherwise, all age and time averages will
-approximated by the value at the midpoint of the intervals.
-
 ----
 
 xsrst input file: ``xsrst/all_node_db.xsrst``

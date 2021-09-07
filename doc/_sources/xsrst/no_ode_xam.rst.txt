@@ -61,7 +61,7 @@ fit_goal_set
 ============
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 322-322
+    :lines: 326-326
     :language: py
 
 .. meta::
@@ -108,7 +108,7 @@ We use *r_n* for the reference value of income at node *n*.
 The code below sets this reference using the name avg_income:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 338-341
+    :lines: 342-345
     :language: py
 
 .. meta::
@@ -127,7 +127,7 @@ The true value for these multipliers
 (used which simulating the data) is
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 334-334
+    :lines: 338-338
     :language: py
 
 .. meta::
@@ -139,7 +139,7 @@ The true value for these multipliers
 
 gamma
 =====
-We use gamma_\ *integrand*
+We use gamma\_\ *integrand*
 for the :ref:`glossary.meas_noise` covariate multiplier
 which multiplies *one* add affects the specified integrand
 where *integrand* is one of the following:
@@ -173,7 +173,7 @@ We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 345-351
+    :lines: 349-355
     :language: py
 
 .. meta::
@@ -200,23 +200,27 @@ If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 326-330
+    :lines: 330-334
     :language: py
 
 .. meta::
-   :keywords: rate_true(rate, , a, , n, , i)
+   :keywords: rate_true(rate, , a, , t, , n, , c)
 
-.. index:: rate_true(rate, , a, , n, , i)
+.. index:: rate_true(rate, , a, , t, , n, , c)
 
-.. _no_ode_xam.simulated_data.rate_true(rate,_a,_n,_i):
+.. _no_ode_xam.simulated_data.rate_true(rate,_a,_t,_n,_c):
 
-rate_true(rate, a, n, I)
-========================
+rate_true(rate, a, t, n, c)
+===========================
 For *rate* equal to iota, chi, and omega,
-this is the true value for *rate* in node *n* at age *a* and income *I*:
+this is the true value for *rate*
+in node *n* at age *a*, time *t*, and covariate values *c*.
+The covariate values are a list in the
+same order as the covariate table.
+The values *t* and *c[1]* are not used by this function for this example.
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 377-391
+    :lines: 381-396
     :language: py
 
 The true model for chi is constant below the second age grid point
@@ -269,7 +273,7 @@ a_i
 For each leaf node, data is generated on the following *age_grid*:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 355-355
+    :lines: 359-359
     :language: py
 
 .. meta::
@@ -285,7 +289,7 @@ For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 359-371
+    :lines: 363-375
     :language: py
 
 Note that the check of the fit for the nodes in the fit_goal_set
@@ -316,7 +320,7 @@ The parent smoothings use the true value of iota and chi at age 50
 and in the root_node:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 411-412
+    :lines: 417-419
     :language: py
 
 .. meta::
@@ -348,12 +352,12 @@ Value Prior
 The following is the value prior used for the fit_node
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 420-427
+    :lines: 427-434
     :language: py
 
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 432-439
+    :lines: 439-446
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -372,7 +376,7 @@ dage Prior
 The following is the dage prior used for the fit_node:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 445-450
+    :lines: 452-457
     :language: py
 
 .. meta::
@@ -401,7 +405,7 @@ Value Prior
 The following is the value prior used for the children of the fit_node:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 455-459
+    :lines: 462-466
     :language: py
 
 .. meta::
@@ -429,7 +433,7 @@ Value Prior
 The following is the value prior used for this smoothing:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 464-470
+    :lines: 471-477
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -445,7 +449,7 @@ routine replaces them for other nodes.
 
 Gamma Smoothing
 ***************
-This is the smoothing used for gamma_\ *integrand* where
+This is the smoothing used for gamma\_\ *integrand* where
 *integrand* is Sincidence, mtexcess, or prevalence.
 There is only one age and one time point in this smoothing
 so it does not have dage or dtime priors.
@@ -453,7 +457,7 @@ In addition, the value prior has upper and lower limits equal
 to the constant returned by the lambda function in this smoothing:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 514-520
+    :lines: 521-527
     :language: py
 
 .. meta::
@@ -466,11 +470,11 @@ to the constant returned by the lambda function in this smoothing:
 Checking The Fit
 ****************
 The results of the fit are in the
-:ref:`cascade_fit_node.dismod_db.predict` and
-:ref:`cascade_fit_node.dismod_db.c_predict_fit_var`
+:ref:`cascade_fit_node.output_dismod_db.predict` and
+:ref:`cascade_fit_node.output_dismod_db.c_predict_fit_var`
 tables of the fit_node_database corresponding to each node.
-The ``check_fit`` routine uses these tables to check that fit
-against the truth.
+The :ref:`check_cascade_fit<check_cascade_fit>`
+routine uses these tables to check that fit against the truth.
 
 .. csv-table::
     :header: "Child", "Title"

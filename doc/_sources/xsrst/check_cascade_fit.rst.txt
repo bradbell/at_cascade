@@ -1,0 +1,92 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!!
+check_cascade_fit
+!!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: check_cascade_fit, check, the, cascade, results, for, node
+
+.. index:: check_cascade_fit, check, the, cascade, results, for, node
+
+.. _check_cascade_fit:
+
+Check the Cascade Results for a Node
+####################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _check_cascade_fit.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/check_cascade_fit.py
+    :lines: 76-80
+    :language: py
+
+.. meta::
+   :keywords: rate_true
+
+.. index:: rate_true
+
+.. _check_cascade_fit.rate_true:
+
+rate_true
+*********
+This argument can't be ``None`` and
+is a function with the following syntax
+```
+rate = rate_true(rate_name, a, t, n, c)
+```
+The argument *rate_name* is one of the following:
+:ref:`glossary.iota`,
+:ref:`glossary.rho`,
+:ref:`glossary.chi`, or
+:ref:`glossary.omega`.
+The argument *a* ( *t* ) is the age ( time ) at which we
+are evaluating the rate.
+The argument *n* is the :ref:`glossary.node_name` for the
+node where we are evaluating the rate.
+The argument *c* is a list of covariate values
+in the same order as the covariate table.
+The result *rate* is the corresponding value for the rate.
+
+.. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _check_cascade_fit.all_node_database:
+
+all_node_database
+*****************
+is a python string specifying the location of the
+:ref:`all_node_db<all_node_db>`
+relative to the current working directory.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: fit_node_database
+
+.. index:: fit_node_database
+
+.. _check_cascade_fit.fit_node_database:
+
+fit_node_database
+*****************
+is a python string specifying the location of a
+dismod_at database relative to the current working directory.
+It is a :ref:`glossary.fit_node_database` with the
+extra properties listed under
+:ref:`dismod.db<cascade_fit_node.output_dismod_db>`
+in the cascade_fit_node documentation.
+
+----
+
+xsrst input file: ``at_cascade/check_cascade_fit.py``

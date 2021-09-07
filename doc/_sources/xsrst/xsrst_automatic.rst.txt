@@ -30,13 +30,14 @@ Table of Contents
 | :ref:`5<module>` The at_cascade Python Module
 |
 |  |space| :ref:`5.1<cascade_fit_node>` Cascade a Fit Starting at a Node
-|  |space| :ref:`5.2<child_avgint_table>` Create avgint Table That Predicts Rates for Child Nodes
-|  |space| :ref:`5.3<create_all_node_db>` Create an All Node Database
-|  |space| :ref:`5.4<create_child_node_db>` Create Child Database From Fit in Parent Database
-|  |space| :ref:`5.5<get_fit_children>` Determine the Set of Nodes to Fit
-|  |space| :ref:`5.6<get_parent_node>` Get Parent Node Name From Option Table
-|  |space| :ref:`5.7<no_ode_fit>` Do A No Ode Fit For One Node
-|  |space| :ref:`5.8<omega_constraint>` Set Omega Constraints in a Fit Node Database
+|  |space| :ref:`5.2<check_cascade_fit>` Check the Cascade Results for a Node
+|  |space| :ref:`5.3<child_avgint_table>` Create avgint Table That Predicts Rates for Child Nodes
+|  |space| :ref:`5.4<create_all_node_db>` Create an All Node Database
+|  |space| :ref:`5.5<create_child_node_db>` Create Child Database From Fit in Parent Database
+|  |space| :ref:`5.6<get_fit_children>` Determine the Set of Nodes to Fit
+|  |space| :ref:`5.7<get_parent_node>` Get Parent Node Name From Option Table
+|  |space| :ref:`5.8<no_ode_fit>` Do A No Ode Fit For One Node
+|  |space| :ref:`5.9<omega_constraint>` Set Omega Constraints in a Fit Node Database
 |
 
 Link to Index

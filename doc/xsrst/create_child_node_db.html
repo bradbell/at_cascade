@@ -103,6 +103,7 @@
 <li class="toctree-l2"><a class="reference internal" href="example.html">example</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="module.html">module</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="cascade_fit_node.html">cascade_fit_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="check_cascade_fit.html">check_cascade_fit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="child_avgint_table.html">child_avgint_table</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_all_node_db.html">create_all_node_db</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">create_child_node_db</a></li>
@@ -223,8 +224,9 @@ This argument can’t be <code class="docutils literal notranslate"><span class=
 <div class="section" id="parent-node-database">
 <span id="create-child-node-db-parent-node-database"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">parent_node_database</a><a class="headerlink" href="#parent-node-database" title="Permalink to this headline">¶</a></h3>
 <p>is a python string containing the name of a dismod_at database.
-It has two predict tables (mentioned below)
-that are used to create priors in the child node databases.
+This is a <a class="reference internal" href="glossary.html#glossary-fit-node-database"><span class="std std-ref">fit_node_database</span></a> which
+has two predict tables (mentioned below).
+These tables are used to create priors in the child node databases.
 This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <div class="section" id="parent-node">
 <span id="create-child-node-db-parent-node-database-parent-node"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">parent_node</a><a class="headerlink" href="#parent-node" title="Permalink to this headline">¶</a></h4>
@@ -268,11 +270,8 @@ avgint table with only the node_id column modified.</p>
 <em>child_name</em> is a <a class="reference internal" href="glossary.html#glossary-node-name"><span class="std std-ref">node_name</span></a> and a child of the <em>parent_node</em>.</p>
 <ul class="simple">
 <li><p>For each <em>child_name</em>, <em>child_node_databases[child_name]</em> is the name of
-a <a class="reference internal" href="glossary.html#glossary-fit-node-database"><span class="std std-ref">fit_node_database</span></a> that is created by this command.</p></li>
+a <a class="reference internal" href="glossary.html#glossary-input-node-database"><span class="std std-ref">input_node_database</span></a> that is created by this command.</p></li>
 <li><p>In this database, <em>child_name</em> will be the <a class="reference internal" href="glossary.html#glossary-fit-node"><span class="std std-ref">fit_node</span></a> .</p></li>
-<li><p>The rate table is changed to have null priors for omega;
-see <a class="reference internal" href="omega_constraint.html#id1"><span class="std std-ref">Set Omega Constraints in a Fit Node Database</span></a> for properly setting these priors.</p></li>
-<li><p>The difference priors are the same as in <em>parent_node_database</em>.</p></li>
 <li><p>If the upper and lower limits are equal,
 the value priors are effectively the same.
 Otherwise the mean and standard deviation in the values priors
@@ -281,8 +280,6 @@ for the child node.</p></li>
 <li><p>The avgint table is a copy of the c_avgint table in the
 <em>parent_node_database</em> with the node_id replaced by the corresponding
 child node id.</p></li>
-<li><p>The following tables are the same as in the root_node_database:
-age, data, density, integrand, node, subgroup, time, weight, weight_grid.</p></li>
 </ul>
 <p>This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <hr class="docutils" />
