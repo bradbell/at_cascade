@@ -39,7 +39,7 @@ relative to the current working directory.
 On input, this is an :ref:`glossary.input_node_database`.
 Upon return, it is a :ref:`glossary.fit_node_database` with the
 extra properties listed under
-:ref:`dismod.db<cascade_fit_node.output_dismod_db>` below.
+:ref:`cascade_fit_node.output_dismod_db` below.
 This argument can't be ``None``.
 
 
