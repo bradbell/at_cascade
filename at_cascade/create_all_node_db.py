@@ -10,6 +10,7 @@
 '''
 {xsrst_begin create_all_node_db}
 {xsrst_spell
+    bool
 }
 
 Create an All Node Database
@@ -55,19 +56,19 @@ It is a dictionary with the following keys:
 
 sex_level
 =========
-If this key is present, it is a text representation of
+If this key is present, it is a ``int`` specifying the
 :ref:`all_option_table.sex_level`.
 Otherwise, there is no sex_level in the all_option table.
 
 in_parallel
 ===========
-If this key is present, it is a text representation of
+If this key is present, it is a ``bool`` specifying
 :ref:`all_option_table.in_parallel`.
 Otherwise, there is no in_parallel in the all_option table.
 
 max_midpoint
 ============
-If this key is present, it is a text representation of
+If this key is present, it is a ``float`` specifying the
 :ref:`all_option_table.max_midpoint`.
 Otherwise, there is no max_midpoint in the all_option table.
 
@@ -168,6 +169,7 @@ def create_all_node_db(
     all_node_database   = None,
     root_node_database  = None,
     all_cov_reference   = None,
+    all_option          = None,
     omega_grid          = None,
     mtall_data          = None,
     mtspecific_data     = None,
@@ -175,9 +177,10 @@ def create_all_node_db(
 # )
 # END syntax
 ):
-    assert not all_node_database is None
+    assert not all_node_database  is None
     assert not root_node_database is None
-    assert not all_cov_reference is None
+    assert not all_cov_reference  is None
+    assert not all_option         is None
     if omega_grid is None :
         assert mtall_data is None
         assert mtspecific_data is None
@@ -381,6 +384,10 @@ def create_all_node_db(
     row_list = [
         ['root_node_name', root_node_name ]
     ]
+    for key in all_option :
+        option_name = key
+        option_value = str( all_option[key] )
+        row_list.append( [ option_name, option_value ] )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )

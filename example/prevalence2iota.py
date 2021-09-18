@@ -654,10 +654,12 @@ def main() :
     # Create all_node.db
     # We could get all_cov_reference from here, but we do not need to
     all_node_database = 'all_node.db'
+    empty_dict        = dict()
     at_cascade.create_all_node_db(
-        all_node_database   = all_node_database   ,
-        root_node_database  = root_node_database  ,
-        all_cov_reference   = all_cov_reference ,
+        all_node_database   = all_node_database,
+        root_node_database  = root_node_database,
+        all_cov_reference   = all_cov_reference,
+        all_option          = empty_dict,
         omega_grid          = omega_grid,
         mtall_data          = mtall_data,
         fit_goal_set        = fit_goal_set,
