@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_all_node_db.py
-    :lines: 162-173
+    :lines: 168-177
     :language: py
 
 .. meta::
@@ -76,6 +76,57 @@ If *covariate_name* is an covariate name,
 
 is the reference values for the specified node and covariate.
 The argument *all_cov_reference* can't be ``None``.
+
+.. meta::
+   :keywords: all_option
+
+.. index:: all_option
+
+.. _create_all_node_db.all_option:
+
+all_option
+**********
+This argument can't be ``None``.
+It is a dictionary with the following keys:
+
+.. meta::
+   :keywords: sex_level
+
+.. index:: sex_level
+
+.. _create_all_node_db.all_option.sex_level:
+
+sex_level
+=========
+If this key is present, it is a ``int`` specifying the
+:ref:`all_option_table.sex_level`.
+Otherwise, there is no sex_level in the all_option table.
+
+.. meta::
+   :keywords: in_parallel
+
+.. index:: in_parallel
+
+.. _create_all_node_db.all_option.in_parallel:
+
+in_parallel
+===========
+If this key is present, it is a ``bool`` specifying
+:ref:`all_option_table.in_parallel`.
+Otherwise, there is no in_parallel in the all_option table.
+
+.. meta::
+   :keywords: max_midpoint
+
+.. index:: max_midpoint
+
+.. _create_all_node_db.all_option.max_midpoint:
+
+max_midpoint
+============
+If this key is present, it is a ``float`` specifying the
+:ref:`all_option_table.max_midpoint`.
+Otherwise, there is no max_midpoint in the all_option table.
 
 .. meta::
    :keywords: omega_grid
@@ -202,45 +253,6 @@ This is a python set equal to the :ref:`glossary.fit_goal_set`
 where each element is represented by its node name.
 If this argument is ``None``, the root_node and all of its
 descendants will be fit.
-
-.. meta::
-   :keywords: sex_level
-
-.. index:: sex_level
-
-.. _create_all_node_db.sex_level:
-
-sex_level
-*********
-Not yet specified.
-If this argument is ``None``, there will be no sex split between
-*root_node* and the nodes in the fit_goal_set.
-
-.. meta::
-   :keywords: in_parallel
-
-.. index:: in_parallel
-
-.. _create_all_node_db.in_parallel:
-
-in_parallel
-***********
-Not yet specified.
-If this argument is ``None``, the cascade will be run sequentially; i.e.,
-not in parallel.
-
-.. meta::
-   :keywords: min_interval
-
-.. index:: min_interval
-
-.. _create_all_node_db.min_interval:
-
-min_interval
-************
-Not yet specified.
-If this argument is ``None``, all age and time averages will
-approximated by the value at the midpoint of the intervals.
 
 ----
 

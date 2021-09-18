@@ -496,10 +496,12 @@
     <span class="c1">#</span>
     <span class="c1"># Create all_node.db</span>
     <span class="n">all_node_database</span> <span class="o">=</span> <span class="s1">&#39;all_node.db&#39;</span>
+    <span class="n">empty_dict</span>        <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="n">at_cascade</span><span class="o">.</span><span class="n">create_all_node_db</span><span class="p">(</span>
-        <span class="n">all_node_database</span>   <span class="o">=</span> <span class="n">all_node_database</span>   <span class="p">,</span>
-        <span class="n">root_node_database</span>  <span class="o">=</span> <span class="n">root_node_database</span>  <span class="p">,</span>
-        <span class="n">all_cov_reference</span>   <span class="o">=</span> <span class="n">all_cov_reference</span> <span class="p">,</span>
+        <span class="n">all_node_database</span>   <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
+        <span class="n">root_node_database</span>  <span class="o">=</span> <span class="n">root_node_database</span><span class="p">,</span>
+        <span class="n">all_cov_reference</span>   <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">,</span>
+        <span class="n">all_option</span>          <span class="o">=</span> <span class="n">empty_dict</span><span class="p">,</span>
         <span class="n">fit_goal_set</span>        <span class="o">=</span> <span class="n">fit_goal_set</span>
     <span class="p">)</span>
     <span class="c1">#</span>

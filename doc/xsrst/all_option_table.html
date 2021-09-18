@@ -13,6 +13,7 @@
 <meta content="root_node_name" name="keywords" />
 <meta content="sex_level" name="keywords" />
 <meta content="in_parallel" name="keywords" />
+<meta content="max_midpoint" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -195,6 +196,7 @@
 <li><p><a class="reference internal" href="#root-node-name" id="id6">root_node_name</a></p></li>
 <li><p><a class="reference internal" href="#sex-level" id="id7">sex_level</a></p></li>
 <li><p><a class="reference internal" href="#in-parallel" id="id8">in_parallel</a></p></li>
+<li><p><a class="reference internal" href="#max-midpoint" id="id9">max_midpoint</a></p></li>
 </ul>
 </div>
 <p>This table specifies certain at_cascade options</p>
@@ -224,15 +226,25 @@ is the name of the <a class="reference internal" href="glossary.html#glossary-ro
 </div>
 <div class="section" id="sex-level">
 <span id="all-option-table-sex-level"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id7">sex_level</a><a class="headerlink" href="#sex-level" title="Permalink to this headline">¶</a></h3>
-<p>If this option_name appears, the corresponding option_value
-is not yet specified.
-Otherwise, there will be no sex split in this cascade.</p>
+<p>If this option does not appear, there will be no sex split in this cascade.
+Otherwise, it is a text representation of a non-negative integer specifying
+the level at which to split the cascade by sex.
+Level 0 corresponds to splitting after fitting the root_node,
+level 1 to splitting after fitting the children of the root_node,
+and so on.</p>
 </div>
 <div class="section" id="in-parallel">
 <span id="all-option-table-in-parallel"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id8">in_parallel</a><a class="headerlink" href="#in-parallel" title="Permalink to this headline">¶</a></h3>
-<p>If this option_name appears, the corresponding option_value
-is not yet specified.
-Otherwise, the cascade will be run sequentially.</p>
+<p>If this option does not appear, the cascade will be run sequentially.
+Otherwise, if it is <code class="docutils literal notranslate"><span class="pre">True</span></code> ( <code class="docutils literal notranslate"><span class="pre">False</span></code>)
+fitting of each of the nodes will be run in parallel (sequentially).</p>
+</div>
+<div class="section" id="max-midpoint">
+<span id="all-option-table-max-midpoint"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id9">max_midpoint</a><a class="headerlink" href="#max-midpoint" title="Permalink to this headline">¶</a></h3>
+<p>If this option does not appear, none of the age or time intervals in the
+root_node_database data file will be approximated by their midpoint values.
+Otherwise, it is a text representation of the maximum age and time interval
+that is approximated by its midpoint value.</p>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">xsrst/all_node_db.xsrst</span></code></p>
 </div>
