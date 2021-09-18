@@ -48,6 +48,29 @@ If *covariate_name* is an covariate name,
 is the reference values for the specified node and covariate.
 The argument *all_cov_reference* can't be ``None``.
 
+all_option
+**********
+This argument can't be ``None``.
+It is a dictionary with the following keys:
+
+sex_level
+=========
+If this key is present, it is a text representation of
+:ref:`all_option_table.sex_level`.
+Otherwise, there is no sex_level in the all_option table.
+
+in_parallel
+===========
+If this key is present, it is a text representation of
+:ref:`all_option_table.in_parallel`.
+Otherwise, there is no in_parallel in the all_option table.
+
+max_midpoint
+============
+If this key is present, it is a text representation of
+:ref:`all_option_table.max_midpoint`.
+Otherwise, there is no max_midpoint in the all_option table.
+
 omega_grid
 **********
 is a dictionary with two keys ``age`` and ``time``.
@@ -119,24 +142,6 @@ where each element is represented by its node name.
 If this argument is ``None``, the root_node and all of its
 descendants will be fit.
 
-sex_level
-*********
-Not yet specified.
-If this argument is ``None``, there will be no sex split between
-*root_node* and the nodes in the fit_goal_set.
-
-in_parallel
-***********
-Not yet specified.
-If this argument is ``None``, the cascade will be run sequentially; i.e.,
-not in parallel.
-
-min_interval
-************
-Not yet specified.
-If this argument is ``None``, all age and time averages will
-approximated by the value at the midpoint of the intervals.
-
 {xsrst_end create_all_node_db}
 '''
 import dismod_at
@@ -167,9 +172,6 @@ def create_all_node_db(
     mtall_data          = None,
     mtspecific_data     = None,
     fit_goal_set        = None,
-    sex_level           = None,
-    in_parallel         = None,
-    min_interval        = None,
 # )
 # END syntax
 ):
@@ -182,10 +184,6 @@ def create_all_node_db(
     else :
         assert not mtall_data is None
     #
-    # so far only None is implemented for these options
-    assert sex_level is None
-    assert in_parallel is None
-    assert min_interval is None
     # -------------------------------------------------------------------------
     # Read root node database
     # -------------------------------------------------------------------------

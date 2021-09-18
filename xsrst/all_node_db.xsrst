@@ -275,15 +275,26 @@ is the name of the :ref:`glossary.root_node` in the node table of the
 
 sex_level
 *********
-If this option_name appears, the corresponding option_value
-is not yet specified.
-Otherwise, there will be no sex split in this cascade.
+If this option does not appear, there will be no sex split in this cascade.
+Otherwise, it is a text representation of a non-negative integer specifying
+the level at which to split the cascade by sex.
+Level 0 corresponds to splitting after fitting the root_node,
+level 1 to splitting after fitting the children of the root_node,
+and so on.
 
 in_parallel
 ***********
-If this option_name appears, the corresponding option_value
-is not yet specified.
-Otherwise, the cascade will be run sequentially.
+If this option does not appear, the cascade will be run sequentially.
+Otherwise, if it is ``True`` ( ``False``)
+fitting of each of the nodes will be run in parallel (sequentially).
+
+max_midpoint
+************
+If this option does not appear, none of the age or time intervals in the
+root_node_database data file will be approximated by their midpoint values.
+Otherwise, it is a text representation of the maximum age and time interval
+that is approximated by its midpoint value.
+
 
 {xsrst_end all_option_table}
 ------------------------------------------------------------------------------
