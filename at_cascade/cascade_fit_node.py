@@ -155,11 +155,20 @@ def cascade_fit_node(
 # )
 # END syntax
 ) :
+    # connection
+    new         = False
+    connection  = dismod_at.create_connection(all_node_database, new)
+    #
+    # all_option_table
+    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+    #
+    # check that options that are present are implemented
+    implemented = [ 'root_node_name' ]
+    for row in all_option_table :
+        assert row['option_name'] in implemented
+    #
     # fit_children
     if fit_children is None :
-        new              = False
-        connection       = dismod_at.create_connection(all_node_database, new)
-        all_option_table = dismod_at.get_table_dict(connection, 'all_option')
         fit_goal_table   = dismod_at.get_table_dict(connection, 'fit_goal')
         connection.close()
         root_node_name   = None
