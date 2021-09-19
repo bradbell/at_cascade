@@ -14,6 +14,7 @@
 <meta content="sex_level" name="keywords" />
 <meta content="in_parallel" name="keywords" />
 <meta content="max_midpoint" name="keywords" />
+<meta content="max_fit" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -197,6 +198,7 @@
 <li><p><a class="reference internal" href="#sex-level" id="id7">sex_level</a></p></li>
 <li><p><a class="reference internal" href="#in-parallel" id="id8">in_parallel</a></p></li>
 <li><p><a class="reference internal" href="#max-midpoint" id="id9">max_midpoint</a></p></li>
+<li><p><a class="reference internal" href="#max-fit" id="id10">max_fit</a></p></li>
 </ul>
 </div>
 <p>This table specifies certain at_cascade options</p>
@@ -245,6 +247,17 @@ fitting of each of the nodes will be run in parallel (sequentially).</p>
 root_node_database data file will be approximated by their midpoint values.
 Otherwise, it is a text representation of the maximum age and time interval
 that is approximated by its midpoint value.</p>
+</div>
+<div class="section" id="max-fit">
+<span id="all-option-table-max-fit"></span><span id="index-9"></span><h3><a class="toc-backref" href="#id10">max_fit</a><a class="headerlink" href="#max-fit" title="Permalink to this headline">¶</a></h3>
+<p>It this option does not appear, all of the data for each integrand is included
+(unless held out in the root_node data table or option table).
+Otherwise, this is a text representation of a non-negative integer specifying
+the maximum number of values to fit for each integrand.
+If more than this number of values are available,
+at a <a class="reference internal" href="glossary.html#glossary-fit-node"><span class="std std-ref">fit_node</span></a> and for one integrand,
+a randomly selected subset of the values
+are held out so that only this number are included in the fit.</p>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">xsrst/all_node_db.xsrst</span></code></p>
 </div>
