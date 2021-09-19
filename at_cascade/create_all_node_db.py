@@ -72,6 +72,12 @@ If this key is present, it is a ``float`` specifying the
 :ref:`all_option_table.max_midpoint`.
 Otherwise, there is no max_midpoint in the all_option table.
 
+max_fit
+=======
+If this key is present, it is a ``int`` specifying the
+:ref:`all_option_table.max_fit`.
+Otherwise, there is no max_fit in the all_option table.
+
 omega_grid
 **********
 is a dictionary with two keys ``age`` and ``time``.
