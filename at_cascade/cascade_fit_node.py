@@ -176,7 +176,7 @@ def cascade_fit_node(
     all_option_table = dismod_at.get_table_dict(connection, 'all_option')
     #
     # all_option
-    implemented = [ 'root_node_name' ]
+    implemented = [ 'root_node_name', 'max_fit' ]
     all_option  = dict()
     for key in implemented :
         all_option[key] = None
@@ -189,7 +189,6 @@ def cascade_fit_node(
     # fit_children
     if fit_children is None :
         fit_goal_table   = dismod_at.get_table_dict(connection, 'fit_goal')
-        connection.close()
         root_node_name   = all_option['root_node_name']
         assert not root_node_name is None
         root_node_id = node_table_name2id(node_table, root_node_name)
@@ -197,9 +196,18 @@ def cascade_fit_node(
             root_node_id, fit_goal_table, node_table
         )
     #
+    # connection
+    connection.close()
+    #
     # fit_integrand
     if fit_integrand is None :
         fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
+    #
+    # integrand_table
+    new             = False
+    connection      = dismod_at.create_connection(fit_node_database, new)
+    integrand_table = dismod_at.get_table_dict(connection, 'integrand')
+    connection.close()
     #
     # fit_node_name
     path_list = fit_node_database.split('/')
@@ -234,6 +242,16 @@ def cascade_fit_node(
     #
     # init
     dismod_at.system_command_prc( [ 'dismod_at', fit_node_database, 'init' ] )
+    #
+    # enforce max_fit
+    max_fit = all_option['max_fit']
+    if not max_fit is None :
+        for integrand_id in fit_integrand :
+            integrand_name = integrand_table[integrand_id]['integrand_name']
+            dismod_at.system_command_prc([
+                'dismod_at', fit_node_database,
+                'hold_out', integrand_name, max_fit
+            ])
     #
     # fit
     dismod_at.system_command_prc(
