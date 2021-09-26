@@ -25,6 +25,7 @@ list='
     test/child_avgint_table.py
     test/omega_constraint.py
     test/get_fit_children.py
+    test/get_fit_integrand.py
     example/one_at_function.py
     example/prevalence2iota.py
     example/no_ode_xam.py

@@ -23,10 +23,12 @@ Syntax
 
 fit_node_database
 *****************
-is a python string specifying the location of a dismod_at database
+is a python string specifying the location of a
+:ref:`glossary.fit_node_database`
 relative to the current working directory.
+Note that only the data table in this database is used and
+it is the same data table as the data table in the root_node_database.
 This argument can't be None.
-Note that this has the same data table as the root_node_database.
 
 fit_integrand
 *************
