@@ -42,7 +42,6 @@ extra properties listed under
 :ref:`cascade_fit_node.output_dismod_db` below.
 This argument can't be ``None``.
 
-
 fit_node
 ========
 The *fit_node_database* must be *fit_node*\ ``/dismod.db``,
@@ -162,19 +161,22 @@ def cascade_fit_node(
     # all_option_table
     all_option_table = dismod_at.get_table_dict(connection, 'all_option')
     #
-    # check that options that are present are implemented
+    # all_option
     implemented = [ 'root_node_name' ]
+    all_option  = dict()
+    for key in implemented :
+        all_option[key] = None
     for row in all_option_table :
-        assert row['option_name'] in implemented
+        option_name  = row['option_name']
+        option_value = row['option_value']
+        assert option_name in implemented
+        all_option[option_name] = option_value
     #
     # fit_children
     if fit_children is None :
         fit_goal_table   = dismod_at.get_table_dict(connection, 'fit_goal')
         connection.close()
-        root_node_name   = None
-        for row in all_option_table :
-            if row['option_name'] == 'root_node_name' :
-                root_node_name = row['option_value']
+        root_node_name   = all_option['root_node_name']
         assert not root_node_name is None
         root_node_id = node_table_name2id(node_table, root_node_name)
         fit_children = at_cascade.get_fit_children(

@@ -11,7 +11,6 @@
 {xsrst_begin no_ode_fit}
 {xsrst_spell
     dir
-    integrands
 }
 
 Do A No Ode Fit For One Node

@@ -13,7 +13,6 @@
     avg
     dtime
     dage
-    integrands
     smoothings
 }
 
