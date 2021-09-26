@@ -39,6 +39,7 @@ where each such integrand_id is not held out.
 '''
 # ----------------------------------------------------------------------------
 import sys
+import dismod_at
 # ----------------------------------------------------------------------------
 def get_fit_integrand(
 # BEGIN syntax

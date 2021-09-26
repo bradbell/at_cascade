@@ -51,7 +51,7 @@ for this database.
 
 fit_node_dir
 ============
-is the directory where the fit_node_database is located.
+is the directory where the *fit_node_database* is located.
 
 node_table
 **********
@@ -75,6 +75,19 @@ see :ref:`get_fit_children.fit_children` .
 default
 =======
 If *fit_children* is ``None``, it will be computed by ``cascade_fit_node``
+and reused by recursive calls to this routine.
+
+fit_integrand
+*************
+is the python set.
+Each integrand_id in *fit_integrand* appears in the data table in
+*fit_node_database*.
+Furthermore all such integrand_id that appear in the a row of the data table
+that has hold_out equal to zero are included.
+
+default
+=======
+If *fit_integrand* is ``None``, it will be computed by ``cascade_fit_node``
 and reused by recursive calls to this routine.
 
 Output dismod.db
@@ -151,6 +164,7 @@ def cascade_fit_node(
     fit_node_database = None,
     node_table        = None,
     fit_children      = None,
+    fit_integrand     = None,
 # )
 # END syntax
 ) :
@@ -182,6 +196,10 @@ def cascade_fit_node(
         fit_children = at_cascade.get_fit_children(
             root_node_id, fit_goal_table, node_table
         )
+    #
+    # fit_integrand
+    if fit_integrand is None :
+        fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
     #
     # fit_node_name
     path_list = fit_node_database.split('/')
@@ -279,7 +297,13 @@ def cascade_fit_node(
     # fit child node databases
     for node_name in child_node_databases :
         fit_node_database = child_node_databases[node_name]
-        cascade_fit_node(all_node_database, fit_node_database, node_table)
+        cascade_fit_node(
+            all_node_database ,
+            fit_node_database ,
+            node_table        ,
+            fit_children      ,
+            fit_integrand     ,
+        )
     #
     # connection
     connection.close()
