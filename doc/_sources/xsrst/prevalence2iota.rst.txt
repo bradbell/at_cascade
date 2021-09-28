@@ -321,7 +321,7 @@ There are no :ref:`glossary.dtime` priors because there is only one time point.
 
 Value Prior
 ===========
-The following is the value prior used for the fit_node
+The following is the value prior used for the root_node
 
 .. literalinclude:: ../../example/prevalence2iota.py
     :lines: 380-381

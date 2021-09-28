@@ -14,6 +14,7 @@ module
    create_all_node_db
    create_child_node_db
    get_fit_children
+   get_fit_integrand
    get_parent_node
    no_ode_fit
    omega_constraint
@@ -41,6 +42,7 @@ The at_cascade Python Module
     "create_all_node_db", :ref:`create_all_node_db`
     "create_child_node_db", :ref:`create_child_node_db`
     "get_fit_children", :ref:`get_fit_children`
+    "get_fit_integrand", :ref:`get_fit_integrand`
     "get_parent_node", :ref:`get_parent_node`
     "no_ode_fit", :ref:`no_ode_fit`
     "omega_constraint", :ref:`omega_constraint`

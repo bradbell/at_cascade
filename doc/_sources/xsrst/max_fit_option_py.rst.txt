@@ -1,0 +1,26 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!!
+max_fit_option_py
+!!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: max_fit_option_py, max_fit_option:, python, source, code
+
+.. index:: max_fit_option_py, max_fit_option:, python, source, code
+
+.. _max_fit_option_py:
+
+max_fit_option: Python Source Code
+###################################
+.. contents::
+   :local:
+
+
+.. literalinclude:: ../../example/max_fit_option.py
+    :lines: 159-466
+    :language: py
+
+----
+
+xsrst input file: ``example/max_fit_option.py``

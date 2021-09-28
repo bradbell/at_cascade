@@ -1,0 +1,65 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!!
+get_fit_integrand
+!!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: get_fit_integrand, determine, the, set, integrands, in, data, table
+
+.. index:: get_fit_integrand, determine, the, set, integrands, in, data, table
+
+.. _get_fit_integrand:
+
+Determine the Set of Integrands in Data Table
+#############################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _get_fit_integrand.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/get_fit_integrand.py
+    :lines: 48-50
+    :language: py
+
+.. meta::
+   :keywords: fit_node_database
+
+.. index:: fit_node_database
+
+.. _get_fit_integrand.fit_node_database:
+
+fit_node_database
+*****************
+is a python string specifying the location of a
+:ref:`glossary.fit_node_database`
+relative to the current working directory.
+Note that only the data table in this database is used and
+it is the same data table as the data table in the root_node_database.
+This argument can't be None.
+
+.. meta::
+   :keywords: fit_integrand
+
+.. index:: fit_integrand
+
+.. _get_fit_integrand.fit_integrand:
+
+fit_integrand
+*************
+The return value *fit_integrand* is a python set of integrand_id
+that appear in the data table in the *fit_node_database*.
+Furthermore there is a row in the data table
+where each such integrand_id is not held out.
+
+----
+
+xsrst input file: ``at_cascade/get_fit_integrand.py``

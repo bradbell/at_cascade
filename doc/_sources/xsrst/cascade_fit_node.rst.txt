@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/cascade_fit_node.py
-    :lines: 150-155
+    :lines: 162-168
     :language: py
 
 .. meta::
@@ -84,7 +84,7 @@ for this database.
 
 fit_node_dir
 ============
-is the directory where the fit_node_database is located.
+is the directory where the *fit_node_database* is located.
 
 .. meta::
    :keywords: node_table
@@ -129,6 +129,33 @@ see :ref:`get_fit_children.fit_children` .
 default
 =======
 If *fit_children* is ``None``, it will be computed by ``cascade_fit_node``
+and reused by recursive calls to this routine.
+
+.. meta::
+   :keywords: fit_integrand
+
+.. index:: fit_integrand
+
+.. _cascade_fit_node.fit_integrand:
+
+fit_integrand
+*************
+is the python set.
+Each integrand_id in *fit_integrand* appears in the data table in
+*fit_node_database*.
+Furthermore all such integrand_id that appear in the a row of the data table
+that has hold_out equal to zero are included.
+
+.. meta::
+   :keywords: default
+
+.. index:: default
+
+.. _cascade_fit_node.fit_integrand.default:
+
+default
+=======
+If *fit_integrand* is ``None``, it will be computed by ``cascade_fit_node``
 and reused by recursive calls to this routine.
 
 .. meta::

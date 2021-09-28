@@ -8,6 +8,7 @@ example
    :maxdepth: 1
    :hidden:
 
+   max_fit_option
    no_ode_xam
    one_at_function
    prevalence2iota
@@ -30,6 +31,7 @@ The at_cascade Examples
     :header:  "Child", "Title"
     :widths: 20, 80
 
+    "max_fit_option", :ref:`max_fit_option`
     "no_ode_xam", :ref:`no_ode_xam`
     "one_at_function", :ref:`one_at_function`
     "prevalence2iota", :ref:`prevalence2iota`

@@ -61,7 +61,7 @@ fit_goal_set
 ============
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 326-326
+    :lines: 325-325
     :language: py
 
 .. meta::
@@ -108,7 +108,7 @@ We use *r_n* for the reference value of income at node *n*.
 The code below sets this reference using the name avg_income:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 342-345
+    :lines: 341-344
     :language: py
 
 .. meta::
@@ -127,7 +127,7 @@ The true value for these multipliers
 (used which simulating the data) is
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 338-338
+    :lines: 337-337
     :language: py
 
 .. meta::
@@ -173,7 +173,7 @@ We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 349-355
+    :lines: 348-354
     :language: py
 
 .. meta::
@@ -200,7 +200,7 @@ If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 330-334
+    :lines: 329-333
     :language: py
 
 .. meta::
@@ -220,7 +220,7 @@ same order as the covariate table.
 The values *t* and *c[1]* are not used by this function for this example.
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 381-396
+    :lines: 380-395
     :language: py
 
 The true model for chi is constant below the second age grid point
@@ -273,7 +273,7 @@ a_i
 For each leaf node, data is generated on the following *age_grid*:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 359-359
+    :lines: 358-358
     :language: py
 
 .. meta::
@@ -289,7 +289,7 @@ For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 363-375
+    :lines: 362-374
     :language: py
 
 Note that the check of the fit for the nodes in the fit_goal_set
@@ -320,7 +320,7 @@ The parent smoothings use the true value of iota and chi at age 50
 and in the root_node:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 417-419
+    :lines: 416-418
     :language: py
 
 .. meta::
@@ -349,15 +349,15 @@ and prevalence measurements.
 
 Value Prior
 ===========
-The following is the value prior used for the fit_node
+The following is the value prior used for the root_node
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 427-434
+    :lines: 426-433
     :language: py
 
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 439-446
+    :lines: 438-445
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -376,7 +376,7 @@ dage Prior
 The following is the dage prior used for the fit_node:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 452-457
+    :lines: 451-456
     :language: py
 
 .. meta::
@@ -405,7 +405,7 @@ Value Prior
 The following is the value prior used for the children of the fit_node:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 462-466
+    :lines: 461-465
     :language: py
 
 .. meta::
@@ -433,7 +433,7 @@ Value Prior
 The following is the value prior used for this smoothing:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 471-477
+    :lines: 470-476
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -457,7 +457,7 @@ In addition, the value prior has upper and lower limits equal
 to the constant returned by the lambda function in this smoothing:
 
 .. literalinclude:: ../../example/no_ode_xam.py
-    :lines: 521-527
+    :lines: 520-526
     :language: py
 
 .. meta::

@@ -295,7 +295,7 @@ priors because there is only one time point.
 
 Value Prior
 ===========
-The following is the value prior used for the fit_node
+The following is the value prior used for the root_node
 
 .. literalinclude:: ../../example/one_at_function.py
     :lines: 347-354
