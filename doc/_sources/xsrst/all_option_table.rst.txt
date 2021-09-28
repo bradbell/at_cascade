@@ -107,20 +107,6 @@ Otherwise, if it is ``True`` ( ``False``)
 fitting of each of the nodes will be run in parallel (sequentially).
 
 .. meta::
-   :keywords: max_midpoint
-
-.. index:: max_midpoint
-
-.. _all_option_table.max_midpoint:
-
-max_midpoint
-************
-If this option does not appear, none of the age or time intervals in the
-root_node_database data file will be approximated by their midpoint values.
-Otherwise, it is a text representation of the maximum age and time interval
-that is approximated by its midpoint value.
-
-.. meta::
    :keywords: max_fit
 
 .. index:: max_fit
