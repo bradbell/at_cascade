@@ -62,7 +62,11 @@ corresponding row of the dismod_at node table.
 This node table is the same as the node table in *fit_node_database*.
 It is the same for all the fits and
 passing it as an argument avoids reading it each time.
-This argument can't be ``None``.
+
+default
+=======
+If *node_table* is ``None``, it will be read by ``cascade_fit_node``
+and reused by recursive calls to this routine.
 
 fit_children
 ************
@@ -168,6 +172,13 @@ def cascade_fit_node(
 # )
 # END syntax
 ) :
+    #
+    # node_table
+    if node_table is None :
+        new         = False
+        connection  = dismod_at.create_connection(fit_node_database, new)
+        node_table  = dismod_at.get_table_dict(connection, 'node')
+        connection.close()
     # connection
     new         = False
     connection  = dismod_at.create_connection(all_node_database, new)

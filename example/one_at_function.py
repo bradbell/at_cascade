@@ -571,12 +571,6 @@ def main() :
         fit_goal_set        = fit_goal_set
     )
     #
-    # node_table
-    new        = False
-    connection = dismod_at.create_connection(root_node_database, new)
-    node_table = dismod_at.get_table_dict(connection, 'node')
-    connection.close()
-    #
     # fit_node_dir
     fit_node_dir = 'n0'
     if os.path.exists(fit_node_dir) :
@@ -592,9 +586,7 @@ def main() :
     shutil.copyfile(root_node_database, fit_node_database)
     #
     # cascade starting at root node
-    at_cascade.cascade_fit_node(
-        all_node_database, fit_node_database, node_table
-    )
+    at_cascade.cascade_fit_node(all_node_database, fit_node_database)
     #
     # check results
     for goal_dir in [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2' ] :
