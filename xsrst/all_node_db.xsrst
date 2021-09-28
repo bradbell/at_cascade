@@ -288,13 +288,6 @@ If this option does not appear, the cascade will be run sequentially.
 Otherwise, if it is ``True`` ( ``False``)
 fitting of each of the nodes will be run in parallel (sequentially).
 
-max_midpoint
-************
-If this option does not appear, none of the age or time intervals in the
-root_node_database data file will be approximated by their midpoint values.
-Otherwise, it is a text representation of the maximum age and time interval
-that is approximated by its midpoint value.
-
 max_fit
 *******
 It this option does not appear, all of the data for each integrand is included

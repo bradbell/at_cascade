@@ -66,12 +66,6 @@ If this key is present, it is a ``bool`` specifying
 :ref:`all_option_table.in_parallel`.
 Otherwise, there is no in_parallel in the all_option table.
 
-max_midpoint
-============
-If this key is present, it is a ``float`` specifying the
-:ref:`all_option_table.max_midpoint`.
-Otherwise, there is no max_midpoint in the all_option table.
-
 max_fit
 =======
 If this key is present, it is a ``int`` specifying the
