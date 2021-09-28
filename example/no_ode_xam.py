@@ -205,7 +205,7 @@ and prevalence measurements.
 
 Value Prior
 ===========
-The following is the value prior used for the fit_node
+The following is the value prior used for the root_node
 {xsrst_file
     # BEGIN parent_iota_value_prior
     # END parent_iota_value_prior

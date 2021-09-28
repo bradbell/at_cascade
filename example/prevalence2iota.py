@@ -177,7 +177,7 @@ There are no :ref:`glossary.dtime` priors because there is only one time point.
 
 Value Prior
 ===========
-The following is the value prior used for the fit_node
+The following is the value prior used for the root_node
 {xsrst_file
     # BEGIN iota_50
     # END iota_50

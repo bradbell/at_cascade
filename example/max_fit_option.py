@@ -8,23 +8,21 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin_parent one_at_function}
+{xsrst_begin_parent max_fit_option}
 {xsrst_spell
-    avg
     dage
     dtime
 }
 
-Example That Directly Measures One Age Time Function
-####################################################
-For this example everything is constant in time so the
-functions below do not depend on time.
+Example Using max_fit Option
+############################
+For this example everything is constant in age and time.
 
 Nodes
 *****
 The following is a diagram of the node tree for this example.
 The :ref:`glossary.root_node` is n0,
-the :ref:`glossary.fit_goal_set` is {n3, n4, n2},
+the :ref:`glossary.fit_goal_set` is {n3, n4, n5, n6},
 and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
@@ -43,56 +41,12 @@ fit_goal_set
 Rates
 *****
 The only non-zero dismod_at rate for this example is
-:ref:`glossary.iota`; i.e.,
-we choose iota to represent the function that we are estimating.
-(We could have used
-:ref:`glossary.rho` or :ref:`glossary.chi` but not :ref:`glossary.omega`
-for this purpose.)
-We use *iota_n(a, n, I)* to denote the value for iota
-as a function of age *a* node number *n* and income *I*.
+:ref:`glossary.iota`.
 
 Covariate
 *********
-The only covariate for this example is income.
-Its reference value is the average income corresponding
-to the :ref:`glossary.fit_node`.
+There are no covariates for this example.
 
-r_n
-===
-We use *r_n* for the reference value of income at node *n*.
-The code below sets this reference using the name avg_income:
-{xsrst_file
-    # BEGIN avg_income
-    # END avg_income
-}
-
-alpha
-=====
-We use *alpha*
-for the :ref:`glossary.rate_value` covariate multiplier
-that multipliers income.
-This multiplier affects the value of iota.
-The true value for *alpha* (used which simulating the data) is
-{xsrst_file
-    # BEGIN alpha_true
-    # END alpha_true
-}
-
-
-Random Effects
-**************
-For each node, there is a random effect on iota that is constant
-in age and time. Note that the leaf nodes have random effect for the node
-above them as well as their own random effect.
-
-s_n
-===
-We use *s_n* to denote the sum of the random effects for node *n*.
-The code below sets this sum using the name sum_random:
-{xsrst_file
-    # BEGIN sum_random
-    # END sum_random
-}
 
 Simulated Data
 **************
@@ -113,27 +67,19 @@ rate_true(rate, a, t, n, c)
 For *rate* equal to iota,
 this is the true value for *rate*
 in node *n* at age *a*, time *t*, and covariate values *c*.
-The covariate values are a list in the
-same order as the covariate table.
-The value *t* is not used by this function for this example.
+The values *a*, *t*. *c*, are not used by this function for this example.
 {xsrst_file
     # BEGIN rate_true
     # END rate_true
 }
-The value *t* is not used by this function for this example.
 
 y_i
 ===
 The only simulated integrand for this example is :ref:`glossary.sincidence`
 which is a direct measurement of iota.
-(If we had used a different rate to represent the function we are estimating,
-we would use the corresponding direct measurement of that rate.)
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
-*y_i = rate_true('iota', a_i, None, n_i, I_i)*
-where *a_i* is the age,
-*n_i* is the node,
-and *I_i* is the income for the i-th measurement.
+*y_i = rate_true('iota', None, None, n_i, None)* where *n_i* is the node.
 The data is modeled as having noise even though there is no simulated noise.
 
 n_i
@@ -143,31 +89,22 @@ each *n_i* is in the set { n3, n4, n5, n6 }.
 Since the data does not have any nose, the data residuals are a measure
 of how good the fit is for the nodes in the fit_goal_set.
 
-a_i
-===
-For each leaf node, data is generated on the following *age_grid*:
+max_fit_option
+==============
+This is the value of the :ref:`all_option_table.max_fit` option.
+It is also te number of data values per leaf.
+Thus the leaf nodes fit all their data while the other nodes only fit
+a randomly chosen subset of their data.
 {xsrst_file
-    # BEGIN age_grid
-    # END age_grid
+    # BEGIN max_fit_option
+    # END max_fit_option
 }
-
-I_i
-===
-For each leaf node and each age in *age_grid*,
-data is generated for the following *income_grid*:
-{xsrst_file
-    # BEGIN income_grid
-    # END income_grid
-}
-Note that the check of the fit for the nodes in the fit_goal_set
-expects much more accuracy when the income grid is not chosen randomly.
 
 Parent Rate Smoothing
 *********************
 This is the iota smoothing used for the fit_node.
-This smoothing uses the *age_gird* and one time point.
-There are no :ref:`glossary.dtime`
-priors because there is only one time point.
+There are no :ref:`glossary.dage` or :ref:`glossary.dtime`
+priors because there is only one age and one time point.
 
 Value Prior
 ===========
@@ -180,19 +117,11 @@ The mean and standard deviation are only used for the root_node.
 The :ref:`create_child_node_db<create_child_node_db>`
 routine replaces them for other nodes.
 
-dage Prior
-==========
-The following is the dage prior used for the fit_node:
-{xsrst_file
-    # BEGIN parent_dage_prior
-    # END parent_dage_prior
-}
-
 Child Rate Smoothing
 ********************
 This is the smoothing used for the
 random effect for each child of the fit_node.
-There are no :ref:`glossary.dage` or dtime
+There are no dage or dtime
 priors because there is only one age and one time point in this smoothing.
 
 Value Prior
@@ -203,23 +132,6 @@ The following is the value prior used for the children of the fit_node:
     # END child_value_prior
 }
 
-Alpha Smoothing
-***************
-This is the smoothing used for *alpha* which multiplies the income covariate.
-There is only one age and one time point in this smoothing
-so it does not have dage or dtime priors.
-
-Value Prior
-===========
-The following is the value prior used for this smoothing:
-{xsrst_file
-    # BEGIN alpha_value_prior
-    # END alpha_value_prior
-}
-The mean and standard deviation are only used for the root_node.
-The create_child_node_db
-routine replaces them for other nodes.
-
 Checking The Fit
 ****************
 The results of the fit are in the
@@ -229,21 +141,21 @@ tables of the fit_node_database corresponding to each node.
 The :ref:`check_cascade_fit<check_cascade_fit>`
 routine uses these tables to check that fit against the truth.
 
-{xsrst_end one_at_function}
+{xsrst_end max_fit_option}
 ------------------------------------------------------------------------------
-{xsrst_begin one_at_function_py}
+{xsrst_begin max_fit_option_py}
 
-one_at_function: Python Source Code
+max_fit_option: Python Source Code
 ###################################
 
 {xsrst_file
-    BEGIN one_at_function source code
-    END one_at_function source code
+    BEGIN source code
+    END source code
 }
 
-{xsrst_end one_at_function_py}
+{xsrst_end max_fit_option_py}
 '''
-# BEGIN one_at_function source code
+# BEGIN source code
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
@@ -268,7 +180,7 @@ import at_cascade
 # global varables
 # -----------------------------------------------------------------------------
 # BEGIN fit_goal_set
-fit_goal_set = { 'n3', 'n4', 'n2' }
+fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 # END fit_goal_set
 #
 # BEGIN random_seed
@@ -276,69 +188,37 @@ random_seed = 0
 if random_seed == 0 :
     random_seed = int( time.time() )
 random.seed(random_seed)
-print('one_at_function: random_seed = ', random_seed)
+print('max_fit_option: random_seed = ', random_seed)
 # END random_seed
 #
-# BEGIN alpha_true
-alpha_true = - 0.2
-# END alpha_true
+# BEGIN max_fit_option
+max_fit_option = 10
+# END max_fit_option
 #
-# BEGIN avg_income
-avg_income       = { 'n3':1.0, 'n4':2.0, 'n5':3.0, 'n6':4.0 }
-avg_income['n2'] = ( avg_income['n5'] + avg_income['n6'] ) / 2.0
-avg_income['n1'] = ( avg_income['n3'] + avg_income['n4'] ) / 2.0
-avg_income['n0'] = ( avg_income['n1'] + avg_income['n2'] ) / 2.0
-# END avg_income
-#
-# BEGIN sum_random_effect
-size_level1      = 0.2
-size_level2      = 0.2
-sum_random       = { 'n0': 0.0, 'n1': size_level1, 'n2': -size_level1 }
-sum_random['n3'] = sum_random['n1'] + size_level2;
-sum_random['n4'] = sum_random['n1'] - size_level2;
-sum_random['n5'] = sum_random['n2'] + size_level2;
-sum_random['n6'] = sum_random['n2'] - size_level2;
-# END sum_random_effect
-#
-# BEGIN age_grid
-age_grid = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
-# END age_grid
-#
-# BEGIN income_grid
-random_income = False
-income_grid   = dict()
-for node in [ 'n3', 'n4', 'n5', 'n6' ] :
-    max_income  = 2.0 * avg_income[node]
-    if random_income :
-        n_income_grid = 10
-        income_grid[node] = \
-            [ random.uniform(0.0, max_income) for j in range(n_income_grid) ]
-        income_grid[node] = sorted( income_grid[node] )
-    else :
-        n_income_grid = 3
-        d_income_grid = max_income / (n_income_grid - 1)
-        income_grid[node] = [ j * d_income_grid for j in range(n_income_grid) ]
-# END income_grid
 # ----------------------------------------------------------------------------
 # functions
 # ----------------------------------------------------------------------------
 # BEGIN rate_true
 def rate_true(rate, a, t, n, c) :
-    income = c[0]
-    s_n    = sum_random[n]
-    r_0    = avg_income['n0']
-    effect = s_n + alpha_true * ( income - r_0 )
+    iota_true = {
+        'n3' : 0.04,
+        'n4' : 0.05,
+        'n5' : 0.06,
+        'n6' : 0.07,
+    }
+    iota_true['n1'] = (iota_true['n3'] + iota_true['n4']) / 2.0
+    iota_true['n2'] = (iota_true['n5'] + iota_true['n6']) / 2.0
+    iota_true['n0'] = (iota_true['n1'] + iota_true['n2']) / 2.0
     if rate == 'iota' :
-        return (1 + a / 100) * 1e-2 * exp(effect)
+        return iota_true[n]
     return 0.0
 # END rate_true
 # ----------------------------------------------------------------------------
 def root_node_db(file_name) :
     #
-    # BEGIN iota_50
-    covariate_list = [ avg_income['n0'] ]
-    iota_50        = rate_true('iota', 50.0, None, 'n0', covariate_list)
-    # END iota_50
+    # BEGIN iota_mean
+    iota_mean      = rate_true('iota', None, None, 'n0', None)
+    # END iota_mean
     #
     # prior_table
     prior_table = list()
@@ -346,23 +226,13 @@ def root_node_db(file_name) :
         # BEGIN parent_value_prior
         {   'name':    'parent_value_prior',
             'density': 'gaussian',
-            'lower':   iota_50 / 10.0,
-            'upper':   iota_50 * 10.0,
-            'mean':    iota_50,
-            'std':     iota_50 * 10.0,
-            'eta':     iota_50 * 1e-3
+            'lower':   iota_mean / 10.0,
+            'upper':   iota_mean * 10.0,
+            'mean':    iota_mean,
+            'std':     iota_mean,
+            'eta':     iota_mean * 1e-3
         }
         # END parent_value_prior
-    )
-    prior_table.append(
-        # BEGIN parent_dage_prior
-        {   'name':    'parent_dage_prior',
-            'density': 'log_gaussian',
-            'mean':    0.0,
-            'std':     3.0,
-            'eta':     iota_50 * 1e-3,
-        }
-        # END parent_dage_prior
     )
     prior_table.append(
         # BEGIN child_value_prior
@@ -373,26 +243,15 @@ def root_node_db(file_name) :
         }
         # END child_value_prior
     )
-    prior_table.append(
-        # BEGIN alpha_value_prior
-        {   'name':    'alpha_value_prior',
-            'density': 'gaussian',
-            'lower':   - 10 * abs(alpha_true),
-            'upper':   + 10 * abs(alpha_true),
-            'std':     + 10 * abs(alpha_true),
-            'mean':    0.0,
-        }
-        # END alpha_value_prior
-    )
     #
     # smooth_table
     smooth_table = list()
     #
     # parent_smooth
-    fun = lambda a, t : ('parent_value_prior', 'parent_dage_prior', None)
+    fun = lambda a, t : ('parent_value_prior', None, None)
     smooth_table.append({
         'name':       'parent_smooth',
-        'age_id':     range( len(age_grid) ),
+        'age_id':     [0],
         'time_id':    [0],
         'fun':        fun,
     })
@@ -401,15 +260,6 @@ def root_node_db(file_name) :
     fun = lambda a, t : ('child_value_prior', None, None)
     smooth_table.append({
         'name':       'child_smooth',
-        'age_id':     [0],
-        'time_id':    [0],
-        'fun':        fun,
-    })
-    #
-    # alpha_smooth
-    fun = lambda a, t : ('alpha_value_prior', None, None)
-    smooth_table.append({
-        'name':       'alpha_smooth',
         'age_id':     [0],
         'time_id':    [0],
         'fun':        fun,
@@ -430,29 +280,20 @@ def root_node_db(file_name) :
     rate_table = [ {
         'name':           'iota',
         'parent_smooth':  'parent_smooth',
-        'child_smooth':   'child_smooth' ,
+        'child_smooth':   'child_smooth',
     } ]
     #
     # covariate_table
-    covariate_table = [ { 'name':'income',   'reference':avg_income['n0'] } ]
+    covariate_table = list()
     #
     # mulcov_table
-    mulcov_table = [ {
-        # alpha
-        'covariate':  'income',
-        'type':       'rate_value',
-        'effected':   'iota',
-        'group':      'world',
-        'smooth':     'alpha_smooth',
-    } ]
+    mulcov_table = list()
     #
     # subgroup_table
     subgroup_table = [ {'subgroup': 'world', 'group':'world'} ]
     #
     # integrand_table
     integrand_table = [ {'name':'Sincidence'} ]
-    for mulcov_id in range( len(mulcov_table) ) :
-        integrand_table.append( { 'name': f'mulcov_{mulcov_id}' } )
     #
     # avgint_table
     avgint_table = list()
@@ -460,23 +301,24 @@ def root_node_db(file_name) :
         'node':         'n0',
         'subgroup':     'world',
         'weight':       '',
+        'age_lower':    50.0,
+        'age_upper':    50.0,
         'time_lower':   2000.0,
         'time_upper':   2000.0,
         'income':       None,
         'integrand':    'Sincidence',
     }
-    for age in age_grid :
-        row['age_lower'] = age
-        row['age_upper'] = age
-        avgint_table.append( copy.copy(row) )
+    avgint_table.append( copy.copy(row) )
     #
     # data_table
     data_table  = list()
     leaf_set    = { 'n3', 'n4', 'n5', 'n6' }
-    for (age_id, age) in enumerate( age_grid ) :
+    for j in range( max_fit_option ) :
         row = {
             'subgroup':     'world',
             'weight':       '',
+            'age_lower':    50.0,
+            'age_upper':    50.0,
             'time_lower':   2000.0,
             'time_upper':   2000.0,
             'integrand':    'Sincidence',
@@ -484,20 +326,14 @@ def root_node_db(file_name) :
             'hold_out':     False,
         }
         for node in leaf_set :
-            for income in income_grid[node] :
-                meas_value        = rate_true(
-                    'iota', age, None, node, [ income ]
-                )
+                meas_value        = rate_true('iota', None, None, node, None)
                 row['node']       = node
                 row['meas_value'] = meas_value
-                row['age_lower']  = age
-                row['age_upper']  = age
-                row['income']     = income
-                # The model for the measurement noise is small so a few
-                # data points act like lots of real data points.
-                # The actual measruement noise is zero.
                 row['meas_std']   = meas_value / 10.0
                 data_table.append( copy.copy(row) )
+    #
+    # time_grid
+    age_grid = [ 0.0, 100.0 ]
     #
     # time_grid
     time_grid = [ 2000.0 ]
@@ -554,20 +390,17 @@ def main() :
     #
     # all_cov_reference
     all_cov_reference = dict()
-    covariate_name      = 'income'
     for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
-        all_cov_reference[node_name] = {
-            covariate_name : avg_income[node_name]
-        }
+        all_cov_reference[node_name] = dict()
     #
     # Create all_node.db
     all_node_database = 'all_node.db'
-    empty_dict        = dict()
+    all_option        = { 'max_fit' : max_fit_option }
     at_cascade.create_all_node_db(
         all_node_database   = all_node_database,
         root_node_database  = root_node_database,
         all_cov_reference   = all_cov_reference,
-        all_option          = empty_dict,
+        all_option          = all_option,
         fit_goal_set        = fit_goal_set
     )
     #
@@ -602,12 +435,8 @@ def main() :
         at_cascade.check_cascade_fit(
             rate_true, all_node_database, goal_database
         )
-    #
-    # check that fits were not run for n5 and n6
-    for not_fit_dir in [ 'n0/n2/n5', 'n0/n2/n6' ] :
-        assert not os.path.exists( not_fit_dir )
 #
 main()
-print('one_at_function: OK')
+print('max_fit_option: OK')
 sys.exit(0)
-# END one_at_function source code
+# END source code

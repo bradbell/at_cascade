@@ -26,6 +26,7 @@ list='
     test/omega_constraint.py
     test/get_fit_children.py
     test/get_fit_integrand.py
+    example/max_fit_option.py
     example/one_at_function.py
     example/prevalence2iota.py
     example/no_ode_xam.py
