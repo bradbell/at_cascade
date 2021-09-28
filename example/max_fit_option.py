@@ -429,12 +429,37 @@ def main() :
         all_node_database, fit_node_database, node_table
     )
     #
-    # check results
-    for goal_dir in [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2' ] :
-        goal_database = goal_dir + '/dismod.db'
+    # check leaf node results
+    leaf_dir_list = [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2/n5', 'n0/n2/n6' ]
+    for leaf_dir in leaf_dir_list :
+        leaf_database = leaf_dir + '/dismod.db'
         at_cascade.check_cascade_fit(
-            rate_true, all_node_database, goal_database
+            rate_true, all_node_database, leaf_database
         )
+    #
+    # check hold outs for all nodes
+    for fit_dir in leaf_dir_list + [ 'n0', 'n0/n1', 'n0/n2' ] :
+        #
+        # data_subset
+        fit_database = fit_dir + '/dismod.db'
+        new          = False
+        connection   = dismod_at.create_connection(fit_database, new)
+        data_subset  = dismod_at.get_table_dict(connection, 'data_subset')
+        if fit_dir == 'n0' :
+            assert len(data_subset) == 4 * max_fit_option
+        elif fit_dir in [ 'n0/n1', 'n0/n2' ] :
+            assert len(data_subset) == 2 * max_fit_option
+        else :
+            assert fit_dir in leaf_dir_list
+            assert len(data_subset) == max_fit_option
+        #
+        # count_hold_out
+        count_hold_out = 0
+        for row in data_subset :
+            assert row['hold_out'] in [ 0, 1]
+            count_hold_out += row['hold_out']
+        #
+        assert len(data_subset) - count_hold_out == max_fit_option
 #
 main()
 print('max_fit_option: OK')
