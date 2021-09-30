@@ -296,6 +296,33 @@ def omega_constraint(
             else :
                 parent_omega = parent_mtall[ij] - parent_mtspecific[ij]
                 child_omega  = child_mtall[ij] - child_mtspecific[ij]
+            if parent_omega <= 0 :
+                msg  = 'parent_omega <= 0'
+                msg += f', parent_node_id = {parent_node_id}'
+                msg += f'\nmtall_ancestor_node_id = {mtall_ancestor_node_id}'
+                msg += f', parent_mtall = {parent_mtall[ij]}'
+                if not parent_mtspecific is None :
+                    msg += '\nmtspecific_ancestor_node_id = '
+                    msg += str(mtall_ancestor_node_id)
+                    msg += f', parent_mtspecfic = {parent_mtspecific[ij]}'
+                assert False, msg
+            if child_omega <= 0 :
+                msg  = 'child_omega <= 0'
+                msg += f', child_node_id = {child_node_id}'
+                if child_node_id in node_id2all_mtall_id :
+                    msg += f'\nmtall_ancestor_node_id = {child_node_id}'
+                else :
+                    msg += '\nmtall_ancestor_node_id = '
+                    msg += str(mtall_ancestor_node_id)
+                msg += f', child_mtall = {child_mtall[ij]}'
+                if not parent_mtspecific is None :
+                    msg += '\nmtspecific_ancestor_node_id = '
+                    if child_node_id in node_id2all_mtspecific_id :
+                        msg += str(child_node_id)
+                    else :
+                        msg += str(mtspecific_ancestor_node_id)
+                    msg += f', child_mtspecfic = {child_mtspecific[ij]}'
+                assert False, msg
             random_effect.append( log( child_omega / parent_omega ) )
         #
         # smooth_id

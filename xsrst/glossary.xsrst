@@ -206,7 +206,7 @@ root_node_database
 ******************
 This is a dismod_at database where the *root_node* is the
 parent node in the dismod_at option table.
-This must satisfy all the conditions for a :ref:`glossary.fit_node_database`.
+This must satisfy all the conditions for a :ref:`glossary.input_node_database`.
 
 Sincidence
 **********
