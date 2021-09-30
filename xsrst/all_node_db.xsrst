@@ -18,8 +18,8 @@ Primary Key
 ***********
 If *tbl_name* is the name of a table in this database,
 the primary key column has name *tbl_name*\ ``_id`` .
-This column has type ``integer`` ,
-its initial value is zero, and it increments by one for each row.
+This must be the first column, have type ``integer`` ,
+initial value is zero, and it must increment by one for each row.
 
 {xsrst_end all_node_db}
 ------------------------------------------------------------------------------
