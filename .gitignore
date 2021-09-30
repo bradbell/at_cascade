@@ -20,6 +20,9 @@
 # used to store and install external packages
 /external/
 #
+# used to store ihme databases
+/ihme_db/
+#
 # used to cache local changes (instead of using git cache)
 /new/
 /new.*/
