@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/cascade_fit_node.py
-    :lines: 162-168
+    :lines: 166-172
     :language: py
 
 .. meta::
@@ -102,7 +102,18 @@ corresponding row of the dismod_at node table.
 This node table is the same as the node table in *fit_node_database*.
 It is the same for all the fits and
 passing it as an argument avoids reading it each time.
-This argument can't be ``None``.
+
+.. meta::
+   :keywords: default
+
+.. index:: default
+
+.. _cascade_fit_node.node_table.default:
+
+default
+=======
+If *node_table* is ``None``, it will be read by ``cascade_fit_node``
+and reused by recursive calls to this routine.
 
 .. meta::
    :keywords: fit_children
