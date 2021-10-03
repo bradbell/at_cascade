@@ -140,12 +140,6 @@ def child_node_id_list(node_table, parent_node_id) :
             result.append(node_id)
     return result
 # ----------------------------------------------------------------------------
-def node_table_name2id(node_table, row_name) :
-    for (node_id, row) in enumerate(node_table) :
-        if row['node_name'] == row_name :
-            return node_id
-    assert False
-# ----------------------------------------------------------------------------
 def move_table(connection, src_name, dst_name) :
     command     = 'DROP TABLE IF EXISTS ' + dst_name
     dismod_at.sql_command(connection, command)
@@ -202,7 +196,9 @@ def cascade_fit_node(
         fit_goal_table   = dismod_at.get_table_dict(connection, 'fit_goal')
         root_node_name   = all_option['root_node_name']
         assert not root_node_name is None
-        root_node_id = node_table_name2id(node_table, root_node_name)
+        root_node_id = at_cascade.table_name2id(
+            node_table, 'node', root_node_name
+        )
         fit_children = at_cascade.get_fit_children(
             root_node_id, fit_goal_table, node_table
         )
@@ -233,7 +229,7 @@ def cascade_fit_node(
     assert fit_node_name == parent_node_name, msg
     #
     # fit_node_id
-    fit_node_id = node_table_name2id(node_table, fit_node_name)
+    fit_node_id = at_cascade.table_name2id(node_table, 'node', fit_node_name)
     #
     # fit_node_dir, fit_node_database
     fit_node_dir = fit_node_database[ : - len('dismod.db') - 1 ]

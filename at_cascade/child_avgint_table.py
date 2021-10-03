@@ -66,14 +66,7 @@ in the new avgint table.
 '''
 # ----------------------------------------------------------------------------
 import dismod_at
-# ----------------------------------------------------------------------------
-def table_name2id(tables, tbl_name, row_name) :
-    col_name = f'{tbl_name}_name'
-    for (row_id, row) in enumerate(tables[tbl_name]) :
-        if row[col_name] == row_name :
-            return row_id
-    msg = f"Can't find {col_name} = {row_name} in table {tbl_name}"
-    assert False, msg
+import at_cascade
 # ----------------------------------------------------------------------------
 def child_avgint_table(
 # BEGIN syntax
@@ -127,7 +120,9 @@ def child_avgint_table(
         if row['option_name'] == 'parent_node_name' :
             parent_node_name = row['option_value']
     assert parent_node_name is not None
-    parent_node_id = table_name2id(fit_tables, 'node', parent_node_name)
+    parent_node_id = at_cascade.table_name2id(
+        fit_tables['node'], 'node', parent_node_name
+    )
     #
     # child_all_cov_reference
     child_all_cov_reference = dict()
@@ -199,8 +194,8 @@ def child_avgint_table(
             #
             # integrand_id
             integrand_name  = 'mulcov_' + str(mulcov_id)
-            integrand_id    = table_name2id(
-                fit_tables, 'integrand', integrand_name
+            integrand_id    = at_cascade.table_name2id(
+                fit_tables['integrand'], 'integrand', integrand_name
             )
             #
             # grid_row
@@ -241,7 +236,9 @@ def child_avgint_table(
     for rate_name in name_rate2integrand :
         #
         # rate_id
-        rate_id = table_name2id(fit_tables, 'rate', rate_name)
+        rate_id = at_cascade.table_name2id(
+            fit_tables['rate'], 'rate', rate_name
+        )
         #
         # parent_smooth_id
         parent_smooth_id = fit_tables['rate'][rate_id]['parent_smooth_id']
@@ -249,8 +246,8 @@ def child_avgint_table(
             #
             # integrand_id
             integrand_name  = name_rate2integrand[rate_name]
-            integrand_id    = table_name2id(
-                fit_tables, 'integrand', integrand_name
+            integrand_id    = at_cascade.table_name2id(
+                fit_tables['integrand'], 'integrand', integrand_name
             )
             #
             # grid_row

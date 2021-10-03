@@ -146,6 +146,7 @@ descendants will be fit.
 {xsrst_end create_all_node_db}
 '''
 import dismod_at
+import at_cascade
 # ----------------------------------------------------------------------------
 # is_descendant
 def is_descendant(node_table, ancestor_node_id, this_node_id) :
@@ -156,12 +157,6 @@ def is_descendant(node_table, ancestor_node_id, this_node_id) :
         if this_node_id == ancestor_node_id :
             return True
     return False
-# ----------------------------------------------------------------------------
-def table_name2id(table, col_name, row_name) :
-    for (row_id, row) in enumerate(table) :
-        if row[col_name] == row_name :
-            return row_id
-    assert False
 # ----------------------------------------------------------------------------
 def create_all_node_db(
 # BEGIN syntax
@@ -315,7 +310,7 @@ def create_all_node_db(
     if not mtall_data is None :
         node_list = mtall_data.keys()
         for node_name in node_list :
-            node_id = table_name2id(node_table, 'node_name', node_name)
+            node_id = at_cascade.table_name2id(node_table, 'node', node_name)
             assert len(mtall_data[node_name]) == n_omega_age * n_omega_time
             for i in range(n_omega_age) :
                 for j in range(n_omega_time) :
@@ -334,7 +329,7 @@ def create_all_node_db(
     if not mtall_data is None :
         all_mtall_id = 0
         for node_name in node_list :
-            node_id = table_name2id(node_table, 'node_name', node_name)
+            node_id = at_cascade.table_name2id(node_table, 'node', node_name)
             row     = [ node_id, all_mtall_id ]
             row_list.append( row )
             all_mtall_id += n_omega_age * n_omega_time
@@ -350,7 +345,7 @@ def create_all_node_db(
     if not mtspecific_data is None :
         node_list = mtspecific_data.keys()
         for node_name in node_list :
-            node_id = table_name2id(node_table, 'node_name', node_name)
+            node_id = at_cascade.table_name2id(node_table, 'node', node_name)
             assert len(mtspecific_data[node_name]) == n_omega_age * n_omega_time
             for i in range(n_omega_age) :
                 for j in range(n_omega_time) :
@@ -369,7 +364,7 @@ def create_all_node_db(
     if not mtspecific_data is None :
         all_mtspecific_id = 0
         for node_name in node_list :
-            node_id = table_name2id(node_table, 'node_name', node_name)
+            node_id = at_cascade.table_name2id(node_table, 'node', node_name)
             row     = [ node_id, all_mtspecific_id ]
             row_list.append( row )
             all_mtspecific_id += n_omega_age * n_omega_time

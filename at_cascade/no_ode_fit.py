@@ -60,14 +60,6 @@ import copy
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
-def table_name2id(tables, tbl_name, row_name) :
-    col_name = f'{tbl_name}_name'
-    for (row_id, row) in enumerate(tables[tbl_name]) :
-        if row[col_name] == row_name :
-            return row_id
-    msg = f"Can't find {col_name} = {row_name} in table {tbl_name}"
-    assert False, msg
-# ----------------------------------------------------------------------------
 def add_index_to_name(table, name_col) :
     row   = table[-1]
     name  = row[name_col]
@@ -213,7 +205,9 @@ def no_ode_fit(
     fit_node_name = at_cascade.get_parent_node(in_database)
     #
     # fit_node_id
-    fit_node_id   = table_name2id(in_tables, 'node', fit_node_name)
+    fit_node_id   = at_cascade.table_name2id(
+        in_tables['node'], 'node', fit_node_name
+    )
     #
     # out_database
     index = in_database.rfind('/')

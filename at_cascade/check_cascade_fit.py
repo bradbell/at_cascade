@@ -63,14 +63,6 @@ import math
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
-def table_name2id(tables, tbl_name, row_name) :
-    col_name = f'{tbl_name}_name'
-    for (row_id, row) in enumerate(tables[tbl_name]) :
-        if row[col_name] == row_name :
-            return row_id
-    msg = f"Can't find {col_name} = {row_name} in table {tbl_name}"
-    assert False, msg
-# ----------------------------------------------------------------------------
 def check_cascade_fit(
 # BEGIN syntax
 # at_cascade.check_cascade_fit(
@@ -120,7 +112,9 @@ def check_cascade_fit(
     #
     # fit_node_id
     fit_node_name = at_cascade.get_parent_node( fit_node_database )
-    fit_node_id   = table_name2id(tables, 'node', fit_node_name)
+    fit_node_id   = at_cascade.table_name2id(
+        tables['node'], 'node', fit_node_name
+    )
     #
     # cov_reference
     cov_reference_list = n_covariate * [ None ]

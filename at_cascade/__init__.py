@@ -25,6 +25,7 @@ The at_cascade Python Module
     at_cascade/get_parent_node.py
     at_cascade/no_ode_fit.py
     at_cascade/omega_constraint.py
+    at_cascade/table_name2id.py
 }
 .. END_SORT_THIS_LINE_MINUS_2
 
@@ -42,4 +43,5 @@ from .get_fit_integrand     import get_fit_integrand
 from .get_parent_node       import get_parent_node
 from .no_ode_fit            import no_ode_fit
 from .omega_constraint      import omega_constraint
+from .table_name2id         import table_name2id
 # END_SORT_THIS_LINE_MINUS_1

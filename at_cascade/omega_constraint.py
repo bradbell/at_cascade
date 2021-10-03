@@ -91,13 +91,8 @@ None of the other tables in the database are modified.
 # ----------------------------------------------------------------------------
 import copy
 import dismod_at
+import at_cascade
 from math import log
-# ----------------------------------------------------------------------------
-def table_name2id(table, col_name, row_name) :
-    for (row_id, row) in enumerate(table) :
-        if row[col_name] == row_name :
-            return row_id
-    assert False
 # ----------------------------------------------------------------------------
 def null_row(connection, tbl_name) :
     (col_name, col_type) = dismod_at.get_name_type(connection, tbl_name)
@@ -182,8 +177,8 @@ def omega_constraint(
         if row['option_name'] == 'parent_node_name' :
             parent_node_name = row['option_value']
     assert parent_node_name is not None
-    parent_node_id = table_name2id(
-        fit_tables['node'], 'node_name', parent_node_name
+    parent_node_id = at_cascade.table_name2id(
+        fit_tables['node'], 'node', parent_node_name
     )
     #
     # node_id2all_mtall_id

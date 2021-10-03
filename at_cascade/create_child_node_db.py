@@ -98,6 +98,7 @@ import copy
 import shutil
 import statistics
 import dismod_at
+import at_cascade
 # ----------------------------------------------------------------------------
 def add_index_to_name(table, name_col) :
     row   = table[-1]
@@ -108,14 +109,6 @@ def add_index_to_name(table, name_col) :
     if name[-1] == '_' :
         name = name[: -1]
     row[name_col] = name + '_' + str( len(table) )
-# ----------------------------------------------------------------------------
-def table_name2id(tables, tbl_name, row_name) :
-    col_name = f'{tbl_name}_name'
-    for (row_id, row) in enumerate(tables[tbl_name]) :
-        if row[col_name] == row_name :
-            return row_id
-    msg = f"Can't find {col_name} = {row_name} in table {tbl_name}"
-    assert False, msg
 # ----------------------------------------------------------------------------
 def move_table(connection, src_name, dst_name) :
     command     = 'DROP TABLE IF EXISTS ' + dst_name
@@ -325,7 +318,9 @@ def create_child_node_db(
     assert parent_node_name is not None
     #
     # parent_node_id
-    parent_node_id = table_name2id(parent_tables, 'node', parent_node_name)
+    parent_node_id = at_cascade.table_name2id(
+        parent_tables['node'], 'node', parent_node_name
+    )
     #
     for child_name in child_node_databases :
         # ---------------------------------------------------------------------
@@ -349,7 +344,9 @@ def create_child_node_db(
         child_tables['nslist_pair'] = list()
         #
         # child_node_id
-        child_node_id = table_name2id(parent_tables, 'node', child_name)
+        child_node_id = at_cascade.table_name2id(
+            parent_tables['node'], 'node', child_name
+        )
         assert parent_tables['node'][child_node_id]['parent'] == parent_node_id
         #
         # child_node_database = parent_node_database
@@ -387,7 +384,9 @@ def create_child_node_db(
                 #
                 # integrand_id
                 name         = 'mulcov_' + str(mulcov_id)
-                integrand_id = table_name2id(parent_tables, 'integrand', name)
+                integrand_id = at_cascade.table_name2id(
+                    parent_tables['integrand'], 'integrand', name
+                )
                 #
                 smooth_row = parent_tables['smooth'][parent_smooth_id]
                 smooth_row = copy.copy(smooth_row)
@@ -442,8 +441,8 @@ def create_child_node_db(
                 #
                 # integrand_id
                 integrand_name  = name_rate2integrand[rate_name]
-                integrand_id = table_name2id(
-                    parent_tables, 'integrand', integrand_name
+                integrand_id = at_cascade.table_name2id(
+                    parent_tables['integrand'], 'integrand', integrand_name
                 )
                 #
                 smooth_row = parent_tables['smooth'][parent_smooth_id]
