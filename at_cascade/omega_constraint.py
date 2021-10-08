@@ -152,6 +152,8 @@ def omega_constraint(
     fit_tables   = dict()
     fit_null_row = dict()
     for name in [
+        'age',
+        'time',
         'nslist',
         'nslist_pair',
         'node',
@@ -162,6 +164,8 @@ def omega_constraint(
     ] :
         fit_tables[name]   = dismod_at.get_table_dict(connection, name)
         fit_null_row[name] = null_row(connection, name)
+    #
+    # check some fit_node_database assumptions
     assert len( fit_tables['nslist'] ) == 0
     assert len( fit_tables['nslist_pair'] ) == 0
     for row in fit_tables['rate'] :
@@ -169,6 +173,20 @@ def omega_constraint(
             assert row['parent_smooth_id'] is None
             assert row['child_smooth_id'] is None
             assert row['child_nslist_id'] is None
+    for row in all_tables['omega_age_grid'] :
+        age_id = row['age_id']
+        if age_id >= len( fit_tables['age'] ) :
+            msg  = f'The age_id {age_id} not valid for the root_node_database'
+            msg += f'\nbut it appears in the omega_age_grid table '
+            msg += f'of the all_node_database'
+            assert False, msg
+    for row in all_tables['omega_time_grid'] :
+        time_id = row['time_id']
+        if time_id >= len( fit_tables['time'] ) :
+            msg  = f'The time_id {time_id} not valid for the root_node_database'
+            msg += f'\nbut it appears in the omega_time_grid table '
+            msg += f'of the all_node_database'
+            assert False, msg
     #
     # parent_node_id
     parent_node_name = None
