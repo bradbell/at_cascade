@@ -41,6 +41,7 @@ Table of Contents
 |  |space| :ref:`5.8<get_parent_node>` Get Parent Node Name From Option Table
 |  |space| :ref:`5.9<no_ode_fit>` Do A No Ode Fit For One Node
 |  |space| :ref:`5.10<omega_constraint>` Set Omega Constraints in a Fit Node Database
+|  |space| :ref:`5.11<table_name2id>` Map a Table Row Name to The Row Index
 |
 
 Link to Index

@@ -18,6 +18,7 @@ module
    get_parent_node
    no_ode_fit
    omega_constraint
+   table_name2id
 
 .. meta::
    :keywords: module, the, at_cascade, python, module
@@ -46,6 +47,7 @@ The at_cascade Python Module
     "get_parent_node", :ref:`get_parent_node`
     "no_ode_fit", :ref:`no_ode_fit`
     "omega_constraint", :ref:`omega_constraint`
+    "table_name2id", :ref:`table_name2id`
 
 .. END_SORT_THIS_LINE_MINUS_2
 

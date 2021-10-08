@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/check_cascade_fit.py
-    :lines: 76-80
+    :lines: 68-72
     :language: py
 
 .. meta::

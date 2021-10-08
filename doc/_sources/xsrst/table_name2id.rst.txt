@@ -1,0 +1,83 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!
+table_name2id
+!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: table_name2id, map, table, row, name, to, the, row, index
+
+.. index:: table_name2id, map, table, row, name, to, the, row, index
+
+.. _table_name2id:
+
+Map a Table Row Name to The Row Index
+#####################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _table_name2id.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/table_name2id.py
+    :lines: 51-53
+    :language: py
+
+.. meta::
+   :keywords: table
+
+.. index:: table
+
+.. _table_name2id.table:
+
+table
+*****
+This is a ``list`` of ``dict`` containing the table.
+The primary key is not included because it is the row index.
+
+.. meta::
+   :keywords: tbl_name
+
+.. index:: tbl_name
+
+.. _table_name2id.tbl_name:
+
+tbl_name
+********
+This is a ``str`` containing the name of the table.
+This table must have a column named *table_name*\ ``_name``.
+
+.. meta::
+   :keywords: row_name
+
+.. index:: row_name
+
+.. _table_name2id.row_name:
+
+row_name
+********
+This is the value we are searching for in the
+*table_name*\ ``_name`` column.
+
+.. meta::
+   :keywords: row_id
+
+.. index:: row_id
+
+.. _table_name2id.row_id:
+
+row_id
+******
+This is the index of the row in the table where
+*row_name* occurs. An assert will occur if there is no such row.
+
+----
+
+xsrst input file: ``at_cascade/table_name2id.py``

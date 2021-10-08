@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_child_node_db.py
-    :lines: 242-246
+    :lines: 235-239
     :language: py
 
 .. meta::

@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/omega_constraint.py
-    :lines: 118-121
+    :lines: 113-116
     :language: py
 
 .. meta::

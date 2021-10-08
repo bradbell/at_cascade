@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/child_avgint_table.py
-    :lines: 80-83
+    :lines: 73-76
     :language: py
 
 .. meta::
