@@ -146,6 +146,9 @@ all_mtall_value
 ===============
 This column has type ``real`` and is the value of mtall
 for a specific node, age, and time; see mtall_index table below.
+Each value in this column is mtall at a specific age and time
+not on an age or time interval. If you only have mtall on age and time
+intervals, use the midpoint age and midpoint time in the omega grid.
 
 mtall_index Table
 *****************
@@ -209,6 +212,8 @@ all_mtspecific_value
 ====================
 This column has type ``real`` and is the value of mtspecific
 for a specific node, age, and time; see mtspecific_index table below.
+Each value in this column is mtspecific at the same age and time
+as the corresponding :ref:`all_mtall.all_mtall_table.all_mtall_value`.
 
 mtspecific_index Table
 **********************
