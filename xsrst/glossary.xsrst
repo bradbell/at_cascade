@@ -49,13 +49,18 @@ fit_goal_set
 ************
 This is the set of nodes that we need a fit for.
 Each node in this set must be the *root_node* or a descendant of the root node.
-Note that all the nodes between the root node and the goal nodes
-are also be fit.
 
 fit_node
 ********
 For a dismod_at database, *fit_node* is
 the parent node in the dismod_at option table.
+
+fit_node_set
+************
+This is the set of nodes that need to be fit in order to fit the
+:ref:`glossary.fit_goal_set`.
+This includes all the nodes between the root node and the goal nodes
+(including the root node and he goal nodes).
 
 fit_node_database
 *****************

@@ -37,20 +37,23 @@ is the :ref:`all_node_db.primary_key` for this table.
 
 node_id
 *******
-This column has type ``integer`` and is specifies
+This column has type ``integer`` and specifies
 the node for this reference
-by the primary key in the root_node_database node table
+by the primary key in the root_node_database node table.
 
 covariate_id
 ************
-This column has type ``integer`` and is specifies
+This column has type ``integer`` and specifies
 the covariate, for this reference,
-by the primary key in the root_node_database covariate table
+by the primary key in the root_node_database covariate table.
 
 reference
 *********
 This column has type ``real`` and it specifies the reference value
 for this covariate and node.
+For each node_id in the :ref:`glossary.fit_node_set`,
+and each covariate_id,
+there must be one and only one reference value.
 
 {xsrst_end all_cov_reference_table}
 ------------------------------------------------------------------------------

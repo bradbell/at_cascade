@@ -761,7 +761,6 @@ def main() :
                 average_integrand(integrand_name, age, node_name, income)
             mtspecific_data[node_name].append(mtspecific)
     #
-    #
     # Create all_node.db
     # We could get all_cov_reference from here, but we do not need to
     all_node_database = 'all_node.db'

@@ -369,9 +369,19 @@ def create_child_node_db(
             if row['node_id'] == child_node_id :
                 covariate_id           = row['covariate_id']
                 child_row              = child_tables['covariate'][covariate_id]
+                if not child_row['reference'] is None :
+                    msg  = 'More than one row in all_cov_reference table has\n'
+                    msg += f'node_id = {child_node_id} and '
+                    msg += f'covariate_id = {covariate_id}'
+                    assert False, msg
                 child_row['reference'] = row['reference']
         for child_row in child_tables['covariate'] :
-            assert not child_row['reference'] is None
+            if child_row['reference'] is None :
+                covariate_id = child_row['covariate_id']
+                msg  = 'No row in all_cov_reference table has\n'
+                msg += f'node_id = {child_node_id} and '
+                msg += f'covariate_id = {covariate_id}'
+                assert False, msg
         #
         # --------------------------------------------------------------------
         # child_tables['mulcov']

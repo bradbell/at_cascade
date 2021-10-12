@@ -40,10 +40,10 @@ fit_children
 The return value *fit_children* is a python list of python lists.
 For each *node_id* in the node table,
 *fit_children[node_id]* is a list of child_node_id.
-Each child_node_id is a child of *node_id* and is between the
-root_node and the :ref:`glossary.fit_goal_set` inclusive.
+A child_node_id is in this list if and only if
+it is a child of *node_id* and is in the :ref:`glossary.fit_node_set`.
 These are the children of node_id that must be fit to obtain
-a fit for all the goal nodes.
+a fit for the :ref:`glossary.fit_goal_set`.
 
 {xsrst_end get_fit_children}
 '''
