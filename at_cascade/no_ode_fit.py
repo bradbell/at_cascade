@@ -39,6 +39,13 @@ fit_node
 This is the name of the
 :ref:`glossary.fit_node` for the *in_database* and *out_database*.
 
+max_fit
+*******
+is an ``int`` containing the value of :ref:`all_option_table.max_fit` in the
+all option table.
+If max_fit does not appear in the all option table,
+*max_fit* should be None.
+
 out_database
 ************
 The return value *out_database* is equal to
@@ -180,9 +187,14 @@ def no_ode_fit(
 # BEGIN syntax
 # out_database = at_cascade.no_ode_fit(
     in_database = None,
+    max_fit     = None,
 # )
 # END syntax
 ) :
+    #
+    # fit_integrand
+    if not max_fit is None :
+        fit_integrand = at_cascade.get_fit_integrand(in_database)
     #
     # in_tables
     new        = False
@@ -240,6 +252,19 @@ def no_ode_fit(
     #
     # init
     dismod_at.system_command_prc([ 'dismod_at', out_database, 'init' ])
+    #
+    # enforce max_fit
+    if not max_fit is None :
+        for integrand_id in fit_integrand :
+            row            = in_tables['integrand'][integrand_id]
+            integrand_name = row['integrand_name']
+            dismod_at.system_command_prc([
+                'dismod_at',
+                out_database,
+                'hold_out',
+                integrand_name,
+                str(max_fit),
+            ])
     #
     # fit both
     dismod_at.system_command_prc([ 'dismod_at', out_database, 'fit', 'both' ])
