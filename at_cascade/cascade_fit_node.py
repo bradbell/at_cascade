@@ -177,8 +177,11 @@ def cascade_fit_node(
     new         = False
     connection  = dismod_at.create_connection(all_node_database, new)
     #
-    # all_option_table
+    # all_option_table, all_cov_reference_table
     all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+    all_cov_reference_table = \
+        dismod_at.get_table_dict(connection, 'all_cov_reference'
+    )
     #
     # all_option
     implemented = [ 'root_node_name', 'max_fit' ]
@@ -210,12 +213,6 @@ def cascade_fit_node(
     if fit_integrand is None :
         fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
     #
-    # integrand_table
-    new             = False
-    connection      = dismod_at.create_connection(fit_node_database, new)
-    integrand_table = dismod_at.get_table_dict(connection, 'integrand')
-    connection.close()
-    #
     # fit_node_name
     path_list = fit_node_database.split('/')
     assert len(path_list) >= 2
@@ -237,6 +234,27 @@ def cascade_fit_node(
     # connection
     new        = False
     connection = dismod_at.create_connection(fit_node_database, new)
+    #
+    # check covariate references for this fit node
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    check_reference = len(covariate_table) * [ False ]
+    for row in all_cov_reference_table :
+        if row['node_id'] == fit_node_id :
+            covariate_id = row['covariate_id']
+            if check_reference[covariate_id] :
+                msg  = 'More than one row in all_cov_reference table has\n'
+                msg += f'node_id = {fit_node_id} and '
+                msg += f'covariate_id = {covariate_id}'
+                assert False, msg
+            if row['reference'] != covariate_table[covariate_id]['reference'] :
+                msg  = 'Covariate references for '
+                msg += f'node_id = {fit_node_id} and '
+                msg += f'covariate_id = {covariate_id} are different in\n'
+                msg += 'fit_node_database and all_cov_reference table'
+                assert False, msg
+    #
+    # integrand_table
+    integrand_table = dismod_at.get_table_dict(connection, 'integrand')
     #
     # add omega to model
     at_cascade.omega_constraint(all_node_database, fit_node_database)
