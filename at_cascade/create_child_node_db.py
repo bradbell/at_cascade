@@ -353,10 +353,6 @@ def create_child_node_db(
         child_database = child_node_databases[child_name]
         shutil.copyfile(parent_node_database, child_database)
         #
-        # child_connection
-        new        = False
-        child_connection = dismod_at.create_connection(child_database, new)
-        #
         # child_tables['option']
         for row in child_tables['option'] :
             if row['option_name'] == 'parent_node_name' :
@@ -537,6 +533,10 @@ def create_child_node_db(
         # child_tables['c_avgint']
         for row in child_tables['c_avgint'] :
             row['node_id'] = child_node_id
+        #
+        # child_connection
+        new        = False
+        child_connection = dismod_at.create_connection(child_database, new)
         #
         # replace child_tables
         for name in child_tables :

@@ -197,17 +197,12 @@ def create_all_node_db(
     else :
         assert not mtall_data is None
     #
-    # split_list
-    if 'split_list' in all_option :
-        split_list = all_option['split_list']
-    else :
-        split_list = None
-    #
     # split_reference_list
     split_reference_list = None
-    if not split_list is None :
-        split_reference_list = split_list.split()
-        split_reference_list = float( split_reference_list[2:] )
+    if 'split_list' in all_option :
+        split_list = all_option['split_list']
+        split_list = split_list.split()
+        split_reference_list = float( split_list[2:] )
     #
     # -------------------------------------------------------------------------
     # Read root node database
