@@ -240,9 +240,10 @@ def create_child_node_db(
 # END syntax
 ) :
     # ------------------------------------------------------------------------
-    # all_cov_reference_table
+    # all_option_table, all_cov_reference_table
     new        = False
     connection = dismod_at.create_connection(all_node_database, new)
+    all_option_table = dismod_at.get_table_dict( connection, 'all_option')
     all_cov_reference_table = dismod_at.get_table_dict(
         connection, 'all_cov_reference'
     )
@@ -322,6 +323,20 @@ def create_child_node_db(
         parent_tables['node'], 'node', parent_node_name
     )
     #
+    # split_reference
+    split_reference = None
+    for row in all_option_table :
+        if row['option_name'] == 'split_list' :
+            split_list      = row['option_value']
+            split_list      = split_list.split()
+            covariate_name  = split_list[2]
+            reference_list  = split_list[2:]
+            covariate_id    = at_cascade.table_name2id(
+                parent_tables['covariate'], 'covariate', covariate_name
+            )
+            split_reference = \
+                parent_tables['covariate'][covariate_id]['reference']
+    #
     for child_name in child_node_databases :
         # ---------------------------------------------------------------------
         # create child_node_databases[child_name]
@@ -359,25 +374,12 @@ def create_child_node_db(
                 row['option_value'] = child_name
         #
         # child_tables['covariate']
-        for child_row in child_tables['covariate'] :
-            child_row['reference'] = None
         for row in all_cov_reference_table :
-            if row['node_id'] == child_node_id :
-                covariate_id           = row['covariate_id']
-                child_row              = child_tables['covariate'][covariate_id]
-                if not child_row['reference'] is None :
-                    msg  = 'More than one row in all_cov_reference table has\n'
-                    msg += f'node_id = {child_node_id} and '
-                    msg += f'covariate_id = {covariate_id}'
-                    assert False, msg
+            if row['node_id'] == child_node_id and \
+                row['split_reference'] == split_reference :
+                covariate_id  = row['covariate_id']
+                child_row     = child_tables['covariate'][covariate_id]
                 child_row['reference'] = row['reference']
-        for child_row in child_tables['covariate'] :
-            if child_row['reference'] is None :
-                covariate_id = child_row['covariate_id']
-                msg  = 'No row in all_cov_reference table has\n'
-                msg += f'node_id = {child_node_id} and '
-                msg += f'covariate_id = {covariate_id}'
-                assert False, msg
         #
         # --------------------------------------------------------------------
         # child_tables['mulcov']
