@@ -296,7 +296,7 @@ split_list
 **********
 This is a space separated list with the following entries:
 
-| |tab| split_level split_covariate reference_0 reference_1 ...
+| |tab| split_level split_covariate_name reference_0 reference_1 ...
 
 If this option does not appear, there will be no split of the cascade.
 
@@ -304,12 +304,14 @@ split_level
 ===========
 is a text representation of a non-negative integer specifying
 the level at which to split the cascade.
+If split_level < 0 the split occurred above the root node
+and no more splitting is done.
 Level 0 corresponds to splitting after fitting the root_node,
 level 1 to splitting after fitting the children of the root_node,
 and so on.
 
-split_covariate
-===============
+split_covariate_name
+====================
 is the name of the covariate in the root_node_database covariate table.
 
 reference_j

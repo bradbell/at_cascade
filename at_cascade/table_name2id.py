@@ -48,7 +48,7 @@ This is the index of the row in the table where
 # -----------------------------------------------------------------------------
 def table_name2id(
 # BEGIN syntax
-# row_id = cascade_at.table_name2id(
+# row_id = at_cascade.table_name2id(
     table, tbl_name, row_name
 # )
 # END syntax
