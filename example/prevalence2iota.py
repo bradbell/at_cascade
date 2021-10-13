@@ -631,7 +631,7 @@ def main() :
     for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
         all_cov_reference[node_name] = {
             'income' : avg_income[node_name],
-            'one':     0.0,
+            'one':     [0.0],
         }
     #
     # omega_grid

@@ -46,13 +46,28 @@ If *covariate_name* is an covariate name,
 
 | |tab| *all_cov_reference[node_name][covariate_name]*
 
-is the reference values for the specified node and covariate.
+is a list of reference values for the specified node and covariate.
 The argument *all_cov_reference* can't be ``None``.
+
+split_list present
+==================
+If :ref:`all_option_table.split_list` is present,
+the length of the list of reference values is the number of reference
+values in *split_list*.
+Each covariate reference can depend on the corresponding
+split covariance reference value.
+In the case where covariate_id corresponds to the split covariate,
+both reference values must be equal.
+
+no split_list
+=============
+If split_list is not present,
+the length of the reference list is one.
 
 all_option
 **********
 This argument can't be ``None``.
-It is a dictionary with the following keys:
+It is a dictionary with the following possible keys:
 
 split_list
 ==========
@@ -182,6 +197,18 @@ def create_all_node_db(
     else :
         assert not mtall_data is None
     #
+    # split_list
+    if 'split_list' in all_option :
+        split_list = all_option['split_list']
+    else :
+        split_list = None
+    #
+    # split_reference_list
+    split_reference_list = None
+    if not split_list is None :
+        split_reference_list = split_list.split()
+        split_reference_list = float( split_reference_list[2:] )
+    #
     # -------------------------------------------------------------------------
     # Read root node database
     # -------------------------------------------------------------------------
@@ -240,15 +267,27 @@ def create_all_node_db(
     col_name = [ 'node_id',  'covariate_id', 'split_reference', 'reference' ]
     col_type = [ 'integer',  'integer',      'real',            'real'      ]
     row_list = list()
-    split_reference = None
     for node_id in range( len(node_table) ) :
         for covariate_id in range( len(covariate_table) ) :
             node_name      = node_table[node_id]['node_name']
             covariate_name = covariate_table[covariate_id]['covariate_name']
-            reference      = all_cov_reference[node_name][covariate_name]
+            reference_list = all_cov_reference[node_name][covariate_name]
             #
-            row  = [ node_id, covariate_id, split_reference, reference ]
-            row_list.append( row )
+            if split_reference_list is None :
+                assert len(reference_list) == 1
+                reference = reference_list[0]
+                row       = [ node_id, covariate_id, None, reference ]
+                row_list.append( row )
+            else :
+                assert len(reference_list) == len(split_reference_list)
+                for (i, split_reference) in enumerate(split_reference_list) :
+                    row  = [
+                        node_id,
+                        covariate_id,
+                        split_reference,
+                        reference_list[i]
+                    ]
+                    row_list.append( row )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )
