@@ -54,11 +54,11 @@ all_option
 This argument can't be ``None``.
 It is a dictionary with the following keys:
 
-sex_level
-=========
-If this key is present, it is a ``int`` specifying the
-:ref:`all_option_table.sex_level`.
-Otherwise, there is no sex_level in the all_option table.
+split_list
+==========
+If this key is present, it is a ``str`` specifying the
+:ref:`all_option_table.split_list`.
+Otherwise, there is no split_level in the all_option table.
 
 in_parallel
 ===========
@@ -237,15 +237,17 @@ def create_all_node_db(
     #
     # all_cov_reference table
     tbl_name = 'all_cov_reference'
-    col_name = [ 'node_id',  'covariate_id', 'reference' ]
-    col_type = [ 'integer',  'integer',       'real'      ]
+    col_name = [ 'node_id',  'covariate_id', 'split_reference', 'reference' ]
+    col_type = [ 'integer',  'integer',      'real',            'real'      ]
     row_list = list()
+    split_reference = None
     for node_id in range( len(node_table) ) :
         for covariate_id in range( len(covariate_table) ) :
             node_name      = node_table[node_id]['node_name']
             covariate_name = covariate_table[covariate_id]['covariate_name']
             reference      = all_cov_reference[node_name][covariate_name]
-            row            = [ node_id, covariate_id, reference ]
+            #
+            row  = [ node_id, covariate_id, split_reference, reference ]
             row_list.append( row )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list

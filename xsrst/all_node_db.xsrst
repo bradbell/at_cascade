@@ -47,13 +47,24 @@ This column has type ``integer`` and specifies
 the covariate, for this reference,
 by the primary key in the root_node_database covariate table.
 
+split_reference
+***************
+This column has type ``real`` and it specifies the reference value
+for the split covariate and must be one of the reference values
+in :ref:`all_option_table.split_list`.
+If there is (is not) a split_list in the option table,
+the values in this column must not be (must be) null.
+
 reference
 *********
 This column has type ``real`` and it specifies the reference value
 for this covariate and node.
 For each node_id in the :ref:`glossary.fit_node_set`,
-and each covariate_id,
+each covariate_id,
+and each split_reference,
 there must be one and only one reference value.
+Note that when the covariate_id corresponds to the split_covariate,
+the reference and the split_reference must have the same value.
 
 {xsrst_end all_cov_reference_table}
 ------------------------------------------------------------------------------
@@ -281,14 +292,30 @@ is the name of the :ref:`glossary.root_node` in the node table of the
 :ref:`glossary.root_node_database` .
 (The node table is the same in all the dismod_at databases.)
 
-sex_level
-*********
-If this option does not appear, there will be no sex split in this cascade.
-Otherwise, it is a text representation of a non-negative integer specifying
-the level at which to split the cascade by sex.
+split_list
+**********
+This is a space separated list with the following entries:
+
+| |tab| split_level split_covariate reference_0 reference_1 ...
+
+If this option does not appear, there will be no split of the cascade.
+
+split_level
+===========
+is a text representation of a non-negative integer specifying
+the level at which to split the cascade.
 Level 0 corresponds to splitting after fitting the root_node,
 level 1 to splitting after fitting the children of the root_node,
 and so on.
+
+split_covariate
+===============
+is the name of the covariate in the root_node_database covariate table.
+
+reference_j
+===========
+For j equal 0, 1, ..., reference_j is the reference values for the
+sex covariate.
 
 in_parallel
 ***********
