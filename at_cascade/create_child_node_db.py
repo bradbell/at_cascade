@@ -375,6 +375,7 @@ def create_child_node_db(
         #
         # child_tables['covariate']
         for row in all_cov_reference_table :
+            # Use fact that None == None is true
             if row['node_id'] == child_node_id and \
                 row['split_reference'] == split_reference :
                 covariate_id  = row['covariate_id']

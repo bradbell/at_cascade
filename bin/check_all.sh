@@ -21,16 +21,19 @@ then
 fi
 # -----------------------------------------------------------------------------
 echo_eval bin/run_sphinx.sh
+# BEGIN_SORT_THIS_LINE_PLUS_2
 list='
-    test/child_avgint_table.py
-    test/omega_constraint.py
-    test/get_fit_children.py
-    test/get_fit_integrand.py
     example/max_fit_option.py
+    example/no_ode_xam.py
     example/one_at_function.py
     example/prevalence2iota.py
-    example/no_ode_xam.py
+    example/split_list.py
+    test/child_avgint_table.py
+    test/get_fit_children.py
+    test/get_fit_integrand.py
+    test/omega_constraint.py
 '
+# END_SORT_THIS_LINE_MINUS_2
 for script in $list
 do
     echo_eval python3 $script
