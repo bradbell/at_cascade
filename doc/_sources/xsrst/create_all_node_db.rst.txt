@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_all_node_db.py
-    :lines: 163-172
+    :lines: 178-187
     :language: py
 
 .. meta::
@@ -74,8 +74,37 @@ If *covariate_name* is an covariate name,
 
 | |tab| *all_cov_reference[node_name][covariate_name]*
 
-is the reference values for the specified node and covariate.
+is a list of reference values for the specified node and covariate.
 The argument *all_cov_reference* can't be ``None``.
+
+.. meta::
+   :keywords: split_list, present
+
+.. index:: split_list, present
+
+.. _create_all_node_db.all_cov_reference.split_list_present:
+
+split_list present
+==================
+If :ref:`all_option_table.split_list` is present,
+the length of the list of reference values is the number of reference
+values in *split_list*.
+Each covariate reference can depend on the corresponding
+split covariance reference value.
+In the case where covariate_id corresponds to the split covariate,
+both reference values must be equal.
+
+.. meta::
+   :keywords: no, split_list
+
+.. index:: no, split_list
+
+.. _create_all_node_db.all_cov_reference.no_split_list:
+
+no split_list
+=============
+If split_list is not present,
+the length of the reference list is one.
 
 .. meta::
    :keywords: all_option
@@ -87,20 +116,20 @@ The argument *all_cov_reference* can't be ``None``.
 all_option
 **********
 This argument can't be ``None``.
-It is a dictionary with the following keys:
+It is a dictionary with the following possible keys:
 
 .. meta::
-   :keywords: sex_level
+   :keywords: split_list
 
-.. index:: sex_level
+.. index:: split_list
 
-.. _create_all_node_db.all_option.sex_level:
+.. _create_all_node_db.all_option.split_list:
 
-sex_level
-=========
-If this key is present, it is a ``int`` specifying the
-:ref:`all_option_table.sex_level`.
-Otherwise, there is no sex_level in the all_option table.
+split_list
+==========
+If this key is present, it is a ``str`` specifying the
+:ref:`all_option_table.split_list`.
+Otherwise, there is no split_level in the all_option table.
 
 .. meta::
    :keywords: in_parallel

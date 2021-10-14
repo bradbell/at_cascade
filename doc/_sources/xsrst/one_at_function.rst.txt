@@ -56,7 +56,7 @@ fit_goal_set
 ============
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 271-271
+    :lines: 270-270
     :language: py
 
 .. meta::
@@ -103,7 +103,7 @@ We use *r_n* for the reference value of income at node *n*.
 The code below sets this reference using the name avg_income:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 287-290
+    :lines: 286-289
     :language: py
 
 .. meta::
@@ -122,7 +122,7 @@ This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 283-283
+    :lines: 282-282
     :language: py
 
 .. meta::
@@ -151,7 +151,7 @@ We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 294-300
+    :lines: 293-299
     :language: py
 
 .. meta::
@@ -178,7 +178,7 @@ If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 275-279
+    :lines: 274-278
     :language: py
 
 .. meta::
@@ -198,10 +198,8 @@ same order as the covariate table.
 The value *t* is not used by this function for this example.
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 326-333
+    :lines: 325-332
     :language: py
-
-The value *t* is not used by this function for this example.
 
 .. meta::
    :keywords: y_i
@@ -250,7 +248,7 @@ a_i
 For each leaf node, data is generated on the following *age_grid*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 304-304
+    :lines: 303-303
     :language: py
 
 .. meta::
@@ -266,7 +264,7 @@ For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 308-320
+    :lines: 307-319
     :language: py
 
 Note that the check of the fit for the nodes in the fit_goal_set
@@ -298,7 +296,7 @@ Value Prior
 The following is the value prior used for the root_node
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 347-354
+    :lines: 346-353
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -317,7 +315,7 @@ dage Prior
 The following is the dage prior used for the fit_node:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 359-364
+    :lines: 358-363
     :language: py
 
 .. meta::
@@ -346,7 +344,7 @@ Value Prior
 The following is the value prior used for the children of the fit_node:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 369-373
+    :lines: 368-372
     :language: py
 
 .. meta::
@@ -374,7 +372,7 @@ Value Prior
 The following is the value prior used for this smoothing:
 
 .. literalinclude:: ../../example/one_at_function.py
-    :lines: 378-384
+    :lines: 377-383
     :language: py
 
 The mean and standard deviation are only used for the root_node.

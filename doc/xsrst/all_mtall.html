@@ -218,7 +218,10 @@ It is an error if there is no ancestor of a
 <div class="section" id="all-mtall-value">
 <span id="all-mtall-all-mtall-table-all-mtall-value"></span><span id="index-3"></span><h4><a class="toc-backref" href="#id5">all_mtall_value</a><a class="headerlink" href="#all-mtall-value" title="Permalink to this headline">¶</a></h4>
 <p>This column has type <code class="docutils literal notranslate"><span class="pre">real</span></code> and is the value of mtall
-for a specific node, age, and time; see mtall_index table below.</p>
+for a specific node, age, and time; see mtall_index table below.
+Each value in this column is mtall at a specific age and time
+not on an age or time interval. If you only have mtall on age and time
+intervals, use the midpoint age and midpoint time in the omega grid.</p>
 </div>
 </div>
 <div class="section" id="mtall-index-table">

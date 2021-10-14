@@ -1,0 +1,464 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta content="split_list, example, using, split_list, option, in, all_node_database" name="keywords" />
+<meta content="nodes" name="keywords" />
+<meta content="fit_goal_set" name="keywords" />
+<meta content="rates" name="keywords" />
+<meta content="covariate" name="keywords" />
+<meta content="split_list" name="keywords" />
+<meta content="alpha" name="keywords" />
+<meta content="random, effects" name="keywords" />
+<meta content="simulated, data" name="keywords" />
+<meta content="rate_true(rate, , a, , t, , n, , c)" name="keywords" />
+<meta content="y_i" name="keywords" />
+<meta content="n_i" name="keywords" />
+<meta content="parent, rate, smoothing" name="keywords" />
+<meta content="value, prior" name="keywords" />
+<meta content="alpha, smoothing" name="keywords" />
+<meta content="value, prior" name="keywords" />
+<meta content="checking, the, fit" name="keywords" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>split_list &mdash; at_cascade  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="split_list_py" href="split_list_py.html" />
+    <link rel="prev" title="prevalence2iota_py" href="prevalence2iota_py.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> at_cascade
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="xsrst_automatic.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xsrst_automatic.html#link-to-index">Link to Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="at_cascade.html">at_cascade</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="glossary.html">glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="example.html">example</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="max_fit_option.html">max_fit_option</a></li>
+<li class="toctree-l3"><a class="reference internal" href="no_ode_xam.html">no_ode_xam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="one_at_function.html">one_at_function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prevalence2iota.html">prevalence2iota</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">split_list</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="split_list_py.html">split_list_py</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">at_cascade</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="at_cascade.html">at_cascade</a> &raquo;</li>
+        
+          <li><a href="example.html">example</a> &raquo;</li>
+        
+      <li>split_list</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/xsrst/split_list.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <p class="hidden"><span class="math notranslate nohighlight">\(\newcommand{\B}[1]{ {\bf #1} }\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\R}[1]{ {\rm #1} }\)</span></p>
+<div class="section" id="split-list">
+<h1>split_list<a class="headerlink" href="#split-list" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="example-using-split-list-option-in-all-node-database">
+<span id="id1"></span><h2>Example Using split_list Option in all_node_database<a class="headerlink" href="#example-using-split-list-option-in-all-node-database" title="Permalink to this headline">¶</a></h2>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#nodes" id="id4">Nodes</a></p>
+<ul>
+<li><p><a class="reference internal" href="#fit-goal-set" id="id5">fit_goal_set</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#rates" id="id6">Rates</a></p></li>
+<li><p><a class="reference internal" href="#covariate" id="id7">Covariate</a></p>
+<ul>
+<li><p><a class="reference internal" href="#split-list-covariate-split-list" id="id8">split_list</a></p></li>
+<li><p><a class="reference internal" href="#alpha" id="id9">alpha</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#random-effects" id="id10">Random Effects</a></p></li>
+<li><p><a class="reference internal" href="#simulated-data" id="id11">Simulated Data</a></p>
+<ul>
+<li><p><a class="reference internal" href="#rate-true-rate-a-t-n-c" id="id12">rate_true(rate, a, t, n, c)</a></p></li>
+<li><p><a class="reference internal" href="#y-i" id="id13">y_i</a></p></li>
+<li><p><a class="reference internal" href="#n-i" id="id14">n_i</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#parent-rate-smoothing" id="id15">Parent Rate Smoothing</a></p>
+<ul>
+<li><p><a class="reference internal" href="#value-prior" id="id16">Value Prior</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#alpha-smoothing" id="id17">Alpha Smoothing</a></p>
+<ul>
+<li><p><a class="reference internal" href="#split-list-alpha-smoothing-value-prior" id="id18">Value Prior</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#checking-the-fit" id="id19">Checking The Fit</a></p></li>
+</ul>
+</div>
+<p>For this example everything is constant in and time and
+there is only one rate function iota.</p>
+<div class="section" id="nodes">
+<span id="split-list-nodes"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id4">Nodes</a><a class="headerlink" href="#nodes" title="Permalink to this headline">¶</a></h3>
+<p>The following is a diagram of the node tree for this example.
+The <a class="reference internal" href="glossary.html#glossary-root-node"><span class="std std-ref">root_node</span></a> is n0,
+the <a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a> is {n3, n4, n2},
+and the leaf nodes are {n3, n4, n5, n6}:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="n">n0</span>
+      <span class="o">/-----/</span>\<span class="o">-----</span>\
+    <span class="n">n1</span>             <span class="p">(</span><span class="n">n2</span><span class="p">)</span>
+   <span class="o">/</span>  \            <span class="o">/</span>  \
+<span class="p">(</span><span class="n">n3</span><span class="p">)</span>  <span class="p">(</span><span class="n">n4</span><span class="p">)</span>       <span class="n">n5</span>    <span class="n">n6</span>
+</pre></div>
+</div>
+<div class="section" id="fit-goal-set">
+<span id="split-list-nodes-fit-goal-set"></span><span id="index-2"></span><h4><a class="toc-backref" href="#id5">fit_goal_set</a><a class="headerlink" href="#fit-goal-set" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">fit_goal_set</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="rates">
+<span id="split-list-rates"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id6">Rates</a><a class="headerlink" href="#rates" title="Permalink to this headline">¶</a></h3>
+<p>The only non-zero dismod_at rate for this example is
+<a class="reference internal" href="glossary.html#glossary-iota"><span class="std std-ref">iota</span></a>.</p>
+</div>
+<div class="section" id="covariate">
+<span id="split-list-covariate"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id7">Covariate</a><a class="headerlink" href="#covariate" title="Permalink to this headline">¶</a></h3>
+<p>There are two covariates for this example, sex and income.
+The reference value for income depends on the value of sex;
+see <a class="reference internal" href="create_all_node_db.html#create-all-node-db-all-cov-reference"><span class="std std-ref">all_cov_reference</span></a>:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">all_cov_reference</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">node_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">node_name</span> <span class="o">=</span> <span class="s1">&#39;n&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">node_id</span><span class="p">)</span>
+    <span class="n">all_cov_reference</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;sex&#39;</span>    <span class="p">:</span> <span class="p">[</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span> <span class="p">],</span>
+        <span class="s1">&#39;income&#39;</span> <span class="p">:</span> <span class="p">[</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">node_id</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">node_id</span> <span class="o">/</span> <span class="mf">10.0</span> <span class="p">]</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="split-list-covariate-split-list">
+<span id="index-5"></span><span id="id2"></span><h4><a class="toc-backref" href="#id8">split_list</a><a class="headerlink" href="#split-list-covariate-split-list" title="Permalink to this headline">¶</a></h4>
+<p>This cascade is set up to split by sex reference value; see
+<a class="reference internal" href="all_option_table.html#all-option-table-split-list"><span class="std std-ref">split_list</span></a>:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">split_level</span>     <span class="o">=</span> <span class="s1">&#39;-1 &#39;</span>
+<span class="n">split_covariate</span> <span class="o">=</span> <span class="s1">&#39;sex &#39;</span>
+<span class="n">split_reference</span> <span class="o">=</span> <span class="s1">&#39;1.0 2.0 3.0&#39;</span>
+<span class="n">all_option</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;split_list&#39;</span> <span class="p">:</span> <span class="n">split_level</span> <span class="o">+</span> <span class="n">split_covariate</span> <span class="o">+</span> <span class="n">split_reference</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="alpha">
+<span id="split-list-covariate-alpha"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id9">alpha</a><a class="headerlink" href="#alpha" title="Permalink to this headline">¶</a></h4>
+<p>We use <em>alpha</em>
+for the <a class="reference internal" href="glossary.html#glossary-rate-value"><span class="std std-ref">rate_value</span></a> covariate multiplier
+that multipliers income.
+This multiplier affects the value of iota.
+The true value for <em>alpha</em> (used which simulating the data) is</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">alpha_true</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="random-effects">
+<span id="split-list-random-effects"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id10">Random Effects</a><a class="headerlink" href="#random-effects" title="Permalink to this headline">¶</a></h3>
+<p>There are no random effect for this example.</p>
+</div>
+<div class="section" id="simulated-data">
+<span id="split-list-simulated-data"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id11">Simulated Data</a><a class="headerlink" href="#simulated-data" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="rate-true-rate-a-t-n-c">
+<span id="split-list-simulated-data-rate-true-rate-a-t-n-c"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id12">rate_true(rate, a, t, n, c)</a><a class="headerlink" href="#rate-true-rate-a-t-n-c" title="Permalink to this headline">¶</a></h4>
+<p>For <em>rate</em> equal to iota,
+this is the true value for <em>rate</em>
+in node <em>n</em> at age <em>a</em>, time <em>t</em>, and covariate values <em>c</em>.
+The covariate values are a list in the
+same order as the covariate table.
+The values <em>a</em>, <em>t</em>, <em>n</em>  are not used by this function for this example.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">rate_true</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">income</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">r_0</span>    <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">][</span><span class="s1">&#39;income&#39;</span><span class="p">][</span><span class="n">split_index</span><span class="p">]</span>
+    <span class="n">effect</span> <span class="o">=</span> <span class="n">alpha_true</span> <span class="o">*</span> <span class="p">(</span> <span class="n">income</span> <span class="o">-</span> <span class="n">r_0</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">rate</span> <span class="o">==</span> <span class="s1">&#39;iota&#39;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1e-2</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="n">effect</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">0.0</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="y-i">
+<span id="split-list-simulated-data-y-i"></span><span id="index-10"></span><h4><a class="toc-backref" href="#id13">y_i</a><a class="headerlink" href="#y-i" title="Permalink to this headline">¶</a></h4>
+<p>The only simulated integrand for this example is <a class="reference internal" href="glossary.html#glossary-sincidence"><span class="std std-ref">Sincidence</span></a>
+which is a direct measurement of iota.
+This data is simulated without any noise; i.e.,
+the i-th measurement is simulated as
+<em>y_i = rate_true(‘iota’, None, None, None, I_i)</em>
+where <em>I_i</em> is the income for the i-th measurement.
+The data is modeled as having noise even though there is no simulated noise.</p>
+</div>
+<div class="section" id="n-i">
+<span id="split-list-simulated-data-n-i"></span><span id="index-11"></span><h4><a class="toc-backref" href="#id14">n_i</a><a class="headerlink" href="#n-i" title="Permalink to this headline">¶</a></h4>
+<p>Data is only simulated for the leaf nodes; i.e.,
+each <em>n_i</em> is in the set { n3, n4, n5, n6 }.
+Since the data does not have any nose, the data residuals are a measure
+of how good the fit is for the nodes in the fit_goal_set.</p>
+</div>
+</div>
+<div class="section" id="parent-rate-smoothing">
+<span id="split-list-parent-rate-smoothing"></span><span id="index-12"></span><h3><a class="toc-backref" href="#id15">Parent Rate Smoothing</a><a class="headerlink" href="#parent-rate-smoothing" title="Permalink to this headline">¶</a></h3>
+<p>This is the iota smoothing used for the fit_node.
+There are no <a class="reference internal" href="glossary.html#glossary-dage"><span class="std std-ref">dage</span></a> or <a class="reference internal" href="glossary.html#glossary-dtime"><span class="std std-ref">dtime</span></a>
+priors because there is only one age and one time point in the smoothing grid.</p>
+<div class="section" id="value-prior">
+<span id="split-list-parent-rate-smoothing-value-prior"></span><span id="index-13"></span><h4><a class="toc-backref" href="#id16">Value Prior</a><a class="headerlink" href="#value-prior" title="Permalink to this headline">¶</a></h4>
+<p>The following is the value prior used for the root_node</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span>        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;parent_value_prior&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="n">iota_n0</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="n">iota_n0</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="n">iota_n0</span> <span class="p">,</span>
+            <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="n">iota_n0</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s1">&#39;eta&#39;</span><span class="p">:</span>     <span class="n">iota_n0</span> <span class="o">*</span> <span class="mf">1e-3</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+<p>The mean and standard deviation are only used for the root_node.
+The <a class="reference internal" href="create_child_node_db.html#id1"><span class="std std-ref">create_child_node_db</span></a>
+routine replaces them for other nodes.</p>
+</div>
+</div>
+<div class="section" id="alpha-smoothing">
+<span id="split-list-alpha-smoothing"></span><span id="index-14"></span><h3><a class="toc-backref" href="#id17">Alpha Smoothing</a><a class="headerlink" href="#alpha-smoothing" title="Permalink to this headline">¶</a></h3>
+<p>This is the smoothing used for <em>alpha</em> which multiplies the income covariate.
+There is only one age and one time point in this smoothing
+so it does not have dage or dtime priors.</p>
+<div class="section" id="split-list-alpha-smoothing-value-prior">
+<span id="index-15"></span><span id="id3"></span><h4><a class="toc-backref" href="#id18">Value Prior</a><a class="headerlink" href="#split-list-alpha-smoothing-value-prior" title="Permalink to this headline">¶</a></h4>
+<p>The following is the value prior used for this smoothing:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span>        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;alpha_value_prior&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
+            <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
+            <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
+            <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+<p>The mean and standard deviation are only used for the root_node.
+The create_child_node_db
+routine replaces them for other nodes.</p>
+</div>
+</div>
+<div class="section" id="checking-the-fit">
+<span id="split-list-checking-the-fit"></span><span id="index-16"></span><h3><a class="toc-backref" href="#id19">Checking The Fit</a><a class="headerlink" href="#checking-the-fit" title="Permalink to this headline">¶</a></h3>
+<p>The results of the fit are in the
+<a class="reference internal" href="cascade_fit_node.html#cascade-fit-node-output-dismod-db-predict"><span class="std std-ref">predict</span></a> and
+<a class="reference internal" href="cascade_fit_node.html#cascade-fit-node-output-dismod-db-c-predict-fit-var"><span class="std std-ref">c_predict_fit_var</span></a>
+tables of the fit_node_database corresponding to each node.
+The <a class="reference internal" href="check_cascade_fit.html#id1"><span class="std std-ref">check_cascade_fit</span></a>
+routine uses these tables to check that fit against the truth.</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Child</p></th>
+<th class="head"><p>Title</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>split_list_py</p></td>
+<td><p><a class="reference internal" href="split_list_py.html#id1"><span class="std std-ref">split_list: Python Source Code</span></a></p></td>
+</tr>
+</tbody>
+</table>
+<hr class="docutils" />
+<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">example/split_list.py</span></code></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="split_list_py.html" class="btn btn-neutral float-right" title="split_list_py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="prevalence2iota_py.html" class="btn btn-neutral float-left" title="prevalence2iota_py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

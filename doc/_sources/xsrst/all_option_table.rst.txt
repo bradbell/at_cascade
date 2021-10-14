@@ -78,20 +78,59 @@ is the name of the :ref:`glossary.root_node` in the node table of the
 (The node table is the same in all the dismod_at databases.)
 
 .. meta::
-   :keywords: sex_level
+   :keywords: split_list
 
-.. index:: sex_level
+.. index:: split_list
 
-.. _all_option_table.sex_level:
+.. _all_option_table.split_list:
 
-sex_level
-*********
-If this option does not appear, there will be no sex split in this cascade.
-Otherwise, it is a text representation of a non-negative integer specifying
-the level at which to split the cascade by sex.
+split_list
+**********
+This is a space separated list with the following entries:
+
+| |tab| split_level split_covariate_name reference_0 reference_1 ...
+
+If this option does not appear, there will be no split of the cascade.
+
+.. meta::
+   :keywords: split_level
+
+.. index:: split_level
+
+.. _all_option_table.split_list.split_level:
+
+split_level
+===========
+is a text representation of a non-negative integer specifying
+the level at which to split the cascade.
+If split_level < 0 the split occurred above the root node
+and no more splitting is done.
 Level 0 corresponds to splitting after fitting the root_node,
 level 1 to splitting after fitting the children of the root_node,
 and so on.
+
+.. meta::
+   :keywords: split_covariate_name
+
+.. index:: split_covariate_name
+
+.. _all_option_table.split_list.split_covariate_name:
+
+split_covariate_name
+====================
+is the name of the covariate in the root_node_database covariate table.
+
+.. meta::
+   :keywords: reference_j
+
+.. index:: reference_j
+
+.. _all_option_table.split_list.reference_j:
+
+reference_j
+===========
+For j equal 0, 1, ..., reference_j is the reference values for the
+sex covariate.
 
 .. meta::
    :keywords: in_parallel

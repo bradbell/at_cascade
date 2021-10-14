@@ -1,0 +1,286 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!
+split_list
+!!!!!!!!!!
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   split_list_py
+
+.. meta::
+   :keywords: split_list, example, using, split_list, option, in, all_node_database
+
+.. index:: split_list, example, using, split_list, option, in, all_node_database
+
+.. _split_list:
+
+Example Using split_list Option in all_node_database
+####################################################
+.. contents::
+   :local:
+
+For this example everything is constant in and time and
+there is only one rate function iota.
+
+.. meta::
+   :keywords: nodes
+
+.. index:: nodes
+
+.. _split_list.nodes:
+
+Nodes
+*****
+The following is a diagram of the node tree for this example.
+The :ref:`glossary.root_node` is n0,
+the :ref:`glossary.fit_goal_set` is {n3, n4, n2},
+and the leaf nodes are {n3, n4, n5, n6}::
+
+                n0
+          /-----/\-----\
+        n1             (n2)
+       /  \            /  \
+    (n3)  (n4)       n5    n6
+
+.. meta::
+   :keywords: fit_goal_set
+
+.. index:: fit_goal_set
+
+.. _split_list.nodes.fit_goal_set:
+
+fit_goal_set
+============
+
+.. literalinclude:: ../../example/split_list.py
+    :lines: 198-198
+    :language: py
+
+.. meta::
+   :keywords: rates
+
+.. index:: rates
+
+.. _split_list.rates:
+
+Rates
+*****
+The only non-zero dismod_at rate for this example is
+:ref:`glossary.iota`.
+
+.. meta::
+   :keywords: covariate
+
+.. index:: covariate
+
+.. _split_list.covariate:
+
+Covariate
+*********
+There are two covariates for this example, sex and income.
+The reference value for income depends on the value of sex;
+see :ref:`create_all_node_db.all_cov_reference`:
+
+.. literalinclude:: ../../example/split_list.py
+    :lines: 213-219
+    :language: py
+
+.. meta::
+   :keywords: split_list
+
+.. index:: split_list
+
+.. _split_list.covariate.split_list:
+
+split_list
+==========
+This cascade is set up to split by sex reference value; see
+:ref:`all_option_table.split_list`:
+
+.. literalinclude:: ../../example/split_list.py
+    :lines: 202-205
+    :language: py
+
+.. meta::
+   :keywords: alpha
+
+.. index:: alpha
+
+.. _split_list.covariate.alpha:
+
+alpha
+=====
+We use *alpha*
+for the :ref:`glossary.rate_value` covariate multiplier
+that multipliers income.
+This multiplier affects the value of iota.
+The true value for *alpha* (used which simulating the data) is
+
+.. literalinclude:: ../../example/split_list.py
+    :lines: 223-223
+    :language: py
+
+.. meta::
+   :keywords: random, effects
+
+.. index:: random, effects
+
+.. _split_list.random_effects:
+
+Random Effects
+**************
+There are no random effect for this example.
+
+.. meta::
+   :keywords: simulated, data
+
+.. index:: simulated, data
+
+.. _split_list.simulated_data:
+
+Simulated Data
+**************
+
+.. meta::
+   :keywords: rate_true(rate, , a, , t, , n, , c)
+
+.. index:: rate_true(rate, , a, , t, , n, , c)
+
+.. _split_list.simulated_data.rate_true(rate,_a,_t,_n,_c):
+
+rate_true(rate, a, t, n, c)
+===========================
+For *rate* equal to iota,
+this is the true value for *rate*
+in node *n* at age *a*, time *t*, and covariate values *c*.
+The covariate values are a list in the
+same order as the covariate table.
+The values *a*, *t*, *n*  are not used by this function for this example.
+
+.. literalinclude:: ../../example/split_list.py
+    :lines: 230-236
+    :language: py
+
+.. meta::
+   :keywords: y_i
+
+.. index:: y_i
+
+.. _split_list.simulated_data.y_i:
+
+y_i
+===
+The only simulated integrand for this example is :ref:`glossary.sincidence`
+which is a direct measurement of iota.
+This data is simulated without any noise; i.e.,
+the i-th measurement is simulated as
+*y_i = rate_true('iota', None, None, None, I_i)*
+where *I_i* is the income for the i-th measurement.
+The data is modeled as having noise even though there is no simulated noise.
+
+.. meta::
+   :keywords: n_i
+
+.. index:: n_i
+
+.. _split_list.simulated_data.n_i:
+
+n_i
+===
+Data is only simulated for the leaf nodes; i.e.,
+each *n_i* is in the set { n3, n4, n5, n6 }.
+Since the data does not have any nose, the data residuals are a measure
+of how good the fit is for the nodes in the fit_goal_set.
+
+.. meta::
+   :keywords: parent, rate, smoothing
+
+.. index:: parent, rate, smoothing
+
+.. _split_list.parent_rate_smoothing:
+
+Parent Rate Smoothing
+*********************
+This is the iota smoothing used for the fit_node.
+There are no :ref:`glossary.dage` or :ref:`glossary.dtime`
+priors because there is only one age and one time point in the smoothing grid.
+
+.. meta::
+   :keywords: value, prior
+
+.. index:: value, prior
+
+.. _split_list.parent_rate_smoothing.value_prior:
+
+Value Prior
+===========
+The following is the value prior used for the root_node
+
+.. literalinclude:: ../../example/split_list.py
+    :lines: 253-260
+    :language: py
+
+The mean and standard deviation are only used for the root_node.
+The :ref:`create_child_node_db<create_child_node_db>`
+routine replaces them for other nodes.
+
+.. meta::
+   :keywords: alpha, smoothing
+
+.. index:: alpha, smoothing
+
+.. _split_list.alpha_smoothing:
+
+Alpha Smoothing
+***************
+This is the smoothing used for *alpha* which multiplies the income covariate.
+There is only one age and one time point in this smoothing
+so it does not have dage or dtime priors.
+
+.. meta::
+   :keywords: value, prior
+
+.. index:: value, prior
+
+.. _split_list.alpha_smoothing.value_prior:
+
+Value Prior
+===========
+The following is the value prior used for this smoothing:
+
+.. literalinclude:: ../../example/split_list.py
+    :lines: 265-271
+    :language: py
+
+The mean and standard deviation are only used for the root_node.
+The create_child_node_db
+routine replaces them for other nodes.
+
+.. meta::
+   :keywords: checking, the, fit
+
+.. index:: checking, the, fit
+
+.. _split_list.checking_the_fit:
+
+Checking The Fit
+****************
+The results of the fit are in the
+:ref:`cascade_fit_node.output_dismod_db.predict` and
+:ref:`cascade_fit_node.output_dismod_db.c_predict_fit_var`
+tables of the fit_node_database corresponding to each node.
+The :ref:`check_cascade_fit<check_cascade_fit>`
+routine uses these tables to check that fit against the truth.
+
+.. csv-table::
+    :header: "Child", "Title"
+    :widths: 20, 80
+
+    "split_list_py", :ref:`split_list_py`
+
+----
+
+xsrst input file: ``example/split_list.py``

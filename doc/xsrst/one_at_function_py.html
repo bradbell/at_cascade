@@ -98,6 +98,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="prevalence2iota.html">prevalence2iota</a></li>
+<li class="toctree-l3"><a class="reference internal" href="split_list.html">split_list</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
@@ -492,7 +493,7 @@
     <span class="n">covariate_name</span>      <span class="o">=</span> <span class="s1">&#39;income&#39;</span>
     <span class="k">for</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span> <span class="s1">&#39;n1&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span><span class="p">,</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">]</span> <span class="p">:</span>
         <span class="n">all_cov_reference</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">covariate_name</span> <span class="p">:</span> <span class="n">avg_income</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span>
+            <span class="n">covariate_name</span> <span class="p">:</span> <span class="p">[</span> <span class="n">avg_income</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="p">]</span>
         <span class="p">}</span>
     <span class="c1">#</span>
     <span class="c1"># Create all_node.db</span>

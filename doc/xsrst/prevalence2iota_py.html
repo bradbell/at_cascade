@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="module" href="module.html" />
+    <link rel="next" title="split_list" href="split_list.html" />
     <link rel="prev" title="prevalence2iota" href="prevalence2iota.html" /> 
 </head>
 
@@ -98,6 +98,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">prevalence2iota_py</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="split_list.html">split_list</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
@@ -543,8 +544,8 @@
     <span class="n">all_cov_reference</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span> <span class="s1">&#39;n1&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span><span class="p">,</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">]</span> <span class="p">:</span>
         <span class="n">all_cov_reference</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;income&#39;</span> <span class="p">:</span> <span class="n">avg_income</span><span class="p">[</span><span class="n">node_name</span><span class="p">],</span>
-            <span class="s1">&#39;one&#39;</span><span class="p">:</span>     <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s1">&#39;income&#39;</span> <span class="p">:</span> <span class="p">[</span> <span class="n">avg_income</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="p">],</span>
+            <span class="s1">&#39;one&#39;</span><span class="p">:</span>     <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span>
         <span class="p">}</span>
     <span class="c1">#</span>
     <span class="c1"># omega_grid</span>
@@ -625,7 +626,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="module.html" class="btn btn-neutral float-right" title="module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="split_list.html" class="btn btn-neutral float-right" title="split_list" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="prevalence2iota.html" class="btn btn-neutral float-left" title="prevalence2iota" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
