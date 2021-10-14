@@ -201,7 +201,7 @@ def check_covariate_reference(
     split_covariate_name = tmp[1]
     split_reference_list = tmp[2:]
     for i in range( len(split_reference_list) ) :
-        split_reference_list[i] = int( split_reference[i] )
+        split_reference_list[i] = float( split_reference_list[i] )
     #
     # split_covariate_id
     split_covariate_id   = at_cascade.table_name2id(
@@ -209,13 +209,13 @@ def check_covariate_reference(
     )
     #
     # split_reference
-    split_reference = covariate_table[split_covariate_id]['refernece']
+    split_reference = covariate_table[split_covariate_id]['reference']
     #
     for row in all_cov_reference_table :
         assert not row['split_reference'] is None
         covariate_id = row['covariate_id']
         if row['node_id'] == fit_node_id and \
-            row['split_reverence'] == split_reference :
+            row['split_reference'] == split_reference :
             #
             if check_reference[covariate_id] :
                 msg  = 'More than one row in all_cov_reference table has\n'
@@ -266,7 +266,7 @@ def cascade_fit_node(
     )
     #
     # all_option
-    implemented = [ 'root_node_name', 'max_fit' ]
+    implemented = [ 'root_node_name', 'max_fit', 'split_list' ]
     all_option  = dict()
     for key in implemented :
         all_option[key] = None

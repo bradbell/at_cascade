@@ -19,6 +19,7 @@ The at_cascade Examples
     example/no_ode_xam.py
     example/one_at_function.py
     example/prevalence2iota.py
+    example/split_list.py
 }
 
 .. comment END_SORT_THIS_LINE_MINUS_3

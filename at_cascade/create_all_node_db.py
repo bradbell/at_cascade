@@ -202,7 +202,9 @@ def create_all_node_db(
     if 'split_list' in all_option :
         split_list = all_option['split_list']
         split_list = split_list.split()
-        split_reference_list = float( split_list[2:] )
+        split_reference_list = list()
+        for reference in split_list[2:] :
+            split_reference_list.append( float(reference) )
     #
     # -------------------------------------------------------------------------
     # Read root node database

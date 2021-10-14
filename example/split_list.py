@@ -10,15 +10,14 @@
 '''
 {xsrst_begin_parent split_list}
 {xsrst_spell
-    avg
     dage
     dtime
 }
 
-Example Using split_list Option in all_nodedatabase
-###################################################
-For this example everything is constant in and and time and
-there is only one function.
+Example Using split_list Option in all_node_database
+####################################################
+For this example everything is constant in and time and
+there is only one rate function iota.
 
 Nodes
 *****
@@ -44,22 +43,24 @@ Rates
 *****
 The only non-zero dismod_at rate for this example is
 :ref:`glossary.iota`.
-We use *iota(I)* to denote the value for iota
-as a function of income *I*.
 
 Covariate
 *********
-The only covariate for this example is income.
-Its reference value is the average income corresponding
-to the :ref:`glossary.fit_node`.
-
-r_n
-===
-We use *r_n* for the reference value of income at node *n*.
-The code below sets this reference using the name avg_income:
+There are two covariates for this example, sex and income.
+The reference value for income depends on the value of sex;
+see :ref:`create_all_node_db.all_cov_reference`:
 {xsrst_file
-    # BEGIN avg_income
-    # END avg_income
+    # BEGIN all_cov_reference
+    # END all_cov_reference
+}
+
+split_list
+==========
+This cascade is set up to split by sex reference value; see
+:ref:`all_option_table.split_list`:
+{xsrst_file
+    # BEGIN_1 split_list
+    # END_1 split_list
 }
 
 alpha
@@ -101,10 +102,8 @@ The only simulated integrand for this example is :ref:`glossary.sincidence`
 which is a direct measurement of iota.
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
-*y_i = rate_true('iota', a_i, None, n_i, I_i)*
-where *a_i* is the age,
-*n_i* is the node,
-and *I_i* is the income for the i-th measurement.
+*y_i = rate_true('iota', None, None, None, I_i)*
+where *I_i* is the income for the i-th measurement.
 The data is modeled as having noise even though there is no simulated noise.
 
 n_i
@@ -118,7 +117,7 @@ Parent Rate Smoothing
 *********************
 This is the iota smoothing used for the fit_node.
 There are no :ref:`glossary.dage` or :ref:`glossary.dtime`
-priors because there is only one age and one time point in the smoohting grid.
+priors because there is only one age and one time point in the smoothing grid.
 
 Value Prior
 ===========
@@ -159,19 +158,19 @@ routine uses these tables to check that fit against the truth.
 
 {xsrst_end split_list}
 ------------------------------------------------------------------------------
-{xsrst_begin split_list.py}
+{xsrst_begin split_list_py}
 
 split_list: Python Source Code
 ###################################
 
 {xsrst_file
-    BEGIN split_list source code
-    END split_list source code
+    BEGIN_2 split_list source code
+    END_2 split_list source code
 }
 
-{xsrst_end split_list.py}
+{xsrst_end split_list_py}
 '''
-# BEGIN split_list source code
+# BEGIN_2 split_list source code
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
@@ -199,16 +198,30 @@ import at_cascade
 fit_goal_set = { 'n3', 'n4', 'n2' }
 # END fit_goal_set
 #
+# BEGIN_1 split_list
+split_level     = '-1 '
+split_covariate = 'sex '
+split_reference = '1.0 2.0 3.0'
+all_option = { 'split_list' : split_level + split_covariate + split_reference }
+# END_1 split_list
+#
+# BEGIN split_index
+split_index = 2
+# END split_index
+#
+# BEGIN all_cov_reference
+all_cov_reference = dict()
+for node_id in range(7) :
+    node_name = 'n' + str(node_id)
+    all_cov_reference[node_name] = {
+        'sex'    : [ 1.0, 2.0, 3.0 ],
+        'income' : [ 1.0 - node_id / 10.0, 1.0, 1.0 + node_id / 10.0 ]
+    }
+# END all_cov_reference
+#
 # BEGIN alpha_true
 alpha_true = - 0.2
 # END alpha_true
-#
-# BEGIN avg_income
-avg_income       = { 'n3':1.0, 'n4':2.0, 'n5':3.0, 'n6':4.0 }
-avg_income['n2'] = ( avg_income['n5'] + avg_income['n6'] ) / 2.0
-avg_income['n1'] = ( avg_income['n3'] + avg_income['n4'] ) / 2.0
-avg_income['n0'] = ( avg_income['n1'] + avg_income['n2'] ) / 2.0
-# END avg_income
 #
 # ----------------------------------------------------------------------------
 # functions
@@ -216,7 +229,7 @@ avg_income['n0'] = ( avg_income['n1'] + avg_income['n2'] ) / 2.0
 # BEGIN rate_true
 def rate_true(rate, a, t, n, c) :
     income = c[0]
-    r_0    = avg_income['n0']
+    r_0    = all_cov_reference['n0']['income'][split_index]
     effect = alpha_true * ( income - r_0 )
     if rate == 'iota' :
         return 1e-2 * exp(effect)
@@ -226,7 +239,10 @@ def rate_true(rate, a, t, n, c) :
 def root_node_db(file_name) :
     #
     # iota_n0
-    covariate_list = [ avg_income['n0'] ]
+    covariate_list = [
+        all_cov_reference['n0']['sex'][split_index],
+        all_cov_reference['n0']['income'][split_index],
+    ]
     iota_n0        = rate_true('iota', None, None, None, covariate_list)
     # END iota_50
     #
@@ -238,7 +254,7 @@ def root_node_db(file_name) :
             'density': 'gaussian',
             'lower':   iota_n0 / 10.0,
             'upper':   iota_n0 * 10.0,
-            'mean':    iota_n0 / 2.0,
+            'mean':    iota_n0 ,
             'std':     iota_n0 * 10.0,
             'eta':     iota_n0 * 1e-3
         }
@@ -296,7 +312,14 @@ def root_node_db(file_name) :
     } ]
     #
     # covariate_table
-    covariate_table = [ { 'name':'income',   'reference':avg_income['n0'] } ]
+    covariate_table = [ {
+        'name':     'income',
+        'reference': all_cov_reference['n0']['income'][split_index],
+    } ]
+    covariate_table.append( {
+        'name':     'sex',
+        'reference': all_cov_reference['n0']['sex'][split_index],
+    } )
     #
     # mulcov_table
     mulcov_table = [ {
@@ -327,6 +350,7 @@ def root_node_db(file_name) :
         'age_lower':    50.0,
         'age_upper':    50.0,
         'income':       None,
+        'sex':          None,
         'integrand':    'Sincidence',
     }
     avgint_table.append( copy.copy(row) )
@@ -346,14 +370,13 @@ def root_node_db(file_name) :
         'hold_out':     False,
     }
     for node in leaf_set :
-        income     = avg_income[node]
+        income     = all_cov_reference[node]['income'][split_index]
+        sex        = all_cov_reference[node]['sex'][split_index]
         meas_value = rate_true('iota', None, None, None, [ income ])
         row['node']       = node
         row['meas_value'] = meas_value
         row['income']     = income
-        # The model for the measurement noise is small so a few
-        # data points act like lots of real data points.
-        # The actual measruement noise is zero.
+        row['sex']        = sex
         row['meas_std']   = meas_value / 10.0
         data_table.append( copy.copy(row) )
     #
@@ -412,22 +435,13 @@ def main() :
     root_node_database  = 'root_node.db'
     root_node_db(root_node_database)
     #
-    # all_cov_reference
-    all_cov_reference = dict()
-    covariate_name      = 'income'
-    for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
-        all_cov_reference[node_name] = {
-            covariate_name : [ avg_income[node_name] ]
-        }
-    #
     # Create all_node.db
     all_node_database = 'all_node.db'
-    empty_dict        = dict()
     at_cascade.create_all_node_db(
         all_node_database   = all_node_database,
         root_node_database  = root_node_database,
         all_cov_reference   = all_cov_reference,
-        all_option          = empty_dict,
+        all_option          = all_option,
         fit_goal_set        = fit_goal_set
     )
     #
@@ -462,4 +476,4 @@ def main() :
 main()
 print('split_list: OK')
 sys.exit(0)
-# END split_list source code
+# END_2 split_list source code

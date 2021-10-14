@@ -329,7 +329,7 @@ def create_child_node_db(
         if row['option_name'] == 'split_list' :
             split_list      = row['option_value']
             split_list      = split_list.split()
-            covariate_name  = split_list[2]
+            covariate_name  = split_list[1]
             reference_list  = split_list[2:]
             covariate_id    = at_cascade.table_name2id(
                 parent_tables['covariate'], 'covariate', covariate_name
