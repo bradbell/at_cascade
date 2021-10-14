@@ -275,6 +275,12 @@ def cascade_fit_node(
         option_value = row['option_value']
         assert option_name in implemented
         all_option[option_name] = option_value
+    if not all_option['split_list'] is None :
+        split_list  = all_option['split_list'].split()
+        split_level = split_list[0]
+        if 0 <= int( split_level ) :
+            msg  = '0 <= split_level not yet implemented'
+            assert False, msg
     #
     # fit_children
     if fit_children is None :
