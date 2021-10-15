@@ -47,11 +47,11 @@ This column has type ``integer`` and specifies
 the covariate, for this reference,
 by the primary key in the root_node_database covariate table.
 
-split_reference
-***************
-This column has type ``real`` and it specifies the reference value
-for the split covariate and must be one of the reference values
-in :ref:`all_option_table.split_list`.
+split_reference_id
+******************
+This column has type ``integer`` and it specifies the
+index of a value in
+:ref:`all_option_table.split_list.split_reference_list`.
 If there is (is not) a split_list in the option table,
 the values in this column must not be (must be) null.
 
@@ -296,7 +296,7 @@ split_list
 **********
 This is a space separated list with the following entries:
 
-| |tab| split_level split_covariate_name reference_0 reference_1 ...
+| |tab| split_level split_covariate_name split_reference_0 split_reference_1 ...
 
 If this option does not appear, there will be no split of the cascade.
 
@@ -312,12 +312,13 @@ and so on.
 
 split_covariate_name
 ====================
-is the name of the covariate in the root_node_database covariate table.
+is the name, in the root_node_database covariate table, of the splitting
+covariate.
 
-reference_j
-===========
-For j equal 0, 1, ..., reference_j is the reference values for the
-sex covariate.
+split_reference_list
+====================
+This is a space separated list, with two less elements than split_list,
+that contains the reference values for the splitting covariate.
 
 in_parallel
 ***********

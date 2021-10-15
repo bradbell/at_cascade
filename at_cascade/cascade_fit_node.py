@@ -171,7 +171,7 @@ def check_covariate_reference(
     # ------------------------------------------------------------------------
     if split_list is None :
         for row in all_cov_reference_table :
-            assert row['split_reference'] is None
+            assert row['split_reference_id'] is None
             if row['node_id'] == fit_node_id :
                 covariate_id = row['covariate_id']
                 #
@@ -211,11 +211,18 @@ def check_covariate_reference(
     # split_reference
     split_reference = covariate_table[split_covariate_id]['reference']
     #
+    # split_reference_id
+    if not split_reference in split_reference_list :
+        msg  = 'fit_node_database reference value for splitting covariate '
+        msg += 'is not in split_list'
+        assert False, msg
+    split_reference_id = split_reference_list.index( split_reference )
+    #
     for row in all_cov_reference_table :
-        assert not row['split_reference'] is None
+        assert not row['split_reference_id'] is None
         covariate_id = row['covariate_id']
         if row['node_id'] == fit_node_id and \
-            row['split_reference'] == split_reference :
+            row['split_reference_id'] == split_reference_id :
             #
             if check_reference[covariate_id] :
                 msg  = 'More than one row in all_cov_reference table has\n'

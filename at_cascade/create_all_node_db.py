@@ -261,8 +261,8 @@ def create_all_node_db(
     #
     # all_cov_reference table
     tbl_name = 'all_cov_reference'
-    col_name = [ 'node_id',  'covariate_id', 'split_reference', 'reference' ]
-    col_type = [ 'integer',  'integer',      'real',            'real'      ]
+    col_name = [ 'node_id',  'covariate_id', 'split_reference_id', 'reference' ]
+    col_type = [ 'integer',  'integer',      'integer',            'real'      ]
     row_list = list()
     for node_id in range( len(node_table) ) :
         for covariate_id in range( len(covariate_table) ) :
@@ -277,12 +277,13 @@ def create_all_node_db(
                 row_list.append( row )
             else :
                 assert len(reference_list) == len(split_reference_list)
-                for (i, split_reference) in enumerate(split_reference_list) :
+                for (i, reference) in enumerate(reference_list) :
+                    split_reference_id = i
                     row  = [
                         node_id,
                         covariate_id,
-                        split_reference,
-                        reference_list[i]
+                        split_reference_id,
+                        reference,
                     ]
                     row_list.append( row )
     dismod_at.create_table(
