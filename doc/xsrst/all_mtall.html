@@ -252,7 +252,9 @@ and <em>j</em> equal 0 through
 </div>
 <p>is the index in the all_mtall table of the value for this node,
 the <em>i</em>-th age in the omega_grid,
-and the <em>j</em>-th time in the omega_grid.</p>
+and the <em>j</em>-th time in the omega_grid.
+Note that each all_mtall_id should be a multiple of n_omega_age * n_omega_time
+(because there are that many mtall entries for each node).</p>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">xsrst/all_node_db.xsrst</span></code></p>
 </div>

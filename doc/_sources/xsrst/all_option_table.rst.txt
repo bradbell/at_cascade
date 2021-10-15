@@ -88,7 +88,7 @@ split_list
 **********
 This is a space separated list with the following entries:
 
-| |tab| split_level split_covariate_name reference_0 reference_1 ...
+| |tab| split_level split_covariate_name split_reference_0 split_reference_1 ...
 
 If this option does not appear, there will be no split of the cascade.
 
@@ -118,19 +118,20 @@ and so on.
 
 split_covariate_name
 ====================
-is the name of the covariate in the root_node_database covariate table.
+is the name, in the root_node_database covariate table, of the splitting
+covariate.
 
 .. meta::
-   :keywords: reference_j
+   :keywords: split_reference_list
 
-.. index:: reference_j
+.. index:: split_reference_list
 
-.. _all_option_table.split_list.reference_j:
+.. _all_option_table.split_list.split_reference_list:
 
-reference_j
-===========
-For j equal 0, 1, ..., reference_j is the reference values for the
-sex covariate.
+split_reference_list
+====================
+This is a space separated list, with two less elements than split_list,
+that contains the reference values for the splitting covariate.
 
 .. meta::
    :keywords: in_parallel

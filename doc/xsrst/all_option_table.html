@@ -14,7 +14,7 @@
 <meta content="split_list" name="keywords" />
 <meta content="split_level" name="keywords" />
 <meta content="split_covariate_name" name="keywords" />
-<meta content="reference_j" name="keywords" />
+<meta content="split_reference_list" name="keywords" />
 <meta content="in_parallel" name="keywords" />
 <meta content="max_fit" name="keywords" />
 
@@ -201,7 +201,7 @@
 <ul>
 <li><p><a class="reference internal" href="#split-level" id="id8">split_level</a></p></li>
 <li><p><a class="reference internal" href="#split-covariate-name" id="id9">split_covariate_name</a></p></li>
-<li><p><a class="reference internal" href="#reference-j" id="id10">reference_j</a></p></li>
+<li><p><a class="reference internal" href="#split-reference-list" id="id10">split_reference_list</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#in-parallel" id="id11">in_parallel</a></p></li>
@@ -237,7 +237,7 @@ is the name of the <a class="reference internal" href="glossary.html#glossary-ro
 <span id="all-option-table-split-list"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id7">split_list</a><a class="headerlink" href="#split-list" title="Permalink to this headline">¶</a></h3>
 <p>This is a space separated list with the following entries:</p>
 <div class="line-block">
-<div class="line">        split_level split_covariate_name reference_0 reference_1 …</div>
+<div class="line">        split_level split_covariate_name split_reference_0 split_reference_1 …</div>
 </div>
 <p>If this option does not appear, there will be no split of the cascade.</p>
 <div class="section" id="split-level">
@@ -252,12 +252,13 @@ and so on.</p>
 </div>
 <div class="section" id="split-covariate-name">
 <span id="all-option-table-split-list-split-covariate-name"></span><span id="index-8"></span><h4><a class="toc-backref" href="#id9">split_covariate_name</a><a class="headerlink" href="#split-covariate-name" title="Permalink to this headline">¶</a></h4>
-<p>is the name of the covariate in the root_node_database covariate table.</p>
+<p>is the name, in the root_node_database covariate table, of the splitting
+covariate.</p>
 </div>
-<div class="section" id="reference-j">
-<span id="all-option-table-split-list-reference-j"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id10">reference_j</a><a class="headerlink" href="#reference-j" title="Permalink to this headline">¶</a></h4>
-<p>For j equal 0, 1, …, reference_j is the reference values for the
-sex covariate.</p>
+<div class="section" id="split-reference-list">
+<span id="all-option-table-split-list-split-reference-list"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id10">split_reference_list</a><a class="headerlink" href="#split-reference-list" title="Permalink to this headline">¶</a></h4>
+<p>This is a space separated list, with two less elements than split_list,
+that contains the reference values for the splitting covariate.</p>
 </div>
 </div>
 <div class="section" id="in-parallel">

@@ -58,17 +58,17 @@ the covariate, for this reference,
 by the primary key in the root_node_database covariate table.
 
 .. meta::
-   :keywords: split_reference
+   :keywords: split_reference_id
 
-.. index:: split_reference
+.. index:: split_reference_id
 
-.. _all_cov_reference_table.split_reference:
+.. _all_cov_reference_table.split_reference_id:
 
-split_reference
-***************
-This column has type ``real`` and it specifies the reference value
-for the split covariate and must be one of the reference values
-in :ref:`all_option_table.split_list`.
+split_reference_id
+******************
+This column has type ``integer`` and it specifies the
+index of a value in
+:ref:`all_option_table.split_list.split_reference_list`.
 If there is (is not) a split_list in the option table,
 the values in this column must not be (must be) null.
 

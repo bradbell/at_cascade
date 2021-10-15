@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/no_ode_fit.py
-    :lines: 188-191
+    :lines: 200-203
     :language: py
 
 .. meta::
@@ -82,6 +82,22 @@ If max_fit does not appear in the all option table,
 *max_fit* should be None.
 
 .. meta::
+   :keywords: no_ode_database
+
+.. index:: no_ode_database
+
+.. _no_ode_fit.no_ode_database:
+
+no_ode_database
+***************
+An intermediate database is stored in the file
+
+    *in_dir*\ /\ *fit_node*\ /no_ode.db
+
+This contains the results of the no ODE fit so they
+can be plotted and converted to csv files.
+
+.. meta::
    :keywords: out_database
 
 .. index:: out_database
@@ -99,6 +115,7 @@ This is a fit_node_database similar to *in_database*.
 The difference is that the mean value in the priors for the fixed effects
 has been replace by the optimal estimate for fitting with the integrands
 that do not used the ODE.
+The last operation on this table is a dismod_at init command.
 
 ----
 
