@@ -227,7 +227,7 @@ def check_covariate_reference(
             if check_reference[covariate_id] :
                 msg  = 'More than one row in all_cov_reference table has\n'
                 msg += f'node_id = {fit_node_id} '
-                msg += 'split_reference = {split_reference} and '
+                msg += f'split_reference_id = {split_reference_id} and '
                 msg += f'covariate_id = {covariate_id}'
                 assert False, msg
                 #
@@ -235,7 +235,7 @@ def check_covariate_reference(
             if row['reference'] != reference :
                 msg  = 'Covariate references for '
                 msg += f'node_id = {fit_node_id} '
-                msg += 'split_reference = {split_refernece} and '
+                msg += f'split_reference_id = {split_reference_id} and '
                 msg += f'covariate_id = {covariate_id} are different in\n'
                 msg += 'covariate and all_cov_reference tables'
                 assert False, msg

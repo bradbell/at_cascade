@@ -11,6 +11,8 @@
 {xsrst_begin no_ode_fit}
 {xsrst_spell
     dir
+    csv
+    init
 }
 
 Do A No Ode Fit For One Node
@@ -46,6 +48,15 @@ all option table.
 If max_fit does not appear in the all option table,
 *max_fit* should be None.
 
+no_ode_database
+***************
+An intermediate database is stored in the file
+
+    *in_dir*\ /\ *fit_node*\ /no_ode.db
+
+This contains the results of the no ODE fit so they
+can be plotted and converted to csv files.
+
 out_database
 ************
 The return value *out_database* is equal to
@@ -57,6 +68,7 @@ This is a fit_node_database similar to *in_database*.
 The difference is that the mean value in the priors for the fixed effects
 has been replace by the optimal estimate for fitting with the integrands
 that do not used the ODE.
+The last operation on this table is a dismod_at init command.
 
 {xsrst_end no_ode_fit}
 '''
@@ -221,19 +233,21 @@ def no_ode_fit(
         in_tables['node'], 'node', fit_node_name
     )
     #
-    # out_database
+    # no_ode_daabase, out_database
     index = in_database.rfind('/')
     if 0 <= index :
-        in_dir       = in_database[: index]
-        out_database = f'{in_dir}/{fit_node_name}/dismod.db'
+        in_dir          = in_database[: index]
+        out_database    = f'{in_dir}/{fit_node_name}/dismod.db'
+        no_ode_database = f'{in_dir}/{fit_node_name}/no_ode.db'
     else :
-        out_database = f'{fit_node_name}/dismod.db'
+        out_database    = f'{fit_node_name}/dismod.db'
+        no_ode_database = f'{fit_node_name}/no_ode.db'
     #
     msg   = f'in_database and out_database are equal'
     assert not in_database == out_database, msg
     #
     # copy in_database to out_database
-    shutil.copyfile(in_database, out_database)
+    shutil.copyfile(in_database, no_ode_database)
     #
     # hold_out_integrand
     hold_out_integrand = list()
@@ -247,11 +261,11 @@ def no_ode_fit(
     name  = 'hold_out_integrand'
     value = ' '.join(hold_out_integrand)
     dismod_at.system_command_prc(
-        [ 'dismod_at', out_database, 'set', 'option', name, value ]
+        [ 'dismod_at', no_ode_database, 'set', 'option', name, value ]
     )
     #
     # init
-    dismod_at.system_command_prc([ 'dismod_at', out_database, 'init' ])
+    dismod_at.system_command_prc([ 'dismod_at', no_ode_database, 'init' ])
     #
     # enforce max_fit
     if not max_fit is None :
@@ -260,14 +274,20 @@ def no_ode_fit(
             integrand_name = row['integrand_name']
             dismod_at.system_command_prc([
                 'dismod_at',
-                out_database,
+                no_ode_database,
                 'hold_out',
                 integrand_name,
                 str(max_fit),
             ])
     #
     # fit both
-    dismod_at.system_command_prc([ 'dismod_at', out_database, 'fit', 'both' ])
+    dismod_at.system_command_prc(
+        [ 'dismod_at', no_ode_database, 'fit', 'both' ]
+    )
+    #
+    # copy no_ode_database to out_database
+    shutil.copyfile(no_ode_database, out_database)
+    #
     #
     # out_connection
     new            = False
@@ -436,6 +456,7 @@ def no_ode_fit(
     dismod_at.system_command_prc(
         [ 'dismod_at', out_database, 'set', 'option', name, value ]
     )
+    dismod_at.system_command_prc([ 'dismod_at', out_database, 'init' ])
     #
     # out_connection
     out_connection.close()
