@@ -202,6 +202,14 @@ def omega_constraint(
     # node_id2all_mtall_id
     node_id2all_mtall_id = dict()
     for row in all_tables['mtall_index'] :
+        all_mtall_id = row['all_mtall_id']
+        if all_mtall_id % (n_omega_age * n_omega_time) != 0 :
+            msg  = 'mtall_index table: Expect all_mtall_id o be a multipler '
+            msg += 'of n_omega_age * n_omega_time\n'
+            msg += f'all_mtall_id = {all_mtall_id} '
+            msg += f'n_omega_age = {n_omega_age} '
+            msg += f'n_omega_time = {n_omega_time} '
+            assert False, msg
         node_id2all_mtall_id[ row['node_id'] ] = row['all_mtall_id']
     #
     # node_id2all_mtspecific_id
