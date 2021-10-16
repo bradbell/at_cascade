@@ -12,6 +12,7 @@
 <meta content="mtspecific_index, table" name="keywords" />
 <meta content="mtspecific_index_id" name="keywords" />
 <meta content="node_id" name="keywords" />
+<meta content="split_reference_id" name="keywords" />
 <meta content="all_mtspecific_id" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -195,13 +196,18 @@
 <ul>
 <li><p><a class="reference internal" href="#mtspecific-index-id" id="id7">mtspecific_index_id</a></p></li>
 <li><p><a class="reference internal" href="#node-id" id="id8">node_id</a></p></li>
-<li><p><a class="reference internal" href="#all-mtspecific-mtspecific-index-table-all-mtspecific-id" id="id9">all_mtspecific_id</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#split-reference-id" id="id9">split_reference_id</a></p>
+<ul>
+<li><p><a class="reference internal" href="#all-mtspecific-split-reference-id-all-mtspecific-id" id="id10">all_mtspecific_id</a></p></li>
 </ul>
 </li>
 </ul>
 </div>
-<p>This table specifies the value of <a class="reference internal" href="glossary.html#glossary-mtspecific"><span class="std std-ref">mtspecific</span></a> for each
-age, time point in the <a class="reference internal" href="omega_grid.html#id1"><span class="std std-ref">Omega Grid</span></a> and every node.
+<p>The combination of the all_mtspecific and mtspecific_index tables specify
+the value of <a class="reference internal" href="glossary.html#glossary-mtspecific"><span class="std std-ref">mtspecific</span></a> for all the nodes that have
+mtspecific data.
 If mtspecific is not specified for a node, it will use the same <em>mtspecific</em>
 values as its nearest ancestor node.
 If there is no ancestor of a node that has mtspecific data,
@@ -210,7 +216,8 @@ If there is no ancestor of a node that has mtspecific data,
 <div class="section" id="all-mtspecific-table">
 <span id="all-mtspecific-all-mtspecific-table"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id3">all_mtspecific Table</a><a class="headerlink" href="#all-mtspecific-table" title="Permalink to this headline">¶</a></h3>
 <p>This table specifies the value of <a class="reference internal" href="glossary.html#glossary-mtspecific"><span class="std std-ref">mtspecific</span></a> for each
-age, time point in the <a class="reference internal" href="omega_grid.html#id1"><span class="std std-ref">Omega Grid</span></a> and every node.
+age, time point in the <a class="reference internal" href="omega_grid.html#id1"><span class="std std-ref">Omega Grid</span></a>,  every node, and each reference
+in the <a class="reference internal" href="all_option_table.html#all-option-table-split-list-split-reference-list"><span class="std std-ref">split_reference_list</span></a>.
 If mtspecific is not specified for a node, it will use the same <em>mtspecific</em>
 values as its nearest ancestor node.
 If none of its ancestors have mtspecific data,
@@ -231,7 +238,7 @@ as the corresponding <a class="reference internal" href="all_mtall.html#all-mtal
 <span id="all-mtspecific-mtspecific-index-table"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id6">mtspecific_index Table</a><a class="headerlink" href="#mtspecific-index-table" title="Permalink to this headline">¶</a></h3>
 <p>This table specifies the all_mtspecific_id at which the mtspecific values
 for a particular node begin.
-In addition, specifications for which age and time points
+Specifications for which age and time points
 correspond to each all_mtspecific_id are included.</p>
 <div class="section" id="mtspecific-index-id">
 <span id="all-mtspecific-mtspecific-index-table-mtspecific-index-id"></span><span id="index-5"></span><h4><a class="toc-backref" href="#id7">mtspecific_index_id</a><a class="headerlink" href="#mtspecific-index-id" title="Permalink to this headline">¶</a></h4>
@@ -242,10 +249,19 @@ correspond to each all_mtspecific_id are included.</p>
 <p>This column has type <code class="docutils literal notranslate"><span class="pre">integer</span></code> and specifies a node by its index
 in the root node database node table.</p>
 </div>
-<div class="section" id="all-mtspecific-mtspecific-index-table-all-mtspecific-id">
-<span id="index-7"></span><span id="id2"></span><h4><a class="toc-backref" href="#id9">all_mtspecific_id</a><a class="headerlink" href="#all-mtspecific-mtspecific-index-table-all-mtspecific-id" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="split-reference-id">
+<span id="all-mtspecific-split-reference-id"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id9">split_reference_id</a><a class="headerlink" href="#split-reference-id" title="Permalink to this headline">¶</a></h3>
+<p>This column has type <code class="docutils literal notranslate"><span class="pre">integer</span></code> and it specifies the
+index of a value in
+<a class="reference internal" href="all_option_table.html#all-option-table-split-list-split-reference-list"><span class="std std-ref">split_reference_list</span></a>.
+If there is (is not) a split_list in the option table,
+the values in this column must not be (must be) null.</p>
+<div class="section" id="all-mtspecific-split-reference-id-all-mtspecific-id">
+<span id="index-8"></span><span id="id2"></span><h4><a class="toc-backref" href="#id10">all_mtspecific_id</a><a class="headerlink" href="#all-mtspecific-split-reference-id-all-mtspecific-id" title="Permalink to this headline">¶</a></h4>
 <p>This column has type <code class="docutils literal notranslate"><span class="pre">integer</span></code> and specifies the index in the
-all_mtspecific table where the mtspecific values for this node begin.
+all_mtspecific table where the mtspecific values,
+for this node and split_reference, begin.
 For <em>i</em> equal 0 through
 <a class="reference internal" href="omega_grid.html#omega-grid-omega-age-grid-table-n-omega-age"><span class="std std-ref">n_omega_age-1</span></a>
 and <em>j</em> equal 0 through
@@ -255,7 +271,11 @@ and <em>j</em> equal 0 through
 </div></blockquote>
 <p>is the index in the all_mtspecific table of the value for this node,
 the <em>i</em>-th age in the omega_grid,
-and the <em>j</em>-th time in the omega_grid.</p>
+and the <em>j</em>-th time in the omega_grid.
+Note that each all_mtspecific_id in this table should be a multiple of
+n_omega_age * n_omega_time
+(because there are that many mtspecific entries for each node and each
+split_reference value).</p>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">xsrst/all_node_db.xsrst</span></code></p>
 </div>

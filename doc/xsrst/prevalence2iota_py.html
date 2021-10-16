@@ -557,13 +557,14 @@
     <span class="n">integrand_name</span> <span class="o">=</span> <span class="s1">&#39;mtall&#39;</span>
     <span class="n">mtall_data</span>     <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span> <span class="s1">&#39;n1&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span><span class="p">,</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">]</span> <span class="p">:</span>
-        <span class="n">mtall_data</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">mtall_data_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="n">income</span>                <span class="o">=</span> <span class="n">avg_income</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">age_id</span> <span class="ow">in</span> <span class="n">omega_grid</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span> <span class="p">:</span>
             <span class="n">age</span>  <span class="o">=</span> <span class="n">age_grid</span><span class="p">[</span><span class="n">age_id</span><span class="p">]</span>
             <span class="n">time</span> <span class="o">=</span> <span class="mf">2000.0</span>
             <span class="n">mtall</span> <span class="o">=</span> <span class="n">average_integrand</span><span class="p">(</span><span class="n">integrand_name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
-            <span class="n">mtall_data</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mtall</span><span class="p">)</span>
+            <span class="n">mtall_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mtall</span><span class="p">)</span>
+        <span class="n">mtall_data</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="n">mtall_list</span> <span class="p">]</span>
     <span class="c1">#</span>
     <span class="c1"># Create all_node.db</span>
     <span class="c1"># We could get all_cov_reference from here, but we do not need to</span>

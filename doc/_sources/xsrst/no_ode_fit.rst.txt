@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/no_ode_fit.py
-    :lines: 200-203
+    :lines: 208-212
     :language: py
 
 .. meta::
@@ -80,6 +80,20 @@ is an ``int`` containing the value of :ref:`all_option_table.max_fit` in the
 all option table.
 If max_fit does not appear in the all option table,
 *max_fit* should be None.
+
+.. meta::
+   :keywords: max_abs_effect
+
+.. index:: max_abs_effect
+
+.. _no_ode_fit.max_abs_effect:
+
+max_abs_effect
+**************
+is a ``float`` containing the value of :ref:`all_option_table.max_abs_effect`
+in the all option table.
+If max_abs_effect does not appear in the all option table,
+*max_abs_effect* should be None.
 
 .. meta::
    :keywords: no_ode_database
