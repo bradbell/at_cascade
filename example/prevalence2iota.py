@@ -643,13 +643,14 @@ def main() :
     integrand_name = 'mtall'
     mtall_data     = dict()
     for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
-        mtall_data[node_name] = list()
+        mtall_data_list = list()
         income                = avg_income[node_name]
         for age_id in omega_grid['age'] :
             age  = age_grid[age_id]
             time = 2000.0
             mtall = average_integrand(integrand_name, age, node_name, income)
-            mtall_data[node_name].append(mtall)
+            mtall_list.append(mtall)
+        mtall_data[node_name] = [ mtall_list ]
     #
     # Create all_node.db
     # We could get all_cov_reference from here, but we do not need to

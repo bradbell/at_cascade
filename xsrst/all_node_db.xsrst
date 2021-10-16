@@ -139,13 +139,14 @@ by their index in the root_node_database time table.
 
 All Node mtall Values
 #####################
-This table contains the value of :ref:`glossary.mtall`
-for all the nodes that have mtall data.
+The combination of the all_mtall and mtall_index tables specify
+the value of :ref:`glossary.mtall` for all the nodes that have mtall data.
 
 all_mtall Table
 ***************
 This table specifies the value of :ref:`glossary.mtall` for each
-age, time point in the :ref:`omega_grid` and every node.
+age, time point in the :ref:`omega_grid`, every node, and each reference
+in the :ref:`all_option_table.split_list.split_reference_list`.
 This data is used to compute the :ref:`omega_constraint` for each node.
 If mtall is not specified for a node, it will use the same *mtall*
 values as its nearest ancestor node.
@@ -167,9 +168,9 @@ intervals, use the midpoint age and midpoint time in the omega grid.
 mtall_index Table
 *****************
 This table specifies the all_mtall_id at which the mtall values
-for a particular node begin.
-In addition, specifications for which age and time points
-correspond to each all_mtall_id are included.
+for a particular node and split_reference begin.
+Specifications for which age and time points
+correspond to each all_mtall_id are included below.
 
 mtall_index_id
 ==============
@@ -180,10 +181,19 @@ node_id
 This column has type ``integer`` and specifies a node by its index
 in the root node database node table.
 
+split_reference_id
+******************
+This column has type ``integer`` and it specifies the
+index of a value in
+:ref:`all_option_table.split_list.split_reference_list`.
+If there is (is not) a split_list in the option table,
+the values in this column must not be (must be) null.
+
 all_mtall_id
 ============
 This column has type ``integer`` and specifies the index in the
-all_mtall table where the mtall values for this node begin.
+all_mtall table where the mtall values,
+for this node and split_reference, begin.
 For *i* equal 0 through
 :ref:`n_omega_age-1<omega_grid.omega_age_grid_table.n_omega_age>`
 and *j* equal 0 through
@@ -194,8 +204,10 @@ and *j* equal 0 through
 is the index in the all_mtall table of the value for this node,
 the *i*-th age in the omega_grid,
 and the *j*-th time in the omega_grid.
-Note that each all_mtall_id should be a multiple of n_omega_age * n_omega_time
-(because there are that many mtall entries for each node).
+Note that each all_mtall_id in this table
+should be a multiple of n_omega_age * n_omega_time
+(because there are that many mtall entries for each node and each
+split_reference value).
 
 {xsrst_end all_mtall}
 ------------------------------------------------------------------------------
@@ -203,8 +215,9 @@ Note that each all_mtall_id should be a multiple of n_omega_age * n_omega_time
 
 All Node mtspecific Values
 ##########################
-This table specifies the value of :ref:`glossary.mtspecific` for each
-age, time point in the :ref:`omega_grid` and every node.
+The combination of the all_mtspecific and mtspecific_index tables specify
+the value of :ref:`glossary.mtspecific` for all the nodes that have
+mtspecific data.
 If mtspecific is not specified for a node, it will use the same *mtspecific*
 values as its nearest ancestor node.
 If there is no ancestor of a node that has mtspecific data,
@@ -214,7 +227,8 @@ If there is no ancestor of a node that has mtspecific data,
 all_mtspecific Table
 ********************
 This table specifies the value of :ref:`glossary.mtspecific` for each
-age, time point in the :ref:`omega_grid` and every node.
+age, time point in the :ref:`omega_grid`,  every node, and each reference
+in the :ref:`all_option_table.split_list.split_reference_list`.
 If mtspecific is not specified for a node, it will use the same *mtspecific*
 values as its nearest ancestor node.
 If none of its ancestors have mtspecific data,
@@ -235,7 +249,7 @@ mtspecific_index Table
 **********************
 This table specifies the all_mtspecific_id at which the mtspecific values
 for a particular node begin.
-In addition, specifications for which age and time points
+Specifications for which age and time points
 correspond to each all_mtspecific_id are included.
 
 mtspecific_index_id
@@ -247,10 +261,19 @@ node_id
 This column has type ``integer`` and specifies a node by its index
 in the root node database node table.
 
+split_reference_id
+******************
+This column has type ``integer`` and it specifies the
+index of a value in
+:ref:`all_option_table.split_list.split_reference_list`.
+If there is (is not) a split_list in the option table,
+the values in this column must not be (must be) null.
+
 all_mtspecific_id
 =================
 This column has type ``integer`` and specifies the index in the
-all_mtspecific table where the mtspecific values for this node begin.
+all_mtspecific table where the mtspecific values,
+for this node and split_reference, begin.
 For *i* equal 0 through
 :ref:`n_omega_age-1<omega_grid.omega_age_grid_table.n_omega_age>`
 and *j* equal 0 through
@@ -261,6 +284,10 @@ and *j* equal 0 through
 is the index in the all_mtspecific table of the value for this node,
 the *i*-th age in the omega_grid,
 and the *j*-th time in the omega_grid.
+Note that each all_mtspecific_id in this table should be a multiple of
+n_omega_age * n_omega_time
+(because there are that many mtspecific entries for each node and each
+split_reference value).
 
 {xsrst_end all_mtspecific}
 ------------------------------------------------------------------------------

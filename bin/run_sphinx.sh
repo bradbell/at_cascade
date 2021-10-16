@@ -19,11 +19,18 @@ then
     echo 'bin/run_sphinx.sh must be run from its parent directory.'
     exit 1
 fi
-if [ "$1" != '' ]
+if [ "$1" == '' ]
 then
-    line_increment=10
+    echo 'usage: bin/run_sphinx.sh line_increment'
+    echo 'line_increment = 0 for no line number table at the end'
+    exit 0
 else
-    line_increment=''
+    if [ "$1" == '0' ]
+    then
+        line_increment=''
+    else
+        line_increment="$1"
+    fi
 fi
 # -----------------------------------------------------------------------------
 echo "xsrst.py html doc.xsrst sphinx spelling keyword $line_increment"

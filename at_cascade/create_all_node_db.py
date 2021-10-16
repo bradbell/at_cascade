@@ -113,14 +113,27 @@ mtall_data
 This is a python dictionary with a key for each node name
 for the :ref:`glossary.root_node` and its descendant.
 The value *mtall_data[node_name]* is a list.
+For each *k*, *mtall_data[node_name][k]* is a list.
 For *i* equal 0, ..., *n_omega_age*-1
 and *j* equal 0, ..., *n_omega_time*-1,
 
-| |tab| *mtall_data[node_name][ i * n_omega_time + j ]*
+| |tab| *mtall_data[node_name][k][ i * n_omega_time + j ]*
 
 is the value of *mtall* at the specified node,
+the *k*-th value in :ref:`all_option_table.split_list.split_reference_list`,
 the age corresponding to index *i* in *omega_grid*\ [``age``],
 and time corresponding to index *j* in *omega_grid*\ [``time``].
+
+split_reference_list present
+============================
+If split_reference_list is present,
+the length of the list *mtall_data[node_name]* is the same as the length of
+split_reference_list.
+
+no split_reference_list
+=======================
+If split_reference_list is not present,
+the length of *mtall_data[node_name]* is one.
 
 default
 =======
@@ -135,14 +148,27 @@ mtspecific_data
 This is a python dictionary with a key for each node name
 for the :ref:`glossary.root_node` and its descendant.
 The value *mtspecific_data[node_name]* is a list.
+For each *k*, *mtspecific_data[node_name][k]* is a list.
 For *i* equal 0, ..., *n_omega_age*-1
 and *j* equal 0, ..., *n_omega_time*-1,
 
-| |tab| *mtspecific_data[node_name][ i * n_omega_time + j ]*
+| |tab| *mtspecific_data[node_name][k][ i * n_omega_time + j ]*
 
 is the value of *mtspecific* at the specified node,
+the *k*-th value in :ref:`all_option_table.split_list.split_reference_list`,
 the age corresponding to index *i* in *omega_grid*\ [``age``],
 and time corresponding to index *j* in *omega_grid*\ [``time``].
+
+split_reference_list present
+============================
+If split_reference_list is present,
+the length of the list *mtspecific_data[node_name]*
+is the same as the length of split_reference_list.
+
+no split_reference_list
+=======================
+If split_reference_list is not present,
+the length of *mtspecific_data[node_name]* is one.
 
 default
 =======
@@ -197,14 +223,16 @@ def create_all_node_db(
     else :
         assert not mtall_data is None
     #
-    # split_reference_list
+    # split_reference_list, n_split
     split_reference_list = None
+    n_split              = 1
     if 'split_list' in all_option :
         split_list = all_option['split_list']
         split_list = split_list.split()
         split_reference_list = list()
         for reference in split_list[2:] :
             split_reference_list.append( float(reference) )
+        n_split = len( split_reference_list )
     #
     # -------------------------------------------------------------------------
     # Read root node database
@@ -261,8 +289,8 @@ def create_all_node_db(
     #
     # all_cov_reference table
     tbl_name = 'all_cov_reference'
-    col_name = [ 'node_id',  'covariate_id', 'split_reference_id', 'reference' ]
-    col_type = [ 'integer',  'integer',      'integer',            'real'      ]
+    col_name = [ 'node_id', 'covariate_id', 'split_reference_id', 'reference']
+    col_type = [ 'integer', 'integer',      'integer',            'real'     ]
     row_list = list()
     for node_id in range( len(node_table) ) :
         for covariate_id in range( len(covariate_table) ) :
@@ -350,28 +378,36 @@ def create_all_node_db(
         node_list = mtall_data.keys()
         for node_name in node_list :
             node_id = at_cascade.table_name2id(node_table, 'node', node_name)
-            assert len(mtall_data[node_name]) == n_omega_age * n_omega_time
-            for i in range(n_omega_age) :
-                for j in range(n_omega_time) :
-                    value   = mtall_data[node_name][ i * n_omega_time + j]
-                    row     = [ value ]
-                    row_list.append( row )
+            assert n_split == len( mtall_data[node_name] )
+            for k in range(n_split) :
+                mtall_list = mtall_data[node_name][k]
+                assert len(mtall_list) == n_omega_age * n_omega_time
+                for i in range(n_omega_age) :
+                    for j in range(n_omega_time) :
+                        value   = mtall_list[ i * n_omega_time + j]
+                        row     = [ value ]
+                        row_list.append( row )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )
     #
     # mtall_index table
     tbl_name  = 'mtall_index'
-    col_name  = [ 'node_id', 'all_mtall_id' ]
-    col_type  = [ 'integer', 'integer' ]
+    col_name  = [ 'node_id', 'split_reference_id', 'all_mtall_id' ]
+    col_type  = [ 'integer', 'integer',             'integer' ]
     row_list  = list()
     if not mtall_data is None :
         all_mtall_id = 0
         for node_name in node_list :
             node_id = at_cascade.table_name2id(node_table, 'node', node_name)
-            row     = [ node_id, all_mtall_id ]
-            row_list.append( row )
-            all_mtall_id += n_omega_age * n_omega_time
+            for k in range(n_split) :
+                if split_reference_list is None :
+                    split_reference_id = None
+                else :
+                    split_reference_id = k
+                row     = [ node_id, split_reference_id, all_mtall_id ]
+                row_list.append( row )
+                all_mtall_id += n_omega_age * n_omega_time
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )
@@ -385,28 +421,36 @@ def create_all_node_db(
         node_list = mtspecific_data.keys()
         for node_name in node_list :
             node_id = at_cascade.table_name2id(node_table, 'node', node_name)
-            assert len(mtspecific_data[node_name]) == n_omega_age * n_omega_time
-            for i in range(n_omega_age) :
-                for j in range(n_omega_time) :
-                    value   = mtspecific_data[node_name][ i * n_omega_time + j]
-                    row     = [ value ]
-                    row_list.append( row )
+            assert n_split == len( mtall_data[node_name] )
+            for k in range(n_split) :
+                mtspecific_list = mtspecific_data[node_name][k]
+                assert len(mtspecific_list) == n_omega_age * n_omega_time
+                for i in range(n_omega_age) :
+                    for j in range(n_omega_time) :
+                        value   = mtspecific_list[i * n_omega_time + j]
+                        row     = [ value ]
+                        row_list.append( row )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )
     #
     # mtspecific_index table
     tbl_name  = 'mtspecific_index'
-    col_name  = [ 'node_id', 'all_mtspecific_id' ]
-    col_type  = [ 'integer', 'integer' ]
+    col_name  = [ 'node_id', 'split_reference_id', 'all_mtspecific_id' ]
+    col_type  = [ 'integer', 'integer',            'integer' ]
     row_list  = list()
     if not mtspecific_data is None :
         all_mtspecific_id = 0
         for node_name in node_list :
             node_id = at_cascade.table_name2id(node_table, 'node', node_name)
-            row     = [ node_id, all_mtspecific_id ]
-            row_list.append( row )
-            all_mtspecific_id += n_omega_age * n_omega_time
+            for k in range(n_split) :
+                if split_reference_list is None :
+                    split_reference_id = None
+                else :
+                    split_reference_id = k
+                row     = [ node_id, split_reference_id, all_mtspecific_id ]
+                row_list.append( row )
+                all_mtspecific_id += n_omega_age * n_omega_time
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )

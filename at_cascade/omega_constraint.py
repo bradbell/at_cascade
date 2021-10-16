@@ -121,6 +121,7 @@ def omega_constraint(
     connection        = dismod_at.create_connection(all_node_database, new)
     all_tables = dict()
     for name in [
+        'all_option',
         'all_mtall',
         'all_mtspecific',
         'mtall_index',
@@ -154,6 +155,7 @@ def omega_constraint(
     for name in [
         'age',
         'time',
+        'covariate',
         'nslist',
         'nslist_pair',
         'node',
@@ -188,6 +190,31 @@ def omega_constraint(
             msg += f'of the all_node_database'
             assert False, msg
     #
+    # split_list
+    split_list = None
+    for row in all_tables['all_option'] :
+        if row['option_name'] == 'split_list' :
+            split_list = row['option_value'].split
+    #
+    # split_reference_id
+    split_reference_id = None
+    if not split_list is None :
+        split_covariate_name = split_list[1]
+        split_covariate_id   = at_cascade.table_name2id(
+            fit_tables['covariate'], 'covariate', split_covarate_name
+        )
+        split_reference = fit_tables['covariate'][covariate_id]['reference']
+        split_reference_list = split_list[2:]
+        for (k, reference) in split_reference_list :
+            if split_reference == reference :
+                split_reference_id = k
+        if split_reference_id is None :
+            msg  = 'Cannot find split_reference in split_reference_list\n'
+            msg += f'split_reference_list = {split_reference_list}\n'
+            msg += f'covariate_name = {split_covariate_name}, '
+            msg += f'referencee = {split_reerence}, '
+            assert False, msg
+    #
     # parent_node_id
     parent_node_name = None
     for row in fit_tables['option'] :
@@ -210,7 +237,8 @@ def omega_constraint(
             msg += f'n_omega_age = {n_omega_age} '
             msg += f'n_omega_time = {n_omega_time} '
             assert False, msg
-        node_id2all_mtall_id[ row['node_id'] ] = all_mtall_id
+        if row['split_reference_id'] == split_reference_id :
+            node_id2all_mtall_id[ row['node_id'] ] = all_mtall_id
     #
     # node_id2all_mtspecific_id
     node_id2all_mtspecific_id = dict()
@@ -223,7 +251,8 @@ def omega_constraint(
             msg += f'n_omega_age = {n_omega_age} '
             msg += f'n_omega_time = {n_omega_time} '
             assert False, msg
-        node_id2all_mtspecific_id[ row['node_id'] ] = all_mtspecific_id
+        if row['split_reference_id'] == split_reference_id :
+            node_id2all_mtspecific_id[ row['node_id'] ] = all_mtspecific_id
     node_id2all_mtspecific_id[None] = None
     #
     # mtall_ancestor_node_id
