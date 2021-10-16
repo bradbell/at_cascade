@@ -294,6 +294,37 @@ is the name of the :ref:`glossary.root_node` in the node table of the
 :ref:`glossary.root_node_database` .
 (The node table is the same in all the dismod_at databases.)
 
+in_parallel
+***********
+If this option does not appear, the cascade will be run sequentially.
+Otherwise, if it is ``True`` ( ``False``)
+fitting of each of the nodes will be run in parallel (sequentially).
+
+max_fit
+*******
+If this option does not appear, all of the data for each integrand is included
+(unless held out in the root_node data table or option table).
+Otherwise, this is a text representation of a non-negative integer specifying
+the maximum number of values to fit for each integrand.
+If more than this number of values are available,
+at a :ref:`glossary.fit_node` and for one integrand,
+a randomly selected subset of the values
+are held out so that only this number are included in the fit.
+
+max_abs_effect
+**************
+If this option does not appears, its specifies an extra bound on the
+absolute value of the covariate multipliers (except for measurement noise
+multipliers).
+To be specific, the bound on the covariate multiplier is as large as possible
+under the condition
+
+| |tab| *max_abs_effect* <= | *cov_bnd* * ( *cov_value* - *cov_ref* ) |
+
+where *cov_bnd* is the non-negative covariate multiplier bound,
+*cov_value* is a data table value of the covariate,
+and *cov_ref* is the reference value for the covariate.
+
 split_list
 **********
 This is a space separated list with the following entries:
@@ -321,23 +352,6 @@ split_reference_list
 ====================
 This is a space separated list, with two less elements than split_list,
 that contains the reference values for the splitting covariate.
-
-in_parallel
-***********
-If this option does not appear, the cascade will be run sequentially.
-Otherwise, if it is ``True`` ( ``False``)
-fitting of each of the nodes will be run in parallel (sequentially).
-
-max_fit
-*******
-It this option does not appear, all of the data for each integrand is included
-(unless held out in the root_node data table or option table).
-Otherwise, this is a text representation of a non-negative integer specifying
-the maximum number of values to fit for each integrand.
-If more than this number of values are available,
-at a :ref:`glossary.fit_node` and for one integrand,
-a randomly selected subset of the values
-are held out so that only this number are included in the fit.
 
 
 {xsrst_end all_option_table}

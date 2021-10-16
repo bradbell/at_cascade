@@ -273,7 +273,9 @@ def cascade_fit_node(
     )
     #
     # all_option
-    implemented = [ 'root_node_name', 'max_fit', 'split_list' ]
+    implemented = [
+		'root_node_name', 'max_fit', 'max_abs_effect', 'split_list'
+	]
     all_option  = dict()
     for key in implemented :
         all_option[key] = None
@@ -360,6 +362,13 @@ def cascade_fit_node(
                 'dismod_at', fit_node_database,
                 'hold_out', integrand_name, max_fit
             ])
+    #
+    # enforce max_abs_effect
+    max_abs_effect = all_option['max_abs_effect']
+    if not max_abs_effect is None :
+        dismod_at.system_command_prc([
+            'dismod_at', fit_node_database, 'bnd_mulcov', max_abs_effect
+        ])
     #
     # fit
     dismod_at.system_command_prc(
