@@ -204,18 +204,26 @@ def omega_constraint(
     for row in all_tables['mtall_index'] :
         all_mtall_id = row['all_mtall_id']
         if all_mtall_id % (n_omega_age * n_omega_time) != 0 :
-            msg  = 'mtall_index table: Expect all_mtall_id o be a multipler '
+            msg  = 'mtall_index table: Expect all_mtall_id to be a multipler '
             msg += 'of n_omega_age * n_omega_time\n'
             msg += f'all_mtall_id = {all_mtall_id} '
             msg += f'n_omega_age = {n_omega_age} '
             msg += f'n_omega_time = {n_omega_time} '
             assert False, msg
-        node_id2all_mtall_id[ row['node_id'] ] = row['all_mtall_id']
+        node_id2all_mtall_id[ row['node_id'] ] = all_mtall_id
     #
     # node_id2all_mtspecific_id
     node_id2all_mtspecific_id = dict()
     for row in all_tables['mtspecific_index'] :
-        node_id2all_mtspecific_id[ row['node_id'] ] = row['all_mtspecific_id']
+        all_mtspecific_id = row['all_mtspecific_id']
+        if all_mtspecific_id % (n_omega_age * n_omega_time) != 0 :
+            msg  = 'mtspecific_index table: Expect all_mtspecific_id '
+            msg += 'to be a multiplier of n_omega_age * n_omega_time\n'
+            msg += f'all_mtspecific_id = {all_mtspecific_id} '
+            msg += f'n_omega_age = {n_omega_age} '
+            msg += f'n_omega_time = {n_omega_time} '
+            assert False, msg
+        node_id2all_mtspecific_id[ row['node_id'] ] = all_mtspecific_id
     node_id2all_mtspecific_id[None] = None
     #
     # mtall_ancestor_node_id
