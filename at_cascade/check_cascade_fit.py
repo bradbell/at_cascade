@@ -80,9 +80,27 @@ def check_cascade_fit(
     all_cov_reference_table = dismod_at.get_table_dict(
         connection, 'all_cov_reference'
     )
-    connection.close()
+    #
+    # all_option_table
+    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+    #
+    # split_reference_list, split_covariate_name
+    split_list = None
+    for row in all_option_table :
+        if row['option_name'] == 'split_list' :
+            split_list = row['option_value']
+    if split_list is None :
+        split_covariate_name = None
+        split_reference_list = None
+    else :
+        split_list           = split_list.split()
+        split_covariate_name = split_list[1]
+        split_reference_list = split_list[2:]
+        for k in range( len(split_reference_list) ) :
+            split_reference_list[k] = float( split_reference_list[k] )
     #
     # connection
+    connection.close()
     new        = False
     connection = dismod_at.create_connection(fit_node_database, new)
     #
@@ -116,14 +134,36 @@ def check_cascade_fit(
         tables['node'], 'node', fit_node_name
     )
     #
+    # split_covariate_id
+    split_covariate_id = None
+    if not split_covariate_name is None :
+        split_covariate_id = at_cascade.table_name2id(
+            tables['covariate'], 'covariate', split_covariate_name
+        )
+    #
+    # split_reference_id
+    split_reference_id = None
+    if not split_covariate_id is None :
+        split_reference = tables['covariate'][split_covariate_id]['reference']
+        for (k, reference) in enumerate(split_reference_list) :
+            if split_reference == reference :
+                split_reference_id = k
+        if split_reference_id is None :
+            msg  = 'Cannot find split reference value in split_list\n'
+            msg += f'split_list = {split_list}, '
+            msg += f'split_covariate_id = {split_covariate_id}, '
+            msg += f'split_reference = {split_reference}'
+            assert False, msg
+    #
     # cov_reference
     cov_reference_list = n_covariate * [ None ]
     for row in all_cov_reference_table :
-        if row['node_id'] == fit_node_id :
+        if row['node_id'] == fit_node_id \
+        and row['split_reference_id'] == split_reference_id :
             covariate_id = row['covariate_id']
             cov_reference_list[covariate_id] = row['reference']
     for reference in cov_reference_list :
-        not reference is None
+        assert not reference is None
     #
     # rate_fun
     rate_fun = dict()

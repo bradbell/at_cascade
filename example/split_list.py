@@ -16,8 +16,7 @@
 
 Example Using split_list Option in all_node_database
 ####################################################
-For this example everything is constant in and time and
-there is only one rate function iota.
+For this example everything is constant in and time.
 
 Nodes
 *****
@@ -41,8 +40,8 @@ fit_goal_set
 
 Rates
 *****
-The only non-zero dismod_at rate for this example is
-:ref:`glossary.iota`.
+The only non-zero dismod_at rates for this example are
+:ref:`glossary.iota`.and :ref:`glossary.omega`.
 
 Covariate
 *********
@@ -75,7 +74,6 @@ The true value for *alpha* (used which simulating the data) is
     # END alpha_true
 }
 
-
 Random Effects
 **************
 There are no random effect for this example.
@@ -83,14 +81,21 @@ There are no random effect for this example.
 Simulated Data
 **************
 
+mtall
+=====
+The ref:`all_mtall` data fro this example is simulated as equal to
+the true value for omega (see rate_true directly below) and there is
+no :ref:`all_mtspecific` data for this example.
+
 rate_true(rate, a, t, n, c)
 ===========================
-For *rate* equal to iota,
+For *rate* equal to iota or omega,
 this is the true value for *rate*
-in node *n* at age *a*, time *t*, and covariate values *c*.
+in node *n* at age *a*, time *t*, and covariate values *c=[sex,income]*.
 The covariate values are a list in the
 same order as the covariate table.
-The values *a*, *t*, *n*  are not used by this function for this example.
+The values *a*, *t*, *n*, *sex*
+are not used by this function for this example.
 {xsrst_file
     # BEGIN rate_true
     # END rate_true
@@ -102,7 +107,7 @@ The only simulated integrand for this example is :ref:`glossary.sincidence`
 which is a direct measurement of iota.
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
-*y_i = rate_true('iota', None, None, None, I_i)*
+*y_i = rate_true('iota', None, None, None, [None, I_i])*
 where *I_i* is the income for the i-th measurement.
 The data is modeled as having noise even though there is no simulated noise.
 
@@ -199,10 +204,12 @@ fit_goal_set = { 'n3', 'n4', 'n2' }
 # END fit_goal_set
 #
 # BEGIN_1 split_list
-split_level     = '-1 '
-split_covariate = 'sex '
-split_reference = '1.0 2.0 3.0'
-all_option = { 'split_list' : split_level + split_covariate + split_reference }
+split_level_str     = '-1 '
+split_covariate_name = 'sex '
+split_reference_str = '1.0 2.0 3.0'
+all_option = { 'split_list' :
+    split_level_str + split_covariate_name + split_reference_str
+}
 # END_1 split_list
 #
 # BEGIN split_index
@@ -228,11 +235,14 @@ alpha_true = - 0.2
 # ----------------------------------------------------------------------------
 # BEGIN rate_true
 def rate_true(rate, a, t, n, c) :
-    income = c[0]
+    sex    = c[0]
+    income = c[1]
     r_0    = all_cov_reference['n0']['income'][split_index]
     effect = alpha_true * ( income - r_0 )
     if rate == 'iota' :
         return 1e-2 * exp(effect)
+    if rate == 'omega' :
+        return 2e-2 * exp(effect)
     return 0.0
 # END rate_true
 # ----------------------------------------------------------------------------
@@ -312,13 +322,14 @@ def root_node_db(file_name) :
     } ]
     #
     # covariate_table
-    covariate_table = [ {
-        'name':     'income',
-        'reference': all_cov_reference['n0']['income'][split_index],
-    } ]
+    covariate_table = list()
     covariate_table.append( {
         'name':     'sex',
         'reference': all_cov_reference['n0']['sex'][split_index],
+    } )
+    covariate_table.append( {
+        'name':     'income',
+        'reference': all_cov_reference['n0']['income'][split_index],
     } )
     #
     # mulcov_table
@@ -349,8 +360,8 @@ def root_node_db(file_name) :
         'time_upper':   2000.0,
         'age_lower':    50.0,
         'age_upper':    50.0,
-        'income':       None,
         'sex':          None,
+        'income':       None,
         'integrand':    'Sincidence',
     }
     avgint_table.append( copy.copy(row) )
@@ -370,13 +381,13 @@ def root_node_db(file_name) :
         'hold_out':     False,
     }
     for node in leaf_set :
-        income     = all_cov_reference[node]['income'][split_index]
         sex        = all_cov_reference[node]['sex'][split_index]
-        meas_value = rate_true('iota', None, None, None, [ income ])
+        income     = all_cov_reference[node]['income'][split_index]
+        meas_value = rate_true('iota', None, None, None, [ None, income ])
         row['node']       = node
         row['meas_value'] = meas_value
-        row['income']     = income
         row['sex']        = sex
+        row['income']     = income
         row['meas_std']   = meas_value / 10.0
         data_table.append( copy.copy(row) )
     #
@@ -384,7 +395,7 @@ def root_node_db(file_name) :
     age_grid = [ 0.0, 100.0 ]
     #
     # time_grid
-    time_grid = [ 2000.0 ]
+    time_grid = [ 1980.0, 2020.0 ]
     #
     # weight table:
     weight_table = list()
@@ -435,6 +446,37 @@ def main() :
     root_node_database  = 'root_node.db'
     root_node_db(root_node_database)
     #
+    # omega_grid
+    new          = False
+    connection   = dismod_at.create_connection(root_node_database, new)
+    age_table    = dismod_at.get_table_dict(connection, 'age')
+    time_table   = dismod_at.get_table_dict(connection, 'time')
+    age_id_list  = list( range( len(age_table) ) )
+    time_id_list = list( range( len(age_table) ) )
+    omega_grid   = { 'age': age_id_list, 'time' : time_id_list }
+    #
+    # n_split, split_reference_list
+    split_reference_list = split_reference_str.split()
+    n_split              = len( split_reference_list )
+    for k in range(n_split) :
+        split_reference_list[k] = float( split_reference_list[k] )
+    #
+    # mtall_data
+    mtall_data      = dict()
+    for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
+        mtall_data[node_name] = list()
+        for k in range(n_split) :
+            mtall_data[node_name].append( list() )
+            for age_id in omega_grid['age'] :
+                for time_id in omega_grid['time'] :
+                    age    = age_table[age_id]['age']
+                    time   = time_table[time_id]['time']
+                    sex    = split_reference_list[k]
+                    income = all_cov_reference[node_name]['income'][k]
+                    cov    = [ sex, income ]
+                    omega  = rate_true('omega', None, None, None, cov)
+                    mtall_data[node_name][k].append( omega )
+    #
     # Create all_node.db
     all_node_database = 'all_node.db'
     at_cascade.create_all_node_db(
@@ -442,7 +484,9 @@ def main() :
         root_node_database  = root_node_database,
         all_cov_reference   = all_cov_reference,
         all_option          = all_option,
-        fit_goal_set        = fit_goal_set
+        omega_grid          = omega_grid,
+        mtall_data          = mtall_data,
+        fit_goal_set        = fit_goal_set,
     )
     #
     # fit_node_dir

@@ -194,25 +194,27 @@ def omega_constraint(
     split_list = None
     for row in all_tables['all_option'] :
         if row['option_name'] == 'split_list' :
-            split_list = row['option_value'].split
+            split_list = row['option_value'].split()
     #
     # split_reference_id
     split_reference_id = None
     if not split_list is None :
         split_covariate_name = split_list[1]
         split_covariate_id   = at_cascade.table_name2id(
-            fit_tables['covariate'], 'covariate', split_covarate_name
+            fit_tables['covariate'], 'covariate', split_covariate_name
         )
-        split_reference = fit_tables['covariate'][covariate_id]['reference']
+        split_reference = \
+            fit_tables['covariate'][split_covariate_id]['reference']
         split_reference_list = split_list[2:]
-        for (k, reference) in split_reference_list :
-            if split_reference == reference :
+        for (k, reference) in enumerate(split_reference_list) :
+            split_reference_list[k] = float( reference )
+            if split_reference == split_reference_list[k] :
                 split_reference_id = k
         if split_reference_id is None :
             msg  = 'Cannot find split_reference in split_reference_list\n'
             msg += f'split_reference_list = {split_reference_list}\n'
             msg += f'covariate_name = {split_covariate_name}, '
-            msg += f'referencee = {split_reerence}, '
+            msg += f'referencee = {split_reference}, '
             assert False, msg
     #
     # parent_node_id
@@ -355,9 +357,9 @@ def omega_constraint(
                 parent_omega = parent_mtall[ij] - parent_mtspecific[ij]
                 child_omega  = child_mtall[ij] - child_mtspecific[ij]
             if parent_omega <= 0 :
-                msg  = 'parent_omega <= 0'
-                msg += f', parent_node_id = {parent_node_id}'
-                msg += f'\nmtall_ancestor_node_id = {mtall_ancestor_node_id}'
+                msg  = 'parent_omega <= 0\n'
+                msg += f'parent_node_id = {parent_node_id}'
+                msg += f', mtall_ancestor_node_id = {mtall_ancestor_node_id}'
                 msg += f', parent_mtall = {parent_mtall[ij]}'
                 if not parent_mtspecific is None :
                     msg += '\nmtspecific_ancestor_node_id = '

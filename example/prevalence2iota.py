@@ -643,7 +643,7 @@ def main() :
     integrand_name = 'mtall'
     mtall_data     = dict()
     for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
-        mtall_data_list = list()
+        mtall_list = list()
         income                = avg_income[node_name]
         for age_id in omega_grid['age'] :
             age  = age_grid[age_id]

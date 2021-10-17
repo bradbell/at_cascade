@@ -171,7 +171,7 @@ def main() :
     # chi is zero so mtall is equal to omega
     mtall_data = dict()
     for node_name in [ 'n0', 'n1', 'n2' ] :
-        mtall_data[node_name] = list()
+        mtall_data[node_name] = [ list() ]
         for i in range(n_omega_age) :
             for j in range(n_omega_time) :
                 age_id  = omega_grid['age'][i]
@@ -179,7 +179,7 @@ def main() :
                 age     = age_grid[age_id]
                 time    = time_grid[time_id]
                 omega   = omega_true(age, time, node_name)
-                mtall_data[node_name].append( omega )
+                mtall_data[node_name][0].append( omega )
     #
     # Create all_node.db
     all_node_database = 'all_node.db'
