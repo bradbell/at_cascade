@@ -1,0 +1,75 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!!!
+data4cov_reference
+!!!!!!!!!!!!!!!!!!
+
+}
+
+.. meta::
+   :keywords: data4cov_reference, use, data, table, average, covariates, for, reference
+
+.. index:: data4cov_reference, use, data, table, average, covariates, for, reference
+
+.. _data4cov_reference:
+
+Use Data Table Average Covariates for Reference
+###############################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _data4cov_reference.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/data4cov_reference.py
+    :lines: 45-45
+    :language: py
+
+.. meta::
+   :keywords: connection
+
+.. index:: connection
+
+.. _data4cov_reference.connection:
+
+connection
+**********
+This is a dismod_at connection to a dismod_at database.
+
+.. meta::
+   :keywords: data_subset, table
+
+.. index:: data_subset, table
+
+.. _data4cov_reference.connection.data_subset_table:
+
+data_subset Table
+=================
+This database must have a data_subset table.
+
+.. meta::
+   :keywords: covariate_table
+
+.. index:: covariate_table
+
+.. _data4cov_reference.connection.covariate_table:
+
+covariate_table
+================
+The ``reference`` column in the covariate table is replaced
+by the average of the corresponding covariate in the data table.
+Only the data_id that appear in the data_subset table are included
+in this average.
+In addition, null covariate values in the data table
+are not included in the average.
+
+----
+
+xsrst input file: ``at_cascade/data4cov_reference.py``

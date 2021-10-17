@@ -22,8 +22,7 @@ Example Using split_list Option in all_node_database
 .. contents::
    :local:
 
-For this example everything is constant in and time and
-there is only one rate function iota.
+For this example everything is constant in and time.
 
 .. meta::
    :keywords: nodes
@@ -56,7 +55,7 @@ fit_goal_set
 ============
 
 .. literalinclude:: ../../example/split_list.py
-    :lines: 198-198
+    :lines: 203-203
     :language: py
 
 .. meta::
@@ -68,8 +67,8 @@ fit_goal_set
 
 Rates
 *****
-The only non-zero dismod_at rate for this example is
-:ref:`glossary.iota`.
+The only non-zero dismod_at rates for this example are
+:ref:`glossary.iota`.and :ref:`glossary.omega`.
 
 .. meta::
    :keywords: covariate
@@ -85,7 +84,7 @@ The reference value for income depends on the value of sex;
 see :ref:`create_all_node_db.all_cov_reference`:
 
 .. literalinclude:: ../../example/split_list.py
-    :lines: 213-219
+    :lines: 220-226
     :language: py
 
 .. meta::
@@ -101,7 +100,7 @@ This cascade is set up to split by sex reference value; see
 :ref:`all_option_table.split_list`:
 
 .. literalinclude:: ../../example/split_list.py
-    :lines: 202-205
+    :lines: 207-212
     :language: py
 
 .. meta::
@@ -120,7 +119,7 @@ This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
 
 .. literalinclude:: ../../example/split_list.py
-    :lines: 223-223
+    :lines: 230-230
     :language: py
 
 .. meta::
@@ -145,6 +144,19 @@ Simulated Data
 **************
 
 .. meta::
+   :keywords: mtall
+
+.. index:: mtall
+
+.. _split_list.simulated_data.mtall:
+
+mtall
+=====
+The ref:`all_mtall` data fro this example is simulated as equal to
+the true value for omega (see rate_true directly below) and there is
+no :ref:`all_mtspecific` data for this example.
+
+.. meta::
    :keywords: rate_true(rate, , a, , t, , n, , c)
 
 .. index:: rate_true(rate, , a, , t, , n, , c)
@@ -153,15 +165,16 @@ Simulated Data
 
 rate_true(rate, a, t, n, c)
 ===========================
-For *rate* equal to iota,
+For *rate* equal to iota or omega,
 this is the true value for *rate*
-in node *n* at age *a*, time *t*, and covariate values *c*.
+in node *n* at age *a*, time *t*, and covariate values *c=[sex,income]*.
 The covariate values are a list in the
 same order as the covariate table.
-The values *a*, *t*, *n*  are not used by this function for this example.
+The values *a*, *t*, *n*, *sex*
+are not used by this function for this example.
 
 .. literalinclude:: ../../example/split_list.py
-    :lines: 230-236
+    :lines: 237-246
     :language: py
 
 .. meta::
@@ -177,7 +190,7 @@ The only simulated integrand for this example is :ref:`glossary.sincidence`
 which is a direct measurement of iota.
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
-*y_i = rate_true('iota', None, None, None, I_i)*
+*y_i = rate_true('iota', None, None, None, [None, I_i])*
 where *I_i* is the income for the i-th measurement.
 The data is modeled as having noise even though there is no simulated noise.
 
@@ -220,7 +233,7 @@ Value Prior
 The following is the value prior used for the root_node
 
 .. literalinclude:: ../../example/split_list.py
-    :lines: 253-260
+    :lines: 263-270
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -252,7 +265,7 @@ Value Prior
 The following is the value prior used for this smoothing:
 
 .. literalinclude:: ../../example/split_list.py
-    :lines: 265-271
+    :lines: 275-281
     :language: py
 
 The mean and standard deviation are only used for the root_node.

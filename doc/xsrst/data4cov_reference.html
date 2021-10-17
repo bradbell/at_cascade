@@ -5,11 +5,15 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta content="module, the, at_cascade, python, module" name="keywords" />
+  <meta content="data4cov_reference, use, data, table, average, covariates, for, reference" name="keywords" />
+<meta content="syntax" name="keywords" />
+<meta content="connection" name="keywords" />
+<meta content="data_subset, table" name="keywords" />
+<meta content="covariate_table" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>module &mdash; at_cascade  documentation</title>
+  <title>data4cov_reference &mdash; at_cascade  documentation</title>
   
 
   
@@ -38,8 +42,8 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="cascade_fit_node" href="cascade_fit_node.html" />
-    <link rel="prev" title="split_list_py" href="split_list_py.html" /> 
+    <link rel="next" title="get_fit_children" href="get_fit_children.html" />
+    <link rel="prev" title="create_child_node_db" href="create_child_node_db.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,13 +95,13 @@
 <li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
 <li class="toctree-l2"><a class="reference internal" href="example.html">example</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">module</a><ul>
+<li class="toctree-l2 current"><a class="reference internal" href="module.html">module</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="cascade_fit_node.html">cascade_fit_node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="check_cascade_fit.html">check_cascade_fit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="child_avgint_table.html">child_avgint_table</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_all_node_db.html">create_all_node_db</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_child_node_db.html">create_child_node_db</a></li>
-<li class="toctree-l3"><a class="reference internal" href="data4cov_reference.html">data4cov_reference</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">data4cov_reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_fit_children.html">get_fit_children</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_fit_integrand.html">get_fit_integrand</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_parent_node.html">get_parent_node</a></li>
@@ -155,13 +159,15 @@
         
           <li><a href="at_cascade.html">at_cascade</a> &raquo;</li>
         
-      <li>module</li>
+          <li><a href="module.html">module</a> &raquo;</li>
+        
+      <li>data4cov_reference</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/xsrst/module.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/xsrst/data4cov_reference.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -176,63 +182,47 @@
             
   <p class="hidden"><span class="math notranslate nohighlight">\(\newcommand{\B}[1]{ {\bf #1} }\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\R}[1]{ {\rm #1} }\)</span></p>
-<div class="section" id="module">
-<h1>module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
+<div class="section" id="data4cov-reference">
+<h1>data4cov_reference<a class="headerlink" href="#data4cov-reference" title="Permalink to this headline">¶</a></h1>
+<p>}</p>
+<div class="section" id="use-data-table-average-covariates-for-reference">
+<span id="id1"></span><h2>Use Data Table Average Covariates for Reference<a class="headerlink" href="#use-data-table-average-covariates-for-reference" title="Permalink to this headline">¶</a></h2>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#syntax" id="id2">Syntax</a></p></li>
+<li><p><a class="reference internal" href="#connection" id="id3">connection</a></p>
+<ul>
+<li><p><a class="reference internal" href="#data-subset-table" id="id4">data_subset Table</a></p></li>
+<li><p><a class="reference internal" href="#covariate-table" id="id5">covariate_table</a></p></li>
+</ul>
+</li>
+</ul>
 </div>
-<div class="section" id="the-at-cascade-python-module">
-<span id="id1"></span><h2>The at_cascade Python Module<a class="headerlink" href="#the-at-cascade-python-module" title="Permalink to this headline">¶</a></h2>
-<table class="colwidths-given docutils align-default">
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 80%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Child</p></th>
-<th class="head"><p>Title</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>cascade_fit_node</p></td>
-<td><p><a class="reference internal" href="cascade_fit_node.html#id1"><span class="std std-ref">Cascade a Fit Starting at a Node</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p>check_cascade_fit</p></td>
-<td><p><a class="reference internal" href="check_cascade_fit.html#id1"><span class="std std-ref">Check the Cascade Results for a Node</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p>child_avgint_table</p></td>
-<td><p><a class="reference internal" href="child_avgint_table.html#id1"><span class="std std-ref">Create avgint Table That Predicts Rates for Child Nodes</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p>create_all_node_db</p></td>
-<td><p><a class="reference internal" href="create_all_node_db.html#id1"><span class="std std-ref">Create an All Node Database</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p>create_child_node_db</p></td>
-<td><p><a class="reference internal" href="create_child_node_db.html#id1"><span class="std std-ref">Create Child Database From Fit in Parent Database</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p>data4cov_reference</p></td>
-<td><p><a class="reference internal" href="data4cov_reference.html#id1"><span class="std std-ref">Use Data Table Average Covariates for Reference</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p>get_fit_children</p></td>
-<td><p><a class="reference internal" href="get_fit_children.html#id1"><span class="std std-ref">Determine the Set of Nodes to Fit</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p>get_fit_integrand</p></td>
-<td><p><a class="reference internal" href="get_fit_integrand.html#id1"><span class="std std-ref">Determine the Set of Integrands in Data Table</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p>get_parent_node</p></td>
-<td><p><a class="reference internal" href="get_parent_node.html#id1"><span class="std std-ref">Get Parent Node Name From Option Table</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p>no_ode_fit</p></td>
-<td><p><a class="reference internal" href="no_ode_fit.html#id1"><span class="std std-ref">Do A No Ode Fit For One Node</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p>omega_constraint</p></td>
-<td><p><a class="reference internal" href="omega_constraint.html#id1"><span class="std std-ref">Set Omega Constraints in a Fit Node Database</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p>table_name2id</p></td>
-<td><p><a class="reference internal" href="table_name2id.html#id1"><span class="std std-ref">Map a Table Row Name to The Row Index</span></a></p></td>
-</tr>
-</tbody>
-</table>
+<div class="section" id="syntax">
+<span id="data4cov-reference-syntax"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># data4cov_reference(database)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="connection">
+<span id="data4cov-reference-connection"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">connection</a><a class="headerlink" href="#connection" title="Permalink to this headline">¶</a></h3>
+<p>This is a dismod_at connection to a dismod_at database.</p>
+<div class="section" id="data-subset-table">
+<span id="data4cov-reference-connection-data-subset-table"></span><span id="index-3"></span><h4><a class="toc-backref" href="#id4">data_subset Table</a><a class="headerlink" href="#data-subset-table" title="Permalink to this headline">¶</a></h4>
+<p>This database must have a data_subset table.</p>
+</div>
+<div class="section" id="covariate-table">
+<span id="data4cov-reference-connection-covariate-table"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">covariate_table</a><a class="headerlink" href="#covariate-table" title="Permalink to this headline">¶</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">reference</span></code> column in the covariate table is replaced
+by the average of the corresponding covariate in the data table.
+Only the data_id that appear in the data_subset table are included
+in this average.
+In addition, null covariate values in the data table
+are not included in the average.</p>
 <hr class="docutils" />
-<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/__init__.py</span></code></p>
+<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/data4cov_reference.py</span></code></p>
+</div>
+</div>
 </div>
 </div>
 
@@ -244,10 +234,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="cascade_fit_node.html" class="btn btn-neutral float-right" title="cascade_fit_node" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="get_fit_children.html" class="btn btn-neutral float-right" title="get_fit_children" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="split_list_py.html" class="btn btn-neutral float-left" title="split_list_py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="create_child_node_db.html" class="btn btn-neutral float-left" title="create_child_node_db" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
