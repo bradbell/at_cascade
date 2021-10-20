@@ -120,25 +120,14 @@ def data4cov_reference(
     connection.close()
     #
     # split_reference_id
-    split_reference_id = None
-    for row in all_table['all_option'] :
-        if row['option_name'] == 'split_list' :
-            split_list = row['option_value'].split()
-            split_covariate_name = split_list[1]
-            split_covariate_id   = at_cascade.table_name2id(
-                root_table['covariate'], 'covariate', split_covariate_name
-            )
-            split_reference_list = split_list[2:]
-            for (k, reference) in enumerate(split_reference_list) :
-                split_reference_list[k] = float( reference )
-            reference = root_table['covariate'][split_covariate_id]['reference']
-            if not reference in split_reference_list :
-                msg  = 'The reference value for the splitting covariate '
-                msg += '{split_covariate_name}\n'
-                msg += 'is not in the split_reference_list = '
-                msg += f'{split_reference_list}'
-                assert False, msg
-            split_reference_id = split_reference_list.index(reference)
+    split_info = at_cascade.get_split_info(
+        all_table['all_option'], root_table['covariate']
+    )
+    if split_info is None :
+        split_reference_id = None
+    else :
+        split_reference_id = split_info['split_reference_id']
+
     #
     # n_covariate
     n_covariate = len( root_table['covariate'] )
@@ -225,8 +214,7 @@ def data4cov_reference(
     #
     # all_table['all_cov_reference']
     for row in all_table['all_cov_reference'] :
-        if row['split_reference_id'] == split_reference_id  \
-        or split_reference_id is None :
+        if row['split_reference_id'] == split_reference_id :
             covariate_id = row['covariate_id']
             node_id      = row['node_id']
             avg          =  covariate_avg[node_id][covariate_id]
