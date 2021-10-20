@@ -160,33 +160,30 @@ def check_covariate_reference(
 ) :
     #
     # split_list
-    split_list = None
-    for row in all_option_table :
-        if row['option_name'] == 'split_list' :
-            split_list = row['option_value']
+    split_info = at_cascade.get_split_info(all_option_table, covariate_table)
     #
     # check_reference
     check_reference = len(covariate_table) * [ False ]
     #
     # ------------------------------------------------------------------------
-    if split_list is None :
+    if split_info is None :
         for row in all_cov_reference_table :
             assert row['split_reference_id'] is None
             if row['node_id'] == fit_node_id :
                 covariate_id = row['covariate_id']
                 #
                 if check_reference[covariate_id] :
-                    msg  = 'More than one row in all_cov_reference table has\n'
+                    msg  = 'split_list is not in all_option table and '
+                    msg += 'more than one row in all_cov_reference table has\n'
                     msg += f'node_id = {fit_node_id} '
-                    msg += 'split_reference = null and '
                     msg += f'covariate_id = {covariate_id}'
                     assert False, msg
                 #
                 reference = covariate_table[covariate_id]['reference']
                 if row['reference'] != reference :
-                    msg  = 'Covariate references for '
+                    msg  = 'split_list is not in all_option table and '
+                    msg  = 'covariate references for '
                     msg += f'node_id = {fit_node_id} '
-                    msg += 'split_reference = null and '
                     msg += f'covariate_id = {covariate_id} are different in\n'
                     msg += 'covariate and all_cov_reference tables'
                     assert False, msg
@@ -196,27 +193,8 @@ def check_covariate_reference(
         return
     # ------------------------------------------------------------------------
     #
-    # split_covariate_name, split_reference_list
-    tmp                  = split_list.split()
-    split_covariate_name = tmp[1]
-    split_reference_list = tmp[2:]
-    for i in range( len(split_reference_list) ) :
-        split_reference_list[i] = float( split_reference_list[i] )
-    #
-    # split_covariate_id
-    split_covariate_id   = at_cascade.table_name2id(
-        covariate_table, 'covariate', split_covariate_name
-    )
-    #
-    # split_reference
-    split_reference = covariate_table[split_covariate_id]['reference']
-    #
     # split_reference_id
-    if not split_reference in split_reference_list :
-        msg  = 'fit_node_database reference value for splitting covariate '
-        msg += 'is not in split_list'
-        assert False, msg
-    split_reference_id = split_reference_list.index( split_reference )
+    split_reference_id = split_info['split_reference_id']
     #
     for row in all_cov_reference_table :
         assert not row['split_reference_id'] is None
