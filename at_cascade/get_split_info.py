@@ -71,6 +71,8 @@ to reference value for split_covariate_name in the covariate table.
 
 {xsrst_end get_split_info}
 '''
+import at_cascade
+#
 def get_split_info(
 # BEGIN syntax
 # split_info = get_split_info(
