@@ -324,22 +324,13 @@ def create_child_node_db(
     )
     #
     # split_reference_id
-    split_reference_id = None
-    for row in all_option_table :
-        if row['option_name'] == 'split_list' :
-            split_list      = row['option_value']
-            split_list      = split_list.split()
-            covariate_name  = split_list[1]
-            reference_list  = split_list[2:]
-            for i in range( len(reference_list ) ) :
-                reference_list[i] = float( reference_list[i] )
-            covariate_id    = at_cascade.table_name2id(
-                parent_tables['covariate'], 'covariate', covariate_name
-            )
-            split_reference = \
-                parent_tables['covariate'][covariate_id]['reference']
-            # cascade_fit_node should check that this will work
-            split_reference_id = reference_list.index( split_reference )
+    split_info = at_cascade.get_split_info(
+        all_option_table, parent_tables['covariate']
+    )
+    if split_info is None :
+        split_reference_id = None
+    else :
+        split_reference_id = split_info['split_reference_id']
     #
     for child_name in child_node_databases :
         # ---------------------------------------------------------------------
