@@ -190,32 +190,14 @@ def omega_constraint(
             msg += f'of the all_node_database'
             assert False, msg
     #
-    # split_list
-    split_list = None
-    for row in all_tables['all_option'] :
-        if row['option_name'] == 'split_list' :
-            split_list = row['option_value'].split()
-    #
     # split_reference_id
-    split_reference_id = None
-    if not split_list is None :
-        split_covariate_name = split_list[1]
-        split_covariate_id   = at_cascade.table_name2id(
-            fit_tables['covariate'], 'covariate', split_covariate_name
-        )
-        split_reference = \
-            fit_tables['covariate'][split_covariate_id]['reference']
-        split_reference_list = split_list[2:]
-        for (k, reference) in enumerate(split_reference_list) :
-            split_reference_list[k] = float( reference )
-            if split_reference == split_reference_list[k] :
-                split_reference_id = k
-        if split_reference_id is None :
-            msg  = 'Cannot find split_reference in split_reference_list\n'
-            msg += f'split_reference_list = {split_reference_list}\n'
-            msg += f'covariate_name = {split_covariate_name}, '
-            msg += f'referencee = {split_reference}, '
-            assert False, msg
+    split_info = at_cascade.get_split_info(
+        all_tables['all_option'], fit_tables['covariate']
+    )
+    if split_info is None :
+        split_reference_id = None
+    else :
+        split_reference_id = split_info['split_reference_id']
     #
     # parent_node_id
     parent_node_name = None
