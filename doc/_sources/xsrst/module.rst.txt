@@ -14,6 +14,7 @@ module
    create_all_node_db
    create_child_node_db
    data4cov_reference
+   get_cov_info
    get_fit_children
    get_fit_integrand
    get_parent_node
@@ -44,6 +45,7 @@ The at_cascade Python Module
     "create_all_node_db", :ref:`create_all_node_db`
     "create_child_node_db", :ref:`create_child_node_db`
     "data4cov_reference", :ref:`data4cov_reference`
+    "get_cov_info", :ref:`get_cov_info`
     "get_fit_children", :ref:`get_fit_children`
     "get_fit_integrand", :ref:`get_fit_integrand`
     "get_parent_node", :ref:`get_parent_node`

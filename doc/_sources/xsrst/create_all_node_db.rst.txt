@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_all_node_db.py
-    :lines: 204-213
+    :lines: 210-219
     :language: py
 
 .. meta::
@@ -117,6 +117,19 @@ all_option
 **********
 This argument can't be ``None``.
 It is a dictionary with the following possible keys:
+
+.. meta::
+   :keywords: absolute_covariates
+
+.. index:: absolute_covariates
+
+.. _create_all_node_db.all_option.absolute_covariates:
+
+absolute_covariates
+===================
+If this key is present, it is a ``str`` specifying the
+:ref:`all_option_table.absolute_covariates`.
+Otherwise, there absolute_covariates does not appear in the all_option table.
 
 .. meta::
    :keywords: split_list

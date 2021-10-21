@@ -7,10 +7,12 @@
   <meta charset="utf-8">
   <meta content="data4cov_reference, use, data, table, average, covariates, for, reference" name="keywords" />
 <meta content="syntax" name="keywords" />
-<meta content="connection" name="keywords" />
+<meta content="root_node_database" name="keywords" />
 <meta content="option, table" name="keywords" />
 <meta content="data, table" name="keywords" />
-<meta content="covariate_table" name="keywords" />
+<meta content="all_node_database" name="keywords" />
+<meta content="all_option, table" name="keywords" />
+<meta content="all_cov_reference, table" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -43,7 +45,7 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="get_fit_children" href="get_fit_children.html" />
+    <link rel="next" title="get_cov_info" href="get_cov_info.html" />
     <link rel="prev" title="create_child_node_db" href="create_child_node_db.html" /> 
 </head>
 
@@ -103,6 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="create_all_node_db.html">create_all_node_db</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_child_node_db.html">create_child_node_db</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">data4cov_reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="get_cov_info.html">get_cov_info</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_fit_children.html">get_fit_children</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_fit_integrand.html">get_fit_integrand</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_parent_node.html">get_parent_node</a></li>
@@ -191,56 +194,83 @@
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#syntax" id="id2">Syntax</a></p></li>
-<li><p><a class="reference internal" href="#connection" id="id3">connection</a></p></li>
-<li><p><a class="reference internal" href="#option-table" id="id4">option Table</a></p></li>
-<li><p><a class="reference internal" href="#data-table" id="id5">data Table</a></p>
+<li><p><a class="reference internal" href="#root-node-database" id="id3">root_node_database</a></p>
 <ul>
-<li><p><a class="reference internal" href="#covariate-table" id="id6">covariate_table</a></p></li>
+<li><p><a class="reference internal" href="#option-table" id="id4">option Table</a></p></li>
+<li><p><a class="reference internal" href="#data-table" id="id5">data Table</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#all-node-database" id="id6">all_node_database</a></p>
+<ul>
+<li><p><a class="reference internal" href="#all-option-table" id="id7">all_option Table</a></p></li>
+<li><p><a class="reference internal" href="#all-cov-reference-table" id="id8">all_cov_reference Table</a></p></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="syntax">
 <span id="data4cov-reference-syntax"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># data4cov_reference(database)</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span>    <span class="n">all_node_database</span>  <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">root_node_database</span> <span class="o">=</span> <span class="kc">None</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="connection">
-<span id="data4cov-reference-connection"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">connection</a><a class="headerlink" href="#connection" title="Permalink to this headline">¶</a></h3>
-<p>This is a dismod_at connection to a dismod_at database.
-Only the following tables are required:
+<div class="section" id="root-node-database">
+<span id="data4cov-reference-root-node-database"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">root_node_database</a><a class="headerlink" href="#root-node-database" title="Permalink to this headline">¶</a></h3>
+<p>This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code> and
+is the <a class="reference internal" href="glossary.html#glossary-root-node-database"><span class="std std-ref">root_node_database</span></a>.
+This database is not modified and
+only following tables are used:
 option, data, node, covariate.</p>
-</div>
 <div class="section" id="option-table">
-<span id="data4cov-reference-option-table"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">option Table</a><a class="headerlink" href="#option-table" title="Permalink to this headline">¶</a></h3>
+<span id="data4cov-reference-root-node-database-option-table"></span><span id="index-3"></span><h4><a class="toc-backref" href="#id4">option Table</a><a class="headerlink" href="#option-table" title="Permalink to this headline">¶</a></h4>
 <p>This table must have a row with option_value equal to parent_node_name.
 Only this row of the option table is used.</p>
 </div>
 <div class="section" id="data-table">
-<span id="data4cov-reference-data-table"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id5">data Table</a><a class="headerlink" href="#data-table" title="Permalink to this headline">¶</a></h3>
+<span id="data4cov-reference-root-node-database-data-table"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">data Table</a><a class="headerlink" href="#data-table" title="Permalink to this headline">¶</a></h4>
 <p>Only the following columns of this table are used:
 data_id, node_id, x_0, … x_n,
 where n is the number of covariates minus one.</p>
-<div class="section" id="covariate-table">
-<span id="data4cov-reference-data-table-covariate-table"></span><span id="index-5"></span><h4><a class="toc-backref" href="#id6">covariate_table</a><a class="headerlink" href="#covariate-table" title="Permalink to this headline">¶</a></h4>
-<p>The <code class="docutils literal notranslate"><span class="pre">reference</span></code> column in the covariate table is replaced
-by the average of the corresponding covariate in the data table.
+</div>
+</div>
+<div class="section" id="all-node-database">
+<span id="data4cov-reference-all-node-database"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id6">all_node_database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h3>
+<p>This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code> and is the :ref:all_node_db`.
+Only the <a class="reference internal" href="all_cov_reference_table.html#id1"><span class="std std-ref">All Node Covariate Reference Table</span></a>
+and <a class="reference internal" href="all_option_table.html#id1"><span class="std std-ref">All Node Option Table</span></a> are used.</p>
+<div class="section" id="all-option-table">
+<span id="data4cov-reference-all-node-database-all-option-table"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id7">all_option Table</a><a class="headerlink" href="#all-option-table" title="Permalink to this headline">¶</a></h4>
+<p>The <a class="reference internal" href="all_option_table.html#all-option-table-split-list"><span class="std std-ref">split_list</span></a> row of this table
+(if it exists) is the only row of this table that is used.</p>
+</div>
+<div class="section" id="all-cov-reference-table">
+<span id="data4cov-reference-all-node-database-all-cov-reference-table"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id8">all_cov_reference Table</a><a class="headerlink" href="#all-cov-reference-table" title="Permalink to this headline">¶</a></h4>
+<p>The <a class="reference internal" href="all_cov_reference_table.html#all-cov-reference-table-reference"><span class="std std-ref">reference</span></a> column for some of the rows in
+this table is replaced by the average of the corresponding covariate in the
+data table.
 Only the rows of the data table that satisfy the following conditions
-are included:</p>
+are included when computing the average:</p>
 <ol class="arabic simple">
-<li><p>The node for the data table row is the parent node or a descendant of
-the parent node.</p></li>
-<li><p>The difference of each covariate value in the data table row
+<li><p>The node_id for the data table row is the
+<a class="reference internal" href="all_cov_reference_table.html#all-cov-reference-table-node-id"><span class="std std-ref">node_id</span></a> for the all_cov_reference row,
+or a descendant of all_cov_reference node.</p></li>
+<li><p>The difference of all the covariate values in the data table row
 from the corresponding reference in the covariate table is
 less than or equal the maximum difference for that covariate.</p></li>
 </ol>
-<p>Only the reference values for covariates that satisfy the following conditions
-are modified:</p>
+<p>Only the rows of the all_cov_reference table
+that satisfy the following conditions are modified:</p>
 <ol class="arabic simple" start="3">
 <li><p>There is at least one row of the data table that satisfies conditions
-1 and 2 for this covariate.</p></li>
-<li><p>This covariate has maximum difference equal to infinity (or null).</p></li>
+1 and 2 for this all_cov_reference
+<a class="reference internal" href="all_cov_reference_table.html#all-cov-reference-table-covariate-id"><span class="std std-ref">covariate_id</span></a>.</p></li>
+<li><p>This all_cov_reference covariate has maximum difference equal to
+infinity (or null).</p></li>
+<li><p>The <a class="reference internal" href="all_cov_reference_table.html#all-cov-reference-table-split-reference-id"><span class="std std-ref">split_reference_id</span></a> for this row
+corresponds to the covariate value for splitting covariate in the
+covariate table.
+(2DO: This should be extended to all values for the splitting covariate.)</p></li>
 </ol>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/data4cov_reference.py</span></code></p>
@@ -257,7 +287,7 @@ are modified:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="get_fit_children.html" class="btn btn-neutral float-right" title="get_fit_children" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="get_cov_info.html" class="btn btn-neutral float-right" title="get_cov_info" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="create_child_node_db.html" class="btn btn-neutral float-left" title="create_child_node_db" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

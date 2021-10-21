@@ -91,6 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="example.html">example</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="absolute_covariates.html">absolute_covariates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="max_fit_option.html">max_fit_option</a></li>
 <li class="toctree-l3"><a class="reference internal" href="no_ode_xam.html">no_ode_xam</a></li>
 <li class="toctree-l3"><a class="reference internal" href="one_at_function.html">one_at_function</a></li>
@@ -225,7 +226,6 @@
 <span class="k">for</span> <span class="n">node_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="p">:</span>
     <span class="n">node_name</span> <span class="o">=</span> <span class="s1">&#39;n&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">node_id</span><span class="p">)</span>
     <span class="n">all_cov_reference</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;sex&#39;</span>    <span class="p">:</span> <span class="p">[</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span> <span class="p">],</span>
         <span class="s1">&#39;income&#39;</span> <span class="p">:</span> <span class="p">[</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">node_id</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">node_id</span> <span class="o">/</span> <span class="mf">10.0</span> <span class="p">]</span>
     <span class="p">}</span>
 <span class="c1"># END all_cov_reference</span>
@@ -234,6 +234,11 @@
 <span class="n">alpha_true</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.2</span>
 <span class="c1"># END alpha_true</span>
 <span class="c1">#</span>
+<span class="c1"># BEGIN split_reference_list</span>
+<span class="n">split_reference_list</span> <span class="o">=</span> <span class="n">split_reference_str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">split_reference_list</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
+    <span class="n">split_reference_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span> <span class="n">split_reference_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="p">)</span>
+<span class="c1"># END split_reference_list</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># functions</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
@@ -254,7 +259,7 @@
     <span class="c1">#</span>
     <span class="c1"># iota_n0</span>
     <span class="n">covariate_list</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">all_cov_reference</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">][</span><span class="s1">&#39;sex&#39;</span><span class="p">][</span><span class="n">split_index</span><span class="p">],</span>
+        <span class="n">split_reference_list</span><span class="p">[</span><span class="n">split_index</span><span class="p">],</span>
         <span class="n">all_cov_reference</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">][</span><span class="s1">&#39;income&#39;</span><span class="p">][</span><span class="n">split_index</span><span class="p">],</span>
     <span class="p">]</span>
     <span class="n">iota_n0</span>        <span class="o">=</span> <span class="n">rate_true</span><span class="p">(</span><span class="s1">&#39;iota&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">covariate_list</span><span class="p">)</span>
@@ -329,7 +334,7 @@
     <span class="n">covariate_table</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="n">covariate_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">{</span>
         <span class="s1">&#39;name&#39;</span><span class="p">:</span>     <span class="s1">&#39;sex&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;reference&#39;</span><span class="p">:</span> <span class="n">all_cov_reference</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">][</span><span class="s1">&#39;sex&#39;</span><span class="p">][</span><span class="n">split_index</span><span class="p">],</span>
+        <span class="s1">&#39;reference&#39;</span><span class="p">:</span> <span class="n">split_reference_list</span><span class="p">[</span><span class="n">split_index</span><span class="p">],</span>
     <span class="p">}</span> <span class="p">)</span>
     <span class="n">covariate_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">{</span>
         <span class="s1">&#39;name&#39;</span><span class="p">:</span>     <span class="s1">&#39;income&#39;</span><span class="p">,</span>
@@ -385,7 +390,7 @@
         <span class="s1">&#39;hold_out&#39;</span><span class="p">:</span>     <span class="kc">False</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">leaf_set</span> <span class="p">:</span>
-        <span class="n">sex</span>        <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;sex&#39;</span><span class="p">][</span><span class="n">split_index</span><span class="p">]</span>
+        <span class="n">sex</span>        <span class="o">=</span> <span class="n">split_reference_list</span><span class="p">[</span><span class="n">split_index</span><span class="p">]</span>
         <span class="n">income</span>     <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;income&#39;</span><span class="p">][</span><span class="n">split_index</span><span class="p">]</span>
         <span class="n">meas_value</span> <span class="o">=</span> <span class="n">rate_true</span><span class="p">(</span><span class="s1">&#39;iota&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[</span> <span class="kc">None</span><span class="p">,</span> <span class="n">income</span> <span class="p">])</span>
         <span class="n">row</span><span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">]</span>       <span class="o">=</span> <span class="n">node</span>

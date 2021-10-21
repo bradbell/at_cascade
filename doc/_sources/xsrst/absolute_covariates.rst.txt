@@ -1,24 +1,24 @@
 .. include:: ../preamble.rst
 
-!!!!!!!!!!
-split_list
-!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!
+absolute_covariates
+!!!!!!!!!!!!!!!!!!!
 
 .. toctree::
    :maxdepth: 1
    :hidden:
 
-   split_list_py
+   absolute_covariates_py
 
 .. meta::
-   :keywords: split_list, example, using, split_list, option, in, all_node_database
+   :keywords: absolute_covariates, example, using, absolute_covariates, option, in, all_node_database
 
-.. index:: split_list, example, using, split_list, option, in, all_node_database
+.. index:: absolute_covariates, example, using, absolute_covariates, option, in, all_node_database
 
-.. _split_list:
+.. _absolute_covariates:
 
-Example Using split_list Option in all_node_database
-####################################################
+Example Using absolute_covariates Option in all_node_database
+#############################################################
 .. contents::
    :local:
 
@@ -29,7 +29,7 @@ For this example everything is constant w.r.t. age and time.
 
 .. index:: nodes
 
-.. _split_list.nodes:
+.. _absolute_covariates.nodes:
 
 Nodes
 *****
@@ -49,13 +49,13 @@ and the leaf nodes are {n3, n4, n5, n6}::
 
 .. index:: fit_goal_set
 
-.. _split_list.nodes.fit_goal_set:
+.. _absolute_covariates.nodes.fit_goal_set:
 
 fit_goal_set
 ============
 
-.. literalinclude:: ../../example/split_list.py
-    :lines: 207-207
+.. literalinclude:: ../../example/absolute_covariates.py
+    :lines: 216-216
     :language: py
 
 .. meta::
@@ -63,7 +63,7 @@ fit_goal_set
 
 .. index:: rates
 
-.. _split_list.rates:
+.. _absolute_covariates.rates:
 
 Rates
 *****
@@ -75,15 +75,15 @@ The only non-zero dismod_at rates for this example are
 
 .. index:: split_list
 
-.. _split_list.rates.split_list:
+.. _absolute_covariates.rates.split_list:
 
 split_list
 ==========
 This cascade is set up to split by sex reference value; see
 :ref:`all_option_table.split_list`:
 
-.. literalinclude:: ../../example/split_list.py
-    :lines: 211-216
+.. literalinclude:: ../../example/absolute_covariates.py
+    :lines: 220-225
     :language: py
 
 .. meta::
@@ -91,21 +91,37 @@ This cascade is set up to split by sex reference value; see
 
 .. index:: covariate
 
-.. _split_list.covariate:
+.. _absolute_covariates.covariate:
 
 Covariate
 *********
-There are two covariates for this example, sex and income.
+There are three covariates for this example, sex, vaccine, and income.
 The reference value for income depends on the value of sex;
 see :ref:`create_all_node_db.all_cov_reference`:
 
-.. literalinclude:: ../../example/split_list.py
-    :lines: 224-229
+.. literalinclude:: ../../example/absolute_covariates.py
+    :lines: 233-238
     :language: py
 
 
-.. literalinclude:: ../../example/split_list.py
-    :lines: 237-239
+.. literalinclude:: ../../example/absolute_covariates.py
+    :lines: 246-248
+    :language: py
+
+.. meta::
+   :keywords: absolute_covariates
+
+.. index:: absolute_covariates
+
+.. _absolute_covariates.covariate.absolute_covariates:
+
+absolute_covariates
+===================
+The only absolute covariate in this example is vaccine
+(0 for no vaccine, 1 for yes vaccine).
+
+.. literalinclude:: ../../example/absolute_covariates.py
+    :lines: 252-252
     :language: py
 
 .. meta::
@@ -113,18 +129,18 @@ see :ref:`create_all_node_db.all_cov_reference`:
 
 .. index:: alpha
 
-.. _split_list.covariate.alpha:
+.. _absolute_covariates.covariate.alpha:
 
 alpha
 =====
-We use *alpha*
-for the :ref:`glossary.rate_value` covariate multiplier
-that multipliers income.
-This multiplier affects the value of iota.
+We use *alpha*\ ``[income]``
+and  *alpha*\ ``[vaccine]``
+for the :ref:`glossary.rate_value` covariate multipliers
+that multiply the income and vaccine covariates.
 The true value for *alpha* (used which simulating the data) is
 
-.. literalinclude:: ../../example/split_list.py
-    :lines: 233-233
+.. literalinclude:: ../../example/absolute_covariates.py
+    :lines: 242-242
     :language: py
 
 .. meta::
@@ -132,7 +148,7 @@ The true value for *alpha* (used which simulating the data) is
 
 .. index:: random, effects
 
-.. _split_list.random_effects:
+.. _absolute_covariates.random_effects:
 
 Random Effects
 **************
@@ -143,7 +159,7 @@ There are no random effect for this example.
 
 .. index:: simulated, data
 
-.. _split_list.simulated_data:
+.. _absolute_covariates.simulated_data:
 
 Simulated Data
 **************
@@ -153,7 +169,7 @@ Simulated Data
 
 .. index:: mtall
 
-.. _split_list.simulated_data.mtall:
+.. _absolute_covariates.simulated_data.mtall:
 
 mtall
 =====
@@ -166,7 +182,7 @@ no :ref:`all_mtspecific` data for this example.
 
 .. index:: rate_true(rate, , a, , t, , n, , c)
 
-.. _split_list.simulated_data.rate_true(rate,_a,_t,_n,_c):
+.. _absolute_covariates.simulated_data.rate_true(rate,_a,_t,_n,_c):
 
 rate_true(rate, a, t, n, c)
 ===========================
@@ -178,8 +194,8 @@ same order as the covariate table.
 The values *a*, *t*, *n*, *sex*
 are not used by this function for this example.
 
-.. literalinclude:: ../../example/split_list.py
-    :lines: 245-254
+.. literalinclude:: ../../example/absolute_covariates.py
+    :lines: 258-269
     :language: py
 
 .. meta::
@@ -187,7 +203,7 @@ are not used by this function for this example.
 
 .. index:: y_i
 
-.. _split_list.simulated_data.y_i:
+.. _absolute_covariates.simulated_data.y_i:
 
 y_i
 ===
@@ -204,7 +220,7 @@ The data is modeled as having noise even though there is no simulated noise.
 
 .. index:: n_i
 
-.. _split_list.simulated_data.n_i:
+.. _absolute_covariates.simulated_data.n_i:
 
 n_i
 ===
@@ -218,7 +234,7 @@ of how good the fit is for the nodes in the fit_goal_set.
 
 .. index:: parent, rate, smoothing
 
-.. _split_list.parent_rate_smoothing:
+.. _absolute_covariates.parent_rate_smoothing:
 
 Parent Rate Smoothing
 *********************
@@ -231,14 +247,14 @@ priors because there is only one age and one time point in the smoothing grid.
 
 .. index:: value, prior
 
-.. _split_list.parent_rate_smoothing.value_prior:
+.. _absolute_covariates.parent_rate_smoothing.value_prior:
 
 Value Prior
 ===========
 The following is the value prior used for the root_node
 
-.. literalinclude:: ../../example/split_list.py
-    :lines: 271-278
+.. literalinclude:: ../../example/absolute_covariates.py
+    :lines: 286-293
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -250,7 +266,7 @@ routine replaces them for other nodes.
 
 .. index:: alpha, smoothing
 
-.. _split_list.alpha_smoothing:
+.. _absolute_covariates.alpha_smoothing:
 
 Alpha Smoothing
 ***************
@@ -263,14 +279,14 @@ so it does not have dage or dtime priors.
 
 .. index:: value, prior
 
-.. _split_list.alpha_smoothing.value_prior:
+.. _absolute_covariates.alpha_smoothing.value_prior:
 
 Value Prior
 ===========
 The following is the value prior used for this smoothing:
 
-.. literalinclude:: ../../example/split_list.py
-    :lines: 283-289
+.. literalinclude:: ../../example/absolute_covariates.py
+    :lines: 296-310
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -282,7 +298,7 @@ routine replaces them for other nodes.
 
 .. index:: checking, the, fit
 
-.. _split_list.checking_the_fit:
+.. _absolute_covariates.checking_the_fit:
 
 Checking The Fit
 ****************
@@ -297,8 +313,8 @@ routine uses these tables to check that fit against the truth.
     :header: "Child", "Title"
     :widths: 20, 80
 
-    "split_list_py", :ref:`split_list_py`
+    "absolute_covariates_py", :ref:`absolute_covariates_py`
 
 ----
 
-xsrst input file: ``example/split_list.py``
+xsrst input file: ``example/absolute_covariates.py``

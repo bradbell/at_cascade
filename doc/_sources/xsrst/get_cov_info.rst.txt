@@ -1,0 +1,179 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!
+get_cov_info
+!!!!!!!!!!!!
+
+.. meta::
+   :keywords: get_cov_info, splitting, covariate, reference, index
+
+.. index:: get_cov_info, splitting, covariate, reference, index
+
+.. _get_cov_info:
+
+Splitting Covariate Reference Index
+###################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _get_cov_info.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/get_cov_info.py
+    :lines: 101-104
+    :language: py
+
+.. meta::
+   :keywords: all_option_table
+
+.. index:: all_option_table
+
+.. _get_cov_info.all_option_table:
+
+all_option_table
+****************
+This is the :ref:`all_option_table` as a python list
+of python dictionaries.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: covariate_table
+
+.. index:: covariate_table
+
+.. _get_cov_info.covariate_table:
+
+covariate_table
+****************
+This is the dismod_at covariate table as a python list
+of python dictionaries.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: cov_info
+
+.. index:: cov_info
+
+.. _get_cov_info.cov_info:
+
+cov_info
+********
+The return value *cov_info* is a `dict` with the following keys:
+
+.. meta::
+   :keywords: abs_covariate_id_set
+
+.. index:: abs_covariate_id_set
+
+.. _get_cov_info.cov_info.abs_covariate_id_set:
+
+abs_covariate_id_set
+====================
+if *key* is abs_covariate_id_set, *cov_info[key]* is a ``set`` of ``int``.
+A covariate_id is in this set if and only if the corresponding
+covariate name is in :ref:`all_option_table.absolute_covariates`.
+If absolute_covariates does not appear in the all_option table,
+*cov_info[key]* is the empty set.
+The reference value for these absolute covariates is the same
+for all nodes and all values of the splitting covariate.
+
+.. meta::
+   :keywords: rel_covariate_id_set
+
+.. index:: rel_covariate_id_set
+
+.. _get_cov_info.cov_info.rel_covariate_id_set:
+
+rel_covariate_id_set
+====================
+if *key* is rel_covariate_id_set, *cov_info[key]* is a set of ``int``.
+This is the set of covariate_id values corresponding to the
+:ref:`relative covariates<glossary.relative_covariate>`.
+
+.. meta::
+   :keywords: split, keys
+
+.. index:: split, keys
+
+.. _get_cov_info.cov_info.split_keys:
+
+Split Keys
+==========
+The keys that begin with ``split_`` appear (do not appear)
+if :ref:`all_option_table.split_list` is in (is not in)
+the all_option table
+
+.. meta::
+   :keywords: split_list
+
+.. index:: split_list
+
+.. _get_cov_info.cov_info.split_keys.split_list:
+
+split_list
+----------
+if *key* is split_list, *cov_info[key]* is a ``str``
+representation of :ref:`all_option_table.split_list`.
+
+.. meta::
+   :keywords: split_level
+
+.. index:: split_level
+
+.. _get_cov_info.cov_info.split_keys.split_level:
+
+split_level
+-----------
+if *key* is split_level, *cov_info[key]* is an ``int``
+representation of :ref:`all_option_table.split_list.split_level`.
+
+.. meta::
+   :keywords: split_covariate_id
+
+.. index:: split_covariate_id
+
+.. _get_cov_info.cov_info.split_keys.split_covariate_id:
+
+split_covariate_id
+------------------
+if *key* is split_covariate_id, *cov_info[key]* is an ``int``
+equal to the covariate_id corresponding to the
+:ref:`all_option_table.split_list.split_covariate_name`.
+
+.. meta::
+   :keywords: split_reference_list
+
+.. index:: split_reference_list
+
+.. _get_cov_info.cov_info.split_keys.split_reference_list:
+
+split_reference_list
+--------------------
+if *key* is split_reference_list, *cov_info[key]* is a
+``list`` of ``float`` representation of
+:ref:`all_option_table.split_list.split_reference_list`.
+
+.. meta::
+   :keywords: split_reference_id
+
+.. index:: split_reference_id
+
+.. _get_cov_info.cov_info.split_keys.split_reference_id:
+
+split_reference_id
+-------------------
+if *key* is split_reference_id, *cov_info[key]* is an ``int``
+containing an index in the split_reference_list.
+The corresponding value is split_reference_list is equal to
+to reference value for split_covariate_name in the covariate table.
+
+----
+
+xsrst input file: ``at_cascade/get_cov_info.py``

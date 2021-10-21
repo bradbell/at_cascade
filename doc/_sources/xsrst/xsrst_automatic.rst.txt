@@ -20,16 +20,18 @@ Table of Contents
 |
 | :ref:`4<example>` The at_cascade Examples
 |
-|  |space| :ref:`4.1<max_fit_option>` Example Using max_fit Option
-|  |space|  |space| :ref:`4.1.1<max_fit_option_py>` max_fit_option: Python Source Code
-|  |space| :ref:`4.2<no_ode_xam>` Example Using no_ode_fit To Initialize Optimization
-|  |space|  |space| :ref:`4.2.1<no_ode_xam_py>` no_ode_xam: Python Source Code
-|  |space| :ref:`4.3<one_at_function>` Example That Directly Measures One Age Time Function
-|  |space|  |space| :ref:`4.3.1<one_at_function_py>` one_at_function: Python Source Code
-|  |space| :ref:`4.4<prevalence2iota>` Example Estimation of iota From Prevalence Data
-|  |space|  |space| :ref:`4.4.1<prevalence2iota_py>` prevalence2iota: Python Source Code
-|  |space| :ref:`4.5<split_list>` Example Using split_list Option in all_node_database
-|  |space|  |space| :ref:`4.5.1<split_list_py>` split_list: Python Source Code
+|  |space| :ref:`4.1<absolute_covariates>` Example Using absolute_covariates Option in all_node_database
+|  |space|  |space| :ref:`4.1.1<absolute_covariates_py>` absolute_covariates: Python Source Code
+|  |space| :ref:`4.2<max_fit_option>` Example Using max_fit Option
+|  |space|  |space| :ref:`4.2.1<max_fit_option_py>` max_fit_option: Python Source Code
+|  |space| :ref:`4.3<no_ode_xam>` Example Using no_ode_fit To Initialize Optimization
+|  |space|  |space| :ref:`4.3.1<no_ode_xam_py>` no_ode_xam: Python Source Code
+|  |space| :ref:`4.4<one_at_function>` Example That Directly Measures One Age Time Function
+|  |space|  |space| :ref:`4.4.1<one_at_function_py>` one_at_function: Python Source Code
+|  |space| :ref:`4.5<prevalence2iota>` Example Estimation of iota From Prevalence Data
+|  |space|  |space| :ref:`4.5.1<prevalence2iota_py>` prevalence2iota: Python Source Code
+|  |space| :ref:`4.6<split_list>` Example Using split_list Option in all_node_database
+|  |space|  |space| :ref:`4.6.1<split_list_py>` split_list: Python Source Code
 |
 | :ref:`5<module>` The at_cascade Python Module
 |
@@ -39,12 +41,13 @@ Table of Contents
 |  |space| :ref:`5.4<create_all_node_db>` Create an All Node Database
 |  |space| :ref:`5.5<create_child_node_db>` Create Child Database From Fit in Parent Database
 |  |space| :ref:`5.6<data4cov_reference>` Use Data Table Average Covariates for Reference
-|  |space| :ref:`5.7<get_fit_children>` Determine the Set of Nodes to Fit
-|  |space| :ref:`5.8<get_fit_integrand>` Determine the Set of Integrands in Data Table
-|  |space| :ref:`5.9<get_parent_node>` Get Parent Node Name From Option Table
-|  |space| :ref:`5.10<no_ode_fit>` Do A No Ode Fit For One Node
-|  |space| :ref:`5.11<omega_constraint>` Set Omega Constraints in a Fit Node Database
-|  |space| :ref:`5.12<table_name2id>` Map a Table Row Name to The Row Index
+|  |space| :ref:`5.7<get_cov_info>` Splitting Covariate Reference Index
+|  |space| :ref:`5.8<get_fit_children>` Determine the Set of Nodes to Fit
+|  |space| :ref:`5.9<get_fit_integrand>` Determine the Set of Integrands in Data Table
+|  |space| :ref:`5.10<get_parent_node>` Get Parent Node Name From Option Table
+|  |space| :ref:`5.11<no_ode_fit>` Do A No Ode Fit For One Node
+|  |space| :ref:`5.12<omega_constraint>` Set Omega Constraints in a Fit Node Database
+|  |space| :ref:`5.13<table_name2id>` Map a Table Row Name to The Row Index
 |
 
 Link to Index

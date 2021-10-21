@@ -5,12 +5,13 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta content="split_list, example, using, split_list, option, in, all_node_database" name="keywords" />
+  <meta content="absolute_covariates, example, using, absolute_covariates, option, in, all_node_database" name="keywords" />
 <meta content="nodes" name="keywords" />
 <meta content="fit_goal_set" name="keywords" />
 <meta content="rates" name="keywords" />
 <meta content="split_list" name="keywords" />
 <meta content="covariate" name="keywords" />
+<meta content="absolute_covariates" name="keywords" />
 <meta content="alpha" name="keywords" />
 <meta content="random, effects" name="keywords" />
 <meta content="simulated, data" name="keywords" />
@@ -26,7 +27,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>split_list &mdash; at_cascade  documentation</title>
+  <title>absolute_covariates &mdash; at_cascade  documentation</title>
   
 
   
@@ -55,8 +56,8 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="split_list_py" href="split_list_py.html" />
-    <link rel="prev" title="prevalence2iota_py" href="prevalence2iota_py.html" /> 
+    <link rel="next" title="absolute_covariates_py" href="absolute_covariates_py.html" />
+    <link rel="prev" title="example" href="example.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -108,15 +109,15 @@
 <li class="toctree-l2"><a class="reference internal" href="plan.html">plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="example.html">example</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="absolute_covariates.html">absolute_covariates</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">absolute_covariates</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="absolute_covariates_py.html">absolute_covariates_py</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="max_fit_option.html">max_fit_option</a></li>
 <li class="toctree-l3"><a class="reference internal" href="no_ode_xam.html">no_ode_xam</a></li>
 <li class="toctree-l3"><a class="reference internal" href="one_at_function.html">one_at_function</a></li>
 <li class="toctree-l3"><a class="reference internal" href="prevalence2iota.html">prevalence2iota</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">split_list</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="split_list_py.html">split_list_py</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="split_list.html">split_list</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
@@ -171,13 +172,13 @@
         
           <li><a href="example.html">example</a> &raquo;</li>
         
-      <li>split_list</li>
+      <li>absolute_covariates</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/xsrst/split_list.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/xsrst/absolute_covariates.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -192,12 +193,12 @@
             
   <p class="hidden"><span class="math notranslate nohighlight">\(\newcommand{\B}[1]{ {\bf #1} }\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\R}[1]{ {\rm #1} }\)</span></p>
-<div class="section" id="split-list">
-<h1>split_list<a class="headerlink" href="#split-list" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="absolute-covariates">
+<h1>absolute_covariates<a class="headerlink" href="#absolute-covariates" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<div class="section" id="example-using-split-list-option-in-all-node-database">
-<span id="id1"></span><h2>Example Using split_list Option in all_node_database<a class="headerlink" href="#example-using-split-list-option-in-all-node-database" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example-using-absolute-covariates-option-in-all-node-database">
+<span id="id1"></span><h2>Example Using absolute_covariates Option in all_node_database<a class="headerlink" href="#example-using-absolute-covariates-option-in-all-node-database" title="Permalink to this headline">¶</a></h2>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#nodes" id="id4">Nodes</a></p>
@@ -207,39 +208,40 @@
 </li>
 <li><p><a class="reference internal" href="#rates" id="id6">Rates</a></p>
 <ul>
-<li><p><a class="reference internal" href="#split-list-rates-split-list" id="id7">split_list</a></p></li>
+<li><p><a class="reference internal" href="#split-list" id="id7">split_list</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#covariate" id="id8">Covariate</a></p>
 <ul>
-<li><p><a class="reference internal" href="#alpha" id="id9">alpha</a></p></li>
+<li><p><a class="reference internal" href="#absolute-covariates-covariate-absolute-covariates" id="id9">absolute_covariates</a></p></li>
+<li><p><a class="reference internal" href="#alpha" id="id10">alpha</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#random-effects" id="id10">Random Effects</a></p></li>
-<li><p><a class="reference internal" href="#simulated-data" id="id11">Simulated Data</a></p>
+<li><p><a class="reference internal" href="#random-effects" id="id11">Random Effects</a></p></li>
+<li><p><a class="reference internal" href="#simulated-data" id="id12">Simulated Data</a></p>
 <ul>
-<li><p><a class="reference internal" href="#mtall" id="id12">mtall</a></p></li>
-<li><p><a class="reference internal" href="#rate-true-rate-a-t-n-c" id="id13">rate_true(rate, a, t, n, c)</a></p></li>
-<li><p><a class="reference internal" href="#y-i" id="id14">y_i</a></p></li>
-<li><p><a class="reference internal" href="#n-i" id="id15">n_i</a></p></li>
+<li><p><a class="reference internal" href="#mtall" id="id13">mtall</a></p></li>
+<li><p><a class="reference internal" href="#rate-true-rate-a-t-n-c" id="id14">rate_true(rate, a, t, n, c)</a></p></li>
+<li><p><a class="reference internal" href="#y-i" id="id15">y_i</a></p></li>
+<li><p><a class="reference internal" href="#n-i" id="id16">n_i</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#parent-rate-smoothing" id="id16">Parent Rate Smoothing</a></p>
+<li><p><a class="reference internal" href="#parent-rate-smoothing" id="id17">Parent Rate Smoothing</a></p>
 <ul>
-<li><p><a class="reference internal" href="#value-prior" id="id17">Value Prior</a></p></li>
+<li><p><a class="reference internal" href="#value-prior" id="id18">Value Prior</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#alpha-smoothing" id="id18">Alpha Smoothing</a></p>
+<li><p><a class="reference internal" href="#alpha-smoothing" id="id19">Alpha Smoothing</a></p>
 <ul>
-<li><p><a class="reference internal" href="#split-list-alpha-smoothing-value-prior" id="id19">Value Prior</a></p></li>
+<li><p><a class="reference internal" href="#absolute-covariates-alpha-smoothing-value-prior" id="id20">Value Prior</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#checking-the-fit" id="id20">Checking The Fit</a></p></li>
+<li><p><a class="reference internal" href="#checking-the-fit" id="id21">Checking The Fit</a></p></li>
 </ul>
 </div>
 <p>For this example everything is constant w.r.t. age and time.</p>
 <div class="section" id="nodes">
-<span id="split-list-nodes"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id4">Nodes</a><a class="headerlink" href="#nodes" title="Permalink to this headline">¶</a></h3>
+<span id="absolute-covariates-nodes"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id4">Nodes</a><a class="headerlink" href="#nodes" title="Permalink to this headline">¶</a></h3>
 <p>The following is a diagram of the node tree for this example.
 The <a class="reference internal" href="glossary.html#glossary-root-node"><span class="std std-ref">root_node</span></a> is n0,
 the <a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a> is {n3, n4, n2},
@@ -252,18 +254,18 @@ and the leaf nodes are {n3, n4, n5, n6}:</p>
 </pre></div>
 </div>
 <div class="section" id="fit-goal-set">
-<span id="split-list-nodes-fit-goal-set"></span><span id="index-2"></span><h4><a class="toc-backref" href="#id5">fit_goal_set</a><a class="headerlink" href="#fit-goal-set" title="Permalink to this headline">¶</a></h4>
+<span id="absolute-covariates-nodes-fit-goal-set"></span><span id="index-2"></span><h4><a class="toc-backref" href="#id5">fit_goal_set</a><a class="headerlink" href="#fit-goal-set" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">fit_goal_set</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span> <span class="p">}</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="rates">
-<span id="split-list-rates"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id6">Rates</a><a class="headerlink" href="#rates" title="Permalink to this headline">¶</a></h3>
+<span id="absolute-covariates-rates"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id6">Rates</a><a class="headerlink" href="#rates" title="Permalink to this headline">¶</a></h3>
 <p>The only non-zero dismod_at rates for this example are
 <a class="reference internal" href="glossary.html#glossary-iota"><span class="std std-ref">iota</span></a>.and <a class="reference internal" href="glossary.html#glossary-omega"><span class="std std-ref">omega</span></a>.</p>
-<div class="section" id="split-list-rates-split-list">
-<span id="index-4"></span><span id="id2"></span><h4><a class="toc-backref" href="#id7">split_list</a><a class="headerlink" href="#split-list-rates-split-list" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="split-list">
+<span id="absolute-covariates-rates-split-list"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id7">split_list</a><a class="headerlink" href="#split-list" title="Permalink to this headline">¶</a></h4>
 <p>This cascade is set up to split by sex reference value; see
 <a class="reference internal" href="all_option_table.html#all-option-table-split-list"><span class="std std-ref">split_list</span></a>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">split_level_str</span>     <span class="o">=</span> <span class="s1">&#39;-1 &#39;</span>
@@ -277,8 +279,8 @@ and the leaf nodes are {n3, n4, n5, n6}:</p>
 </div>
 </div>
 <div class="section" id="covariate">
-<span id="split-list-covariate"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id8">Covariate</a><a class="headerlink" href="#covariate" title="Permalink to this headline">¶</a></h3>
-<p>There are two covariates for this example, sex and income.
+<span id="absolute-covariates-covariate"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id8">Covariate</a><a class="headerlink" href="#covariate" title="Permalink to this headline">¶</a></h3>
+<p>There are three covariates for this example, sex, vaccine, and income.
 The reference value for income depends on the value of sex;
 see <a class="reference internal" href="create_all_node_db.html#create-all-node-db-all-cov-reference"><span class="std std-ref">all_cov_reference</span></a>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">all_cov_reference</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -294,32 +296,40 @@ see <a class="reference internal" href="create_all_node_db.html#create-all-node-
     <span class="n">split_reference_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span> <span class="n">split_reference_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="p">)</span>
 </pre></div>
 </div>
+<div class="section" id="absolute-covariates-covariate-absolute-covariates">
+<span id="index-6"></span><span id="id2"></span><h4><a class="toc-backref" href="#id9">absolute_covariates</a><a class="headerlink" href="#absolute-covariates-covariate-absolute-covariates" title="Permalink to this headline">¶</a></h4>
+<p>The only absolute covariate in this example is vaccine
+(0 for no vaccine, 1 for yes vaccine).</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">all_option</span><span class="p">[</span><span class="s1">&#39;absolute_covariates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;vaccine&#39;</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="alpha">
-<span id="split-list-covariate-alpha"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id9">alpha</a><a class="headerlink" href="#alpha" title="Permalink to this headline">¶</a></h4>
-<p>We use <em>alpha</em>
-for the <a class="reference internal" href="glossary.html#glossary-rate-value"><span class="std std-ref">rate_value</span></a> covariate multiplier
-that multipliers income.
-This multiplier affects the value of iota.
+<span id="absolute-covariates-covariate-alpha"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id10">alpha</a><a class="headerlink" href="#alpha" title="Permalink to this headline">¶</a></h4>
+<p>We use <em>alpha</em><code class="docutils literal notranslate"><span class="pre">[income]</span></code>
+and  <em>alpha</em><code class="docutils literal notranslate"><span class="pre">[vaccine]</span></code>
+for the <a class="reference internal" href="glossary.html#glossary-rate-value"><span class="std std-ref">rate_value</span></a> covariate multipliers
+that multiply the income and vaccine covariates.
 The true value for <em>alpha</em> (used which simulating the data) is</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">alpha_true</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.2</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">alpha_true</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vaccine&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span>  <span class="s1">&#39;income&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="random-effects">
-<span id="split-list-random-effects"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id10">Random Effects</a><a class="headerlink" href="#random-effects" title="Permalink to this headline">¶</a></h3>
+<span id="absolute-covariates-random-effects"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id11">Random Effects</a><a class="headerlink" href="#random-effects" title="Permalink to this headline">¶</a></h3>
 <p>There are no random effect for this example.</p>
 </div>
 <div class="section" id="simulated-data">
-<span id="split-list-simulated-data"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id11">Simulated Data</a><a class="headerlink" href="#simulated-data" title="Permalink to this headline">¶</a></h3>
+<span id="absolute-covariates-simulated-data"></span><span id="index-9"></span><h3><a class="toc-backref" href="#id12">Simulated Data</a><a class="headerlink" href="#simulated-data" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="mtall">
-<span id="split-list-simulated-data-mtall"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id12">mtall</a><a class="headerlink" href="#mtall" title="Permalink to this headline">¶</a></h4>
+<span id="absolute-covariates-simulated-data-mtall"></span><span id="index-10"></span><h4><a class="toc-backref" href="#id13">mtall</a><a class="headerlink" href="#mtall" title="Permalink to this headline">¶</a></h4>
 <p>The ref:<cite>all_mtall</cite> data fro this example is simulated as equal to
 the true value for omega (see rate_true directly below) and there is
 no <a class="reference internal" href="all_mtspecific.html#id1"><span class="std std-ref">All Node mtspecific Values</span></a> data for this example.</p>
 </div>
 <div class="section" id="rate-true-rate-a-t-n-c">
-<span id="split-list-simulated-data-rate-true-rate-a-t-n-c"></span><span id="index-10"></span><h4><a class="toc-backref" href="#id13">rate_true(rate, a, t, n, c)</a><a class="headerlink" href="#rate-true-rate-a-t-n-c" title="Permalink to this headline">¶</a></h4>
+<span id="absolute-covariates-simulated-data-rate-true-rate-a-t-n-c"></span><span id="index-11"></span><h4><a class="toc-backref" href="#id14">rate_true(rate, a, t, n, c)</a><a class="headerlink" href="#rate-true-rate-a-t-n-c" title="Permalink to this headline">¶</a></h4>
 <p>For <em>rate</em> equal to iota or omega,
 this is the true value for <em>rate</em>
 in node <em>n</em> at age <em>a</em>, time <em>t</em>, and covariate values <em>c=[sex,income]</em>.
@@ -328,10 +338,12 @@ same order as the covariate table.
 The values <em>a</em>, <em>t</em>, <em>n</em>, <em>sex</em>
 are not used by this function for this example.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">rate_true</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="p">:</span>
-    <span class="n">sex</span>    <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">income</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">r_0</span>    <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">][</span><span class="s1">&#39;income&#39;</span><span class="p">][</span><span class="n">split_index</span><span class="p">]</span>
-    <span class="n">effect</span> <span class="o">=</span> <span class="n">alpha_true</span> <span class="o">*</span> <span class="p">(</span> <span class="n">income</span> <span class="o">-</span> <span class="n">r_0</span> <span class="p">)</span>
+    <span class="n">sex</span>     <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">vaccine</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">income</span>  <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">r_0</span>     <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">][</span><span class="s1">&#39;income&#39;</span><span class="p">][</span><span class="n">split_index</span><span class="p">]</span>
+    <span class="n">effect</span>  <span class="o">=</span> <span class="n">alpha_true</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">income</span> <span class="o">-</span> <span class="n">r_0</span><span class="p">)</span>
+    <span class="n">effect</span> <span class="o">+=</span> <span class="n">alpha_true</span><span class="p">[</span><span class="s1">&#39;vaccine&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">vaccine</span>
     <span class="k">if</span> <span class="n">rate</span> <span class="o">==</span> <span class="s1">&#39;iota&#39;</span> <span class="p">:</span>
         <span class="k">return</span> <span class="mf">1e-2</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="n">effect</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">rate</span> <span class="o">==</span> <span class="s1">&#39;omega&#39;</span> <span class="p">:</span>
@@ -341,7 +353,7 @@ are not used by this function for this example.</p>
 </div>
 </div>
 <div class="section" id="y-i">
-<span id="split-list-simulated-data-y-i"></span><span id="index-11"></span><h4><a class="toc-backref" href="#id14">y_i</a><a class="headerlink" href="#y-i" title="Permalink to this headline">¶</a></h4>
+<span id="absolute-covariates-simulated-data-y-i"></span><span id="index-12"></span><h4><a class="toc-backref" href="#id15">y_i</a><a class="headerlink" href="#y-i" title="Permalink to this headline">¶</a></h4>
 <p>The only simulated integrand for this example is <a class="reference internal" href="glossary.html#glossary-sincidence"><span class="std std-ref">Sincidence</span></a>
 which is a direct measurement of iota.
 This data is simulated without any noise; i.e.,
@@ -351,7 +363,7 @@ where <em>I_i</em> is the income for the i-th measurement.
 The data is modeled as having noise even though there is no simulated noise.</p>
 </div>
 <div class="section" id="n-i">
-<span id="split-list-simulated-data-n-i"></span><span id="index-12"></span><h4><a class="toc-backref" href="#id15">n_i</a><a class="headerlink" href="#n-i" title="Permalink to this headline">¶</a></h4>
+<span id="absolute-covariates-simulated-data-n-i"></span><span id="index-13"></span><h4><a class="toc-backref" href="#id16">n_i</a><a class="headerlink" href="#n-i" title="Permalink to this headline">¶</a></h4>
 <p>Data is only simulated for the leaf nodes; i.e.,
 each <em>n_i</em> is in the set { n3, n4, n5, n6 }.
 Since the data does not have any nose, the data residuals are a measure
@@ -359,12 +371,12 @@ of how good the fit is for the nodes in the fit_goal_set.</p>
 </div>
 </div>
 <div class="section" id="parent-rate-smoothing">
-<span id="split-list-parent-rate-smoothing"></span><span id="index-13"></span><h3><a class="toc-backref" href="#id16">Parent Rate Smoothing</a><a class="headerlink" href="#parent-rate-smoothing" title="Permalink to this headline">¶</a></h3>
+<span id="absolute-covariates-parent-rate-smoothing"></span><span id="index-14"></span><h3><a class="toc-backref" href="#id17">Parent Rate Smoothing</a><a class="headerlink" href="#parent-rate-smoothing" title="Permalink to this headline">¶</a></h3>
 <p>This is the iota smoothing used for the fit_node.
 There are no <a class="reference internal" href="glossary.html#glossary-dage"><span class="std std-ref">dage</span></a> or <a class="reference internal" href="glossary.html#glossary-dtime"><span class="std std-ref">dtime</span></a>
 priors because there is only one age and one time point in the smoothing grid.</p>
 <div class="section" id="value-prior">
-<span id="split-list-parent-rate-smoothing-value-prior"></span><span id="index-14"></span><h4><a class="toc-backref" href="#id17">Value Prior</a><a class="headerlink" href="#value-prior" title="Permalink to this headline">¶</a></h4>
+<span id="absolute-covariates-parent-rate-smoothing-value-prior"></span><span id="index-15"></span><h4><a class="toc-backref" href="#id18">Value Prior</a><a class="headerlink" href="#value-prior" title="Permalink to this headline">¶</a></h4>
 <p>The following is the value prior used for the root_node</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span>        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;parent_value_prior&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
@@ -373,7 +385,7 @@ priors because there is only one age and one time point in the smoothing grid.</
             <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="n">iota_n0</span> <span class="p">,</span>
             <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="n">iota_n0</span> <span class="o">*</span> <span class="mf">10.0</span><span class="p">,</span>
             <span class="s1">&#39;eta&#39;</span><span class="p">:</span>     <span class="n">iota_n0</span> <span class="o">*</span> <span class="mf">1e-3</span>
-        <span class="p">}</span>
+        <span class="p">},</span>
 </pre></div>
 </div>
 <p>The mean and standard deviation are only used for the root_node.
@@ -382,18 +394,26 @@ routine replaces them for other nodes.</p>
 </div>
 </div>
 <div class="section" id="alpha-smoothing">
-<span id="split-list-alpha-smoothing"></span><span id="index-15"></span><h3><a class="toc-backref" href="#id18">Alpha Smoothing</a><a class="headerlink" href="#alpha-smoothing" title="Permalink to this headline">¶</a></h3>
+<span id="absolute-covariates-alpha-smoothing"></span><span id="index-16"></span><h3><a class="toc-backref" href="#id19">Alpha Smoothing</a><a class="headerlink" href="#alpha-smoothing" title="Permalink to this headline">¶</a></h3>
 <p>This is the smoothing used for <em>alpha</em> which multiplies the income covariate.
 There is only one age and one time point in this smoothing
 so it does not have dage or dtime priors.</p>
-<div class="section" id="split-list-alpha-smoothing-value-prior">
-<span id="index-16"></span><span id="id3"></span><h4><a class="toc-backref" href="#id19">Value Prior</a><a class="headerlink" href="#split-list-alpha-smoothing-value-prior" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="absolute-covariates-alpha-smoothing-value-prior">
+<span id="index-17"></span><span id="id3"></span><h4><a class="toc-backref" href="#id20">Value Prior</a><a class="headerlink" href="#absolute-covariates-alpha-smoothing-value-prior" title="Permalink to this headline">¶</a></h4>
 <p>The following is the value prior used for this smoothing:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span>        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;alpha_value_prior&#39;</span><span class="p">,</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span>        <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;alpha_vaccine_value_prior&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
-            <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
-            <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">),</span>
+            <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">[</span><span class="s1">&#39;vaccine&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">[</span><span class="s1">&#39;vaccine&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">[</span><span class="s1">&#39;vaccine&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
+        <span class="p">},{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;alpha_income_value_prior&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lower&#39;</span><span class="p">:</span>   <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;upper&#39;</span><span class="p">:</span>   <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;std&#39;</span><span class="p">:</span>     <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha_true</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">]),</span>
             <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
         <span class="p">}</span>
 </pre></div>
@@ -404,7 +424,7 @@ routine replaces them for other nodes.</p>
 </div>
 </div>
 <div class="section" id="checking-the-fit">
-<span id="split-list-checking-the-fit"></span><span id="index-17"></span><h3><a class="toc-backref" href="#id20">Checking The Fit</a><a class="headerlink" href="#checking-the-fit" title="Permalink to this headline">¶</a></h3>
+<span id="absolute-covariates-checking-the-fit"></span><span id="index-18"></span><h3><a class="toc-backref" href="#id21">Checking The Fit</a><a class="headerlink" href="#checking-the-fit" title="Permalink to this headline">¶</a></h3>
 <p>The results of the fit are in the
 <a class="reference internal" href="cascade_fit_node.html#cascade-fit-node-output-dismod-db-predict"><span class="std std-ref">predict</span></a> and
 <a class="reference internal" href="cascade_fit_node.html#cascade-fit-node-output-dismod-db-c-predict-fit-var"><span class="std std-ref">c_predict_fit_var</span></a>
@@ -422,13 +442,13 @@ routine uses these tables to check that fit against the truth.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>split_list_py</p></td>
-<td><p><a class="reference internal" href="split_list_py.html#id1"><span class="std std-ref">split_list: Python Source Code</span></a></p></td>
+<tr class="row-even"><td><p>absolute_covariates_py</p></td>
+<td><p><a class="reference internal" href="absolute_covariates_py.html#id1"><span class="std std-ref">absolute_covariates: Python Source Code</span></a></p></td>
 </tr>
 </tbody>
 </table>
 <hr class="docutils" />
-<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">example/split_list.py</span></code></p>
+<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">example/absolute_covariates.py</span></code></p>
 </div>
 </div>
 </div>
@@ -441,10 +461,10 @@ routine uses these tables to check that fit against the truth.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="split_list_py.html" class="btn btn-neutral float-right" title="split_list_py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="absolute_covariates_py.html" class="btn btn-neutral float-right" title="absolute_covariates_py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="prevalence2iota_py.html" class="btn btn-neutral float-left" title="prevalence2iota_py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="example.html" class="btn btn-neutral float-left" title="example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

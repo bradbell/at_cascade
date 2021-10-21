@@ -1,0 +1,26 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!!!!!!!
+absolute_covariates_py
+!!!!!!!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: absolute_covariates_py, absolute_covariates:, python, source, code
+
+.. index:: absolute_covariates_py, absolute_covariates:, python, source, code
+
+.. _absolute_covariates_py:
+
+absolute_covariates: Python Source Code
+#######################################
+.. contents::
+   :local:
+
+
+.. literalinclude:: ../../example/absolute_covariates.py
+    :lines: 192-579
+    :language: py
+
+----
+
+xsrst input file: ``example/absolute_covariates.py``
