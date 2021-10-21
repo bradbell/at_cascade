@@ -23,6 +23,7 @@ fi
 echo_eval bin/run_sphinx.sh
 # BEGIN_SORT_THIS_LINE_PLUS_2
 list='
+    example/absolute_covariates.py
     example/max_fit_option.py
     example/no_ode_xam.py
     example/one_at_function.py

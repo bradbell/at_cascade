@@ -272,7 +272,11 @@ def cascade_fit_node(
     #
     # all_option
     implemented = [
-		'root_node_name', 'max_fit', 'max_abs_effect', 'split_list'
+		'root_node_name',
+        'max_fit',
+        'max_abs_effect',
+        'absolute_covariates',
+        'split_list',
 	]
     all_option  = dict()
     for key in implemented :

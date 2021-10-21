@@ -8,14 +8,14 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin_parent split_list}
+{xsrst_begin_parent absolute_covariates}
 {xsrst_spell
     dage
     dtime
 }
 
-Example Using split_list Option in all_node_database
-####################################################
+Example Using absolute_covariates Option in all_node_database
+#############################################################
 For this example everything is constant w.r.t. age and time.
 
 Nodes
@@ -48,13 +48,13 @@ split_list
 This cascade is set up to split by sex reference value; see
 :ref:`all_option_table.split_list`:
 {xsrst_file
-    # BEGIN_1 split_list
-    # END_1 split_list
+    # BEGIN split_list
+    # END split_list
 }
 
 Covariate
 *********
-There are two covariates for this example, sex and income.
+There are three covariates for this example, sex, vaccine, and income.
 The reference value for income depends on the value of sex;
 see :ref:`create_all_node_db.all_cov_reference`:
 {xsrst_file
@@ -66,12 +66,21 @@ see :ref:`create_all_node_db.all_cov_reference`:
     # END split_reference_list
 }
 
+absolute_covariates
+===================
+The only absolute covariate in this example is vaccine
+(0 for no vaccine, 1 for yes vaccine).
+{xsrst_file
+    # BEGIN_1 absolute_covariates
+    # END_1 absolute_covariates
+}
+
 alpha
 =====
-We use *alpha*
-for the :ref:`glossary.rate_value` covariate multiplier
-that multipliers income.
-This multiplier affects the value of iota.
+We use *alpha*\ ``[income]``
+and  *alpha*\ ``[vaccine]``
+for the :ref:`glossary.rate_value` covariate multipliers
+that multiply the income and vaccine covariates.
 The true value for *alpha* (used which simulating the data) is
 {xsrst_file
     # BEGIN alpha_true
@@ -165,21 +174,21 @@ tables of the fit_node_database corresponding to each node.
 The :ref:`check_cascade_fit<check_cascade_fit>`
 routine uses these tables to check that fit against the truth.
 
-{xsrst_end split_list}
+{xsrst_end absolute_covariates}
 ------------------------------------------------------------------------------
-{xsrst_begin split_list_py}
+{xsrst_begin absolute_covariates_py}
 
-split_list: Python Source Code
-###################################
+absolute_covariates: Python Source Code
+#######################################
 
 {xsrst_file
-    BEGIN_2 split_list source code
-    END_2 split_list source code
+    BEGIN_2 absolute_covariates source code
+    END_2 absolute_covariates source code
 }
 
-{xsrst_end split_list_py}
+{xsrst_end absolute_covariates_py}
 '''
-# BEGIN_2 split_list source code
+# BEGIN_2 absolute_covariates source code
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
@@ -207,14 +216,14 @@ import at_cascade
 fit_goal_set = { 'n3', 'n4', 'n2' }
 # END fit_goal_set
 #
-# BEGIN_1 split_list
+# BEGIN split_list
 split_level_str     = '-1 '
 split_covariate_name = 'sex '
 split_reference_str = '1.0 2.0 3.0'
 all_option = { 'split_list' :
     split_level_str + split_covariate_name + split_reference_str
 }
-# END_1 split_list
+# END split_list
 #
 # BEGIN split_index
 split_index = 2
@@ -230,7 +239,7 @@ for node_id in range(7) :
 # END all_cov_reference
 #
 # BEGIN alpha_true
-alpha_true = - 0.2
+alpha_true = {'vaccine': -0.3,  'income': -0.2}
 # END alpha_true
 #
 # BEGIN split_reference_list
@@ -238,15 +247,21 @@ split_reference_list = split_reference_str.split()
 for k in range( len(split_reference_list) ) :
     split_reference_list[k] = float( split_reference_list[k] )
 # END split_reference_list
+#
+# BEGIN_1 absolute_covariates
+all_option['absolute_covariates'] = 'vaccine'
+# END_1 absolute_covariates
 # ----------------------------------------------------------------------------
 # functions
 # ----------------------------------------------------------------------------
 # BEGIN rate_true
 def rate_true(rate, a, t, n, c) :
-    sex    = c[0]
-    income = c[1]
-    r_0    = all_cov_reference['n0']['income'][split_index]
-    effect = alpha_true * ( income - r_0 )
+    sex     = c[0]
+    vaccine = c[1]
+    income  = c[2]
+    r_0     = all_cov_reference['n0']['income'][split_index]
+    effect  = alpha_true['income']*(income - r_0)
+    effect += alpha_true['vaccine'] * vaccine
     if rate == 'iota' :
         return 1e-2 * exp(effect)
     if rate == 'omega' :
@@ -257,16 +272,16 @@ def rate_true(rate, a, t, n, c) :
 def root_node_db(file_name) :
     #
     # iota_n0
-    covariate_list = [
-        split_reference_list[split_index],
-        all_cov_reference['n0']['income'][split_index],
-    ]
+    sex     = split_reference_list[split_index]
+    vaccine = 0.0
+    income  = all_cov_reference['n0']['income'][split_index]
+    covariate_list = [ sex, vaccine, income ]
     iota_n0        = rate_true('iota', None, None, None, covariate_list)
     # END iota_50
     #
     # prior_table
     prior_table = list()
-    prior_table.append(
+    prior_table = [
         # BEGIN parent_value_prior
         {   'name':    'parent_value_prior',
             'density': 'gaussian',
@@ -275,20 +290,26 @@ def root_node_db(file_name) :
             'mean':    iota_n0 ,
             'std':     iota_n0 * 10.0,
             'eta':     iota_n0 * 1e-3
-        }
+        },
         # END parent_value_prior
-    )
-    prior_table.append(
         # BEGIN alpha_value_prior
-        {   'name':    'alpha_value_prior',
+        {
+            'name':    'alpha_vaccine_value_prior',
             'density': 'gaussian',
-            'lower':   - 10 * abs(alpha_true),
-            'upper':   + 10 * abs(alpha_true),
-            'std':     + 10 * abs(alpha_true),
+            'lower':   - 10 * abs(alpha_true['vaccine']),
+            'upper':   + 10 * abs(alpha_true['vaccine']),
+            'std':     + 10 * abs(alpha_true['vaccine']),
+            'mean':    0.0,
+        },{
+            'name':    'alpha_income_value_prior',
+            'density': 'gaussian',
+            'lower':   - 10 * abs(alpha_true['income']),
+            'upper':   + 10 * abs(alpha_true['income']),
+            'std':     + 10 * abs(alpha_true['income']),
             'mean':    0.0,
         }
         # END alpha_value_prior
-    )
+    ]
     #
     # smooth_table
     smooth_table = list()
@@ -302,10 +323,19 @@ def root_node_db(file_name) :
         'fun':        fun,
     })
     #
-    # alpha_smooth
-    fun = lambda a, t : ('alpha_value_prior', None, None)
+    # alpha_vaccine_smooth
+    fun = lambda a, t : ('alpha_vaccine_value_prior', None, None)
     smooth_table.append({
-        'name':       'alpha_smooth',
+        'name':       'alpha_vaccine_smooth',
+        'age_id':     [0],
+        'time_id':    [0],
+        'fun':        fun,
+    })
+    #
+    # alpha_income_smooth
+    fun = lambda a, t : ('alpha_income_value_prior', None, None)
+    smooth_table.append({
+        'name':       'alpha_income_smooth',
         'age_id':     [0],
         'time_id':    [0],
         'fun':        fun,
@@ -331,24 +361,37 @@ def root_node_db(file_name) :
     #
     # covariate_table
     covariate_table = list()
-    covariate_table.append( {
+    covariate_table = [
+        {
         'name':     'sex',
         'reference': split_reference_list[split_index],
-    } )
-    covariate_table.append( {
+        },{
+        'name':     'vaccine',
+        'reference': 0.0,      # 0 for no vaccine, 1 for yes vaccine
+        },{
         'name':     'income',
         'reference': all_cov_reference['n0']['income'][split_index],
-    } )
+        }
+    ]
     #
     # mulcov_table
-    mulcov_table = [ {
-        # alpha
+    mulcov_table = [
+        {
+        # alpha_vaccine
+        'covariate':  'vaccine',
+        'type':       'rate_value',
+        'effected':   'iota',
+        'group':      'world',
+        'smooth':     'alpha_vaccine_smooth',
+        },{
+        # alpha_income
         'covariate':  'income',
         'type':       'rate_value',
         'effected':   'iota',
         'group':      'world',
-        'smooth':     'alpha_smooth',
-    } ]
+        'smooth':     'alpha_income_smooth',
+        }
+    ]
     #
     # subgroup_table
     subgroup_table = [ {'subgroup': 'world', 'group':'world'} ]
@@ -369,6 +412,7 @@ def root_node_db(file_name) :
         'age_lower':    50.0,
         'age_upper':    50.0,
         'sex':          None,
+        'vaccine':      None,
         'income':       None,
         'integrand':    'Sincidence',
     }
@@ -391,13 +435,17 @@ def root_node_db(file_name) :
     for node in leaf_set :
         sex        = split_reference_list[split_index]
         income     = all_cov_reference[node]['income'][split_index]
-        meas_value = rate_true('iota', None, None, None, [ None, income ])
-        row['node']       = node
-        row['meas_value'] = meas_value
-        row['sex']        = sex
-        row['income']     = income
-        row['meas_std']   = meas_value / 10.0
-        data_table.append( copy.copy(row) )
+        for vaccine in [ 0.0, 1.0 ] :
+            covariate_list = [ None, vaccine, income ]
+            meas_value = rate_true('iota', None, None, None, covariate_list)
+            #
+            row['node']       = node
+            row['meas_value'] = meas_value
+            row['sex']        = sex
+            row['vaccine']    = vaccine
+            row['income']     = income
+            row['meas_std']   = meas_value / 10.0
+            data_table.append( copy.copy(row) )
     #
     # age_grid
     age_grid = [ 0.0, 100.0 ]
@@ -477,12 +525,13 @@ def main() :
             mtall_data[node_name].append( list() )
             for age_id in omega_grid['age'] :
                 for time_id in omega_grid['time'] :
-                    age    = age_table[age_id]['age']
-                    time   = time_table[time_id]['time']
-                    sex    = split_reference_list[k]
-                    income = all_cov_reference[node_name]['income'][k]
-                    cov    = [ sex, income ]
-                    omega  = rate_true('omega', None, None, None, cov)
+                    age     = age_table[age_id]['age']
+                    time    = time_table[time_id]['time']
+                    sex     = split_reference_list[k]
+                    vaccine = 0.0
+                    income  = all_cov_reference[node_name]['income'][k]
+                    cov     = [ sex, vaccine, income ]
+                    omega   = rate_true('omega', None, None, None, cov)
                     mtall_data[node_name][k].append( omega )
     #
     # Create all_node.db
@@ -526,6 +575,6 @@ def main() :
         assert not os.path.exists( not_fit_dir )
 #
 main()
-print('split_list: OK')
+print('absolute_covariates: OK')
 sys.exit(0)
-# END_2 split_list source code
+# END_2 absolute_covariates source code
