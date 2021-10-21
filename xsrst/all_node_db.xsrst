@@ -24,12 +24,14 @@ initial value is zero, and it must increment by one for each row.
 {xsrst_end all_node_db}
 ------------------------------------------------------------------------------
 {xsrst_begin all_cov_reference_table}
+{xsrst_spell
+    covariate covariate
+}
 
 All Node Covariate Reference Table
 ##################################
-This table specifies the reference value for every covariate
-and node in the :ref:`glossary.root_node_database`.
-It has the following columns:
+This table specifies the reference values for the
+:ref:`relative covariates<glossary.relative_covariate>`.
 
 all_cov_reference_id
 ********************
@@ -60,11 +62,9 @@ reference
 This column has type ``real`` and it specifies the reference value
 for this covariate and node.
 For each node_id in the :ref:`glossary.fit_node_set`,
-each covariate_id,
-and each split_reference,
+each relative covariate covariate_id ,
+and each split_reference_id,
 there must be one and only one reference value.
-Note that when the covariate_id corresponds to the split_covariate,
-the reference and the split_reference must have the same value.
 
 {xsrst_end all_cov_reference_table}
 ------------------------------------------------------------------------------

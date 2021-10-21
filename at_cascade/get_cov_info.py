@@ -53,11 +53,8 @@ for all nodes and all values of the splitting covariate.
 rel_covariate_id_set
 ====================
 if *key* is rel_covariate_id_set, *cov_info[key]* is a set of ``int``.
-A covariate_id is in this set if and only if
-it is not in abs_covariate_set (see above) and it is not the
-split_covariate_id (see below).
-The reference value for these relative covariates depends on the
-node and value of the splitting covariate.
+This is the set of covariate_id values corresponding to the
+:ref:`relative covariates<glossary.relative_covariate>`.
 
 Split Keys
 ==========

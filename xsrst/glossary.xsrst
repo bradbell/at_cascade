@@ -192,6 +192,16 @@ rate_value
 **********
 The abbreviation used for rate value covariate multiplier.
 
+Relative Covariate
+******************
+A relative covariate is any covariate that is not an
+:ref:`absolute covariate<all_option_table.absolute_covariates>`
+and is not the splitting covariate
+(which is specified by the
+:ref:`all_option_table.split_list.split_covariate_name`).
+The reference value for a relative covariate can depend on the node
+and the value of the splitting covariate.
+
 remission
 *********
 The abbreviation used for the remission integrand.

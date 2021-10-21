@@ -69,6 +69,12 @@ all_option
 This argument can't be ``None``.
 It is a dictionary with the following possible keys:
 
+absolute_covariates
+===================
+If this key is present, it is a ``str`` specifying the
+:ref:`all_option_table.absolute_covariates`.
+Otherwise, there absolute_covariates does not appear in the all_option table.
+
 split_list
 ==========
 If this key is present, it is a ``str`` specifying the
@@ -223,16 +229,11 @@ def create_all_node_db(
     else :
         assert not mtall_data is None
     #
-    # split_reference_list, n_split
-    split_reference_list = None
+    # n_split
     n_split              = 1
     if 'split_list' in all_option :
         split_list = all_option['split_list']
-        split_list = split_list.split()
-        split_reference_list = list()
-        for reference in split_list[2:] :
-            split_reference_list.append( float(reference) )
-        n_split = len( split_reference_list )
+        n_split    = len( split_list.split() ) - 2
     #
     # -------------------------------------------------------------------------
     # Read root node database
@@ -298,13 +299,13 @@ def create_all_node_db(
             covariate_name = covariate_table[covariate_id]['covariate_name']
             reference_list = all_cov_reference[node_name][covariate_name]
             #
-            if split_reference_list is None :
+            if not 'split_list' in all_option :
                 assert len(reference_list) == 1
                 reference = reference_list[0]
                 row       = [ node_id, covariate_id, None, reference ]
                 row_list.append( row )
             else :
-                assert len(reference_list) == len(split_reference_list)
+                assert len(reference_list) == n_split
                 for (i, reference) in enumerate(reference_list) :
                     split_reference_id = i
                     row  = [
@@ -401,7 +402,7 @@ def create_all_node_db(
         for node_name in node_list :
             node_id = at_cascade.table_name2id(node_table, 'node', node_name)
             for k in range(n_split) :
-                if split_reference_list is None :
+                if not 'split_list' in all_option :
                     split_reference_id = None
                 else :
                     split_reference_id = k
@@ -444,7 +445,7 @@ def create_all_node_db(
         for node_name in node_list :
             node_id = at_cascade.table_name2id(node_table, 'node', node_name)
             for k in range(n_split) :
-                if split_reference_list is None :
+                if not 'split_list' in all_option :
                     split_reference_id = None
                 else :
                     split_reference_id = k
