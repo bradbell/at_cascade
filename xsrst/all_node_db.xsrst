@@ -355,8 +355,8 @@ and *cov_ref* is the reference value for the covariate.
 absolute_covariates
 *******************
 This is a space separate list of the names for the
-covariates that do not change thier reference value and hence are not
-included in the :ref:`all_cov_reference` table.
+covariates that do not change their reference value and hence are not
+included in the :ref:`all_cov_reference_table`.
 If this option does not appear, there are no absolute covariates.
 
 split_list

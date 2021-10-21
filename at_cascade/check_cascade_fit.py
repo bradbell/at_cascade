@@ -129,7 +129,7 @@ def check_cascade_fit(
     for row in all_cov_reference_table :
         if row['node_id'] == fit_node_id :
             covariate_id = row['covariate_id']
-            if cov_info is None :
+            if not 'split_list' in cov_info :
                 cov_reference_list[covariate_id] = row['reference']
             elif row['split_reference_id']==cov_info['split_reference_id'] :
                 cov_reference_list[covariate_id] = row['reference']

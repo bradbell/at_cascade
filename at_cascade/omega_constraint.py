@@ -194,7 +194,7 @@ def omega_constraint(
     cov_info = at_cascade.get_cov_info(
         all_tables['all_option'], fit_tables['covariate']
     )
-    if cov_info is None :
+    if not 'split_list' in cov_info :
         split_reference_id = None
     else :
         split_reference_id = cov_info['split_reference_id']

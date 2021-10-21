@@ -37,48 +37,43 @@ This argument can't be ``None``.
 
 cov_info
 ********
-If :ref:`all_option_table.split_list` is not in the
-all_option table, the return value *cov_info* is ``None``.
-Otherwise, it is a `dict` with the following keys:
+The return value *cov_info* is a `dict` with the following keys:
+
+
+Split Keys
+==========
+The keys that begin with ``split_`` appear (do not appear)
+if :ref:`all_option_table.split_list` is in (is not in)
+the all_option table
 
 split_list
-==========
-if *key* is split_level, *cov_info[key]* is a ``str``
+----------
+if *key* is split_list, *cov_info[key]* is a ``str``
 representation of :ref:`all_option_table.split_list`.
 
 split_level
-===========
+-----------
 if *key* is split_level, *cov_info[key]* is an ``int``
 representation of :ref:`all_option_table.split_list.split_level`.
 
 split_covariate_name
-====================
+--------------------
 if *key* is split_covariate_name, *cov_info[key]* is a ``str``
 representation of :ref:`all_option_table.split_list.split_covariate_name`.
 
 split_reference_list
-====================
+--------------------
 if *key* is split_reference_list, *cov_info[key]* is a
 ``list`` of ``float`` representation of
 :ref:`all_option_table.split_list.split_reference_list`.
 
 split_reference_id
-====================
+-------------------
 if *key* is split_reference_id, *cov_info[key]* is an ``int``
 containing an index in the split_reference_list.
 The corresponding value is split_reference_list is equal to
 to reference value for split_covariate_name in the covariate table.
-abs_covariare_id_list
-
 abs_covariate_id_list
-=====================
-if *key* is abs_covariate_id_list, *cov_info[key]* the list of ``int``
-where the k-th element of the list corresponds to the k-th element of
-the all_option table value :ref:`all_option.absolute_covariates`.
-If absolute_covariates does not appear in the all_option table,
-*abs_covariate_id_list* is empty.
-
-
 
 
 {xsrst_end get_cov_info}
@@ -100,10 +95,10 @@ def get_cov_info(
         if row['option_name'] == 'split_list' :
             split_list           = row['option_value']
     if split_list is None :
-        return None
+        return dict()
     #
     # split_level, split_covarate_name, split_reference_list
-    temp_list = split_list.split()
+    temp_list            = split_list.split()
     split_level          = int( temp_list[0] )
     split_covariate_name = temp_list[1]
     split_reference_list = temp_list[2:]
