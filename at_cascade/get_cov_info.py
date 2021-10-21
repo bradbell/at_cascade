@@ -126,10 +126,9 @@ def get_cov_info(
     #
     # rel_covariate_id_set
     rel_covariate_id_set = set()
-    if split_list is None :
-        for covariate_id in range( len(covariate_table) ) :
-            if not covariate_id in abs_covariate_id_set :
-                rel_covariate_id_set.add( covariate_id )
+    for covariate_id in range( len(covariate_table) ) :
+        if not covariate_id in abs_covariate_id_set :
+            rel_covariate_id_set.add( covariate_id )
     #
     # case where split_list not in all_option table
     if split_list is None :

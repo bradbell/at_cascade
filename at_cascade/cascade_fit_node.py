@@ -162,9 +162,11 @@ def check_covariate_reference(
     # cov_info
     cov_info = at_cascade.get_cov_info(all_option_table, covariate_table)
     #
-    # check_reference
-    check_reference = len(covariate_table) * [ False ]
+    # rel_covariate_id_set
+    rel_covariate_id_set = cov_info['rel_covariate_id_set']
     #
+    # check_reference_set
+    check_reference_set = set()
     # ------------------------------------------------------------------------
     if not 'split_list' in cov_info :
         for row in all_cov_reference_table :
@@ -172,7 +174,7 @@ def check_covariate_reference(
             if row['node_id'] == fit_node_id :
                 covariate_id = row['covariate_id']
                 #
-                if check_reference[covariate_id] :
+                if covariate_id in check_reference_set :
                     msg  = 'split_list is not in all_option table and '
                     msg += 'more than one row in all_cov_reference table has\n'
                     msg += f'node_id = {fit_node_id} '
@@ -188,8 +190,16 @@ def check_covariate_reference(
                     msg += 'covariate and all_cov_reference tables'
                     assert False, msg
                 #
-                # check_reference
-                check_reference[covariate_id] = True
+                # check_reference_set
+                check_reference_set.add(covariate_id)
+        #
+        if check_reference_set != rel_covariate_id_set :
+            msg  = f'node_id = {fit_node_id} all_cov_reference_table has '
+            msg += 'reference values for following set of covaraite_id\n'
+            msg += f'{check_reference_set}\n'
+            msg += 'but this is not equal to the set of relative covariates\n'
+            msg += f'{rel_covariate_id_set}'
+            assert False, msg
         return
     # ------------------------------------------------------------------------
     #
@@ -202,7 +212,7 @@ def check_covariate_reference(
         if row['node_id'] == fit_node_id and \
             row['split_reference_id'] == split_reference_id :
             #
-            if check_reference[covariate_id] :
+            if covariate_id in check_reference_set :
                 msg  = 'More than one row in all_cov_reference table has\n'
                 msg += f'node_id = {fit_node_id} '
                 msg += f'split_reference_id = {split_reference_id} and '
@@ -218,8 +228,18 @@ def check_covariate_reference(
                 msg += 'covariate and all_cov_reference tables'
                 assert False, msg
             #
-            # check_reference
-            check_reference[covariate_id] = True
+            # check_reference_set
+            check_reference_set.add(covariate_id)
+    #
+    if check_reference_set != rel_covariate_id_set :
+        msg  = f'node_id = {fit_node_id}, '
+        msg += f'split_reference_id = {split_reference_id}\n'
+        msg += 'all_cov_reference_table has reference values '
+        msg += 'for following set of covaraite_id\n'
+        msg += f'{check_reference_set}\n'
+        msg += 'but this is not equal to the set of relative covariates\n'
+        msg += f'{rel_covariate_id_set}'
+        assert False, msg
     return
 # ----------------------------------------------------------------------------
 def cascade_fit_node(

@@ -279,6 +279,24 @@ def create_all_node_db(
     # root_node_name
     root_node_name = node_table[root_node_id]['node_name']
     #
+    # rel_covariate_id_set
+    rel_covariate_id_set = set( range(len(covariate_table)) )
+    if 'split_list' in all_option :
+        temp_list            = all_option['split_list'].split()
+        split_covariate_name = temp_list[1]
+        split_covariate_id   = at_cascade.table_name2id(
+            covariate_table, 'covariate', split_covariate_name
+        )
+        rel_covariate_id_set.remove(split_covariate_id)
+    if 'absolute_covariates' in all_option :
+        temp_list = all_option['absolute_covariates'].split()
+        abs_covariate_id_list = list()
+        for covariate_name in temp_list :
+            covariate_id   = at_cascade.table_name2id(
+                covariate_table, 'covariate', covariate_name
+            )
+        rel_covariate_id_set.remove(covariate_id)
+    #
     # close
     root_connection.close()
     # -------------------------------------------------------------------------
@@ -294,7 +312,7 @@ def create_all_node_db(
     col_type = [ 'integer', 'integer',      'integer',            'real'     ]
     row_list = list()
     for node_id in range( len(node_table) ) :
-        for covariate_id in range( len(covariate_table) ) :
+        for covariate_id in rel_covariate_id_set :
             node_name      = node_table[node_id]['node_name']
             covariate_name = covariate_table[covariate_id]['covariate_name']
             reference_list = all_cov_reference[node_name][covariate_name]

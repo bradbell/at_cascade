@@ -221,7 +221,6 @@ all_cov_reference = dict()
 for node_id in range(7) :
     node_name = 'n' + str(node_id)
     all_cov_reference[node_name] = {
-        'sex'    : [ 1.0, 2.0, 3.0 ],
         'income' : [ 1.0 - node_id / 10.0, 1.0, 1.0 + node_id / 10.0 ]
     }
 # END all_cov_reference
@@ -230,6 +229,10 @@ for node_id in range(7) :
 alpha_true = - 0.2
 # END alpha_true
 #
+# split_reference_list
+split_reference_list = split_reference_str.split()
+for k in range( len(split_reference_list) ) :
+    split_reference_list[k] = float( split_reference_list[k] )
 # ----------------------------------------------------------------------------
 # functions
 # ----------------------------------------------------------------------------
@@ -250,7 +253,7 @@ def root_node_db(file_name) :
     #
     # iota_n0
     covariate_list = [
-        all_cov_reference['n0']['sex'][split_index],
+        split_reference_list[split_index],
         all_cov_reference['n0']['income'][split_index],
     ]
     iota_n0        = rate_true('iota', None, None, None, covariate_list)
@@ -325,7 +328,7 @@ def root_node_db(file_name) :
     covariate_table = list()
     covariate_table.append( {
         'name':     'sex',
-        'reference': all_cov_reference['n0']['sex'][split_index],
+        'reference': split_reference_list[split_index],
     } )
     covariate_table.append( {
         'name':     'income',
@@ -381,7 +384,7 @@ def root_node_db(file_name) :
         'hold_out':     False,
     }
     for node in leaf_set :
-        sex        = all_cov_reference[node]['sex'][split_index]
+        sex        = split_reference_list[split_index]
         income     = all_cov_reference[node]['income'][split_index]
         meas_value = rate_true('iota', None, None, None, [ None, income ])
         row['node']       = node
