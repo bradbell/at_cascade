@@ -352,6 +352,13 @@ where *cov_bnd* is the non-negative covariate multiplier bound,
 *cov_value* is a data table value of the covariate,
 and *cov_ref* is the reference value for the covariate.
 
+absolute_covariates
+*******************
+This is a space separate list of the names for the
+covariates that do not change thier reference value and hence are not
+included in the :ref:`all_cov_reference` table.
+If this option does not appear, there are no absolute covariates.
+
 split_list
 **********
 This is a space separated list with the following entries:
