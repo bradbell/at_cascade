@@ -324,13 +324,13 @@ def create_child_node_db(
     )
     #
     # split_reference_id
-    split_info = at_cascade.get_split_info(
+    cov_info = at_cascade.get_cov_info(
         all_option_table, parent_tables['covariate']
     )
-    if split_info is None :
+    if cov_info is None :
         split_reference_id = None
     else :
-        split_reference_id = split_info['split_reference_id']
+        split_reference_id = cov_info['split_reference_id']
     #
     for child_name in child_node_databases :
         # ---------------------------------------------------------------------

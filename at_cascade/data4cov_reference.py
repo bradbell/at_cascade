@@ -120,13 +120,13 @@ def data4cov_reference(
     connection.close()
     #
     # split_reference_id
-    split_info = at_cascade.get_split_info(
+    cov_info = at_cascade.get_cov_info(
         all_table['all_option'], root_table['covariate']
     )
-    if split_info is None :
+    if cov_info is None :
         split_reference_id = None
     else :
-        split_reference_id = split_info['split_reference_id']
+        split_reference_id = cov_info['split_reference_id']
 
     #
     # n_covariate

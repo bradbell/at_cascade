@@ -119,8 +119,8 @@ def check_cascade_fit(
         tables['node'], 'node', fit_node_name
     )
     #
-    # split_info
-    split_info = at_cascade.get_split_info(
+    # cov_info
+    cov_info = at_cascade.get_cov_info(
         all_option_table, tables['covariate']
     )
     #
@@ -129,9 +129,9 @@ def check_cascade_fit(
     for row in all_cov_reference_table :
         if row['node_id'] == fit_node_id :
             covariate_id = row['covariate_id']
-            if split_info is None :
+            if cov_info is None :
                 cov_reference_list[covariate_id] = row['reference']
-            elif row['split_reference_id']==split_info['split_reference_id'] :
+            elif row['split_reference_id']==cov_info['split_reference_id'] :
                 cov_reference_list[covariate_id] = row['reference']
     for reference in cov_reference_list :
         assert not reference is None

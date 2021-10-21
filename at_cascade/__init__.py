@@ -21,10 +21,10 @@ The at_cascade Python Module
     at_cascade/create_all_node_db.py
     at_cascade/create_child_node_db.py
     at_cascade/data4cov_reference.py
+    at_cascade/get_cov_info.py
     at_cascade/get_fit_children.py
     at_cascade/get_fit_integrand.py
     at_cascade/get_parent_node.py
-    at_cascade/get_split_info.py
     at_cascade/no_ode_fit.py
     at_cascade/omega_constraint.py
     at_cascade/table_name2id.py
@@ -41,10 +41,10 @@ from .child_avgint_table    import child_avgint_table
 from .create_all_node_db    import create_all_node_db
 from .create_child_node_db  import create_child_node_db
 from .data4cov_reference    import data4cov_reference
+from .get_cov_info          import get_cov_info
 from .get_fit_children      import get_fit_children
 from .get_fit_integrand     import get_fit_integrand
 from .get_parent_node       import get_parent_node
-from .get_split_info        import get_split_info
 from .no_ode_fit            import no_ode_fit
 from .omega_constraint      import omega_constraint
 from .table_name2id         import table_name2id

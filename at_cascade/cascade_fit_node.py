@@ -160,13 +160,13 @@ def check_covariate_reference(
 ) :
     #
     # split_list
-    split_info = at_cascade.get_split_info(all_option_table, covariate_table)
+    cov_info = at_cascade.get_cov_info(all_option_table, covariate_table)
     #
     # check_reference
     check_reference = len(covariate_table) * [ False ]
     #
     # ------------------------------------------------------------------------
-    if split_info is None :
+    if cov_info is None :
         for row in all_cov_reference_table :
             assert row['split_reference_id'] is None
             if row['node_id'] == fit_node_id :
@@ -194,7 +194,7 @@ def check_covariate_reference(
     # ------------------------------------------------------------------------
     #
     # split_reference_id
-    split_reference_id = split_info['split_reference_id']
+    split_reference_id = cov_info['split_reference_id']
     #
     for row in all_cov_reference_table :
         assert not row['split_reference_id'] is None

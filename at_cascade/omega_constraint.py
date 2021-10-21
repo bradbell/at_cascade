@@ -191,13 +191,13 @@ def omega_constraint(
             assert False, msg
     #
     # split_reference_id
-    split_info = at_cascade.get_split_info(
+    cov_info = at_cascade.get_cov_info(
         all_tables['all_option'], fit_tables['covariate']
     )
-    if split_info is None :
+    if cov_info is None :
         split_reference_id = None
     else :
-        split_reference_id = split_info['split_reference_id']
+        split_reference_id = cov_info['split_reference_id']
     #
     # parent_node_id
     parent_node_name = None
