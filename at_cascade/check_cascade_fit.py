@@ -124,7 +124,7 @@ def check_cascade_fit(
         all_option_table, tables['covariate']
     )
     #
-    # cov_reference
+    # cov_reference_list
     # values that are in the all_cov_reference table
     cov_reference_list = n_covariate * [ None ]
     for row in all_cov_reference_table :
@@ -135,14 +135,21 @@ def check_cascade_fit(
             elif row['split_reference_id']==cov_info['split_reference_id'] :
                 cov_reference_list[covariate_id] = row['reference']
     #
-    # cov_reference
-    # value that is in the split_list
+    # cov_reference_list
+    # include splitting covariate value
     if 'split_list' in cov_info :
         split_covariate_id   = cov_info['split_covariate_id']
         split_reference_list = cov_info['split_reference_list']
         split_reference_id   = cov_info['split_reference_id']
         reference            = split_reference_list[split_reference_id]
         cov_reference_list[split_covariate_id] = reference
+    #
+    # cov_reference_list
+    # include absolute covariate values
+    for covariate_id in cov_info['abs_covariate_id_set'] :
+        reference = tables['covariate'][covariate_id]['reference']
+        cov_reference_list[covariate_id] = reference
+
     #
     for reference in cov_reference_list :
         assert not reference is None

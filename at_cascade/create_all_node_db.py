@@ -290,7 +290,7 @@ def create_all_node_db(
         rel_covariate_id_set.remove(split_covariate_id)
     if 'absolute_covariates' in all_option :
         temp_list = all_option['absolute_covariates'].split()
-        abs_covariate_id_list = list()
+        abs_covariate_id_set = set()
         for covariate_name in temp_list :
             covariate_id   = at_cascade.table_name2id(
                 covariate_table, 'covariate', covariate_name
