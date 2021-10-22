@@ -47,39 +47,29 @@ and :ref:`all_option_table` are used.
 
 all_option Table
 ================
-The :ref:`all_option_table.split_list` row of this table
-(if it exists) is the only row of this table that is used.
+The :ref:`all_option_table.split_list` and
+:ref:`all_option_table.absolute_covariates` rows of this table
+(if they exist) are the only rows of this table that are used.
 
 all_cov_reference Table
 =======================
-The :ref:`all_cov_reference_table.reference` column for some of the rows in
-this table is replaced by the average of the corresponding covariate in the
-data table.
-Only the rows of the data table that satisfy the following conditions
-are included when computing the average:
+The :ref:`all_cov_reference_table.reference` created
+using the average of the covariates in the data table.
 
-1.  The node_id for the data table row is the
-    :ref:`all_cov_reference_table.node_id` for the all_cov_reference row,
+1.  If there is an all_cov_reference table on input,
+    all its information is lost.
+
+2.  The node_id for the data table row is the
+    :ref:`all_cov_reference_table.node_id` for the new all_cov_reference row,
     or a descendant of all_cov_reference node.
 
-2.  The difference of all the covariate values in the data table row
+3.  The difference of all the covariate values in the data table row
     from the corresponding reference in the covariate table is
     less than or equal the maximum difference for that covariate.
 
-Only the rows of the all_cov_reference table
-that satisfy the following conditions are modified:
-
-3.  There is at least one row of the data table that satisfies conditions
-    1 and 2 for this all_cov_reference
-    :ref:`all_cov_reference_table.covariate_id`.
-
-4.  This all_cov_reference covariate has maximum difference equal to
-    infinity (or null).
-
-5.  The :ref:`all_cov_reference_table.split_reference_id` for this row
-    corresponds to the covariate value for splitting covariate in the
-    covariate table.
-    (2DO: This should be extended to all values for the splitting covariate.)
+4.  If there is no row of the data table that satisfies conditions
+    1 and 2 for this all_cov_reference row,
+    the resulting reference value is null.
 
 {xsrst_end data4cov_reference}}
 '''
@@ -95,15 +85,10 @@ def data4cov_reference(
 # END syntax
 ) :
     #
-    # all_table
-    new        = False
-    connection = dismod_at.create_connection(all_node_database, new)
-    all_table  = dict()
-    for tbl_name in [
-        'all_option',
-        'all_cov_reference',
-    ] :
-        all_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
+    # all_option_table
+    new              = False
+    connection       = dismod_at.create_connection(all_node_database, new)
+    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
     connection.close()
     #
     # root_table
@@ -119,15 +104,23 @@ def data4cov_reference(
         root_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
     connection.close()
     #
-    # split_reference_id
+    # cov_info
     cov_info = at_cascade.get_cov_info(
-        all_table['all_option'], root_table['covariate']
+        all_option_table, root_table['covariate']
     )
-    if not 'split_list' in cov_info :
-        split_reference_id = None
-    else :
-        split_reference_id = cov_info['split_reference_id']
-
+    #
+    # rel_covariate_id_set
+    rel_covariate_id_set = cov_info['rel_covariate_id_set']
+    #
+    # check max_difference
+    for covariate_id in rel_covariate_id_set :
+        covariate_row  = root_table['covariate'][covariate_id]
+        max_difference = covariate_row['max_difference']
+        if not max_difference in [ None, math.inf ] :
+            msg  = f'data4cov_reference: covariate_id = {covariate_id}\n'
+            msg += 'is a relative covariate and '
+            msg += f'max_difference = {max_difference}'
+            assert False, msg
     #
     # n_covariate
     n_covariate = len( root_table['covariate'] )
@@ -147,11 +140,20 @@ def data4cov_reference(
             )
     assert not parent_node_id is None
     #
-    # covariate_avg
-    covariate_avg = list()
+    # split_reference_list, split_covariate_id, n_split
+    if 'split_list' in cov_info :
+        split_reference_list  = cov_info['split_reference_list']
+        split_covariate_id    = cov_info['split_covariate_id']
+        n_split               = len(split_reference_list)
+    else :
+        split_reference_list  = None
+        split_covariate_id    = None
+        n_split               = 1
+    #
+    #
+    # row_list
+    row_list = list()
     for avg_node_id in range( len(root_table['node'] ) ) :
-        assert len( covariate_avg ) == avg_node_id
-        covariate_avg.append( None )
         #
         # is_decendant
         is_descendant = list()
@@ -165,65 +167,77 @@ def data4cov_reference(
                 ancestor_node_id = ancestor_row['parent']
             is_descendant.append( this_is_descendant)
         #
-        # data_subset_list
-        data_subset_list = list()
-        for (data_id, data_row) in enumerate(root_table['data']) :
-            node_id = data_row['node_id']
-            if is_descendant[node_id] :
-                in_bounds = True
-                for covariate_id in range( n_covariate ) :
-                    label               = covariate_label[covariate_id]
-                    covariate_value     = data_row[label]
-                    covariate_row       = root_table['covariate'][covariate_id]
-                    reference           = covariate_row['reference']
-                    max_difference      = covariate_row['max_difference']
-                    assert not reference is None
-                    #
-                    if max_difference is None :
-                        max_difference = math.inf
-                    if covariate_value is None :
-                        covariate_value = reference
-                    abs_difference      = abs( covariate_value - reference )
-                    in_bounds = in_bounds and abs_difference <= max_difference
-                if in_bounds :
-                    data_subset_list.append( data_id )
-        #
-        # covariate_value
-        covariate_value = list()
-        for covariate_id in range( n_covariate ) :
-            covariate_value.append( list() )
-        for data_id in data_subset_list :
-            data_row = root_table['data'][data_id]
-            for covariate_id in range( n_covariate ) :
-                covariate_row  = root_table['covariate'][covariate_id]
-                max_difference = covariate_row['max_difference']
-                cov_value      = data_row[ covariate_label[covariate_id] ]
-                if not cov_value is None :
-                    if max_difference is None or max_difference == math.inf :
-                        covariate_value[covariate_id].append(cov_value)
-        #
-        # covariate_avg[avg_node_id]
-        covariate_avg[avg_node_id] = list()
-        for covariate_id in range( n_covariate ) :
-            cov_list = covariate_value[covariate_id]
-            if len( cov_list ) == 0 :
-                avg = None
+        # split_reference_id, split_reference
+        for k in range( n_split ) :
+            if 'split_list' in cov_info :
+                split_reference_id = k
+                split_reference    = split_reference_list[k]
             else :
-                avg = sum(cov_list) / len(cov_list)
-            covariate_avg[avg_node_id].append( avg )
+                row  = root_table['covariate'][split_covariate_id]
+                split_reference    = row['reference']
+                split_reference_id = None
+            #
+            # data_subset_list
+            data_subset_list = list()
+            for (data_id, data_row) in enumerate(root_table['data']) :
+                node_id = data_row['node_id']
+                if is_descendant[node_id] :
+                    in_bnd = True
+                    for covariate_id in range( n_covariate ) :
+                        label           = covariate_label[covariate_id]
+                        covariate_value = data_row[label]
+                        covariate_row   = root_table['covariate'][covariate_id]
+                        reference       = covariate_row['reference']
+                        if covariate_id == split_covariate_id :
+                            reference   = split_reference
+                        max_difference  = covariate_row['max_difference']
+                        if max_difference is None :
+                            max_difference = math.inf
+                        #
+                        skip = covariate_value is None
+                        skip = skip or max_difference == math.inf
+                        if not skip :
+                            abs_diff = abs( covariate_value - reference )
+                            in_bnd   = in_bnd and abs_diff <= max_difference
+                    if in_bnd :
+                        data_subset_list.append( data_id )
+            #
+            # covariate_value
+            covariate_value = dict()
+            for covariate_id in rel_covariate_id_set :
+                covariate_value[covariate_id] = list()
+            for data_id in data_subset_list :
+                data_row = root_table['data'][data_id]
+                for covariate_id in rel_covariate_id_set :
+                    covariate_row  = root_table['covariate'][covariate_id]
+                    cov_value      = data_row[ covariate_label[covariate_id] ]
+                    if not cov_value is None :
+                        covariate_value[covariate_id].append(cov_value)
+            #
+            # all_cov_reference
+            for covariate_id in rel_covariate_id_set :
+                cov_list = covariate_value[covariate_id]
+                if len( cov_list ) == 0 :
+                    avg = None
+                else :
+                    avg = sum(cov_list) / len(cov_list)
+                #
+                # row_list
+                node_id   = avg_node_id
+                reference = avg
+                row = [ node_id, covariate_id, split_reference_id, reference ]
+                row_list.append( row )
     #
-    # all_table['all_cov_reference']
-    for row in all_table['all_cov_reference'] :
-        if row['split_reference_id'] == split_reference_id :
-            covariate_id = row['covariate_id']
-            node_id      = row['node_id']
-            avg          =  covariate_avg[node_id][covariate_id]
-            if not avg is None :
-                row['reference'] = avg
+    # all_cov_reference table
     new        = False
     connection = dismod_at.create_connection(all_node_database, new)
-    dismod_at.replace_table(
-        connection, 'all_cov_reference', all_table['all_cov_reference']
+    command    = 'DROP TABLE IF EXISTS all_cov_reference'
+    dismod_at.sql_command(connection, command)
+    tbl_name   = 'all_cov_reference'
+    col_name   = ['node_id', 'covariate_id', 'split_reference_id', 'reference']
+    col_type   = ['integer', 'integer',      'integer',            'real']
+    dismod_at.create_table(
+        connection, tbl_name, col_name, col_type, row_list
     )
     #
     return

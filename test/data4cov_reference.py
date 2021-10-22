@@ -39,6 +39,9 @@ def main() :
     # split_reference_list
     split_reference_list = [ -0.5, 0.0, 0.5 ]
     #
+    # absolute_covariates
+    absolute_covariates = 'vaccine'
+    #
     # all_option table
     tbl_name = 'all_option'
     col_name = [ 'option_name', 'option_value' ]
@@ -49,31 +52,14 @@ def main() :
     for reference in split_reference_list :
         split_list += ' ' + str(reference)
     row_list = [
-        [ 'split_list', split_list ]
+        [ 'split_list',          split_list ],
+        [ 'absolute_covariates', absolute_covariates ],
     ]
     dismod_at.create_table(
         connection, tbl_name, col_name, col_type, row_list
     )
     #
-    # all_cov_reference table
-    tbl_name = 'all_cov_reference'
-    col_name = ['node_id', 'covariate_id', 'split_reference_id', 'reference']
-    col_type = ['integer', 'integer',      'integer',            'real'     ]
-    row_list = list()
-    for node_id in range(4) :
-        for (k, sex_reference)  in enumerate(split_reference_list) :
-            split_reference_id = str(k)
-            #
-            covariate_id = '0' # sex
-            row = [ node_id, covariate_id, split_reference_id, sex_reference ]
-            row_list.append(row)
-            #
-            covariate_id  = '1' # bmi
-            row = [ str(node_id), covariate_id, split_reference_id, '100.0' ]
-            row_list.append(row)
-    dismod_at.create_table(
-        connection, tbl_name, col_name, col_type, row_list
-    )
+    # connection
     connection.close()
     #
     # ------------------------------------------------------------------------
@@ -110,31 +96,37 @@ def main() :
         connection, tbl_name, col_name, col_type, row_list
     )
     #
-    #
     # covariate table
-    split_reference_id = 1
     tbl_name = 'covariate'
     col_name = [ 'covariate_name', 'reference', 'max_difference' ]
     col_type = [ 'text',           'real',      'real'           ]
     row_list = [
-        [ 'sex',   split_reference_list[split_reference_id],   0.6 ],
-        [ 'bmi',   10.0,                                       None ],
+        [ 'sex',    -0.5,   0.6 ],
+        [ 'vaccine', 0.0,   None],
+        [ 'bmi',     10.0,  None ],
     ]
     dismod_at.create_table(
         connection, tbl_name, col_name, col_type, row_list
     )
     #
+    # row_list
+    row_list = [
+        # values included in average for split_reference_id in [0, 1]
+        [ 0, -0.5, 0.0, 0.0 ], # included in average for node_id >= 0
+        [ 1, -0.5, 0.0, 1.0 ], # included in average for node_id >= 1
+        [ 2, -0.5, 0.0, 2.0 ], # included in average for node_id >= 2
+        [ 3, -0.5, 0.0, 3.0 ], # included in average for node_id >= 3
+        # values included in average for split_reference_id in [1, 2]
+        [ 0,  0.5, 1.0, 4.0 ], # included in average for node_id >= 0
+        [ 1,  0.5, 1.0, 5.0 ], # included in average for node_id >= 1
+        [ 2,  0.5, 1.0, 6.0 ], # included in average for node_id >= 2
+        [ 3,  0.5, 1.0, 7.0 ], # included in average for node_id >= 3
+    ]
+    #
     # data table
     tbl_name = 'data'
-    col_name = [ 'node_id', 'x_0',  'x_1'  ]
-    col_type = [ 'integer', 'real', 'real' ]
-    row_list = [
-        [ 1, 1.0, 1e4 ], # sex does not satisfy max_difference
-        [ 0, 0.0, 0.0 ], # include in average for node_id >= 0
-        [ 1, 0.5, 1.0 ], # included in average for node_id >= 1
-        [ 2, 0.5, 2.0 ], # included in average for node_id >= 2
-        [ 3, 0.5, 3.0 ], # included in average for node_id >= 3
-    ]
+    col_name = [ 'node_id', 'x_0',  'x_1',   'x_2'  ]
+    col_type = [ 'integer', 'real', 'real', 'real' ]
     dismod_at.create_table(
         connection, tbl_name, col_name, col_type, row_list
     )
@@ -154,20 +146,33 @@ def main() :
     )
     #
     # check
-    for row in all_cov_reference_table :
-        node_id            = row['node_id']
-        covariate_id       = row['covariate_id']
-        split_reference_id = row['split_reference_id']
-        reference          = row['reference']
-        same               = node_id == 0 or split_reference_id != 1
-        if covariate_id == 0 :
-            assert reference == split_reference_list[split_reference_id]
-        else :
-            if split_reference_id != 1 :
-                assert reference == 100.0
-            else :
-                avg = sum( range(node_id, 4) ) / (4 - node_id)
-                assert reference == avg
+    check = list()
+    for node_id in range(4) :
+        covariate_id = 2
+        for split_reference_id in range(3) :
+            sex      = split_reference_list[split_reference_id]
+            bmi_list = list()
+            for row in row_list :
+                row_node_id = row[0]
+                row_sex     = row[1]
+                row_vaccine = row[2]
+                row_bmi     = row[3]
+                include     = row_node_id >= node_id
+                include     = include and abs(row_sex - sex) <= 0.6
+                if include :
+                    bmi_list.append( row_bmi )
+            avg = sum( bmi_list ) / len(bmi_list)
+            #
+            found  = False
+            for row in all_cov_reference_table :
+                match = row['split_reference_id'] == split_reference_id
+                match = match and row['node_id'] == node_id
+                match = match and row['covariate_id'] == covariate_id
+                if match :
+                    assert row['reference'] == avg
+                    assert found == False
+                    found = True
+            assert found
 main()
 print('data4cov_reference: OK')
 sys.exit(0)
