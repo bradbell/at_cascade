@@ -20,7 +20,7 @@ then
     exit 1
 fi
 # -----------------------------------------------------------------------------
-echo_eval bin/run_sphinx.sh
+echo_eval bin/run_sphinx.sh 0
 # BEGIN_SORT_THIS_LINE_PLUS_2
 list='
     example/absolute_covariates.py

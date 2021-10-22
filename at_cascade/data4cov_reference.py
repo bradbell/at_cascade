@@ -69,7 +69,7 @@ using the average of the covariates in the data table.
 
 4.  If there is no row of the data table that satisfies conditions
     1 and 2 for this all_cov_reference row,
-    the resulting reference value is null.
+    the resulting reference value is zero.
 
 {xsrst_end data4cov_reference}}
 '''
@@ -218,7 +218,7 @@ def data4cov_reference(
             for covariate_id in rel_covariate_id_set :
                 cov_list = covariate_value[covariate_id]
                 if len( cov_list ) == 0 :
-                    avg = None
+                    avg = 0.0
                 else :
                     avg = sum(cov_list) / len(cov_list)
                 #

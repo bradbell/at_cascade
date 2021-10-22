@@ -271,26 +271,30 @@ def cascade_fit_node(
     )
     #
     # all_option
-    implemented = [
+    valid = [
 		'root_node_name',
         'max_fit',
         'max_abs_effect',
         'absolute_covariates',
         'split_list',
+        'in_parallel',
 	]
     all_option  = dict()
-    for key in implemented :
-        all_option[key] = None
     for row in all_option_table :
         option_name  = row['option_name']
         option_value = row['option_value']
-        assert option_name in implemented
+        assert option_name in valid
         all_option[option_name] = option_value
-    if not all_option['split_list'] is None :
+    if 'split_list' in  all_option :
         split_list  = all_option['split_list'].split()
         split_level = split_list[0]
         if 0 <= int( split_level ) :
             msg  = '0 <= split_level not yet implemented'
+            assert False, msg
+    if 'in_parallel' in all_option :
+        if all_option['in_parallel'] != 'false' :
+            msg = f'all_option table: in_parallel = {in_parallel} '
+            msg += 'not yet implemented'
             assert False, msg
     #
     # fit_children
@@ -356,8 +360,8 @@ def cascade_fit_node(
     dismod_at.system_command_prc( [ 'dismod_at', fit_node_database, 'init' ] )
     #
     # enforce max_fit
-    max_fit = all_option['max_fit']
-    if not max_fit is None :
+    if 'max_fit' in all_option :
+        max_fit = all_option['max_fit']
         for integrand_id in fit_integrand :
             integrand_name = integrand_table[integrand_id]['integrand_name']
             dismod_at.system_command_prc([
@@ -366,8 +370,8 @@ def cascade_fit_node(
             ])
     #
     # enforce max_abs_effect
-    max_abs_effect = all_option['max_abs_effect']
-    if not max_abs_effect is None :
+    if 'max_abs_effect' in all_option:
+        max_abs_effect = all_option['max_abs_effect']
         dismod_at.system_command_prc([
             'dismod_at', fit_node_database, 'bnd_mulcov', max_abs_effect
         ])
