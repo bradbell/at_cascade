@@ -29,7 +29,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/data4cov_reference.py
-    :lines: 93-94
+    :lines: 83-84
     :language: py
 
 .. meta::
@@ -94,8 +94,9 @@ and :ref:`all_option_table` are used.
 
 all_option Table
 ================
-The :ref:`all_option_table.split_list` row of this table
-(if it exists) is the only row of this table that is used.
+The :ref:`all_option_table.split_list` and
+:ref:`all_option_table.absolute_covariates` rows of this table
+(if they exist) are the only rows of this table that are used.
 
 .. meta::
    :keywords: all_cov_reference, table
@@ -106,34 +107,23 @@ The :ref:`all_option_table.split_list` row of this table
 
 all_cov_reference Table
 =======================
-The :ref:`all_cov_reference_table.reference` column for some of the rows in
-this table is replaced by the average of the corresponding covariate in the
-data table.
-Only the rows of the data table that satisfy the following conditions
-are included when computing the average:
+The :ref:`all_cov_reference_table.reference` created
+using the average of the covariates in the data table.
 
-1.  The node_id for the data table row is the
-    :ref:`all_cov_reference_table.node_id` for the all_cov_reference row,
+1.  If there is an all_cov_reference table on input,
+    all its information is lost.
+
+2.  The node_id for the data table row is the
+    :ref:`all_cov_reference_table.node_id` for the new all_cov_reference row,
     or a descendant of all_cov_reference node.
 
-2.  The difference of all the covariate values in the data table row
+3.  The difference of all the covariate values in the data table row
     from the corresponding reference in the covariate table is
     less than or equal the maximum difference for that covariate.
 
-Only the rows of the all_cov_reference table
-that satisfy the following conditions are modified:
-
-3.  There is at least one row of the data table that satisfies conditions
-    1 and 2 for this all_cov_reference
-    :ref:`all_cov_reference_table.covariate_id`.
-
-4.  This all_cov_reference covariate has maximum difference equal to
-    infinity (or null).
-
-5.  The :ref:`all_cov_reference_table.split_reference_id` for this row
-    corresponds to the covariate value for splitting covariate in the
-    covariate table.
-    (2DO: This should be extended to all values for the splitting covariate.)
+4.  If there is no row of the data table that satisfies conditions
+    1 and 2 for this all_cov_reference row,
+    the resulting reference value is zero.
 
 ----
 

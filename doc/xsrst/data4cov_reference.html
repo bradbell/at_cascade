@@ -241,36 +241,26 @@ Only the <a class="reference internal" href="all_cov_reference_table.html#id1"><
 and <a class="reference internal" href="all_option_table.html#id1"><span class="std std-ref">All Node Option Table</span></a> are used.</p>
 <div class="section" id="all-option-table">
 <span id="data4cov-reference-all-node-database-all-option-table"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id7">all_option Table</a><a class="headerlink" href="#all-option-table" title="Permalink to this headline">¶</a></h4>
-<p>The <a class="reference internal" href="all_option_table.html#all-option-table-split-list"><span class="std std-ref">split_list</span></a> row of this table
-(if it exists) is the only row of this table that is used.</p>
+<p>The <a class="reference internal" href="all_option_table.html#all-option-table-split-list"><span class="std std-ref">split_list</span></a> and
+<a class="reference internal" href="all_option_table.html#all-option-table-absolute-covariates"><span class="std std-ref">absolute_covariates</span></a> rows of this table
+(if they exist) are the only rows of this table that are used.</p>
 </div>
 <div class="section" id="all-cov-reference-table">
 <span id="data4cov-reference-all-node-database-all-cov-reference-table"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id8">all_cov_reference Table</a><a class="headerlink" href="#all-cov-reference-table" title="Permalink to this headline">¶</a></h4>
-<p>The <a class="reference internal" href="all_cov_reference_table.html#all-cov-reference-table-reference"><span class="std std-ref">reference</span></a> column for some of the rows in
-this table is replaced by the average of the corresponding covariate in the
-data table.
-Only the rows of the data table that satisfy the following conditions
-are included when computing the average:</p>
+<p>The <a class="reference internal" href="all_cov_reference_table.html#all-cov-reference-table-reference"><span class="std std-ref">reference</span></a> created
+using the average of the covariates in the data table.</p>
 <ol class="arabic simple">
+<li><p>If there is an all_cov_reference table on input,
+all its information is lost.</p></li>
 <li><p>The node_id for the data table row is the
-<a class="reference internal" href="all_cov_reference_table.html#all-cov-reference-table-node-id"><span class="std std-ref">node_id</span></a> for the all_cov_reference row,
+<a class="reference internal" href="all_cov_reference_table.html#all-cov-reference-table-node-id"><span class="std std-ref">node_id</span></a> for the new all_cov_reference row,
 or a descendant of all_cov_reference node.</p></li>
 <li><p>The difference of all the covariate values in the data table row
 from the corresponding reference in the covariate table is
 less than or equal the maximum difference for that covariate.</p></li>
-</ol>
-<p>Only the rows of the all_cov_reference table
-that satisfy the following conditions are modified:</p>
-<ol class="arabic simple" start="3">
-<li><p>There is at least one row of the data table that satisfies conditions
-1 and 2 for this all_cov_reference
-<a class="reference internal" href="all_cov_reference_table.html#all-cov-reference-table-covariate-id"><span class="std std-ref">covariate_id</span></a>.</p></li>
-<li><p>This all_cov_reference covariate has maximum difference equal to
-infinity (or null).</p></li>
-<li><p>The <a class="reference internal" href="all_cov_reference_table.html#all-cov-reference-table-split-reference-id"><span class="std std-ref">split_reference_id</span></a> for this row
-corresponds to the covariate value for splitting covariate in the
-covariate table.
-(2DO: This should be extended to all values for the splitting covariate.)</p></li>
+<li><p>If there is no row of the data table that satisfies conditions
+1 and 2 for this all_cov_reference row,
+the resulting reference value is zero.</p></li>
 </ol>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/data4cov_reference.py</span></code></p>
