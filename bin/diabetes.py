@@ -63,8 +63,8 @@ connect_root = dismod_at.create_connection(root_node_copy, new)
 node_table   = dismod_at.get_table_dict(connect_root, 'node')
 #
 # fit_goal table
-# Start with a drill to drill_node_name
-drill_node_name = 'Global'
+# Do a drill to drill_node_name
+drill_node_name = 'New York'
 drill_node_id   = None
 for (node_id, row) in enumerate( node_table ) :
     if row['node_name'] == drill_node_name :
