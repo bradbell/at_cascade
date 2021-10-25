@@ -94,6 +94,13 @@ default
 If *fit_integrand* is ``None``, it will be computed by ``cascade_fit_node``
 and reused by recursive calls to this routine.
 
+trace_fit
+*********
+if ``True``, ( ``False`` ) the progress of the dismod at fit commands
+will be printed on standard output during the optimization.
+
+
+
 Output dismod.db
 ****************
 The results for this fit are in the
@@ -250,6 +257,7 @@ def cascade_fit_node(
     node_table        = None,
     fit_children      = None,
     fit_integrand     = None,
+    trace_fit         = False,
 # )
 # END syntax
 ) :
@@ -272,13 +280,13 @@ def cascade_fit_node(
     #
     # all_option
     valid = [
-		'root_node_name',
+        'root_node_name',
         'max_fit',
         'max_abs_effect',
         'absolute_covariates',
         'split_list',
         'in_parallel',
-	]
+    ]
     all_option  = dict()
     for row in all_option_table :
         option_name  = row['option_name']
@@ -377,9 +385,8 @@ def cascade_fit_node(
         ])
     #
     # fit
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'fit', 'both' ]
-    )
+    command = [ 'dismod_at', fit_node_database, 'fit', 'both' ]
+    dismod_at.system_command_prc(command, return_stdout = not trace_fit )
     #
     # sample
     dismod_at.system_command_prc(

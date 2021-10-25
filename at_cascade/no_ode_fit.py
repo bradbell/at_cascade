@@ -55,6 +55,10 @@ in the all option table.
 If max_abs_effect does not appear in the all option table,
 *max_abs_effect* should be None.
 
+trace_fit
+*********
+if ``True``, ( ``False`` ) the progress of the dismod at fit command
+will be printed on standard output during the optimization.
 
 no_ode_database
 ***************
@@ -209,6 +213,7 @@ def no_ode_fit(
     in_database    = None,
     max_fit        = None,
     max_abs_effect = None,
+    trace_fit      = False,
 # )
 # END syntax
 ) :
@@ -296,9 +301,8 @@ def no_ode_fit(
             ])
     #
     # fit both
-    dismod_at.system_command_prc(
-        [ 'dismod_at', no_ode_database, 'fit', 'both' ]
-    )
+    command = [ 'dismod_at', no_ode_database, 'fit', 'both' ]
+    dismod_at.system_command_prc(command, return_stdout = not trace_fit )
     #
     # copy no_ode_database to out_database
     shutil.copyfile(no_ode_database, out_database)
