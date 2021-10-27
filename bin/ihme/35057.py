@@ -9,7 +9,6 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 disease_name        = 'diabetes'
-age_table_csv       = 'age_metadata_gbd2020.csv'
 location_table_csv  = 'location_map.csv'
 ldi_table_csv       = 'ldi_covariate_data.csv'
 obesity_table_csv   = 'obesity_covariate_data.csv'
@@ -35,42 +34,25 @@ work_dir = 'ihme_db/csv/35057'
 distutils.dir_util.mkpath(work_dir)
 os.chdir(work_dir)
 # ---------------------------------------------------------------------------
-# age_table = get_age_table(file_name)
-def get_age_table(file_name) :
-    file_ptr  = open(file_name)
-    reader    = csv.DictReader(file_ptr)
-    age_table = list()
-    for row_in in reader :
-        row_out = dict()
-        row_out['age_group_id'] = int( row_in['age_group_id'] )
-        row_out['age_lower'] = float( row_in['age_group_years_start'] )
-        row_out['age_upper'] = float( row_in['age_group_years_end'] )
-        age_table.append( row_out )
-    #
-    age_table = sorted(age_table, key = lambda row: row['age_lower'] )
-    #
-    # check that age_table splits ages into non-overlapping intervals
-    row_prev = None
-    for row in age_table :
-        assert row['age_lower'] < row['age_upper']
-        if not row_prev is None :
-            assert row['age_lower'] == row_prev['age_upper']
-    #
-    return age_table
-# ---------------------------------------------------------------------------
-# covariate_table = get_covariate_table(file_name)
-def get_covariate_table(file_name) :
+# covariate_dict = get_covariate_dict(file_name)
+def get_covariate_dict(file_name) :
+    # LDI and obseity do do not depend on age
     file_ptr        = open(file_name)
     reader          = csv.DictReader(file_ptr)
-    covariate_table = list()
-    for row_in in reader :
-        row_out = dict()
-        row_out['age_group_id'] = int( row_in['age_group_id'] )
-        row_out['sex']          = row_in['sex']
-        row_out['year_id']      = int( row_in['year_id'] )
-        row_out['value']        = float( row_in['mean_value'] )
-        covariate_table.append( row_out )
-    return covariate_table
+    covariate_dict  = dict()
+    for row in reader :
+        location_id  = int( row['location_id'] )
+        year_id      = int( row['year_id'] )
+        sex          = row['sex']
+        mean_value   = float( row['mean_value'] )
+        if not sex in covariate_dict :
+            covariate_dict[sex] = dict()
+        if not location_id in covariate_dict[sex] :
+            covariate_dict[sex][location_id] = dict()
+        assert not year_id in covariate_dict[sex][location_id]
+        covariate_dict[sex][location_id][year_id] = mean_value
+    #
+    return covariate_dict
 # ---------------------------------------------------------------------------
 # location_table = get_location_table(file_name)
 def get_location_table(file_name) :
@@ -95,11 +77,13 @@ def get_data_table(file_name) :
         row_out['location_id']  = int( row_in['location_id'] )
         row_out['sex']          = row_in['sex']
         row_out['time_lower']   = float( row_in['year_start'] )
-        row_out['time_upper']   = float( row_in['year_end'] )
+        row_out['time_upper']   = float( row_in['year_end'] ) + 1.0
         row_out['age_lower']    = float( row_in['age_start'] )
-        row_out['age_upper']    = float( row_in['age_end'] )
+        row_out['age_upper']    = float( row_in['age_end'] ) + 1.0
         row_out['meas_value']   = float( row_in['mean'] )
         row_out['meas_std']     = float( row_in['standard_error'] )
+        row_out['obesity']      = None
+        row_out['ldi']          = None
         #
         if row_in['measure'] == 'incidence' :
             row_out['integrand']    = 'Sincidence'
@@ -108,61 +92,48 @@ def get_data_table(file_name) :
         #
         data_table.append( row_out )
     return data_table
-# --------------------------------------------------------------------------
-def age_and_time_id2cov(covariate_table, group_id2age_id) :
-    result = dict()
-    for row in covariate_table :
-        group_id = row['age_group_id']
-        if group_id in group_id2age_id :
-            age_id   = group_id2age_id[group_id]
-            time_id  = row['time_id']
-            value    = row['value']
-            if not age_id in result :
-                result[age_id] = dict()
-            assert not time_id  in result[age_id]
-            result[age_id][time_id] = value
-    return result
 # ---------------------------------------------------------------------------
-def print_table(table) :
-    for row in table :
-        print(row)
+def get_covariate(covariate_dict, sex, location_id, time) :
+    year    = time + 0.5
+    year_id = int( time )
+    if not year_id in covariate_dict[sex][location_id] :
+        return None
+    if not year_id + 1 in covariate_dict[sex][location_id] :
+        return None
+    cleft  = covariate_dict[sex][location_id][year_id]
+    cright = covariate_dict[sex][location_id][year_id + 1]
+    cvalue = cright * (time - year_id) + cleft * (year_id  + 1 - time)
+    return cvalue
 # ---------------------------------------------------------------------------
-# sex_set = get_sex_set(table)
+def print_table(table, n) :
+    for data_id in range(n) :
+        print(table[data_id])
+# ---------------------------------------------------------------------------
+# sex_set = get_set(table)
 def get_value_set(table, column_name) :
     value_set = set()
     for row in table :
         value_set.add( row[column_name] )
     return value_set
 # ---------------------------------------------------------------------------
-# table = get_table()
-def get_table() :
-    table = dict()
-    table['location'] = get_location_table(location_table_csv)
-    table['age']      = get_age_table(age_table_csv)
-    table['ldi']      = get_covariate_table( ldi_table_csv )
-    table['obesity']  = get_covariate_table( obesity_table_csv )
-    table['data']     = get_data_table( data_table_csv )
-
-    return table
-# ---------------------------------------------------------------------------
 def main() :
     #
-    # table
-    table = get_table()
-    print_table( table['ldi'] )
+    # tables
+    location_table  = get_location_table(location_table_csv)
+    data_table      = get_data_table(data_table_csv)
     #
-    # group_id2age_d, age_id2group_id
-    # Due to sorting, age is monotone increase with age_id
-    group_id2age_id = dict()
-    age_id2group_id = dict()
-    for (age_id, row) in enumerate(table['age']) :
-        group_id = row['age_group_id']
-        group_id2age_id[group_id] = age_id
-        age_id2group_id[age_id]    = group_id
+    # covariate information by sex, location_id, year_id
+    obesity_dict    = get_covariate_dict(obesity_table_csv)
+    ldi_dict        = get_covariate_dict(ldi_table_csv)
     #
-    # ldi_age_time
-    ldi_age_time     = age_and_time_id2cov(table['ldi'], group_id2age_id)
-    obesity_age_time = age_and_time_id2cov(table['obesity'], group_id2age_id)
+    # add covariates to data_table
+    for row in data_table :
+        sex             = row['sex']
+        location_id     = row['location_id']
+        time            = (row['time_lower'] + row['time_upper']) / 2.0
+        row['obesity']  = get_covariate(obesity_dict, sex, location_id, time)
+    #
+    print_table(data_table, 10)
     #
 main()
 print(sys.argv[0] + ': OK')
