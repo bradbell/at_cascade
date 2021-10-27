@@ -318,12 +318,12 @@ connect_root.close()
 # ----------------------------------------------------------------------------
 #
 # no_ode_fit
-out_database = at_cascade.no_ode_fit(
+fit_node_database = at_cascade.no_ode_fit(
     in_database = root_node_copy,
     max_fit     = max_fit,
     trace_fit   = True,
 )
-assert out_database == root_node_dir + '/dismod.db'
+assert fit_node_database == root_node_dir + '/dismod.db'
 no_ode_database = root_node_dir + '/no_ode.db'
 #
 # data.pdf
@@ -350,9 +350,9 @@ plot_set = dismod_at.plot_rate_fit(
 dismod_at.system_command_prc([ 'dismodat.py', no_ode_database, 'db2csv' ])
 #
 # cascade starting at root node
-# at_cascade.cascade_fit_node(all_node_copy, out_database)
+at_cascade.cascade_fit_node(all_node_copy, fit_node_database)
 #
 print(f'all_node_database = {all_node_copy}')
-print(f'fit_node_database = {out_database}')
+print(f'fit_node_database = {fit_node_database}')
 print('setup_cascade.py: OK')
 sys.exit(0)
