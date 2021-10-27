@@ -8,11 +8,15 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
-disease_name        = 'diabetes'
+# input table file names
 location_table_csv  = 'location_map.csv'
 ldi_table_csv       = 'ldi_covariate_data.csv'
 obesity_table_csv   = 'obesity_covariate_data.csv'
 data_table_csv      = 'overall_diabetes_input_data_crosswalkv35057.csv'
+#
+# output table file name
+data_table_out      = 'data.csv'
+node_table_out      = 'node.csv'
 # -----------------------------------------------------------------------------
 #
 import csv
@@ -61,8 +65,8 @@ def get_location_table(file_name) :
     location_table  = list()
     for row_in in reader :
         row_out = dict()
-        row_out['location_name'] = row_in['location_name']
         row_out['location_id']   = int( row_in['location_id'] )
+        row_out['location_name'] = row_in['location_name']
         row_out['parent_id']     = int( row_in['parent_id'] )
         location_table.append( row_out )
     return location_table
@@ -105,6 +109,14 @@ def get_covariate(covariate_dict, sex, location_id, time) :
     cvalue = cright * (time - year_id) + cleft * (year_id  + 1 - time)
     return cvalue
 # ---------------------------------------------------------------------------
+def write_csv(file_name, table) :
+    fieldnames  = table[0].keys()
+    file_ptr    = open(file_name, 'w')
+    writer      = csv.DictWriter(file_ptr, fieldnames = fieldnames)
+    writer.writeheader()
+    writer.writerows( table )
+    file_ptr.close()
+# ---------------------------------------------------------------------------
 def print_table(table, n) :
     for data_id in range(n) :
         print(table[data_id])
@@ -118,13 +130,21 @@ def get_value_set(table, column_name) :
 # ---------------------------------------------------------------------------
 def main() :
     #
-    # tables
-    location_table  = get_location_table(location_table_csv)
-    data_table      = get_data_table(data_table_csv)
+    # data_table
+    data_table = get_data_table(data_table_csv)
+    #
+    # location_table
+    location_table = get_location_table(location_table_csv)
     #
     # covariate information by sex, location_id, year_id
     obesity_dict    = get_covariate_dict(obesity_table_csv)
     ldi_dict        = get_covariate_dict(ldi_table_csv)
+    #
+    # location_id2node_id
+    location_id2node_id = dict()
+    for (node_id, row) in enumerate(location_table) :
+        location_id = row['location_id']
+        location_id2node_id[location_id]  = node_id
     #
     # add covariates to data_table
     for row in data_table :
@@ -133,7 +153,34 @@ def main() :
         time            = (row['time_lower'] + row['time_upper']) / 2.0
         row['obesity']  = get_covariate(obesity_dict, sex, location_id, time)
     #
-    print_table(data_table, 10)
+    # change location_id to node_id
+    for row in data_table :
+        location_id    = row['location_id']
+        node_id        = location_id2node_id[location_id]
+        row['node_id'] = node_id
+        del row['location_id']
+    #
+    # create data_table_out
+    write_csv(data_table_out, data_table)
+    #
+    # node_table
+    node_table = list()
+    for (node_id, row_in) in enumerate(location_table) :
+        location_name        = row_in['location_name']
+        location_id          = row_in['location_id']
+        parent_location_id   = row_in['parent_id']
+        if parent_location_id == location_id :
+            parent_node_id = None
+        else :
+            parent_node_id = location_id2node_id[parent_location_id]
+        row_out = dict()
+        row_out['node_id']   = node_id
+        row_out['node_name'] = location_name
+        row_out['parent']    = parent_node_id
+        node_table.append(row_out)
+    #
+    # create node_table_out
+    write_csv(node_table_out, node_table)
     #
 main()
 print(sys.argv[0] + ': OK')
