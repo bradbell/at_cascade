@@ -64,7 +64,7 @@ node_table   = dismod_at.get_table_dict(connect_root, 'node')
 #
 # fit_goal table
 # Do a drill to drill_node_name
-drill_node_name = 'New York'
+drill_node_name = 'Global'
 drill_node_id   = None
 for (node_id, row) in enumerate( node_table ) :
     if row['node_name'] == drill_node_name :
@@ -202,7 +202,7 @@ tables['rate'][pini_rate_id]['parent_smooth_id'] = smooth_id
 for tbl_name in tables.keys() :
     dismod_at.replace_table(connect_root, tbl_name, tables[tbl_name] )
 # --------------------------------------------------------------------------
-# Corrections to root_node_database
+# Corrections to root_node_database and all_node_database
 #
 # integrand_table
 # Add missing mulcov_j to integrand table.
@@ -234,6 +234,14 @@ for row in option_table :
 assert not parent_node_name is None
 assert not parent_node_id is None
 dismod_at.replace_table(connect_root, 'option', option_table)
+#
+# avgint table
+old_avgint_table = dismod_at.get_table_dict(connect_root, 'avgint')
+new_avgint_table = list()
+for row in old_avgint_table :
+    if row['node_id'] == parent_node_id :
+        new_avgint_table.append( row )
+dismod_at.replace_table(connect_root, 'avgint', new_avgint_table)
 #
 # rate table
 # all omega rates must be null
