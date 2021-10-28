@@ -17,8 +17,14 @@ data_table_csv      = 'overall_diabetes_input_data_crosswalkv35057.csv'
 # output table file name
 data_table_out      = 'data.csv'
 node_table_out      = 'node.csv'
+#
+# Maximum number of data table entries. This is to speed up testing.
+# In the real case set max_data_table = None
+max_data_table      = 10000
 # -----------------------------------------------------------------------------
 #
+import random
+import math
 import csv
 import copy
 import sys
@@ -63,16 +69,22 @@ def get_location_table(file_name) :
     file_ptr        = open(file_name)
     reader          = csv.DictReader(file_ptr)
     location_table  = list()
+    location_id_set = set()
     for row_in in reader :
         location_name = row_in['location_name']
         location_name = location_name.replace(' ', '_')
         location_name = location_name.replace("'", '_')
         #
         row_out = dict()
-        row_out['location_id']   = int( row_in['location_id'] )
+        location_id              = int( row_in['location_id'] )
+        row_out['location_id']   = location_id
         row_out['location_name'] = location_name
         row_out['parent_id']     = int( row_in['parent_id'] )
         location_table.append( row_out )
+        #
+        assert not location_id in location_id_set
+        location_id_set.add( location_id )
+        #
     return location_table
 # ---------------------------------------------------------------------------
 # data_table = get_data_table(file_name)
@@ -89,9 +101,20 @@ def get_data_table(file_name) :
         row_out['age_lower']    = float( row_in['age_start'] )
         row_out['age_upper']    = float( row_in['age_end'] ) + 1.0
         row_out['meas_value']   = float( row_in['mean'] )
-        row_out['meas_std']     = float( row_in['standard_error'] )
         row_out['obesity']      = None
         row_out['ldi']          = None
+        #
+        meas_std                = float( row_in['standard_error'] )
+        if meas_std <= 0.0 :
+            sample_size = float( row_in['sample_size'] )
+            meas_value  = row_out['meas_value']
+            std_5 = math.sqrt( meas_value / sample_size )
+            if meas_value * sample_size < 5.0 :
+                std_0 = 1.0 / sample_size
+                meas_std  = (5.0 - meas_value * sample_size) * std_0
+                meas_std += meas_value * sample_size * std_5
+                meas_std  = meas_std / 5.0
+        row_out['meas_std']     = meas_std
         #
         if row_in['measure'] == 'incidence' :
             row_out['integrand']    = 'Sincidence'
@@ -136,6 +159,19 @@ def main() :
     #
     # data_table
     data_table = get_data_table(data_table_csv)
+    if False :
+        age_max   = - math.inf
+        time_max   = - math.inf
+        for row in data_table :
+            age_max  = max(age_max, row['age_upper'] )
+            time_max = max(time_max, row['time_upper'] )
+        print( age_max, time_max)
+    if not max_data_table is None :
+        subsample = random.sample(range(0, len(data_table)), max_data_table)
+    temp_table = data_table
+    data_table = list()
+    for k in range(0, max_data_table) :
+        data_table.append( temp_table[subsample[k]] )
     #
     # location_table
     location_table = get_location_table(location_table_csv)
@@ -157,11 +193,11 @@ def main() :
         time            = (row['time_lower'] + row['time_upper']) / 2.0
         row['obesity']  = get_covariate(obesity_dict, sex, location_id, time)
     #
-    # change location_id to node_id
+    # change location_id to data_name and add node_id
     for row in data_table :
-        location_id    = row['location_id']
-        node_id        = location_id2node_id[location_id]
-        row['node_id'] = node_id
+        location_id      = row['location_id']
+        node_id          = location_id2node_id[location_id]
+        row['node_id']   = node_id
         del row['location_id']
     #
     # create data_table_out
