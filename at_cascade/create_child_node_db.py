@@ -66,10 +66,10 @@ column predict_id to c_predict_fit_var_id.
 
 c_avgint Table
 ==============
-The c_avgint table contains the original version of the avgint table
-that predicts for the parent node and is a version of the
-:ref:`glossary.root_node_database`
-avgint table with only the node_id column modified.
+The c_avgint table contains the original version of the
+:ref:`glossary.root_node_database` avgint table
+that predicts for the parent node.
+Only the node_id column has been modified from the root_node_database version.
 
 child_node_databases
 ********************

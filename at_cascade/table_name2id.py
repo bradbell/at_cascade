@@ -11,6 +11,7 @@
 {xsrst_begin table_name2id}
 {xsrst_spell
     dict
+    tbl
 }
 
 Map a Table Row Name to The Row Index

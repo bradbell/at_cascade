@@ -64,9 +64,13 @@ def get_location_table(file_name) :
     reader          = csv.DictReader(file_ptr)
     location_table  = list()
     for row_in in reader :
+        location_name = row_in['location_name']
+        location_name = location_name.replace(' ', '_')
+        location_name = location_name.replace("'", '_')
+        #
         row_out = dict()
         row_out['location_id']   = int( row_in['location_id'] )
-        row_out['location_name'] = row_in['location_name']
+        row_out['location_name'] = location_name
         row_out['parent_id']     = int( row_in['parent_id'] )
         location_table.append( row_out )
     return location_table
@@ -164,7 +168,9 @@ def main() :
     write_csv(data_table_out, data_table)
     #
     # node_table
-    node_table = list()
+    node_table      = list()
+    node_name_set   = set()
+    double_name_set = set()
     for (node_id, row_in) in enumerate(location_table) :
         location_name        = row_in['location_name']
         location_id          = row_in['location_id']
@@ -174,10 +180,28 @@ def main() :
         else :
             parent_node_id = location_id2node_id[parent_location_id]
         row_out = dict()
-        row_out['node_id']   = node_id
-        row_out['node_name'] = location_name
-        row_out['parent']    = parent_node_id
+        row_out['node_id']       = node_id
+        row_out['node_name']     = location_name
+        row_out['parent']        = parent_node_id
+        row_out['c_location_id'] = location_id
         node_table.append(row_out)
+        #
+        # double_name_set
+        if location_name in node_name_set :
+            double_name_set.add( location_name )
+        #
+        # node_name_set
+        node_name_set.add( location_name )
+    #
+    # location_name
+    for location_name in double_name_set :
+        # row
+        for row in node_table :
+            if row['node_name'] == location_name :
+                # add parent to node_name for this row
+                parent           = row['parent']
+                node_name        = f'{location_name}_{parent}'
+                row['node_name'] = node_name
     #
     # create node_table_out
     write_csv(node_table_out, node_table)

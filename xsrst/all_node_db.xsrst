@@ -8,6 +8,10 @@ This program is distributed under the terms of the
 see http://www.gnu.org/licenses/agpl.txt
 -----------------------------------------------------------------------------
 {xsrst_begin_parent all_node_db}
+{xsrst_spell
+    tbl
+}
+
 
 The All Node DataBase
 #####################
@@ -292,6 +296,9 @@ split_reference value).
 {xsrst_end all_mtspecific}
 ------------------------------------------------------------------------------
 {xsrst_begin all_option_table}
+{xsrst_spell
+    bnd
+}
 
 All Node Option Table
 #####################
