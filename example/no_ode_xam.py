@@ -540,7 +540,7 @@ def root_node_db(file_name) :
     for age in age_grid :
         row['age_lower'] = age
         row['age_upper'] = age
-        for integrand in [ 'Sincidence', 'mtexcess' ] :
+        for integrand in [ 'prevalence' ] :
             row['integrand'] = integrand
             avgint_table.append( copy.copy(row) )
     #
@@ -638,6 +638,11 @@ def check_no_ode_fit(fit_node_dir) :
     # no_ode_database
     no_ode_database = fit_node_dir + '/no_ode.db'
     #
+    # predict
+    dismod_at.system_command_prc([
+        'dismod_at', no_ode_database, 'predict', 'fit_var'
+    ] )
+    #
     # connection
     new        = False
     connection = dismod_at.create_connection(no_ode_database, new)
@@ -645,7 +650,8 @@ def check_no_ode_fit(fit_node_dir) :
     # table
     table = dict()
     for tbl_name in [
-        'age', 'time', 'var', 'rate', 'node', 'fit_var'
+        'age', 'time', 'var', 'rate', 'node', 'fit_var', 'avgint',
+        'integrand', 'predict'
 
     ] :
         table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
@@ -653,7 +659,7 @@ def check_no_ode_fit(fit_node_dir) :
     # connection
     connection.close()
     #
-    # for each row of the var table
+    # check variable values
     for (var_id, var_row) in enumerate( table['var'] ) :
         var_type      = var_row['var_type']
         node_id       = var_row['node_id']
@@ -674,6 +680,36 @@ def check_no_ode_fit(fit_node_dir) :
                 check         = rate_true(rate_name, age, time, 'n0', c)
                 rel_error     = (1.0 - fit_var_value / check )
                 assert abs( rel_error ) < 1e-5
+    #
+    # check prevalence values
+    for predict_row in table['predict'] :
+        avgint_id      = predict_row['avgint_id']
+        avgint_row     = table['avgint'][avgint_id]
+        avg_integrand  = predict_row['avg_integrand']
+        #
+        integrand_id   = avgint_row['integrand_id']
+        integrand_name = table['integrand'][integrand_id]['integrand_name']
+        assert integrand_name == 'prevalence'
+        #
+        node_id   = avgint_row['node_id']
+        node_name = table['node'][node_id]['node_name']
+        assert node_name == 'n0'
+        #
+        age  = avgint_row['age_lower']
+        assert age == avgint_row['age_upper']
+        #
+        income = avgint_row['x_0']
+        assert income is None
+        #
+        income = avg_income['n0']
+        check = average_integrand(integrand_name, age, node_name, income)
+        #
+        if check == 0.0 :
+            assert avg_integrand == 0.0
+        else :
+            rel_error = (1.0 - avg_integrand / check )
+            assert abs(rel_error) < 1e-3
+
 # ----------------------------------------------------------------------------
 # main
 # ----------------------------------------------------------------------------

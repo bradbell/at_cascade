@@ -184,7 +184,7 @@ def check_cascade_fit(
     sumsq = n_avgint * [0.0]
     #
     # predict_id, predict_row
-    max_rel_error = 0.0
+    max_rel_error    = 0.0
     for (predict_id, predict_row) in enumerate( tables['predict'] ) :
         #
         # avgint_row
@@ -247,11 +247,14 @@ def check_cascade_fit(
         )
         #
         # check
-        error       = check_value - avg_integrand
-        rel_error   = 1.0 - avg_integrand / check_value
-        if not relative_tolerance is None :
-            assert abs(rel_error) < relative_tolerance
-        assert abs(error) < 2.0 * sample_std
-        max_rel_error = max(max_rel_error, rel_error)
+        if check_value == 0.0 :
+            assert avg_integrand == 0.0
+        else :
+            error            = check_value - avg_integrand
+            rel_error        = 1.0 - avg_integrand / check_value
+            max_rel_error    = max(max_rel_error, abs(rel_error) )
+            if not relative_tolerance is None :
+                assert abs(rel_error) < relative_tolerance
+                assert abs(error) < 2.0 * sample_std
     if relative_tolerance is None :
         print('check_cascade: max_rel_error = ', max_rel_error)
