@@ -12,7 +12,6 @@
 {xsrst_spell
     dir
     csv
-    init
 }
 
 Do A No Ode Fit For One Node

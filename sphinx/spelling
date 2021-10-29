@@ -3,12 +3,20 @@
 xsrst
 rst
 #
+# i-th
+th
+#
+# database abbreviation
+db
+#
+# python types
+str
+#
 # special words for this package
 # BEGIN_SORT_THIS_LINE_PLUS_1
 avgint
 dismod
 ihme
-integrands
 mtall
 mtexcess
 mtother

@@ -16,7 +16,6 @@ see http://www.gnu.org/licenses/agpl.txt
     dage
     dtime
     mulcov
-    init
 }
 
 Glossary
@@ -137,12 +136,6 @@ Rate Table
 ==========
 The rate table must have null entries for the
 omega parent and child smoothings.
-
-avgint Table
-============
-The only node_id that appears in the avgint table is the
-node_id corresponding to the parent_node_name in the option table
-for this database.
 
 iota
 ****
