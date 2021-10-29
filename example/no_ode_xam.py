@@ -392,7 +392,7 @@ def root_node_db(file_name) :
     prior_table.append(
         # BEGIN parent_iota_value_prior
         {   'name':    'parent_iota_value_prior',
-            'density': 'gaussian',
+            'density': 'uniform',
             'lower':   iota_50 / 10.0,
             'upper':   iota_50 * 10.0,
             'mean':    iota_50,
@@ -404,7 +404,7 @@ def root_node_db(file_name) :
     prior_table.append(
         # BEGIN parent_chi_value_prior
         {   'name':    'parent_chi_value_prior',
-            'density': 'gaussian',
+            'density': 'uniform',
             'lower':   chi_50 / 10.0,
             'upper':   chi_50 * 10.0,
             'mean':    chi_50,
@@ -436,11 +436,10 @@ def root_node_db(file_name) :
     prior_table.append(
         # BEGIN alpha_value_prior
         {   'name':    'alpha_value_prior',
-            'density': 'gaussian',
+            'density': 'uniform',
             'lower':   - 10 * alpha_true_max_abs,
             'upper':   + 10 * alpha_true_max_abs,
             'mean':    0.0,
-            'std':     + 10 * alpha_true_max_abs,
         }
         # END alpha_value_prior
     )
