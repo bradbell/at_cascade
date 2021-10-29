@@ -83,17 +83,6 @@ The true value for these multipliers
     # END alpha_true
 }
 
-gamma
-=====
-We use gamma\_\ *integrand*
-for the :ref:`glossary.meas_noise` covariate multiplier
-which multiplies *one* add affects the specified integrand
-where *integrand* is one of the following:
-Sincidence, mtexcess, prevalence.
-These multipliers adds to the nose level in log space,
-because the corresponding densities are log Gaussian.
-
-
 Random Effects
 **************
 For each node, there is a random effect on iota and chi that is constant
@@ -255,19 +244,6 @@ The following is the value prior used for this smoothing:
 The mean and standard deviation are only used for the root_node.
 The create_child_node_db
 routine replaces them for other nodes.
-
-Gamma Smoothing
-***************
-This is the smoothing used for gamma\_\ *integrand* where
-*integrand* is Sincidence, mtexcess, or prevalence.
-There is only one age and one time point in this smoothing
-so it does not have dage or dtime priors.
-In addition, the value prior has upper and lower limits equal
-to the constant returned by the lambda function in this smoothing:
-{xsrst_file
-    # BEGIN gamma_smooth
-    # END gamma_smooth
-}
 
 Checking The Fit
 ****************
@@ -508,16 +484,6 @@ def root_node_db(file_name) :
         'fun':        fun,
     })
     #
-    # BEGIN gamma_smooth
-    fun = lambda a, t : (0.5, None, None)
-    smooth_table.append({
-        'name':       'gamma_smooth',
-        'age_id':     [0],
-        'time_id':    [0],
-        'fun':        fun
-    })
-    # END gamma_smooth
-    #
     # node_table
     node_table = [
         { 'name':'n0',        'parent':''   },
@@ -556,25 +522,8 @@ def root_node_db(file_name) :
             'effected':   'chi',
             'group':      'world',
             'smooth':     'alpha_smooth',
-        },{ # gamma_Sincidence
-            'covariate':  'one',
-            'type':       'meas_noise',
-            'effected':   'Sincidence',
-            'group':      'world',
-            'smooth':     'gamma_smooth',
-        },{ # gamma_mtexcess
-            'covariate':  'one',
-            'type':       'meas_noise',
-            'effected':   'mtexcess',
-            'group':      'world',
-            'smooth':     'gamma_smooth',
-        },{ # gamma_prevalence
-            'covariate':  'one',
-            'type':       'meas_noise',
-            'effected':   'prevalence',
-            'group':      'world',
-            'smooth':     'gamma_smooth',
-    } ]
+        },
+    ]
     #
     # subgroup_table
     subgroup_table = [ {'subgroup': 'world', 'group':'world'} ]
