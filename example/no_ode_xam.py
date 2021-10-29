@@ -61,9 +61,9 @@ There is one covariate for this example, income.
 The reference value for income is the average income corresponding
 to the :ref:`glossary.fit_node`.
 
-r_n
+I_n
 ===
-We use *r_n* for the reference value of income at node *n*.
+We use *I_n* for the reference value of income at node *n*.
 The code below sets this reference using the name avg_income:
 {xsrst_file
     # BEGIN avg_income
@@ -88,13 +88,13 @@ For each node, there is a random effect on iota and chi that is constant
 in age and time. Note that the leaf nodes have random effect for the node
 above them as well as their own random effect.
 
-s_n
+R_n
 ===
-We use *s_n* to denote the sum of the random effects for node *n*.
-The code below sets this sum using the name sum_random:
+We use *R_n* to denote the random effects for node *n*.
+The code below sets this value:
 {xsrst_file
-    # BEGIN sum_random
-    # END sum_random
+    # BEGIN random_effect_true
+    # END random_effect_true
 }
 
 Simulated Data
@@ -316,11 +316,9 @@ avg_income       = { 'n1':1.0, 'n2':2.0 }
 avg_income['n0'] = ( avg_income['n1'] + avg_income['n2'] ) / 2.0
 # END avg_income
 #
-# BEGIN sum_random_effect
-size_level1      = 0.2
-size_level2      = 0.2
-sum_random       = { 'n0': 0.0, 'n1': size_level1, 'n2': -size_level1 }
-# END sum_random_effect
+# BEGIN random_effect_true
+random_effect_true  = { 'n0': 0.0, 'n1': 0.3, 'n2': -0.3}
+# END random_effect_true
 #
 # BEGIN age_grid
 age_grid = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
@@ -347,13 +345,13 @@ for node in [ 'n1', 'n2' ] :
 # BEGIN rate_true
 def rate_true(rate, a, t, n, c) :
     income   = c[0]
-    s_n      = sum_random[n]
-    r_0      = avg_income['n0']
+    R_n      = random_effect_true[n]
+    I_n      = avg_income['n0']
     if rate == 'iota' :
-        effect   = s_n + alpha_true[rate] * ( income - r_0 )
+        effect   = R_n + alpha_true[rate] * ( income - I_n )
         return (1 + a / 100) * 1e-4 * math.exp( effect  )
     if rate == 'chi' :
-        effect   = s_n + alpha_true[rate] * ( income - r_0 )
+        effect   = R_n + alpha_true[rate] * ( income - I_n )
         # chi is constant up to second age grid point because prevalence
         # cannot determine chi at age zero.
         aa = max(a, age_grid[1] )
