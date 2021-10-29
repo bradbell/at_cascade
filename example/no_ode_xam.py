@@ -633,6 +633,48 @@ def root_node_db(file_name) :
         option_table
     )
 # ----------------------------------------------------------------------------
+def check_no_ode_fit(fit_node_dir) :
+    #
+    # no_ode_database
+    no_ode_database = fit_node_dir + '/no_ode.db'
+    #
+    # connection
+    new        = False
+    connection = dismod_at.create_connection(no_ode_database, new)
+    #
+    # table
+    table = dict()
+    for tbl_name in [
+        'age', 'time', 'var', 'rate', 'node', 'fit_var'
+
+    ] :
+        table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
+    #
+    # connection
+    connection.close()
+    #
+    # for each row of the var table
+    for (var_id, var_row) in enumerate( table['var'] ) :
+        var_type      = var_row['var_type']
+        node_id       = var_row['node_id']
+        if var_type == 'rate' :
+            node_name     = table['node'][node_id]['node_name']
+            if node_name == 'n0' :
+                # check the rate value
+                age_id        = var_row['age_id']
+                time_id       = var_row['time_id']
+                rate_id       = var_row['rate_id']
+                #
+                age           = table['age'][age_id]['age']
+                time          = table['time'][time_id]['time']
+                rate_name     = table['rate'][rate_id]['rate_name']
+                fit_var_value = table['fit_var'][var_id]['fit_var_value']
+                #
+                c             = [ avg_income['n0'] ]
+                check         = rate_true(rate_name, age, time, 'n0', c)
+                rel_error     = (1.0 - fit_var_value / check )
+                assert abs( rel_error ) < 1e-5
+# ----------------------------------------------------------------------------
 # main
 # ----------------------------------------------------------------------------
 def main() :
@@ -712,9 +754,15 @@ def main() :
     os.makedirs(fit_node_dir )
     #
     # fit_node_database
-    out_database = at_cascade.no_ode_fit(root_node_database)
+    out_database = at_cascade.no_ode_fit(
+        in_database = root_node_database,
+        trace_fit   = False
+    )
     fit_node_database =  fit_node_dir + '/dismod.db'
     assert out_database == fit_node_database
+    #
+    # check_no_ode_fit
+    check_no_ode_fit(fit_node_dir)
     #
     # cascade starting at root node
     at_cascade.cascade_fit_node(all_node_database, fit_node_database)
