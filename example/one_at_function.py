@@ -591,7 +591,10 @@ def main() :
     for goal_dir in [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2' ] :
         goal_database = goal_dir + '/dismod.db'
         at_cascade.check_cascade_fit(
-            rate_true, all_node_database, goal_database
+            rate_true = rate_true,
+            all_node_database  = all_node_database,
+            fit_node_database  = goal_database,
+            relative_tolerance = 1e-3,
         )
     #
     # check that fits were not run for n5 and n6

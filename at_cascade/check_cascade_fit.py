@@ -55,6 +55,16 @@ It is a :ref:`glossary.fit_node_database` with the
 extra properties listed under
 :ref:`cascade_fit_node.output_dismod_db`
 in the cascade_fit_node documentation.
+This argument can't be ``None``.
+
+relative_tolerance
+******************
+Is an upper bound for the relative error in the predictions
+corresponding to the avgint table.
+The error is the prediction using the true rates
+minus the prediction using the estimated rates.
+If this argument is ``None``, the maximum relative error is printed.
+This is intended as an aid in setting the relative tolerance.
 
 {xsrst_end check_cascade_fit}
 '''
@@ -66,12 +76,17 @@ import at_cascade
 def check_cascade_fit(
 # BEGIN syntax
 # at_cascade.check_cascade_fit(
-            rate_true         = None,
-            all_node_database = None,
-            fit_node_database = None
+            rate_true          = None,
+            all_node_database  = None,
+            fit_node_database  = None,
+            relative_tolerance = None,
 # )
 # END syntax
 ) :
+    assert not rate_true is None
+    assert not all_node_database is None
+    assert not fit_node_database is None
+    #
     # connection
     new        = False
     connection = dismod_at.create_connection(all_node_database, new)
@@ -169,6 +184,7 @@ def check_cascade_fit(
     sumsq = n_avgint * [0.0]
     #
     # predict_id, predict_row
+    max_rel_error = 0.0
     for (predict_id, predict_row) in enumerate( tables['predict'] ) :
         #
         # avgint_row
@@ -225,7 +241,7 @@ def check_cascade_fit(
         #
         # check_value
         grid        = { 'age' : [age], 'time' : [time] }
-        abs_tol     = 1e-6
+        abs_tol     = 1e-8
         check_value = dismod_at.average_integrand(
             rate_fun, integrand_name, grid, abs_tol
         )
@@ -233,6 +249,9 @@ def check_cascade_fit(
         # check
         error       = check_value - avg_integrand
         rel_error   = 1.0 - avg_integrand / check_value
-        # print(age, rel_error, error, sample_std)
-        assert abs(rel_error) < 1e-1
+        if not relative_tolerance is None :
+            assert abs(rel_error) < relative_tolerance
         assert abs(error) < 2.0 * sample_std
+        max_rel_error = max(max_rel_error, rel_error)
+    if relative_tolerance is None :
+        print('check_cascade: max_rel_error = ', max_rel_error)

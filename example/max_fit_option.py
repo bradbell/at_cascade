@@ -426,7 +426,10 @@ def main() :
     for leaf_dir in leaf_dir_list :
         leaf_database = leaf_dir + '/dismod.db'
         at_cascade.check_cascade_fit(
-            rate_true, all_node_database, leaf_database
+            rate_true          = rate_true,
+            all_node_database  = all_node_database,
+            fit_node_database  = leaf_database,
+            relative_tolerance = 1e-8,
         )
     #
     # check hold outs for all nodes

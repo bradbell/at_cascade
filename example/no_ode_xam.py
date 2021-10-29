@@ -349,13 +349,13 @@ def rate_true(rate, a, t, n, c) :
     I_n      = avg_income['n0']
     if rate == 'iota' :
         effect   = R_n + alpha_true[rate] * ( income - I_n )
-        return (1 + a / 100) * 1e-4 * math.exp( effect  )
+        return (1 + a / 100) * 1e-3 * math.exp( effect  )
     if rate == 'chi' :
         effect   = R_n + alpha_true[rate] * ( income - I_n )
         # chi is constant up to second age grid point because prevalence
         # cannot determine chi at age zero.
         aa = max(a, age_grid[1] )
-        return (1 + aa / 100) * 1e-1 * math.exp( effect )
+        return (1 + aa / 100) * 1e-2 * math.exp( effect )
     if rate == 'omega' :
         return (1 + a / 100) * 1e-2
     return 0.0
@@ -729,7 +729,10 @@ def main() :
     for goal_dir in [ 'n0/n1', 'n0/n2' ] :
         goal_database = goal_dir + '/dismod.db'
         at_cascade.check_cascade_fit(
-            rate_true, all_node_database, goal_database
+            rate_true         = rate_true,
+            all_node_database = all_node_database,
+            fit_node_database = goal_database,
+            relative_tolerance = 1e-2,
         )
 #
 main()
