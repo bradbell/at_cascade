@@ -307,7 +307,8 @@ print('no_ode_xam: random_seed = ', random_seed)
 # END random_seed
 #
 # BEGIN alpha_true
-alpha_true = - 0.2
+alpha_true = { 'iota':- 0.2, 'chi':-0.2}
+alpha_true_max_abs = 0.3
 # END alpha_true
 #
 # BEGIN avg_income
@@ -348,16 +349,17 @@ def rate_true(rate, a, t, n, c) :
     income   = c[0]
     s_n      = sum_random[n]
     r_0      = avg_income['n0']
-    effect   = s_n + alpha_true * ( income - r_0 )
     if rate == 'iota' :
+        effect   = s_n + alpha_true[rate] * ( income - r_0 )
         return (1 + a / 100) * 1e-4 * math.exp( effect  )
     if rate == 'chi' :
+        effect   = s_n + alpha_true[rate] * ( income - r_0 )
         # chi is constant up to second age grid point because prevalence
         # cannot determine chi at age zero.
         aa = max(a, age_grid[1] )
         return (1 + aa / 100) * 1e-1 * math.exp( effect )
     if rate == 'omega' :
-        return (1 + a / 100) * 1e-2 * math.exp( effect )
+        return (1 + a / 100) * 1e-2
     return 0.0
 # END rate_true
 # ----------------------------------------------------------------------------
@@ -435,10 +437,10 @@ def root_node_db(file_name) :
         # BEGIN alpha_value_prior
         {   'name':    'alpha_value_prior',
             'density': 'gaussian',
-            'lower':   - 10 * abs(alpha_true),
-            'upper':   + 10 * abs(alpha_true),
+            'lower':   - 10 * alpha_true_max_abs,
+            'upper':   + 10 * alpha_true_max_abs,
             'mean':    0.0,
-            'std':     + 10 * abs(alpha_true),
+            'std':     + 10 * alpha_true_max_abs,
         }
         # END alpha_value_prior
     )
