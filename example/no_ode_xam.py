@@ -57,10 +57,9 @@ as a function of age *a* and node *n*.
 
 Covariate
 *********
-There are two covariates for this example is income and *one*.
+There is one covariate for this example, income.
 The reference value for income is the average income corresponding
 to the :ref:`glossary.fit_node`.
-The *one* covariate is always equal to 1 and its reference is always zero.
 
 r_n
 ===
@@ -347,7 +346,6 @@ for node in [ 'n1', 'n2' ] :
 # BEGIN rate_true
 def rate_true(rate, a, t, n, c) :
     income   = c[0]
-    one      = c[1]
     s_n      = sum_random[n]
     r_0      = avg_income['n0']
     effect   = s_n + alpha_true * ( income - r_0 )
@@ -364,7 +362,7 @@ def rate_true(rate, a, t, n, c) :
 # END rate_true
 # ----------------------------------------------------------------------------
 def average_integrand(integrand_name, age, node_name, income) :
-    covariate_list = [ income , None ]
+    covariate_list = [ income ]
     def iota(a, t) :
         return rate_true('iota', a, t, node_name, covariate_list)
     def chi(a, t) :
@@ -381,7 +379,7 @@ def average_integrand(integrand_name, age, node_name, income) :
 # ----------------------------------------------------------------------------
 def root_node_db(file_name) :
     # BEGIN iota_chi_50
-    covariate_list = [ avg_income['n0'], None ]
+    covariate_list = [ avg_income['n0'] ]
     iota_50        = rate_true('iota', 50.0, None, 'n0', covariate_list )
     chi_50         = rate_true('chi',  50.0, None, 'n0', covariate_list )
     # END iota_chi_50
@@ -505,7 +503,6 @@ def root_node_db(file_name) :
     # covariate_table
     covariate_table = [
         { 'name':'income',   'reference':avg_income['n0'] },
-        { 'name':'one',      'reference':0.0              },
     ]
     #
     # mulcov_table
@@ -546,7 +543,6 @@ def root_node_db(file_name) :
         'time_lower':   2000.0,
         'time_upper':   2000.0,
         'income':       None,
-        'one':          1.0,
     }
     for age in age_grid :
         row['age_lower'] = age
@@ -566,7 +562,6 @@ def root_node_db(file_name) :
             'time_upper':   2000.0,
             'density':      'log_gaussian',
             'hold_out':     False,
-            'one':          1.0,
         }
         row_list       = list()
         max_meas_value =  {
@@ -621,8 +616,6 @@ def root_node_db(file_name) :
         { 'name':'max_num_iter_random',   'value':'200'},
         { 'name':'tolerance_fixed',       'value':'1e-8'},
         { 'name':'tolerance_random',      'value':'1e-8'},
-        { 'name':'bound_random',          'value':1.0},
-        { 'name':'meas_noise_effect',     'value':'add_std_scale_none'},
         { 'name':'hold_out_integrand',    'value':'mtexcess'},
         { 'name':'random_seed',           'value':str(random_seed)},
     ]
