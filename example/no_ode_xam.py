@@ -31,13 +31,11 @@ Nodes
 The following is a diagram of the node tree for this example.
 The :ref:`glossary.root_node` is n0,
 the :ref:`glossary.fit_goal_set` and the leaf node set
-are both {n3, n4, n5, n6} for this example::
+are both {n2, n3} for this example::
 
                 n0
           /-----/\-----\
         n1              n2
-       /  \            /  \
-    (n3)  (n4)      (n5)  (n6)
 
 fit_goal_set
 ============
@@ -322,7 +320,7 @@ import at_cascade
 # global variables
 # -----------------------------------------------------------------------------
 # BEGIN fit_goal_set
-fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
+fit_goal_set = { 'n1', 'n2' }
 # END fit_goal_set
 #
 # BEGIN random_seed
@@ -338,9 +336,7 @@ alpha_true = - 0.2
 # END alpha_true
 #
 # BEGIN avg_income
-avg_income       = { 'n3':1.0, 'n4':2.0, 'n5':3.0, 'n6':4.0 }
-avg_income['n2'] = ( avg_income['n5'] + avg_income['n6'] ) / 2.0
-avg_income['n1'] = ( avg_income['n3'] + avg_income['n4'] ) / 2.0
+avg_income       = { 'n1':1.0, 'n2':2.0 }
 avg_income['n0'] = ( avg_income['n1'] + avg_income['n2'] ) / 2.0
 # END avg_income
 #
@@ -348,10 +344,6 @@ avg_income['n0'] = ( avg_income['n1'] + avg_income['n2'] ) / 2.0
 size_level1      = 0.2
 size_level2      = 0.2
 sum_random       = { 'n0': 0.0, 'n1': size_level1, 'n2': -size_level1 }
-sum_random['n3'] = sum_random['n1'] + size_level2;
-sum_random['n4'] = sum_random['n1'] - size_level2;
-sum_random['n5'] = sum_random['n2'] + size_level2;
-sum_random['n6'] = sum_random['n2'] - size_level2;
 # END sum_random_effect
 #
 # BEGIN age_grid
@@ -361,7 +353,7 @@ age_grid = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
 # BEGIN income_grid
 random_income = False
 income_grid   = dict()
-for node in [ 'n3', 'n4', 'n5', 'n6' ] :
+for node in [ 'n1', 'n2' ] :
     max_income  = 2.0 * avg_income[node]
     if random_income :
         n_income_grid = 10
@@ -531,10 +523,6 @@ def root_node_db(file_name) :
         { 'name':'n0',        'parent':''   },
         { 'name':'n1',        'parent':'n0' },
         { 'name':'n2',        'parent':'n0' },
-        { 'name':'n3',        'parent':'n1' },
-        { 'name':'n4',        'parent':'n1' },
-        { 'name':'n5',        'parent':'n2' },
-        { 'name':'n6',        'parent':'n2' },
     ]
     #
     # rate_table
@@ -620,7 +608,7 @@ def root_node_db(file_name) :
     #
     # data_table
     data_table = list()
-    leaf_set   = [ 'n3', 'n4', 'n5', 'n6' ]
+    leaf_set   = [ 'n1', 'n2' ]
     for node in leaf_set :
         row = {
             'subgroup':     'world',
@@ -725,7 +713,7 @@ def main() :
     #
     # all_cov_reference
     all_cov_reference = dict()
-    for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
+    for node_name in [ 'n0', 'n1', 'n2' ] :
         all_cov_reference[node_name] = {
             'income' : [ avg_income[node_name] ],
             'one':     [0.0],
@@ -739,7 +727,7 @@ def main() :
     # mtall_data
     integrand_name = 'mtall'
     mtall_data     = dict()
-    for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
+    for node_name in [ 'n0', 'n1', 'n2' ] :
         mtall_list = list()
         income                = avg_income[node_name]
         for age_id in omega_grid['age'] :
@@ -752,7 +740,7 @@ def main() :
     # mtspecific_data
     integrand_name  = 'mtspecific'
     mtspecific_data = dict()
-    for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
+    for node_name in [ 'n0', 'n1', 'n2' ] :
         mtspecific_list = list()
         income   = avg_income[node_name]
         for age_id in omega_grid['age'] :
@@ -797,16 +785,11 @@ def main() :
     at_cascade.cascade_fit_node(all_node_database, fit_node_database)
     #
     # check results
-    for goal_dir in [ 'n0/n1', 'n0/n2/n5', 'n0/n2/n6' ] :
+    for goal_dir in [ 'n0/n1', 'n0/n2' ] :
         goal_database = goal_dir + '/dismod.db'
         at_cascade.check_cascade_fit(
             rate_true, all_node_database, goal_database
         )
-    #
-    # check that fits were not run for n3 and n4
-    for not_fit_dir in [ ] :
-        assert not os.path.exists( not_fit_dir )
-
 #
 main()
 print('no_ode_xam: OK')
