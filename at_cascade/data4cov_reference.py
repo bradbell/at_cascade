@@ -51,6 +51,12 @@ The :ref:`all_option_table.split_list` and
 :ref:`all_option_table.absolute_covariates` rows of this table
 (if they exist) are the only rows of this table that are used.
 
+trace
+*****
+If *trace* is True (False) a message will (will not) be printed
+at the beginning and end of this process
+(because it can take a while).
+
 all_cov_reference Table
 =======================
 The :ref:`all_cov_reference_table.reference` created
@@ -81,9 +87,12 @@ import math
 def data4cov_reference(
 # BEGIN syntax
     all_node_database  = None,
-    root_node_database = None
+    root_node_database = None,
+    trace              = False,
 # END syntax
 ) :
+    if trace :
+        print('begin: data4cov_reference')
     #
     # all_option_table
     new              = False
@@ -240,4 +249,6 @@ def data4cov_reference(
         connection, tbl_name, col_name, col_type, row_list
     )
     #
+    if trace :
+        print('end: data4cov_reference')
     return

@@ -78,7 +78,7 @@ The return value *out_database* is equal to
 which can't be the same file name as *in_database*.
 This is a fit_node_database similar to *in_database*.
 The difference is that the mean value in the priors for the fixed effects
-has been replace by the optimal estimate for fitting with the integrands
+have been replace by the optimal estimate for fitting with the integrands
 that do not used the ODE.
 The last operation on this table is a dismod_at init command.
 

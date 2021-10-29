@@ -64,7 +64,7 @@ node_table   = dismod_at.get_table_dict(connect_root, 'node')
 #
 # fit_goal table
 # Do a drill to drill_node_name
-drill_node_name = 'Global'
+drill_node_name = 'New York'
 drill_node_id   = None
 for (node_id, row) in enumerate( node_table ) :
     if row['node_name'] == drill_node_name :
@@ -243,21 +243,6 @@ for row in old_avgint_table :
         new_avgint_table.append( row )
 dismod_at.replace_table(connect_root, 'avgint', new_avgint_table)
 #
-# rate table
-# all omega rates must be null
-rate_table    = dismod_at.get_table_dict(connect_root, 'rate')
-omega_rate_id = 4
-assert rate_table[omega_rate_id]['rate_name'] == 'omega'
-rate_table[omega_rate_id]['parent_smooth_id'] = None
-rate_table[omega_rate_id]['child_smooth_id'] = None
-rate_table[omega_rate_id]['child_nslist_id'] = None
-dismod_at.replace_table(connect_root, 'rate', rate_table)
-#
-# nslist and nslist_pair tables
-empty_list = list()
-dismod_at.replace_table(connect_root, 'nslist', empty_list)
-dismod_at.replace_table(connect_root, 'nslist_pair', empty_list)
-#
 # mtall_index, mtspecific_index
 # Change sex_id -> split_reference_id and map its values
 # 2 -> 0 (female), 3 -> 1 (both), 1 -> 2 (male)
@@ -298,6 +283,7 @@ connect_root.close()
 at_cascade.data4cov_reference(
     root_node_database = root_node_copy ,
     all_node_database  = all_node_copy  ,
+    trace              = True,
 )
 #
 # connect_all, connect_root
@@ -346,6 +332,10 @@ n_point_list = dismod_at.plot_data_fit(
 )
 #
 # rate.pdf
+new        = False
+connection = dismod_at.create_connection(no_ode_database, new)
+rate_table = dismod_at.get_table_dict(connection, 'rate')
+connection.close()
 rate_set = set()
 for row in rate_table :
     if not row['parent_smooth_id'] is None :
@@ -358,7 +348,7 @@ plot_set = dismod_at.plot_rate_fit(
 dismod_at.system_command_prc([ 'dismodat.py', no_ode_database, 'db2csv' ])
 #
 # cascade starting at root node
-at_cascade.cascade_fit_node(all_node_copy, fit_node_database)
+at_cascade.cascade_fit_node(all_node_copy, fit_node_database, trace_fit = True)
 #
 print(f'all_node_database = {all_node_copy}')
 print(f'fit_node_database = {fit_node_database}')
