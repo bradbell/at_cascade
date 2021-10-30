@@ -13,6 +13,7 @@ location_table_csv  = 'location_map.csv'
 ldi_table_csv       = 'ldi_covariate_data.csv'
 obesity_table_csv   = 'obesity_covariate_data.csv'
 data_table_csv      = 'overall_diabetes_input_data_crosswalkv35057.csv'
+all_node_database   = '../../475876/all_node.db'
 #
 # output table file name
 data_table_out      = 'data.csv'
@@ -20,7 +21,10 @@ node_table_out      = 'node.csv'
 #
 # Maximum number of data table entries. This is to speed up softward testing.
 # In the real case set max_data_table = None
-max_data_table      = 10000
+max_data_table      = 20000
+#
+# maximum number of data row per integrand to include in a fit
+max_fit = 250
 # -----------------------------------------------------------------------------
 #
 import random
@@ -43,6 +47,16 @@ import at_cascade
 work_dir = 'ihme_db/csv/35057'
 distutils.dir_util.mkpath(work_dir)
 os.chdir(work_dir)
+#
+# root_node_dir
+root_node_dir = 'Global'
+if os.path.exists(root_node_dir) :
+    # rmtree is very dangerous so make sure root_node_dir is as expected
+    os.chdir('../../..')
+    assert work_dir == 'ihme_db/csv/35057'
+    shutil.rmtree(work_dir + '/' + root_node_dir)
+    os.chdir(work_dir)
+os.makedirs(root_node_dir)
 # ---------------------------------------------------------------------------
 # covariate_dict = get_covariate_dict(file_name)
 def get_covariate_dict(file_name) :
@@ -445,6 +459,7 @@ def create_root_node_database(file_name) :
         { 'name':'max_num_iter_fixed',   'value':'30'},
         { 'name':'trace_init_fit_model', 'value':'true'},
         { 'name':'data_extra_columns',   'value':'csv_row_id'},
+        { 'name':'print_level_fixed',    'value':'5'},
     ]
     #
     # create_database
@@ -470,9 +485,149 @@ def create_root_node_database(file_name) :
          option_table
     )
 # ---------------------------------------------------------------------------
+def create_all_node_copy(root_node_database) :
+    #
+    # all_node_copy
+    all_node_copy = 'all_node_copy.db'
+    shutil.copyfile(all_node_database, all_node_copy)
+    #
+    # node_table
+    new        = False
+    connection = dismod_at.create_connection(root_node_database, new)
+    node_table = dismod_at.get_table_dict(connection, 'node')
+    connection.close()
+    #
+    # connection
+    new        = False
+    connection = dismod_at.create_connection(all_node_copy, new)
+    #
+    # fit_goal table
+    # Do a drill to drill_node_name
+    drill_node_name = 'New_York'
+    drill_node_id   = None
+    for (node_id, row) in enumerate( node_table ) :
+        if row['node_name'] == drill_node_name :
+            drill_node_id = node_id
+    assert not drill_node_id is None
+    tbl_name = 'fit_goal'
+    col_name = [ 'node_id' ]
+    col_type = [ 'integer' ]
+    row_list = [
+        [ drill_node_id ]
+    ]
+    command = 'DROP TABLE IF EXISTS '  + tbl_name
+    dismod_at.sql_command(connection, command)
+    dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
+    #
+    # mtall_index, mtspecific_index
+    # Change sex_id -> split_reference_id and map its values
+    # 2 -> 0 (female), 3 -> 1 (both), 1 -> 2 (male)
+    split_map = { 1:2, 2:0, 3:1}
+    for tbl_name in [ 'mtall_index', 'mtspecific_index' ] :
+        command  = 'ALTER TABLE ' + tbl_name + ' '
+        command += 'RENAME COLUMN sex_id TO split_reference_id'
+        dismod_at.sql_command(connection, command)
+        #
+        this_table = \
+            dismod_at.get_table_dict(connection, tbl_name)
+        for row in this_table :
+            split_reference_id = split_map[ row['split_reference_id'] ]
+            row['split_reference_id'] = split_reference_id
+        dismod_at.replace_table( connection, tbl_name, this_table)
+    #
+    # all_option_table
+    all_option_table  = dismod_at.get_table_dict(connection, 'all_option')
+    all_option_id     = None
+    for (row_id, row) in enumerate( all_option_table ) :
+        # in_parallel
+        if row['option_name'] == 'in_parallel' :
+            row['option_value'] = 'false'
+        # max_fit
+        if row['option_name'] == 'max_fit' :
+            row['option_value'] = str(max_fit)
+        # max_abs_effect
+        if row['option_name'] == 'max_abs_effect' :
+            all_option_id = row_id
+        # split_list
+        if row['option_name'] == 'split_list' :
+            row['option_value'] = '-1 sex -0.5 0.0 +0.5'
+    # max_abs_effect
+    if not all_option_id is None :
+        del all_option_table[all_option_id]
+    dismod_at.replace_table(connection, 'all_option', all_option_table)
+    #
+    # connection
+    connection.close()
+    #
+    # all_cov_reference table
+    at_cascade.data4cov_reference(
+        root_node_database = root_node_database,
+        all_node_database  = all_node_copy  ,
+        trace              = True,
+    )
+# ---------------------------------------------------------------------------
+def display_results(database) :
+    #
+    # pdf_file
+    index    = database.rfind('/')
+    pdf_dir  = database[0:index]
+    #
+    # integrand_table, rate_table
+    new             = False
+    connection      = dismod_at.create_connection(database, new)
+    integrand_table = dismod_at.get_table_dict(connection, 'integrand')
+    rate_table      = dismod_at.get_table_dict(connection, 'rate')
+    #
+    # data.pdf
+    integrand_list = list( at_cascade.get_fit_integrand(database) )
+    for i in range( len(integrand_list) ) :
+        integrand_id      = integrand_list[i]
+        integrand_name    = integrand_table[integrand_id]['integrand_name']
+        integrand_list[i] = integrand_name
+    pdf_file = pdf_dir + '/data.pdf'
+    n_point_list = dismod_at.plot_data_fit(database, integrand_list, pdf_file)
+    #
+    # rate.pdf
+    rate_set = set()
+    for row in rate_table :
+        if not row['parent_smooth_id'] is None :
+            rate_set.add( row['rate_name'] )
+    pdf_file = pdf_dir + '/rate.pdf'
+    plot_set = dismod_at.plot_rate_fit( database, rate_set, pdf_file)
+    #
+    # db2csv
+    dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
+# ---------------------------------------------------------------------------
 # main
 # ---------------------------------------------------------------------------
+#
+# extract info from raw csv files
 create_csv_files()
+#
+# create root_node.db
 create_root_node_database('root_node.db')
+#
+# create all_node_copy.db
+create_all_node_copy('root_node.db')
+#
+# no_ode_fit
+#
+# all_cov_reference table
+at_cascade.data4cov_reference(
+    root_node_database = 'root_node.db' ,
+    all_node_database  = 'all_node_copy.db'  ,
+    trace              = True,
+)
+#
+# no_ode_fit
+fit_node_database = at_cascade.no_ode_fit(
+    in_database = 'root_node.db',
+    max_fit     = max_fit,
+    trace_fit   = True,
+)
+#
+# display_results
+display_results( 'no_ode.db' )
+# ----------------------------------------------------------------------------
 print(sys.argv[0] + ': OK')
 sys.exit(0)
