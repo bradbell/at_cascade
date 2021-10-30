@@ -23,6 +23,9 @@ all_node_database   = 'all_node.db' # copy of ../475876/all_node.db
 data_table_out      = 'data.csv'
 node_table_out      = 'node.csv'
 #
+# root_node_name
+root_node_name      = 'Global'
+#
 # Maximum number of data table entries. This is to speed up softward testing.
 # In the real case set max_data_table = None
 max_data_table      = 20000
@@ -49,17 +52,17 @@ import at_cascade
 #
 # working_directory
 distutils.dir_util.mkpath(working_directory)
-os.chdir(working_directory)
 #
-# root_node_dir
-root_node_dir = 'Global'
-if os.path.exists(root_node_dir) :
-    # rmtree is very dangerous so make sure root_node_dir is as expected
-    os.chdir('../..')
+# remove old verison of working_directory/root_node_name
+if os.path.exists(working_directory + '/' + root_node_name) :
+    # rmtree is very dangerous so make sure working_directory is as expected
     assert working_directory == 'ihme_db/35057'
-    shutil.rmtree(working_directory + '/' + root_node_dir)
+    shutil.rmtree(working_directory + '/' + root_node_name)
     os.chdir(working_directory)
-os.makedirs(root_node_dir)
+#
+# change into working directory and create root_node_name subdirectory
+os.chdir(working_directory)
+os.makedirs(root_node_name)
 # ---------------------------------------------------------------------------
 # covariate_dict = get_covariate_dict(file_name)
 def get_covariate_dict(file_name) :
@@ -635,7 +638,7 @@ fit_node_database = at_cascade.no_ode_fit(
 )
 #
 # display_results
-display_results( root_node_dir + '/no_ode.db' )
+display_results( root_node_name + '/no_ode.db' )
 # ----------------------------------------------------------------------------
 print(sys.argv[0] + ': OK')
 sys.exit(0)
