@@ -347,10 +347,11 @@ def create_root_node_database(file_name) :
     prior_table = [
         {
             'name'    :    'parent_rate_value',
-            'density' :    'uniform',
+            'density' :    'gaussian',
             'lower'   :    1e-7,
             'upper'   :    1.0,
-            'mean'    :    1e-6,
+            'mean'    :    1e-2,
+            'std'     :    1.0
         },{
             'name'    :    'parent_rate_delta',
             'density' :    'log_gaussian',
@@ -414,6 +415,15 @@ def create_root_node_database(file_name) :
         'fun':       fun
     })
     #
+    # omega_smooth
+    fun = lambda a, t : (1e-2, None, None)
+    smooth_table.append({
+        'name':    'omega_smooth',
+        'age_id':   [0],
+        'time_id':   [0],
+        'fun':       fun
+    })
+    #
     # rate_table
     rate_table = [
         {
@@ -428,6 +438,10 @@ def create_root_node_database(file_name) :
             'name':           'chi',
             'parent_smooth': 'parent_rate',
             'child_smooth':  'child_smooth',
+        },{
+            'name':           'omega',
+            'parent_smooth': 'omega_smooth',
+            'child_smooth':  None,
         }
     ]
     #
@@ -611,15 +625,6 @@ create_root_node_database('root_node.db')
 create_all_node_copy('root_node.db')
 #
 # no_ode_fit
-#
-# all_cov_reference table
-at_cascade.data4cov_reference(
-    root_node_database = 'root_node.db' ,
-    all_node_database  = 'all_node_copy.db'  ,
-    trace              = True,
-)
-#
-# no_ode_fit
 fit_node_database = at_cascade.no_ode_fit(
     in_database = 'root_node.db',
     max_fit     = max_fit,
@@ -627,7 +632,7 @@ fit_node_database = at_cascade.no_ode_fit(
 )
 #
 # display_results
-display_results( 'no_ode.db' )
+display_results( root_node_dir + '/no_ode.db' )
 # ----------------------------------------------------------------------------
 print(sys.argv[0] + ': OK')
 sys.exit(0)
