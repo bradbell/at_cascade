@@ -19,7 +19,8 @@ obesity_table_csv   = 'obesity_covariate_data.csv'
 data_table_csv      = 'overall_diabetes_input_data_crosswalkv35057.csv'
 emr_table_csv       = 'diabetes_emr.csv'
 age_group_table_csv = 'age_metadata_gbd2020.csv'
-all_node_database   = 'all_node.db' # copy of ../475876/all_node.db
+all_node_other      = '../475876/all_node.db'
+root_node_other     = '../475876/dismod.db'
 #
 # output table file name
 data_table_out      = 'data.csv'
@@ -341,7 +342,7 @@ def get_table_csv(file_name) :
         table.append(row)
     return table
 # ---------------------------------------------------------------------------
-def create_root_node_database(file_name) :
+def create_root_node_database(file_name, other_age_table, other_time_table) :
     #
     # csv_data_table, csv_node_table
     csv_data_table = get_table_csv( data_table_out )
@@ -351,10 +352,57 @@ def create_root_node_database(file_name) :
     subgroup_table = [ {'subgroup': 'world', 'group':'world'} ]
     #
     # age_list
-    age_list = [ 0.0, 5.0, 10.0, 20.0, 40.0, 60.0, 80.0, 100.0, 126.0 ]
+    age_list = list()
+    for row in other_age_table :
+        age_list.append( row['age'] )
+    #
+    # age_list, grid_age_id
+    grid_age_id = list()
+    age_grid    = [ 0.0, 5.0, 10.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
+    for age in age_grid :
+        if age in age_list :
+            grid_age_id.append( age_list.index(age) )
+        else :
+            grid_age_id.append( len(age_list) )
+            age_list.append( age )
+    # max aage in csv files
+    age_list.append( 126.0 )
     #
     # time_list
-    time_list = [ 1960.0, 1970.0, 1980.0, 2000.0, 2010.0, 2020.0, 2023.0 ]
+    time_list = list()
+    for row in other_time_table :
+        time_list.append( row['time'] )
+    #
+    # time_list, grid_time_id
+    grid_time_id = list()
+    time_grid   = [ 1960.0, 1970.0, 1980.0, 2000.0, 2010.0, 2020.0 ]
+    for time in time_grid :
+        if time in time_list :
+            grid_time_id.append( time_list.index(time) )
+        else :
+            grid_time_id.append( len(time_list) )
+            time_list.append( time )
+    # max time in csv files
+    time_list.append( 2023.0 )
+    #
+    # mulcov_table
+    mulcov_table = [
+        {
+            # alpha_iota_obesity
+            'covariate': 'obesity',
+            'type':      'rate_value',
+            'effected':  'iota',
+            'group':     'world',
+            'smooth':    'alpha_smooth',
+        },{
+            # alpha_iota_sex
+            'covariate': 'sex',
+            'type':      'rate_value',
+            'effected':  'iota',
+            'group':     'world',
+            'smooth':    'alpha_smooth',
+        }
+    ]
     #
     # integrand_table
     integrand_set = set()
@@ -363,6 +411,8 @@ def create_root_node_database(file_name) :
     integrand_table = list()
     for integrand_name in integrand_set :
         integrand_table.append( { 'name' : integrand_name } )
+    for j in range( len(mulcov_table) ) :
+        integrand_table.append( { 'name' : f'mulcov_{j}' } )
     #
     # node_table
     node_table = list()
@@ -457,8 +507,8 @@ def create_root_node_database(file_name) :
         ('parent_rate_value', 'parent_rate_delta', 'parent_rate_delta')
     smooth_table.append({
         'name':     'parent_rate',
-        'age_id':   range( 1, len(age_list) - 1 ),
-        'time_id':  range( 1, len(time_list) - 1 ),
+        'age_id':   grid_age_id,
+        'time_id':  grid_time_id,
         'fun':      fun
     })
     fun = lambda a, t :  \
@@ -466,7 +516,7 @@ def create_root_node_database(file_name) :
     smooth_table.append({
         'name':     'parent_pini',
         'age_id':   [0],
-        'time_id':  range( len(time_list) - 1 ),
+        'time_id':  grid_time_id,
         'fun':      fun
     })
     #
@@ -488,15 +538,6 @@ def create_root_node_database(file_name) :
         'fun':       fun
     })
     #
-    # omega_smooth
-    fun = lambda a, t : (1e-2, None, None)
-    smooth_table.append({
-        'name':    'omega_smooth',
-        'age_id':   [0],
-        'time_id':   [0],
-        'fun':       fun
-    })
-    #
     # rate_table
     rate_table = [
         {
@@ -511,29 +552,6 @@ def create_root_node_database(file_name) :
             'name':           'chi',
             'parent_smooth': 'parent_rate',
             'child_smooth':  'child_smooth',
-        },{
-            'name':           'omega',
-            'parent_smooth': 'omega_smooth',
-            'child_smooth':  None,
-        }
-    ]
-    #
-    # mulcov_table
-    mulcov_table = [
-        {
-            # alpha_iota_obesity
-            'covariate': 'obesity',
-            'type':      'rate_value',
-            'effected':  'iota',
-            'group':     'world',
-            'smooth':    'alpha_smooth',
-        },{
-            # alpha_iota_sex
-            'covariate': 'sex',
-            'type':      'rate_value',
-            'effected':  'iota',
-            'group':     'world',
-            'smooth':    'alpha_smooth',
         }
     ]
     #
@@ -572,11 +590,10 @@ def create_root_node_database(file_name) :
          option_table
     )
 # ---------------------------------------------------------------------------
-def create_all_node_copy(root_node_database) :
+def create_all_node_database(all_node_database, root_node_database) :
     #
-    # all_node_copy
-    all_node_copy = 'all_node_copy.db'
-    shutil.copyfile(all_node_database, all_node_copy)
+    # all_node_database
+    shutil.copyfile(all_node_other, all_node_database)
     #
     # node_table
     new        = False
@@ -586,7 +603,7 @@ def create_all_node_copy(root_node_database) :
     #
     # connection
     new        = False
-    connection = dismod_at.create_connection(all_node_copy, new)
+    connection = dismod_at.create_connection(all_node_database, new)
     #
     # fit_goal table
     # Do a drill to drill_node_name
@@ -655,7 +672,7 @@ def create_all_node_copy(root_node_database) :
     # all_cov_reference table
     at_cascade.data4cov_reference(
         root_node_database = root_node_database,
-        all_node_database  = all_node_copy  ,
+        all_node_database  = all_node_database  ,
         trace              = True,
     )
 # ---------------------------------------------------------------------------
@@ -694,19 +711,30 @@ def display_results(database) :
 # main
 # ---------------------------------------------------------------------------
 def main() :
+    root_node_database = 'root_node.db'
+    all_node_database  = 'all_node.db'
+    #
+    # other_age_table, other_time_table
+    new        = False
+    connection = dismod_at.create_connection(root_node_other, new)
+    other_age_table  = dismod_at.get_table_dict(connection, 'age')
+    other_time_table = dismod_at.get_table_dict(connection, 'time')
+    connection.close()
     #
     # extract info from raw csv files
     create_csv_files()
     #
     # create root_node.db
-    create_root_node_database('root_node.db')
+    create_root_node_database(
+        root_node_database, other_age_table, other_time_table
+    )
     #
-    # create all_node_copy.db
-    create_all_node_copy('root_node.db')
+    # create all_node.db
+    create_all_node_database(all_node_database, root_node_database)
     #
     # no_ode_fit
     fit_node_database = at_cascade.no_ode_fit(
-        in_database = 'root_node.db',
+        in_database = root_node_database,
         max_fit     = max_fit,
         trace_fit   = True,
     )
@@ -716,7 +744,6 @@ def main() :
     display_results( root_node_name + '/no_ode.db' )
     #
     # cascade starting at root node
-    all_node_database = 'all_node_copy.db'
     at_cascade.cascade_fit_node(
         all_node_database, fit_node_database, trace_fit = True
     )
