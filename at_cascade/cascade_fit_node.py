@@ -228,11 +228,14 @@ def check_covariate_reference(
                 #
             reference = covariate_table[covariate_id]['reference']
             if row['reference'] != reference :
-                msg  = 'Covariate references for '
-                msg += f'node_id = {fit_node_id} '
-                msg += f'split_reference_id = {split_reference_id} and '
-                msg += f'covariate_id = {covariate_id} are different in\n'
-                msg += 'covariate and all_cov_reference tables'
+                row_reference = row['reference']
+                covariate_name = covariate_table[covariate_id]['covariate_name']
+                msg  = f'Covariate references for {covariate_name} '
+                msg += f'at node_id {fit_node_id} '
+                msg += f' and split_reference_id {split_reference_id}:\n'
+                msg += f'covariate_id = {covariate_id}:\n'
+                msg += f'is {reference} in covariate table and '
+                msg += f'{row_reference} in all_cov_reference table'
                 assert False, msg
             #
             # check_reference_set

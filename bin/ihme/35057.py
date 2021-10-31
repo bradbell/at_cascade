@@ -17,6 +17,8 @@ location_table_csv  = 'location_map.csv'
 ldi_table_csv       = 'ldi_covariate_data.csv'
 obesity_table_csv   = 'obesity_covariate_data.csv'
 data_table_csv      = 'overall_diabetes_input_data_crosswalkv35057.csv'
+emr_table_csv       = 'diabetes_emr.csv'
+age_group_table_csv = 'age_metadata_gbd2020.csv'
 all_node_database   = 'all_node.db' # copy of ../475876/all_node.db
 #
 # output table file name
@@ -32,6 +34,9 @@ max_data_table      = 20000
 #
 # maximum number of data row per integrand to include in a fit
 max_fit = 250
+#
+# random_seed (if zero, use clock for random seed)
+random_seed = 1234
 # -----------------------------------------------------------------------------
 #
 import random
@@ -51,18 +56,22 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
 import at_cascade
 #
 # working_directory
-distutils.dir_util.mkpath(working_directory)
+if not os.path.exists(working_directory) :
+    os.makedirs(working_directory)
 #
 # remove old verison of working_directory/root_node_name
 if os.path.exists(working_directory + '/' + root_node_name) :
     # rmtree is very dangerous so make sure working_directory is as expected
     assert working_directory == 'ihme_db/35057'
     shutil.rmtree(working_directory + '/' + root_node_name)
-    os.chdir(working_directory)
 #
 # change into working directory and create root_node_name subdirectory
 os.chdir(working_directory)
 os.makedirs(root_node_name)
+#
+# random.seed
+if random_seed != 0 :
+    random.seed(random_seed)
 # ---------------------------------------------------------------------------
 # covariate_dict = get_covariate_dict(file_name)
 def get_covariate_dict(file_name) :
@@ -106,6 +115,56 @@ def get_location_table(file_name) :
         location_id_set.add( location_id )
         #
     return location_table
+# ---------------------------------------------------------------------------
+# age_group_dict = get_age_group_dict(file_name)
+def get_age_group_dict(file_name) :
+    file_ptr   = open(file_name)
+    reader     = csv.DictReader(file_ptr)
+    age_group_dict = dict()
+    csv_row_id = 0
+    for row_in in reader :
+        csv_row_id += 1
+        row_out = dict()
+        age_group_id                 = int( row_in['age_group_id'] )
+        row_out['csv_row_id']        = csv_row_id
+        row_out['age_lower']         = float( row_in['age_group_years_start'] )
+        row_out['age_upper']         = float( row_in['age_group_years_end'] )
+        age_group_dict[age_group_id] = row_out
+    return age_group_dict
+# ---------------------------------------------------------------------------
+# emr_table = get_emr_table(file_name, age_group_dict)
+def get_emr_table(file_name, age_group_dict) :
+    file_ptr   = open(file_name)
+    reader     = csv.DictReader(file_ptr)
+    emr_table  = list()
+    csv_row_id = 0
+    for row_in in reader :
+        csv_row_id += 1
+        year_id      = float( row_in['year_id'] )
+        age_group_id = int( row_in['age_group_id'] )
+        lower        = float( row_in['lower'] )
+        upper        = float( row_in['upper'] )
+        meas_std     = (upper - lower) / 2.0
+        row_out = dict()
+        row_out['csv_row_id']   = csv_row_id
+        row_out['location_id']  = int( row_in['location_id'] )
+        row_out['sex']          = 'Both'
+        row_out['time_lower']   = year_id
+        row_out['time_upper']   = year_id + 1.0
+        row_out['age_lower']    = age_group_dict[age_group_id]['age_lower']
+        row_out['age_upper']    = age_group_dict[age_group_id]['age_upper']
+        row_out['meas_value']   = float( row_in['mean'] )
+        row_out['meas_std']     = meas_std
+        row_out['obesity']      = None
+        row_out['ldi']          = None
+        #
+        if row_in['measure'] == 'incidence' :
+            row_out['integrand']    = 'Sincidence'
+        else :
+            row_out['integrand']    = row_in['measure']
+        #
+        emr_table.append( row_out )
+    return emr_table
 # ---------------------------------------------------------------------------
 # data_table = get_data_table(file_name)
 def get_data_table(file_name) :
@@ -189,6 +248,14 @@ def create_csv_files() :
             age_max  = max(age_max, row['age_upper'] )
             time_max = max(time_max, row['t ime_upper'] )
         print( age_max, time_max)
+    #
+    # emr_table
+    age_group_dict = get_age_group_dict(age_group_table_csv)
+    emr_table     = get_emr_table(emr_table_csv, age_group_dict)
+    #
+    # data_table
+    assert set( data_table[0].keys() ) == set( emr_table[0].keys() )
+    data_table += emr_table
     if not max_data_table is None :
         subsample = random.sample(range(0, len(data_table)), max_data_table)
         subsample = sorted(subsample)
@@ -284,10 +351,10 @@ def create_root_node_database(file_name) :
     subgroup_table = [ {'subgroup': 'world', 'group':'world'} ]
     #
     # age_list
-    age_list = [ 0.0, 1.0, 5.0, 10.0, 20.0, 40.0, 60.0, 80.0, 100.0, 126.0 ]
+    age_list = [ 0.0, 5.0, 10.0, 20.0, 40.0, 60.0, 80.0, 100.0, 126.0 ]
     #
     # time_list
-    time_list = [ 1960.0, 1970.0, 1980.0, 2000.0, 2010.0, 2020.0, 2021.0 ]
+    time_list = [ 1960.0, 1970.0, 1980.0, 2000.0, 2010.0, 2020.0, 2023.0 ]
     #
     # integrand_table
     integrand_set = set()
@@ -312,7 +379,7 @@ def create_root_node_database(file_name) :
     covariate_table = [
         { 'name':'sex',     'reference':0.0, 'max_difference':0.6},
         { 'name':'one',     'reference':0.0 },
-        { 'name':'obesity', 'reference':0.0 },
+        { 'name':'obesity', 'reference':0.1193 },
     ]
     #
     # avgint_table
@@ -364,7 +431,7 @@ def create_root_node_database(file_name) :
             'lower'   :    None,
             'upper'   :    None,
             'mean'    :    0.0,
-            'std'     :    1.0,
+            'std'     :    0.1,
             'eta'     :    1e-7,
         },{
             'name'    :   'child_rate_value',
@@ -390,8 +457,8 @@ def create_root_node_database(file_name) :
         ('parent_rate_value', 'parent_rate_delta', 'parent_rate_delta')
     smooth_table.append({
         'name':     'parent_rate',
-        'age_id':   range( len(age_list) - 1 ),
-        'time_id':  range( len(time_list) - 1 ),
+        'age_id':   range( 1, len(age_list) - 1 ),
+        'time_id':  range( 1, len(time_list) - 1 ),
         'fun':      fun
     })
     fun = lambda a, t :  \
@@ -474,7 +541,7 @@ def create_root_node_database(file_name) :
     option_table = [
         { 'name':'parent_node_name',     'value':'Global'},
         { 'name':'zero_sum_child_rate',  'value':'iota chi'},
-        { 'name':'random_seed',          'value':'0'},
+        { 'name':'random_seed',          'value':str(random_seed)},
         { 'name':'tolerance_fixed',      'value':'1e-3'},
         { 'name':'max_num_iter_fixed',   'value':'30'},
         { 'name':'trace_init_fit_model', 'value':'true'},
@@ -523,7 +590,7 @@ def create_all_node_copy(root_node_database) :
     #
     # fit_goal table
     # Do a drill to drill_node_name
-    drill_node_name = 'New_York'
+    drill_node_name = 'Global'
     drill_node_id   = None
     for (node_id, row) in enumerate( node_table ) :
         if row['node_name'] == drill_node_name :
@@ -571,9 +638,15 @@ def create_all_node_copy(root_node_database) :
         # split_list
         if row['option_name'] == 'split_list' :
             row['option_value'] = '-1 sex -0.5 0.0 +0.5'
+        # split_list
+        if row['option_name'] == 'split_list' :
+            row['option_value'] = '-1 sex -0.5 0.0 +0.5'
     # max_abs_effect
     if not all_option_id is None :
         del all_option_table[all_option_id]
+    # absolute_covariates
+    row = { 'option_name':'absolute_covariates', 'option_value':'one' }
+    all_option_table.append(row)
     dismod_at.replace_table(connection, 'all_option', all_option_table)
     #
     # connection
@@ -620,25 +693,34 @@ def display_results(database) :
 # ---------------------------------------------------------------------------
 # main
 # ---------------------------------------------------------------------------
-#
-# extract info from raw csv files
-create_csv_files()
-#
-# create root_node.db
-create_root_node_database('root_node.db')
-#
-# create all_node_copy.db
-create_all_node_copy('root_node.db')
-#
-# no_ode_fit
-fit_node_database = at_cascade.no_ode_fit(
-    in_database = 'root_node.db',
-    max_fit     = max_fit,
-    trace_fit   = True,
-)
-#
-# display_results
-display_results( root_node_name + '/no_ode.db' )
+def main() :
+    #
+    # extract info from raw csv files
+    create_csv_files()
+    #
+    # create root_node.db
+    create_root_node_database('root_node.db')
+    #
+    # create all_node_copy.db
+    create_all_node_copy('root_node.db')
+    #
+    # no_ode_fit
+    fit_node_database = at_cascade.no_ode_fit(
+        in_database = 'root_node.db',
+        max_fit     = max_fit,
+        trace_fit   = True,
+    )
+    assert fit_node_database == root_node_name + '/dismod.db'
+    #
+    # display_results
+    display_results( root_node_name + '/no_ode.db' )
+    #
+    # cascade starting at root node
+    all_node_database = 'all_node_copy.db'
+    at_cascade.cascade_fit_node(
+        all_node_database, fit_node_database, trace_fit = True
+    )
 # ----------------------------------------------------------------------------
+main()
 print(sys.argv[0] + ': OK')
 sys.exit(0)

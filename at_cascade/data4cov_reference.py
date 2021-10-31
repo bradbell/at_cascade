@@ -61,6 +61,9 @@ all_cov_reference Table
 =======================
 The :ref:`all_cov_reference_table.reference` created
 using the average of the covariates in the data table.
+(The average is rounded off to and unspecified number of digits.
+This makes it easier to set reference values
+in the :ref:`glossary.root_node_database` to be the same.)
 
 1.  If there is an all_cov_reference table on input,
     all its information is lost.
@@ -233,7 +236,7 @@ def data4cov_reference(
                 #
                 # row_list
                 node_id   = avg_node_id
-                reference = avg
+                reference = float( f'{avg:.4g}' )
                 row = [ node_id, covariate_id, split_reference_id, reference ]
                 row_list.append( row )
     #
