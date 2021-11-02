@@ -12,8 +12,8 @@
 {xsrst_spell
 }
 
-Create avgint Table That Predicts Rates for Child Nodes
-#######################################################
+avgint Table That Predicts Child Rates and Covariate Multipliers
+################################################################
 
 Syntax
 ******
@@ -57,10 +57,11 @@ fit_node_database that this prediction is for.
 
 Rectangular Grid
 ================
-For each rate (or covariate multiplier) that has a non-null
-parent smoothing (group smoothing) in the fit_node_database,
-all of the age time pairs in the smoothing are represented
-in the new avgint table.
+For each covariate multiplier that has non-null group smoothing, all of the
+age time pairs in the smoothing are represented in the new avgint table.
+For each child of the parent node and
+each rate that has non-null parent smoothing, all of the
+age time pairs in the smoothing are represented in the new avgint table.
 
 {xsrst_end child_avgint_table}
 '''
