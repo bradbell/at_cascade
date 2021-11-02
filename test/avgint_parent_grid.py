@@ -250,7 +250,7 @@ def main() :
     )
     #
     # replace avgint table
-    at_cascade.child_avgint_table(all_node_database, root_node_database)
+    at_cascade.avgint_parent_grid(all_node_database, root_node_database)
     #
     # init
     dismod_at.system_command_prc( [ 'dismod_at', root_node_database, 'init' ] )
@@ -308,7 +308,7 @@ def main() :
             #
             # node_name
             node_id = avgint_row['node_id']
-            assert node_id in [ 1, 2 ]
+            assert node_id in [ 0, 1, 2 ]
             node_name = table['node'][node_id]['node_name']
             #
             # age
@@ -326,5 +326,5 @@ def main() :
         assert abs( relative_err ) < 1e-7
 #
 main()
-print('child_avgint_table.py: OK')
+print('avgint_parent_grid.py: OK')
 sys.exit(0)

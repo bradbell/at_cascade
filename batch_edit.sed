@@ -15,12 +15,13 @@
 # '
 # list of files and or directories that are moved to new names
 # move_paths='
-#   at_cascade/get_split_info.py
+#   at_cascade/child_avgint_table.py
+#   test/child_avgint_table.py
 # '
 # list of sed commands that map old file and directory names to new names.
 # The characters @s, @d, @n get converted to a space, dollar sign, new line.
 # move_seds='
-#   s|split_info|cov_info|
+#   s|child_avgint_table|avgint_parent_grid|
 # '
 # list of files that get edited by the extra_seds command
 # extra_files='
@@ -32,4 +33,4 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|split_info|cov_info|g
+s|child_avgint_table|avgint_parent_grid|g

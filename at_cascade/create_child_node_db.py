@@ -49,13 +49,13 @@ the results of a dismod_at sample command for both the fixed and random effects.
 avgint Table
 ============
 The avgint table determines which predictions are done for the child nodes
-and should come from :ref:`child_avgint_table`.
+and should come from :ref:`avgint_parent_grid`.
 
 predict Table
 =============
 The predict table contains
 The results of a predict command using the sample table
-and the avgint table corresponding to :ref:`child_avgint_table`.
+and the avgint table corresponding to :ref:`avgint_parent_grid`.
 
 c_predict_fit_var Table
 =======================

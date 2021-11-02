@@ -29,7 +29,7 @@ list='
     example/one_at_function.py
     example/prevalence2iota.py
     example/split_list.py
-    test/child_avgint_table.py
+    test/avgint_parent_grid.py
     test/data4cov_reference.py
     test/get_fit_children.py
     test/get_fit_integrand.py

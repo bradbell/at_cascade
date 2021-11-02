@@ -263,5 +263,5 @@ def main() :
         assert abs( relative_err ) < eps99
 #
 main()
-print('child_avgint_table.py: OK')
+print('avgint_parent_grid.py: OK')
 sys.exit(0)

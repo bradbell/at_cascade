@@ -8,12 +8,12 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin child_avgint_table}
+{xsrst_begin avgint_parent_grid}
 {xsrst_spell
 }
 
-avgint Table That Predicts Child Rates and Covariate Multipliers
-################################################################
+Predicts Parent Rates, Child Rates, and Covariate Multipliers
+#############################################################
 
 Syntax
 ******
@@ -21,6 +21,13 @@ Syntax
     # BEGIN syntax
     # END syntax
 }
+
+Purpose
+*******
+Create an avgint table that predicts the parent and child rates
+on the grid corresponding to the parent not rates.
+Also predict the covariate multiplies which have the same grid
+for the parent and child nodes.
 
 all_node_database
 *****************
@@ -59,27 +66,28 @@ Rectangular Grid
 ================
 For each covariate multiplier that has non-null group smoothing, all of the
 age time pairs in the smoothing are represented in the new avgint table.
-For each child of the parent node and
+For the parent node, each child of the parent node, and
 each rate that has non-null parent smoothing, all of the
 age time pairs in the smoothing are represented in the new avgint table.
 
-{xsrst_end child_avgint_table}
+{xsrst_end avgint_parent_grid}
 '''
 # ----------------------------------------------------------------------------
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
-def child_avgint_table(
+def avgint_parent_grid(
 # BEGIN syntax
-# at_cascade.child_avgint_table(
+# at_cascade.avgint_parent_grid(
     all_node_database    = None ,
     fit_node_database = None ,
 # )
 # END syntax
 ) :
-    # all_cov_reference_table
+    # all_cov_reference_table, all_option_table
     new        = False
     connection = dismod_at.create_connection(all_node_database, new)
+    all_option_table        = dismod_at.get_table_dict(connection, 'all_option')
     all_cov_reference_table = dismod_at.get_table_dict(
         connection, 'all_cov_reference'
     )
@@ -103,6 +111,14 @@ def child_avgint_table(
         fit_tables[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
     #
+    # split_reference_id
+    split_reference_id = None
+    cov_info = at_cascade.get_cov_info(
+        all_option_table, fit_tables['covariate']
+    )
+    if 'split_reference_id' in cov_info :
+        split_reference_id = cov_info['split_reference_id']
+    #
     # minimum_age_id
     minimum_age_id = 0
     minimum_age    = fit_tables['age'][minimum_age_id]['age']
@@ -125,16 +141,17 @@ def child_avgint_table(
         fit_tables['node'], 'node', parent_node_name
     )
     #
-    # child_all_cov_reference
-    child_all_cov_reference = dict()
+    # cov_reference
+    cov_reference = dict()
     for (node_id, row) in enumerate(fit_tables['node']) :
-        if row['parent'] == parent_node_id :
+        if node_id == parent_node_id or row['parent'] == parent_node_id :
             reference = n_covariate * [0.0]
             for row in all_cov_reference_table :
-                if row['node_id'] == node_id :
+                if row['node_id'] == node_id and \
+                    row['split_reference_id'] == split_reference_id :
                     covariate_id = row['covariate_id']
                     reference[covariate_id] = row['reference']
-            child_all_cov_reference[node_id] = reference
+            cov_reference[node_id] = reference
     #
     # tbl_name
     tbl_name = 'avgint'
@@ -270,7 +287,7 @@ def child_avgint_table(
                     time_upper = time_lower
                     #
                     # node_id
-                    for node_id in child_all_cov_reference :
+                    for node_id in cov_reference :
                         #
                         # row
                         subgroup_id = 0
@@ -285,7 +302,7 @@ def child_avgint_table(
                             time_lower,
                             time_upper,
                         ]
-                        row += child_all_cov_reference[node_id]
+                        row += cov_reference[node_id]
                         row += [ age_id, time_id, ]
                         #
                         # add to row_list
