@@ -100,16 +100,16 @@ def add_index_to_name(table, name_col) :
         name = name[: -1]
     row[name_col] = name + '_' + str( len(table) )
 # ----------------------------------------------------------------------------
-# The smoothing for the new out_tables['smooth_grid'] row is the most
-# recent smoothing added to out_tables['smooth']; i.e., its smoothing_id
-# is len( out_tables['smooth'] ) - 1.
+# The smoothing for the new out_table['smooth_grid'] row is the most
+# recent smoothing added to out_table['smooth']; i.e., its smoothing_id
+# is len( out_table['smooth'] ) - 1.
 def add_out_grid_row(
     var_type,
     fit_node_id,
     rate_id,
     mulcov_id,
-    in_tables,
-    out_tables,
+    in_table,
+    out_table,
     in_grid_row,
 ) :
     # -----------------------------------------------------------------------
@@ -126,7 +126,7 @@ def add_out_grid_row(
     if out_const_value is None :
         #
         # in_prior_row
-        in_prior_row = in_tables['prior'][in_prior_id]
+        in_prior_row = in_table['prior'][in_prior_id]
         #
         # out_const_value
         # out_value_prior_id
@@ -135,7 +135,7 @@ def add_out_grid_row(
             assert out_value_prior_id is None
         else :
             assert out_const_value is None
-            out_value_prior_id = len( out_tables['prior'] )
+            out_value_prior_id = len( out_table['prior'] )
             #
             # out_prior_row
             out_prior_row  = copy.copy( in_prior_row )
@@ -143,7 +143,7 @@ def add_out_grid_row(
             # var_id
             age_id    = in_grid_row['age_id']
             time_id   = in_grid_row['time_id']
-            var_table = out_tables['var']
+            var_table = out_table['var']
             var_id    = at_cascade.get_var_id(
                 var_table   = var_table,
                 var_type    = var_type,
@@ -156,15 +156,15 @@ def add_out_grid_row(
             )
             #
             # out_prior_row['mean']
-            fit_var_row           = out_tables['fit_var'][var_id]
+            fit_var_row           = out_table['fit_var'][var_id]
             fit_var_value         = fit_var_row['fit_var_value']
             assert fit_var_value <= out_prior_row['upper']
             assert out_prior_row['lower'] <= fit_var_value
             out_prior_row['mean'] = fit_var_value
             #
-            # out_tables['prior']
-            out_tables['prior'].append( out_prior_row )
-            add_index_to_name( out_tables['prior'], 'prior_name' )
+            # out_table['prior']
+            out_table['prior'].append( out_prior_row )
+            add_index_to_name( out_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # dage_prior
     # -----------------------------------------------------------------------
@@ -172,11 +172,11 @@ def add_out_grid_row(
     if in_prior_id == None :
         out_dage_prior_id = None
     else :
-        in_prior_row      = in_tables['prior'][in_prior_id]
+        in_prior_row      = in_table['prior'][in_prior_id]
         out_prior_row       = copy.copy( in_prior_row )
-        out_dage_prior_id   = len( out_tables['prior'] )
-        out_tables['prior'].append( out_prior_row )
-        add_index_to_name( out_tables['prior'], 'prior_name' )
+        out_dage_prior_id   = len( out_table['prior'] )
+        out_table['prior'].append( out_prior_row )
+        add_index_to_name( out_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # dtime_prior
     # -----------------------------------------------------------------------
@@ -184,11 +184,11 @@ def add_out_grid_row(
     if in_prior_id == None :
         out_dtime_prior_id = None
     else :
-        in_prior_row       = in_tables['prior'][in_prior_id]
+        in_prior_row       = in_table['prior'][in_prior_id]
         out_prior_row        = copy.copy( in_prior_row )
-        out_dtime_prior_id   = len( out_tables['prior'] )
-        out_tables['prior'].append( out_prior_row )
-        add_index_to_name( out_tables['prior'], 'prior_name' )
+        out_dtime_prior_id   = len( out_table['prior'] )
+        out_table['prior'].append( out_prior_row )
+        add_index_to_name( out_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # out_grid_row
     out_grid_row = copy.copy( in_grid_row )
@@ -197,9 +197,9 @@ def add_out_grid_row(
     out_grid_row['dage_prior_id']   = out_dage_prior_id
     out_grid_row['dtime_prior_id']  = out_dtime_prior_id
     #
-    # out_tables['smooth_grid']
-    out_grid_row['smooth_id']  = len( out_tables['smooth'] ) - 1
-    out_tables['smooth_grid'].append( out_grid_row )
+    # out_table['smooth_grid']
+    out_grid_row['smooth_id']  = len( out_table['smooth'] ) - 1
+    out_table['smooth_grid'].append( out_grid_row )
 # ----------------------------------------------------------------------------
 def no_ode_fit(
 # BEGIN syntax
@@ -216,10 +216,10 @@ def no_ode_fit(
     if not max_fit is None :
         fit_integrand = at_cascade.get_fit_integrand(in_database)
     #
-    # in_tables
+    # in_table
     new        = False
     connection = dismod_at.create_connection(in_database, new)
-    in_tables = dict()
+    in_table = dict()
     for name in [
         'integrand',
         'mulcov',
@@ -230,7 +230,7 @@ def no_ode_fit(
         'smooth',
         'smooth_grid'
     ] :
-        in_tables[name] = dismod_at.get_table_dict(connection, name)
+        in_table[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
     #
     # fit_node_name
@@ -238,7 +238,7 @@ def no_ode_fit(
     #
     # fit_node_id
     fit_node_id   = at_cascade.table_name2id(
-        in_tables['node'], 'node', fit_node_name
+        in_table['node'], 'node', fit_node_name
     )
     #
     # no_ode_daabase, out_database
@@ -262,7 +262,7 @@ def no_ode_fit(
     use_ode = [
         'prevalence', 'Tincidence', 'mtspecific', 'mtall', 'mtstandard'
     ]
-    for row in in_tables['integrand'] :
+    for row in in_table['integrand'] :
         integrand_name = row['integrand_name']
         if integrand_name in use_ode :
             hold_out_integrand.append( integrand_name )
@@ -284,7 +284,7 @@ def no_ode_fit(
     # enforce max_fit
     if not max_fit is None :
         for integrand_id in fit_integrand :
-            row            = in_tables['integrand'][integrand_id]
+            row            = in_table['integrand'][integrand_id]
             integrand_name = row['integrand_name']
             dismod_at.system_command_prc([
                 'dismod_at',
@@ -306,13 +306,13 @@ def no_ode_fit(
     new            = False
     out_connection = dismod_at.create_connection(out_database, new)
     #
-    # out_tables
-    out_tables = dict()
+    # out_table
+    out_table = dict()
     for name in [
         'fit_var',
         'var',
     ] :
-        out_tables[name] = dismod_at.get_table_dict(out_connection, name)
+        out_table[name] = dismod_at.get_table_dict(out_connection, name)
     for name in [
         'prior',
         'mulcov',
@@ -320,11 +320,11 @@ def no_ode_fit(
         'smooth',
         'smooth_grid',
     ] :
-        out_tables[name] = list()
+        out_table[name] = list()
     # ------------------------------------------------------------------------
-    # out_tables['mulcov']
+    # out_table['mulcov']
     # and the corresponding entries in smooth, smooth_grid, and prior tables
-    for (mulcov_id, in_mulcov_row) in enumerate( in_tables['mulcov'] ) :
+    for (mulcov_id, in_mulcov_row) in enumerate( in_table['mulcov'] ) :
         #
         # in_smooth_id
         assert in_mulcov_row['subgroup_smooth_id'] is None
@@ -336,43 +336,43 @@ def no_ode_fit(
         if not in_smooth_id is None :
             #
             # smooth_row
-            smooth_row = in_tables['smooth'][in_smooth_id]
+            smooth_row = in_table['smooth'][in_smooth_id]
             smooth_row = copy.copy(smooth_row)
             assert smooth_row['mulstd_value_prior_id'] is None
             assert smooth_row['mulstd_dage_prior_id']  is None
             assert smooth_row['mulstd_dtime_prior_id'] is None
             #
-            # out_tables['smooth']
+            # out_table['smooth']
             # out_smooth_id
-            out_smooth_id = len(out_tables['smooth'])
+            out_smooth_id = len(out_table['smooth'])
             smooth_row['smooth_name'] += f'_{out_smooth_id}'
-            out_tables['smooth'].append(smooth_row)
+            out_table['smooth'].append(smooth_row)
             #
             # out_mulcov_row
             out_mulcov_row['group_smooth_id'] = out_smooth_id
             #
-            # out_tables['smooth_grid']
+            # out_table['smooth_grid']
             rate_id     = in_mulcov_row['rate_id']
             mulcov_type = in_mulcov_row['mulcov_type']
             var_type = 'mulcov_' + mulcov_type
-            for in_grid_row in in_tables['smooth_grid'] :
+            for in_grid_row in in_table['smooth_grid'] :
                 if in_grid_row['smooth_id'] == in_smooth_id :
                     add_out_grid_row(
                         var_type,
                         fit_node_id,
                         rate_id,
                         mulcov_id,
-                        in_tables,
-                        out_tables,
+                        in_table,
+                        out_table,
                         in_grid_row
                     )
         #
-        # out_tables['mulcov_row']
-        out_tables['mulcov'].append( out_mulcov_row )
+        # out_table['mulcov_row']
+        out_table['mulcov'].append( out_mulcov_row )
     # ------------------------------------------------------------------------
-    # out_tables['rate']
+    # out_table['rate']
     # and the corresponding entries in smooth, smooth_grid, and prior tables
-    for (rate_id, in_rate_row) in enumerate(in_tables['rate']) :
+    for (rate_id, in_rate_row) in enumerate(in_table['rate']) :
         #
         # in_smooth_id
         assert in_rate_row['child_nslist_id'] is None
@@ -384,61 +384,61 @@ def no_ode_fit(
         if not in_smooth_id is None :
             #
             # smooth_row
-            smooth_row = in_tables['smooth'][in_smooth_id]
+            smooth_row = in_table['smooth'][in_smooth_id]
             smooth_row = copy.copy(smooth_row)
             assert smooth_row['mulstd_value_prior_id'] is None
             assert smooth_row['mulstd_dage_prior_id']  is None
             assert smooth_row['mulstd_dtime_prior_id'] is None
             #
-            # out_tables['smooth']
+            # out_table['smooth']
             # out_smooth_id
-            out_smooth_id = len(out_tables['smooth'])
+            out_smooth_id = len(out_table['smooth'])
             smooth_row['smooth_name'] += f'_{out_smooth_id}'
-            out_tables['smooth'].append(smooth_row)
+            out_table['smooth'].append(smooth_row)
             #
             # out_rate_row
             out_rate_row['parent_smooth_id'] = out_smooth_id
             #
-            # out_tables['smooth_grid']
+            # out_table['smooth_grid']
             mulcov_id = None
             var_type  = 'rate'
-            for in_grid_row in in_tables['smooth_grid'] :
+            for in_grid_row in in_table['smooth_grid'] :
                 if in_grid_row['smooth_id'] == in_smooth_id :
                     add_out_grid_row(
                         var_type,
                         fit_node_id,
                         rate_id,
                         mulcov_id,
-                        in_tables,
-                        out_tables,
+                        in_table,
+                        out_table,
                         in_grid_row
                     )
         #
-        # out_tables['rate_row']
-        out_tables['rate'].append( out_rate_row )
+        # out_table['rate_row']
+        out_table['rate'].append( out_rate_row )
         #
         # in_smooth_id
         in_smooth_id = in_rate_row['child_smooth_id']
         if not in_smooth_id is None :
             #
             # smooth_row
-            smooth_row = in_tables['smooth'][in_smooth_id]
+            smooth_row = in_table['smooth'][in_smooth_id]
             smooth_row = copy.copy(smooth_row)
             assert smooth_row['mulstd_value_prior_id'] is None
             assert smooth_row['mulstd_dage_prior_id']  is None
             assert smooth_row['mulstd_dtime_prior_id'] is None
             #
-            # out_tables['smooth']
+            # out_table['smooth']
             # out_smooth_id
-            out_smooth_id = len(out_tables['smooth'])
+            out_smooth_id = len(out_table['smooth'])
             smooth_row['smooth_name'] += f'_{out_smooth_id}'
-            out_tables['smooth'].append(smooth_row)
+            out_table['smooth'].append(smooth_row)
             #
             # out_rate_row
             out_rate_row['child_smooth_id'] = out_smooth_id
             #
-            # out_tables['smooth_grid']
-            for in_grid_row in in_tables['smooth_grid'] :
+            # out_table['smooth_grid']
+            for in_grid_row in in_table['smooth_grid'] :
                 if in_grid_row['smooth_id'] == in_smooth_id :
                     #
                     # out_grid_row
@@ -448,25 +448,25 @@ def no_ode_fit(
                     ] :
                         prior_id = in_grid_row[ty]
                         if not prior_id is None :
-                            prior_row = in_tables['prior'][prior_id]
+                            prior_row = in_table['prior'][prior_id]
                             prior_row = copy.copy( prior_row )
-                            prior_id  = len( out_tables['prior'] )
-                            out_tables['prior'].append( prior_row )
+                            prior_id  = len( out_table['prior'] )
+                            out_table['prior'].append( prior_row )
                             add_index_to_name(
-                                out_tables['prior'], 'prior_name'
+                                out_table['prior'], 'prior_name'
                             )
                             out_grid_row[ty] = prior_id
                     out_grid_row['smooth_id'] = out_smooth_id
-                    out_tables['smooth_grid'].append( out_grid_row )
+                    out_table['smooth_grid'].append( out_grid_row )
     #
-    # replace out_tables
-    for name in out_tables :
+    # replace out_table
+    for name in out_table :
         if name not in [ 'var', 'fit_var' ] :
-            dismod_at.replace_table(out_connection, name, out_tables[name])
+            dismod_at.replace_table(out_connection, name, out_table[name])
     #
     # restore hold_out_integrand
     hold_out_integrand = ''
-    for row in in_tables['option'] :
+    for row in in_table['option'] :
         if row['option_name'] == 'hold_out_integrand' :
             hold_out_integrand = row['option_value']
     name  = 'hold_out_integrand'
