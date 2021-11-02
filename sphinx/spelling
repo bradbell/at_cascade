@@ -11,6 +11,7 @@ db
 #
 # python types
 str
+dict
 #
 # special words for this package
 # BEGIN_SORT_THIS_LINE_PLUS_1

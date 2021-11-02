@@ -254,6 +254,8 @@ def check_cascade_fit(
             rel_error        = 1.0 - avg_integrand / check_value
             max_rel_error    = max(max_rel_error, abs(rel_error) )
             if not relative_tolerance is None :
+                if abs(rel_error) >= relative_tolerance :
+                    print(rel_error, relative_tolerance)
                 assert abs(rel_error) < relative_tolerance
                 assert abs(error) < 2.0 * sample_std
     if relative_tolerance is None :

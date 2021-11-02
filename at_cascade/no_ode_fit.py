@@ -100,23 +100,11 @@ def add_index_to_name(table, name_col) :
         name = name[: -1]
     row[name_col] = name + '_' + str( len(table) )
 # ----------------------------------------------------------------------------
-def get_var_id(var_table, fit_node_id, rate_id, mulcov_id, age_id, time_id) :
-    for (var_id, row) in enumerate(var_table) :
-        match =  row['rate_id'] == rate_id
-        match = match and row['mulcov_id'] == mulcov_id
-        match = match and row['age_id'] == age_id
-        match = match and row['time_id'] == time_id
-        # check that this a fixed effect when matching rates
-        if mulcov_id is None :
-            match = match and row['node_id'] == fit_node_id
-        if match :
-            return var_id
-    assert False
-# ----------------------------------------------------------------------------
 # The smoothing for the new out_tables['smooth_grid'] row is the most
 # recent smoothing added to out_tables['smooth']; i.e., its smoothing_id
 # is len( out_tables['smooth'] ) - 1.
 def add_out_grid_row(
+    var_type,
     fit_node_id,
     rate_id,
     mulcov_id,
@@ -156,8 +144,15 @@ def add_out_grid_row(
             age_id    = in_grid_row['age_id']
             time_id   = in_grid_row['time_id']
             var_table = out_tables['var']
-            var_id    = get_var_id(
-                var_table, fit_node_id, rate_id, mulcov_id, age_id, time_id
+            var_id    = at_cascade.get_var_id(
+                var_table   = var_table,
+                var_type    = var_type,
+                age_id      = age_id,
+                time_id     = time_id,
+                node_id     = fit_node_id,
+                rate_id     = rate_id,
+                mulcov_id   = mulcov_id,
+                group_id    = 0,
             )
             #
             # out_prior_row['mean']
@@ -357,10 +352,13 @@ def no_ode_fit(
             out_mulcov_row['group_smooth_id'] = out_smooth_id
             #
             # out_tables['smooth_grid']
-            rate_id = in_mulcov_row['rate_id']
+            rate_id     = in_mulcov_row['rate_id']
+            mulcov_type = in_mulcov_row['mulcov_type']
+            var_type = 'mulcov_' + mulcov_type
             for in_grid_row in in_tables['smooth_grid'] :
                 if in_grid_row['smooth_id'] == in_smooth_id :
                     add_out_grid_row(
+                        var_type,
                         fit_node_id,
                         rate_id,
                         mulcov_id,
@@ -403,9 +401,11 @@ def no_ode_fit(
             #
             # out_tables['smooth_grid']
             mulcov_id = None
+            var_type  = 'rate'
             for in_grid_row in in_tables['smooth_grid'] :
                 if in_grid_row['smooth_id'] == in_smooth_id :
                     add_out_grid_row(
+                        var_type,
                         fit_node_id,
                         rate_id,
                         mulcov_id,

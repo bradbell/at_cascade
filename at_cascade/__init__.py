@@ -25,6 +25,7 @@ The at_cascade Python Module
     at_cascade/get_fit_children.py
     at_cascade/get_fit_integrand.py
     at_cascade/get_parent_node.py
+    at_cascade/get_var_id.py
     at_cascade/no_ode_fit.py
     at_cascade/omega_constraint.py
     at_cascade/table_name2id.py
@@ -45,6 +46,7 @@ from .get_cov_info          import get_cov_info
 from .get_fit_children      import get_fit_children
 from .get_fit_integrand     import get_fit_integrand
 from .get_parent_node       import get_parent_node
+from .get_var_id            import get_var_id
 from .no_ode_fit            import no_ode_fit
 from .omega_constraint      import omega_constraint
 from .table_name2id         import table_name2id

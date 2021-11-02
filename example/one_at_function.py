@@ -594,7 +594,7 @@ def main() :
             rate_true = rate_true,
             all_node_database  = all_node_database,
             fit_node_database  = goal_database,
-            relative_tolerance = 1e-3,
+            relative_tolerance = 2e-3,
         )
     #
     # check that fits were not run for n5 and n6

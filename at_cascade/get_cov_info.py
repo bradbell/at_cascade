@@ -10,7 +10,6 @@
 '''
 {xsrst_begin get_cov_info}
 {xsrst_spell
-    dict
     rel
 }
 
