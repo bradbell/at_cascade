@@ -254,7 +254,7 @@ def no_ode_fit(
     msg   = f'in_database and out_database are equal'
     assert not in_database == out_database, msg
     #
-    # copy in_database to out_database
+    # copy in_database to no_ode_database
     shutil.copyfile(in_database, no_ode_database)
     #
     # hold_out_integrand

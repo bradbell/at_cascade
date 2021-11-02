@@ -64,7 +64,7 @@ other arguments matter:
 '''
 def get_var_id(
 # BEGIN syntax
-# var_id = get_var_id(
+# var_id = at_cascade.get_var_id(
     var_table    = None,
     var_type     = None,
     smooth_id    = None,

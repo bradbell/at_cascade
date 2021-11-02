@@ -97,7 +97,7 @@ import at_cascade
 #
 def get_cov_info(
 # BEGIN syntax
-# cov_info = get_cov_info(
+# cov_info = at_cascade.get_cov_info(
     all_option_table = None ,
     covariate_table  = None ,
 # )
