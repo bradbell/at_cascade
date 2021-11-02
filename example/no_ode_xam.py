@@ -680,35 +680,6 @@ def check_no_ode_fit(fit_node_dir) :
                 check         = rate_true(rate_name, age, time, 'n0', c)
                 rel_error     = (1.0 - fit_var_value / check )
                 assert abs( rel_error ) < 1e-5
-    #
-    # check prevalence values
-    for predict_row in table['predict'] :
-        avgint_id      = predict_row['avgint_id']
-        avgint_row     = table['avgint'][avgint_id]
-        avg_integrand  = predict_row['avg_integrand']
-        #
-        integrand_id   = avgint_row['integrand_id']
-        integrand_name = table['integrand'][integrand_id]['integrand_name']
-        assert integrand_name == 'prevalence'
-        #
-        node_id   = avgint_row['node_id']
-        node_name = table['node'][node_id]['node_name']
-        assert node_name == 'n0'
-        #
-        age  = avgint_row['age_lower']
-        assert age == avgint_row['age_upper']
-        #
-        income = avgint_row['x_0']
-        assert income is None
-        #
-        income = avg_income['n0']
-        check = average_integrand(integrand_name, age, node_name, income)
-        #
-        if check == 0.0 :
-            assert avg_integrand == 0.0
-        else :
-            rel_error = (1.0 - avg_integrand / check )
-            assert abs(rel_error) < 1e-3
 
 # ----------------------------------------------------------------------------
 # main
@@ -791,8 +762,9 @@ def main() :
     #
     # fit_node_database
     out_database = at_cascade.no_ode_fit(
-        in_database = root_node_database,
-        trace_fit   = False
+        all_node_database = all_node_database,
+        in_database       = root_node_database,
+        trace_fit         = False
     )
     fit_node_database =  fit_node_dir + '/dismod.db'
     assert out_database == fit_node_database

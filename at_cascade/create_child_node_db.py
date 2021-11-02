@@ -379,10 +379,12 @@ def create_child_node_db(
         #
         # --------------------------------------------------------------------
         # child_tables['mulcov']
-        # and corresponding entries in the following child tables:
+        # and corresponding entries in
         # smooth, smooth_grid, and prior
         for (mulcov_id, child_mulcov_row) in enumerate(child_tables['mulcov']) :
             assert child_mulcov_row['subgroup_smooth_id'] is None
+            #
+            # parent_smooth_id
             parent_smooth_id = child_mulcov_row['group_smooth_id']
             if not parent_smooth_id is None :
                 #
@@ -392,15 +394,14 @@ def create_child_node_db(
                     parent_tables['integrand'], 'integrand', name
                 )
                 #
+                # smooth_row
                 smooth_row = parent_tables['smooth'][parent_smooth_id]
                 smooth_row = copy.copy(smooth_row)
-                #
-                # update: child_tables['smooth']
                 assert smooth_row['mulstd_value_prior_id'] is None
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
                 #
-                # child_tables['smooth']
+                # child_tables['smooth'], child_smooth_id
                 child_smooth_id = len(child_tables['smooth'])
                 smooth_row['smooth_name'] += f'_{child_smooth_id}'
                 child_tables['smooth'].append(smooth_row)
@@ -408,8 +409,8 @@ def create_child_node_db(
                 # change child_tables['mulcov'] to use the new smoothing
                 child_mulcov_row['group_smooth_id'] = child_smooth_id
                 #
-                # add rows for this smoothing to
                 # child_tables['smooth_grid']
+                # add rows for this smoothing
                 node_id = None
                 for parent_grid_row in parent_tables['smooth_grid'] :
                     if parent_grid_row['smooth_id'] == parent_smooth_id :
@@ -428,8 +429,9 @@ def create_child_node_db(
         # and corresponding entries in the following child tables:
         # smooth, smooth_grid, and prior
         for child_rate_row in child_tables['rate'] :
+            # rate_name
             rate_name        = child_rate_row['rate_name']
-            #
+            # ----------------------------------------------------------------
             # parent_smooth_id
             parent_smooth_id = None
             if rate_name in name_rate2integrand :
@@ -444,29 +446,30 @@ def create_child_node_db(
             if not parent_smooth_id is None :
                 #
                 # integrand_id
+                # only check for integrands that are used
                 integrand_name  = name_rate2integrand[rate_name]
                 integrand_id = at_cascade.table_name2id(
                     parent_tables['integrand'], 'integrand', integrand_name
                 )
                 #
+                # smooth_row
                 smooth_row = parent_tables['smooth'][parent_smooth_id]
                 smooth_row = copy.copy(smooth_row)
-                #
                 assert smooth_row['mulstd_value_prior_id'] is None
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
                 #
-                # update: child_tables['smooth']
-                # for case where its is the parent
+                # : child_tables['smooth'], child_smooth_id
                 child_smooth_id = len(child_tables['smooth'])
                 smooth_row['smooth_name'] += f'_{child_smooth_id}'
                 child_tables['smooth'].append(smooth_row)
                 #
-                # change child_tables['rate'] to use the new smoothing
+                # child_tables['rate']
+                # use the new smoothing for this rate
                 child_rate_row['parent_smooth_id'] = child_smooth_id
                 #
-                # add rows for this smoothing to
                 # child_tables['smooth_grid']
+                # add rows for this smoothing
                 for parent_grid_row in parent_tables['smooth_grid'] :
                     if parent_grid_row['smooth_id'] == parent_smooth_id :
                         add_child_grid_row(
@@ -478,7 +481,7 @@ def create_child_node_db(
                             integrand_id,
                             child_node_id,
                         )
-            #
+            # ----------------------------------------------------------------
             # parent_smooth_id
             parent_smooth_id = None
             if rate_name in name_rate2integrand :

@@ -24,6 +24,11 @@ Syntax
     # END syntax
 }
 
+all_node_database
+*****************
+is a python string containing the name of the :ref:`all_node_db`.
+This argument can't be ``None``.
+
 in_database
 ***********
 is a python string specifying the location of a
@@ -104,13 +109,11 @@ def add_index_to_name(table, name_col) :
 # recent smoothing added to out_table['smooth']; i.e., its smoothing_id
 # is len( out_table['smooth'] ) - 1.
 def add_out_grid_row(
-    var_type,
-    fit_node_id,
-    rate_id,
-    mulcov_id,
+    no_ode_fit_var,
     in_table,
     out_table,
     in_grid_row,
+    integrand_id,
 ) :
     # -----------------------------------------------------------------------
     # value_prior
@@ -140,27 +143,16 @@ def add_out_grid_row(
             # out_prior_row
             out_prior_row  = copy.copy( in_prior_row )
             #
-            # var_id
+            # key
             age_id    = in_grid_row['age_id']
             time_id   = in_grid_row['time_id']
-            var_table = out_table['var']
-            var_id    = at_cascade.get_var_id(
-                var_table   = var_table,
-                var_type    = var_type,
-                age_id      = age_id,
-                time_id     = time_id,
-                node_id     = fit_node_id,
-                rate_id     = rate_id,
-                mulcov_id   = mulcov_id,
-                group_id    = 0,
-            )
+            key       = (integrand_id, age_id, time_id)
             #
-            # out_prior_row['mean']
-            fit_var_row           = out_table['fit_var'][var_id]
-            fit_var_value         = fit_var_row['fit_var_value']
-            assert fit_var_value <= out_prior_row['upper']
-            assert out_prior_row['lower'] <= fit_var_value
-            out_prior_row['mean'] = fit_var_value
+            # mean
+            mean = no_ode_fit_var[key]
+            #
+            # out_prior_row
+            out_prior_row['mean']        = mean
             #
             # out_table['prior']
             out_table['prior'].append( out_prior_row )
@@ -204,13 +196,22 @@ def add_out_grid_row(
 def no_ode_fit(
 # BEGIN syntax
 # out_database = at_cascade.no_ode_fit(
-    in_database    = None,
-    max_fit        = None,
-    max_abs_effect = None,
-    trace_fit      = False,
+    all_node_database = None,
+    in_database       = None,
+    max_fit           = None,
+    max_abs_effect    = None,
+    trace_fit         = False,
 # )
 # END syntax
 ) :
+    #
+    # name_rate2integrand
+    name_rate2integrand = {
+        'pini'  : 'prevalence',
+        'iota'  : 'Sincidence',
+        'rho'   : 'remission',
+        'chi'   : 'mtexcess',
+    }
     #
     # fit_integrand
     if not max_fit is None :
@@ -253,9 +254,16 @@ def no_ode_fit(
     #
     msg   = f'in_database and out_database are equal'
     assert not in_database == out_database, msg
-    #
-    # copy in_database to no_ode_database
+    # ------------------------------------------------------------------------
+    # no_ode_database
+    # ------------------------------------------------------------------------
     shutil.copyfile(in_database, no_ode_database)
+    #
+    # omega_constraint
+    at_cascade.omega_constraint(all_node_database, no_ode_database)
+    #
+    # avgint table
+    at_cascade.avgint_parent_grid(all_node_database, no_ode_database)
     #
     # hold_out_integrand
     hold_out_integrand = list()
@@ -298,21 +306,38 @@ def no_ode_fit(
     command = [ 'dismod_at', no_ode_database, 'fit', 'both' ]
     dismod_at.system_command_prc(command, return_stdout = not trace_fit )
     #
-    # copy no_ode_database to out_database
-    shutil.copyfile(no_ode_database, out_database)
+    # predict fit_var
+    command = [ 'dismod_at', no_ode_database, 'predict', 'fit_var' ]
+    dismod_at.system_command_prc(command, return_stdout = not trace_fit )
     #
+    # no_ode_table
+    new          = False
+    connection   = dismod_at.create_connection(no_ode_database, new)
+    no_ode_table = dict()
+    for name in [ 'predict', 'avgint', ] :
+        no_ode_table[name] = dismod_at.get_table_dict(connection, name)
+    connection.close()
     #
-    # out_connection
-    new            = False
-    out_connection = dismod_at.create_connection(out_database, new)
+    # no_ode_fit_var
+    no_ode_fit_var = dict()
+    for predict_row in no_ode_table['predict'] :
+        avgint_id          = predict_row['avgint_id']
+        avgint_row         = no_ode_table['avgint'][avgint_id]
+        integrand_id       = avgint_row['integrand_id']
+        node_id            = avgint_row['node_id']
+        age_id             = avgint_row['c_age_id']
+        time_id            = avgint_row['c_time_id']
+        if node_id == fit_node_id or node_id is None:
+            key = (integrand_id, age_id, time_id)
+            assert not key in no_ode_fit_var
+            no_ode_fit_var[key] = predict_row['avg_integrand']
+    # ------------------------------------------------------------------------
+    # out_database
+    # ------------------------------------------------------------------------
+    shutil.copyfile(in_database, out_database)
     #
     # out_table
     out_table = dict()
-    for name in [
-        'fit_var',
-        'var',
-    ] :
-        out_table[name] = dismod_at.get_table_dict(out_connection, name)
     for name in [
         'prior',
         'mulcov',
@@ -325,15 +350,17 @@ def no_ode_fit(
     # out_table['mulcov']
     # and the corresponding entries in smooth, smooth_grid, and prior tables
     for (mulcov_id, in_mulcov_row) in enumerate( in_table['mulcov'] ) :
+        assert in_mulcov_row['subgroup_smooth_id'] is None
         #
         # in_smooth_id
-        assert in_mulcov_row['subgroup_smooth_id'] is None
         in_smooth_id = in_mulcov_row['group_smooth_id']
-        #
-        # out_mulcov_row
-        out_mulcov_row = copy.copy( in_mulcov_row )
-        #
         if not in_smooth_id is None :
+            #
+            # integrand_id
+            name         = 'mulcov_' + str(mulcov_id)
+            integrand_id = at_cascade.table_name2id(
+                 in_table['integrand'], 'integrand', name
+            )
             #
             # smooth_row
             smooth_row = in_table['smooth'][in_smooth_id]
@@ -342,29 +369,25 @@ def no_ode_fit(
             assert smooth_row['mulstd_dage_prior_id']  is None
             assert smooth_row['mulstd_dtime_prior_id'] is None
             #
-            # out_table['smooth']
-            # out_smooth_id
+            # out_table['smooth'], out_smooth_id
             out_smooth_id = len(out_table['smooth'])
             smooth_row['smooth_name'] += f'_{out_smooth_id}'
             out_table['smooth'].append(smooth_row)
             #
             # out_mulcov_row
+            out_mulcov_row = copy.copy( in_mulcov_row )
             out_mulcov_row['group_smooth_id'] = out_smooth_id
             #
             # out_table['smooth_grid']
-            rate_id     = in_mulcov_row['rate_id']
-            mulcov_type = in_mulcov_row['mulcov_type']
-            var_type = 'mulcov_' + mulcov_type
+            # add rows for this smoothing
             for in_grid_row in in_table['smooth_grid'] :
                 if in_grid_row['smooth_id'] == in_smooth_id :
                     add_out_grid_row(
-                        var_type,
-                        fit_node_id,
-                        rate_id,
-                        mulcov_id,
+                        no_ode_fit_var,
                         in_table,
                         out_table,
-                        in_grid_row
+                        in_grid_row,
+                        integrand_id
                     )
         #
         # out_table['mulcov_row']
@@ -372,16 +395,33 @@ def no_ode_fit(
     # ------------------------------------------------------------------------
     # out_table['rate']
     # and the corresponding entries in smooth, smooth_grid, and prior tables
-    for (rate_id, in_rate_row) in enumerate(in_table['rate']) :
-        #
+    for in_rate_row in in_table['rate'] :
+        # rate_name
+        rate_name = in_rate_row['rate_name']
+        # --------------------------------------------------------------------
         # in_smooth_id
-        assert in_rate_row['child_nslist_id'] is None
-        in_smooth_id = in_rate_row['parent_smooth_id']
+        in_smooth_id = None
+        if rate_name in name_rate2integrand :
+            assert in_rate_row['child_nslist_id'] is None
+            in_smooth_id = in_rate_row['parent_smooth_id']
+        else :
+            # proper priors for omega are set by omega_constraint routine
+            assert rate_name == 'omega'
+            in_rate_row['parent_smooth_id'] = None
+            in_rate_row['child_smooth_id']  = None
+            in_rate_row['child_nslist_id']  = None
         #
         # out_rate_row
         out_rate_row = copy.copy( in_rate_row )
         #
         if not in_smooth_id is None :
+            #
+            # integrand_id
+            # only check for integrands that are used
+            integrand_name  = name_rate2integrand[rate_name]
+            integrand_id = at_cascade.table_name2id(
+                in_table['integrand'], 'integrand', integrand_name
+            )
             #
             # smooth_row
             smooth_row = in_table['smooth'][in_smooth_id]
@@ -390,8 +430,7 @@ def no_ode_fit(
             assert smooth_row['mulstd_dage_prior_id']  is None
             assert smooth_row['mulstd_dtime_prior_id'] is None
             #
-            # out_table['smooth']
-            # out_smooth_id
+            # out_table['smooth'], out_smooth_id
             out_smooth_id = len(out_table['smooth'])
             smooth_row['smooth_name'] += f'_{out_smooth_id}'
             out_table['smooth'].append(smooth_row)
@@ -400,25 +439,22 @@ def no_ode_fit(
             out_rate_row['parent_smooth_id'] = out_smooth_id
             #
             # out_table['smooth_grid']
-            mulcov_id = None
-            var_type  = 'rate'
+            # add rows for this smoothing
             for in_grid_row in in_table['smooth_grid'] :
                 if in_grid_row['smooth_id'] == in_smooth_id :
                     add_out_grid_row(
-                        var_type,
-                        fit_node_id,
-                        rate_id,
-                        mulcov_id,
+                        no_ode_fit_var,
                         in_table,
                         out_table,
-                        in_grid_row
+                        in_grid_row,
+                        integrand_id
                     )
-        #
-        # out_table['rate_row']
-        out_table['rate'].append( out_rate_row )
-        #
+        # --------------------------------------------------------------------
         # in_smooth_id
-        in_smooth_id = in_rate_row['child_smooth_id']
+        in_smooth_id = None
+        if rate_name in name_rate2integrand :
+            in_smooth_id = in_rate_row['child_smooth_id']
+        #
         if not in_smooth_id is None :
             #
             # smooth_row
@@ -428,8 +464,7 @@ def no_ode_fit(
             assert smooth_row['mulstd_dage_prior_id']  is None
             assert smooth_row['mulstd_dtime_prior_id'] is None
             #
-            # out_table['smooth']
-            # out_smooth_id
+            # out_table['smooth'],  out_smooth_id
             out_smooth_id = len(out_table['smooth'])
             smooth_row['smooth_name'] += f'_{out_smooth_id}'
             out_table['smooth'].append(smooth_row)
@@ -438,6 +473,7 @@ def no_ode_fit(
             out_rate_row['child_smooth_id'] = out_smooth_id
             #
             # out_table['smooth_grid']
+            # add rows for this smoothing
             for in_grid_row in in_table['smooth_grid'] :
                 if in_grid_row['smooth_id'] == in_smooth_id :
                     #
@@ -458,11 +494,16 @@ def no_ode_fit(
                             out_grid_row[ty] = prior_id
                     out_grid_row['smooth_id'] = out_smooth_id
                     out_table['smooth_grid'].append( out_grid_row )
+        #
+        # out_table['rate']
+        out_table['rate'].append( out_rate_row )
     #
     # replace out_table
+    new        = False
+    connection = dismod_at.create_connection(out_database, new)
     for name in out_table :
-        if name not in [ 'var', 'fit_var' ] :
-            dismod_at.replace_table(out_connection, name, out_table[name])
+        dismod_at.replace_table(connection, name, out_table[name])
+    connection.close()
     #
     # restore hold_out_integrand
     hold_out_integrand = ''
@@ -475,8 +516,5 @@ def no_ode_fit(
         [ 'dismod_at', out_database, 'set', 'option', name, value ]
     )
     dismod_at.system_command_prc([ 'dismod_at', out_database, 'init' ])
-    #
-    # out_connection
-    out_connection.close()
     #
     return out_database
