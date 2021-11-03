@@ -451,7 +451,10 @@
     <span class="k">for</span> <span class="n">leaf_dir</span> <span class="ow">in</span> <span class="n">leaf_dir_list</span> <span class="p">:</span>
         <span class="n">leaf_database</span> <span class="o">=</span> <span class="n">leaf_dir</span> <span class="o">+</span> <span class="s1">&#39;/dismod.db&#39;</span>
         <span class="n">at_cascade</span><span class="o">.</span><span class="n">check_cascade_fit</span><span class="p">(</span>
-            <span class="n">rate_true</span><span class="p">,</span> <span class="n">all_node_database</span><span class="p">,</span> <span class="n">leaf_database</span>
+            <span class="n">rate_true</span>          <span class="o">=</span> <span class="n">rate_true</span><span class="p">,</span>
+            <span class="n">all_node_database</span>  <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
+            <span class="n">fit_node_database</span>  <span class="o">=</span> <span class="n">leaf_database</span><span class="p">,</span>
+            <span class="n">relative_tolerance</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># check hold outs for all nodes</span>

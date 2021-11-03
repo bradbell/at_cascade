@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/cascade_fit_node.py
-    :lines: 247-253
+    :lines: 257-264
     :language: py
 
 .. meta::
@@ -168,6 +168,18 @@ default
 =======
 If *fit_integrand* is ``None``, it will be computed by ``cascade_fit_node``
 and reused by recursive calls to this routine.
+
+.. meta::
+   :keywords: trace_fit
+
+.. index:: trace_fit
+
+.. _cascade_fit_node.trace_fit:
+
+trace_fit
+*********
+if ``True``, ( ``False`` ) the progress of the dismod at fit commands
+will be printed on standard output during the optimization.
 
 .. meta::
    :keywords: output, dismod.db

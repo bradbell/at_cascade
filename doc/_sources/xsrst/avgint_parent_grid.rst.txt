@@ -1,18 +1,18 @@
 .. include:: ../preamble.rst
 
 !!!!!!!!!!!!!!!!!!
-child_avgint_table
+avgint_parent_grid
 !!!!!!!!!!!!!!!!!!
 
 .. meta::
-   :keywords: child_avgint_table, create, avgint, table, that, predicts, rates, for, child, nodes
+   :keywords: avgint_parent_grid, predicts, parent, rates, , child, rates, , covariate, multipliers
 
-.. index:: child_avgint_table, create, avgint, table, that, predicts, rates, for, child, nodes
+.. index:: avgint_parent_grid, predicts, parent, rates, , child, rates, , covariate, multipliers
 
-.. _child_avgint_table:
+.. _avgint_parent_grid:
 
-Create avgint Table That Predicts Rates for Child Nodes
-#######################################################
+Predicts Parent Rates, Child Rates, and Covariate Multipliers
+#############################################################
 .. contents::
    :local:
 
@@ -21,21 +21,35 @@ Create avgint Table That Predicts Rates for Child Nodes
 
 .. index:: syntax
 
-.. _child_avgint_table.syntax:
+.. _avgint_parent_grid.syntax:
 
 Syntax
 ******
 
-.. literalinclude:: ../../at_cascade/child_avgint_table.py
-    :lines: 73-76
+.. literalinclude:: ../../at_cascade/avgint_parent_grid.py
+    :lines: 81-84
     :language: py
+
+.. meta::
+   :keywords: purpose
+
+.. index:: purpose
+
+.. _avgint_parent_grid.purpose:
+
+Purpose
+*******
+Create an avgint table that predicts the parent and child rates
+on the grid corresponding to the parent not rates.
+Also predict the covariate multiplies which have the same grid
+for the parent and child nodes.
 
 .. meta::
    :keywords: all_node_database
 
 .. index:: all_node_database
 
-.. _child_avgint_table.all_node_database:
+.. _avgint_parent_grid.all_node_database:
 
 all_node_database
 *****************
@@ -47,7 +61,7 @@ This argument can't be ``None``.
 
 .. index:: fit_node_database
 
-.. _child_avgint_table.fit_node_database:
+.. _avgint_parent_grid.fit_node_database:
 
 fit_node_database
 *****************
@@ -62,7 +76,7 @@ This argument can't be ``None``.
 
 .. index:: parent_node
 
-.. _child_avgint_table.fit_node_database.parent_node:
+.. _avgint_parent_grid.fit_node_database.parent_node:
 
 parent_node
 ===========
@@ -74,7 +88,7 @@ dismod_at option table in the fit_node_database.
 
 .. index:: avgint, table
 
-.. _child_avgint_table.avgint_table:
+.. _avgint_parent_grid.avgint_table:
 
 avgint Table
 ************
@@ -86,7 +100,7 @@ plus the following extra columns:
 
 .. index:: c_age_id
 
-.. _child_avgint_table.avgint_table.c_age_id:
+.. _avgint_parent_grid.avgint_table.c_age_id:
 
 c_age_id
 ========
@@ -98,7 +112,7 @@ fit_node_database that this prediction is for.
 
 .. index:: c_time_id
 
-.. _child_avgint_table.avgint_table.c_time_id:
+.. _avgint_parent_grid.avgint_table.c_time_id:
 
 c_time_id
 =========
@@ -110,15 +124,16 @@ fit_node_database that this prediction is for.
 
 .. index:: rectangular, grid
 
-.. _child_avgint_table.avgint_table.rectangular_grid:
+.. _avgint_parent_grid.avgint_table.rectangular_grid:
 
 Rectangular Grid
 ================
-For each rate (or covariate multiplier) that has a non-null
-parent smoothing (group smoothing) in the fit_node_database,
-all of the age time pairs in the smoothing are represented
-in the new avgint table.
+For each covariate multiplier that has non-null group smoothing, all of the
+age time pairs in the smoothing are represented in the new avgint table.
+For the parent node, each child of the parent node, and
+each rate that has non-null parent smoothing, all of the
+age time pairs in the smoothing are represented in the new avgint table.
 
 ----
 
-xsrst input file: ``at_cascade/child_avgint_table.py``
+xsrst input file: ``at_cascade/avgint_parent_grid.py``

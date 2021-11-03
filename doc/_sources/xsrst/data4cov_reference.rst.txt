@@ -29,7 +29,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/data4cov_reference.py
-    :lines: 83-84
+    :lines: 92-96
     :language: py
 
 .. meta::
@@ -99,16 +99,32 @@ The :ref:`all_option_table.split_list` and
 (if they exist) are the only rows of this table that are used.
 
 .. meta::
+   :keywords: trace
+
+.. index:: trace
+
+.. _data4cov_reference.trace:
+
+trace
+*****
+If *trace* is True (False) a message will (will not) be printed
+at the beginning and end of this process
+(because it can take a while).
+
+.. meta::
    :keywords: all_cov_reference, table
 
 .. index:: all_cov_reference, table
 
-.. _data4cov_reference.all_node_database.all_cov_reference_table:
+.. _data4cov_reference.trace.all_cov_reference_table:
 
 all_cov_reference Table
 =======================
 The :ref:`all_cov_reference_table.reference` created
 using the average of the covariates in the data table.
+(The average is rounded off to and unspecified number of digits.
+This makes it easier to set reference values
+in the :ref:`glossary.root_node_database` to be the same.)
 
 1.  If there is an all_cov_reference table on input,
     all its information is lost.

@@ -37,7 +37,7 @@ Table of Contents
 |
 |  |space| :ref:`5.1<cascade_fit_node>` Cascade a Fit Starting at a Node
 |  |space| :ref:`5.2<check_cascade_fit>` Check the Cascade Results for a Node
-|  |space| :ref:`5.3<child_avgint_table>` Create avgint Table That Predicts Rates for Child Nodes
+|  |space| :ref:`5.3<avgint_parent_grid>` Predicts Parent Rates, Child Rates, and Covariate Multipliers
 |  |space| :ref:`5.4<create_all_node_db>` Create an All Node Database
 |  |space| :ref:`5.5<create_child_node_db>` Create Child Database From Fit in Parent Database
 |  |space| :ref:`5.6<data4cov_reference>` Use Data Table Average Covariates for Reference
@@ -45,9 +45,10 @@ Table of Contents
 |  |space| :ref:`5.8<get_fit_children>` Determine the Set of Nodes to Fit
 |  |space| :ref:`5.9<get_fit_integrand>` Determine the Set of Integrands in Data Table
 |  |space| :ref:`5.10<get_parent_node>` Get Parent Node Name From Option Table
-|  |space| :ref:`5.11<no_ode_fit>` Do A No Ode Fit For One Node
-|  |space| :ref:`5.12<omega_constraint>` Set Omega Constraints in a Fit Node Database
-|  |space| :ref:`5.13<table_name2id>` Map a Table Row Name to The Row Index
+|  |space| :ref:`5.11<get_var_id>` Map Var Table Values to its Primary Key
+|  |space| :ref:`5.12<no_ode_fit>` Do A No Ode Fit For One Node
+|  |space| :ref:`5.13<omega_constraint>` Set Omega Constraints in a Fit Node Database
+|  |space| :ref:`5.14<table_name2id>` Map a Table Row Name to The Row Index
 |
 
 Link to Index

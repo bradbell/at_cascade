@@ -91,7 +91,7 @@ the results of a dismod_at sample command for both the fixed and random effects.
 avgint Table
 ============
 The avgint table determines which predictions are done for the child nodes
-and should come from :ref:`child_avgint_table`.
+and should come from :ref:`avgint_parent_grid`.
 
 .. meta::
    :keywords: predict, table
@@ -104,7 +104,7 @@ predict Table
 =============
 The predict table contains
 The results of a predict command using the sample table
-and the avgint table corresponding to :ref:`child_avgint_table`.
+and the avgint table corresponding to :ref:`avgint_parent_grid`.
 
 .. meta::
    :keywords: c_predict_fit_var, table
@@ -129,10 +129,10 @@ column predict_id to c_predict_fit_var_id.
 
 c_avgint Table
 ==============
-The c_avgint table contains the original version of the avgint table
-that predicts for the parent node and is a version of the
-:ref:`glossary.root_node_database`
-avgint table with only the node_id column modified.
+The c_avgint table contains the original version of the
+:ref:`glossary.root_node_database` avgint table
+that predicts for the parent node.
+Only the node_id column has been modified from the root_node_database version.
 
 .. meta::
    :keywords: child_node_databases

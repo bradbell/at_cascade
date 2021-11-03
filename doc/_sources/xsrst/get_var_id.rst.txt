@@ -1,0 +1,86 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!
+get_var_id
+!!!!!!!!!!
+
+.. meta::
+   :keywords: get_var_id, map, var, table, values, to, its, primary, key
+
+.. index:: get_var_id, map, var, table, values, to, its, primary, key
+
+.. _get_var_id:
+
+Map Var Table Values to its Primary Key
+#######################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _get_var_id.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/get_var_id.py
+    :lines: 67-78
+    :language: py
+
+.. meta::
+   :keywords: var_table
+
+.. index:: var_table
+
+.. _get_var_id.var_table:
+
+var_table
+*********
+This is a ``list`` of ``dict`` representation of the
+a dismod_at var table.
+
+.. meta::
+   :keywords: var_type
+
+.. index:: var_type
+
+.. _get_var_id.var_type:
+
+var_type
+********
+This is a ``str`` that specifies the type of variable
+for the corresponding row of the var table.
+It must have one of the values in the table below
+(and cannot be ``None``).
+
+.. meta::
+   :keywords: other, arguments
+
+.. index:: other, arguments
+
+.. _get_var_id.other_arguments:
+
+Other Arguments
+***************
+All of the arguments, other than *var_type*, are ``int`` values.
+Depending on the value of *var_type* only certain of the
+other arguments matter:
+
+.. csv-table:: **Other Arguments That Matter by Variable Type**
+    :header: var_type,     Other Arguments
+    :widths: 30, 70
+
+    mulstd_value,          *smooth_id*
+    mulstd_dage,           *smooth_id*
+    mulstd_dtime,          *smooth_id*
+    rate,                  "age_id, time_id, node_id, rate_id"
+    mulcov_rate_value,     "age_id, time_id, mulcov_id, group_id, subgroup_id"
+    mulcov_meas_value,     "age_id, time_id, mulcov_id, group_id, subgroup_id"
+    mulcov_meas_noise,     "age_id, time_id, mulcov_id, group_id"
+
+----
+
+xsrst input file: ``at_cascade/get_var_id.py``

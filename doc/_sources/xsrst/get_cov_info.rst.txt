@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/get_cov_info.py
-    :lines: 101-104
+    :lines: 100-103
     :language: py
 
 .. meta::

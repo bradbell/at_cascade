@@ -7,11 +7,13 @@
   <meta charset="utf-8">
   <meta content="no_ode_fit, do, no, ode, fit, for, one, node" name="keywords" />
 <meta content="syntax" name="keywords" />
+<meta content="all_node_database" name="keywords" />
 <meta content="in_database" name="keywords" />
 <meta content="in_dir" name="keywords" />
 <meta content="fit_node" name="keywords" />
 <meta content="max_fit" name="keywords" />
 <meta content="max_abs_effect" name="keywords" />
+<meta content="trace_fit" name="keywords" />
 <meta content="no_ode_database" name="keywords" />
 <meta content="out_database" name="keywords" />
 
@@ -47,7 +49,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="omega_constraint" href="omega_constraint.html" />
-    <link rel="prev" title="get_parent_node" href="get_parent_node.html" /> 
+    <link rel="prev" title="get_var_id" href="get_var_id.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -102,7 +104,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="module.html">module</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="cascade_fit_node.html">cascade_fit_node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="check_cascade_fit.html">check_cascade_fit</a></li>
-<li class="toctree-l3"><a class="reference internal" href="child_avgint_table.html">child_avgint_table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="avgint_parent_grid.html">avgint_parent_grid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_all_node_db.html">create_all_node_db</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_child_node_db.html">create_child_node_db</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data4cov_reference.html">data4cov_reference</a></li>
@@ -110,6 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="get_fit_children.html">get_fit_children</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_fit_integrand.html">get_fit_integrand</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_parent_node.html">get_parent_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="get_var_id.html">get_var_id</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">no_ode_fit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="omega_constraint.html">omega_constraint</a></li>
 <li class="toctree-l3"><a class="reference internal" href="table_name2id.html">table_name2id</a></li>
@@ -194,77 +197,95 @@
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#syntax" id="id2">Syntax</a></p></li>
-<li><p><a class="reference internal" href="#in-database" id="id3">in_database</a></p>
+<li><p><a class="reference internal" href="#all-node-database" id="id3">all_node_database</a></p></li>
+<li><p><a class="reference internal" href="#in-database" id="id4">in_database</a></p>
 <ul>
-<li><p><a class="reference internal" href="#in-dir" id="id4">in_dir</a></p></li>
-<li><p><a class="reference internal" href="#fit-node" id="id5">fit_node</a></p></li>
+<li><p><a class="reference internal" href="#in-dir" id="id5">in_dir</a></p></li>
+<li><p><a class="reference internal" href="#fit-node" id="id6">fit_node</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#max-fit" id="id6">max_fit</a></p></li>
-<li><p><a class="reference internal" href="#max-abs-effect" id="id7">max_abs_effect</a></p></li>
-<li><p><a class="reference internal" href="#no-ode-database" id="id8">no_ode_database</a></p></li>
-<li><p><a class="reference internal" href="#out-database" id="id9">out_database</a></p></li>
+<li><p><a class="reference internal" href="#max-fit" id="id7">max_fit</a></p></li>
+<li><p><a class="reference internal" href="#max-abs-effect" id="id8">max_abs_effect</a></p></li>
+<li><p><a class="reference internal" href="#trace-fit" id="id9">trace_fit</a></p></li>
+<li><p><a class="reference internal" href="#no-ode-database" id="id10">no_ode_database</a></p></li>
+<li><p><a class="reference internal" href="#out-database" id="id11">out_database</a></p></li>
 </ul>
 </div>
 <div class="section" id="syntax">
 <span id="no-ode-fit-syntax"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># out_database = at_cascade.no_ode_fit(</span>
-    <span class="n">in_database</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">max_fit</span>        <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">max_abs_effect</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">all_node_database</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">in_database</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_fit</span>           <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_abs_effect</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">trace_fit</span>         <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="c1"># )</span>
 </pre></div>
 </div>
 </div>
+<div class="section" id="all-node-database">
+<span id="no-ode-fit-all-node-database"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">all_node_database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h3>
+<p>is a python string containing the name of the <a class="reference internal" href="all_node_db.html#id1"><span class="std std-ref">The All Node DataBase</span></a>.
+This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</div>
 <div class="section" id="in-database">
-<span id="no-ode-fit-in-database"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">in_database</a><a class="headerlink" href="#in-database" title="Permalink to this headline">¶</a></h3>
+<span id="no-ode-fit-in-database"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">in_database</a><a class="headerlink" href="#in-database" title="Permalink to this headline">¶</a></h3>
 <p>is a python string specifying the location of a
-<a class="reference internal" href="glossary.html#glossary-fit-node-database"><span class="std std-ref">fit_node_database</span></a>
+<a class="reference internal" href="glossary.html#glossary-input-node-database"><span class="std std-ref">input_node_database</span></a>
 relative to the current working directory.
 This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <div class="section" id="in-dir">
-<span id="no-ode-fit-in-database-in-dir"></span><span id="index-3"></span><h4><a class="toc-backref" href="#id4">in_dir</a><a class="headerlink" href="#in-dir" title="Permalink to this headline">¶</a></h4>
+<span id="no-ode-fit-in-database-in-dir"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">in_dir</a><a class="headerlink" href="#in-dir" title="Permalink to this headline">¶</a></h4>
 <p>is the directory where the <em>in_database</em> is located.</p>
 </div>
 <div class="section" id="fit-node">
-<span id="no-ode-fit-in-database-fit-node"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">fit_node</a><a class="headerlink" href="#fit-node" title="Permalink to this headline">¶</a></h4>
+<span id="no-ode-fit-in-database-fit-node"></span><span id="index-5"></span><h4><a class="toc-backref" href="#id6">fit_node</a><a class="headerlink" href="#fit-node" title="Permalink to this headline">¶</a></h4>
 <p>This is the name of the
 <a class="reference internal" href="glossary.html#glossary-fit-node"><span class="std std-ref">fit_node</span></a> for the <em>in_database</em> and <em>out_database</em>.</p>
 </div>
 </div>
 <div class="section" id="max-fit">
-<span id="no-ode-fit-max-fit"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id6">max_fit</a><a class="headerlink" href="#max-fit" title="Permalink to this headline">¶</a></h3>
+<span id="no-ode-fit-max-fit"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id7">max_fit</a><a class="headerlink" href="#max-fit" title="Permalink to this headline">¶</a></h3>
 <p>is an <code class="docutils literal notranslate"><span class="pre">int</span></code> containing the value of <a class="reference internal" href="all_option_table.html#all-option-table-max-fit"><span class="std std-ref">max_fit</span></a> in the
 all option table.
 If max_fit does not appear in the all option table,
 <em>max_fit</em> should be None.</p>
 </div>
 <div class="section" id="max-abs-effect">
-<span id="no-ode-fit-max-abs-effect"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id7">max_abs_effect</a><a class="headerlink" href="#max-abs-effect" title="Permalink to this headline">¶</a></h3>
+<span id="no-ode-fit-max-abs-effect"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id8">max_abs_effect</a><a class="headerlink" href="#max-abs-effect" title="Permalink to this headline">¶</a></h3>
 <p>is a <code class="docutils literal notranslate"><span class="pre">float</span></code> containing the value of <a class="reference internal" href="all_option_table.html#all-option-table-max-abs-effect"><span class="std std-ref">max_abs_effect</span></a>
 in the all option table.
 If max_abs_effect does not appear in the all option table,
 <em>max_abs_effect</em> should be None.</p>
 </div>
+<div class="section" id="trace-fit">
+<span id="no-ode-fit-trace-fit"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id9">trace_fit</a><a class="headerlink" href="#trace-fit" title="Permalink to this headline">¶</a></h3>
+<p>if <code class="docutils literal notranslate"><span class="pre">True</span></code>, ( <code class="docutils literal notranslate"><span class="pre">False</span></code> ) the progress of the dismod at fit command
+will be printed on standard output during the optimization.</p>
+</div>
 <div class="section" id="no-ode-database">
-<span id="no-ode-fit-no-ode-database"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id8">no_ode_database</a><a class="headerlink" href="#no-ode-database" title="Permalink to this headline">¶</a></h3>
+<span id="no-ode-fit-no-ode-database"></span><span id="index-9"></span><h3><a class="toc-backref" href="#id10">no_ode_database</a><a class="headerlink" href="#no-ode-database" title="Permalink to this headline">¶</a></h3>
 <p>An intermediate database is stored in the file</p>
 <blockquote>
 <div><p><em>in_dir</em>/<em>fit_node</em>/no_ode.db</p>
 </div></blockquote>
-<p>This contains the results of the no ODE fit so they
-can be plotted and converted to csv files.</p>
+<p>This contains the results of fitting without the ODE integrands
+so they can be plotted and converted to csv files.
+It has the <a class="reference internal" href="omega_constraint.html#id1"><span class="std std-ref">Set Omega Constraints in a Fit Node Database</span></a> so that the residuals for
+the ODE integrands make sense.
+These residuals correspond to the prior means for a fit using
+the  <em>out_database</em> (which will incldue the ODE integrands).</p>
 </div>
 <div class="section" id="out-database">
-<span id="no-ode-fit-out-database"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id9">out_database</a><a class="headerlink" href="#out-database" title="Permalink to this headline">¶</a></h3>
+<span id="no-ode-fit-out-database"></span><span id="index-10"></span><h3><a class="toc-backref" href="#id11">out_database</a><a class="headerlink" href="#out-database" title="Permalink to this headline">¶</a></h3>
 <p>The return value <em>out_database</em> is equal to</p>
 <blockquote>
 <div><p><em>in_dir</em>/<em>fit_node</em>/dismod.db</p>
 </div></blockquote>
 <p>which can’t be the same file name as <em>in_database</em>.
-This is a fit_node_database similar to <em>in_database</em>.
+This is an input_node_database similar to <em>in_database</em>.
 The difference is that the mean value in the priors for the fixed effects
-has been replace by the optimal estimate for fitting with the integrands
+have been replace by the optimal estimate for fitting with the integrands
 that do not used the ODE.
 The last operation on this table is a dismod_at init command.</p>
 <hr class="docutils" />
@@ -284,7 +305,7 @@ The last operation on this table is a dismod_at init command.</p>
         <a href="omega_constraint.html" class="btn btn-neutral float-right" title="omega_constraint" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="get_parent_node.html" class="btn btn-neutral float-left" title="get_parent_node" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="get_var_id.html" class="btn btn-neutral float-left" title="get_var_id" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

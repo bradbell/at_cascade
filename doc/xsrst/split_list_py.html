@@ -519,7 +519,10 @@
     <span class="k">for</span> <span class="n">goal_dir</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0/n1/n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n1/n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n2&#39;</span> <span class="p">]</span> <span class="p">:</span>
         <span class="n">goal_database</span> <span class="o">=</span> <span class="n">goal_dir</span> <span class="o">+</span> <span class="s1">&#39;/dismod.db&#39;</span>
         <span class="n">at_cascade</span><span class="o">.</span><span class="n">check_cascade_fit</span><span class="p">(</span>
-            <span class="n">rate_true</span><span class="p">,</span> <span class="n">all_node_database</span><span class="p">,</span> <span class="n">goal_database</span>
+            <span class="n">rate_true</span>          <span class="o">=</span> <span class="n">rate_true</span><span class="p">,</span>
+            <span class="n">all_node_database</span>  <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
+            <span class="n">fit_node_database</span>  <span class="o">=</span> <span class="n">goal_database</span><span class="p">,</span>
+            <span class="n">relative_tolerance</span> <span class="o">=</span> <span class="mf">1e-2</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># check that fits were not run for n5 and n6</span>

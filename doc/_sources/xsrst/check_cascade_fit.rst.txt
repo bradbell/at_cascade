@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/check_cascade_fit.py
-    :lines: 68-72
+    :lines: 78-83
     :language: py
 
 .. meta::
@@ -86,6 +86,23 @@ It is a :ref:`glossary.fit_node_database` with the
 extra properties listed under
 :ref:`cascade_fit_node.output_dismod_db`
 in the cascade_fit_node documentation.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: relative_tolerance
+
+.. index:: relative_tolerance
+
+.. _check_cascade_fit.relative_tolerance:
+
+relative_tolerance
+******************
+Is an upper bound for the relative error in the predictions
+corresponding to the avgint table.
+The error is the prediction using the true rates
+minus the prediction using the estimated rates.
+If this argument is ``None``, the maximum relative error is printed.
+This is intended as an aid in setting the relative tolerance.
 
 ----
 
