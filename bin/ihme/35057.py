@@ -375,7 +375,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     #
     # time_list, grid_time_id
     grid_time_id = list()
-    time_grid   = [ 1960.0, 1970.0, 1980.0, 2000.0, 2010.0, 2020.0 ]
+    time_grid   = [ 1980.0, 2000.0, 2010.0, 2020.0 ]
     for time in time_grid :
         if time in time_list :
             grid_time_id.append( time_list.index(time) )
@@ -542,7 +542,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     rate_table = [
         {
             'name':          'pini',
-            'parent_smooth': 'parent_pini',
+            'parent_smooth': None,
             'child_smooth':  None,
         },{
             'name':           'iota',
@@ -560,8 +560,9 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         { 'name':'parent_node_name',     'value':'Global'},
         { 'name':'zero_sum_child_rate',  'value':'iota chi'},
         { 'name':'random_seed',          'value':str(random_seed)},
+        { 'name':'quasi_fixed',          'value':'false' },
         { 'name':'tolerance_fixed',      'value':'1e-3'},
-        { 'name':'max_num_iter_fixed',   'value':'30'},
+        { 'name':'max_num_iter_fixed',   'value':'70'},
         { 'name':'trace_init_fit_model', 'value':'true'},
         { 'name':'data_extra_columns',   'value':'csv_row_id'},
         { 'name':'print_level_fixed',    'value':'5'},
@@ -745,9 +746,10 @@ def main() :
     display_results( root_node_name + '/no_ode.db' )
     #
     # cascade starting at root node
-    at_cascade.cascade_fit_node(
-        all_node_database, fit_node_database, trace_fit = True
-    )
+    if False :
+        at_cascade.cascade_fit_node(
+            all_node_database, fit_node_database, trace_fit = True
+        )
 # ----------------------------------------------------------------------------
 main()
 print(sys.argv[0] + ': OK')
