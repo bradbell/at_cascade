@@ -307,7 +307,7 @@ print('no_ode_xam: random_seed = ', random_seed)
 # END random_seed
 #
 # BEGIN alpha_true
-alpha_true = { 'iota':- 0.2, 'chi':-0.2}
+alpha_true = { 'iota':- 0.25, 'chi':-0.15 }
 alpha_true_max_abs = 0.3
 # END alpha_true
 #
@@ -338,6 +338,8 @@ for node in [ 'n1', 'n2' ] :
 # ----------------------------------------------------------------------------
 # BEGIN rate_true
 def rate_true(rate, a, t, n, c) :
+    if rate in [ 'pini', 'rho' ] :
+        return 0.0
     income   = c[0]
     R_n      = random_effect_true[n]
     I_n      = avg_income['n0']
@@ -351,8 +353,12 @@ def rate_true(rate, a, t, n, c) :
         aa = max(a, age_grid[1] )
         return (1 + aa / 100) * 1e-2 * math.exp( effect )
     if rate == 'omega' :
-        return (1 + a / 100) * 1e-2
-    return 0.0
+        # omega random effect is constrained for each node so to get an
+        # exact match it cannot depend on income, but it can depend on
+        # age and time
+        effect   = R_n +  a / 10000
+        return (1 + a / 100) * 1e-2 * math.exp( effect)
+    assert False
 # END rate_true
 # ----------------------------------------------------------------------------
 def average_integrand(integrand_name, age, node_name, income) :
@@ -661,26 +667,57 @@ def check_no_ode_fit(fit_node_dir) :
     #
     # check variable values
     for (var_id, var_row) in enumerate( table['var'] ) :
+        #
+        # fit_var_value
+        fit_var_value = table['fit_var'][var_id]['fit_var_value']
+        #
+        # var_type
         var_type      = var_row['var_type']
-        node_id       = var_row['node_id']
+        #
+        # rate_name
+        rate_id       = var_row['rate_id']
+        rate_name     = table['rate'][rate_id]['rate_name']
+        #
         if var_type == 'rate' :
+            #
+            # node_name
+            node_id       = var_row['node_id']
             node_name     = table['node'][node_id]['node_name']
+            #
+            # c_0
+            c_0           = [ avg_income['n0'] ]
+            #
+            # rate_true_n0
+            age_id        = var_row['age_id']
+            time_id       = var_row['time_id']
+            age           = table['age'][age_id]['age']
+            time          = table['time'][time_id]['time']
+            rate_true_n0  = rate_true(rate_name, age, time, 'n0', c_0)
+            #
             if node_name == 'n0' :
-                # check the rate value
-                age_id        = var_row['age_id']
-                time_id       = var_row['time_id']
-                rate_id       = var_row['rate_id']
-                #
-                age           = table['age'][age_id]['age']
-                time          = table['time'][time_id]['time']
-                rate_name     = table['rate'][rate_id]['rate_name']
-                fit_var_value = table['fit_var'][var_id]['fit_var_value']
-                #
-                c             = [ avg_income['n0'] ]
-                check         = rate_true(rate_name, age, time, 'n0', c)
-                rel_error     = (1.0 - fit_var_value / check )
-                assert abs( rel_error ) < 1e-5
-
+                # fixed effect
+                rel_error     = (1.0 - fit_var_value / rate_true_n0 )
+                if rate_name == 'omega' :
+                    assert rel_error < 1e-12
+                else :
+                    assert abs( rel_error ) < 1e-5
+            elif rate_name in [ 'iota', 'chi'] :
+                # These random effects are constant w.r.t age and time
+                rate_true_n  = rate_true(rate_name, age, time, node_name, c_0)
+                effect_true  = math.log( rate_true_n / rate_true_n0 )
+                rel_error     = (1.0 - fit_var_value / effect_true )
+                assert abs( rel_error ) < 1e-4
+            else :
+                # These random effects are constraints
+                c_n          = [ avg_income[node_name] ]
+                rate_true_n  = rate_true(rate_name, age, time, node_name, c_n)
+                effect_true  = math.log( rate_true_n / rate_true_n0 )
+                rel_error     = (1.0 - fit_var_value / effect_true )
+                assert abs( rel_error ) < 1e-12
+        else :
+            assert var_type == 'mulcov_rate_value'
+            rel_error = (1.0 - fit_var_value / alpha_true[rate_name])
+            assert abs( rel_error ) < 1e-4
 # ----------------------------------------------------------------------------
 # main
 # ----------------------------------------------------------------------------
@@ -713,7 +750,7 @@ def main() :
     mtall_data     = dict()
     for node_name in [ 'n0', 'n1', 'n2' ] :
         mtall_list = list()
-        income                = avg_income[node_name]
+        income  = avg_income[node_name]
         for age_id in omega_grid['age'] :
             age  = age_grid[age_id]
             time = 2000.0

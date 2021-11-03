@@ -32,7 +32,7 @@ This argument can't be ``None``.
 in_database
 ***********
 is a python string specifying the location of a
-:ref:`glossary.fit_node_database`
+:ref:`glossary.input_node_database`
 relative to the current working directory.
 This argument can't be ``None``.
 
@@ -70,8 +70,12 @@ An intermediate database is stored in the file
 
     *in_dir*\ /\ *fit_node*\ /no_ode.db
 
-This contains the results of the no ODE fit so they
-can be plotted and converted to csv files.
+This contains the results of fitting without the ODE integrands
+so they can be plotted and converted to csv files.
+It has the :ref:`omega_constraint` so that the residuals for
+the ODE integrands make sense.
+These residuals correspond to the prior means for a fit using
+the  *out_database* (which will incldue the ODE integrands).
 
 out_database
 ************
@@ -80,7 +84,7 @@ The return value *out_database* is equal to
     *in_dir*\ /\ *fit_node*\ /dismod.db
 
 which can't be the same file name as *in_database*.
-This is a fit_node_database similar to *in_database*.
+This is an input_node_database similar to *in_database*.
 The difference is that the mean value in the priors for the fixed effects
 have been replace by the optimal estimate for fitting with the integrands
 that do not used the ODE.

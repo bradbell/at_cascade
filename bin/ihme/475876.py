@@ -313,9 +313,10 @@ connect_root.close()
 #
 # no_ode_fit
 fit_node_database = at_cascade.no_ode_fit(
-    in_database = root_node_copy,
-    max_fit     = max_fit,
-    trace_fit   = True,
+    all_node_database = all_node_copy,
+    in_database       = root_node_copy,
+    max_fit           = max_fit,
+    trace_fit         = True,
 )
 assert fit_node_database == root_node_dir + '/dismod.db'
 no_ode_database = root_node_dir + '/no_ode.db'

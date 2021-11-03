@@ -734,9 +734,10 @@ def main() :
     #
     # no_ode_fit
     fit_node_database = at_cascade.no_ode_fit(
-        in_database = root_node_database,
-        max_fit     = max_fit,
-        trace_fit   = True,
+        all_node_database = all_node_database,
+        in_database       = root_node_database,
+        max_fit           = max_fit,
+        trace_fit         = True,
     )
     assert fit_node_database == root_node_name + '/dismod.db'
     #
