@@ -37,7 +37,7 @@ max_data_table      = 40000
 max_fit = 500
 #
 # random_seed (if zero, use clock for random seed)
-random_seed = 1636023671
+random_seed = 0
 # -----------------------------------------------------------------------------
 #
 import time
@@ -372,8 +372,6 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         else :
             grid_age_id.append( len(age_list) )
             age_list.append( age )
-    # max aage in csv files
-    age_list.append( 126.0 )
     #
     # time_list
     time_list = list()
@@ -389,9 +387,25 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         else :
             grid_time_id.append( len(time_list) )
             time_list.append( time )
-    # max time in csv files
-    time_list.append( 1960.0 )
-    time_list.append( 2023.0 )
+    #
+    # ensure all data is with in age and time limits
+    age_min =   math.inf
+    age_max = - math.inf
+    time_min =  math.inf
+    time_max = - math.inf
+    for row in csv_data_table :
+        age_min  = min(age_min,  float( row['age_lower'] ) )
+        time_min = min(time_min, float( row['time_lower'] ) )
+        age_max  = max(age_max,  float( row['age_upper'] ) )
+        time_max = max(time_max, float( row['time_upper'] ) )
+    if age_min < min( age_list ) :
+        age_list.append( age_min )
+    if age_max > max( age_list ) :
+        age_list.append( age_max )
+    if time_min < min( time_list ) :
+        time_list.append( time_min )
+    if time_max > max( time_list ) :
+        time_list.append( time_max )
     #
     # mulcov_table
     mulcov_table = [
