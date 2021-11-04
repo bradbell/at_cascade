@@ -37,7 +37,7 @@ max_data_table      = 40000
 max_fit = 500
 #
 # random_seed (if zero, use clock for random seed)
-random_seed = 0
+random_seed = 1636023671
 # -----------------------------------------------------------------------------
 #
 import time
@@ -576,6 +576,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         { 'name':'trace_init_fit_model', 'value':'true'},
         { 'name':'data_extra_columns',   'value':'csv_row_id'},
         { 'name':'print_level_fixed',    'value':'5'},
+        { 'name':'hold_out_integrand',   'value':'mtexcess'},
     ]
     #
     # create_database

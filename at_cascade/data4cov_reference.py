@@ -24,9 +24,9 @@ root_node_database
 *******************
 This argument can't be ``None`` and
 is the :ref:`glossary.root_node_database`.
-This database is not modified and
-only following tables are used:
-option, data, node, covariate.
+Only the following tables in this database are used:
+option, data, node, covariate and only the covariate
+table is modified.
 
 option Table
 ============
@@ -38,6 +38,15 @@ data Table
 Only the following columns of this table are used:
 data_id, node_id, x_0, ... x_n,
 where n is the number of covariates minus one.
+
+covariate Table
+===============
+The covariate reference value for the
+:ref:`relative covariates <glossary.relative_covariate>` is changed
+to agree with the new value in the all_cov_reference table
+(described below) for the :ref:`all_cov_reference_table.node_id`
+and :ref:`all_cov_reference_table.split_reference_id` corresponding
+to the *root_node_database*.
 
 all_node_database
 *****************
@@ -164,7 +173,7 @@ def data4cov_reference(
         split_covariate_id    = None
         n_split               = 1
     #
-    #
+    # -------------------------------------------------------------------------
     # row_list
     row_list = list()
     for avg_node_id in range( len(root_table['node'] ) ) :
@@ -241,7 +250,7 @@ def data4cov_reference(
                 reference = float( f'{avg:.4g}' )
                 row = [ node_id, covariate_id, split_reference_id, reference ]
                 row_list.append( row )
-    #
+    # -------------------------------------------------------------------------
     # all_cov_reference table
     new        = False
     connection = dismod_at.create_connection(all_node_database, new)
@@ -253,6 +262,19 @@ def data4cov_reference(
     dismod_at.create_table(
         connection, tbl_name, col_name, col_type, row_list
     )
+    connection.close()
+    # -------------------------------------------------------------------------
+    # root_table['covariate']
+    for row in row_list :
+        (node_id, covariate_id, split_reference_id, reference) = row
+        if split_reference_id == cov_info['split_reference_id'] \
+            and node_id == parent_node_id :
+                root_table['covariate'][covariate_id]['reference'] = reference
+    new        = False
+    connection = dismod_at.create_connection(root_node_database, new)
+    dismod_at.replace_table(connection, 'covariate', root_table['covariate'])
+    connection.close()
+    # -------------------------------------------------------------------------
     #
     if trace :
         print('end: data4cov_reference')
