@@ -158,6 +158,7 @@ def get_emr_table(file_name, age_group_dict) :
         row_out['age_lower']    = age_group_dict[age_group_id]['age_lower']
         row_out['age_upper']    = age_group_dict[age_group_id]['age_upper']
         row_out['meas_value']   = float( row_in['mean'] )
+        row_out['hold_out']     = 0
         row_out['meas_std']     = meas_std
         row_out['obesity']      = None
         row_out['ldi']          = None
@@ -187,6 +188,7 @@ def get_data_table(file_name) :
         row_out['age_lower']    = float( row_in['age_start'] )
         row_out['age_upper']    = float( row_in['age_end'] ) + 1.0
         row_out['meas_value']   = float( row_in['mean'] )
+        row_out['hold_out']     = int( row_in['is_outlier'] )
         row_out['obesity']      = None
         row_out['ldi']          = None
         #
@@ -482,7 +484,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'sex'             : sex,
             'one'             : 1.0,
             'obesity'         : obesity,
-            'hold_out'        : False,
+            'hold_out'        : int( row_in['hold_out'] ),
             'density'         : 'gaussian',
             'meas_value'      : float( row_in['meas_value'] ),
             'meas_std'        : float( row_in['meas_std'] ),
