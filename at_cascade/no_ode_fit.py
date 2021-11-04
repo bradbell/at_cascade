@@ -68,14 +68,14 @@ no_ode_database
 ***************
 An intermediate database is stored in the file
 
-    *in_dir*\ /\ *fit_node*\ /no_ode.db
+    *in_dir*\ /\ *fit_node*\ /no_ode/dismod.db
 
 This contains the results of fitting without the ODE integrands
 so they can be plotted and converted to csv files.
 It has the :ref:`omega_constraint` so that the residuals for
 the ODE integrands make sense.
-These residuals correspond to the prior means for a fit using
-the  *out_database* (which will incldue the ODE integrands).
+The ODE integrands are not included (are included) for a fit using
+the *no_ode_database* (*out_database*).
 
 out_database
 ************
@@ -86,8 +86,8 @@ The return value *out_database* is equal to
 which can't be the same file name as *in_database*.
 This is an input_node_database similar to *in_database*.
 The difference is that the mean value in the priors for the fixed effects
-have been replace by the optimal estimate for fitting with the integrands
-that do not used the ODE.
+have been replace by the optimal estimate for fitting with out the integrands
+that use the ODE.
 The last operation on this table is a dismod_at init command.
 
 {xsrst_end no_ode_fit}
@@ -251,10 +251,12 @@ def no_ode_fit(
     if 0 <= index :
         in_dir          = in_database[: index]
         out_database    = f'{in_dir}/{fit_node_name}/dismod.db'
-        no_ode_database = f'{in_dir}/{fit_node_name}/no_ode.db'
+        no_ode_database = f'{in_dir}/{fit_node_name}/no_ode/dismod.db'
+        os.makedirs(f'{in_dir}/{fit_node_name}/no_ode')
     else :
         out_database    = f'{fit_node_name}/dismod.db'
-        no_ode_database = f'{fit_node_name}/no_ode.db'
+        no_ode_database = f'{fit_node_name}/no_ode/dismod.db'
+        os.makedirs(f'{fit_node_name}/no_ode')
     #
     msg   = f'in_database and out_database are equal'
     assert not in_database == out_database, msg
@@ -306,13 +308,18 @@ def no_ode_fit(
                 str(max_fit),
             ])
     #
+    # max_num_iter_fixed
+    command  = [ 'dismod_at', no_ode_database ]
+    command += [ 'set', 'option', 'max_num_iter_fixed', '150' ]
+    dismod_at.system_command_prc(command )
+    #
     # fit both
     command = [ 'dismod_at', no_ode_database, 'fit', 'both' ]
     dismod_at.system_command_prc(command, return_stdout = not trace_fit )
     #
     # predict fit_var
     command = [ 'dismod_at', no_ode_database, 'predict', 'fit_var' ]
-    dismod_at.system_command_prc(command, return_stdout = not trace_fit )
+    dismod_at.system_command_prc(command)
     #
     # no_ode_table
     new          = False

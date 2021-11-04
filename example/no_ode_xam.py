@@ -638,11 +638,32 @@ def root_node_db(file_name) :
         mulcov_table,
         option_table
     )
+# ---------------------------------------------------------------------------
+def display_no_ode_fit(fit_node_dir) :
+    #
+    # database
+    database = fit_node_dir + '/no_ode/dismod.db'
+    #
+    # pdf_file
+    pdf_dir  = fit_node_dir + '/no_ode'
+    #
+    # data.pdf
+    integrand_list = [ 'Sincidence', 'mtexcess', 'prevalence' ]
+    pdf_file       = pdf_dir + '/data.pdf'
+    dismod_at.plot_data_fit(database, integrand_list, pdf_file)
+    #
+    # rate.pdf
+    rate_set = [ 'iota', 'chi' ]
+    pdf_file = pdf_dir + '/rate.pdf'
+    dismod_at.plot_rate_fit( database, rate_set, pdf_file)
+    #
+    # db2csv
+    dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
 # ----------------------------------------------------------------------------
 def check_no_ode_fit(fit_node_dir) :
     #
     # no_ode_database
-    no_ode_database = fit_node_dir + '/no_ode.db'
+    no_ode_database = fit_node_dir + '/no_ode/dismod.db'
     #
     # predict
     dismod_at.system_command_prc([
@@ -808,6 +829,9 @@ def main() :
     #
     # check_no_ode_fit
     check_no_ode_fit(fit_node_dir)
+    #
+    # display_no_ode_fit
+    display_no_ode_fit(fit_node_dir)
     #
     # cascade starting at root node
     at_cascade.cascade_fit_node(all_node_database, fit_node_database)

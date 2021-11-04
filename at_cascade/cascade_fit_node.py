@@ -236,7 +236,8 @@ def check_covariate_reference(
                 msg += f'covariate_id = {covariate_id}:\n'
                 msg += f'is {reference} in covariate table and '
                 msg += f'{row_reference} in all_cov_reference table'
-                assert False, msg
+                # 2DO: assert False, msg
+                print('Begin Warning:\n'+ msg + '\nEnd Warning.')
             #
             # check_reference_set
             check_reference_set.add(covariate_id)

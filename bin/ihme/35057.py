@@ -31,15 +31,16 @@ root_node_name      = 'Global'
 #
 # Maximum number of data table entries. This is to speed up softward testing.
 # In the real case set max_data_table = None
-max_data_table      = 20000
+max_data_table      = 40000
 #
 # maximum number of data row per integrand to include in a fit
-max_fit = 250
+max_fit = 500
 #
 # random_seed (if zero, use clock for random seed)
-random_seed = 1234
+random_seed = 0
 # -----------------------------------------------------------------------------
 #
+import time
 import random
 import math
 import csv
@@ -71,8 +72,10 @@ os.chdir(working_directory)
 os.makedirs(root_node_name)
 #
 # random.seed
-if random_seed != 0 :
-    random.seed(random_seed)
+if random_seed == 0 :
+    random_seed = int( time.time() )
+print('random_seed = ', random_seed)
+random.seed(random_seed)
 # ---------------------------------------------------------------------------
 # covariate_dict = get_covariate_dict(file_name)
 def get_covariate_dict(file_name) :
@@ -358,7 +361,11 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     #
     # age_list, grid_age_id
     grid_age_id = list()
-    age_grid    = [ 0.0, 5.0, 10.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
+    age_grid    = [
+        0.0, 5.0, 10.0, 15.0, 20.0,
+        40.0, 60.0,
+        70.0, 80.0, 90.0, 100.0
+    ]
     for age in age_grid :
         if age in age_list :
             grid_age_id.append( age_list.index(age) )
@@ -375,7 +382,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     #
     # time_list, grid_time_id
     grid_time_id = list()
-    time_grid   = [ 1980.0, 2000.0, 2010.0, 2020.0 ]
+    time_grid   = [ 1990.0, 2000.0, 2010.0, 2020.0 ]
     for time in time_grid :
         if time in time_list :
             grid_time_id.append( time_list.index(time) )
@@ -383,6 +390,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             grid_time_id.append( len(time_list) )
             time_list.append( time )
     # max time in csv files
+    time_list.append( 1960.0 )
     time_list.append( 2023.0 )
     #
     # mulcov_table
@@ -426,10 +434,12 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         node_table.append({ 'name':row['node_name'], 'parent':parent_name })
     #
     # covarite_table
+    # 2DO: becasue we are using data4cov_reference,
+    # obesity reference depends on random_seed and max_data_table
     covariate_table = [
         { 'name':'sex',     'reference':0.0, 'max_difference':0.6},
         { 'name':'one',     'reference':0.0 },
-        { 'name':'obesity', 'reference':0.1193 },
+        { 'name':'obesity', 'reference':0.1203},
     ]
     #
     # avgint_table
@@ -562,7 +572,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         { 'name':'random_seed',          'value':str(random_seed)},
         { 'name':'quasi_fixed',          'value':'false' },
         { 'name':'tolerance_fixed',      'value':'1e-3'},
-        { 'name':'max_num_iter_fixed',   'value':'70'},
+        { 'name':'max_num_iter_fixed',   'value':'30'},
         { 'name':'trace_init_fit_model', 'value':'true'},
         { 'name':'data_extra_columns',   'value':'csv_row_id'},
         { 'name':'print_level_fixed',    'value':'5'},
@@ -743,10 +753,10 @@ def main() :
     assert fit_node_database == root_node_name + '/dismod.db'
     #
     # display_results
-    display_results( root_node_name + '/no_ode.db' )
+    display_results( root_node_name + '/no_ode/dismod.db' )
     #
     # cascade starting at root node
-    if False :
+    if True :
         at_cascade.cascade_fit_node(
             all_node_database, fit_node_database, trace_fit = True
         )
