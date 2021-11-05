@@ -34,7 +34,7 @@ root_node_name      = 'Global'
 max_data_table      = 40000
 #
 # maximum number of data row per integrand to include in a fit
-max_fit = 500
+max_fit = 250
 #
 # random_seed (if zero, use clock for random seed)
 random_seed = 0
@@ -441,7 +441,11 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         integrand_set.add( row['integrand'] )
     integrand_table = list()
     for integrand_name in integrand_set :
-        row = { 'name' : integrand_name, 'minimum_meas_cv' : '0.1' }
+        if integrand_name == 'mtexcess' :
+            min_cv  = '1.0'
+        else :
+            min_cv  = '0.1'
+        row = { 'name' : integrand_name, 'minimum_meas_cv' : min_cv }
         integrand_table.append( row )
     for j in range( len(mulcov_table) ) :
         integrand_table.append( { 'name' : f'mulcov_{j}' } )
@@ -504,11 +508,12 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     prior_table = [
         {
             'name'    :    'parent_rate_value',
-            'density' :    'gaussian',
+            'density' :    'log_gaussian',
             'lower'   :    1e-7,
             'upper'   :    1.0,
             'mean'    :    1e-2,
-            'std'     :    1.0
+            'std'     :    1.0,
+            'eta'     :    1e-7,
         },{
             'name'    :    'parent_rate_delta',
             'density' :    'log_gaussian',
@@ -621,9 +626,12 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         { 'name':'trace_init_fit_model', 'value':'true'},
         { 'name':'data_extra_columns',   'value':'csv_row_id'},
         { 'name':'print_level_fixed',    'value':'5'},
-        { 'name':'hold_out_integrand',   'value':'mtexcess'},
         { 'name':'meas_noise_effect',    'value':'add_std_scale_none'},
     ]
+    # Diabetes does not have enough incidence data to estimate
+    # both iota and chi without mtexcess. Alos see he minimum_cv setting
+    # for mtexcess in the integand table.
+    # { 'name':'hold_out_integrand',   'value':'mtexcess'},
     #
     # create_database
     nslist_table   = list()
