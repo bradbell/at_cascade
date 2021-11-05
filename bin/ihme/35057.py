@@ -546,8 +546,14 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     fun = lambda a, t :  \
         ('parent_rate_value', 'parent_rate_delta', 'parent_rate_delta')
     smooth_table.append({
-        'name':     'parent_rate',
+        'name':     'parent_iota',
         'age_id':   grid_age_id,
+        'time_id':  grid_time_id,
+        'fun':      fun
+    })
+    smooth_table.append({
+        'name':     'parent_chi',
+        'age_id':   grid_age_id[2:],
         'time_id':  grid_time_id,
         'fun':      fun
     })
@@ -595,11 +601,11 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'child_smooth':  None,
         },{
             'name':           'iota',
-            'parent_smooth': 'parent_rate',
+            'parent_smooth': 'parent_iota',
             'child_smooth':  'child_smooth',
         },{
             'name':           'chi',
-            'parent_smooth': 'parent_rate',
+            'parent_smooth': 'parent_chi',
             'child_smooth':  'child_smooth',
         }
     ]
