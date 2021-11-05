@@ -425,6 +425,13 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'effected':  'iota',
             'group':     'world',
             'smooth':    'alpha_smooth',
+        },{
+            # gamma_mtspecific
+            'covariate':  'one',
+            'type':       'meas_noise',
+            'effected':   'mtspecific',
+            'group':      'world',
+            'smooth':     'gamma_mtspecific'
         }
     ]
     #
@@ -434,7 +441,8 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         integrand_set.add( row['integrand'] )
     integrand_table = list()
     for integrand_name in integrand_set :
-        integrand_table.append( { 'name' : integrand_name } )
+        row = { 'name' : integrand_name, 'minimum_meas_cv' : '0.1' }
+        integrand_table.append( row )
     for j in range( len(mulcov_table) ) :
         integrand_table.append( { 'name' : f'mulcov_{j}' } )
     #
@@ -522,6 +530,12 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'lower'   :   -1.0,
             'upper'   :   1.0,
             'mean'    :   0.0,
+        },{
+            'name'    :   'gamma_mtspecific',
+            'density' :   'uniform',
+            'lower'   :   1e-7,
+            'upper'   :   1e-7,
+            'mean'    :   1e-7,
         }
     ]
     #
@@ -564,6 +578,15 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         'fun':       fun
     })
     #
+    # gamma_mtspecific
+    fun = lambda a, t : ('gamma_mtspecific', None, None)
+    smooth_table.append({
+        'name':    'gamma_mtspecific',
+        'age_id':   [0],
+        'time_id':  [0],
+        'fun':      fun
+    })
+    #
     # rate_table
     rate_table = [
         {
@@ -593,6 +616,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         { 'name':'data_extra_columns',   'value':'csv_row_id'},
         { 'name':'print_level_fixed',    'value':'5'},
         { 'name':'hold_out_integrand',   'value':'mtexcess'},
+        { 'name':'meas_noise_effect',    'value':'add_std_scale_none'},
     ]
     #
     # create_database
