@@ -454,6 +454,7 @@ def cascade_fit_node(
             node_table        ,
             fit_children      ,
             fit_integrand     ,
+            trace_fit         ,
         )
     #
     # connection

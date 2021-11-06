@@ -30,14 +30,18 @@ node_table_out      = 'node.csv'
 root_node_name      = 'Global'
 #
 # Maximum number of data table entries. This is to speed up softward testing.
-# In the real case set max_data_table = None
+# This number must be a multiple of 1000 or None. If it is None, all
+# of the data is used.
 max_data_table      = 40000
 #
 # maximum number of data row per integrand to include in a fit
-max_fit = 500
+max_fit             = 100
 #
 # random_seed (if zero, use clock for random seed)
 random_seed = 0
+#
+# Name of the node that we are drilling to
+drill_node_name = 'New_York'
 # -----------------------------------------------------------------------------
 #
 import time
@@ -463,7 +467,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     #
     # covarite_table
     # 2DO: becasue we are using data4cov_reference,
-    # obesity reference depends on random_seed and max_data_table
+    # obesity reference will get replaced
     covariate_table = [
         { 'name':'sex',     'reference':0.0, 'max_difference':0.6},
         { 'name':'one',     'reference':0.0 },
@@ -671,24 +675,6 @@ def create_all_node_database(all_node_database, root_node_database) :
     new        = False
     connection = dismod_at.create_connection(all_node_database, new)
     #
-    # fit_goal table
-    # Do a drill to drill_node_name
-    drill_node_name = 'Germany'
-    drill_node_id   = None
-    for (node_id, row) in enumerate( node_table ) :
-        if row['node_name'] == drill_node_name :
-            drill_node_id = node_id
-    assert not drill_node_id is None
-    tbl_name = 'fit_goal'
-    col_name = [ 'node_id' ]
-    col_type = [ 'integer' ]
-    row_list = [
-        [ drill_node_id ]
-    ]
-    command = 'DROP TABLE IF EXISTS '  + tbl_name
-    dismod_at.sql_command(connection, command)
-    dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
-    #
     # mtall_index, mtspecific_index
     # Change sex_id -> split_reference_id and map its values
     # 2 -> 0 (female), 3 -> 1 (both), 1 -> 2 (male)
@@ -774,11 +760,115 @@ def display_results(database) :
     # db2csv
     dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
 # ---------------------------------------------------------------------------
+def replace_relative_covariate_reference(
+        all_node_database, root_node_database
+) :
+    #
+    # all_option_table, all_cov_reference_table
+    new               = False
+    connection        = dismod_at.create_connection(all_node_database, new)
+    all_option_table  = dismod_at.get_table_dict(connection, 'all_option')
+    all_cov_reference_table = dismod_at.get_table_dict(
+        connection, 'all_cov_reference'
+    )
+    connection.close()
+    #
+    # covariate_table, option_table
+    new             = False
+    connection      = dismod_at.create_connection(root_node_database, new)
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    option_table    = dismod_at.get_table_dict(connection, 'option')
+    node_table      = dismod_at.get_table_dict(connection, 'node')
+    connection.close()
+    #
+    # cov_info
+    cov_info = at_cascade.get_cov_info(all_option_table, covariate_table)
+    #
+    # parent_node_id
+    parent_node_name = None
+    for row in option_table :
+        if row['option_name'] == 'parent_node_name' :
+            parent_node_name = row['option_value']
+    assert not parent_node_name is None
+    parent_node_id = at_cascade.table_name2id(
+        node_table, 'node', parent_node_name
+    )
+    # covriate_table
+    for row in all_cov_reference_table :
+        node_id            = row['node_id']
+        covariate_id       = row['covariate_id']
+        split_reference_id = row['split_reference_id']
+        reference          = row['reference']
+        if split_reference_id == cov_info['split_reference_id'] \
+            and node_id == parent_node_id :
+                covariate_table[covariate_id]['reference'] = reference
+    new             = False
+    connection      = dismod_at.create_connection(root_node_database, new)
+    dismod_at.replace_table(connection, 'covariate', covariate_table)
+    connection.close()
+# ---------------------------------------------------------------------------
+def set_all_option_max_fit(all_node_database) :
+    #
+    # connection
+    new               = False
+    connection        = dismod_at.create_connection(all_node_database, new)
+    #
+    # all_option_table
+    all_option_table  = dismod_at.get_table_dict(connection, 'all_option')
+    #
+    found = False
+    for row in all_option_table :
+        if row['option_name'] == 'max_fit' :
+            row['option_value'] = str(max_fit)
+            found = True
+    assert found
+    #
+    dismod_at.replace_table(connection, 'all_option', all_option_table)
+    connection.close()
+# ---------------------------------------------------------------------------
+def set_fit_goal_table(all_node_database, root_node_database) :
+    #
+    # node_table
+    new        = False
+    connection = dismod_at.create_connection(root_node_database, new)
+    node_table = dismod_at.get_table_dict(connection, 'node')
+    connection.close()
+    #
+    # fit_goal table
+    # Do a drill to drill_node_name
+    new        = False
+    connection = dismod_at.create_connection(all_node_database, new)
+    #
+    drill_node_id   = None
+    for (node_id, row) in enumerate( node_table ) :
+        if row['node_name'] == drill_node_name :
+            drill_node_id = node_id
+    assert not drill_node_id is None
+    tbl_name = 'fit_goal'
+    col_name = [ 'node_id' ]
+    col_type = [ 'integer' ]
+    row_list = [
+        [ drill_node_id ]
+    ]
+    command = 'DROP TABLE IF EXISTS '  + tbl_name
+    dismod_at.sql_command(connection, command)
+    dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
+    connection.close()
+# ---------------------------------------------------------------------------
 # main
 # ---------------------------------------------------------------------------
 def main() :
+    #
+    # root_node_database
     root_node_database = 'root_node.db'
-    all_node_database  = 'all_node.db'
+    #
+    # all_node_database
+    if max_data_table is None :
+        all_node_database = 'all_node.db'
+    else :
+        assert max_data_table % 1000 == 0
+        nk = int( max_data_table / 1000 )
+        all_node_database = f'all_node_{nk}K.db'
     #
     # other_age_table, other_time_table
     new        = False
@@ -796,7 +886,20 @@ def main() :
     )
     #
     # create all_node.db
-    create_all_node_database(all_node_database, root_node_database)
+    if not os.path.exists(all_node_database) :
+        print(f'creating {all_node_database}')
+        create_all_node_database(all_node_database, root_node_database)
+    else :
+        print(f'using existing {all_node_database}')
+        replace_relative_covariate_reference(
+            all_node_database, root_node_database
+        )
+    #
+    # set_all_option_max_fit
+    set_all_option_max_fit(all_node_database)
+    #
+    # set_fit_goal_table
+    set_fit_goal_table(all_node_database, root_node_database)
     #
     # no_ode_fit
     fit_node_database = at_cascade.no_ode_fit(
