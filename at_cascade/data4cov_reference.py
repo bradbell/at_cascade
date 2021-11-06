@@ -60,11 +60,11 @@ The :ref:`all_option_table.split_list` and
 :ref:`all_option_table.absolute_covariates` rows of this table
 (if they exist) are the only rows of this table that are used.
 
-trace
-*****
-If *trace* is True (False) a message will (will not) be printed
-at the beginning and end of this process
-(because it can take a while).
+trace_interval
+**************
+If *trace_interval* is ``None`` no tracking is pinted.
+Otherwise, a message will once per *trace_interval* nodes to indicate
+the progress of this processing (because it can take a while).
 
 all_cov_reference Table
 =======================
@@ -101,12 +101,10 @@ def data4cov_reference(
 # at_cascade.data4cov_reference
     all_node_database  = None,
     root_node_database = None,
-    trace              = False,
+    trace_interval     = False,
 # )
 # END syntax
 ) :
-    if trace :
-        print('begin: data4cov_reference')
     #
     # all_option_table
     new              = False
@@ -126,6 +124,11 @@ def data4cov_reference(
     ] :
         root_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
     connection.close()
+    #
+    if not trace_interval is None :
+        assert 0 < trace_interval
+        n_node = len( root_table['node'] )
+        print( 'data2cov_reference: n_node = ', n_node )
     #
     # cov_info
     cov_info = at_cascade.get_cov_info(
@@ -177,6 +180,10 @@ def data4cov_reference(
     # row_list
     row_list = list()
     for avg_node_id in range( len(root_table['node'] ) ) :
+        #
+        if not trace_interval is None :
+            if avg_node_id % trace_interval == 0 :
+                print('node_id = ', avg_node_id)
         #
         # is_decendant
         is_descendant = list()
@@ -276,6 +283,6 @@ def data4cov_reference(
     connection.close()
     # -------------------------------------------------------------------------
     #
-    if trace :
+    if not trace_interval is None :
         print('end: data4cov_reference')
     return

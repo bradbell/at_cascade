@@ -29,13 +29,11 @@ node_table_out      = 'node.csv'
 # root_node_name
 root_node_name      = 'Global'
 #
-# Maximum number of data table entries. This is to speed up softward testing.
-# This number must be a multiple of 1000 or None. If it is None, all
-# of the data is used.
-max_data_table      = 40000
-#
 # maximum number of data row per integrand to include in a fit
-max_fit             = 100
+max_fit             = 500
+#
+# maximum number of data points to plot per integrand
+max_plot            = 40000
 #
 # random_seed (if zero, use clock for random seed)
 random_seed = 0
@@ -248,6 +246,7 @@ def get_value_set(table, column_name) :
     return value_set
 # ---------------------------------------------------------------------------
 def create_csv_files() :
+    print('begin create_csv_files')
     #
     # data_table
     data_table = get_data_table(data_table_csv)
@@ -266,13 +265,6 @@ def create_csv_files() :
     # data_table
     assert set( data_table[0].keys() ) == set( emr_table[0].keys() )
     data_table += emr_table
-    if not max_data_table is None :
-        subsample = random.sample(range(0, len(data_table)), max_data_table)
-        subsample = sorted(subsample)
-        temp_table = data_table
-        data_table = list()
-        for k in range(0, max_data_table) :
-            data_table.append( temp_table[subsample[k]] )
     #
     # location_table
     location_table = get_location_table(location_table_csv)
@@ -342,6 +334,8 @@ def create_csv_files() :
     #
     # create node_table_out
     write_csv(node_table_out, node_table)
+    #
+    print('end create_csv_files')
 # -----------------------------------------------------------------------------
 def get_table_csv(file_name) :
     file_ptr   = open(file_name)
@@ -725,14 +719,14 @@ def create_all_node_database(all_node_database, root_node_database) :
     at_cascade.data4cov_reference(
         root_node_database = root_node_database,
         all_node_database  = all_node_database  ,
-        trace              = True,
+        trace_interval     = 100,
     )
 # ---------------------------------------------------------------------------
-def display_results(database) :
+def display_results(database, plot_title) :
     #
     # pdf_file
-    index    = database.rfind('/')
-    pdf_dir  = database[0:index]
+    index      = database.rfind('/')
+    pdf_dir    = database[0:index]
     #
     # integrand_table, rate_table
     new             = False
@@ -747,7 +741,13 @@ def display_results(database) :
         integrand_name    = integrand_table[integrand_id]['integrand_name']
         integrand_list[i] = integrand_name
     pdf_file = pdf_dir + '/data.pdf'
-    n_point_list = dismod_at.plot_data_fit(database, integrand_list, pdf_file)
+    n_point_list = dismod_at.plot_data_fit(
+        database = database,
+        integrand_list    = integrand_list,
+        pdf_file          = pdf_file,
+        plot_title        = plot_title,
+        max_plot          = max_plot,
+    )
     #
     # rate.pdf
     rate_set = set()
@@ -755,7 +755,9 @@ def display_results(database) :
         if not row['parent_smooth_id'] is None :
             rate_set.add( row['rate_name'] )
     pdf_file = pdf_dir + '/rate.pdf'
-    plot_set = dismod_at.plot_rate_fit( database, rate_set, pdf_file)
+    plot_set = dismod_at.plot_rate_fit(
+        database, rate_set, pdf_file, plot_title
+    )
     #
     # db2csv
     dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
@@ -863,12 +865,7 @@ def main() :
     root_node_database = 'root_node.db'
     #
     # all_node_database
-    if max_data_table is None :
-        all_node_database = 'all_node.db'
-    else :
-        assert max_data_table % 1000 == 0
-        nk = int( max_data_table / 1000 )
-        all_node_database = f'all_node_{nk}K.db'
+    all_node_database = 'all_node.db'
     #
     # other_age_table, other_time_table
     new        = False
@@ -911,7 +908,9 @@ def main() :
     assert fit_node_database == root_node_name + '/dismod.db'
     #
     # display_results
-    display_results( root_node_name + '/no_ode/dismod.db' )
+    database =  root_node_name + '/no_ode/dismod.db'
+    plot_title = root_node_name + '/no_ode'
+    display_results(database, plot_title)
     #
     # cascade starting at root node
     if True :
