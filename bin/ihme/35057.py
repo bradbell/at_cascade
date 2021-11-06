@@ -34,7 +34,7 @@ root_node_name      = 'Global'
 max_data_table      = 40000
 #
 # maximum number of data row per integrand to include in a fit
-max_fit = 250
+max_fit = 500
 #
 # random_seed (if zero, use clock for random seed)
 random_seed = 0
@@ -558,7 +558,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     })
     smooth_table.append({
         'name':     'parent_chi',
-        'age_id':   grid_age_id[2:],
+        'age_id':   grid_age_id,
         'time_id':  grid_time_id,
         'fun':      fun
     })
@@ -673,7 +673,7 @@ def create_all_node_database(all_node_database, root_node_database) :
     #
     # fit_goal table
     # Do a drill to drill_node_name
-    drill_node_name = 'Global'
+    drill_node_name = 'Germany'
     drill_node_id   = None
     for (node_id, row) in enumerate( node_table ) :
         if row['node_name'] == drill_node_name :
