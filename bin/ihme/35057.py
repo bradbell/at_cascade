@@ -30,7 +30,7 @@ node_table_out      = 'node.csv'
 root_node_name      = 'Global'
 #
 # maximum number of data row per integrand to include in a fit
-max_fit             = 500
+max_fit             = 250
 #
 # maximum absolute effect for covriate multipliers
 max_abs_effect      = 2.0
@@ -276,6 +276,9 @@ def create_csv_files() :
     obesity_dict    = get_covariate_dict(obesity_table_csv)
     ldi_dict        = get_covariate_dict(ldi_table_csv)
     #
+    # ldi has only sex == Both
+    assert ldi_dict.keys() == 'Both'
+    #
     # location_id2node_id
     location_id2node_id = dict()
     for (node_id, row) in enumerate(location_table) :
@@ -288,8 +291,9 @@ def create_csv_files() :
         location_id     = row['location_id']
         time            = (row['time_lower'] + row['time_upper']) / 2.0
         row['obesity']  = get_covariate(obesity_dict, sex, location_id, time)
+        row['ldi']      = get_covariate(obesity_dict, 'Both', location_id, time)
     #
-    # change location_id to data_name and add node_id
+    # change location_id to node_id
     for row in data_table :
         location_id      = row['location_id']
         node_id          = location_id2node_id[location_id]
@@ -532,10 +536,11 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'std'     :   1.0,
         },{
             'name'    :   'alpha_value',
-            'density' :   'uniform',
+            'density' :   'gaussian',
             'lower'   :   None,
             'upper'   :   None,
             'mean'    :   0.0,
+            'std'     :   10.0,
         },{
             'name'    :   'gamma_mtspecific',
             'density' :   'uniform',
@@ -711,15 +716,9 @@ def display_results(database, plot_title) :
     rate_table      = dismod_at.get_table_dict(connection, 'rate')
     #
     # data.pdf
-    integrand_list = list( at_cascade.get_fit_integrand(database) )
-    for i in range( len(integrand_list) ) :
-        integrand_id      = integrand_list[i]
-        integrand_name    = integrand_table[integrand_id]['integrand_name']
-        integrand_list[i] = integrand_name
     pdf_file = pdf_dir + '/data.pdf'
     n_point_list = dismod_at.plot_data_fit(
         database = database,
-        integrand_list    = integrand_list,
         pdf_file          = pdf_file,
         plot_title        = plot_title,
         max_plot          = max_plot,

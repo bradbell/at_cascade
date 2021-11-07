@@ -83,7 +83,9 @@ is a python dictionary and if *child_name* is a key for *child_node_databases*,
     the value priors are effectively the same.
     Otherwise the mean and standard deviation in the values priors
     are replaced using the predict, in the *parent_node_database*,
-    for the child node.
+    for the child node. Note that if the value prior is uniform,
+    the standard devaition is not used and the mean is only used to
+    initialize the optimization.
 -   The avgint table is a copy of the c_avgint table in the
     *parent_node_database* with the node_id replaced by the corresponding
     child node id.
