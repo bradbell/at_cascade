@@ -149,8 +149,14 @@ def add_child_grid_row(
         #
         # child_const_value
         # child_value_prior_id
-        if parent_prior_row['lower'] == parent_prior_row['upper'] :
-            child_const_value = parent_prior_row['lower']
+        lower = parent_prior_row['lower']
+        upper = parent_prior_row['upper']
+        if lower is None :
+            lower = - math.inf
+        if upper is None :
+            upper = + math.inf
+        if lower == upper :
+            child_const_value = lower
             assert child_value_prior_id is None
         else :
             assert child_const_value is None

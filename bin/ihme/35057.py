@@ -32,6 +32,9 @@ root_node_name      = 'Global'
 # maximum number of data row per integrand to include in a fit
 max_fit             = 500
 #
+# maximum absolute effect for covriate multipliers
+max_abs_effect      = 2.0
+#
 # maximum number of data points to plot per integrand
 max_plot            = 40000
 #
@@ -530,8 +533,8 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         },{
             'name'    :   'alpha_value',
             'density' :   'uniform',
-            'lower'   :   -1.0,
-            'upper'   :   1.0,
+            'lower'   :   None,
+            'upper'   :   None,
             'mean'    :   0.0,
         },{
             'name'    :   'gamma_mtspecific',
@@ -685,33 +688,6 @@ def create_all_node_database(all_node_database, root_node_database) :
             row['split_reference_id'] = split_reference_id
         dismod_at.replace_table( connection, tbl_name, this_table)
     #
-    # all_option_table
-    all_option_table  = dismod_at.get_table_dict(connection, 'all_option')
-    all_option_id     = None
-    for (row_id, row) in enumerate( all_option_table ) :
-        # in_parallel
-        if row['option_name'] == 'in_parallel' :
-            row['option_value'] = 'false'
-        # max_fit
-        if row['option_name'] == 'max_fit' :
-            row['option_value'] = str(max_fit)
-        # max_abs_effect
-        if row['option_name'] == 'max_abs_effect' :
-            all_option_id = row_id
-        # split_list
-        if row['option_name'] == 'split_list' :
-            row['option_value'] = '-1 sex -0.5 0.0 +0.5'
-        # split_list
-        if row['option_name'] == 'split_list' :
-            row['option_value'] = '-1 sex -0.5 0.0 +0.5'
-    # max_abs_effect
-    if not all_option_id is None :
-        del all_option_table[all_option_id]
-    # absolute_covariates
-    row = { 'option_name':'absolute_covariates', 'option_value':'one' }
-    all_option_table.append(row)
-    dismod_at.replace_table(connection, 'all_option', all_option_table)
-    #
     # connection
     connection.close()
     #
@@ -809,22 +785,20 @@ def replace_relative_covariate_reference(
     dismod_at.replace_table(connection, 'covariate', covariate_table)
     connection.close()
 # ---------------------------------------------------------------------------
-def set_all_option_max_fit(all_node_database) :
-    #
-    # connection
-    new               = False
-    connection        = dismod_at.create_connection(all_node_database, new)
+def set_all_option_table(all_node_database) :
     #
     # all_option_table
-    all_option_table  = dismod_at.get_table_dict(connection, 'all_option')
-    #
-    found = False
-    for row in all_option_table :
-        if row['option_name'] == 'max_fit' :
-            row['option_value'] = str(max_fit)
-            found = True
-    assert found
-    #
+    split_list = '-1 sex -0.5 0.0 +0.5'
+    all_option_table  = [
+    {'option_name': 'root_node_name',     'option_value':root_node_name},
+    {'option_name': 'in_parallel',         'option_value':'false'},
+    {'option_name': 'max_fit',             'option_value':str(max_fit)},
+    {'option_name': 'absolute_covariates', 'option_value':'one'},
+    {'option_name': 'split_list',          'option_value':split_list},
+    {'option_name': 'max_abs_effect',      'option_value':str(max_abs_effect)},
+    ]
+    new               = False
+    connection        = dismod_at.create_connection(all_node_database, new)
     dismod_at.replace_table(connection, 'all_option', all_option_table)
     connection.close()
 # ---------------------------------------------------------------------------
@@ -892,8 +866,8 @@ def main() :
             all_node_database, root_node_database
         )
     #
-    # set_all_option_max_fit
-    set_all_option_max_fit(all_node_database)
+    # set_all_option_table
+    set_all_option_table(all_node_database)
     #
     # set_fit_goal_table
     set_fit_goal_table(all_node_database, root_node_database)

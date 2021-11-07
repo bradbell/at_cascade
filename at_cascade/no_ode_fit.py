@@ -92,6 +92,7 @@ The last operation on this table is a dismod_at init command.
 
 {xsrst_end no_ode_fit}
 '''
+import math
 import sys
 import os
 import shutil
@@ -137,8 +138,14 @@ def add_out_grid_row(
         #
         # out_const_value
         # out_value_prior_id
-        if in_prior_row['lower'] == in_prior_row['upper'] :
-            out_const_value = in_prior_row['lower']
+        lower = in_prior_row['lower']
+        upper = in_prior_row['upper']
+        if lower is None :
+            lower = - math.inf
+        if upper is None :
+            upper = + math.inf
+        if lower == upper :
+            out_const_value = lower
             assert out_value_prior_id is None
         else :
             assert out_const_value is None
