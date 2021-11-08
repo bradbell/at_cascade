@@ -277,7 +277,7 @@ def create_csv_files() :
     ldi_dict        = get_covariate_dict(ldi_table_csv)
     #
     # ldi has only sex == Both
-    assert ldi_dict.keys() == 'Both'
+    assert list( ldi_dict.keys() )  == [ 'Both' ]
     #
     # location_id2node_id
     location_id2node_id = dict()
@@ -370,8 +370,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     grid_age_id = list()
     age_grid    = [
         0.0, 5.0, 10.0, 15.0, 20.0,
-        40.0, 60.0,
-        70.0, 80.0, 90.0, 100.0
+        30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0
     ]
     for age in age_grid :
         if age in age_list :
@@ -431,6 +430,13 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'group':     'world',
             'smooth':    'alpha_smooth',
         },{
+            # alpha_chi_ldi
+            'covariate': 'ldi',
+            'type':      'rate_value',
+            'effected':  'chi',
+            'group':     'world',
+            'smooth':    'alpha_smooth',
+        },{
             # gamma_mtspecific
             'covariate':  'one',
             'type':       'meas_noise',
@@ -467,12 +473,13 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         node_table.append({ 'name':row['node_name'], 'parent':parent_name })
     #
     # covarite_table
-    # 2DO: becasue we are using data4cov_reference,
-    # obesity reference will get replaced
+    # Becasue we are using data4cov_reference, the reference for
+    # obesity and ldi will get replaced (because they are relative covariates).
     covariate_table = [
         { 'name':'sex',     'reference':0.0, 'max_difference':0.6},
         { 'name':'one',     'reference':0.0 },
-        { 'name':'obesity', 'reference':0.1203},
+        { 'name':'obesity', 'reference':0.0},
+        { 'name':'ldi',     'reference':0.0},
     ]
     #
     # avgint_table
@@ -489,6 +496,10 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             obesity = None
         else :
             obesity = float( row_in['obesity'] )
+        if row_in['ldi'] == '' :
+            ldi = None
+        else :
+            ldi = float( row_in['ldi'] )
         row_out  = {
             'integrand'       : row_in['integrand'],
             'node'            : node_name,
@@ -501,6 +512,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'sex'             : sex,
             'one'             : 1.0,
             'obesity'         : obesity,
+            'ldi'             : ldi,
             'hold_out'        : int( row_in['hold_out'] ),
             'density'         : 'gaussian',
             'meas_value'      : float( row_in['meas_value'] ),
@@ -695,6 +707,9 @@ def create_all_node_database(all_node_database, root_node_database) :
     #
     # connection
     connection.close()
+    #
+    # all_option_table (needed by data4cov_reference)
+    set_all_option_table(all_node_database)
     #
     # all_cov_reference table
     at_cascade.data4cov_reference(
