@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/no_ode_fit.py
-    :lines: 202-208
+    :lines: 209-215
     :language: py
 
 .. meta::
@@ -130,14 +130,14 @@ no_ode_database
 ***************
 An intermediate database is stored in the file
 
-    *in_dir*\ /\ *fit_node*\ /no_ode.db
+    *in_dir*\ /\ *fit_node*\ /no_ode/dismod.db
 
 This contains the results of fitting without the ODE integrands
 so they can be plotted and converted to csv files.
 It has the :ref:`omega_constraint` so that the residuals for
 the ODE integrands make sense.
-These residuals correspond to the prior means for a fit using
-the  *out_database* (which will incldue the ODE integrands).
+The ODE integrands are not included (are included) for a fit using
+the *no_ode_database* (*out_database*).
 
 .. meta::
    :keywords: out_database
@@ -155,8 +155,8 @@ The return value *out_database* is equal to
 which can't be the same file name as *in_database*.
 This is an input_node_database similar to *in_database*.
 The difference is that the mean value in the priors for the fixed effects
-have been replace by the optimal estimate for fitting with the integrands
-that do not used the ODE.
+have been replace by the optimal estimate for fitting with out the integrands
+that use the ODE.
 The last operation on this table is a dismod_at init command.
 
 ----

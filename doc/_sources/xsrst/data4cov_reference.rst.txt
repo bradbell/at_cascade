@@ -29,7 +29,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/data4cov_reference.py
-    :lines: 92-96
+    :lines: 101-105
     :language: py
 
 .. meta::
@@ -43,9 +43,9 @@ root_node_database
 *******************
 This argument can't be ``None`` and
 is the :ref:`glossary.root_node_database`.
-This database is not modified and
-only following tables are used:
-option, data, node, covariate.
+Only the following tables in this database are used:
+option, data, node, covariate and only the covariate
+table is modified.
 
 .. meta::
    :keywords: option, table
@@ -71,6 +71,22 @@ data Table
 Only the following columns of this table are used:
 data_id, node_id, x_0, ... x_n,
 where n is the number of covariates minus one.
+
+.. meta::
+   :keywords: covariate, table
+
+.. index:: covariate, table
+
+.. _data4cov_reference.root_node_database.covariate_table:
+
+covariate Table
+===============
+The covariate reference value for the
+:ref:`relative covariates <glossary.relative_covariate>` is changed
+to agree with the new value in the all_cov_reference table
+(described below) for the :ref:`all_cov_reference_table.node_id`
+and :ref:`all_cov_reference_table.split_reference_id` corresponding
+to the *root_node_database*.
 
 .. meta::
    :keywords: all_node_database
@@ -99,24 +115,24 @@ The :ref:`all_option_table.split_list` and
 (if they exist) are the only rows of this table that are used.
 
 .. meta::
-   :keywords: trace
+   :keywords: trace_interval
 
-.. index:: trace
+.. index:: trace_interval
 
-.. _data4cov_reference.trace:
+.. _data4cov_reference.trace_interval:
 
-trace
-*****
-If *trace* is True (False) a message will (will not) be printed
-at the beginning and end of this process
-(because it can take a while).
+trace_interval
+**************
+If *trace_interval* is ``None`` no tracking is pinted.
+Otherwise, a message will once per *trace_interval* nodes to indicate
+the progress of this processing (because it can take a while).
 
 .. meta::
    :keywords: all_cov_reference, table
 
 .. index:: all_cov_reference, table
 
-.. _data4cov_reference.trace.all_cov_reference_table:
+.. _data4cov_reference.trace_interval.all_cov_reference_table:
 
 all_cov_reference Table
 =======================

@@ -281,7 +281,9 @@ a <a class="reference internal" href="glossary.html#glossary-input-node-database
 the value priors are effectively the same.
 Otherwise the mean and standard deviation in the values priors
 are replaced using the predict, in the <em>parent_node_database</em>,
-for the child node.</p></li>
+for the child node. Note that if the value prior is uniform,
+the standard devaition is not used and the mean is only used to
+initialize the optimization.</p></li>
 <li><p>The avgint table is a copy of the c_avgint table in the
 <em>parent_node_database</em> with the node_id replaced by the corresponding
 child node id.</p></li>
