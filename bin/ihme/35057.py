@@ -36,7 +36,7 @@ max_fit             = 250
 max_abs_effect      = 2.0
 #
 # maximum number of data points to plot per integrand
-max_plot            = 40000
+max_plot            = 10000
 #
 # random_seed (if zero, use clock for random seed)
 random_seed = 0
@@ -386,7 +386,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     #
     # time_list, grid_time_id
     grid_time_id = list()
-    time_grid   = [ 1990, 1995, 2000, 2005,  2010, 2015, 2020 ]
+    time_grid   = [ 1980, 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
     for time in time_grid :
         if time in time_list :
             grid_time_id.append( time_list.index(time) )
@@ -537,7 +537,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'lower'   :    None,
             'upper'   :    None,
             'mean'    :    0.0,
-            'std'     :    0.1,
+            'std'     :    0.05,
             'eta'     :    1e-7,
         },{
             'name'    :   'child_rate_value',
@@ -559,6 +559,12 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'lower'   :   1e-7,
             'upper'   :   1e-7,
             'mean'    :   1e-7,
+        },{ # This prior currently not used
+            'name'    :   'no_info_prior',
+            'density' :   'uniform',
+            'lower'   :   None,
+            'upper'   :   None,
+            'mean'    :   0.0,
         }
     ]
     #
@@ -645,6 +651,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         { 'name':'data_extra_columns',   'value':'csv_row_id'},
         { 'name':'print_level_fixed',    'value':'5'},
         { 'name':'meas_noise_effect',    'value':'add_std_scale_none'},
+        { 'name':'age_avg_split',        'value':'0.1 1.0'},
     ]
     # Diabetes does not have enough incidence data to estimate
     # both iota and chi without mtexcess. Alos see he minimum_cv setting
