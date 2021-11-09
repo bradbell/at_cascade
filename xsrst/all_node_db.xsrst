@@ -346,9 +346,9 @@ If this option does not appear, all of the data for each integrand is included
 
 max_abs_effect
 **************
-If this option does appears, its specifies an extra bound on the
-absolute value of the covariate multipliers (except for measurement noise
-multipliers).
+If this option appears, it specifies an extra bound on the
+absolute value of the covariate multipliers,
+except for measurement noise multipliers.
 To be specific, the bound on the covariate multiplier is as large as possible
 under the condition
 
@@ -357,6 +357,8 @@ under the condition
 where *cov_bnd* is the non-negative covariate multiplier bound,
 *cov_value* is a data table value of the covariate,
 and *cov_ref* is the reference value for the covariate.
+It is an extra bound becasue it is in addition to the priors for a
+covariate multiplier.
 
 absolute_covariates
 *******************

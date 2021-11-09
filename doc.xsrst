@@ -27,7 +27,6 @@ Children
 ********
 {xsrst_child_table
     xsrst/glossary.xsrst
-    xsrst/plan.xsrst
     xsrst/all_node_db.xsrst
     example/example.xsrst
     at_cascade/__init__.py

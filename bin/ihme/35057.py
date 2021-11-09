@@ -386,7 +386,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     #
     # time_list, grid_time_id
     grid_time_id = list()
-    time_grid   = [ 1980, 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
+    time_grid   = [ 1960, 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
     for time in time_grid :
         if time in time_list :
             grid_time_id.append( time_list.index(time) )

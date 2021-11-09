@@ -62,7 +62,7 @@ The :ref:`all_option_table.split_list` and
 
 trace_interval
 **************
-If *trace_interval* is ``None`` no tracking is pinted.
+If *trace_interval* is ``None`` no tracking is printed.
 Otherwise, a message will once per *trace_interval* nodes to indicate
 the progress of this processing (because it can take a while).
 
