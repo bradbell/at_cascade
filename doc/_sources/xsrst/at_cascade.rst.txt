@@ -9,7 +9,6 @@ at_cascade
    :hidden:
 
    glossary
-   plan
    all_node_db
    example
    module
@@ -38,13 +37,13 @@ Under Construction
 This package is under construction and not yet usable.
 
 .. meta::
-   :keywords: version, 2021.11.7
+   :keywords: version, 2021.11.9
 
-.. index:: version, 2021.11.7
+.. index:: version, 2021.11.9
 
-.. _at_cascade.version_2021_11_7:
+.. _at_cascade.version_2021_11_9:
 
-Version 2021.11.7
+Version 2021.11.9
 ******************
 
 .. meta::
@@ -72,7 +71,6 @@ Children
     :widths: 20, 80
 
     "glossary", :ref:`glossary`
-    "plan", :ref:`plan`
     "all_node_db", :ref:`all_node_db`
     "example", :ref:`example`
     "module", :ref:`module`
