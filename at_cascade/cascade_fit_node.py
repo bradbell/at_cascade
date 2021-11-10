@@ -100,7 +100,6 @@ if ``True``, ( ``False`` ) the progress of the dismod at fit commands
 will be printed on standard output during the optimization.
 
 
-
 Output dismod.db
 ****************
 The results for this fit are in the
