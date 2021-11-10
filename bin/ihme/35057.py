@@ -36,7 +36,7 @@ max_fit             = 250
 max_abs_effect      = 2.0
 #
 # maximum number of data points to plot per integrand
-max_plot            = 10000
+max_plot            = 2000
 #
 # random_seed (if zero, use clock for random seed)
 random_seed = 0
