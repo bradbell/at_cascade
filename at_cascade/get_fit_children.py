@@ -25,10 +25,10 @@ root_node_id
 This is the node_id in the node_table for the
 :ref:`glossary.root_node`.
 
-fit_goal_table
-**************
-This is python list of python dictionaries containing the
-:ref:`fit_goal_table` .
+fit_goal_set
+************
+This is a ``set`` with ``int`` elements
+containing the node_id for each element of the :ref:`glossary.fit_goal_set` .
 
 node_table
 **********
@@ -37,10 +37,10 @@ containing the dismod_at node table.
 
 fit_children
 ************
-The return value *fit_children* is a python list of python lists.
+The return value *fit_children* is a python list of python sets.
 For each *node_id* in the node table,
-*fit_children[node_id]* is a list of child_node_id.
-A child_node_id is in this list if and only if
+*fit_children[node_id]* is a the set of child_node_id.
+A child_node_id is in this set if and only if
 it is a child of *node_id* and is in the :ref:`glossary.fit_node_set`.
 These are the children of node_id that must be fit to obtain
 a fit for the :ref:`glossary.fit_goal_set`.
@@ -53,46 +53,45 @@ import sys
 def get_fit_children(
 # BEGIN syntax
 # fit_children = at_cascade.get_fit_children(
-    root_node_id    = None ,
-    fit_goal_table  = None ,
-    node_table      = None ,
+    root_node_id  = None ,
+    fit_goal_set  = None ,
+    node_table    = None ,
 # )
 # END syntax
 ) :
+    assert type( root_node_id ) == int
+    assert type( fit_goal_set ) == set
+    assert type( node_table ) == list
+    #
     # number of nodes
     n_node       = len( node_table )
     #
-    # intialize return value
+    # fit_chiledren
     fit_children = list()
     for i in range(n_node) :
-        fit_children.append( list() )
+        fit_children.append( set() )
     #
-    # initialize which nodes need to be fit as a child
-    done_fit_as_child = n_node * [False]
-    #
-    # root_node_id does not need to be fit as a child
-    done_fit_as_child[root_node_id] = True
-    #
-    # row
-    for row in fit_goal_table :
-        # goal node_id, parent_id
-        goal_node_id   = row['node_id']
-        node_id        = goal_node_id
-        parent_id      = node_table[node_id]['parent']
-        while not done_fit_as_child[node_id] :
+    # goal_node_id
+    for goal_node_id in fit_goal_set :
+        #
+        # node_id, parent_id
+        node_id    = goal_node_id
+        parent_id  = node_table[node_id]['parent']
+        #
+        while node_id != root_node_id :
+            #
             if parent_id == None :
-                node_id   = row['node_id']
                 goal_name = node_table[goal_node_id]['node_name']
                 msg       = 'get_fit_children: goal node = ' + goal_name
                 msg      += '\nis not a descendant of the root node = '
                 msg      += node_table[root_node_id]['node_name']
                 sys.exit(msg)
+            #
             # fit_children
-            fit_children[parent_id].append(node_id)
-            done_fit_as_child[node_id] = True
+            fit_children[parent_id].add(node_id)
             #
             # next node_id, parent_id
             node_id   = parent_id
             parent_id = node_table[node_id]['parent']
-
+    #
     return fit_children

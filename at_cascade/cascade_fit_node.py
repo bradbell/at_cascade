@@ -310,16 +310,24 @@ def cascade_fit_node(
             msg += 'not yet implemented'
             assert False, msg
     #
-    # fit_children
     if fit_children is None :
+        #
+        # fit_goal_set
         fit_goal_table   = dismod_at.get_table_dict(connection, 'fit_goal')
+        fit_goal_set     = set()
+        for row in fit_goal_table :
+            fit_goal_set.add( row['node_id'] )
+        #
+        # root_node_id
         root_node_name   = all_option['root_node_name']
         assert not root_node_name is None
         root_node_id = at_cascade.table_name2id(
             node_table, 'node', root_node_name
         )
+        #
+        # fit_children
         fit_children = at_cascade.get_fit_children(
-            root_node_id, fit_goal_table, node_table
+            root_node_id, fit_goal_set, node_table
         )
     #
     # connection
