@@ -101,7 +101,7 @@ def data4cov_reference(
 # at_cascade.data4cov_reference
     all_node_database  = None,
     root_node_database = None,
-    trace_interval     = False,
+    trace_interval     = None,
 # )
 # END syntax
 ) :

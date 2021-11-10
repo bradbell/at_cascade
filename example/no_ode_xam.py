@@ -650,12 +650,17 @@ def display_no_ode_fit(fit_node_dir) :
     # data.pdf
     integrand_list = [ 'Sincidence', 'mtexcess', 'prevalence' ]
     pdf_file       = pdf_dir + '/data.pdf'
-    dismod_at.plot_data_fit(database, integrand_list, pdf_file)
+    dismod_at.plot_data_fit(
+        database       = database        ,
+        pdf_file       = pdf_file        ,
+        integrand_list = integrand_list  ,
+    )
     #
     # rate.pdf
     rate_set = [ 'iota', 'chi' ]
     pdf_file = pdf_dir + '/rate.pdf'
-    dismod_at.plot_rate_fit( database, rate_set, pdf_file)
+    plot_title = 'rate'
+    dismod_at.plot_rate_fit(database, rate_set, pdf_file, plot_title)
     #
     # db2csv
     dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
@@ -834,7 +839,11 @@ def main() :
     display_no_ode_fit(fit_node_dir)
     #
     # cascade starting at root node
-    at_cascade.cascade_fit_node(all_node_database, fit_node_database)
+    at_cascade.cascade_fit_node(
+        all_node_database = all_node_database ,
+        fit_node_database = fit_node_database ,
+        fit_goal_set      = fit_goal_set      ,
+    )
     #
     # check results
     for goal_dir in [ 'n0/n1', 'n0/n2' ] :

@@ -27,8 +27,9 @@ This is the node_id in the node_table for the
 
 fit_goal_set
 ************
-This is a ``set`` with ``int`` elements
-containing the node_id for each element of the :ref:`glossary.fit_goal_set` .
+This is a ``set`` with elements of type ``int`` (``str``)
+specifying the node_id (node_name) for each element of the
+:ref:`glossary.fit_goal_set` .
 
 node_table
 **********
@@ -49,6 +50,7 @@ a fit for the :ref:`glossary.fit_goal_set`.
 '''
 # ----------------------------------------------------------------------------
 import sys
+import at_cascade
 # ----------------------------------------------------------------------------
 def get_fit_children(
 # BEGIN syntax
@@ -72,7 +74,12 @@ def get_fit_children(
         fit_children.append( set() )
     #
     # goal_node_id
-    for goal_node_id in fit_goal_set :
+    for node in fit_goal_set :
+        if type(node) == str :
+            goal_node_id = at_cascade.table_name2id(node_table, 'node', node)
+        else :
+            assert type(node) == int
+            goal_node_id = node
         #
         # node_id, parent_id
         node_id    = goal_node_id

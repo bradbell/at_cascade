@@ -585,7 +585,11 @@ def main() :
     shutil.copyfile(root_node_database, fit_node_database)
     #
     # cascade starting at root node
-    at_cascade.cascade_fit_node(all_node_database, fit_node_database)
+    at_cascade.cascade_fit_node(
+        all_node_database = all_node_database ,
+        fit_node_database = fit_node_database ,
+        fit_goal_set      = fit_goal_set      ,
+    )
     #
     # check results
     for goal_dir in [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2' ] :

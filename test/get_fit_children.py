@@ -40,24 +40,20 @@ def main() :
     ]
     #
     # fit_goal_table
-    fit_goal_table = [
-        { 'node_id' : 3},
-        { 'node_id' : 4},
-        { 'node_id' : 2},
-    ]
+    fit_goal_set = {3, 4, 2}
     #
     # root_node_id
     root_node_id = 0
     #
     # fit_children
     fit_children = at_cascade.get_fit_children(
-        root_node_id, fit_goal_table, node_table,
+        root_node_id, fit_goal_set, node_table,
     )
     #
     # expected result
-    expected = 7 * [list()]
-    expected[0] = [1, 2] # fit children of n0
-    expected[1] = [3, 4] # fit children of n1
+    expected = 7 * [set()]
+    expected[0] = {1, 2} # fit children of n0
+    expected[1] = {3, 4} # fit children of n1
     #
     assert fit_children == expected
 main()

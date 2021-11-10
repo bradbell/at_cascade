@@ -53,6 +53,12 @@ fit_node_dir
 ============
 is the directory where the *fit_node_database* is located.
 
+fit_goal_set
+************
+This is a ``set`` with elements of type ``int`` (``str``)
+specifying the node_id (node_name) for each element of the
+:ref:`glossary.fit_goal_set` .
+
 node_table
 **********
 This is a python list where
@@ -73,7 +79,7 @@ fit_children
 is the python list of python lists.
 For each valid *node_id*, *fit_children[node_id]* is the list of
 children of *node* that must be fit in order to fit the
-:ref`glossary.goal_node_set`;
+:ref`glossary.fit_goal_set`;
 see :ref:`get_fit_children.fit_children` .
 
 default
@@ -259,6 +265,7 @@ def cascade_fit_node(
 # at_cascade.cascade_fit_node(
     all_node_database = None,
     fit_node_database = None,
+    fit_goal_set      = None,
     node_table        = None,
     fit_children      = None,
     fit_integrand     = None,
@@ -266,6 +273,9 @@ def cascade_fit_node(
 # )
 # END syntax
 ) :
+    assert not all_node_database is None
+    assert not fit_node_database is None
+    assert not fit_goal_set is None
     #
     # node_table
     if node_table is None :
@@ -311,12 +321,6 @@ def cascade_fit_node(
             assert False, msg
     #
     if fit_children is None :
-        #
-        # fit_goal_set
-        fit_goal_table   = dismod_at.get_table_dict(connection, 'fit_goal')
-        fit_goal_set     = set()
-        for row in fit_goal_table :
-            fit_goal_set.add( row['node_id'] )
         #
         # root_node_id
         root_node_name   = all_option['root_node_name']
@@ -458,6 +462,7 @@ def cascade_fit_node(
         cascade_fit_node(
             all_node_database ,
             fit_node_database ,
+            fit_goal_set      ,
             node_table        ,
             fit_children      ,
             fit_integrand     ,
