@@ -166,7 +166,7 @@ def get_emr_table(file_name, age_group_dict) :
         row_out['hold_out']     = 0
         row_out['meas_std']     = meas_std
         row_out['obesity']      = None
-        row_out['ldi']          = None
+        row_out['ldiK']         = None
         #
         if row_in['measure'] == 'incidence' :
             row_out['integrand']    = 'Sincidence'
@@ -195,7 +195,7 @@ def get_data_table(file_name) :
         row_out['meas_value']   = float( row_in['mean'] )
         row_out['hold_out']     = int( row_in['is_outlier'] )
         row_out['obesity']      = None
-        row_out['ldi']          = None
+        row_out['ldiK']         = None
         #
         meas_std                = float( row_in['standard_error'] )
         if meas_std <= 0.0 :
@@ -291,7 +291,11 @@ def create_csv_files() :
         location_id     = row['location_id']
         time            = (row['time_lower'] + row['time_upper']) / 2.0
         row['obesity']  = get_covariate(obesity_dict, sex, location_id, time)
-        row['ldi']      = get_covariate(obesity_dict, 'Both', location_id, time)
+        ldi             = get_covariate(ldi_dict, 'Both', location_id, time)
+        if ldi is None :
+            row['ldiK'] = None
+        else :
+            row['ldiK']  = ldi / 1000.0
     #
     # change location_id to node_id
     for row in data_table :
@@ -386,7 +390,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     #
     # time_list, grid_time_id
     grid_time_id = list()
-    time_grid   = [ 1960, 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
+    time_grid   = [ 1960, 1975, 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
     for time in time_grid :
         if time in time_list :
             grid_time_id.append( time_list.index(time) )
@@ -430,8 +434,8 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'group':     'world',
             'smooth':    'alpha_smooth',
         },{
-            # alpha_chi_ldi
-            'covariate': 'ldi',
+            # alpha_chi_ldiK
+            'covariate': 'ldiK',
             'type':      'rate_value',
             'effected':  'chi',
             'group':     'world',
@@ -474,12 +478,12 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     #
     # covarite_table
     # Becasue we are using data4cov_reference, the reference for
-    # obesity and ldi will get replaced (because they are relative covariates).
+    # obesity and ldiK will get replaced (because they are relative covariates).
     covariate_table = [
         { 'name':'sex',     'reference':0.0, 'max_difference':0.6},
         { 'name':'one',     'reference':0.0 },
         { 'name':'obesity', 'reference':0.0},
-        { 'name':'ldi',     'reference':0.0},
+        { 'name':'ldiK',     'reference':0.0},
     ]
     #
     # avgint_table
@@ -496,10 +500,10 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             obesity = None
         else :
             obesity = float( row_in['obesity'] )
-        if row_in['ldi'] == '' :
-            ldi = None
+        if row_in['ldiK'] == '' :
+            ldiK = None
         else :
-            ldi = float( row_in['ldi'] )
+            ldiK = float( row_in['ldiK'] )
         row_out  = {
             'integrand'       : row_in['integrand'],
             'node'            : node_name,
@@ -512,7 +516,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'sex'             : sex,
             'one'             : 1.0,
             'obesity'         : obesity,
-            'ldi'             : ldi,
+            'ldiK'            : ldiK,
             'hold_out'        : int( row_in['hold_out'] ),
             'density'         : 'gaussian',
             'meas_value'      : float( row_in['meas_value'] ),

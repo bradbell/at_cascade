@@ -105,9 +105,12 @@ Output dismod.db
 ****************
 The results for this fit are in the
 *fit_node_dir*\ ``/dismod.db`` dismod_at database.
-The corresponding *fit_node_dir/\*.csv* , create by the
-dismod_at db2csv command, are also the *fit_node_dir* directory.
-Furthermore there is a sub-directory, for each child node of *fit_node_name*,
+The *.csv* files in *fit_node_dir* can be created using the
+dismod_at db2csv command.
+The dismod_at function ``plot_rate_fit`` and ``plot_data_fit``
+can be used to crate the corresponding plots.
+Furthermore, for each child node of *fit_node_name* that is in the
+:ref:`glossary.fit_node_set`, there is a sub-directory
 with the results for that child node.
 
 fit_var
@@ -441,9 +444,6 @@ def cascade_fit_node(
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
-    # db2csv
-    dismod_at.system_command_prc(
-        [ 'dismodat.py', fit_node_database, 'db2csv' ] )
     #
     # fit child node databases
     for node_name in child_node_databases :
