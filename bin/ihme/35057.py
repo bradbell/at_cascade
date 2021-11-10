@@ -166,7 +166,7 @@ def get_emr_table(file_name, age_group_dict) :
         row_out['hold_out']     = 0
         row_out['meas_std']     = meas_std
         row_out['obesity']      = None
-        row_out['ldiK']         = None
+        row_out['log_ldi']      = None
         #
         if row_in['measure'] == 'incidence' :
             row_out['integrand']    = 'Sincidence'
@@ -195,7 +195,7 @@ def get_data_table(file_name) :
         row_out['meas_value']   = float( row_in['mean'] )
         row_out['hold_out']     = int( row_in['is_outlier'] )
         row_out['obesity']      = None
-        row_out['ldiK']         = None
+        row_out['log_ldi']      = None
         #
         meas_std                = float( row_in['standard_error'] )
         if meas_std <= 0.0 :
@@ -293,9 +293,9 @@ def create_csv_files() :
         row['obesity']  = get_covariate(obesity_dict, sex, location_id, time)
         ldi             = get_covariate(ldi_dict, 'Both', location_id, time)
         if ldi is None :
-            row['ldiK'] = None
+            row['log_ldi'] = None
         else :
-            row['ldiK']  = ldi / 1000.0
+            row['log_ldi']  = math.log10( ldi )
     #
     # change location_id to node_id
     for row in data_table :
@@ -434,8 +434,8 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'group':     'world',
             'smooth':    'alpha_smooth',
         },{
-            # alpha_chi_ldiK
-            'covariate': 'ldiK',
+            # alpha_chi_log_ldi
+            'covariate': 'log_ldi',
             'type':      'rate_value',
             'effected':  'chi',
             'group':     'world',
@@ -477,13 +477,13 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         node_table.append({ 'name':row['node_name'], 'parent':parent_name })
     #
     # covarite_table
-    # Becasue we are using data4cov_reference, the reference for
-    # obesity and ldiK will get replaced (because they are relative covariates).
+    # Becasue we are using data4cov_reference, the reference for obesity and
+    # log_ldi will get replaced (because they are relative covariates).
     covariate_table = [
         { 'name':'sex',     'reference':0.0, 'max_difference':0.6},
         { 'name':'one',     'reference':0.0 },
         { 'name':'obesity', 'reference':0.0},
-        { 'name':'ldiK',     'reference':0.0},
+        { 'name':'log_ldi', 'reference':0.0},
     ]
     #
     # avgint_table
@@ -500,10 +500,10 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             obesity = None
         else :
             obesity = float( row_in['obesity'] )
-        if row_in['ldiK'] == '' :
-            ldiK = None
+        if row_in['log_ldi'] == '' :
+            log_ldi = None
         else :
-            ldiK = float( row_in['ldiK'] )
+            log_ldi = float( row_in['log_ldi'] )
         row_out  = {
             'integrand'       : row_in['integrand'],
             'node'            : node_name,
@@ -516,7 +516,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'sex'             : sex,
             'one'             : 1.0,
             'obesity'         : obesity,
-            'ldiK'            : ldiK,
+            'log_ldi'         : log_ldi,
             'hold_out'        : int( row_in['hold_out'] ),
             'density'         : 'gaussian',
             'meas_value'      : float( row_in['meas_value'] ),
@@ -902,6 +902,7 @@ def main() :
         all_node_database = all_node_database,
         in_database       = root_node_database,
         max_fit           = max_fit,
+        max_abs_effect    = max_abs_effect,
         trace_fit         = True,
     )
     assert fit_node_database == root_node_name + '/dismod.db'
