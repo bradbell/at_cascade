@@ -42,7 +42,7 @@ max_plot            = 2000
 random_seed = 0
 #
 # Name of the node that we are drilling to
-drill_node_name = 'New_York'
+fit_goal_set = { 'New_York' }
 # -----------------------------------------------------------------------------
 #
 import time
@@ -827,35 +827,6 @@ def set_all_option_table(all_node_database) :
     dismod_at.replace_table(connection, 'all_option', all_option_table)
     connection.close()
 # ---------------------------------------------------------------------------
-def set_fit_goal_table(all_node_database, root_node_database) :
-    #
-    # node_table
-    new        = False
-    connection = dismod_at.create_connection(root_node_database, new)
-    node_table = dismod_at.get_table_dict(connection, 'node')
-    connection.close()
-    #
-    # fit_goal table
-    # Do a drill to drill_node_name
-    new        = False
-    connection = dismod_at.create_connection(all_node_database, new)
-    #
-    drill_node_id   = None
-    for (node_id, row) in enumerate( node_table ) :
-        if row['node_name'] == drill_node_name :
-            drill_node_id = node_id
-    assert not drill_node_id is None
-    tbl_name = 'fit_goal'
-    col_name = [ 'node_id' ]
-    col_type = [ 'integer' ]
-    row_list = [
-        [ drill_node_id ]
-    ]
-    command = 'DROP TABLE IF EXISTS '  + tbl_name
-    dismod_at.sql_command(connection, command)
-    dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
-    connection.close()
-# ---------------------------------------------------------------------------
 # main
 # ---------------------------------------------------------------------------
 def main() :
@@ -894,9 +865,6 @@ def main() :
     # set_all_option_table
     set_all_option_table(all_node_database)
     #
-    # set_fit_goal_table
-    set_fit_goal_table(all_node_database, root_node_database)
-    #
     # no_ode_fit
     fit_node_database = at_cascade.no_ode_fit(
         all_node_database = all_node_database,
@@ -915,7 +883,10 @@ def main() :
     # cascade starting at root node
     if True :
         at_cascade.cascade_fit_node(
-            all_node_database, fit_node_database, trace_fit = True
+            all_node_database = all_node_database,
+            fit_node_database = fit_node_database,
+            fit_goal_set      = fit_goal_set,
+            trace_fit         = True,
         )
 # ----------------------------------------------------------------------------
 main()

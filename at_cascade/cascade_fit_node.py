@@ -142,8 +142,14 @@ fit_var table and the avgint table in the
 root_node_database except that values in the node_id column
 has been replaced by the node_id for this fit_node.
 
+log
+===
+The log table contiains a summary of the operations preformed on dismod.db
+between it's input and output state.
+
 {xsrst_end cascade_fit_node}
 '''
+import time
 import os
 import dismod_at
 import at_cascade
@@ -155,7 +161,46 @@ def child_node_id_list(node_table, parent_node_id) :
             result.append(node_id)
     return result
 # ----------------------------------------------------------------------------
-def move_table(connection, src_name, dst_name) :
+def create_empty_log_table(connection) :
+    #
+    cmd  = 'create table if not exists log('
+    cmd += ' log_id        integer primary key,'
+    cmd += ' message_type  text               ,'
+    cmd += ' table_name    text               ,'
+    cmd += ' row_id        integer            ,'
+    cmd += ' unix_time     integer            ,'
+    cmd += ' message       text               )'
+    dismod_at.sql_command(connection, cmd)
+    #
+    # log table
+    empty_list = list()
+    dismod_at.replace_table(connection, 'log', empty_list)
+# ----------------------------------------------------------------------------
+def add_log_entry(connection, message) :
+    #
+    # log_table
+    log_table = dismod_at.get_table_dict(connection, 'log')
+    #
+    # seconds
+    seconds   = int( time.time() )
+    #
+    # message_type
+    message_type = 'at_cascade'
+    #
+    # cmd
+    cmd = 'insert into log'
+    cmd += ' (log_id,message_type,table_name,row_id,unix_time,message) values('
+    cmd += str( len(log_table) ) + ','     # log_id
+    cmd += f'"{message_type}",'            # message_type
+    cmd += 'null,'                         # table_name
+    cmd += 'null,'                         # row_id
+    cmd += str(seconds) + ','              # unix_time
+    cmd += f'"{message}")'                 # message
+    dismod_at.sql_command(connection, cmd)
+# ----------------------------------------------------------------------------
+def move_table_column(connection, src_name, dst_name) :
+    #
+    # execute sql command
     command     = 'DROP TABLE IF EXISTS ' + dst_name
     dismod_at.sql_command(connection, command)
     command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
@@ -163,6 +208,10 @@ def move_table(connection, src_name, dst_name) :
     dismod_at.sql_command(connection, command)
     command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
     dismod_at.sql_command(connection, command)
+    #
+    # log table
+    message      = command
+    add_log_entry(connection, message)
 # ----------------------------------------------------------------------------
 def set_avgint_node_id(connection, fit_node_id) :
     avgint_table = dismod_at.get_table_dict(connection, 'avgint')
@@ -363,6 +412,9 @@ def cascade_fit_node(
     new        = False
     connection = dismod_at.create_connection(fit_node_database, new)
     #
+    # log table
+    create_empty_log_table(connection)
+    #
     # check covariate references for this fit node
     covariate_table = dismod_at.get_table_dict(connection, 'covariate')
     check_covariate_reference(
@@ -374,9 +426,11 @@ def cascade_fit_node(
     #
     # add omega to model
     at_cascade.omega_constraint(all_node_database, fit_node_database)
+    message       = 'omege_contraint'
+    add_log_entry(connection, message)
     #
     # move avgint -> c_avgint
-    move_table(connection, 'avgint', 'c_avgint')
+    move_table_column(connection, 'avgint', 'c_avgint')
     #
     # avgint table for child predictions
     at_cascade.avgint_parent_grid(all_node_database, fit_node_database)
@@ -413,7 +467,7 @@ def cascade_fit_node(
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
     )
-    move_table(connection, 'predict', 'c_predict_fit_var')
+    move_table_column(connection, 'predict', 'c_predict_fit_var')
     #
     # predict sample using avgint_parent_grid version of avgint
     dismod_at.system_command_prc(
@@ -440,7 +494,7 @@ def cascade_fit_node(
     )
     #
     # move c_avgint -> avgint (original version of this table)
-    move_table(connection, 'c_avgint', 'avgint')
+    move_table_column(connection, 'c_avgint', 'avgint')
     #
     # node_id for predictions for fit_node
     set_avgint_node_id(connection, fit_node_id)
@@ -449,7 +503,7 @@ def cascade_fit_node(
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
     )
-    move_table(connection, 'predict', 'c_predict_fit_var')
+    move_table_column(connection, 'predict', 'c_predict_fit_var')
     #
     # predict
     dismod_at.system_command_prc(

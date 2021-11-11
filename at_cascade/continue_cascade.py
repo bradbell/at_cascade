@@ -49,6 +49,13 @@ extra properties listed under
 :ref:`cascade_fit_node.output_dismod_db` below.
 This argument can't be ``None``.
 
+fit_goal_set
+************
+This is a ``set`` with elements of type ``int`` (``str``)
+specifying the node_id (node_name) for each element of the
+:ref:`glossary.fit_goal_set` .
+This argument can't be ``None``.
+
 trace_fit
 *********
 if ``True``, ( ``False`` ) the progress of the dismod at fit commands
@@ -61,6 +68,7 @@ def continue_cascade(
 # continue_cascade(
     all_node_database = None ,
     fit_node_database = None ,
+    fit_goal_set      = None ,
     trace_fit         = False,
 # )
 # END syntax
@@ -95,5 +103,6 @@ def continue_cascade(
     at_cascade.cascade_fit_node(
         all_node_database = all_node_database,
         fit_node_database = fit_node_database,
+        fit_goal_set      = fit_goal_set,
         trace_fit         = trace_fit,
     )
