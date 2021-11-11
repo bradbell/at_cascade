@@ -494,7 +494,6 @@ def main() :
         all_option          = all_option,
         omega_grid          = omega_grid,
         mtall_data          = mtall_data,
-        fit_goal_set        = fit_goal_set,
     )
     #
     # fit_node_dir

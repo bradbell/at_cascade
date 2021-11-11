@@ -71,28 +71,6 @@ there must be one and only one reference value.
 
 {xsrst_end all_cov_reference_table}
 ------------------------------------------------------------------------------
-{xsrst_begin fit_goal_table}
-
-Fit Goal Table
-##############
-This table specifies the :ref:`glossary.fit_goal_set`.
-If it is empty, all of the descendants of the
-:ref:`glossary.root_node` are fit.
-Otherwise, only the nodes in the fit goal table,
-and their ancestors up to the root_node, are fit.
-This table has the following columns:
-
-fit_goal_id
-***********
-is the :ref:`all_node_db.primary_key` for this table.
-
-node_id
-*******
-This column has type ``integer`` and is specifies
-a node by the primary key in the :ref:`glossary.root_node_database` node table
-
-{xsrst_end fit_goal_table}
-------------------------------------------------------------------------------
 {xsrst_begin omega_grid}
 
 Omega Grid

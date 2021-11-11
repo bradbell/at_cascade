@@ -567,7 +567,6 @@ def main() :
         root_node_database  = root_node_database,
         all_cov_reference   = all_cov_reference,
         all_option          = empty_dict,
-        fit_goal_set        = fit_goal_set
     )
     #
     # fit_node_dir

@@ -810,7 +810,6 @@ def main() :
         omega_grid          = omega_grid,
         mtall_data          = mtall_data,
         mtspecific_data     = mtspecific_data,
-        fit_goal_set        = fit_goal_set,
     )
     #
     # fit_node_dir

@@ -183,13 +183,6 @@ If *mtspecific_data* is ``None`` the
 :ref:`all_mtspecific.all_mtspecific_table` and
 :ref:`all_mtspecific.mtspecific_index_table` will be empty.
 
-fit_goal_set
-************
-This is a python set equal to the :ref:`glossary.fit_goal_set`
-where each element is represented by its node name.
-If this argument is ``None``, the root_node and all of its
-descendants will be fit.
-
 {xsrst_end create_all_node_db}
 '''
 import dismod_at
@@ -215,7 +208,6 @@ def create_all_node_db(
     omega_grid          = None,
     mtall_data          = None,
     mtspecific_data     = None,
-    fit_goal_set        = None,
 # )
 # END syntax
 ):
@@ -333,25 +325,6 @@ def create_all_node_db(
                         reference,
                     ]
                     row_list.append( row )
-    dismod_at.create_table(
-        all_connection, tbl_name, col_name, col_type, row_list
-    )
-    #
-    # fit_goal table
-    tbl_name = 'fit_goal'
-    col_name = [ 'node_id' ]
-    col_type = [ 'integer' ]
-    row_list = list()
-    if fit_goal_set is None :
-        for node_id in range( len(node_table) ):
-            if is_descendant(node_table, root_node_id, node_id) :
-                row = [ node_id ]
-                row_list.append( row )
-    else :
-        for node_name in fit_goal_set :
-            node_id = node_name2id[node_name]
-            row     = [ node_id ]
-            row_list.append( row )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )
