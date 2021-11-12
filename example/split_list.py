@@ -159,7 +159,7 @@ routine replaces them for other nodes.
 Checking The Fit
 ****************
 The results of the fit are in the
-:ref:`cascade_fit_node.output_dismod_db.predict` and
+:ref:`cascade_fit_node.output_dismod_db.c_predict_sample` and
 :ref:`cascade_fit_node.output_dismod_db.c_predict_fit_var`
 tables of the fit_node_database corresponding to each node.
 The :ref:`check_cascade_fit<check_cascade_fit>`

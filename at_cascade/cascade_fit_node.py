@@ -128,19 +128,24 @@ sample
 The sample table contains the corresponding samples from the posterior
 distribution for the model variables for the fit_node.
 
-predict
-=======
-The predict table contains predictions corresponding to the
-sample table and the avgint table in the
-:ref:`glossary.root_node_database` except that the values in the node_id
-column has been replaced by the node_id for this fit_node.
-
 c_predict_fit_var
 =================
 The c_predict_fit_var table contains the predict table corresponding to the
 predict fit_var command using the avgint table in the
 root_node_database except that values in the node_id column
 has been replaced by the node_id for this fit_node.
+Note that the predict_id column name was changed to c_predict_fit_var_id
+(which is not the same as var_id).
+
+c_predict_sample
+================
+The c_predict_sample table contains the predict table corresponding to the
+predict sample command using the avgint table in the
+root_node_database except that values in the node_id column
+has been replaced by the node_id for this fit_node.
+Note that the predict_id column name was changed to c_predict_sample_id
+(which is not the same as sample_id).
+
 
 log
 ===
@@ -506,10 +511,11 @@ def cascade_fit_node(
     )
     move_table(connection, 'predict', 'c_predict_fit_var')
     #
-    # predict
+    # c_predict_sample
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
+    move_table(connection, 'predict', 'c_predict_sample')
     #
     # fit child node databases
     for node_name in child_node_databases :

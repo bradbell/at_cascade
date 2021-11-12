@@ -62,7 +62,8 @@ c_child_predict_fit_var Table
 This table contains the predict table corresponding to a
 predict fit_var command using the avgint_parent_grid
 version of the avgint table.
-Note that the predict_id column name was changed to c_child_predict_fit_var_id.
+Note that the predict_id column name was changed to c_child_predict_fit_var_id
+(which is not the same as var_id).
 
 c_root_avgint Table
 ===================

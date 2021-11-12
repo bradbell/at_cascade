@@ -113,7 +113,7 @@ def check_cascade_fit(
         'time',
         'integrand',
         'node',
-        'predict',
+        'c_predict_sample',
         'c_predict_fit_var',
     ] :
         tables[name] = dismod_at.get_table_dict(connection, name)
@@ -122,7 +122,7 @@ def check_cascade_fit(
     # n_covariate n_avgint, n_predict, n_sample
     n_covariate = len(tables['covariate'])
     n_avgint    = len(tables['avgint'])
-    n_predict   = len(tables['predict'])
+    n_predict   = len(tables['c_predict_sample'])
     n_sample    = int( n_predict / n_avgint )
     #
     assert n_avgint == len( tables['c_predict_fit_var'] )
@@ -185,7 +185,7 @@ def check_cascade_fit(
     #
     # predict_id, predict_row
     max_rel_error    = 0.0
-    for (predict_id, predict_row) in enumerate( tables['predict'] ) :
+    for (predict_id, predict_row) in enumerate( tables['c_predict_sample'] ) :
         #
         # avgint_row
         avgint_id  = predict_row['avgint_id']
