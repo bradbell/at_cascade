@@ -57,12 +57,12 @@ The predict table contains
 The results of a predict command using the sample table
 and the avgint table corresponding to :ref:`avgint_parent_grid`.
 
-c_predict_fit_var Table
-=======================
-The c_predict_fit_var table contains
-the results of a dismod_at predict command with the fit_var option
-and then moving the predict table to c_predict_fit_var and renaming the
-column predict_id to c_predict_fit_var_id.
+c_child_predict_fit_var Table
+=============================
+This table contains the predict table corresponding to a
+predict fit_var command using the avgint_parent_grid
+version of the avgint table.
+Note that the predict_id column name was changed to c_child_predict_fit_var_id.
 
 c_root_avgint Table
 ===================
@@ -264,7 +264,7 @@ def create_child_node_db(
     for name in [
         'avgint',
         'c_root_avgint',
-        'c_predict_fit_var',
+        'c_child_predict_fit_var',
         'covariate',
         'density',
         'fit_var',
@@ -293,7 +293,7 @@ def create_child_node_db(
     #
     # parent_fit_var
     parent_fit_var = dict()
-    for predict_row in parent_tables['c_predict_fit_var'] :
+    for predict_row in parent_tables['c_child_predict_fit_var'] :
         avgint_id          = predict_row['avgint_id']
         avgint_row         = parent_tables['avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']

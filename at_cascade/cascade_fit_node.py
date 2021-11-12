@@ -137,8 +137,8 @@ column has been replaced by the node_id for this fit_node.
 
 c_predict_fit_var
 =================
-The c_predict_fit_var table contains predictions corresponding to the
-fit_var table and the avgint table in the
+The c_predict_fit_var table contains the predict table corresponding to the
+predict fit_var command using the avgint table in the
 root_node_database except that values in the node_id column
 has been replaced by the node_id for this fit_node.
 
@@ -198,19 +198,20 @@ def add_log_entry(connection, message) :
     cmd += f'"{message}")'                 # message
     dismod_at.sql_command(connection, cmd)
 # ----------------------------------------------------------------------------
-def move_table_column(connection, src_name, dst_name) :
+def move_table(connection, src_name, dst_name) :
     #
-    # execute sql command
     command     = 'DROP TABLE IF EXISTS ' + dst_name
     dismod_at.sql_command(connection, command)
+    #
     command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
     command    += src_name + '_id TO ' + dst_name + '_id'
     dismod_at.sql_command(connection, command)
+    #
     command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
     dismod_at.sql_command(connection, command)
     #
     # log table
-    message      = command
+    message      = f'move table {src_name} to {dst_name}'
     add_log_entry(connection, message)
 # ----------------------------------------------------------------------------
 def set_avgint_node_id(connection, fit_node_id) :
@@ -430,7 +431,7 @@ def cascade_fit_node(
     add_log_entry(connection, message)
     #
     # move avgint -> c_root__avgint
-    move_table_column(connection, 'avgint', 'c_root_avgint')
+    move_table(connection, 'avgint', 'c_root_avgint')
     #
     # avgint table for child predictions
     at_cascade.avgint_parent_grid(all_node_database, fit_node_database)
@@ -463,11 +464,11 @@ def cascade_fit_node(
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'sample', 'asymptotic', 'both', '20' ]
     )
-    # c_predict_fit_var
+    # c_child_predict_fit_var
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
     )
-    move_table_column(connection, 'predict', 'c_predict_fit_var')
+    move_table(connection, 'predict', 'c_child_predict_fit_var')
     #
     # predict sample using avgint_parent_grid version of avgint
     dismod_at.system_command_prc(
@@ -494,7 +495,7 @@ def cascade_fit_node(
     )
     #
     # move c_root_avgint -> avgint
-    move_table_column(connection, 'c_root_avgint', 'avgint')
+    move_table(connection, 'c_root_avgint', 'avgint')
     #
     # node_id for predictions for fit_node
     set_avgint_node_id(connection, fit_node_id)
@@ -503,7 +504,7 @@ def cascade_fit_node(
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
     )
-    move_table_column(connection, 'predict', 'c_predict_fit_var')
+    move_table(connection, 'predict', 'c_predict_fit_var')
     #
     # predict
     dismod_at.system_command_prc(
