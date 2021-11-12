@@ -51,11 +51,13 @@ avgint Table
 The avgint table determines which predictions are done for the child nodes
 and should come from :ref:`avgint_parent_grid`.
 
-predict Table
-=============
-The predict table contains
-The results of a predict command using the sample table
-and the avgint table corresponding to :ref:`avgint_parent_grid`.
+c_child_predict_sample Table
+============================
+This table contains the predict table corresponding to a
+predict sample command using the :ref:`avgint_parent_grid`
+version of the avgint table.
+Note that the predict_id column name was changed to c_child_predict_sample_id
+(which is not the same as sample_id).
 
 c_child_predict_fit_var Table
 =============================
@@ -266,6 +268,7 @@ def create_child_node_db(
         'avgint',
         'c_root_avgint',
         'c_child_predict_fit_var',
+        'c_child_predict_sample',
         'covariate',
         'density',
         'fit_var',
@@ -274,7 +277,6 @@ def create_child_node_db(
         'node',
         'option',
         'prior',
-        'predict',
         'rate',
         'sample',
         'smooth',
@@ -307,7 +309,7 @@ def create_child_node_db(
     #
     # parent_sample
     parent_sample = dict()
-    for predict_row in parent_tables['predict'] :
+    for predict_row in parent_tables['c_child_predict_sample'] :
         avgint_id          = predict_row['avgint_id']
         avgint_row         = parent_tables['avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']

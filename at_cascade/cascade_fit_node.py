@@ -475,10 +475,11 @@ def cascade_fit_node(
     )
     move_table(connection, 'predict', 'c_child_predict_fit_var')
     #
-    # predict sample using avgint_parent_grid version of avgint
+    # c_child_predict_sample
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
+    move_table(connection, 'predict', 'c_child_predict_sample')
     #
     # child_node_list
     child_node_list = fit_children[fit_node_id]
