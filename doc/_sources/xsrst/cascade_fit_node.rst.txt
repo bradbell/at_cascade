@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/cascade_fit_node.py
-    :lines: 257-264
+    :lines: 320-328
     :language: py
 
 .. meta::
@@ -87,6 +87,19 @@ fit_node_dir
 is the directory where the *fit_node_database* is located.
 
 .. meta::
+   :keywords: fit_goal_set
+
+.. index:: fit_goal_set
+
+.. _cascade_fit_node.fit_goal_set:
+
+fit_goal_set
+************
+This is a ``set`` with elements of type ``int`` (``str``)
+specifying the node_id (node_name) for each element of the
+:ref:`glossary.fit_goal_set` .
+
+.. meta::
    :keywords: node_table
 
 .. index:: node_table
@@ -127,7 +140,7 @@ fit_children
 is the python list of python lists.
 For each valid *node_id*, *fit_children[node_id]* is the list of
 children of *node* that must be fit in order to fit the
-:ref`glossary.goal_node_set`;
+:ref`glossary.fit_goal_set`;
 see :ref:`get_fit_children.fit_children` .
 
 .. meta::
@@ -192,9 +205,12 @@ Output dismod.db
 ****************
 The results for this fit are in the
 *fit_node_dir*\ ``/dismod.db`` dismod_at database.
-The corresponding *fit_node_dir/\*.csv* , create by the
-dismod_at db2csv command, are also the *fit_node_dir* directory.
-Furthermore there is a sub-directory, for each child node of *fit_node_name*,
+The *.csv* files in *fit_node_dir* can be created using the
+dismod_at db2csv command.
+The dismod_at function ``plot_rate_fit`` and ``plot_data_fit``
+can be used to crate the corresponding plots.
+Furthermore, for each child node of *fit_node_name* that is in the
+:ref:`glossary.fit_node_set`, there is a sub-directory
 with the results for that child node.
 
 .. meta::
@@ -222,20 +238,6 @@ The sample table contains the corresponding samples from the posterior
 distribution for the model variables for the fit_node.
 
 .. meta::
-   :keywords: predict
-
-.. index:: predict
-
-.. _cascade_fit_node.output_dismod_db.predict:
-
-predict
-=======
-The predict table contains predictions corresponding to the
-sample table and the avgint table in the
-:ref:`glossary.root_node_database` except that the values in the node_id
-column has been replaced by the node_id for this fit_node.
-
-.. meta::
    :keywords: c_predict_fit_var
 
 .. index:: c_predict_fit_var
@@ -244,10 +246,40 @@ column has been replaced by the node_id for this fit_node.
 
 c_predict_fit_var
 =================
-The c_predict_fit_var table contains predictions corresponding to the
-fit_var table and the avgint table in the
+The c_predict_fit_var table contains the predict table corresponding to the
+predict fit_var command using the avgint table in the
 root_node_database except that values in the node_id column
 has been replaced by the node_id for this fit_node.
+Note that the predict_id column name was changed to c_predict_fit_var_id
+(which is not the same as var_id).
+
+.. meta::
+   :keywords: c_predict_sample
+
+.. index:: c_predict_sample
+
+.. _cascade_fit_node.output_dismod_db.c_predict_sample:
+
+c_predict_sample
+================
+The c_predict_sample table contains the predict table corresponding to the
+predict sample command using the avgint table in the
+root_node_database except that values in the node_id column
+has been replaced by the node_id for this fit_node.
+Note that the predict_id column name was changed to c_predict_sample_id
+(which is not the same as sample_id).
+
+.. meta::
+   :keywords: log
+
+.. index:: log
+
+.. _cascade_fit_node.output_dismod_db.log:
+
+log
+===
+The log table contains a summary of the operations preformed on dismod.db
+between it's input and output state.
 
 ----
 

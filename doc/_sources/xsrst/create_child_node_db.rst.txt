@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_child_node_db.py
-    :lines: 243-247
+    :lines: 246-250
     :language: py
 
 .. meta::
@@ -94,42 +94,45 @@ The avgint table determines which predictions are done for the child nodes
 and should come from :ref:`avgint_parent_grid`.
 
 .. meta::
-   :keywords: predict, table
+   :keywords: c_child_predict_sample, table
 
-.. index:: predict, table
+.. index:: c_child_predict_sample, table
 
-.. _create_child_node_db.parent_node_database.predict_table:
+.. _create_child_node_db.parent_node_database.c_child_predict_sample_table:
 
-predict Table
-=============
-The predict table contains
-The results of a predict command using the sample table
-and the avgint table corresponding to :ref:`avgint_parent_grid`.
-
-.. meta::
-   :keywords: c_predict_fit_var, table
-
-.. index:: c_predict_fit_var, table
-
-.. _create_child_node_db.parent_node_database.c_predict_fit_var_table:
-
-c_predict_fit_var Table
-=======================
-The c_predict_fit_var table contains
-the results of a dismod_at predict command with the fit_var option
-and then moving the predict table to c_predict_fit_var and renaming the
-column predict_id to c_predict_fit_var_id.
+c_child_predict_sample Table
+============================
+This table contains the predict table corresponding to a
+predict sample command using the :ref:`avgint_parent_grid`
+version of the avgint table.
+Note that the predict_id column name was changed to c_child_predict_sample_id
+(which is not the same as sample_id).
 
 .. meta::
-   :keywords: c_avgint, table
+   :keywords: c_child_predict_fit_var, table
 
-.. index:: c_avgint, table
+.. index:: c_child_predict_fit_var, table
 
-.. _create_child_node_db.parent_node_database.c_avgint_table:
+.. _create_child_node_db.parent_node_database.c_child_predict_fit_var_table:
 
-c_avgint Table
-==============
-The c_avgint table contains the original version of the
+c_child_predict_fit_var Table
+=============================
+This table contains the predict table corresponding to a
+predict fit_var command using the avgint_parent_grid
+version of the avgint table.
+Note that the predict_id column name was changed to c_child_predict_fit_var_id
+(which is not the same as var_id).
+
+.. meta::
+   :keywords: c_root_avgint, table
+
+.. index:: c_root_avgint, table
+
+.. _create_child_node_db.parent_node_database.c_root_avgint_table:
+
+c_root_avgint Table
+===================
+The c_root_avgint table contains the original version of the
 :ref:`glossary.root_node_database` avgint table
 that predicts for the parent node.
 Only the node_id column has been modified from the root_node_database version.
@@ -156,7 +159,7 @@ is a python dictionary and if *child_name* is a key for *child_node_databases*,
     for the child node. Note that if the value prior is uniform,
     the standard deviation is not used and the mean is only used to
     initialize the optimization.
--   The avgint table is a copy of the c_avgint table in the
+-   The avgint table is a copy of the c_root_avgint table in the
     *parent_node_database* with the node_id replaced by the corresponding
     child node id.
 

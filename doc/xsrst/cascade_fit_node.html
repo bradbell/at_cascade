@@ -11,6 +11,7 @@
 <meta content="fit_node_database" name="keywords" />
 <meta content="fit_node" name="keywords" />
 <meta content="fit_node_dir" name="keywords" />
+<meta content="fit_goal_set" name="keywords" />
 <meta content="node_table" name="keywords" />
 <meta content="default" name="keywords" />
 <meta content="fit_children" name="keywords" />
@@ -21,8 +22,9 @@
 <meta content="output, dismod.db" name="keywords" />
 <meta content="fit_var" name="keywords" />
 <meta content="sample" name="keywords" />
-<meta content="predict" name="keywords" />
 <meta content="c_predict_fit_var" name="keywords" />
+<meta content="c_predict_sample" name="keywords" />
+<meta content="log" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -56,7 +58,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="check_cascade_fit" href="check_cascade_fit.html" />
-    <link rel="prev" title="module" href="module.html" /> 
+    <link rel="prev" title="continue_cascade" href="continue_cascade.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -108,6 +110,7 @@
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
 <li class="toctree-l2"><a class="reference internal" href="example.html">example</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="module.html">module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="continue_cascade.html">continue_cascade</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">cascade_fit_node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="check_cascade_fit.html">check_cascade_fit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="avgint_parent_grid.html">avgint_parent_grid</a></li>
@@ -210,28 +213,30 @@
 <li><p><a class="reference internal" href="#fit-node-dir" id="id8">fit_node_dir</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#node-table" id="id9">node_table</a></p>
+<li><p><a class="reference internal" href="#fit-goal-set" id="id9">fit_goal_set</a></p></li>
+<li><p><a class="reference internal" href="#node-table" id="id10">node_table</a></p>
 <ul>
-<li><p><a class="reference internal" href="#default" id="id10">default</a></p></li>
+<li><p><a class="reference internal" href="#default" id="id11">default</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#fit-children" id="id11">fit_children</a></p>
+<li><p><a class="reference internal" href="#fit-children" id="id12">fit_children</a></p>
 <ul>
-<li><p><a class="reference internal" href="#cascade-fit-node-fit-children-default" id="id12">default</a></p></li>
+<li><p><a class="reference internal" href="#cascade-fit-node-fit-children-default" id="id13">default</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#fit-integrand" id="id13">fit_integrand</a></p>
+<li><p><a class="reference internal" href="#fit-integrand" id="id14">fit_integrand</a></p>
 <ul>
-<li><p><a class="reference internal" href="#cascade-fit-node-fit-integrand-default" id="id14">default</a></p></li>
+<li><p><a class="reference internal" href="#cascade-fit-node-fit-integrand-default" id="id15">default</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#trace-fit" id="id15">trace_fit</a></p></li>
-<li><p><a class="reference internal" href="#output-dismod-db" id="id16">Output dismod.db</a></p>
+<li><p><a class="reference internal" href="#trace-fit" id="id16">trace_fit</a></p></li>
+<li><p><a class="reference internal" href="#output-dismod-db" id="id17">Output dismod.db</a></p>
 <ul>
-<li><p><a class="reference internal" href="#fit-var" id="id17">fit_var</a></p></li>
-<li><p><a class="reference internal" href="#sample" id="id18">sample</a></p></li>
-<li><p><a class="reference internal" href="#predict" id="id19">predict</a></p></li>
+<li><p><a class="reference internal" href="#fit-var" id="id18">fit_var</a></p></li>
+<li><p><a class="reference internal" href="#sample" id="id19">sample</a></p></li>
 <li><p><a class="reference internal" href="#c-predict-fit-var" id="id20">c_predict_fit_var</a></p></li>
+<li><p><a class="reference internal" href="#c-predict-sample" id="id21">c_predict_sample</a></p></li>
+<li><p><a class="reference internal" href="#log" id="id22">log</a></p></li>
 </ul>
 </li>
 </ul>
@@ -241,6 +246,7 @@
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># at_cascade.cascade_fit_node(</span>
     <span class="n">all_node_database</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">fit_node_database</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fit_goal_set</span>      <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">node_table</span>        <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">fit_children</span>      <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">fit_integrand</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -277,8 +283,14 @@ for this database.</p>
 <p>is the directory where the <em>fit_node_database</em> is located.</p>
 </div>
 </div>
+<div class="section" id="fit-goal-set">
+<span id="cascade-fit-node-fit-goal-set"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id9">fit_goal_set</a><a class="headerlink" href="#fit-goal-set" title="Permalink to this headline">¶</a></h3>
+<p>This is a <code class="docutils literal notranslate"><span class="pre">set</span></code> with elements of type <code class="docutils literal notranslate"><span class="pre">int</span></code> (<code class="docutils literal notranslate"><span class="pre">str</span></code>)
+specifying the node_id (node_name) for each element of the
+<a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a> .</p>
+</div>
 <div class="section" id="node-table">
-<span id="cascade-fit-node-node-table"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id9">node_table</a><a class="headerlink" href="#node-table" title="Permalink to this headline">¶</a></h3>
+<span id="cascade-fit-node-node-table"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id10">node_table</a><a class="headerlink" href="#node-table" title="Permalink to this headline">¶</a></h3>
 <p>This is a python list where
 <em>node_table[node_id]</em> is a python dictionary representation of the
 corresponding row of the dismod_at node table.
@@ -287,73 +299,85 @@ This node table is the same as the node table in <em>fit_node_database</em>.
 It is the same for all the fits and
 passing it as an argument avoids reading it each time.</p>
 <div class="section" id="default">
-<span id="cascade-fit-node-node-table-default"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id10">default</a><a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h4>
+<span id="cascade-fit-node-node-table-default"></span><span id="index-8"></span><h4><a class="toc-backref" href="#id11">default</a><a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h4>
 <p>If <em>node_table</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, it will be read by <code class="docutils literal notranslate"><span class="pre">cascade_fit_node</span></code>
 and reused by recursive calls to this routine.</p>
 </div>
 </div>
 <div class="section" id="fit-children">
-<span id="cascade-fit-node-fit-children"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id11">fit_children</a><a class="headerlink" href="#fit-children" title="Permalink to this headline">¶</a></h3>
+<span id="cascade-fit-node-fit-children"></span><span id="index-9"></span><h3><a class="toc-backref" href="#id12">fit_children</a><a class="headerlink" href="#fit-children" title="Permalink to this headline">¶</a></h3>
 <p>is the python list of python lists.
 For each valid <em>node_id</em>, <em>fit_children[node_id]</em> is the list of
 children of <em>node</em> that must be fit in order to fit the
-:ref`glossary.goal_node_set`;
+:ref`glossary.fit_goal_set`;
 see <a class="reference internal" href="get_fit_children.html#get-fit-children-fit-children"><span class="std std-ref">fit_children</span></a> .</p>
 <div class="section" id="cascade-fit-node-fit-children-default">
-<span id="index-9"></span><span id="id2"></span><h4><a class="toc-backref" href="#id12">default</a><a class="headerlink" href="#cascade-fit-node-fit-children-default" title="Permalink to this headline">¶</a></h4>
+<span id="index-10"></span><span id="id2"></span><h4><a class="toc-backref" href="#id13">default</a><a class="headerlink" href="#cascade-fit-node-fit-children-default" title="Permalink to this headline">¶</a></h4>
 <p>If <em>fit_children</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, it will be computed by <code class="docutils literal notranslate"><span class="pre">cascade_fit_node</span></code>
 and reused by recursive calls to this routine.</p>
 </div>
 </div>
 <div class="section" id="fit-integrand">
-<span id="cascade-fit-node-fit-integrand"></span><span id="index-10"></span><h3><a class="toc-backref" href="#id13">fit_integrand</a><a class="headerlink" href="#fit-integrand" title="Permalink to this headline">¶</a></h3>
+<span id="cascade-fit-node-fit-integrand"></span><span id="index-11"></span><h3><a class="toc-backref" href="#id14">fit_integrand</a><a class="headerlink" href="#fit-integrand" title="Permalink to this headline">¶</a></h3>
 <p>is the python set.
 Each integrand_id in <em>fit_integrand</em> appears in the data table in
 <em>fit_node_database</em>.
 Furthermore all such integrand_id that appear in the a row of the data table
 that has hold_out equal to zero are included.</p>
 <div class="section" id="cascade-fit-node-fit-integrand-default">
-<span id="index-11"></span><span id="id3"></span><h4><a class="toc-backref" href="#id14">default</a><a class="headerlink" href="#cascade-fit-node-fit-integrand-default" title="Permalink to this headline">¶</a></h4>
+<span id="index-12"></span><span id="id3"></span><h4><a class="toc-backref" href="#id15">default</a><a class="headerlink" href="#cascade-fit-node-fit-integrand-default" title="Permalink to this headline">¶</a></h4>
 <p>If <em>fit_integrand</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, it will be computed by <code class="docutils literal notranslate"><span class="pre">cascade_fit_node</span></code>
 and reused by recursive calls to this routine.</p>
 </div>
 </div>
 <div class="section" id="trace-fit">
-<span id="cascade-fit-node-trace-fit"></span><span id="index-12"></span><h3><a class="toc-backref" href="#id15">trace_fit</a><a class="headerlink" href="#trace-fit" title="Permalink to this headline">¶</a></h3>
+<span id="cascade-fit-node-trace-fit"></span><span id="index-13"></span><h3><a class="toc-backref" href="#id16">trace_fit</a><a class="headerlink" href="#trace-fit" title="Permalink to this headline">¶</a></h3>
 <p>if <code class="docutils literal notranslate"><span class="pre">True</span></code>, ( <code class="docutils literal notranslate"><span class="pre">False</span></code> ) the progress of the dismod at fit commands
 will be printed on standard output during the optimization.</p>
 </div>
 <div class="section" id="output-dismod-db">
-<span id="cascade-fit-node-output-dismod-db"></span><span id="index-13"></span><h3><a class="toc-backref" href="#id16">Output dismod.db</a><a class="headerlink" href="#output-dismod-db" title="Permalink to this headline">¶</a></h3>
+<span id="cascade-fit-node-output-dismod-db"></span><span id="index-14"></span><h3><a class="toc-backref" href="#id17">Output dismod.db</a><a class="headerlink" href="#output-dismod-db" title="Permalink to this headline">¶</a></h3>
 <p>The results for this fit are in the
 <em>fit_node_dir</em><code class="docutils literal notranslate"><span class="pre">/dismod.db</span></code> dismod_at database.
-The corresponding <em>fit_node_dir/*.csv</em> , create by the
-dismod_at db2csv command, are also the <em>fit_node_dir</em> directory.
-Furthermore there is a sub-directory, for each child node of <em>fit_node_name</em>,
+The <em>.csv</em> files in <em>fit_node_dir</em> can be created using the
+dismod_at db2csv command.
+The dismod_at function <code class="docutils literal notranslate"><span class="pre">plot_rate_fit</span></code> and <code class="docutils literal notranslate"><span class="pre">plot_data_fit</span></code>
+can be used to crate the corresponding plots.
+Furthermore, for each child node of <em>fit_node_name</em> that is in the
+<a class="reference internal" href="glossary.html#glossary-fit-node-set"><span class="std std-ref">fit_node_set</span></a>, there is a sub-directory
 with the results for that child node.</p>
 <div class="section" id="fit-var">
-<span id="cascade-fit-node-output-dismod-db-fit-var"></span><span id="index-14"></span><h4><a class="toc-backref" href="#id17">fit_var</a><a class="headerlink" href="#fit-var" title="Permalink to this headline">¶</a></h4>
+<span id="cascade-fit-node-output-dismod-db-fit-var"></span><span id="index-15"></span><h4><a class="toc-backref" href="#id18">fit_var</a><a class="headerlink" href="#fit-var" title="Permalink to this headline">¶</a></h4>
 <p>The fit_var table correspond to the posterior
 mean for the model variables for the fit_node.</p>
 </div>
 <div class="section" id="sample">
-<span id="cascade-fit-node-output-dismod-db-sample"></span><span id="index-15"></span><h4><a class="toc-backref" href="#id18">sample</a><a class="headerlink" href="#sample" title="Permalink to this headline">¶</a></h4>
+<span id="cascade-fit-node-output-dismod-db-sample"></span><span id="index-16"></span><h4><a class="toc-backref" href="#id19">sample</a><a class="headerlink" href="#sample" title="Permalink to this headline">¶</a></h4>
 <p>The sample table contains the corresponding samples from the posterior
 distribution for the model variables for the fit_node.</p>
 </div>
-<div class="section" id="predict">
-<span id="cascade-fit-node-output-dismod-db-predict"></span><span id="index-16"></span><h4><a class="toc-backref" href="#id19">predict</a><a class="headerlink" href="#predict" title="Permalink to this headline">¶</a></h4>
-<p>The predict table contains predictions corresponding to the
-sample table and the avgint table in the
-<a class="reference internal" href="glossary.html#glossary-root-node-database"><span class="std std-ref">root_node_database</span></a> except that the values in the node_id
-column has been replaced by the node_id for this fit_node.</p>
-</div>
 <div class="section" id="c-predict-fit-var">
 <span id="cascade-fit-node-output-dismod-db-c-predict-fit-var"></span><span id="index-17"></span><h4><a class="toc-backref" href="#id20">c_predict_fit_var</a><a class="headerlink" href="#c-predict-fit-var" title="Permalink to this headline">¶</a></h4>
-<p>The c_predict_fit_var table contains predictions corresponding to the
-fit_var table and the avgint table in the
+<p>The c_predict_fit_var table contains the predict table corresponding to the
+predict fit_var command using the avgint table in the
 root_node_database except that values in the node_id column
-has been replaced by the node_id for this fit_node.</p>
+has been replaced by the node_id for this fit_node.
+Note that the predict_id column name was changed to c_predict_fit_var_id
+(which is not the same as var_id).</p>
+</div>
+<div class="section" id="c-predict-sample">
+<span id="cascade-fit-node-output-dismod-db-c-predict-sample"></span><span id="index-18"></span><h4><a class="toc-backref" href="#id21">c_predict_sample</a><a class="headerlink" href="#c-predict-sample" title="Permalink to this headline">¶</a></h4>
+<p>The c_predict_sample table contains the predict table corresponding to the
+predict sample command using the avgint table in the
+root_node_database except that values in the node_id column
+has been replaced by the node_id for this fit_node.
+Note that the predict_id column name was changed to c_predict_sample_id
+(which is not the same as sample_id).</p>
+</div>
+<div class="section" id="log">
+<span id="cascade-fit-node-output-dismod-db-log"></span><span id="index-19"></span><h4><a class="toc-backref" href="#id22">log</a><a class="headerlink" href="#log" title="Permalink to this headline">¶</a></h4>
+<p>The log table contains a summary of the operations preformed on dismod.db
+between it’s input and output state.</p>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/cascade_fit_node.py</span></code></p>
 </div>
@@ -372,7 +396,7 @@ has been replaced by the node_id for this fit_node.</p>
         <a href="check_cascade_fit.html" class="btn btn-neutral float-right" title="check_cascade_fit" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="module.html" class="btn btn-neutral float-left" title="module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="continue_cascade.html" class="btn btn-neutral float-left" title="continue_cascade" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

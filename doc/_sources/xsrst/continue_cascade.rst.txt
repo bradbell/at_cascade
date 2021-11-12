@@ -1,0 +1,106 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!
+continue_cascade
+!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: continue_cascade, continue, cascade, from, fit, node
+
+.. index:: continue_cascade, continue, cascade, from, fit, node
+
+.. _continue_cascade:
+
+Continue Cascade From a Fit Node
+################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _continue_cascade.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/continue_cascade.py
+    :lines: 68-73
+    :language: py
+
+.. meta::
+   :keywords: purpose
+
+.. index:: purpose
+
+.. _continue_cascade.purpose:
+
+Purpose
+*******
+Sometimes when running the cascade, the fit or statistics for a node fails.
+This may be becasue of something that happend on the system,
+or becasue of some of the settings in the :ref:`glossary.root_node_database`.
+This routine enables you to continue the cascade from such a node.
+
+.. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _continue_cascade.all_node_database:
+
+all_node_database
+*****************
+is a python string specifying the location of the
+:ref:`all_node_db<all_node_db>`
+relative to the current working directory.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: fit_node_database
+
+.. index:: fit_node_database
+
+.. _continue_cascade.fit_node_database:
+
+fit_node_database
+*****************
+is a python string specifying the location of a dismod_at database
+relative to the current working directory.
+On input, this is an :ref:`glossary.fit_node_database`.
+Upon return, it is a :ref:`glossary.fit_node_database` with the
+extra properties listed under
+:ref:`cascade_fit_node.output_dismod_db` below.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: fit_goal_set
+
+.. index:: fit_goal_set
+
+.. _continue_cascade.fit_goal_set:
+
+fit_goal_set
+************
+This is a ``set`` with elements of type ``int`` (``str``)
+specifying the node_id (node_name) for each element of the
+:ref:`glossary.fit_goal_set` .
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: trace_fit
+
+.. index:: trace_fit
+
+.. _continue_cascade.trace_fit:
+
+trace_fit
+*********
+if ``True``, ( ``False`` ) the progress of the dismod at fit commands
+will be printed on standard output during the optimization.
+
+----
+
+xsrst input file: ``at_cascade/continue_cascade.py``

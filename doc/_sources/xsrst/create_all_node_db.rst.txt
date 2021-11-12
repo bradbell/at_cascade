@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_all_node_db.py
-    :lines: 210-219
+    :lines: 203-211
     :language: py
 
 .. meta::
@@ -335,20 +335,6 @@ If *omega_grid* is ``None``, *mtspecific_data* must also be ``None``.
 If *mtspecific_data* is ``None`` the
 :ref:`all_mtspecific.all_mtspecific_table` and
 :ref:`all_mtspecific.mtspecific_index_table` will be empty.
-
-.. meta::
-   :keywords: fit_goal_set
-
-.. index:: fit_goal_set
-
-.. _create_all_node_db.fit_goal_set:
-
-fit_goal_set
-************
-This is a python set equal to the :ref:`glossary.fit_goal_set`
-where each element is represented by its node name.
-If this argument is ``None``, the root_node and all of its
-descendants will be fit.
 
 ----
 

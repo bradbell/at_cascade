@@ -8,6 +8,7 @@ module
    :maxdepth: 1
    :hidden:
 
+   continue_cascade
    cascade_fit_node
    check_cascade_fit
    avgint_parent_grid
@@ -40,6 +41,7 @@ The at_cascade Python Module
     :header:  "Child", "Title"
     :widths: 20, 80
 
+    "continue_cascade", :ref:`continue_cascade`
     "cascade_fit_node", :ref:`cascade_fit_node`
     "check_cascade_fit", :ref:`check_cascade_fit`
     "avgint_parent_grid", :ref:`avgint_parent_grid`

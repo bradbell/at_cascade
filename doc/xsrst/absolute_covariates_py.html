@@ -534,7 +534,6 @@
         <span class="n">all_option</span>          <span class="o">=</span> <span class="n">all_option</span><span class="p">,</span>
         <span class="n">omega_grid</span>          <span class="o">=</span> <span class="n">omega_grid</span><span class="p">,</span>
         <span class="n">mtall_data</span>          <span class="o">=</span> <span class="n">mtall_data</span><span class="p">,</span>
-        <span class="n">fit_goal_set</span>        <span class="o">=</span> <span class="n">fit_goal_set</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># fit_node_dir</span>
@@ -552,7 +551,11 @@
     <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">root_node_database</span><span class="p">,</span> <span class="n">fit_node_database</span><span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># cascade starting at root node</span>
-    <span class="n">at_cascade</span><span class="o">.</span><span class="n">cascade_fit_node</span><span class="p">(</span><span class="n">all_node_database</span><span class="p">,</span> <span class="n">fit_node_database</span><span class="p">)</span>
+    <span class="n">at_cascade</span><span class="o">.</span><span class="n">cascade_fit_node</span><span class="p">(</span>
+        <span class="n">all_node_database</span> <span class="o">=</span> <span class="n">all_node_database</span> <span class="p">,</span>
+        <span class="n">fit_node_database</span> <span class="o">=</span> <span class="n">fit_node_database</span> <span class="p">,</span>
+        <span class="n">fit_goal_set</span>      <span class="o">=</span> <span class="n">fit_goal_set</span>      <span class="p">,</span>
+    <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># check results</span>
     <span class="k">for</span> <span class="n">goal_dir</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0/n1/n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n1/n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n2&#39;</span> <span class="p">]</span> <span class="p">:</span>

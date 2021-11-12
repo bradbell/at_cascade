@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/get_fit_children.py
-    :lines: 55-59
+    :lines: 57-61
     :language: py
 
 .. meta::
@@ -43,16 +43,17 @@ This is the node_id in the node_table for the
 :ref:`glossary.root_node`.
 
 .. meta::
-   :keywords: fit_goal_table
+   :keywords: fit_goal_set
 
-.. index:: fit_goal_table
+.. index:: fit_goal_set
 
-.. _get_fit_children.fit_goal_table:
+.. _get_fit_children.fit_goal_set:
 
-fit_goal_table
-**************
-This is python list of python dictionaries containing the
-:ref:`fit_goal_table` .
+fit_goal_set
+************
+This is a ``set`` with elements of type ``int`` (``str``)
+specifying the node_id (node_name) for each element of the
+:ref:`glossary.fit_goal_set` .
 
 .. meta::
    :keywords: node_table
@@ -75,10 +76,10 @@ containing the dismod_at node table.
 
 fit_children
 ************
-The return value *fit_children* is a python list of python lists.
+The return value *fit_children* is a python list of python sets.
 For each *node_id* in the node table,
-*fit_children[node_id]* is a list of child_node_id.
-A child_node_id is in this list if and only if
+*fit_children[node_id]* is a the set of child_node_id.
+A child_node_id is in this set if and only if
 it is a child of *node_id* and is in the :ref:`glossary.fit_node_set`.
 These are the children of node_id that must be fit to obtain
 a fit for the :ref:`glossary.fit_goal_set`.

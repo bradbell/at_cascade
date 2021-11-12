@@ -8,7 +8,7 @@
   <meta content="get_fit_children, determine, the, set, nodes, to, fit" name="keywords" />
 <meta content="syntax" name="keywords" />
 <meta content="root_node_id" name="keywords" />
-<meta content="fit_goal_table" name="keywords" />
+<meta content="fit_goal_set" name="keywords" />
 <meta content="node_table" name="keywords" />
 <meta content="fit_children" name="keywords" />
 
@@ -96,6 +96,7 @@
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
 <li class="toctree-l2"><a class="reference internal" href="example.html">example</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="module.html">module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="continue_cascade.html">continue_cascade</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cascade_fit_node.html">cascade_fit_node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="check_cascade_fit.html">check_cascade_fit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="avgint_parent_grid.html">avgint_parent_grid</a></li>
@@ -192,7 +193,7 @@
 <ul class="simple">
 <li><p><a class="reference internal" href="#syntax" id="id2">Syntax</a></p></li>
 <li><p><a class="reference internal" href="#root-node-id" id="id3">root_node_id</a></p></li>
-<li><p><a class="reference internal" href="#fit-goal-table" id="id4">fit_goal_table</a></p></li>
+<li><p><a class="reference internal" href="#fit-goal-set" id="id4">fit_goal_set</a></p></li>
 <li><p><a class="reference internal" href="#node-table" id="id5">node_table</a></p></li>
 <li><p><a class="reference internal" href="#fit-children" id="id6">fit_children</a></p></li>
 </ul>
@@ -200,9 +201,9 @@
 <div class="section" id="syntax">
 <span id="get-fit-children-syntax"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># fit_children = at_cascade.get_fit_children(</span>
-    <span class="n">root_node_id</span>    <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
-    <span class="n">fit_goal_table</span>  <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
-    <span class="n">node_table</span>      <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
+    <span class="n">root_node_id</span>  <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
+    <span class="n">fit_goal_set</span>  <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
+    <span class="n">node_table</span>    <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
 <span class="c1"># )</span>
 </pre></div>
 </div>
@@ -212,10 +213,11 @@
 <p>This is the node_id in the node_table for the
 <a class="reference internal" href="glossary.html#glossary-root-node"><span class="std std-ref">root_node</span></a>.</p>
 </div>
-<div class="section" id="fit-goal-table">
-<span id="get-fit-children-fit-goal-table"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">fit_goal_table</a><a class="headerlink" href="#fit-goal-table" title="Permalink to this headline">¶</a></h3>
-<p>This is python list of python dictionaries containing the
-<a class="reference internal" href="fit_goal_table.html#id1"><span class="std std-ref">Fit Goal Table</span></a> .</p>
+<div class="section" id="fit-goal-set">
+<span id="get-fit-children-fit-goal-set"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">fit_goal_set</a><a class="headerlink" href="#fit-goal-set" title="Permalink to this headline">¶</a></h3>
+<p>This is a <code class="docutils literal notranslate"><span class="pre">set</span></code> with elements of type <code class="docutils literal notranslate"><span class="pre">int</span></code> (<code class="docutils literal notranslate"><span class="pre">str</span></code>)
+specifying the node_id (node_name) for each element of the
+<a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a> .</p>
 </div>
 <div class="section" id="node-table">
 <span id="get-fit-children-node-table"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id5">node_table</a><a class="headerlink" href="#node-table" title="Permalink to this headline">¶</a></h3>
@@ -224,10 +226,10 @@ containing the dismod_at node table.</p>
 </div>
 <div class="section" id="fit-children">
 <span id="get-fit-children-fit-children"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id6">fit_children</a><a class="headerlink" href="#fit-children" title="Permalink to this headline">¶</a></h3>
-<p>The return value <em>fit_children</em> is a python list of python lists.
+<p>The return value <em>fit_children</em> is a python list of python sets.
 For each <em>node_id</em> in the node table,
-<em>fit_children[node_id]</em> is a list of child_node_id.
-A child_node_id is in this list if and only if
+<em>fit_children[node_id]</em> is a the set of child_node_id.
+A child_node_id is in this set if and only if
 it is a child of <em>node_id</em> and is in the <a class="reference internal" href="glossary.html#glossary-fit-node-set"><span class="std std-ref">fit_node_set</span></a>.
 These are the children of node_id that must be fit to obtain
 a fit for the <a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a>.</p>

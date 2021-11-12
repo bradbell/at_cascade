@@ -559,12 +559,17 @@
     <span class="c1"># data.pdf</span>
     <span class="n">integrand_list</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;Sincidence&#39;</span><span class="p">,</span> <span class="s1">&#39;mtexcess&#39;</span><span class="p">,</span> <span class="s1">&#39;prevalence&#39;</span> <span class="p">]</span>
     <span class="n">pdf_file</span>       <span class="o">=</span> <span class="n">pdf_dir</span> <span class="o">+</span> <span class="s1">&#39;/data.pdf&#39;</span>
-    <span class="n">dismod_at</span><span class="o">.</span><span class="n">plot_data_fit</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">integrand_list</span><span class="p">,</span> <span class="n">pdf_file</span><span class="p">)</span>
+    <span class="n">dismod_at</span><span class="o">.</span><span class="n">plot_data_fit</span><span class="p">(</span>
+        <span class="n">database</span>       <span class="o">=</span> <span class="n">database</span>        <span class="p">,</span>
+        <span class="n">pdf_file</span>       <span class="o">=</span> <span class="n">pdf_file</span>        <span class="p">,</span>
+        <span class="n">integrand_list</span> <span class="o">=</span> <span class="n">integrand_list</span>  <span class="p">,</span>
+    <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># rate.pdf</span>
     <span class="n">rate_set</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;iota&#39;</span><span class="p">,</span> <span class="s1">&#39;chi&#39;</span> <span class="p">]</span>
     <span class="n">pdf_file</span> <span class="o">=</span> <span class="n">pdf_dir</span> <span class="o">+</span> <span class="s1">&#39;/rate.pdf&#39;</span>
-    <span class="n">dismod_at</span><span class="o">.</span><span class="n">plot_rate_fit</span><span class="p">(</span> <span class="n">database</span><span class="p">,</span> <span class="n">rate_set</span><span class="p">,</span> <span class="n">pdf_file</span><span class="p">)</span>
+    <span class="n">plot_title</span> <span class="o">=</span> <span class="s1">&#39;rate&#39;</span>
+    <span class="n">dismod_at</span><span class="o">.</span><span class="n">plot_rate_fit</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">rate_set</span><span class="p">,</span> <span class="n">pdf_file</span><span class="p">,</span> <span class="n">plot_title</span><span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># db2csv</span>
     <span class="n">dismod_at</span><span class="o">.</span><span class="n">system_command_prc</span><span class="p">([</span> <span class="s1">&#39;dismodat.py&#39;</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="s1">&#39;db2csv&#39;</span> <span class="p">])</span>
@@ -714,7 +719,6 @@
         <span class="n">omega_grid</span>          <span class="o">=</span> <span class="n">omega_grid</span><span class="p">,</span>
         <span class="n">mtall_data</span>          <span class="o">=</span> <span class="n">mtall_data</span><span class="p">,</span>
         <span class="n">mtspecific_data</span>     <span class="o">=</span> <span class="n">mtspecific_data</span><span class="p">,</span>
-        <span class="n">fit_goal_set</span>        <span class="o">=</span> <span class="n">fit_goal_set</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># fit_node_dir</span>
@@ -743,7 +747,11 @@
     <span class="n">display_no_ode_fit</span><span class="p">(</span><span class="n">fit_node_dir</span><span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># cascade starting at root node</span>
-    <span class="n">at_cascade</span><span class="o">.</span><span class="n">cascade_fit_node</span><span class="p">(</span><span class="n">all_node_database</span><span class="p">,</span> <span class="n">fit_node_database</span><span class="p">)</span>
+    <span class="n">at_cascade</span><span class="o">.</span><span class="n">cascade_fit_node</span><span class="p">(</span>
+        <span class="n">all_node_database</span> <span class="o">=</span> <span class="n">all_node_database</span> <span class="p">,</span>
+        <span class="n">fit_node_database</span> <span class="o">=</span> <span class="n">fit_node_database</span> <span class="p">,</span>
+        <span class="n">fit_goal_set</span>      <span class="o">=</span> <span class="n">fit_goal_set</span>      <span class="p">,</span>
+    <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># check results</span>
     <span class="k">for</span> <span class="n">goal_dir</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0/n1&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n2&#39;</span> <span class="p">]</span> <span class="p">:</span>
