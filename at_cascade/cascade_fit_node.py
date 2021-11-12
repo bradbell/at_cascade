@@ -144,7 +144,7 @@ has been replaced by the node_id for this fit_node.
 
 log
 ===
-The log table contiains a summary of the operations preformed on dismod.db
+The log table contains a summary of the operations preformed on dismod.db
 between it's input and output state.
 
 {xsrst_end cascade_fit_node}
@@ -429,8 +429,8 @@ def cascade_fit_node(
     message       = 'omege_contraint'
     add_log_entry(connection, message)
     #
-    # move avgint -> c_avgint
-    move_table_column(connection, 'avgint', 'c_avgint')
+    # move avgint -> c_root__avgint
+    move_table_column(connection, 'avgint', 'c_root_avgint')
     #
     # avgint table for child predictions
     at_cascade.avgint_parent_grid(all_node_database, fit_node_database)
@@ -493,8 +493,8 @@ def cascade_fit_node(
         child_node_databases
     )
     #
-    # move c_avgint -> avgint (original version of this table)
-    move_table_column(connection, 'c_avgint', 'avgint')
+    # move c_root_avgint -> avgint
+    move_table_column(connection, 'c_root_avgint', 'avgint')
     #
     # node_id for predictions for fit_node
     set_avgint_node_id(connection, fit_node_id)

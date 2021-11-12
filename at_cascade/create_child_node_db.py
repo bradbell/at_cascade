@@ -64,9 +64,9 @@ the results of a dismod_at predict command with the fit_var option
 and then moving the predict table to c_predict_fit_var and renaming the
 column predict_id to c_predict_fit_var_id.
 
-c_avgint Table
-==============
-The c_avgint table contains the original version of the
+c_root_avgint Table
+===================
+The c_root_avgint table contains the original version of the
 :ref:`glossary.root_node_database` avgint table
 that predicts for the parent node.
 Only the node_id column has been modified from the root_node_database version.
@@ -86,7 +86,7 @@ is a python dictionary and if *child_name* is a key for *child_node_databases*,
     for the child node. Note that if the value prior is uniform,
     the standard deviation is not used and the mean is only used to
     initialize the optimization.
--   The avgint table is a copy of the c_avgint table in the
+-   The avgint table is a copy of the c_root_avgint table in the
     *parent_node_database* with the node_id replaced by the corresponding
     child node id.
 
@@ -263,7 +263,7 @@ def create_child_node_db(
     parent_tables = dict()
     for name in [
         'avgint',
-        'c_avgint',
+        'c_root_avgint',
         'c_predict_fit_var',
         'covariate',
         'density',
@@ -348,7 +348,7 @@ def create_child_node_db(
         # child_node_tables
         child_tables = dict()
         for name in [
-            'c_avgint',
+            'c_root_avgint',
             'covariate',
             'mulcov',
             'option',
@@ -539,8 +539,8 @@ def create_child_node_db(
                         child_grid_row['smooth_id']      = child_smooth_id
                         child_tables['smooth_grid'].append( child_grid_row )
         #
-        # child_tables['c_avgint']
-        for row in child_tables['c_avgint'] :
+        # child_tables['c_root_avgint']
+        for row in child_tables['c_root_avgint'] :
             row['node_id'] = child_node_id
         #
         # child_connection
@@ -553,8 +553,8 @@ def create_child_node_db(
                 child_connection, name, child_tables[name]
             )
         #
-        # move c_avgint -> avgint
-        move_table(child_connection, 'c_avgint', 'avgint')
+        # move c_root_avgint -> avgint
+        move_table(child_connection, 'c_root_avgint', 'avgint')
         #
         # child_connection
         child_connection.close()
