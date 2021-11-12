@@ -46,24 +46,22 @@ sample Table
 The sample table contains
 the results of a dismod_at sample command for both the fixed and random effects.
 
-avgint Table
-============
-The avgint table determines which predictions are done for the child nodes
-and should come from :ref:`avgint_parent_grid`.
+c_child_avgint Table
+====================
+This is the :ref:`avgint_parent_grid` table corresponding
+to this parent_node_database.
 
 c_child_predict_sample Table
 ============================
 This table contains the predict table corresponding to a
-predict sample command using the :ref:`avgint_parent_grid`
-version of the avgint table.
+predict sample command using the c_child_avgint table.
 Note that the predict_id column name was changed to c_child_predict_sample_id
 (which is not the same as sample_id).
 
 c_child_predict_fit_var Table
 =============================
 This table contains the predict table corresponding to a
-predict fit_var command using the avgint_parent_grid
-version of the avgint table.
+predict fit_var command using the c_child_avgint table.
 Note that the predict_id column name was changed to c_child_predict_fit_var_id
 (which is not the same as var_id).
 
@@ -104,6 +102,15 @@ import shutil
 import statistics
 import dismod_at
 import at_cascade
+ # ----------------------------------------------------------------------------
+def move_table(connection, src_name, dst_name) :
+    command     = 'DROP TABLE IF EXISTS ' + dst_name
+    dismod_at.sql_command(connection, command)
+    command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
+    command    += src_name + '_id TO ' + dst_name + '_id'
+    dismod_at.sql_command(connection, command)
+    command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
+    dismod_at.sql_command(connection, command)
 # ----------------------------------------------------------------------------
 def add_index_to_name(table, name_col) :
     row   = table[-1]
@@ -114,15 +121,6 @@ def add_index_to_name(table, name_col) :
     if name[-1] == '_' :
         name = name[: -1]
     row[name_col] = name + '_' + str( len(table) )
-# ----------------------------------------------------------------------------
-def move_table(connection, src_name, dst_name) :
-    command     = 'DROP TABLE IF EXISTS ' + dst_name
-    dismod_at.sql_command(connection, command)
-    command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
-    command    += src_name + '_id TO ' + dst_name + '_id'
-    dismod_at.sql_command(connection, command)
-    command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
-    dismod_at.sql_command(connection, command)
 # ----------------------------------------------------------------------------
 # The smoothing for the new child_tables['smooth_grid'] row is the most
 # recent smoothing added to child_tables['smooth']; i.e., its smoothing_id
@@ -265,7 +263,7 @@ def create_child_node_db(
     connection    = dismod_at.create_connection(parent_node_database, new)
     parent_tables = dict()
     for name in [
-        'avgint',
+        'c_child_avgint',
         'c_root_avgint',
         'c_child_predict_fit_var',
         'c_child_predict_sample',
@@ -298,7 +296,7 @@ def create_child_node_db(
     parent_fit_var = dict()
     for predict_row in parent_tables['c_child_predict_fit_var'] :
         avgint_id          = predict_row['avgint_id']
-        avgint_row         = parent_tables['avgint'][avgint_id]
+        avgint_row         = parent_tables['c_child_avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
@@ -311,7 +309,7 @@ def create_child_node_db(
     parent_sample = dict()
     for predict_row in parent_tables['c_child_predict_sample'] :
         avgint_id          = predict_row['avgint_id']
-        avgint_row         = parent_tables['avgint'][avgint_id]
+        avgint_row         = parent_tables['c_child_avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
@@ -555,9 +553,17 @@ def create_child_node_db(
             dismod_at.replace_table(
                 child_connection, name, child_tables[name]
             )
-        #
         # move c_root_avgint -> avgint
         move_table(child_connection, 'c_root_avgint', 'avgint')
+        #
+        # drop the following tables:
+        # c_child_avgint, c_child_predict_sample, c_child_predict_fit_var
+        command  = 'DROP TABLE c_child_avgint'
+        dismod_at.sql_command(child_connection, command)
+        command  = 'DROP TABLE c_child_predict_sample'
+        dismod_at.sql_command(child_connection, command)
+        command  = 'DROP TABLE c_child_predict_fit_var'
+        dismod_at.sql_command(child_connection, command)
         #
         # child_connection
         child_connection.close()

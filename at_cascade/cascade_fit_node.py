@@ -375,6 +375,7 @@ def cascade_fit_node(
             msg += 'not yet implemented'
             assert False, msg
     #
+    # fit_children
     if fit_children is None :
         #
         # root_node_id
@@ -411,7 +412,7 @@ def cascade_fit_node(
     # fit_node_id
     fit_node_id = at_cascade.table_name2id(node_table, 'node', fit_node_name)
     #
-    # fit_node_dir, fit_node_database
+    # fit_node_dir
     fit_node_dir = fit_node_database[ : - len('dismod.db') - 1 ]
     #
     # connection
@@ -435,10 +436,10 @@ def cascade_fit_node(
     message       = 'omege_contraint'
     add_log_entry(connection, message)
     #
-    # move avgint -> c_root__avgint
+    # move avgint -> c_root_avgint
     move_table(connection, 'avgint', 'c_root_avgint')
     #
-    # avgint table for child predictions
+    # avgint_parent_grid
     add_log_entry(connection, 'avgint_parent_grid')
     at_cascade.avgint_parent_grid(all_node_database, fit_node_database)
     #
@@ -481,6 +482,9 @@ def cascade_fit_node(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
     move_table(connection, 'predict', 'c_child_predict_sample')
+    #
+    # c_child_avgint
+    move_table(connection, 'avgint', 'c_child_avgint')
     #
     # child_node_list
     child_node_list = fit_children[fit_node_id]
