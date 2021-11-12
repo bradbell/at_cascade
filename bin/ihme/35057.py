@@ -218,15 +218,35 @@ def get_data_table(file_name) :
     return data_table
 # ---------------------------------------------------------------------------
 def get_covariate(covariate_dict, sex, location_id, time) :
-    year    = time + 0.5
-    year_id = int( time )
-    if not year_id in covariate_dict[sex][location_id] :
+    #
+    # year_left, year_right
+    year_id = round(time)
+    minus   = year_id - 1 in covariate_dict[sex][location_id]
+    zero    = year_id     in covariate_dict[sex][location_id]
+    plus    = year_id + 1 in covariate_dict[sex][location_id]
+    if minus and plus :
+        year_left  = year_id - 1
+        year_right = year_id + 1
+    elif minus and zero :
+        year_left  = year_id - 1
+        year_right = year_id
+    elif plus and zero :
+        year_left  = year_id
+        year_right = year_id + 1
+    else :
         return None
-    if not year_id + 1 in covariate_dict[sex][location_id] :
-        return None
-    cleft  = covariate_dict[sex][location_id][year_id]
-    cright = covariate_dict[sex][location_id][year_id + 1]
-    cvalue = cright * (time - year_id) + cleft * (year_id  + 1 - time)
+    #
+    # covariate value corresponding to year_left and year_right
+    cleft  = covariate_dict[sex][location_id][year_left]
+    cright = covariate_dict[sex][location_id][year_right]
+    #
+    # convert from demographer notation
+    year_left  = year_left + 0.5
+    year_right = year_right + 0.5
+    #
+    # linear interpolation of covariate in time
+    cvalue = cright * (time - year_left) + cleft * (year_right - time)
+    cvalue = cvalue / (year_right - year_left)
     return cvalue
 # ---------------------------------------------------------------------------
 def write_csv(file_name, table) :
@@ -292,6 +312,8 @@ def create_csv_files() :
         time            = (row['time_lower'] + row['time_upper']) / 2.0
         row['obesity']  = get_covariate(obesity_dict, sex, location_id, time)
         ldi             = get_covariate(ldi_dict, 'Both', location_id, time)
+        if row['obesity'] is None or ldi is None :
+            row['hold_out'] = 1
         if ldi is None :
             row['log_ldi'] = None
         else :
