@@ -7,11 +7,6 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
-import os
-import sys
-import dismod_at
-import at_cascade
-# -----------------------------------------------------------------------------
 '''
 {xsrst_begin continue_cascade}
 
@@ -43,11 +38,10 @@ fit_node_database
 *****************
 is a python string specifying the location of a dismod_at database
 relative to the current working directory.
-On input, this is an :ref:`glossary.fit_node_database`.
-Upon return, it is a :ref:`glossary.fit_node_database` with the
-extra properties listed under
-:ref:`cascade_fit_node.output_dismod_db` below.
-This argument can't be ``None``.
+This is a :ref:`glossary.fit_node_database` with the
+final state after running :ref:`cascade_fit_node` on this database.
+The necesssary state of *fit_node_database* is reached before
+cascade_fit_node starts runs on any of its child nodes.
 
 fit_goal_set
 ************
@@ -63,6 +57,50 @@ will be printed on standard output during the optimization.
 
 {xsrst_end   continue_cascade}
 '''
+import os
+import sys
+import time
+import dismod_at
+import at_cascade
+# ----------------------------------------------------------------------------
+def add_log_entry(connection, message) :
+    #
+    # log_table
+    log_table = dismod_at.get_table_dict(connection, 'log')
+    #
+    # seconds
+    seconds   = int( time.time() )
+    #
+    # message_type
+    message_type = 'at_cascade'
+    #
+    # cmd
+    cmd = 'insert into log'
+    cmd += ' (log_id,message_type,table_name,row_id,unix_time,message) values('
+    cmd += str( len(log_table) ) + ','     # log_id
+    cmd += f'"{message_type}",'            # message_type
+    cmd += 'null,'                         # table_name
+    cmd += 'null,'                         # row_id
+    cmd += str(seconds) + ','              # unix_time
+    cmd += f'"{message}")'                 # message
+    dismod_at.sql_command(connection, cmd)
+# ----------------------------------------------------------------------------
+def move_table(connection, src_name, dst_name) :
+    #
+    command     = 'DROP TABLE IF EXISTS ' + dst_name
+    dismod_at.sql_command(connection, command)
+    #
+    command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
+    command    += src_name + '_id TO ' + dst_name + '_id'
+    dismod_at.sql_command(connection, command)
+    #
+    command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
+    dismod_at.sql_command(connection, command)
+    #
+    # log table
+    message      = f'move table {src_name} to {dst_name}'
+    add_log_entry(connection, message)
+# ----------------------------------------------------------------------------
 def continue_cascade(
 # BEGIN syntax
 # continue_cascade(
@@ -74,35 +112,106 @@ def continue_cascade(
 # END syntax
 ) :
     #
+    # fit_node_dir
+    fit_node_dir = fit_node_database[ : - len('dismod.db') - 1 ]
+    #
     # connection
     new        = False
     connection = dismod_at.create_connection(fit_node_database, new)
     #
-    # empty_list
-    empty_list = list()
+    # log_table, node_table
+    log_table  = dismod_at.get_table_dict(connection, 'log')
+    node_table = dismod_at.get_table_dict(connection, 'node')
     #
-    # nslist table
-    dismod_at.replace_table(connection, 'nslist', empty_list)
-    #
-    # nslist_pair table
-    dismod_at.replace_table(connection, 'nslist_pair', empty_list)
-    #
-    # rate_table
-    rate_table = dismod_at.get_table_dict(connection, 'rate')
-    for row in rate_table :
-        if row['rate_name'] == 'omega' :
-            row['parent_smooth_id'] = None
-            row['child_smooth_id']  = None
-            row['child_nslist_id']  = None
-    dismod_at.replace_table(connection, 'rate', rate_table)
+    # move avgint -> c_root_avgint
+    move_table(connection, 'avgint', 'c_root_avgint')
     #
     # connection
     connection.close()
     #
-    # cascade_fit
-    at_cascade.cascade_fit_node(
-        all_node_database = all_node_database,
-        fit_node_database = fit_node_database,
-        fit_goal_set      = fit_goal_set,
-        trace_fit         = trace_fit,
+    # fit_ok, sample_ok
+    fit_ok    = False
+    sample_ok = False
+    for log_id in range(len( log_table) ) :
+        message_type = log_table[log_id]['message_type']
+        message      = log_table[log_id]['message']
+        if message_type == 'command' and message.startswith('begin fit both') :
+            #
+            # fit_ok
+            message_type = log_table[log_id + 1]['message_type']
+            message      = log_table[log_id + 1]['message']
+            fit_ok       =  message_type == 'command' and message == 'end fit'
+            #
+            # sample_ok
+            message_type = log_table[log_id + 3]['message_type']
+            message      = log_table[log_id + 3]['message']
+            sample_ok    =  message_type=='command' and message=='end sample'
+    msg  =  'Cannot find successful fit and sample at end of log table in\n'
+    msg += fit_node_database
+    assert fit_ok and sample_ok, msg
+    #
+    # root_node_id
+    new              = False
+    connection       = dismod_at.create_connection(all_node_database, new)
+    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+    root_node_name   = None
+    for row in all_option_table :
+        if row['option_name'] == 'root_node_name' :
+            root_node_name = row['option_value']
+    connection.close()
+    msg = 'Cannot find root_node_name in all_option_table'
+    assert not root_node_name is None, msg
+    root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
+    #
+    # parent_node_id
+    parent_node_name = at_cascade.get_parent_node(fit_node_database)
+    parent_node_id   = at_cascade.table_name2id(
+        node_table, 'node', parent_node_name
     )
+    #
+    # fit_children
+    fit_children= at_cascade.get_fit_children(
+        root_node_id, fit_goal_set, node_table
+    )
+    #
+    # child_node_list
+    child_node_list = fit_children[parent_node_id]
+    #
+    # child_node_databases
+    child_node_databases = dict()
+    for node_id in child_node_list :
+        node_name = node_table[node_id]['node_name']
+        subdir    = fit_node_dir + '/' + node_name
+        if not os.path.exists(subdir) :
+            os.makedirs(subdir)
+        child_node_databases[node_name] = subdir + '/dismod.db'
+    #
+    # create child node databases
+    at_cascade.create_child_node_db(
+        all_node_database,
+        fit_node_database,
+        child_node_databases
+    )
+    #
+    # move c_root_avgint table -> avgint table
+    # creae_child_node_db expects this
+    new        = False
+    connection = dismod_at.create_connection(fit_node_database, new)
+    move_table(connection, 'c_root_avgint', 'avgint')
+    connection.close()
+    #
+    # fit_integrand
+    fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
+    #
+    # fit child node databases
+    for node_name in child_node_databases :
+        fit_node_database = child_node_databases[node_name]
+        at_cascade.cascade_fit_node(
+            all_node_database ,
+            fit_node_database ,
+            fit_goal_set      ,
+            node_table        ,
+            fit_children      ,
+            fit_integrand     ,
+            trace_fit         ,
+        )
