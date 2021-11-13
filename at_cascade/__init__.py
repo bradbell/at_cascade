@@ -15,10 +15,10 @@ The at_cascade Python Module
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
 {xsrst_child_table
-    at_cascade/continue_cascade.py
+    at_cascade/avgint_parent_grid.py
     at_cascade/cascade_fit_node.py
     at_cascade/check_cascade_fit.py
-    at_cascade/avgint_parent_grid.py
+    at_cascade/continue_cascade.py
     at_cascade/create_all_node_db.py
     at_cascade/create_child_node_db.py
     at_cascade/data4cov_reference.py
@@ -37,10 +37,10 @@ The at_cascade Python Module
 '''
 
 # BEGIN_SORT_THIS_LINE_PLUS_1
-from .continue_cascade      import continue_cascade
+from .avgint_parent_grid    import avgint_parent_grid
 from .cascade_fit_node      import cascade_fit_node
 from .check_cascade_fit     import check_cascade_fit
-from .avgint_parent_grid    import avgint_parent_grid
+from .continue_cascade      import continue_cascade
 from .create_all_node_db    import create_all_node_db
 from .create_child_node_db  import create_child_node_db
 from .data4cov_reference    import data4cov_reference

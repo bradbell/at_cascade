@@ -8,13 +8,13 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin_parent max_fit_option}
+{xsrst_begin_parent continue_cascade_xam}
 {xsrst_spell
     dage
     dtime
 }
 
-Example Using max_fit Option
+Example Continuing a Cascade
 ############################
 For this example everything is constant in age and time.
 
@@ -22,14 +22,15 @@ Nodes
 *****
 The following is a diagram of the node tree for this example.
 The :ref:`glossary.root_node` is n0,
-the :ref:`glossary.fit_goal_set` is {n3, n4, n5, n6},
+the first :ref:`glossary.fit_goal_set` is {n3, n4, n2},
+the second :ref:`glossary.fit_goal_set` is {n5, n6},
 and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
           /-----/\-----\
         n1             (n2)
        /  \            /  \
-    (n3)  (n4)       n5    n6
+    (n3)  (n4)      [n5]  [n6]
 
 fit_goal_set
 ============
@@ -37,6 +38,9 @@ fit_goal_set
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
+A cascade using the first fit_goal_set is started at node n0.
+After that finishes, the cascade is continued from node n2
+using the second fit_goal_set.
 
 Rates
 *****
@@ -49,17 +53,6 @@ There are no covariates for this example.
 
 Simulated Data
 **************
-
-Random Seed
-===========
-The random seed can be used to reproduce results.
-If the original value of this setting is zero, the clock is used get
-a random seed. The actual value or *random_seed* is always printed.
-{xsrst_file
-    # BEGIN random_seed
-    # END random_seed
-}
-
 
 rate_true(rate, a, t, n, c)
 ===========================
@@ -86,18 +79,7 @@ n_i
 Data is only simulated for the leaf nodes; i.e.,
 each *n_i* is in the set { n3, n4, n5, n6 }.
 Since the data does not have any nose, the data residuals are a measure
-of how good the fit is for the nodes in the fit_goal_set.
-
-max_fit_option
-==============
-This is the value of the :ref:`all_option_table.max_fit` option.
-It is also te number of data values per leaf.
-Thus the leaf nodes fit all their data while the other nodes only fit
-a randomly chosen subset of their data.
-{xsrst_file
-    # BEGIN max_fit_option
-    # END max_fit_option
-}
+of how good the fit is for the nodes in the fit goal sets.
 
 Parent Rate Smoothing
 *********************
@@ -140,19 +122,19 @@ tables of the fit_node_database corresponding to each node.
 The :ref:`check_cascade_fit<check_cascade_fit>`
 routine uses these tables to check that fit against the truth.
 
-{xsrst_end max_fit_option}
+{xsrst_end continue_cascade_xam}
 ------------------------------------------------------------------------------
-{xsrst_begin max_fit_option_py}
+{xsrst_begin continue_cascade_py}
 
-max_fit_option: Python Source Code
-###################################
+continue_cascade: Python Source Code
+####################################
 
 {xsrst_file
     BEGIN source code
     END source code
 }
 
-{xsrst_end max_fit_option_py}
+{xsrst_end continue_cascade_py}
 '''
 # BEGIN source code
 # ----------------------------------------------------------------------------
@@ -164,7 +146,6 @@ import os
 import copy
 import time
 import csv
-import random
 import shutil
 import distutils.dir_util
 import dismod_at
@@ -179,20 +160,9 @@ import at_cascade
 # global varables
 # -----------------------------------------------------------------------------
 # BEGIN fit_goal_set
-fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
+first_fit_goal_set  = { 'n3', 'n4', 'n2' }
+second_fit_goal_set = { 'n5', 'n6' }
 # END fit_goal_set
-#
-# BEGIN random_seed
-random_seed = 0
-if random_seed == 0 :
-    random_seed = int( time.time() )
-random.seed(random_seed)
-print('max_fit_option: random_seed = ', random_seed)
-# END random_seed
-#
-# BEGIN max_fit_option
-max_fit_option = 10
-# END max_fit_option
 #
 # ----------------------------------------------------------------------------
 # functions
@@ -216,7 +186,7 @@ def rate_true(rate, a, t, n, c) :
 def root_node_db(file_name) :
     #
     # BEGIN iota_mean
-    iota_mean      = rate_true('iota', None, None, 'n0', None)
+    iota_mean = rate_true('iota', None, None, 'n0', None)
     # END iota_mean
     #
     # prior_table
@@ -311,24 +281,23 @@ def root_node_db(file_name) :
     # data_table
     data_table  = list()
     leaf_set    = { 'n3', 'n4', 'n5', 'n6' }
-    for j in range( max_fit_option ) :
-        row = {
-            'subgroup':     'world',
-            'weight':       '',
-            'age_lower':    50.0,
-            'age_upper':    50.0,
-            'time_lower':   2000.0,
-            'time_upper':   2000.0,
-            'integrand':    'Sincidence',
-            'density':      'gaussian',
-            'hold_out':     False,
-        }
-        for node in leaf_set :
-                meas_value        = rate_true('iota', None, None, node, None)
-                row['node']       = node
-                row['meas_value'] = meas_value
-                row['meas_std']   = meas_value / 10.0
-                data_table.append( copy.copy(row) )
+    row = {
+        'subgroup':     'world',
+        'weight':       '',
+        'age_lower':    50.0,
+        'age_upper':    50.0,
+        'time_lower':   2000.0,
+        'time_upper':   2000.0,
+        'integrand':    'Sincidence',
+        'density':      'gaussian',
+        'hold_out':     False,
+    }
+    for node in leaf_set :
+            meas_value        = rate_true('iota', None, None, node, None)
+            row['node']       = node
+            row['meas_value'] = meas_value
+            row['meas_std']   = meas_value / 10.0
+            data_table.append( copy.copy(row) )
     #
     # age_grid
     age_grid = [ 0.0, 100.0 ]
@@ -350,7 +319,6 @@ def root_node_db(file_name) :
         { 'name':'quasi_fixed',           'value':'false'},
         { 'name':'max_num_iter_fixed',    'value':'50'},
         { 'name':'tolerance_fixed',       'value':'1e-8'},
-        { 'name':'random_seed',           'value':str(random_seed)},
     ]
     # ----------------------------------------------------------------------
     # create database
@@ -393,7 +361,7 @@ def main() :
     #
     # Create all_node.db
     all_node_database = 'all_node.db'
-    all_option        = { 'max_fit' : max_fit_option }
+    all_option        = dict()
     at_cascade.create_all_node_db(
         all_node_database   = all_node_database,
         root_node_database  = root_node_database,
@@ -415,11 +383,18 @@ def main() :
     fit_node_database =  fit_node_dir + '/dismod.db'
     shutil.copyfile(root_node_database, fit_node_database)
     #
-    # cascade starting at root node
+    # cascade starting at n0
     at_cascade.cascade_fit_node(
-        all_node_database = all_node_database ,
-        fit_node_database = fit_node_database ,
-        fit_goal_set      = fit_goal_set      ,
+        all_node_database = all_node_database  ,
+        fit_node_database = fit_node_database  ,
+        fit_goal_set      = first_fit_goal_set ,
+    )
+    #
+    # continue starting at at n2
+    at_cascade.continue_cascade(
+        all_node_database = all_node_database   ,
+        fit_node_database = fit_node_database   ,
+        fit_goal_set      = second_fit_goal_set ,
     )
     #
     # check leaf node results
@@ -432,30 +407,6 @@ def main() :
             fit_node_database  = leaf_database,
             relative_tolerance = 1e-8,
         )
-    #
-    # check hold outs for all nodes
-    for fit_dir in leaf_dir_list + [ 'n0', 'n0/n1', 'n0/n2' ] :
-        #
-        # data_subset
-        fit_database = fit_dir + '/dismod.db'
-        new          = False
-        connection   = dismod_at.create_connection(fit_database, new)
-        data_subset  = dismod_at.get_table_dict(connection, 'data_subset')
-        if fit_dir == 'n0' :
-            assert len(data_subset) == 4 * max_fit_option
-        elif fit_dir in [ 'n0/n1', 'n0/n2' ] :
-            assert len(data_subset) == 2 * max_fit_option
-        else :
-            assert fit_dir in leaf_dir_list
-            assert len(data_subset) == max_fit_option
-        #
-        # count_hold_out
-        count_hold_out = 0
-        for row in data_subset :
-            assert row['hold_out'] in [ 0, 1]
-            count_hold_out += row['hold_out']
-        #
-        assert len(data_subset) - count_hold_out == max_fit_option
 #
 main()
 print('max_fit_option: OK')

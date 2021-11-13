@@ -40,7 +40,7 @@ is a python string specifying the location of a dismod_at database
 relative to the current working directory.
 This is a :ref:`glossary.fit_node_database` with the
 final state after running :ref:`cascade_fit_node` on this database.
-The necesssary state of *fit_node_database* is reached before
+The necessary state of *fit_node_database* is reached before
 cascade_fit_node starts runs on any of its child nodes.
 
 fit_goal_set

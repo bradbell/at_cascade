@@ -16,6 +16,7 @@ The at_cascade Examples
 
 {xsrst_child_table
     example/absolute_covariates.py
+    example/continue_cascade.py
     example/max_fit_option.py
     example/no_ode_xam.py
     example/one_at_function.py
