@@ -183,6 +183,7 @@ def get_data_table(file_name) :
     data_table = list()
     csv_row_id = 0
     for row_in in reader :
+        # year_end is in demographer notaiton and age_end is not
         csv_row_id += 1
         row_out = dict()
         row_out['csv_row_id']   = csv_row_id
@@ -191,7 +192,7 @@ def get_data_table(file_name) :
         row_out['time_lower']   = float( row_in['year_start'] )
         row_out['time_upper']   = float( row_in['year_end'] ) + 1.0
         row_out['age_lower']    = float( row_in['age_start'] )
-        row_out['age_upper']    = float( row_in['age_end'] ) + 1.0
+        row_out['age_upper']    = float( row_in['age_end'] )
         row_out['meas_value']   = float( row_in['mean'] )
         row_out['hold_out']     = int( row_in['is_outlier'] )
         row_out['obesity']      = None
