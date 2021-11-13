@@ -91,6 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="example.html">example</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="absolute_covariates.html">absolute_covariates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="continue_cascade_xam.html">continue_cascade_xam</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="max_fit_option.html">max_fit_option</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">max_fit_option_py</a></li>
 </ul>
@@ -329,7 +330,6 @@
         <span class="s1">&#39;age_upper&#39;</span><span class="p">:</span>    <span class="mf">50.0</span><span class="p">,</span>
         <span class="s1">&#39;time_lower&#39;</span><span class="p">:</span>   <span class="mf">2000.0</span><span class="p">,</span>
         <span class="s1">&#39;time_upper&#39;</span><span class="p">:</span>   <span class="mf">2000.0</span><span class="p">,</span>
-        <span class="s1">&#39;income&#39;</span><span class="p">:</span>       <span class="kc">None</span><span class="p">,</span>
         <span class="s1">&#39;integrand&#39;</span><span class="p">:</span>    <span class="s1">&#39;Sincidence&#39;</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">avgint_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="p">)</span>
@@ -356,7 +356,7 @@
                 <span class="n">row</span><span class="p">[</span><span class="s1">&#39;meas_std&#39;</span><span class="p">]</span>   <span class="o">=</span> <span class="n">meas_value</span> <span class="o">/</span> <span class="mf">10.0</span>
                 <span class="n">data_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="p">)</span>
     <span class="c1">#</span>
-    <span class="c1"># time_grid</span>
+    <span class="c1"># age_grid</span>
     <span class="n">age_grid</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span> <span class="p">]</span>
     <span class="c1">#</span>
     <span class="c1"># time_grid</span>

@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_all_node_db.py
-    :lines: 203-211
+    :lines: 205-213
     :language: py
 
 .. meta::
@@ -116,7 +116,9 @@ the length of the reference list is one.
 all_option
 **********
 This argument can't be ``None``.
-It is a dictionary with the following possible keys:
+It is a dictionary with the possible keys below.  Note that
+:ref:`all_option_table.root_node_name` is deduced from the
+*root_node_database* and hence not included in the possible keys.
 
 .. meta::
    :keywords: absolute_covariates

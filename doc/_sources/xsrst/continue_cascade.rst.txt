@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/continue_cascade.py
-    :lines: 68-73
+    :lines: 106-111
     :language: py
 
 .. meta::
@@ -69,11 +69,10 @@ fit_node_database
 *****************
 is a python string specifying the location of a dismod_at database
 relative to the current working directory.
-On input, this is an :ref:`glossary.fit_node_database`.
-Upon return, it is a :ref:`glossary.fit_node_database` with the
-extra properties listed under
-:ref:`cascade_fit_node.output_dismod_db` below.
-This argument can't be ``None``.
+This is a :ref:`glossary.fit_node_database` with the
+final state after running :ref:`cascade_fit_node` on this database.
+The necessary state of *fit_node_database* is reached before
+cascade_fit_node starts runs on any of its child nodes.
 
 .. meta::
    :keywords: fit_goal_set

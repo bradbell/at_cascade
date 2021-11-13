@@ -18,7 +18,7 @@ max_fit_option: Python Source Code
 
 
 .. literalinclude:: ../../example/max_fit_option.py
-    :lines: 159-464
+    :lines: 158-462
     :language: py
 
 ----

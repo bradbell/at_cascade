@@ -8,10 +8,10 @@ module
    :maxdepth: 1
    :hidden:
 
-   continue_cascade
+   avgint_parent_grid
    cascade_fit_node
    check_cascade_fit
-   avgint_parent_grid
+   continue_cascade
    create_all_node_db
    create_child_node_db
    data4cov_reference
@@ -41,10 +41,10 @@ The at_cascade Python Module
     :header:  "Child", "Title"
     :widths: 20, 80
 
-    "continue_cascade", :ref:`continue_cascade`
+    "avgint_parent_grid", :ref:`avgint_parent_grid`
     "cascade_fit_node", :ref:`cascade_fit_node`
     "check_cascade_fit", :ref:`check_cascade_fit`
-    "avgint_parent_grid", :ref:`avgint_parent_grid`
+    "continue_cascade", :ref:`continue_cascade`
     "create_all_node_db", :ref:`create_all_node_db`
     "create_child_node_db", :ref:`create_child_node_db`
     "data4cov_reference", :ref:`data4cov_reference`
