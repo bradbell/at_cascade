@@ -170,7 +170,7 @@ def data4cov_reference(
     assert not parent_node_id is None
     #
     # split_reference_list, split_covariate_id, n_split
-    if 'split_list' in cov_info :
+    if len(split_reference_table) > 0 :
         split_reference_list  = cov_info['split_reference_list']
         split_covariate_id    = cov_info['split_covariate_id']
         n_split               = len(split_reference_list)
@@ -202,7 +202,7 @@ def data4cov_reference(
         #
         # split_reference_id, split_reference
         for k in range( n_split ) :
-            if 'split_list' in cov_info :
+            if len(split_reference_table) > 0 :
                 split_reference_id = k
                 split_reference    = split_reference_list[k]
             else :
