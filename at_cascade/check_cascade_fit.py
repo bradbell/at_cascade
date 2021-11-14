@@ -91,12 +91,10 @@ def check_cascade_fit(
     new        = False
     connection = dismod_at.create_connection(all_node_database, new)
     #
-    # all_cov_reference_table
+    # all_cov_reference_table, all_option_table, split_reference_table
     all_cov_reference_table = dismod_at.get_table_dict(
         connection, 'all_cov_reference'
     )
-    #
-    # all_option_table
     all_option_table      = dismod_at.get_table_dict(connection, 'all_option')
     split_reference_table = dismod_at.get_table_dict(
         connection, 'split_reference'
@@ -148,14 +146,14 @@ def check_cascade_fit(
     for row in all_cov_reference_table :
         if row['node_id'] == fit_node_id :
             covariate_id = row['covariate_id']
-            if not 'split_list' in cov_info :
+            if len( split_reference_table ) == 0 :
                 cov_reference_list[covariate_id] = row['reference']
             elif row['split_reference_id']==cov_info['split_reference_id'] :
                 cov_reference_list[covariate_id] = row['reference']
     #
     # cov_reference_list
     # include splitting covariate value
-    if 'split_list' in cov_info :
+    if len( split_reference_table ) > 0 :
         split_covariate_id   = cov_info['split_covariate_id']
         split_reference_list = cov_info['split_reference_list']
         split_reference_id   = cov_info['split_reference_id']
