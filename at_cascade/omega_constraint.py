@@ -197,7 +197,7 @@ def omega_constraint(
         fit_tables['covariate'],
         all_tables['split_reference'],
     )
-    if not 'split_list' in cov_info :
+    if len( all_tables['split_reference'] )  == 0 :
         split_reference_id = None
     else :
         split_reference_id = cov_info['split_reference_id']
