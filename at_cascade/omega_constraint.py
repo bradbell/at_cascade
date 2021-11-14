@@ -127,7 +127,8 @@ def omega_constraint(
         'mtall_index',
         'mtspecific_index',
         'omega_age_grid',
-        'omega_time_grid'
+        'omega_time_grid',
+        'split_reference',
     ] :
         all_tables[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
@@ -192,7 +193,9 @@ def omega_constraint(
     #
     # split_reference_id
     cov_info = at_cascade.get_cov_info(
-        all_tables['all_option'], fit_tables['covariate']
+        all_tables['all_option'],
+        fit_tables['covariate'],
+        all_tables['split_reference'],
     )
     if not 'split_list' in cov_info :
         split_reference_id = None

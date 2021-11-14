@@ -226,11 +226,17 @@ def set_avgint_node_id(connection, fit_node_id) :
     dismod_at.replace_table(connection, 'avgint', avgint_table)
 # ----------------------------------------------------------------------------
 def check_covariate_reference(
-    fit_node_id, covariate_table, all_option_table, all_cov_reference_table
+    fit_node_id,
+    covariate_table,
+    all_option_table,
+    all_cov_reference_table,
+    split_reference_table
 ) :
     #
     # cov_info
-    cov_info = at_cascade.get_cov_info(all_option_table, covariate_table)
+    cov_info = at_cascade.get_cov_info(
+        all_option_table, covariate_table, split_reference_table
+    )
     #
     # rel_covariate_id_set
     rel_covariate_id_set = cov_info['rel_covariate_id_set']
@@ -342,10 +348,13 @@ def cascade_fit_node(
     new         = False
     connection  = dismod_at.create_connection(all_node_database, new)
     #
-    # all_option_table, all_cov_reference_table
+    # all_option_table, all_cov_reference_table, split_refrence_table
     all_option_table = dismod_at.get_table_dict(connection, 'all_option')
-    all_cov_reference_table = \
-        dismod_at.get_table_dict(connection, 'all_cov_reference'
+    all_cov_reference_table = dismod_at.get_table_dict(
+        connection, 'all_cov_reference'
+    )
+    split_reference_table = dismod_at.get_table_dict(
+        connection, 'split_reference'
     )
     #
     # all_option
@@ -425,7 +434,11 @@ def cascade_fit_node(
     # check covariate references for this fit node
     covariate_table = dismod_at.get_table_dict(connection, 'covariate')
     check_covariate_reference(
-        fit_node_id, covariate_table, all_option_table, all_cov_reference_table
+        fit_node_id,
+        covariate_table,
+        all_option_table,
+        all_cov_reference_table,
+        split_reference_table
     )
     #
     # integrand_table

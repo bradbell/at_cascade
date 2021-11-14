@@ -110,6 +110,9 @@ def data4cov_reference(
     new              = False
     connection       = dismod_at.create_connection(all_node_database, new)
     all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+    split_reference_table = dismod_at.get_table_dict(
+        connection, 'split_reference'
+    )
     connection.close()
     #
     # root_table
@@ -132,7 +135,7 @@ def data4cov_reference(
     #
     # cov_info
     cov_info = at_cascade.get_cov_info(
-        all_option_table, root_table['covariate']
+        all_option_table, root_table['covariate'], split_reference_table
     )
     #
     # rel_covariate_id_set

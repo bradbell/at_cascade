@@ -35,6 +35,12 @@ This is the dismod_at covariate table as a python list
 of python dictionaries.
 This argument can't be ``None``.
 
+split_reference_table
+*********************
+This is the :ref:`split_reference_table` as a python list
+of python dictionaries.
+This argument can't be ``None``.
+
 cov_info
 ********
 The return value *cov_info* is a `dict` with the following keys:
@@ -98,11 +104,15 @@ import at_cascade
 def get_cov_info(
 # BEGIN syntax
 # cov_info = at_cascade.get_cov_info(
-    all_option_table = None ,
-    covariate_table  = None ,
+    all_option_table      = None ,
+    covariate_table       = None ,
+    split_reference_table = None,
 # )
 # END syntax
 ) :
+    assert not all_option_table      is None
+    assert not covariate_table       is None
+    assert not split_reference_table is None
     #
     # split_list, absolute_covariates
     split_list          = None

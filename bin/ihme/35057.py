@@ -797,12 +797,15 @@ def replace_relative_covariate_reference(
         all_node_database, root_node_database
 ) :
     #
-    # all_option_table, all_cov_reference_table
+    # all_option_table, all_cov_reference_table, split_reference_table
     new               = False
     connection        = dismod_at.create_connection(all_node_database, new)
     all_option_table  = dismod_at.get_table_dict(connection, 'all_option')
     all_cov_reference_table = dismod_at.get_table_dict(
         connection, 'all_cov_reference'
+    )
+    split_reference_table = dismod_at.get_table_dict(
+        connection, 'split_reference'
     )
     connection.close()
     #
@@ -815,7 +818,9 @@ def replace_relative_covariate_reference(
     connection.close()
     #
     # cov_info
-    cov_info = at_cascade.get_cov_info(all_option_table, covariate_table)
+    cov_info = at_cascade.get_cov_info(
+        all_option_table, covariate_table, split_reerence_table
+    )
     #
     # parent_node_id
     parent_node_name = None

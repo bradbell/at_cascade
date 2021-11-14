@@ -256,6 +256,9 @@ def create_child_node_db(
     all_cov_reference_table = dismod_at.get_table_dict(
         connection, 'all_cov_reference'
     )
+    split_reference_table = dismod_at.get_table_dict(
+        connection, 'split_reference'
+    )
     connection.close()
     #
     # parent_tables
@@ -334,7 +337,7 @@ def create_child_node_db(
     #
     # split_reference_id
     cov_info = at_cascade.get_cov_info(
-        all_option_table, parent_tables['covariate']
+        all_option_table, parent_tables['covariate'], split_reference_table
     )
     if not 'split_list' in cov_info :
         split_reference_id = None

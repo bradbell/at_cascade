@@ -59,6 +59,13 @@ def main() :
         connection, tbl_name, col_name, col_type, row_list
     )
     #
+    # split_reference table
+    tbl_name = 'split_reference'
+    col_name = [ 'split_reference_name', 'split_reference_value' ]
+    col_type = [ 'text',                 'real']
+    row_list = [ ['female', -0.5], ['both', 0.0], ['male', 0.5] ]
+    dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
+    #
     # connection
     connection.close()
     #

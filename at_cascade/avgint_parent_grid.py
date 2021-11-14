@@ -91,6 +91,9 @@ def avgint_parent_grid(
     all_cov_reference_table = dismod_at.get_table_dict(
         connection, 'all_cov_reference'
     )
+    split_reference_table   = dismod_at.get_table_dict(
+        connection, 'split_reference'
+    )
     connection.close()
     #
     # fit_tables
@@ -114,7 +117,7 @@ def avgint_parent_grid(
     # split_reference_id
     split_reference_id = None
     cov_info = at_cascade.get_cov_info(
-        all_option_table, fit_tables['covariate']
+        all_option_table, fit_tables['covariate'], split_reference_table
     )
     if 'split_reference_id' in cov_info :
         split_reference_id = cov_info['split_reference_id']

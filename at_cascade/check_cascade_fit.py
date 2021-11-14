@@ -97,7 +97,10 @@ def check_cascade_fit(
     )
     #
     # all_option_table
-    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+    all_option_table      = dismod_at.get_table_dict(connection, 'all_option')
+    split_reference_table = dismod_at.get_table_dict(
+        connection, 'split_reference'
+    )
     #
     # connection
     connection.close()
@@ -136,7 +139,7 @@ def check_cascade_fit(
     #
     # cov_info
     cov_info = at_cascade.get_cov_info(
-        all_option_table, tables['covariate']
+        all_option_table, tables['covariate'], split_reference_table
     )
     #
     # cov_reference_list
