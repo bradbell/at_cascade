@@ -129,6 +129,11 @@ def get_cov_info(
     else :
         assert not split_list is None
     #
+    # split_reference_list
+    split_reference_list = list()
+    for row in split_reference_table :
+        split_reference_list.append( row['split_reference_value'] )
+    #
     # abs_covariate_id_set
     abs_covariate_id_set = set()
     if not absolute_covariates is None :
@@ -153,13 +158,10 @@ def get_cov_info(
         }
         return cov_info
     #
-    # split_level, split_covarate_name, split_reference_list
+    # split_level, split_covarate_name
     temp_list            = split_list.split()
     split_level          = int( temp_list[0] )
     split_covariate_name = temp_list[1]
-    split_reference_list = temp_list[2:]
-    for k in range( len(split_reference_list) ) :
-        split_reference_list[k] = float( split_reference_list[k] )
     #
     # split_covariate_id
     split_covariate_id   = at_cascade.table_name2id(
@@ -175,10 +177,10 @@ def get_cov_info(
     # split_reference_id
     if not split_reference in split_reference_list :
         msg  = 'Cannot find covariate table value for splitting covariate '
-        msg += 'in split_reference_list\n'
-        msg += f'split_list = {split_list}, '
+        msg += 'in split_reference table\n'
+        msg += f'split_reference_value = {split_reference_list}, '
         msg += f'split_covariate_id = {split_covariate_id}, '
-        msg += f'covariate table reference = {split_reference}'
+        msg += f'covariate table reference value = {split_reference}'
         assert False, msg
     split_reference_id = split_reference_list.index( split_reference )
     #
