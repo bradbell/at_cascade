@@ -339,7 +339,7 @@ def create_child_node_db(
     cov_info = at_cascade.get_cov_info(
         all_option_table, parent_tables['covariate'], split_reference_table
     )
-    if not 'split_list' in cov_info :
+    if len(split_reference_table) == 0 :
         split_reference_id = None
     else :
         split_reference_id = cov_info['split_reference_id']
