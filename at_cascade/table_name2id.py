@@ -57,6 +57,6 @@ def table_name2id(
     for (row_id, row) in enumerate(table) :
         if row[col_name] == row_name :
             return row_id
-    msg  = f'table_name2id: {row_name} '
-    msg += f'is not presnet in table {tbl_name} column {col_name}.'
+    msg  = f'table_name2id: "{row_name}" '
+    msg += f'is not presnet in column "{col_name}" of "{tbl_name}" table.'
     assert False, msg

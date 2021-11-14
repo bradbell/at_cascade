@@ -240,10 +240,9 @@ def create_all_node_db(
         assert type(mtall_data) is dict
     #
     # n_split
-    n_split              = 1
-    if 'split_list' in all_option :
-        split_list = all_option['split_list']
-        n_split    = len( split_list.split() ) - 2
+    n_split = 1
+    if len(split_reference) > 0 :
+        n_split = len(split_reference)
     #
     # -------------------------------------------------------------------------
     # Read root node database
@@ -291,9 +290,8 @@ def create_all_node_db(
     #
     # rel_covariate_id_set
     rel_covariate_id_set = set( range(len(covariate_table)) )
-    if 'split_list' in all_option :
-        temp_list            = all_option['split_list'].split()
-        split_covariate_name = temp_list[1]
+    if 'split_covariate_name' in all_option :
+        split_covariate_name = all_option['split_covariate_name']
         split_covariate_id   = at_cascade.table_name2id(
             covariate_table, 'covariate', split_covariate_name
         )
@@ -327,7 +325,7 @@ def create_all_node_db(
             covariate_name = covariate_table[covariate_id]['covariate_name']
             reference_list = all_cov_reference[node_name][covariate_name]
             #
-            if not 'split_list' in all_option :
+            if len(split_reference) == 0 :
                 assert len(reference_list) == 1
                 reference = reference_list[0]
                 row       = [ node_id, covariate_id, None, reference ]
@@ -411,7 +409,7 @@ def create_all_node_db(
         for node_name in node_list :
             node_id = at_cascade.table_name2id(node_table, 'node', node_name)
             for k in range(n_split) :
-                if not 'split_list' in all_option :
+                if len(split_reference) == 0 :
                     split_reference_id = None
                 else :
                     split_reference_id = k
@@ -454,7 +452,7 @@ def create_all_node_db(
         for node_name in node_list :
             node_id = at_cascade.table_name2id(node_table, 'node', node_name)
             for k in range(n_split) :
-                if not 'split_list' in all_option :
+                if len( split_reference) == 0 :
                     split_reference_id = None
                 else :
                     split_reference_id = k

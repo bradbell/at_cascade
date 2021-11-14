@@ -218,8 +218,8 @@ fit_goal_set = { 'n3', 'n4', 'n2' }
 #
 # BEGIN split_list
 split_level_str     = '-1 '
-split_covariate_name = 'sex '
-split_reference_str = '1.0 2.0 3.0'
+split_covariate_name = 'sex'
+split_reference_str = ' 1.0 2.0 3.0'
 all_option = {
     'split_list': split_level_str + split_covariate_name + split_reference_str,
     'split_level': split_level_str,
