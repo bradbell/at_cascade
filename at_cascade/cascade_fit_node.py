@@ -244,14 +244,14 @@ def check_covariate_reference(
     # check_reference_set
     check_reference_set = set()
     # ------------------------------------------------------------------------
-    if not 'split_list' in cov_info :
+    if len( split_reference_table ) == 0 :
         for row in all_cov_reference_table :
             assert row['split_reference_id'] is None
             if row['node_id'] == fit_node_id :
                 covariate_id = row['covariate_id']
                 #
                 if covariate_id in check_reference_set :
-                    msg  = 'split_list is not in all_option table and '
+                    msg  = 'split_reference_table is empty and '
                     msg += 'more than one row in all_cov_reference table has\n'
                     msg += f'node_id = {fit_node_id} '
                     msg += f'covariate_id = {covariate_id}'
@@ -259,8 +259,8 @@ def check_covariate_reference(
                 #
                 reference = covariate_table[covariate_id]['reference']
                 if row['reference'] != reference :
-                    msg  = 'split_list is not in all_option table and '
-                    msg  = 'covariate references for '
+                    msg  = 'split_reference_table is empty and '
+                    msg += 'covariate references for '
                     msg += f'node_id = {fit_node_id} '
                     msg += f'covariate_id = {covariate_id} are different in\n'
                     msg += 'covariate and all_cov_reference tables'
@@ -364,6 +364,8 @@ def cascade_fit_node(
         'max_abs_effect',
         'absolute_covariates',
         'split_list',
+        'split_level',
+        'split_covariate_name',
         'in_parallel',
     ]
     all_option  = dict()
@@ -372,9 +374,8 @@ def cascade_fit_node(
         option_value = row['option_value']
         assert option_name in valid
         all_option[option_name] = option_value
-    if 'split_list' in  all_option :
-        split_list  = all_option['split_list'].split()
-        split_level = split_list[0]
+    if 'split_level' in  all_option :
+        split_level = all_option['split_level']
         if 0 <= int( split_level ) :
             msg  = '0 <= split_level not yet implemented'
             assert False, msg
