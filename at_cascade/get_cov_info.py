@@ -63,9 +63,9 @@ This is the set of covariate_id values corresponding to the
 
 Split Keys
 ==========
-The keys that begin with ``split_`` appear (do not appear)
-if :ref:`all_option_table.split_list` is in (is not in)
-the all_option table
+If *split_reference_table* is empty (has no rows),
+the keys that begin with ``split_`` do not appear.
+Otherwise, they appear and have the meaning described below:
 
 split_list
 ----------
@@ -123,6 +123,12 @@ def get_cov_info(
         if row['option_name'] == 'absolute_covariates' :
             absolute_covariates  = row['option_value']
     #
+    # check split_list
+    if len(split_reference_table) == 0 :
+        assert split_list is None
+    else :
+        assert not split_list is None
+    #
     # abs_covariate_id_set
     abs_covariate_id_set = set()
     if not absolute_covariates is None :
@@ -140,7 +146,7 @@ def get_cov_info(
             rel_covariate_id_set.add( covariate_id )
     #
     # case where split_list not in all_option table
-    if split_list is None :
+    if len(split_reference_table) == 0 :
         cov_info = {
             'abs_covariate_id_set':  abs_covariate_id_set,
             'rel_covariate_id_set':  rel_covariate_id_set,
