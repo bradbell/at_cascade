@@ -64,6 +64,16 @@ no split_list
 If split_list is not present,
 the length of the reference list is one.
 
+split_reference
+***************
+This argument can't be ``None``.
+It specifies the possible reference values for the splitting covariate.
+If its length is zero, there is no splitting covariate.
+Otherwise, each key in *split_reference*  is a
+:ref:`split_reference_table.split_reference_name`.
+The value corresponding to a key is the corresponding
+:ref:`split_reference_table.split_reference_value`.
+
 all_option
 **********
 This argument can't be ``None``.
@@ -206,6 +216,7 @@ def create_all_node_db(
     all_node_database   = None,
     root_node_database  = None,
     all_cov_reference   = None,
+    split_reference     = None,
     all_option          = None,
     omega_grid          = None,
     mtall_data          = None,
@@ -216,6 +227,7 @@ def create_all_node_db(
     assert not all_node_database  is None
     assert not root_node_database is None
     assert not all_cov_reference  is None
+    assert not split_reference    is None
     assert not all_option         is None
     if omega_grid is None :
         assert mtall_data is None
@@ -449,7 +461,7 @@ def create_all_node_db(
         all_connection, tbl_name, col_name, col_type, row_list
     )
     #
-    # option table
+    # all_option table
     tbl_name = 'all_option'
     col_name = [ 'option_name', 'option_value' ]
     col_type = [ 'text',        'text']
@@ -460,6 +472,19 @@ def create_all_node_db(
         option_name = key
         option_value = str( all_option[key] )
         row_list.append( [ option_name, option_value ] )
+    dismod_at.create_table(
+        all_connection, tbl_name, col_name, col_type, row_list
+    )
+    #
+    # split_reference table
+    tbl_name = 'split_reference'
+    col_name = [ 'split_reference_name', 'split_reference_value' ]
+    col_type = [ 'text',                 'real']
+    row_list = list()
+    for key in split_reference :
+        name  = key
+        value = str( split_reference[key] )
+        row_list.append( [ name, value ] )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )

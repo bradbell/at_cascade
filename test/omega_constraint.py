@@ -188,6 +188,7 @@ def main() :
         all_node_database   = all_node_database,
         root_node_database  = root_node_database,
         all_cov_reference   = all_cov_reference,
+        split_reference     = empty_dict,
         all_option          = empty_dict,
         omega_grid          = omega_grid,
         mtall_data          = mtall_data,

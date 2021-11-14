@@ -376,3 +376,28 @@ that contains the reference values for the splitting covariate.
 
 {xsrst_end all_option_table}
 ------------------------------------------------------------------------------
+{xsrst_begin split_reference_table}
+
+Split Reference Table
+#####################
+This table specifies the possible reference values for the splitting covariate.
+If this table has not rows, there is no splitting covariate.
+Otherwise :ref:`all_option_table.split_list.split_covariate_name`
+must appear in the all_option table.
+
+split_reference_id
+******************
+is the :ref:`all_node_db.primary_key` for this table.
+
+split_reference_name
+********************
+This column has type ``text`` and contains a name attached
+to each of the splitting covariate reference values.
+
+split_reference_value
+*********************
+This column has type ``real`` and contains the possible reference values for
+the splitting covariate.
+
+{xsrst_end split_reference_table}
+------------------------------------------------------------------------------

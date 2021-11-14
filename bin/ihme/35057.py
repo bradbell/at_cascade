@@ -42,7 +42,7 @@ max_plot            = 2000
 random_seed = 0
 #
 # Name of the node that we are drilling to
-fit_goal_set = { 'New_York' }
+fit_goal_set = { 'Global' }
 # -----------------------------------------------------------------------------
 #
 import time
@@ -738,6 +738,13 @@ def create_all_node_database(all_node_database, root_node_database) :
             split_reference_id = split_map[ row['split_reference_id'] ]
             row['split_reference_id'] = split_reference_id
         dismod_at.replace_table( connection, tbl_name, this_table)
+    #
+    # split_reference table
+    tbl_name = 'split_reference'
+    col_name = [ 'split_reference_name', 'split_reference_value' ]
+    col_type = [ 'text',                 'real']
+    row_list = [ ['female', -0.5], ['both', 0.0], ['male', 0.5] ]
+    dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
     #
     # connection
     connection.close()
