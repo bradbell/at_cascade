@@ -394,12 +394,11 @@ def main() :
     # Create all_node.db
     all_node_database = 'all_node.db'
     all_option        = { 'max_fit' : max_fit_option }
-    empty_dict        = dict()
     at_cascade.create_all_node_db(
         all_node_database   = all_node_database,
         root_node_database  = root_node_database,
         all_cov_reference   = all_cov_reference,
-        split_reference     = empty_dict,
+        split_reference     = list(),
         all_option          = all_option,
     )
     #

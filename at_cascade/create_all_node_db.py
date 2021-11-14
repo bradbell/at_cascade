@@ -66,13 +66,16 @@ the length of the reference list is one.
 
 split_reference
 ***************
-This argument can't be ``None``.
-It specifies the possible reference values for the splitting covariate.
-If its length is zero, there is no splitting covariate.
-Otherwise, each key in *split_reference*  is a
-:ref:`split_reference_table.split_reference_name`.
-The value corresponding to a key is the corresponding
-:ref:`split_reference_table.split_reference_value`.
+This argument can't be ``None`` and
+specifies the possible reference values for the splitting covariate.
+It must be a ``list`` of lists where each inner list has two elements.
+If the length of the outter list is zero, there is no splitting covariate.
+Otherwise th i-th inner list is *[name, value]*
+where *name* is a ``str`` and ``value`` is a ``float``.
+This specifies the :ref:`split_reference_table.split_reference_name`
+and :ref:`split_reference_table.split_reference_value` for the
+for the row with :ref:`split_reference_table.split_reference_id` equal to i.
+
 
 all_option
 **********
@@ -224,16 +227,17 @@ def create_all_node_db(
 # )
 # END syntax
 ):
-    assert not all_node_database  is None
-    assert not root_node_database is None
-    assert not all_cov_reference  is None
-    assert not split_reference    is None
-    assert not all_option         is None
+    assert type(all_node_database)   is str
+    assert type(root_node_database)  is str
+    assert type(all_cov_reference)   is dict
+    assert type(split_reference)     is list
+    assert type(all_option)          is dict
     if omega_grid is None :
         assert mtall_data is None
         assert mtspecific_data is None
     else :
-        assert not mtall_data is None
+        assert type(omega_grid) is dict
+        assert type(mtall_data) is dict
     #
     # n_split
     n_split              = 1
@@ -480,11 +484,7 @@ def create_all_node_db(
     tbl_name = 'split_reference'
     col_name = [ 'split_reference_name', 'split_reference_value' ]
     col_type = [ 'text',                 'real']
-    row_list = list()
-    for key in split_reference :
-        name  = key
-        value = str( split_reference[key] )
-        row_list.append( [ name, value ] )
+    row_list = split_reference
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )

@@ -223,7 +223,7 @@ split_reference_str = '1.0 2.0 3.0'
 all_option = { 'split_list' :
     split_level_str + split_covariate_name + split_reference_str
 }
-split_reference = { 'female': 1.0, 'both': 2.0, 'male': 3.0 }
+split_reference = [ ['female', 1.0], ['both', 2.0], ['male', 3.0] ]
 # END split_list
 #
 # BEGIN split_index
