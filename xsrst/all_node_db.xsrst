@@ -55,10 +55,9 @@ by the primary key in the root_node_database covariate table.
 split_reference_id
 ******************
 This column has type ``integer`` and it specifies the
-index of a value in
-:ref:`all_option_table.split_list.split_reference_list`.
-If there is (is not) a split_list in the option table,
-the values in this column must not be (must be) null.
+index of a value in :ref:`split_reference_table`.
+If split_reference_table is empty (is not empty),
+the values in this column must be (must not be) null.
 
 reference
 *********
@@ -127,7 +126,7 @@ all_mtall Table
 ***************
 This table specifies the value of :ref:`glossary.mtall` for each
 age, time point in the :ref:`omega_grid`, every node, and each reference
-in the :ref:`all_option_table.split_list.split_reference_list`.
+in the :ref:`split_reference_table`.
 This data is used to compute the :ref:`omega_constraint` for each node.
 If mtall is not specified for a node, it will use the same *mtall*
 values as its nearest ancestor node.
@@ -166,9 +165,9 @@ split_reference_id
 ******************
 This column has type ``integer`` and it specifies the
 index of a value in
-:ref:`all_option_table.split_list.split_reference_list`.
-If there is (is not) a split_list in the option table,
-the values in this column must not be (must be) null.
+:ref:`split_reference_table`.
+If split_reference_table is empty (is not empty),
+the values in this column must be (must not be) null.
 
 all_mtall_id
 ============
@@ -209,7 +208,7 @@ all_mtspecific Table
 ********************
 This table specifies the value of :ref:`glossary.mtspecific` for each
 age, time point in the :ref:`omega_grid`,  every node, and each reference
-in the :ref:`all_option_table.split_list.split_reference_list`.
+in the :ref:`split_reference_table`.
 If mtspecific is not specified for a node, it will use the same *mtspecific*
 values as its nearest ancestor node.
 If none of its ancestors have mtspecific data,
@@ -246,9 +245,9 @@ split_reference_id
 ******************
 This column has type ``integer`` and it specifies the
 index of a value in
-:ref:`all_option_table.split_list.split_reference_list`.
-If there is (is not) a split_list in the option table,
-the values in this column must not be (must be) null.
+:ref:`split_reference_table`.
+If split_reference_table is empty (is not empty),
+the values in this column must be (must not be) null.
 
 all_mtspecific_id
 =================
@@ -345,16 +344,8 @@ covariates that do not change their reference value and hence are not
 included in the :ref:`all_cov_reference_table`.
 If this option does not appear, there are no absolute covariates.
 
-split_list
-**********
-This is a space separated list with the following entries:
-
-| |tab| split_level split_covariate_name split_reference_0 split_reference_1 ...
-
-If this option does not appear, there will be no split of the cascade.
-
 split_level
-===========
+***********
 is a text representation of a non-negative integer specifying
 the level at which to split the cascade.
 If split_level < 0 the split occurred above the root node
@@ -362,17 +353,14 @@ and no more splitting is done.
 Level 0 corresponds to splitting after fitting the root_node,
 level 1 to splitting after fitting the children of the root_node,
 and so on.
+If :ref:`split_reference_table` is empty this option must not appear.
 
 split_covariate_name
-====================
+********************
 is the name, in the root_node_database covariate table, of the splitting
 covariate.
-
-split_reference_list
-====================
-This is a space separated list, with two less elements than split_list,
-that contains the reference values for the splitting covariate.
-
+If :ref:`split_reference_table` is empty (is not empty)
+this option must not (must) appear.
 
 {xsrst_end all_option_table}
 ------------------------------------------------------------------------------
@@ -381,9 +369,9 @@ that contains the reference values for the splitting covariate.
 Split Reference Table
 #####################
 This table specifies the possible reference values for the splitting covariate.
-If this table has not rows, there is no splitting covariate.
-Otherwise :ref:`all_option_table.split_list.split_covariate_name`
-must appear in the all_option table.
+If this table is empty (is not empty),
+the :ref:`all_option_table.split_covariate_name`
+must not appear (must appear).
 
 split_reference_id
 ******************
