@@ -13,6 +13,7 @@ all_node_db
    all_mtall
    all_mtspecific
    all_option_table
+   split_reference_table
 
 .. meta::
    :keywords: all_node_db, the, all, node, database
@@ -52,6 +53,7 @@ initial value is zero, and it must increment by one for each row.
     "all_mtall", :ref:`all_mtall`
     "all_mtspecific", :ref:`all_mtspecific`
     "all_option_table", :ref:`all_option_table`
+    "split_reference_table", :ref:`split_reference_table`
 
 ----
 

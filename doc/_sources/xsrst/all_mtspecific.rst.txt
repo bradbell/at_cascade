@@ -36,7 +36,7 @@ all_mtspecific Table
 ********************
 This table specifies the value of :ref:`glossary.mtspecific` for each
 age, time point in the :ref:`omega_grid`,  every node, and each reference
-in the :ref:`all_option_table.split_list.split_reference_list`.
+in the :ref:`split_reference_table`.
 If mtspecific is not specified for a node, it will use the same *mtspecific*
 values as its nearest ancestor node.
 If none of its ancestors have mtspecific data,
@@ -115,9 +115,9 @@ split_reference_id
 ******************
 This column has type ``integer`` and it specifies the
 index of a value in
-:ref:`all_option_table.split_list.split_reference_list`.
-If there is (is not) a split_list in the option table,
-the values in this column must not be (must be) null.
+:ref:`split_reference_table`.
+If split_reference_table is empty (is not empty),
+the values in this column must be (must not be) null.
 
 .. meta::
    :keywords: all_mtspecific_id

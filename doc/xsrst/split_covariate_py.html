@@ -5,11 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta content="split_list_py, split_list:, python, source, code" name="keywords" />
+  <meta content="split_covariate_py, split_covariate:, python, source, code" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>split_list_py &mdash; at_cascade  documentation</title>
+  <title>split_covariate_py &mdash; at_cascade  documentation</title>
   
 
   
@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="module" href="module.html" />
-    <link rel="prev" title="split_list" href="split_list.html" /> 
+    <link rel="prev" title="split_covariate" href="split_covariate.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -96,8 +96,8 @@
 <li class="toctree-l3"><a class="reference internal" href="no_ode_xam.html">no_ode_xam</a></li>
 <li class="toctree-l3"><a class="reference internal" href="one_at_function.html">one_at_function</a></li>
 <li class="toctree-l3"><a class="reference internal" href="prevalence2iota.html">prevalence2iota</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="split_list.html">split_list</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">split_list_py</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="split_covariate.html">split_covariate</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">split_covariate_py</a></li>
 </ul>
 </li>
 </ul>
@@ -154,15 +154,15 @@
         
           <li><a href="example.html">example</a> &raquo;</li>
         
-          <li><a href="split_list.html">split_list</a> &raquo;</li>
+          <li><a href="split_covariate.html">split_covariate</a> &raquo;</li>
         
-      <li>split_list_py</li>
+      <li>split_covariate_py</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/xsrst/split_list_py.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/xsrst/split_covariate_py.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -177,10 +177,10 @@
             
   <p class="hidden"><span class="math notranslate nohighlight">\(\newcommand{\B}[1]{ {\bf #1} }\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\R}[1]{ {\rm #1} }\)</span></p>
-<div class="section" id="split-list-py">
-<h1>split_list_py<a class="headerlink" href="#split-list-py" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="split-list-python-source-code">
-<span id="id1"></span><h2>split_list: Python Source Code<a class="headerlink" href="#split-list-python-source-code" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="split-covariate-py">
+<h1>split_covariate_py<a class="headerlink" href="#split-covariate-py" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="split-covariate-python-source-code">
+<span id="id1"></span><h2>split_covariate: Python Source Code<a class="headerlink" href="#split-covariate-python-source-code" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># imports</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
@@ -208,14 +208,14 @@
 <span class="n">fit_goal_set</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span> <span class="p">}</span>
 <span class="c1"># END fit_goal_set</span>
 <span class="c1">#</span>
-<span class="c1"># BEGIN_1 split_list</span>
-<span class="n">split_level_str</span>     <span class="o">=</span> <span class="s1">&#39;-1 &#39;</span>
-<span class="n">split_covariate_name</span> <span class="o">=</span> <span class="s1">&#39;sex &#39;</span>
-<span class="n">split_reference_str</span> <span class="o">=</span> <span class="s1">&#39;1.0 2.0 3.0&#39;</span>
-<span class="n">all_option</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;split_list&#39;</span> <span class="p">:</span>
-    <span class="n">split_level_str</span> <span class="o">+</span> <span class="n">split_covariate_name</span> <span class="o">+</span> <span class="n">split_reference_str</span>
-<span class="p">}</span>
-<span class="c1"># END_1 split_list</span>
+<span class="c1"># BEGIN split_reference_table</span>
+<span class="n">all_option</span>            <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;split_covariate_name&#39;</span><span class="p">:</span> <span class="s1">&#39;sex&#39;</span><span class="p">}</span>
+<span class="n">split_reference_table</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s1">&#39;split_reference_name&#39;</span><span class="p">:</span> <span class="s1">&#39;female&#39;</span><span class="p">,</span> <span class="s1">&#39;split_reference_value&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;split_reference_name&#39;</span><span class="p">:</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span>   <span class="s1">&#39;split_reference_value&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;split_reference_name&#39;</span><span class="p">:</span> <span class="s1">&#39;male&#39;</span><span class="p">,</span>   <span class="s1">&#39;split_reference_value&#39;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">},</span>
+<span class="p">]</span>
+<span class="c1"># END split_reference_table</span>
 <span class="c1">#</span>
 <span class="c1"># BEGIN split_index</span>
 <span class="n">split_index</span> <span class="o">=</span> <span class="mi">2</span>
@@ -235,9 +235,9 @@
 <span class="c1"># END alpha_true</span>
 <span class="c1">#</span>
 <span class="c1"># BEGIN split_reference_list</span>
-<span class="n">split_reference_list</span> <span class="o">=</span> <span class="n">split_reference_str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">split_reference_list</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
-    <span class="n">split_reference_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span> <span class="n">split_reference_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="p">)</span>
+<span class="n">split_reference_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">split_reference_table</span> <span class="p">:</span>
+    <span class="n">split_reference_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;split_reference_value&#39;</span><span class="p">]</span> <span class="p">)</span>
 <span class="c1"># END split_reference_list</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># functions</span>
@@ -464,11 +464,8 @@
     <span class="n">time_id_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_table</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
     <span class="n">omega_grid</span>   <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="n">age_id_list</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span> <span class="p">:</span> <span class="n">time_id_list</span> <span class="p">}</span>
     <span class="c1">#</span>
-    <span class="c1"># n_split, split_reference_list</span>
-    <span class="n">split_reference_list</span> <span class="o">=</span> <span class="n">split_reference_str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-    <span class="n">n_split</span>              <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">split_reference_list</span> <span class="p">)</span>
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_split</span><span class="p">)</span> <span class="p">:</span>
-        <span class="n">split_reference_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span> <span class="n">split_reference_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="p">)</span>
+    <span class="c1"># n_split</span>
+    <span class="n">n_split</span>  <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">split_reference_list</span> <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># mtall_data</span>
     <span class="n">mtall_data</span>      <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -489,12 +486,13 @@
     <span class="c1"># Create all_node.db</span>
     <span class="n">all_node_database</span> <span class="o">=</span> <span class="s1">&#39;all_node.db&#39;</span>
     <span class="n">at_cascade</span><span class="o">.</span><span class="n">create_all_node_db</span><span class="p">(</span>
-        <span class="n">all_node_database</span>   <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
-        <span class="n">root_node_database</span>  <span class="o">=</span> <span class="n">root_node_database</span><span class="p">,</span>
-        <span class="n">all_cov_reference</span>   <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">,</span>
-        <span class="n">all_option</span>          <span class="o">=</span> <span class="n">all_option</span><span class="p">,</span>
-        <span class="n">omega_grid</span>          <span class="o">=</span> <span class="n">omega_grid</span><span class="p">,</span>
-        <span class="n">mtall_data</span>          <span class="o">=</span> <span class="n">mtall_data</span><span class="p">,</span>
+        <span class="n">all_node_database</span>      <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
+        <span class="n">root_node_database</span>     <span class="o">=</span> <span class="n">root_node_database</span><span class="p">,</span>
+        <span class="n">all_cov_reference</span>      <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">,</span>
+        <span class="n">split_reference_table</span>  <span class="o">=</span> <span class="n">split_reference_table</span><span class="p">,</span>
+        <span class="n">all_option</span>             <span class="o">=</span> <span class="n">all_option</span><span class="p">,</span>
+        <span class="n">omega_grid</span>             <span class="o">=</span> <span class="n">omega_grid</span><span class="p">,</span>
+        <span class="n">mtall_data</span>             <span class="o">=</span> <span class="n">mtall_data</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># fit_node_dir</span>
@@ -533,12 +531,12 @@
         <span class="k">assert</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">not_fit_dir</span> <span class="p">)</span>
 <span class="c1">#</span>
 <span class="n">main</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;split_list: OK&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;split_covariate: OK&#39;</span><span class="p">)</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 <hr class="docutils" />
-<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">example/split_list.py</span></code></p>
+<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">example/split_covariate.py</span></code></p>
 </div>
 </div>
 
@@ -553,7 +551,7 @@
         <a href="module.html" class="btn btn-neutral float-right" title="module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="split_list.html" class="btn btn-neutral float-left" title="split_list" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="split_covariate.html" class="btn btn-neutral float-left" title="split_covariate" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

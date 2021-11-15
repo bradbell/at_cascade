@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_all_node_db.py
-    :lines: 205-213
+    :lines: 197-206
     :language: py
 
 .. meta::
@@ -65,7 +65,8 @@ This argument can't be ``None``.
 
 all_cov_reference
 *****************
-This is a python dictionary with a key equal to the node name for
+This argument can't be ``None``.
+It is a python dictionary with a key equal to the node name for
 each node in the node table in root_node_database.
 If *node_name* is a node name,
 *all_cov_reference[node_name]* is a python dictionary with a key equal to the
@@ -75,36 +76,37 @@ If *covariate_name* is an covariate name,
 | |tab| *all_cov_reference[node_name][covariate_name]*
 
 is a list of reference values for the specified node and covariate.
-The argument *all_cov_reference* can't be ``None``.
 
 .. meta::
-   :keywords: split_list, present
+   :keywords: list
 
-.. index:: split_list, present
+.. index:: list
 
-.. _create_all_node_db.all_cov_reference.split_list_present:
+.. _create_all_node_db.all_cov_reference.list:
 
-split_list present
-==================
-If :ref:`all_option_table.split_list` is present,
-the length of the list of reference values is the number of reference
-values in *split_list*.
-Each covariate reference can depend on the corresponding
+List
+====
+If *split_reference_table* is empty,
+the length of the reference list is one and none of the
+covariates depend on a splitting covariate.
+Otherwise, the length of the list is the same as the length of
+the split_reference table and
+covariate reference can depend on the corresponding
 split covariance reference value.
-In the case where covariate_id corresponds to the split covariate,
-both reference values must be equal.
 
 .. meta::
-   :keywords: no, split_list
+   :keywords: split_reference_table
 
-.. index:: no, split_list
+.. index:: split_reference_table
 
-.. _create_all_node_db.all_cov_reference.no_split_list:
+.. _create_all_node_db.split_reference_table:
 
-no split_list
-=============
-If split_list is not present,
-the length of the reference list is one.
+split_reference_table
+*********************
+This argument can't be ``None`` and
+specifies the possible reference values for the splitting covariate.
+It must be a ``list`` of ``dict`` representation of the
+:ref:`split_reference_table`.
 
 .. meta::
    :keywords: all_option
@@ -134,17 +136,30 @@ If this key is present, it is a ``str`` specifying the
 Otherwise, there absolute_covariates does not appear in the all_option table.
 
 .. meta::
-   :keywords: split_list
+   :keywords: split_level
 
-.. index:: split_list
+.. index:: split_level
 
-.. _create_all_node_db.all_option.split_list:
+.. _create_all_node_db.all_option.split_level:
 
-split_list
-==========
-If this key is present, it is a ``str`` specifying the
-:ref:`all_option_table.split_list`.
+split_level
+===========
+If this key is present, it is an ``int`` specifying the
+:ref:`all_option_table.split_level`.
 Otherwise, there is no split_level in the all_option table.
+
+.. meta::
+   :keywords: split_covariate_name
+
+.. index:: split_covariate_name
+
+.. _create_all_node_db.all_option.split_covariate_name:
+
+split_covariate_name
+====================
+If this key is present, it is a ``str`` specifying the
+:ref:`all_option_table.split_covariate_name`.
+Otherwise, there is no split_covariate_name in the all_option table.
 
 .. meta::
    :keywords: in_parallel
@@ -233,34 +248,12 @@ and *j* equal 0, ..., *n_omega_time*-1,
 | |tab| *mtall_data[node_name][k][ i * n_omega_time + j ]*
 
 is the value of *mtall* at the specified node,
-the *k*-th value in :ref:`all_option_table.split_list.split_reference_list`,
 the age corresponding to index *i* in *omega_grid*\ [``age``],
 and time corresponding to index *j* in *omega_grid*\ [``time``].
-
-.. meta::
-   :keywords: split_reference_list, present
-
-.. index:: split_reference_list, present
-
-.. _create_all_node_db.mtall_data.split_reference_list_present:
-
-split_reference_list present
-============================
-If split_reference_list is present,
-the length of the list *mtall_data[node_name]* is the same as the length of
-split_reference_list.
-
-.. meta::
-   :keywords: no, split_reference_list
-
-.. index:: no, split_reference_list
-
-.. _create_all_node_db.mtall_data.no_split_reference_list:
-
-no split_reference_list
-=======================
-If split_reference_list is not present,
-the length of *mtall_data[node_name]* is one.
+If split_reference table is empty, *k* is zero.
+Otherwise, let *n_split* be the length of the split_reference table.
+For *k* equal 0, ... , *n_split*-1, it specifies the value of
+:ref:`split_reference_table.split_reference_id` for the covariate value.
 
 .. meta::
    :keywords: default
@@ -295,34 +288,12 @@ and *j* equal 0, ..., *n_omega_time*-1,
 | |tab| *mtspecific_data[node_name][k][ i * n_omega_time + j ]*
 
 is the value of *mtspecific* at the specified node,
-the *k*-th value in :ref:`all_option_table.split_list.split_reference_list`,
 the age corresponding to index *i* in *omega_grid*\ [``age``],
 and time corresponding to index *j* in *omega_grid*\ [``time``].
-
-.. meta::
-   :keywords: split_reference_list, present
-
-.. index:: split_reference_list, present
-
-.. _create_all_node_db.mtspecific_data.split_reference_list_present:
-
-split_reference_list present
-============================
-If split_reference_list is present,
-the length of the list *mtspecific_data[node_name]*
-is the same as the length of split_reference_list.
-
-.. meta::
-   :keywords: no, split_reference_list
-
-.. index:: no, split_reference_list
-
-.. _create_all_node_db.mtspecific_data.no_split_reference_list:
-
-no split_reference_list
-=======================
-If split_reference_list is not present,
-the length of *mtspecific_data[node_name]* is one.
+If split_reference table is empty, *k* is zero.
+Otherwise, let *n_split* be the length of the split_reference table.
+For *k* equal 0, ... , *n_split*-1, it specifies the value of
+:ref:`split_reference_table.split_reference_id` for the covariate value.
 
 .. meta::
    :keywords: default

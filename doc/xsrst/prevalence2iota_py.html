@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="split_list" href="split_list.html" />
+    <link rel="next" title="split_covariate" href="split_covariate.html" />
     <link rel="prev" title="prevalence2iota" href="prevalence2iota.html" /> 
 </head>
 
@@ -99,7 +99,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">prevalence2iota_py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="split_list.html">split_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="split_covariate.html">split_covariate</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
@@ -570,14 +570,14 @@
     <span class="c1"># Create all_node.db</span>
     <span class="c1"># We could get all_cov_reference from here, but we do not need to</span>
     <span class="n">all_node_database</span> <span class="o">=</span> <span class="s1">&#39;all_node.db&#39;</span>
-    <span class="n">empty_dict</span>        <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="n">at_cascade</span><span class="o">.</span><span class="n">create_all_node_db</span><span class="p">(</span>
-        <span class="n">all_node_database</span>   <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
-        <span class="n">root_node_database</span>  <span class="o">=</span> <span class="n">root_node_database</span><span class="p">,</span>
-        <span class="n">all_cov_reference</span>   <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">,</span>
-        <span class="n">all_option</span>          <span class="o">=</span> <span class="n">empty_dict</span><span class="p">,</span>
-        <span class="n">omega_grid</span>          <span class="o">=</span> <span class="n">omega_grid</span><span class="p">,</span>
-        <span class="n">mtall_data</span>          <span class="o">=</span> <span class="n">mtall_data</span><span class="p">,</span>
+        <span class="n">all_node_database</span>       <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
+        <span class="n">root_node_database</span>      <span class="o">=</span> <span class="n">root_node_database</span><span class="p">,</span>
+        <span class="n">all_cov_reference</span>       <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">,</span>
+        <span class="n">split_reference_table</span>   <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span>
+        <span class="n">all_option</span>              <span class="o">=</span> <span class="nb">dict</span><span class="p">(),</span>
+        <span class="n">omega_grid</span>              <span class="o">=</span> <span class="n">omega_grid</span><span class="p">,</span>
+        <span class="n">mtall_data</span>              <span class="o">=</span> <span class="n">mtall_data</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># fit_node_dir</span>
@@ -634,7 +634,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="split_list.html" class="btn btn-neutral float-right" title="split_list" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="split_covariate.html" class="btn btn-neutral float-right" title="split_covariate" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="prevalence2iota.html" class="btn btn-neutral float-left" title="prevalence2iota" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

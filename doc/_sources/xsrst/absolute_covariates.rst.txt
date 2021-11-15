@@ -71,16 +71,16 @@ The only non-zero dismod_at rates for this example are
 :ref:`glossary.iota`.and :ref:`glossary.omega`.
 
 .. meta::
-   :keywords: split_list
+   :keywords: splitting, covariate
 
-.. index:: split_list
+.. index:: splitting, covariate
 
-.. _absolute_covariates.rates.split_list:
+.. _absolute_covariates.rates.splitting_covariate:
 
-split_list
-==========
+Splitting Covariate
+===================
 This cascade is set up to split by sex reference value; see
-:ref:`all_option_table.split_list`:
+:ref:`split_reference_table`
 
 .. literalinclude:: ../../example/absolute_covariates.py
     :lines: 220-225

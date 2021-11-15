@@ -1,0 +1,26 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!!!
+split_covariate_py
+!!!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: split_covariate_py, split_covariate:, python, source, code
+
+.. index:: split_covariate_py, split_covariate:, python, source, code
+
+.. _split_covariate_py:
+
+split_covariate: Python Source Code
+###################################
+.. contents::
+   :local:
+
+
+.. literalinclude:: ../../example/split_covariate.py
+    :lines: 183-534
+    :language: py
+
+----
+
+xsrst input file: ``example/split_covariate.py``

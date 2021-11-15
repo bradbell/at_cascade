@@ -1,24 +1,24 @@
 .. include:: ../preamble.rst
 
-!!!!!!!!!!
-split_list
-!!!!!!!!!!
+!!!!!!!!!!!!!!!
+split_covariate
+!!!!!!!!!!!!!!!
 
 .. toctree::
    :maxdepth: 1
    :hidden:
 
-   split_list_py
+   split_covariate_py
 
 .. meta::
-   :keywords: split_list, example, using, split_list, option, in, all_node_database
+   :keywords: split_covariate, example, using, split_reference, table
 
-.. index:: split_list, example, using, split_list, option, in, all_node_database
+.. index:: split_covariate, example, using, split_reference, table
 
-.. _split_list:
+.. _split_covariate:
 
-Example Using split_list Option in all_node_database
-####################################################
+Example Using split_reference Table
+###################################
 .. contents::
    :local:
 
@@ -29,7 +29,7 @@ For this example everything is constant w.r.t. age and time.
 
 .. index:: nodes
 
-.. _split_list.nodes:
+.. _split_covariate.nodes:
 
 Nodes
 *****
@@ -49,12 +49,12 @@ and the leaf nodes are {n3, n4, n5, n6}::
 
 .. index:: fit_goal_set
 
-.. _split_list.nodes.fit_goal_set:
+.. _split_covariate.nodes.fit_goal_set:
 
 fit_goal_set
 ============
 
-.. literalinclude:: ../../example/split_list.py
+.. literalinclude:: ../../example/split_covariate.py
     :lines: 207-207
     :language: py
 
@@ -63,7 +63,7 @@ fit_goal_set
 
 .. index:: rates
 
-.. _split_list.rates:
+.. _split_covariate.rates:
 
 Rates
 *****
@@ -71,18 +71,18 @@ The only non-zero dismod_at rates for this example are
 :ref:`glossary.iota`.and :ref:`glossary.omega`.
 
 .. meta::
-   :keywords: split_list
+   :keywords: splitting, covariate
 
-.. index:: split_list
+.. index:: splitting, covariate
 
-.. _split_list.rates.split_list:
+.. _split_covariate.rates.splitting_covariate:
 
-split_list
-==========
+Splitting Covariate
+===================
 This cascade is set up to split by sex reference value; see
-:ref:`all_option_table.split_list`:
+:ref:`split_reference_table`:
 
-.. literalinclude:: ../../example/split_list.py
+.. literalinclude:: ../../example/split_covariate.py
     :lines: 211-216
     :language: py
 
@@ -91,7 +91,7 @@ This cascade is set up to split by sex reference value; see
 
 .. index:: covariate
 
-.. _split_list.covariate:
+.. _split_covariate.covariate:
 
 Covariate
 *********
@@ -99,12 +99,12 @@ There are two covariates for this example, sex and income.
 The reference value for income depends on the value of sex;
 see :ref:`create_all_node_db.all_cov_reference`:
 
-.. literalinclude:: ../../example/split_list.py
+.. literalinclude:: ../../example/split_covariate.py
     :lines: 224-229
     :language: py
 
 
-.. literalinclude:: ../../example/split_list.py
+.. literalinclude:: ../../example/split_covariate.py
     :lines: 237-239
     :language: py
 
@@ -113,7 +113,7 @@ see :ref:`create_all_node_db.all_cov_reference`:
 
 .. index:: alpha
 
-.. _split_list.covariate.alpha:
+.. _split_covariate.covariate.alpha:
 
 alpha
 =====
@@ -123,7 +123,7 @@ that multipliers income.
 This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
 
-.. literalinclude:: ../../example/split_list.py
+.. literalinclude:: ../../example/split_covariate.py
     :lines: 233-233
     :language: py
 
@@ -132,7 +132,7 @@ The true value for *alpha* (used which simulating the data) is
 
 .. index:: random, effects
 
-.. _split_list.random_effects:
+.. _split_covariate.random_effects:
 
 Random Effects
 **************
@@ -143,7 +143,7 @@ There are no random effect for this example.
 
 .. index:: simulated, data
 
-.. _split_list.simulated_data:
+.. _split_covariate.simulated_data:
 
 Simulated Data
 **************
@@ -153,7 +153,7 @@ Simulated Data
 
 .. index:: mtall
 
-.. _split_list.simulated_data.mtall:
+.. _split_covariate.simulated_data.mtall:
 
 mtall
 =====
@@ -166,7 +166,7 @@ no :ref:`all_mtspecific` data for this example.
 
 .. index:: rate_true(rate, , a, , t, , n, , c)
 
-.. _split_list.simulated_data.rate_true(rate,_a,_t,_n,_c):
+.. _split_covariate.simulated_data.rate_true(rate,_a,_t,_n,_c):
 
 rate_true(rate, a, t, n, c)
 ===========================
@@ -178,7 +178,7 @@ same order as the covariate table.
 The values *a*, *t*, *n*, *sex*
 are not used by this function for this example.
 
-.. literalinclude:: ../../example/split_list.py
+.. literalinclude:: ../../example/split_covariate.py
     :lines: 245-254
     :language: py
 
@@ -187,7 +187,7 @@ are not used by this function for this example.
 
 .. index:: y_i
 
-.. _split_list.simulated_data.y_i:
+.. _split_covariate.simulated_data.y_i:
 
 y_i
 ===
@@ -204,7 +204,7 @@ The data is modeled as having noise even though there is no simulated noise.
 
 .. index:: n_i
 
-.. _split_list.simulated_data.n_i:
+.. _split_covariate.simulated_data.n_i:
 
 n_i
 ===
@@ -218,7 +218,7 @@ of how good the fit is for the nodes in the fit_goal_set.
 
 .. index:: parent, rate, smoothing
 
-.. _split_list.parent_rate_smoothing:
+.. _split_covariate.parent_rate_smoothing:
 
 Parent Rate Smoothing
 *********************
@@ -231,13 +231,13 @@ priors because there is only one age and one time point in the smoothing grid.
 
 .. index:: value, prior
 
-.. _split_list.parent_rate_smoothing.value_prior:
+.. _split_covariate.parent_rate_smoothing.value_prior:
 
 Value Prior
 ===========
 The following is the value prior used for the root_node
 
-.. literalinclude:: ../../example/split_list.py
+.. literalinclude:: ../../example/split_covariate.py
     :lines: 271-278
     :language: py
 
@@ -250,7 +250,7 @@ routine replaces them for other nodes.
 
 .. index:: alpha, smoothing
 
-.. _split_list.alpha_smoothing:
+.. _split_covariate.alpha_smoothing:
 
 Alpha Smoothing
 ***************
@@ -263,13 +263,13 @@ so it does not have dage or dtime priors.
 
 .. index:: value, prior
 
-.. _split_list.alpha_smoothing.value_prior:
+.. _split_covariate.alpha_smoothing.value_prior:
 
 Value Prior
 ===========
 The following is the value prior used for this smoothing:
 
-.. literalinclude:: ../../example/split_list.py
+.. literalinclude:: ../../example/split_covariate.py
     :lines: 283-289
     :language: py
 
@@ -282,7 +282,7 @@ routine replaces them for other nodes.
 
 .. index:: checking, the, fit
 
-.. _split_list.checking_the_fit:
+.. _split_covariate.checking_the_fit:
 
 Checking The Fit
 ****************
@@ -297,8 +297,8 @@ routine uses these tables to check that fit against the truth.
     :header: "Child", "Title"
     :widths: 20, 80
 
-    "split_list_py", :ref:`split_list_py`
+    "split_covariate_py", :ref:`split_covariate_py`
 
 ----
 
-xsrst input file: ``example/split_list.py``
+xsrst input file: ``example/split_covariate.py``

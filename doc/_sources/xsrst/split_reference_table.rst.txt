@@ -1,0 +1,61 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!!!!!!
+split_reference_table
+!!!!!!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: split_reference_table, split, reference, table
+
+.. index:: split_reference_table, split, reference, table
+
+.. _split_reference_table:
+
+Split Reference Table
+#####################
+.. contents::
+   :local:
+
+This table specifies the possible reference values for the splitting covariate.
+If this table is empty (is not empty),
+the :ref:`all_option_table.split_covariate_name`
+must not appear (must appear).
+
+.. meta::
+   :keywords: split_reference_id
+
+.. index:: split_reference_id
+
+.. _split_reference_table.split_reference_id:
+
+split_reference_id
+******************
+is the :ref:`all_node_db.primary_key` for this table.
+
+.. meta::
+   :keywords: split_reference_name
+
+.. index:: split_reference_name
+
+.. _split_reference_table.split_reference_name:
+
+split_reference_name
+********************
+This column has type ``text`` and contains a name attached
+to each of the splitting covariate reference values.
+
+.. meta::
+   :keywords: split_reference_value
+
+.. index:: split_reference_value
+
+.. _split_reference_table.split_reference_value:
+
+split_reference_value
+*********************
+This column has type ``real`` and contains the possible reference values for
+the splitting covariate.
+
+----
+
+xsrst input file: ``xsrst/all_node_db.xsrst``

@@ -5,14 +5,14 @@ get_cov_info
 !!!!!!!!!!!!
 
 .. meta::
-   :keywords: get_cov_info, splitting, covariate, reference, index
+   :keywords: get_cov_info, get, covariate, information
 
-.. index:: get_cov_info, splitting, covariate, reference, index
+.. index:: get_cov_info, get, covariate, information
 
 .. _get_cov_info:
 
-Splitting Covariate Reference Index
-###################################
+Get Covariate Information
+#########################
 .. contents::
    :local:
 
@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/get_cov_info.py
-    :lines: 100-103
+    :lines: 94-98
     :language: py
 
 .. meta::
@@ -53,6 +53,19 @@ This argument can't be ``None``.
 covariate_table
 ****************
 This is the dismod_at covariate table as a python list
+of python dictionaries.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: split_reference_table
+
+.. index:: split_reference_table
+
+.. _get_cov_info.split_reference_table:
+
+split_reference_table
+*********************
+This is the :ref:`split_reference_table` as a python list
 of python dictionaries.
 This argument can't be ``None``.
 
@@ -98,78 +111,45 @@ This is the set of covariate_id values corresponding to the
 :ref:`relative covariates<glossary.relative_covariate>`.
 
 .. meta::
-   :keywords: split, keys
-
-.. index:: split, keys
-
-.. _get_cov_info.cov_info.split_keys:
-
-Split Keys
-==========
-The keys that begin with ``split_`` appear (do not appear)
-if :ref:`all_option_table.split_list` is in (is not in)
-the all_option table
-
-.. meta::
-   :keywords: split_list
-
-.. index:: split_list
-
-.. _get_cov_info.cov_info.split_keys.split_list:
-
-split_list
-----------
-if *key* is split_list, *cov_info[key]* is a ``str``
-representation of :ref:`all_option_table.split_list`.
-
-.. meta::
-   :keywords: split_level
-
-.. index:: split_level
-
-.. _get_cov_info.cov_info.split_keys.split_level:
-
-split_level
------------
-if *key* is split_level, *cov_info[key]* is an ``int``
-representation of :ref:`all_option_table.split_list.split_level`.
-
-.. meta::
    :keywords: split_covariate_id
 
 .. index:: split_covariate_id
 
-.. _get_cov_info.cov_info.split_keys.split_covariate_id:
+.. _get_cov_info.cov_info.split_covariate_id:
 
 split_covariate_id
-------------------
-if *key* is split_covariate_id, *cov_info[key]* is an ``int``
+==================
+If :ref:`split_reference_table` is empty, this key is not present.
+Otherwise, for *key* equal to split_covariate_id, *cov_info[key]* is an ``int``
 equal to the covariate_id corresponding to the
-:ref:`all_option_table.split_list.split_covariate_name`.
+:ref:`all_option_table.split_covariate_name`.
 
 .. meta::
    :keywords: split_reference_list
 
 .. index:: split_reference_list
 
-.. _get_cov_info.cov_info.split_keys.split_reference_list:
+.. _get_cov_info.cov_info.split_reference_list:
 
 split_reference_list
---------------------
-if *key* is split_reference_list, *cov_info[key]* is a
+====================
+If :ref:`split_reference_table` is empty, this key is not present.
+Otherwise, for *key* equal to split_reference_list, *cov_info[key]* is a
 ``list`` of ``float`` representation of
-:ref:`all_option_table.split_list.split_reference_list`.
+:ref:`split_reference_table.split_reference_value` in the
+same order as they appear in the table.
 
 .. meta::
    :keywords: split_reference_id
 
 .. index:: split_reference_id
 
-.. _get_cov_info.cov_info.split_keys.split_reference_id:
+.. _get_cov_info.cov_info.split_reference_id:
 
 split_reference_id
--------------------
-if *key* is split_reference_id, *cov_info[key]* is an ``int``
+===================
+If :ref:`split_reference_table` is empty, this key is not present.
+Otherwise, for *key* equal to split_reference_id, *cov_info[key]* is an ``int``
 containing an index in the split_reference_list.
 The corresponding value is split_reference_list is equal to
 to reference value for split_covariate_name in the covariate table.

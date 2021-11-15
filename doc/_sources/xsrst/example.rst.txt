@@ -14,7 +14,7 @@ example
    no_ode_xam
    one_at_function
    prevalence2iota
-   split_list
+   split_covariate
 
 .. meta::
    :keywords: example, the, at_cascade, examples
@@ -40,7 +40,7 @@ The at_cascade Examples
     "no_ode_xam", :ref:`no_ode_xam`
     "one_at_function", :ref:`one_at_function`
     "prevalence2iota", :ref:`prevalence2iota`
-    "split_list", :ref:`split_list`
+    "split_covariate", :ref:`split_covariate`
 
 .. comment END_SORT_THIS_LINE_MINUS_3
 

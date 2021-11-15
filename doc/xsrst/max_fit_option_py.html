@@ -99,7 +99,7 @@
 <li class="toctree-l3"><a class="reference internal" href="no_ode_xam.html">no_ode_xam</a></li>
 <li class="toctree-l3"><a class="reference internal" href="one_at_function.html">one_at_function</a></li>
 <li class="toctree-l3"><a class="reference internal" href="prevalence2iota.html">prevalence2iota</a></li>
-<li class="toctree-l3"><a class="reference internal" href="split_list.html">split_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="split_covariate.html">split_covariate</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
@@ -421,10 +421,11 @@
     <span class="n">all_node_database</span> <span class="o">=</span> <span class="s1">&#39;all_node.db&#39;</span>
     <span class="n">all_option</span>        <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;max_fit&#39;</span> <span class="p">:</span> <span class="n">max_fit_option</span> <span class="p">}</span>
     <span class="n">at_cascade</span><span class="o">.</span><span class="n">create_all_node_db</span><span class="p">(</span>
-        <span class="n">all_node_database</span>   <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
-        <span class="n">root_node_database</span>  <span class="o">=</span> <span class="n">root_node_database</span><span class="p">,</span>
-        <span class="n">all_cov_reference</span>   <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">,</span>
-        <span class="n">all_option</span>          <span class="o">=</span> <span class="n">all_option</span><span class="p">,</span>
+        <span class="n">all_node_database</span>     <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
+        <span class="n">root_node_database</span>    <span class="o">=</span> <span class="n">root_node_database</span><span class="p">,</span>
+        <span class="n">all_cov_reference</span>     <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">,</span>
+        <span class="n">split_reference_table</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span>
+        <span class="n">all_option</span>            <span class="o">=</span> <span class="n">all_option</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># fit_node_dir</span>

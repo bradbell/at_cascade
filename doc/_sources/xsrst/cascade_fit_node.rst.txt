@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/cascade_fit_node.py
-    :lines: 320-328
+    :lines: 326-334
     :language: py
 
 .. meta::
