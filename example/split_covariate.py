@@ -8,7 +8,7 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin_parent split_list}
+{xsrst_begin_parent split_covariate}
 {xsrst_spell
     dage
     dtime
@@ -165,21 +165,21 @@ tables of the fit_node_database corresponding to each node.
 The :ref:`check_cascade_fit<check_cascade_fit>`
 routine uses these tables to check that fit against the truth.
 
-{xsrst_end split_list}
+{xsrst_end split_covariate}
 ------------------------------------------------------------------------------
-{xsrst_begin split_list_py}
+{xsrst_begin split_covariate_py}
 
-split_list: Python Source Code
+split_covariate: Python Source Code
 ###################################
 
 {xsrst_file
-    BEGIN split_list source code
-    END split_list source code
+    BEGIN split_covariate source code
+    END split_covariate source code
 }
 
-{xsrst_end split_list_py}
+{xsrst_end split_covariate_py}
 '''
-# BEGIN split_list source code
+# BEGIN split_covariate source code
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
@@ -530,6 +530,6 @@ def main() :
         assert not os.path.exists( not_fit_dir )
 #
 main()
-print('split_list: OK')
+print('split_covariate: OK')
 sys.exit(0)
-# END split_list source code
+# END split_covariate source code

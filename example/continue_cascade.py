@@ -405,7 +405,7 @@ def main() :
             rate_true          = rate_true,
             all_node_database  = all_node_database,
             fit_node_database  = leaf_database,
-            relative_tolerance = 1e-8,
+            relative_tolerance = 1e-7,
         )
 #
 main()
