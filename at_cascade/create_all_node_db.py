@@ -51,7 +51,7 @@ is a list of reference values for the specified node and covariate.
 
 List
 ====
-If :ref:`split_reference_table` is empty,
+If *split_reference_table* is empty,
 the length of the reference list is one and none of the
 covariates depend on a splitting covariate.
 Otherwise, the length of the list is the same as the length of
@@ -59,18 +59,12 @@ the split_reference table and
 covariate reference can depend on the corresponding
 split covariance reference value.
 
-split_reference
-***************
+split_reference_table
+*********************
 This argument can't be ``None`` and
 specifies the possible reference values for the splitting covariate.
-It must be a ``list`` of lists where each inner list has two elements.
-If the length of the outter list is zero, there is no splitting covariate.
-Otherwise th i-th inner list is *[name, value]*
-where *name* is a ``str`` and ``value`` is a ``float``.
-This specifies the :ref:`split_reference_table.split_reference_name`
-and :ref:`split_reference_table.split_reference_value` for the
-for the row with :ref:`split_reference_table.split_reference_id` equal to i.
-
+It must be a ``list`` of ``dict`` representation of the
+:ref:`split_reference_table`.
 
 all_option
 **********
@@ -201,22 +195,22 @@ def is_descendant(node_table, ancestor_node_id, this_node_id) :
 def create_all_node_db(
 # BEGIN syntax
 # at_cascade.create_all_node_db(
-    all_node_database   = None,
-    root_node_database  = None,
-    all_cov_reference   = None,
-    split_reference     = None,
-    all_option          = None,
-    omega_grid          = None,
-    mtall_data          = None,
-    mtspecific_data     = None,
+    all_node_database         = None,
+    root_node_database        = None,
+    all_cov_reference         = None,
+    split_reference_table     = None,
+    all_option                = None,
+    omega_grid                = None,
+    mtall_data                = None,
+    mtspecific_data           = None,
 # )
 # END syntax
 ):
-    assert type(all_node_database)   is str
-    assert type(root_node_database)  is str
-    assert type(all_cov_reference)   is dict
-    assert type(split_reference)     is list
-    assert type(all_option)          is dict
+    assert type(all_node_database)      is str
+    assert type(root_node_database)     is str
+    assert type(all_cov_reference)      is dict
+    assert type(split_reference_table)  is list
+    assert type(all_option)             is dict
     if omega_grid is None :
         assert mtall_data is None
         assert mtspecific_data is None
@@ -226,8 +220,8 @@ def create_all_node_db(
     #
     # n_split
     n_split = 1
-    if len(split_reference) > 0 :
-        n_split = len(split_reference)
+    if len(split_reference_table) > 0 :
+        n_split = len(split_reference_table)
     #
     # -------------------------------------------------------------------------
     # Read root node database
@@ -310,7 +304,7 @@ def create_all_node_db(
             covariate_name = covariate_table[covariate_id]['covariate_name']
             reference_list = all_cov_reference[node_name][covariate_name]
             #
-            if len(split_reference) == 0 :
+            if len(split_reference_table) == 0 :
                 assert len(reference_list) == 1
                 reference = reference_list[0]
                 row       = [ node_id, covariate_id, None, reference ]
@@ -394,7 +388,7 @@ def create_all_node_db(
         for node_name in node_list :
             node_id = at_cascade.table_name2id(node_table, 'node', node_name)
             for k in range(n_split) :
-                if len(split_reference) == 0 :
+                if len(split_reference_table) == 0 :
                     split_reference_id = None
                 else :
                     split_reference_id = k
@@ -437,7 +431,7 @@ def create_all_node_db(
         for node_name in node_list :
             node_id = at_cascade.table_name2id(node_table, 'node', node_name)
             for k in range(n_split) :
-                if len( split_reference) == 0 :
+                if len(split_reference_table) == 0 :
                     split_reference_id = None
                 else :
                     split_reference_id = k
@@ -467,7 +461,11 @@ def create_all_node_db(
     tbl_name = 'split_reference'
     col_name = [ 'split_reference_name', 'split_reference_value' ]
     col_type = [ 'text',                 'real']
-    row_list = split_reference
+    row_list = list()
+    for row in split_reference_table :
+        name  = row['split_reference_name']
+        value = row['split_reference_value']
+        row_list.append( [ name, value ] )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )

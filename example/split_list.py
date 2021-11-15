@@ -209,7 +209,11 @@ fit_goal_set = { 'n3', 'n4', 'n2' }
 #
 # BEGIN split_reference_table
 all_option            = {'split_covariate_name': 'sex'}
-split_reference_table = [ ['female', 1.0], ['both', 2.0], ['male', 3.0] ]
+split_reference_table = [
+    {'split_reference_name': 'female', 'split_reference_value': 1.0},
+    {'split_reference_name': 'both',   'split_reference_value': 2.0},
+    {'split_reference_name': 'male',   'split_reference_value': 3.0},
+]
 # END split_reference_table
 #
 # BEGIN split_index
@@ -232,7 +236,7 @@ alpha_true = - 0.2
 # BEGIN split_reference_list
 split_reference_list = list()
 for row in split_reference_table :
-    split_reference_list.append( row[1] )
+    split_reference_list.append( row['split_reference_value'] )
 # END split_reference_list
 # ----------------------------------------------------------------------------
 # functions
@@ -481,13 +485,13 @@ def main() :
     # Create all_node.db
     all_node_database = 'all_node.db'
     at_cascade.create_all_node_db(
-        all_node_database   = all_node_database,
-        root_node_database  = root_node_database,
-        all_cov_reference   = all_cov_reference,
-        split_reference     = split_reference_table,
-        all_option          = all_option,
-        omega_grid          = omega_grid,
-        mtall_data          = mtall_data,
+        all_node_database      = all_node_database,
+        root_node_database     = root_node_database,
+        all_cov_reference      = all_cov_reference,
+        split_reference_table  = split_reference_table,
+        all_option             = all_option,
+        omega_grid             = omega_grid,
+        mtall_data             = mtall_data,
     )
     #
     # fit_node_dir

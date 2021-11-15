@@ -395,11 +395,11 @@ def main() :
     all_node_database = 'all_node.db'
     all_option        = { 'max_fit' : max_fit_option }
     at_cascade.create_all_node_db(
-        all_node_database   = all_node_database,
-        root_node_database  = root_node_database,
-        all_cov_reference   = all_cov_reference,
-        split_reference     = list(),
-        all_option          = all_option,
+        all_node_database     = all_node_database,
+        root_node_database    = root_node_database,
+        all_cov_reference     = all_cov_reference,
+        split_reference_table = list(),
+        all_option            = all_option,
     )
     #
     # fit_node_dir
