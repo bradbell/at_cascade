@@ -37,7 +37,8 @@ This argument can't be ``None``.
 
 all_cov_reference
 *****************
-This is a python dictionary with a key equal to the node name for
+This argument can't be ``None``.
+It is a python dictionary with a key equal to the node name for
 each node in the node table in root_node_database.
 If *node_name* is a node name,
 *all_cov_reference[node_name]* is a python dictionary with a key equal to the
@@ -47,22 +48,16 @@ If *covariate_name* is an covariate name,
 | |tab| *all_cov_reference[node_name][covariate_name]*
 
 is a list of reference values for the specified node and covariate.
-The argument *all_cov_reference* can't be ``None``.
 
-split_list present
-==================
-If :ref:`all_option_table.split_list` is present,
-the length of the list of reference values is the number of reference
-values in *split_list*.
-Each covariate reference can depend on the corresponding
+List
+====
+If :ref:`split_reference_table` is empty,
+the length of the reference list is one and none of the
+covariates depend on a splitting covariate.
+Otherwise, the length of the list is the same as the length of
+the split_reference table and
+covariate reference can depend on the corresponding
 split covariance reference value.
-In the case where covariate_id corresponds to the split covariate,
-both reference values must be equal.
-
-no split_list
-=============
-If split_list is not present,
-the length of the reference list is one.
 
 split_reference
 ***************
@@ -90,11 +85,17 @@ If this key is present, it is a ``str`` specifying the
 :ref:`all_option_table.absolute_covariates`.
 Otherwise, there absolute_covariates does not appear in the all_option table.
 
-split_list
-==========
-If this key is present, it is a ``str`` specifying the
-:ref:`all_option_table.split_list`.
+split_level
+===========
+If this key is present, it is an ``int`` specifying the
+:ref:`all_option_table.split_level`.
 Otherwise, there is no split_level in the all_option table.
+
+split_covariate_name
+====================
+If this key is present, it is a ``str`` specifying the
+:ref:`all_option_table.split_covariate_name`.
+Otherwise, there is no split_covariate_name in the all_option table.
 
 in_parallel
 ===========
@@ -141,20 +142,12 @@ and *j* equal 0, ..., *n_omega_time*-1,
 | |tab| *mtall_data[node_name][k][ i * n_omega_time + j ]*
 
 is the value of *mtall* at the specified node,
-the *k*-th value in :ref:`all_option_table.split_list.split_reference_list`,
 the age corresponding to index *i* in *omega_grid*\ [``age``],
 and time corresponding to index *j* in *omega_grid*\ [``time``].
-
-split_reference_list present
-============================
-If split_reference_list is present,
-the length of the list *mtall_data[node_name]* is the same as the length of
-split_reference_list.
-
-no split_reference_list
-=======================
-If split_reference_list is not present,
-the length of *mtall_data[node_name]* is one.
+If split_reference table is empty, *k* is zero.
+Otherwise, let *n_split* be the length of the split_reference table.
+For *k* equal 0, ... , *n_split*-1, it specifies the value of
+:ref:`split_reference_table.split_reference_id` for the covariate value.
 
 default
 =======
@@ -176,20 +169,12 @@ and *j* equal 0, ..., *n_omega_time*-1,
 | |tab| *mtspecific_data[node_name][k][ i * n_omega_time + j ]*
 
 is the value of *mtspecific* at the specified node,
-the *k*-th value in :ref:`all_option_table.split_list.split_reference_list`,
 the age corresponding to index *i* in *omega_grid*\ [``age``],
 and time corresponding to index *j* in *omega_grid*\ [``time``].
-
-split_reference_list present
-============================
-If split_reference_list is present,
-the length of the list *mtspecific_data[node_name]*
-is the same as the length of split_reference_list.
-
-no split_reference_list
-=======================
-If split_reference_list is not present,
-the length of *mtspecific_data[node_name]* is one.
+If split_reference table is empty, *k* is zero.
+Otherwise, let *n_split* be the length of the split_reference table.
+For *k* equal 0, ... , *n_split*-1, it specifies the value of
+:ref:`split_reference_table.split_reference_id` for the covariate value.
 
 default
 =======

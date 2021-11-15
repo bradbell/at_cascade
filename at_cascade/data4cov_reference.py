@@ -56,7 +56,7 @@ and :ref:`all_option_table` are used.
 
 all_option Table
 ================
-The :ref:`all_option_table.split_list` and
+The :ref:`all_option_table.split_covariate_name` and
 :ref:`all_option_table.absolute_covariates` rows of this table
 (if they exist) are the only rows of this table that are used.
 
