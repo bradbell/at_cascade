@@ -819,7 +819,7 @@ def replace_relative_covariate_reference(
     #
     # cov_info
     cov_info = at_cascade.get_cov_info(
-        all_option_table, covariate_table, split_reerence_table
+        all_option_table, covariate_table, split_reference_table
     )
     #
     # parent_node_id
