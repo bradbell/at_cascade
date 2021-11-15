@@ -13,8 +13,8 @@
     rel
 }
 
-Splitting Covariate Reference Index
-###################################
+Get Covariate Information
+#########################
 
 Syntax
 ******
@@ -61,37 +61,25 @@ if *key* is rel_covariate_id_set, *cov_info[key]* is a set of ``int``.
 This is the set of covariate_id values corresponding to the
 :ref:`relative covariates<glossary.relative_covariate>`.
 
-Split Keys
-==========
-If *split_reference_table* is empty (has no rows),
-the keys that begin with ``split_`` do not appear.
-Otherwise, they appear and have the meaning described below:
-
-split_list
-----------
-if *key* is split_list, *cov_info[key]* is a ``str``
-representation of :ref:`all_option_table.split_list`.
-
-split_level
------------
-if *key* is split_level, *cov_info[key]* is an ``int``
-representation of :ref:`all_option_table.split_list.split_level`.
-
 split_covariate_id
-------------------
-if *key* is split_covariate_id, *cov_info[key]* is an ``int``
+==================
+If :ref:`split_reference_table` is empty, this key is not present.
+Otherwise, for *key* equal to split_covariate_id, *cov_info[key]* is an ``int``
 equal to the covariate_id corresponding to the
-:ref:`all_option_table.split_list.split_covariate_name`.
+:ref:`all_option_table.split_covariate_name`.
 
 split_reference_list
---------------------
-if *key* is split_reference_list, *cov_info[key]* is a
+====================
+If :ref:`split_reference_table` is empty, this key is not present.
+Otherwise, for *key* equal to split_reference_list, *cov_info[key]* is a
 ``list`` of ``float`` representation of
-:ref:`all_option_table.split_list.split_reference_list`.
+:ref:`split_reference_table.split_reference_value` in the
+same order as they appear in the table.
 
 split_reference_id
--------------------
-if *key* is split_reference_id, *cov_info[key]* is an ``int``
+===================
+If :ref:`split_reference_table` is empty, this key is not present.
+Otherwise, for *key* equal to split_reference_id, *cov_info[key]* is an ``int``
 containing an index in the split_reference_list.
 The corresponding value is split_reference_list is equal to
 to reference value for split_covariate_name in the covariate table.
@@ -122,7 +110,6 @@ def get_cov_info(
     # check split_covariate_name
     if len(split_reference_table) == 0 :
         assert not 'split_covariate_name' in all_option
-        assert not 'split_level'          in all_option
     else :
         assert 'split_covariate_name' in all_option
     #
@@ -186,7 +173,5 @@ def get_cov_info(
         'split_reference_list':  split_reference_list,
         'split_reference_id':    split_reference_id,
     }
-    if 'split_level' in all_option :
-        cov_info['split_level'] = all_option['split_level']
     #
     return cov_info
