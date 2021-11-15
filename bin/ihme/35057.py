@@ -42,7 +42,7 @@ max_plot            = 2000
 random_seed = 0
 #
 # Name of the node that we are drilling to
-fit_goal_set = { 'Global' }
+fit_goal_set = { 'New_York' }
 # -----------------------------------------------------------------------------
 #
 import time
@@ -848,14 +848,14 @@ def replace_relative_covariate_reference(
 def set_all_option_table(all_node_database) :
     #
     # all_option_table
-    split_list = '-1 sex -0.5 0.0 +0.5'
+    max_abs_effect_str = str( max_abs_effect )
     all_option_table  = [
     {'option_name': 'root_node_name',     'option_value':root_node_name},
     {'option_name': 'in_parallel',         'option_value':'false'},
     {'option_name': 'max_fit',             'option_value':str(max_fit)},
     {'option_name': 'absolute_covariates', 'option_value':'one'},
-    {'option_name': 'split_list',          'option_value':split_list},
-    {'option_name': 'max_abs_effect',      'option_value':str(max_abs_effect)},
+    {'option_name': 'split_covariate_name','option_value':'sex'},
+    {'option_name': 'max_abs_effect',      'option_value':max_abs_effect_str},
     ]
     new               = False
     connection        = dismod_at.create_connection(all_node_database, new)
