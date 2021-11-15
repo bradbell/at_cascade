@@ -114,20 +114,17 @@ def get_cov_info(
     assert not covariate_table       is None
     assert not split_reference_table is None
     #
-    # split_list, absolute_covariates
-    split_list          = None
-    absolute_covariates = None
+    # all_option
+    all_option = dict()
     for row in all_option_table :
-        if row['option_name'] == 'split_list' :
-            split_list           = row['option_value']
-        if row['option_name'] == 'absolute_covariates' :
-            absolute_covariates  = row['option_value']
+        all_option[ row['option_name'] ] = row['option_value']
     #
-    # check split_list
+    # check split_covariate_name
     if len(split_reference_table) == 0 :
-        assert split_list is None
+        assert not 'split_covariate_name' in all_option
+        assert not 'split_level'          in all_option
     else :
-        assert not split_list is None
+        assert 'split_covariate_name' in all_option
     #
     # split_reference_list
     split_reference_list = list()
@@ -136,8 +133,8 @@ def get_cov_info(
     #
     # abs_covariate_id_set
     abs_covariate_id_set = set()
-    if not absolute_covariates is None :
-        absolute_covariate_list = absolute_covariates.split()
+    if 'absolute_covariates' in all_option :
+        absolute_covariate_list = all_option['absolute_covariates'].split()
         for covariate_name in absolute_covariate_list :
             covariate_id = at_cascade.table_name2id(
                 covariate_table, 'covariate', covariate_name
@@ -150,7 +147,7 @@ def get_cov_info(
         if not covariate_id in abs_covariate_id_set :
             rel_covariate_id_set.add( covariate_id )
     #
-    # case where split_list not in all_option table
+    # case where no spliting covariate
     if len(split_reference_table) == 0 :
         cov_info = {
             'abs_covariate_id_set':  abs_covariate_id_set,
@@ -158,10 +155,8 @@ def get_cov_info(
         }
         return cov_info
     #
-    # split_level, split_covarate_name
-    temp_list            = split_list.split()
-    split_level          = int( temp_list[0] )
-    split_covariate_name = temp_list[1]
+    # split_covarate_name
+    split_covariate_name = all_option['split_covariate_name']
     #
     # split_covariate_id
     split_covariate_id   = at_cascade.table_name2id(
@@ -187,11 +182,11 @@ def get_cov_info(
     cov_info = {
         'abs_covariate_id_set':  abs_covariate_id_set,
         'rel_covariate_id_set':  rel_covariate_id_set,
-        'split_list':            split_list,
-        'split_level':           split_level,
         'split_covariate_id':    split_covariate_id,
         'split_reference_list':  split_reference_list,
         'split_reference_id':    split_reference_id,
     }
+    if 'split_level' in all_option :
+        cov_info['split_level'] = all_option['split_level']
     #
     return cov_info

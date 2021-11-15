@@ -47,7 +47,7 @@ def main() :
     col_name = [ 'option_name', 'option_value' ]
     col_type = [ 'text',        'text'         ]
     split_level          = '-1 '
-    split_covariate_name = 'sex '
+    split_covariate_name = 'sex'
     split_list = split_level + split_covariate_name
     for reference in split_reference_list :
         split_list += ' ' + str(reference)
