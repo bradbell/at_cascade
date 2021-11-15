@@ -43,13 +43,13 @@ Rates
 The only non-zero dismod_at rates for this example are
 :ref:`glossary.iota`.and :ref:`glossary.omega`.
 
-split_list
-==========
+Splitting Covariate
+===================
 This cascade is set up to split by sex reference value; see
-:ref:`all_option_table.split_list`:
+:ref:`split_reference_table`
 {xsrst_file
-    # BEGIN split_list
-    # END split_list
+    # BEGIN split_reference_table
+    # END split_reference_table
 }
 
 Covariate
@@ -216,17 +216,10 @@ import at_cascade
 fit_goal_set = { 'n3', 'n4', 'n2' }
 # END fit_goal_set
 #
-# BEGIN split_list
-split_level_str     = '-1 '
-split_covariate_name = 'sex'
-split_reference_str = ' 1.0 2.0 3.0'
-all_option = {
-    'split_list': split_level_str + split_covariate_name + split_reference_str,
-    'split_level': split_level_str,
-    'split_covariate_name': split_covariate_name,
-}
-split_reference = [ ['female', 1.0], ['both', 2.0], ['male', 3.0] ]
-# END split_list
+# BEGIN split_reference_table
+all_option            = {'split_covariate_name': 'sex'}
+split_reference_table = [ ['female', 1.0], ['both', 2.0], ['male', 3.0] ]
+# END split_reference_table
 #
 # BEGIN split_index
 split_index = 2
@@ -246,9 +239,9 @@ alpha_true = {'vaccine': -0.3,  'income': -0.2}
 # END alpha_true
 #
 # BEGIN split_reference_list
-split_reference_list = split_reference_str.split()
-for k in range( len(split_reference_list) ) :
-    split_reference_list[k] = float( split_reference_list[k] )
+split_reference_list = list()
+for row in split_reference_table :
+    split_reference_list.append( row[1] )
 # END split_reference_list
 #
 # BEGIN_1 absolute_covariates
@@ -514,11 +507,8 @@ def main() :
     time_id_list = list( range( len(age_table) ) )
     omega_grid   = { 'age': age_id_list, 'time' : time_id_list }
     #
-    # n_split, split_reference_list
-    split_reference_list = split_reference_str.split()
-    n_split              = len( split_reference_list )
-    for k in range(n_split) :
-        split_reference_list[k] = float( split_reference_list[k] )
+    # n_split
+    n_split = len( split_reference_list )
     #
     # mtall_data
     mtall_data      = dict()
@@ -543,7 +533,7 @@ def main() :
         all_node_database   = all_node_database,
         root_node_database  = root_node_database,
         all_cov_reference   = all_cov_reference,
-        split_reference     = split_reference,
+        split_reference     = split_reference_table,
         all_option          = all_option,
         omega_grid          = omega_grid,
         mtall_data          = mtall_data,
