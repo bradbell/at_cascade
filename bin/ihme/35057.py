@@ -38,6 +38,9 @@ max_abs_effect      = 2.0
 # maximum number of data points to plot per integrand
 max_plot            = 2000
 #
+# gamma for each integrand is this value times the median for the integrand
+gamma_factor        = 1e-2
+#
 # random_seed (if zero, use clock for random seed)
 random_seed = 0
 #
@@ -45,6 +48,7 @@ random_seed = 0
 fit_goal_set = { 'New_York' }
 # -----------------------------------------------------------------------------
 #
+import statistics
 import time
 import random
 import math
@@ -385,6 +389,18 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     csv_data_table = get_table_csv( data_table_out )
     csv_node_table = get_table_csv( node_table_out )
     #
+    # integrand_median
+    integrand_list = dict()
+    for row in csv_data_table :
+        integrand = row['integrand']
+        if integrand not in integrand_list :
+            integrand_list[integrand] = list()
+        integrand_list[integrand].append( float(row['meas_value']) )
+    integrand_median = dict()
+    for integrand in integrand_list :
+        integrand_median[integrand] = \
+            statistics.median( integrand_list[integrand] )
+    #
     # subgroup_table
     subgroup_table = [ {'subgroup': 'world', 'group':'world'} ]
     #
@@ -463,27 +479,23 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'effected':  'chi',
             'group':     'world',
             'smooth':    'alpha_smooth',
-        },{
-            # gamma_mtspecific
-            'covariate':  'one',
-            'type':       'meas_noise',
-            'effected':   'mtspecific',
-            'group':      'world',
-            'smooth':     'gamma_mtspecific'
         }
     ]
+    for integrand in integrand_median :
+        mulcov_table.append(
+            {   # gamma_integrand
+                'covariate':  'one',
+                'type':       'meas_noise',
+                'effected':   integrand,
+                'group':      'world',
+                'smooth':     f'gamma_{integrand}',
+            }
+        )
     #
     # integrand_table
-    integrand_set = set()
-    for row in csv_data_table :
-        integrand_set.add( row['integrand'] )
     integrand_table = list()
-    for integrand_name in integrand_set :
-        if integrand_name == 'mtexcess' :
-            min_cv  = '1.0'
-        else :
-            min_cv  = '0.1'
-        row = { 'name' : integrand_name, 'minimum_meas_cv' : min_cv }
+    for integrand_name in integrand_median :
+        row = { 'name' : integrand_name, 'minimum_meas_cv' : '0.1' }
         integrand_table.append( row )
     for j in range( len(mulcov_table) ) :
         integrand_table.append( { 'name' : f'mulcov_{j}' } )
@@ -580,21 +592,20 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'upper'   :   None,
             'mean'    :   0.0,
             'std'     :   10.0,
-        },{
-            'name'    :   'gamma_mtspecific',
-            'density' :   'uniform',
-            'lower'   :   1e-7,
-            'upper'   :   1e-7,
-            'mean'    :   1e-7,
-        },{ # This prior currently not used
-            'name'    :   'no_info_prior',
-            'density' :   'uniform',
-            'lower'   :   None,
-            'upper'   :   None,
-            'mean'    :   0.0,
         }
     ]
-    #
+    for integrand in integrand_median :
+        gamma = gamma_factor * integrand_median[integrand]
+        prior_table.append(
+            {
+                'name'    :   f'gamma_{integrand}',
+                'density' :   'uniform',
+                'lower'   :   gamma,
+                'upper'   :   gamma,
+                'mean'    :   gamma,
+            }
+        )
+    # ------------------------------------------------------------------------
     # smooth_table
     smooth_table = list()
     #
@@ -640,14 +651,16 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         'fun':       fun
     })
     #
-    # gamma_mtspecific
-    fun = lambda a, t : ('gamma_mtspecific', None, None)
-    smooth_table.append({
-        'name':    'gamma_mtspecific',
-        'age_id':   [0],
-        'time_id':  [0],
-        'fun':      fun
-    })
+    # gamma_integrand
+    for integrand in integrand_median :
+        # fun = lambda a, t : ('gamma_{integrand}', None, None) )
+        fun = eval( f"lambda a, t : ( 'gamma_{integrand}', None, None)" )
+        smooth_table.append({
+            'name':    f'gamma_{integrand}',
+            'age_id':   [0],
+            'time_id':  [0],
+            'fun':      copy.copy(fun)
+        })
     #
     # rate_table
     rate_table = [
@@ -672,7 +685,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         { 'name':'zero_sum_child_rate',  'value':'iota chi'},
         { 'name':'random_seed',          'value':str(random_seed)},
         { 'name':'quasi_fixed',          'value':'false' },
-        { 'name':'tolerance_fixed',      'value':'1e-3'},
+        { 'name':'tolerance_fixed',      'value':'1e-8'},
         { 'name':'max_num_iter_fixed',   'value':'30'},
         { 'name':'trace_init_fit_model', 'value':'true'},
         { 'name':'data_extra_columns',   'value':'csv_row_id'},
