@@ -177,7 +177,11 @@ def get_emr_table(file_name, age_group_dict) :
         else :
             row_out['integrand']    = row_in['measure']
         #
-        emr_table.append( row_out )
+        if row_out['age_upper'] - row_out['age_lower'] > 50.0 :
+            # These are the all age groups
+            assert age_group_id in [ 22, 27 ]
+        else :
+            emr_table.append( row_out )
     return emr_table
 # ---------------------------------------------------------------------------
 # data_table = get_data_table(file_name)
