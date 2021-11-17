@@ -48,6 +48,8 @@ random_seed = 0
 fit_goal_set = { 'New_York' }
 # -----------------------------------------------------------------------------
 #
+import numpy
+from scipy.interpolate import  UnivariateSpline
 import statistics
 import time
 import random
@@ -56,7 +58,6 @@ import csv
 import copy
 import sys
 import os
-import distutils.dir_util
 import shutil
 import dismod_at
 #
@@ -85,26 +86,6 @@ if random_seed == 0 :
     random_seed = int( time.time() )
 print('random_seed = ', random_seed)
 random.seed(random_seed)
-# ---------------------------------------------------------------------------
-# covariate_dict = get_covariate_dict(file_name)
-def get_covariate_dict(file_name) :
-    # LDI and obseity do do not depend on age
-    file_ptr        = open(file_name)
-    reader          = csv.DictReader(file_ptr)
-    covariate_dict  = dict()
-    for row in reader :
-        location_id  = int( row['location_id'] )
-        year_id      = int( row['year_id'] )
-        sex          = row['sex']
-        mean_value   = float( row['mean_value'] )
-        if not sex in covariate_dict :
-            covariate_dict[sex] = dict()
-        if not location_id in covariate_dict[sex] :
-            covariate_dict[sex][location_id] = dict()
-        assert not year_id in covariate_dict[sex][location_id]
-        covariate_dict[sex][location_id][year_id] = mean_value
-    #
-    return covariate_dict
 # ---------------------------------------------------------------------------
 # location_table = get_location_table(file_name)
 def get_location_table(file_name) :
@@ -144,6 +125,101 @@ def get_age_group_dict(file_name) :
         row_out['age_upper']         = float( row_in['age_group_years_end'] )
         age_group_dict[age_group_id] = row_out
     return age_group_dict
+# ---------------------------------------------------------------------------
+# interpolate_covariate  = get_interpolate_covariate(
+#   file_name, age_group_dict
+# )
+def get_interpolate_covariate(file_name, age_group_dict) :
+    file_ptr   = open(file_name)
+    reader     = csv.DictReader(file_ptr)
+    #
+    # triple_list
+    triple_list = dict()
+    #
+    # row
+    for row in reader :
+        #
+        # age_group_id
+        age_group_id = int( row['age_group_id'] )
+        if True :
+            #
+            # location_id
+            location_id = int( row['location_id'] )
+            if location_id not in triple_list :
+                triple_list[location_id]  = dict()
+            #
+            # sex
+            sex = row['sex']
+            if sex not in triple_list[location_id] :
+                triple_list[location_id][sex] = list()
+            #
+            # age
+            age_lower    = age_group_dict[age_group_id]['age_lower']
+            age_upper    = age_group_dict[age_group_id]['age_upper']
+            age          = (age_upper + age_lower) / 2.0
+            #
+            # time
+            time         = int( row['year_id'] ) + 0.5
+            #
+            # covariate
+            covariate    = float( row['mean_value'] )
+            #
+            # triple_list
+            triple = (age, time, covariate)
+            triple_list[location_id][sex].append( triple )
+    #
+    # interpolate_covariate
+    interpolate_covariate = dict()
+    #
+    # location_id
+    for location_id in triple_list :
+        interpolate_covariate[location_id] = dict()
+        # sex
+        for sex in triple_list[location_id] :
+            #
+            # triple_list
+            this_list = triple_list[location_id][sex]
+            this_list = sorted(this_list)
+            triple_list[location_id][sex] = this_list
+            #
+            # age_grid, time_grid
+            age_set  = set()
+            time_set = set()
+            for triple in this_list :
+                age_set.add( triple[0] )
+                time_set.add( triple[1] )
+            age_grid  = sorted(age_set)
+            time_grid = sorted(time_set)
+            #
+            # n_age, n_time
+            n_age  = len(age_grid)
+            n_time = len(time_grid)
+            #
+            # check for rectangular grid
+            for (index, triple) in enumerate(this_list) :
+                age        = triple[0]
+                time       = triple[1]
+                #
+                age_index  = index % n_age
+                time_index = int( index / n_age )
+                #
+                assert age  == age_grid[age_index]
+                assert time == time_grid[time_index]
+            #
+            assert n_age == 1
+            #
+            # covariate_grid
+            covariate_grid = list()
+            for triple in this_list :
+                covariate_grid.append( triple[2] )
+            #
+            # interpolate_covariate
+            linear_spline =  UnivariateSpline(
+                time_grid, covariate_grid, k = 1, s = 0.0, ext = 3
+            )
+            #
+            interpolate_covariate[location_id][sex] = linear_spline
+    return interpolate_covariate
 # ---------------------------------------------------------------------------
 # emr_table = get_emr_table(file_name, age_group_dict)
 def get_emr_table(file_name, age_group_dict) :
@@ -226,38 +302,6 @@ def get_data_table(file_name) :
         data_table.append( row_out )
     return data_table
 # ---------------------------------------------------------------------------
-def get_covariate(covariate_dict, sex, location_id, time) :
-    #
-    # year_left, year_right
-    year_id = round(time)
-    minus   = year_id - 1 in covariate_dict[sex][location_id]
-    zero    = year_id     in covariate_dict[sex][location_id]
-    plus    = year_id + 1 in covariate_dict[sex][location_id]
-    if minus and plus :
-        year_left  = year_id - 1
-        year_right = year_id + 1
-    elif minus and zero :
-        year_left  = year_id - 1
-        year_right = year_id
-    elif plus and zero :
-        year_left  = year_id
-        year_right = year_id + 1
-    else :
-        return None
-    #
-    # covariate value corresponding to year_left and year_right
-    cleft  = covariate_dict[sex][location_id][year_left]
-    cright = covariate_dict[sex][location_id][year_right]
-    #
-    # convert from demographer notation
-    year_left  = year_left + 0.5
-    year_right = year_right + 0.5
-    #
-    # linear interpolation of covariate in time
-    cvalue = cright * (time - year_left) + cleft * (year_right - time)
-    cvalue = cvalue / (year_right - year_left)
-    return cvalue
-# ---------------------------------------------------------------------------
 def write_csv(file_name, table) :
     fieldnames  = table[0].keys()
     file_ptr    = open(file_name, 'w')
@@ -280,18 +324,13 @@ def get_value_set(table, column_name) :
 def create_csv_files() :
     print('begin create_csv_files')
     #
+    # age_group_dict
+    age_group_dict = get_age_group_dict(age_group_table_csv)
+    #
     # data_table
     data_table = get_data_table(data_table_csv)
-    if False :
-        age_max   = - math.inf
-        time_max   = - math.inf
-        for row in data_table :
-            age_max  = max(age_max, row['age_upper'] )
-            time_max = max(time_max, row['t ime_upper'] )
-        print( age_max, time_max)
     #
     # emr_table
-    age_group_dict = get_age_group_dict(age_group_table_csv)
     emr_table     = get_emr_table(emr_table_csv, age_group_dict)
     #
     # data_table
@@ -301,12 +340,15 @@ def create_csv_files() :
     # location_table
     location_table = get_location_table(location_table_csv)
     #
-    # covariate information by sex, location_id, year_id
-    obesity_dict    = get_covariate_dict(obesity_table_csv)
-    ldi_dict        = get_covariate_dict(ldi_table_csv)
+    # interpolate_obesity
+    interpolate_obesity  = get_interpolate_covariate(
+        obesity_table_csv, age_group_dict
+    )
     #
-    # ldi has only sex == Both
-    assert list( ldi_dict.keys() )  == [ 'Both' ]
+    # interpolate_ldi
+    interpolate_ldi  = get_interpolate_covariate(
+        ldi_table_csv, age_group_dict
+    )
     #
     # location_id2node_id
     location_id2node_id = dict()
@@ -319,14 +361,9 @@ def create_csv_files() :
         sex             = row['sex']
         location_id     = row['location_id']
         time            = (row['time_lower'] + row['time_upper']) / 2.0
-        row['obesity']  = get_covariate(obesity_dict, sex, location_id, time)
-        ldi             = get_covariate(ldi_dict, 'Both', location_id, time)
-        if row['obesity'] is None or ldi is None :
-            row['hold_out'] = 1
-        if ldi is None :
-            row['log_ldi'] = None
-        else :
-            row['log_ldi']  = math.log10( ldi )
+        row['obesity']  = interpolate_obesity[location_id][sex](time)
+        ldi             = interpolate_ldi[location_id]['Both'](time)
+        row['log_ldi']  = math.log10( ldi )
     #
     # change location_id to node_id
     for row in data_table :
