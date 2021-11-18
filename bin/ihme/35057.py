@@ -15,7 +15,7 @@ working_directory = 'ihme_db/35057'
 # input table file names
 location_table_csv  = 'location_map.csv'
 ldi_table_csv       = 'ldi_covariate_data.csv'
-obesity_table_csv   = 'obesity_covariate_data.csv'
+obesity_table_csv   = 'obesity_covariate_data_age_specific.csv'
 data_table_csv      = 'overall_diabetes_input_data_crosswalkv35057.csv'
 emr_table_csv       = 'diabetes_emr.csv'
 age_group_table_csv = 'age_metadata_gbd2020.csv'
@@ -33,7 +33,7 @@ root_node_name      = 'Global'
 max_fit             = 250
 #
 # maximum absolute effect for covriate multipliers
-max_abs_effect      = 2.0
+max_abs_effect      = 5.0
 #
 # maximum number of data points to plot per integrand
 max_plot            = 2000
@@ -50,6 +50,7 @@ fit_goal_set = { 'New_York' }
 #
 import numpy
 from scipy.interpolate import  UnivariateSpline
+from scipy.interpolate import  RectBivariateSpline
 import statistics
 import time
 import random
@@ -127,9 +128,9 @@ def get_age_group_dict(file_name) :
     return age_group_dict
 # ---------------------------------------------------------------------------
 # interpolate_covariate  = get_interpolate_covariate(
-#   file_name, age_group_dict
+#   file_name, age_group_dict, one_age_group
 # )
-def get_interpolate_covariate(file_name, age_group_dict) :
+def get_interpolate_covariate(file_name, age_group_dict, one_age_group) :
     file_ptr   = open(file_name)
     reader     = csv.DictReader(file_ptr)
     #
@@ -141,7 +142,8 @@ def get_interpolate_covariate(file_name, age_group_dict) :
         #
         # age_group_id
         age_group_id = int( row['age_group_id'] )
-        if True :
+        if one_age_group or age_group_id not in [ 22, 27] :
+            # 22 and 27 are the all ages groups
             #
             # location_id
             location_id = int( row['location_id'] )
@@ -195,30 +197,46 @@ def get_interpolate_covariate(file_name, age_group_dict) :
             n_age  = len(age_grid)
             n_time = len(time_grid)
             #
-            # check for rectangular grid
-            for (index, triple) in enumerate(this_list) :
-                age        = triple[0]
-                time       = triple[1]
+            if one_age_group :
+                assert n_age == 1
                 #
-                age_index  = index % n_age
-                time_index = int( index / n_age )
+                # covariate_grid
+                covariate_grid = list()
+                for triple in this_list :
+                    covariate_grid.append( triple[2] )
                 #
-                assert age  == age_grid[age_index]
-                assert time == time_grid[time_index]
+                # interpolate_covariate
+                spline =  UnivariateSpline(
+                    time_grid, covariate_grid, k = 1, s = 0.0, ext = 3
+                )
+                interpolate_covariate[location_id][sex] = spline
             #
-            assert n_age == 1
+            # 22 and 27 are the all ages groups
+            elif age_group_id not in [22, 27 ] :
+                assert n_age > 1
+                #
+                # covariate_grid
+                covariate_grid    = numpy.empty( (n_age, n_time) )
+                covariate_grid[:] = numpy.nan
+                #
+                # covariate_grid
+                for (index, triple) in enumerate(this_list) :
+                    age        = triple[0]
+                    time       = triple[1]
+                    #
+                    age_index  = int( index / n_time )
+                    time_index = index % n_time
+                    #
+                    assert age  == age_grid[age_index]
+                    assert time == time_grid[time_index]
+                    covariate_grid[age_index][time_index] = triple[2]
+                #
+                # interpolate_covariate
+                spline= RectBivariateSpline(
+                    age_grid, time_grid, covariate_grid, kx=1, ky=1, s=0
+                )
+                interpolate_covariate[location_id][sex] = spline
             #
-            # covariate_grid
-            covariate_grid = list()
-            for triple in this_list :
-                covariate_grid.append( triple[2] )
-            #
-            # interpolate_covariate
-            linear_spline =  UnivariateSpline(
-                time_grid, covariate_grid, k = 1, s = 0.0, ext = 3
-            )
-            #
-            interpolate_covariate[location_id][sex] = linear_spline
     return interpolate_covariate
 # ---------------------------------------------------------------------------
 # emr_table = get_emr_table(file_name, age_group_dict)
@@ -341,13 +359,15 @@ def create_csv_files() :
     location_table = get_location_table(location_table_csv)
     #
     # interpolate_obesity
+    one_age_group = False
     interpolate_obesity  = get_interpolate_covariate(
-        obesity_table_csv, age_group_dict
+        obesity_table_csv, age_group_dict, one_age_group
     )
     #
     # interpolate_ldi
+    one_age_group = True
     interpolate_ldi  = get_interpolate_covariate(
-        ldi_table_csv, age_group_dict
+        ldi_table_csv, age_group_dict, one_age_group
     )
     #
     # location_id2node_id
@@ -360,10 +380,33 @@ def create_csv_files() :
     for row in data_table :
         sex             = row['sex']
         location_id     = row['location_id']
+        age             = (row['age_lower']  + row['age_upper']) / 2.0
         time            = (row['time_lower'] + row['time_upper']) / 2.0
-        row['obesity']  = interpolate_obesity[location_id][sex](time)
-        ldi             = interpolate_ldi[location_id]['Both'](time)
-        row['log_ldi']  = math.log10( ldi )
+        #
+        # log_ldi, hold_out
+        if location_id in interpolate_ldi :
+            ldi             = interpolate_ldi[location_id]['Both'](time)
+            row['log_ldi']  = math.log10( ldi )
+        else :
+            row['log_ldi']  = None
+            row['hold_out'] = 1
+        #
+        # obesito, hold_out
+        if location_id in interpolate_obesity :
+            if sex == 'Both' :
+                assert sex not in interpolate_obesity[location_id]
+                fun    = interpolate_obesity[location_id]['Male']
+                male   = fun(age, time, grid = False)
+                fun    = interpolate_obesity[location_id]['Female']
+                female = fun(age, time, grid = False)
+                obesity  = ( male + female ) / 2.0
+            else :
+                fun     = interpolate_obesity[location_id][sex]
+                obesity = fun(age, time, grid = False)
+            row['obesity'] = obesity
+        else :
+            row['obesity']  = None
+            row['hold_out'] = 1
     #
     # change location_id to node_id
     for row in data_table :
@@ -617,7 +660,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'lower'   :    None,
             'upper'   :    None,
             'mean'    :    0.0,
-            'std'     :    0.05,
+            'std'     :    0.20,
             'eta'     :    1e-7,
         },{
             'name'    :   'child_rate_value',
@@ -632,7 +675,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'lower'   :   None,
             'upper'   :   None,
             'mean'    :   0.0,
-            'std'     :   10.0,
+            'std'     :   1.0,
         }
     ]
     for integrand in integrand_median :
