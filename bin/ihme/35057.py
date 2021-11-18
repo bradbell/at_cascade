@@ -612,9 +612,6 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         { 'name':'log_ldi', 'reference':0.0},
     ]
     #
-    # avgint_table
-    ageint_table = list()
-    #
     # data_table
     sex_map = { 'Female':-0.5, 'Both':0.0, 'Male':+0.5 }
     data_table = list()
@@ -966,26 +963,7 @@ def set_all_option_table(all_node_database) :
     dismod_at.replace_table(connection, 'all_option', all_option_table)
     connection.close()
 # ---------------------------------------------------------------------------
-# Under Construction
-def create_ihme_results_file(fit_node_database) :
-    #
-    # sex_id
-    sex_id = { 'Male' : 1, 'Female' : 2, 'Both' : 3 }
-    #
-    # year_grid
-    year_grid = [ 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
-    #
-    # location_id
-    fit_node_name   = at_cascade.get_parent_node(fit_node_database)
-    node_info_table = get_table_csv( node_table_info )
-    location_id     = None
-    for row in node_info_table :
-        if row['node_name'] == fit_node_name :
-            location_id = int( row['location_id'] )
-# ---------------------------------------------------------------------------
-# main
-# ---------------------------------------------------------------------------
-def main() :
+def drill() :
     #
     # root_node_database
     root_node_database = 'root_node.db'
@@ -1044,6 +1022,160 @@ def main() :
             fit_goal_set      = fit_goal_set,
             trace_fit         = True,
         )
+# ---------------------------------------------------------------------------
+# Under Construction
+def create_ihme_results_file( fit_node_database) :
+    #
+    # age_group_dict
+    age_group_dict = get_age_group_dict(age_group_table_csv)
+    #
+    # interpolate_obesity
+    one_age_group = False
+    interpolate_obesity  = get_interpolate_covariate(
+        obesity_table_csv, age_group_dict, one_age_group
+    )
+    #
+    # interpolate_ldi
+    one_age_group = True
+    interpolate_ldi  = get_interpolate_covariate(
+        ldi_table_csv, age_group_dict, one_age_group
+    )
+    #
+    # integrand_table
+    new        = False
+    connection      = dismod_at.create_connection(fit_node_database, new)
+    integrand_table = dismod_at.get_table_dict(connection, 'integrand')
+    connection.close()
+    #
+    # integrand_dict
+    integrand_dict = {
+        'prevalence' : 5,
+        'Sincidence' : 6,
+        'mtexcess'   : 9,
+        'mtspecific' : 15
+    }
+    #
+    # integrand_id_list
+    integrand_id_list = list()
+    for integrand_name in integrand_dict :
+        integrand_id = at_cascade.table_name2id(
+            integrand_table, 'integrand', integrand_name
+        )
+        integrand_id_list.append( integrand_id )
+    #
+    # sex2sex_id
+    sex2sex_id = {'Male' : 1,  'Female' : 2}
+    #
+    # year_grid
+    year_grid = [ 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
+    #
+    # age_group_id_list, age_midpoint_list
+    age_group_id_list = list()
+    age_limit_list    = list()
+    age_group_table = get_table_csv(age_group_table_csv)
+    for row in age_group_table :
+        age_group_id = row['age_group_id']
+        if age_group_id not in all_age_group_id_list :
+            age_group_id_list.append( age_group_id )
+            age_lower    = float( row['age_group_years_start'] )
+            age_upper    = float( row['age_group_years_end'] )
+            age_limit_list.append( (age_lower, age_upper) )
+    #
+    # fit_node_id, location_id
+    fit_node_name   = at_cascade.get_parent_node(fit_node_database)
+    node_info_table = get_table_csv( node_table_info )
+    location_id     = None
+    fit_node_id     = None
+    for row in node_info_table :
+        if row['node_name'] == fit_node_name :
+            location_id = int( row['location_id'] )
+            fit_node_id = int( row['node_id'] )
+    assert location_id is not None
+    assert fit_node_id is not None
+    #
+    # avgint_table
+    avgint_table = list()
+    #
+    # sex
+    for sex in sex2sex_id :
+        if sex == 'Male' :
+            x_0 = -0.5
+        else :
+            assert sex == 'Female'
+            x_0 = +0.5
+        #
+        # obesity_fun
+        obesity_fun = interpolate_obesity[location_id][sex]
+        #
+        # ldi_fun
+        ldi_fun = interpolate_ldi[location_id]['Both']
+        #
+        # age_index
+        for age_index in range( len(age_group_id_list) ) :
+            #
+            # age
+            limit = age_limit_list[age_index]
+            age   = (limit[0] + limit[1]) / 2.0
+            #
+            # time
+            for time in year_grid :
+                #
+                # obesity
+                obesity = obesity_fun(age, time, grid = False)
+                #
+                # log_ldi
+                ldi     = ldi_fun(time)
+                log_ldi = math.log10( ldi )
+                #
+                for integrand_id in integrand_id_list :
+                    #
+                    # row
+                    # Covariates are in same order as covariate_table in the
+                    # create_root_node_database routine above.
+                    row = {
+                        'integrand_id'   : integrand_id,
+                        'node_id'        : fit_node_id,
+                        'subgroup_id'    : 0,
+                        'weight_id'      : None,
+                        'age_lower'      : limit[0],
+                        'age_upper'      : limit[1],
+                        'time_lower'     : time,
+                        'time_upper'     : time,
+                        'x_0'            : x_0,
+                        'x_1'            : 1.0,
+                        'x_2'            : obesity,
+                        'x_3'            : log_ldi,
+                    }
+                    avgint_table.append( row )
+    #
+    # avgint_table
+    new        = False
+    connection = dismod_at.create_connection(fit_node_database, new)
+    dismod_at.replace_table(connection, 'avgint', avgint_table)
+    connection.close()
+    #
+    # prefict sample
+    dismod_at.system_command_prc(
+        [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
+    )
+# ----------------------------------------------------------------------------
+def main() :
+    #
+    # command_line_option
+    command_line_ok = False
+    if len(sys.argv) == 2 :
+        command_line_option = sys.argv[1]
+        command_line_ok =  command_line_option in [ 'drill', 'predict' ]
+    if not command_line_ok :
+        usage = 'usage: bin/ihme/35057.py (drill|predict)'
+        sys.exit(usage)
+    #
+    if command_line_option == 'drill' :
+        drill()
+    else :
+        fit_node_database  = 'Global.1/High-income/High-income_North_America'
+        fit_node_database += '/United_States_of_America//dismod.db'
+        create_ihme_results_file(fit_node_database)
 # ----------------------------------------------------------------------------
 main()
 print(sys.argv[0] + ': OK')
