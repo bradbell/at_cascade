@@ -46,6 +46,9 @@ random_seed = 0
 #
 # Name of the node that we are drilling to
 fit_goal_set = { 'New_York' }
+#
+# all_age_group_id_list
+all_age_group_id_list = [ 22, 27 ]
 # -----------------------------------------------------------------------------
 #
 import numpy
@@ -125,6 +128,12 @@ def get_age_group_dict(file_name) :
         row_out['age_lower']         = float( row_in['age_group_years_start'] )
         row_out['age_upper']         = float( row_in['age_group_years_end'] )
         age_group_dict[age_group_id] = row_out
+        #
+        age_group_name = row_in['age_group_name']
+        if age_group_name in [ 'All ages', 'Age-standardized' ] :
+            assert age_group_id in all_age_group_id_list
+        else :
+            assert age_group_id not in all_age_group_id_list
     return age_group_dict
 # ---------------------------------------------------------------------------
 # interpolate_covariate  = get_interpolate_covariate(
@@ -142,8 +151,7 @@ def get_interpolate_covariate(file_name, age_group_dict, one_age_group) :
         #
         # age_group_id
         age_group_id = int( row['age_group_id'] )
-        if one_age_group or age_group_id not in [ 22, 27] :
-            # 22 and 27 are the all ages groups
+        if one_age_group or age_group_id not in all_age_group_id_list :
             #
             # location_id
             location_id = int( row['location_id'] )
@@ -212,7 +220,7 @@ def get_interpolate_covariate(file_name, age_group_dict, one_age_group) :
                 interpolate_covariate[location_id][sex] = spline
             #
             # 22 and 27 are the all ages groups
-            elif age_group_id not in [22, 27 ] :
+            elif age_group_id not in all_age_group_id_list :
                 assert n_age > 1
                 #
                 # covariate_grid
@@ -272,8 +280,7 @@ def get_emr_table(file_name, age_group_dict) :
             row_out['integrand']    = row_in['measure']
         #
         if row_out['age_upper'] - row_out['age_lower'] > 50.0 :
-            # These are the all age groups
-            assert age_group_id in [ 22, 27 ]
+            assert age_group_id in all_age_group_id_list
         else :
             emr_table.append( row_out )
     return emr_table
@@ -434,7 +441,7 @@ def create_csv_info_files() :
         row_out['node_id']       = node_id
         row_out['node_name']     = location_name
         row_out['parent']        = parent_node_id
-        row_out['c_location_id'] = location_id
+        row_out['location_id']   = location_id
         node_table.append(row_out)
         #
         # double_name_set
@@ -958,6 +965,23 @@ def set_all_option_table(all_node_database) :
     connection        = dismod_at.create_connection(all_node_database, new)
     dismod_at.replace_table(connection, 'all_option', all_option_table)
     connection.close()
+# ---------------------------------------------------------------------------
+# Under Construction
+def create_ihme_results_file(fit_node_database) :
+    #
+    # sex_id
+    sex_id = { 'Male' : 1, 'Female' : 2, 'Both' : 3 }
+    #
+    # year_grid
+    year_grid = [ 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
+    #
+    # location_id
+    fit_node_name   = at_cascade.get_parent_node(fit_node_database)
+    node_info_table = get_table_csv( node_table_info )
+    location_id     = None
+    for row in node_info_table :
+        if row['node_name'] == fit_node_name :
+            location_id = int( row['location_id'] )
 # ---------------------------------------------------------------------------
 # main
 # ---------------------------------------------------------------------------
