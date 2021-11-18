@@ -22,9 +22,9 @@ age_group_table_csv = 'age_metadata_gbd2020.csv'
 all_node_other      = '../475876/all_node.db'
 root_node_other     = '../475876/dismod.db'
 #
-# output table file name
-data_table_out      = 'data.csv'
-node_table_out      = 'node.csv'
+# data and node table input information
+data_table_info     = 'data_info.csv'
+node_table_info     = 'node_info.csv'
 #
 # root_node_name
 root_node_name      = 'Global'
@@ -339,8 +339,8 @@ def get_value_set(table, column_name) :
         value_set.add( row[column_name] )
     return value_set
 # ---------------------------------------------------------------------------
-def create_csv_files() :
-    print('begin create_csv_files')
+def create_csv_info_files() :
+    print('begin create_csv_info_files')
     #
     # age_group_dict
     age_group_dict = get_age_group_dict(age_group_table_csv)
@@ -415,8 +415,8 @@ def create_csv_files() :
         row['node_id']   = node_id
         del row['location_id']
     #
-    # create data_table_out
-    write_csv(data_table_out, data_table)
+    # create data_table_info
+    write_csv(data_table_info, data_table)
     #
     # node_table
     node_table      = list()
@@ -454,10 +454,10 @@ def create_csv_files() :
                 node_name        = f'{location_name}_{parent}'
                 row['node_name'] = node_name
     #
-    # create node_table_out
-    write_csv(node_table_out, node_table)
+    # create node_table_info
+    write_csv(node_table_info, node_table)
     #
-    print('end create_csv_files')
+    print('end create_csv_info_files')
 # -----------------------------------------------------------------------------
 def get_table_csv(file_name) :
     file_ptr   = open(file_name)
@@ -470,8 +470,8 @@ def get_table_csv(file_name) :
 def create_root_node_database(file_name, other_age_table, other_time_table) :
     #
     # csv_data_table, csv_node_table
-    csv_data_table = get_table_csv( data_table_out )
-    csv_node_table = get_table_csv( node_table_out )
+    csv_data_table = get_table_csv( data_table_info )
+    csv_node_table = get_table_csv( node_table_info )
     #
     # integrand_median
     integrand_list = dict()
@@ -977,7 +977,7 @@ def main() :
     connection.close()
     #
     # extract info from raw csv files
-    create_csv_files()
+    create_csv_info_files()
     #
     # create root_node.db
     create_root_node_database(
