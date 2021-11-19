@@ -1046,10 +1046,12 @@ def create_ihme_results_file( fit_node_database ) :
         ldi_table_csv, age_group_dict, one_age_group
     )
     #
-    # integrand_table
+    # integrand_table, age_table, time_table
     new        = False
     connection      = dismod_at.create_connection(fit_node_database, new)
     integrand_table = dismod_at.get_table_dict(connection, 'integrand')
+    age_table       = dismod_at.get_table_dict(connection, 'age')
+    time_table      = dismod_at.get_table_dict(connection, 'time')
     connection.close()
     #
     # integrand_name2measure_id
@@ -1080,7 +1082,7 @@ def create_ihme_results_file( fit_node_database ) :
     #
     # age_group_id_list
     age_group_id_list = list()
-    for age_group_id in age_group_table :
+    for age_group_id in age_group_dict :
         if age_group_id not in all_age_group_id_list :
             age_group_id_list.append( age_group_id )
     #
@@ -1187,6 +1189,11 @@ def create_ihme_results_file( fit_node_database ) :
     # output_table
     output_table = list()
     #
+    # plot_data
+    plot_data = dict()
+    plot_data['Male']   = dict()
+    plot_data['Female'] = dict()
+    #
     # avgint_row
     for (avgint_id, avgint_row) in enumerate( avgint_table ) :
         #
@@ -1204,10 +1211,15 @@ def create_ihme_results_file( fit_node_database ) :
             sex = 'Female'
         sex_id = sex2sex_id[sex]
         #
+        # plot_data[sex][integrand_name]
+        if integrand_name not in plot_data[sex] :
+            plot_data[sex][integrand_name] = list()
+        #
         # age_group_id
         age_group_id  = avgint_row['c_age_group_id']
         #
         # year_id
+        assert avgint_row['time_lower'] == avgint_row['time_upper']
         year_id = int( avgint_row['time_lower'] )
         #
         # avg_integrand_list
@@ -1240,10 +1252,52 @@ def create_ihme_results_file( fit_node_database ) :
             key = f'draw_{sample_index}'
             row[key] = avg_integrand_list[sample_index]
         #
+        # output_table
         output_table.append(row)
+        #
+        # row
+        mean      = numpy.mean( avg_integrand_list )
+        std       = numpy.std( avg_integrand_list, ddof = 1 )
+        age_lower = age_group_dict[age_group_id]['age_lower']
+        age_upper = age_group_dict[age_group_id]['age_upper']
+        age       = (age_lower + age_upper) / 2.0
+        time      = avgint_row['time_lower']
+        row = {
+            'age'   : age,
+            'time'  : time,
+            'value' : mean,
+            'std'   : std,
+        }
+        #
+        # plot_data[sex][integrand_name]
+        plot_data[sex][integrand_name].append( row )
     #
     # output_csv
     write_csv(output_csv, output_table)
+    #
+    # plot_limit
+    age_min = min(  [ row['age']  for row in age_table  ] )
+    age_max = max(  [ row['age']  for row in age_table  ] )
+    time_min = min( [ row['time'] for row in time_table ] )
+    time_max = max( [ row['time'] for row in time_table ] )
+    plot_limit = {
+        'age_min'  : age_min,
+        'age_max'  : age_max,
+        'time_min' : time_min,
+        'time_max' : time_max,
+    }
+    #
+    # output_pdf
+    for sex in [ 'Female', 'Male' ] :
+        output_pdf = f'{fit_node_dir}/{fit_node_name}_{sex}_{location_id}.pdf'
+        print(output_pdf)
+        plot_title = f'{fit_node_name}: {sex}'
+        dismod_at.plot_curve(
+            pdf_file   = output_pdf      ,
+            plot_limit = plot_limit      ,
+            plot_title = plot_title      ,
+            plot_data  = plot_data[sex]  ,
+        )
 # ----------------------------------------------------------------------------
 def main() :
     #
