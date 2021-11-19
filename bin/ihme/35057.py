@@ -1234,11 +1234,11 @@ def create_ihme_results_file( fit_node_database ) :
         #
         # row
         row = {
-            'measure_id'     : measure_id,
             'location_id'    : location_id,
             'sex_id'         : sex_id,
             'age_group_id'   : age_group_id,
             'year_id'        : year_id,
+            'measure_id'     : measure_id,
         }
         for sample_index in range( n_sample ) :
             key = f'draw_{sample_index}'
