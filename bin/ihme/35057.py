@@ -1023,8 +1023,13 @@ def drill() :
             trace_fit         = True,
         )
 # ---------------------------------------------------------------------------
-# Under Construction
-def create_ihme_results_file( fit_node_database) :
+# create_ihme_results_file( fit_node_database )
+def create_ihme_results_file( fit_node_database ) :
+    #
+    # fit_node_dir
+    assert fit_node_database.endswith('/dismod.db')
+    index        = fit_node_database.rfind('/')
+    fit_node_dir = fit_node_database[0:index]
     #
     # age_group_dict
     age_group_dict = get_age_group_dict(age_group_table_csv)
@@ -1047,8 +1052,8 @@ def create_ihme_results_file( fit_node_database) :
     integrand_table = dismod_at.get_table_dict(connection, 'integrand')
     connection.close()
     #
-    # integrand_dict
-    integrand_dict = {
+    # integrand_name2measure_id
+    integrand_name2measure_id = {
         'prevalence' : 5,
         'Sincidence' : 6,
         'mtexcess'   : 9,
@@ -1057,7 +1062,7 @@ def create_ihme_results_file( fit_node_database) :
     #
     # integrand_id_list
     integrand_id_list = list()
-    for integrand_name in integrand_dict :
+    for integrand_name in integrand_name2measure_id :
         integrand_id = at_cascade.table_name2id(
             integrand_table, 'integrand', integrand_name
         )
@@ -1067,7 +1072,8 @@ def create_ihme_results_file( fit_node_database) :
     sex2sex_id = {'Male' : 1,  'Female' : 2}
     #
     # year_grid
-    year_grid = [ 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
+    # year_id is output file is in demographer notation
+    year_grid = [ 1990.5, 1995.5, 2000.5, 2005.5, 2010.5, 2015.5, 2020.5 ]
     #
     # age_group_id_list, age_midpoint_list
     age_group_id_list = list()
@@ -1093,6 +1099,10 @@ def create_ihme_results_file( fit_node_database) :
     assert location_id is not None
     assert fit_node_id is not None
     #
+    # output_file
+    output_file = f'{fit_node_dir}/{fit_node_name}_{location_id}.csv'
+    print(output_file)
+    #
     # avgint_table
     avgint_table = list()
     #
@@ -1113,8 +1123,13 @@ def create_ihme_results_file( fit_node_database) :
         # age_index
         for age_index in range( len(age_group_id_list) ) :
             #
-            # age
+            # age_group_id
+            age_group_id = age_group_id_list[age_index]
+            #
+            # limit
             limit = age_limit_list[age_index]
+            #
+            # age
             age   = (limit[0] + limit[1]) / 2.0
             #
             # time
@@ -1133,18 +1148,19 @@ def create_ihme_results_file( fit_node_database) :
                     # Covariates are in same order as covariate_table in the
                     # create_root_node_database routine above.
                     row = {
-                        'integrand_id'   : integrand_id,
-                        'node_id'        : fit_node_id,
-                        'subgroup_id'    : 0,
-                        'weight_id'      : None,
-                        'age_lower'      : limit[0],
-                        'age_upper'      : limit[1],
-                        'time_lower'     : time,
-                        'time_upper'     : time,
-                        'x_0'            : x_0,
-                        'x_1'            : 1.0,
-                        'x_2'            : obesity,
-                        'x_3'            : log_ldi,
+                        'integrand_id'    : integrand_id,
+                        'node_id'         : fit_node_id,
+                        'subgroup_id'     : 0,
+                        'weight_id'       : None,
+                        'age_lower'       : limit[0],
+                        'age_upper'       : limit[1],
+                        'time_lower'      : time,
+                        'time_upper'      : time,
+                        'x_0'             : x_0,
+                        'x_1'             : 1.0,
+                        'x_2'             : obesity,
+                        'x_3'             : log_ldi,
+                        'c_age_group_id'  : age_group_id,
                     }
                     avgint_table.append( row )
     #
@@ -1158,6 +1174,80 @@ def create_ihme_results_file( fit_node_database) :
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
+    #
+    # predict_table
+    new           = False
+    connection    = dismod_at.create_connection(fit_node_database, new)
+    predict_table = dismod_at.get_table_dict(connection, 'predict')
+    connection.close()
+    #
+    # n_sample
+    assert len(predict_table) % len(avgint_table) == 0
+    n_sample = int( len(predict_table) / len(avgint_table) )
+    #
+    # n_avgint
+    n_avgint = len( avgint_table )
+    #
+    # output_table
+    output_table = list()
+    #
+    # avgint_row
+    for (avgint_id, avgint_row) in enumerate( avgint_table ) :
+        #
+        # measure_id
+        integrand_id    = avgint_row['integrand_id']
+        integrand_name  = integrand_table[integrand_id]['integrand_name']
+        measure_id      = integrand_name2measure_id[integrand_name]
+        #
+        # sex_id
+        x_0 = avgint_row['x_0']
+        if x_0 == -0.5 :
+            sex = 'Male'
+        else :
+            assert x_0 == + 0.5
+            sex = 'Female'
+        sex_id = sex2sex_id[sex]
+        #
+        # age_group_id
+        age_group_id  = avgint_row['c_age_group_id']
+        #
+        # year_id
+        year_id = int( avgint_row['time_lower'] )
+        #
+        # avg_integrand_list
+        avg_integrand_list = list()
+        #
+        # sample_index
+        for sample_index in range( n_sample ) :
+            #
+            # predict_row
+            predict_id = sample_index * n_avgint + avgint_id
+            predict_row = predict_table[predict_id]
+            #
+            # some checks
+            assert sample_index  == predict_row['sample_index']
+            assert avgint_id     == predict_row['avgint_id']
+            #
+            # avg_integrand
+            avg_integrand = predict_row['avg_integrand']
+            avg_integrand_list.append( avg_integrand )
+        #
+        # row
+        row = {
+            'measure_id'     : measure_id,
+            'location_id'    : location_id,
+            'sex_id'         : sex_id,
+            'age_group_id'   : age_group_id,
+            'year_id'        : year_id,
+        }
+        for sample_index in range( n_sample ) :
+            key = f'draw_{sample_index}'
+            row[key] = avg_integrand_list[sample_index]
+        #
+        output_table.append(row)
+    #
+    # output_file
+    write_csv(output_file, output_table)
 # ----------------------------------------------------------------------------
 def main() :
     #
@@ -1174,7 +1264,7 @@ def main() :
         drill()
     else :
         fit_node_database  = 'Global.1/High-income/High-income_North_America'
-        fit_node_database += '/United_States_of_America//dismod.db'
+        fit_node_database += '/United_States_of_America/dismod.db'
         create_ihme_results_file(fit_node_database)
 # ----------------------------------------------------------------------------
 main()
