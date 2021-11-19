@@ -1075,17 +1075,14 @@ def create_ihme_results_file( fit_node_database ) :
     # year_id is output file is in demographer notation
     year_grid = [ 1990.5, 1995.5, 2000.5, 2005.5, 2010.5, 2015.5, 2020.5 ]
     #
-    # age_group_id_list, age_midpoint_list
+    # age_group_dict
+    age_group_dict = get_age_group_dict(age_group_table_csv)
+    #
+    # age_group_id_list
     age_group_id_list = list()
-    age_limit_list    = list()
-    age_group_table = get_table_csv(age_group_table_csv)
-    for row in age_group_table :
-        age_group_id = row['age_group_id']
+    for age_group_id in age_group_table :
         if age_group_id not in all_age_group_id_list :
             age_group_id_list.append( age_group_id )
-            age_lower    = float( row['age_group_years_start'] )
-            age_upper    = float( row['age_group_years_end'] )
-            age_limit_list.append( (age_lower, age_upper) )
     #
     # fit_node_id, location_id
     fit_node_name   = at_cascade.get_parent_node(fit_node_database)
@@ -1099,9 +1096,9 @@ def create_ihme_results_file( fit_node_database ) :
     assert location_id is not None
     assert fit_node_id is not None
     #
-    # output_file
-    output_file = f'{fit_node_dir}/{fit_node_name}_{location_id}.csv'
-    print(output_file)
+    # output_csv
+    output_csv = f'{fit_node_dir}/{fit_node_name}_{location_id}.csv'
+    print(output_csv)
     #
     # avgint_table
     avgint_table = list()
@@ -1126,11 +1123,10 @@ def create_ihme_results_file( fit_node_database ) :
             # age_group_id
             age_group_id = age_group_id_list[age_index]
             #
-            # limit
-            limit = age_limit_list[age_index]
-            #
-            # age
-            age   = (limit[0] + limit[1]) / 2.0
+            # age_lower, age_upper, age
+            age_lower = age_group_dict[age_group_id]['age_lower']
+            age_upper = age_group_dict[age_group_id]['age_upper']
+            age       = (age_lower + age_upper) / 2.0
             #
             # time
             for time in year_grid :
@@ -1152,8 +1148,8 @@ def create_ihme_results_file( fit_node_database ) :
                         'node_id'         : fit_node_id,
                         'subgroup_id'     : 0,
                         'weight_id'       : None,
-                        'age_lower'       : limit[0],
-                        'age_upper'       : limit[1],
+                        'age_lower'       : age_lower,
+                        'age_upper'       : age_upper,
                         'time_lower'      : time,
                         'time_upper'      : time,
                         'x_0'             : x_0,
@@ -1246,8 +1242,8 @@ def create_ihme_results_file( fit_node_database ) :
         #
         output_table.append(row)
     #
-    # output_file
-    write_csv(output_file, output_table)
+    # output_csv
+    write_csv(output_csv, output_table)
 # ----------------------------------------------------------------------------
 def main() :
     #
