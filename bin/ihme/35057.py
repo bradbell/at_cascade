@@ -49,10 +49,6 @@ fit_goal_set = { 'New_York' }
 #
 # all_age_group_id_list
 all_age_group_id_list = [ 22, 27 ]
-#
-# predict_node_database
-predict_node_database  = 'Global/High-income/High-income_North_America'
-predict_node_database += '/United_States_of_America/dismod.db'
 # -----------------------------------------------------------------------------
 #
 import numpy
@@ -959,16 +955,6 @@ def set_all_option_table(all_node_database) :
 # ---------------------------------------------------------------------------
 def drill() :
     #
-    # remove old verison of working_directory/root_node_name
-    if os.path.exists(working_directory + '/' + root_node_name) :
-        # rmtree is dangerous so make sure working_directory is as expected
-        assert working_directory == 'ihme_db/35057'
-        shutil.rmtree(working_directory + '/' + root_node_name)
-    #
-    # change into working directory and create root_node_name subdirectory
-    os.chdir(working_directory)
-    os.makedirs(root_node_name)
-    #
     # root_node_database
     root_node_database = 'root_node.db'
     #
@@ -1027,31 +1013,22 @@ def drill() :
             trace_fit         = True,
         )
 # ---------------------------------------------------------------------------
-# create_ihme_results( predict_node_database )
-def create_ihme_results( fit_node_database ) :
-    #
-    # change into working directory
-    os.chdir(working_directory)
+# create_ihme_results_node( predict_node_database )
+def create_ihme_results_node(
+    fit_node_database   = None ,
+    age_group_dict      = None ,
+    interpolate_obesity = None ,
+    interpolate_ldi     = None ,
+) :
+    assert fit_node_database is not None
+    assert age_group_dict is not None
+    assert interpolate_obesity is not None
+    assert interpolate_ldi is not None
     #
     # fit_node_dir
     assert fit_node_database.endswith('/dismod.db')
     index        = fit_node_database.rfind('/')
     fit_node_dir = fit_node_database[0:index]
-    #
-    # age_group_dict
-    age_group_dict = get_age_group_dict(age_group_table_csv)
-    #
-    # interpolate_obesity
-    one_age_group = False
-    interpolate_obesity  = get_interpolate_covariate(
-        obesity_table_csv, age_group_dict, one_age_group
-    )
-    #
-    # interpolate_ldi
-    one_age_group = True
-    interpolate_ldi  = get_interpolate_covariate(
-        ldi_table_csv, age_group_dict, one_age_group
-    )
     #
     # integrand_table, age_table, time_table
     new        = False
@@ -1106,8 +1083,8 @@ def create_ihme_results( fit_node_database ) :
     assert fit_node_id is not None
     #
     # output_csv
-    output_csv = f'{fit_node_dir}/{fit_node_name}_{location_id}.csv'
-    print(output_csv)
+    output_csv = f'{fit_node_dir}/ihme.csv'
+    print( output_csv )
     #
     # avgint_table
     avgint_table = list()
@@ -1305,7 +1282,7 @@ def create_ihme_results( fit_node_database ) :
     #
     # output_pdf
     for sex in [ 'Female', 'Male' ] :
-        output_pdf = f'{fit_node_dir}/{fit_node_name}_{sex}_{location_id}.pdf'
+        output_pdf = f'{fit_node_dir}/ihme_{sex}.pdf'
         print(output_pdf)
         plot_title = f'{fit_node_name}: {sex}'
         dismod_at.plot_curve(
@@ -1313,6 +1290,95 @@ def create_ihme_results( fit_node_database ) :
             plot_limit = plot_limit      ,
             plot_title = plot_title      ,
             plot_data  = plot_data[sex]  ,
+        )
+# ---------------------------------------------------------------------------
+def create_ihme_results(
+    fit_node_database   = None ,
+    fit_children        = None ,
+    age_group_dict      = None ,
+    interpolate_obesity = None ,
+    interpolate_ldi     = None ,
+) :
+    assert fit_node_database is not None
+    #
+    # root_node_database
+    root_node_database = 'root_node.db'
+    #
+    # node_table
+    new        = False
+    connection = dismod_at.create_connection(root_node_database, new)
+    node_table = dismod_at.get_table_dict(connection, 'node')
+    connection.close()
+    #
+    # fit_children
+    if fit_children is None :
+        #
+        # root_node_name
+        root_node_name = at_cascade.get_parent_node(root_node_database)
+        #
+        # root_node_id
+        root_node_id = at_cascade.table_name2id(
+            node_table, 'node', root_node_name
+        )
+        #
+        # fit_children
+        fit_children = at_cascade.get_fit_children(
+            root_node_id = root_node_id ,
+            fit_goal_set = fit_goal_set ,
+            node_table   = node_table   ,
+        )
+    #
+    # age_group_dict
+    if age_group_dict is None :
+        age_group_dict = get_age_group_dict(age_group_table_csv)
+    #
+    # interpolate_obesity
+    if interpolate_obesity is None :
+        one_age_group = False
+        interpolate_obesity  = get_interpolate_covariate(
+            obesity_table_csv, age_group_dict, one_age_group
+        )
+    #
+    # interpolate_ldi
+    if interpolate_ldi is None :
+        one_age_group = True
+        interpolate_ldi  = get_interpolate_covariate(
+            ldi_table_csv, age_group_dict, one_age_group
+        )
+    #
+    # fit_node_id
+    fit_node_name = at_cascade.get_parent_node(fit_node_database)
+    fit_node_id   = at_cascade.table_name2id(
+        node_table, 'node', fit_node_name
+    )
+    #
+    # location_id
+    node_info_table = get_table_csv( node_table_info )
+    location_id = int( node_info_table[fit_node_id]['location_id'] )
+    if location_id in interpolate_obesity and location_id in interpolate_ldi :
+        #
+        # fit_node results
+        create_ihme_results_node(
+            fit_node_database   = fit_node_database   ,
+            age_group_dict      = age_group_dict      ,
+            interpolate_obesity = interpolate_obesity ,
+            interpolate_ldi     = interpolate_ldi     ,
+        )
+    #
+    # fit_node_dir
+    index = fit_node_database.find('/dismod.db')
+    fit_node_dir = fit_node_database[0 : index]
+    #
+    # results for children
+    for child_node_id in fit_children[fit_node_id] :
+        child_node_name = node_table[child_node_id]['node_name']
+        child_node_database = f'{fit_node_dir}/{child_node_name}/dismod.db'
+        create_ihme_results(
+            fit_node_database   = child_node_database   ,
+            fit_children        = fit_children          ,
+            age_group_dict      = age_group_dict        ,
+            interpolate_obesity = interpolate_obesity   ,
+            interpolate_ldi     = interpolate_ldi       ,
         )
 # ----------------------------------------------------------------------------
 def main() :
@@ -1327,9 +1393,26 @@ def main() :
         sys.exit(usage)
     #
     if command_line_option == 'drill' :
+        #
+        # remove old verison of working_directory/root_node_name
+        if os.path.exists(working_directory + '/' + root_node_name) :
+            # rmtree is dangerous so make sure working_directory is as expected
+            assert working_directory == 'ihme_db/35057'
+            shutil.rmtree(working_directory + '/' + root_node_name)
+        #
+        # change into working directory and create root_node_name subdirectory
+        os.chdir(working_directory)
+        os.makedirs(root_node_name)
+        #
+        # drill
         drill()
     else :
-        create_ihme_results(predict_node_database)
+        # change into working directory and create root_node_name subdirectory
+        os.chdir(working_directory)
+        #
+        # start at the fit for the root node
+        fit_node_database = f'{root_node_name}/dismod.db'
+        create_ihme_results(fit_node_database)
 # ----------------------------------------------------------------------------
 main()
 print(sys.argv[0] + ': OK')
