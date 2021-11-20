@@ -1157,6 +1157,10 @@ def create_ihme_results_node(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
     #
+    # db2csv
+    print(f'dismod_at.db2csv_command({fit_node_database})')
+    dismod_at.db2csv_command(fit_node_database)
+    #
     # predict_table
     new           = False
     connection    = dismod_at.create_connection(fit_node_database, new)
