@@ -762,14 +762,16 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         { 'name':'parent_node_name',     'value':'Global'},
         { 'name':'zero_sum_child_rate',  'value':'iota chi'},
         { 'name':'random_seed',          'value':str(random_seed)},
-        { 'name':'quasi_fixed',          'value':'false' },
-        { 'name':'tolerance_fixed',      'value':'1e-8'},
-        { 'name':'max_num_iter_fixed',   'value':'30'},
         { 'name':'trace_init_fit_model', 'value':'true'},
         { 'name':'data_extra_columns',   'value':'csv_row_id'},
-        { 'name':'print_level_fixed',    'value':'5'},
         { 'name':'meas_noise_effect',    'value':'add_std_scale_none'},
         { 'name':'age_avg_split',        'value':'0.1 1.0'},
+        #
+        { 'name':'quasi_fixed',                  'value':'false' },
+        { 'name':'tolerance_fixed',              'value':'1e-8'},
+        { 'name':'max_num_iter_fixed',           'value':'30'},
+        { 'name':'print_level_fixed',            'value':'5'},
+        { 'name':'accept_after_max_steps_fixed', 'value':'10'},
     ]
     # Diabetes does not have enough incidence data to estimate
     # both iota and chi without mtexcess. Alos see he minimum_cv setting

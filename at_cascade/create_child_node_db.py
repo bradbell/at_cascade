@@ -197,8 +197,9 @@ def add_child_grid_row(
                 std      = (math.exp(log_std) - 1) * (mean + eta)
             #
             # child_prior_row
+            # Expand the estimaated standard deviation by a factor of 4
             child_prior_row['mean']        = mean
-            child_prior_row['std']         = std
+            child_prior_row['std']         = 4.0 * std
             #
             # child_tables['prior']
             child_tables['prior'].append( child_prior_row )
