@@ -49,6 +49,10 @@ fit_goal_set = { 'New_York' }
 #
 # all_age_group_id_list
 all_age_group_id_list = [ 22, 27 ]
+#
+# predict_node_database
+predict_node_database  = 'Global/High-income/High-income_North_America'
+predict_node_database += '/United_States_of_America/dismod.db'
 # -----------------------------------------------------------------------------
 #
 import numpy
@@ -74,16 +78,6 @@ import at_cascade
 # working_directory
 if not os.path.exists(working_directory) :
     os.makedirs(working_directory)
-#
-# remove old verison of working_directory/root_node_name
-if os.path.exists(working_directory + '/' + root_node_name) :
-    # rmtree is very dangerous so make sure working_directory is as expected
-    assert working_directory == 'ihme_db/35057'
-    shutil.rmtree(working_directory + '/' + root_node_name)
-#
-# change into working directory and create root_node_name subdirectory
-os.chdir(working_directory)
-os.makedirs(root_node_name)
 #
 # random.seed
 if random_seed == 0 :
@@ -965,6 +959,16 @@ def set_all_option_table(all_node_database) :
 # ---------------------------------------------------------------------------
 def drill() :
     #
+    # remove old verison of working_directory/root_node_name
+    if os.path.exists(working_directory + '/' + root_node_name) :
+        # rmtree is dangerous so make sure working_directory is as expected
+        assert working_directory == 'ihme_db/35057'
+        shutil.rmtree(working_directory + '/' + root_node_name)
+    #
+    # change into working directory and create root_node_name subdirectory
+    os.chdir(working_directory)
+    os.makedirs(root_node_name)
+    #
     # root_node_database
     root_node_database = 'root_node.db'
     #
@@ -1023,8 +1027,11 @@ def drill() :
             trace_fit         = True,
         )
 # ---------------------------------------------------------------------------
-# create_ihme_results_file( fit_node_database )
-def create_ihme_results_file( fit_node_database ) :
+# create_ihme_results( predict_node_database )
+def create_ihme_results( fit_node_database ) :
+    #
+    # change into working directory
+    os.chdir(working_directory)
     #
     # fit_node_dir
     assert fit_node_database.endswith('/dismod.db')
@@ -1107,10 +1114,10 @@ def create_ihme_results_file( fit_node_database ) :
     #
     # sex
     for sex in sex2sex_id :
-        if sex == 'Male' :
+        if sex == 'Female' :
             x_0 = -0.5
         else :
-            assert sex == 'Female'
+            assert sex == 'Male'
             x_0 = +0.5
         #
         # obesity_fun
@@ -1211,6 +1218,13 @@ def create_ihme_results_file( fit_node_database ) :
             sex = 'Female'
         sex_id = sex2sex_id[sex]
         #
+        # obesity
+        obesity = avgint_row['x_2']
+        #
+        # ldi
+        log_ldi = avgint_row['x_3']
+        ldi     = math.exp( math.log(10.0) * log_ldi )
+        #
         # plot_data[sex][integrand_name]
         if integrand_name not in plot_data[sex] :
             plot_data[sex][integrand_name] = list()
@@ -1244,6 +1258,8 @@ def create_ihme_results_file( fit_node_database ) :
         row = {
             'location_id'    : location_id,
             'sex_id'         : sex_id,
+            'obesity'        : obesity,
+            'ldi'            : ldi,
             'age_group_id'   : age_group_id,
             'year_id'        : year_id,
             'measure_id'     : measure_id,
@@ -1313,9 +1329,7 @@ def main() :
     if command_line_option == 'drill' :
         drill()
     else :
-        fit_node_database  = 'Global.1/High-income/High-income_North_America'
-        fit_node_database += '/United_States_of_America/dismod.db'
-        create_ihme_results_file(fit_node_database)
+        create_ihme_results(predict_node_database)
 # ----------------------------------------------------------------------------
 main()
 print(sys.argv[0] + ': OK')
