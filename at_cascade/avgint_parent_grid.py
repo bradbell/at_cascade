@@ -148,11 +148,13 @@ def avgint_parent_grid(
     cov_reference = dict()
     for (node_id, row) in enumerate(fit_tables['node']) :
         if node_id == parent_node_id or row['parent'] == parent_node_id :
-            reference = n_covariate * [0.0]
+            # use None as value for absolute and splitting covariate
+            reference = n_covariate * [None]
             for row in all_cov_reference_table :
                 if row['node_id'] == node_id and \
                     row['split_reference_id'] == split_reference_id :
                     covariate_id = row['covariate_id']
+                    # use all_cov_reference table for relative covariates
                     reference[covariate_id] = row['reference']
             cov_reference[node_id] = reference
     #
