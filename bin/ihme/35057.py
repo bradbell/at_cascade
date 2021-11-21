@@ -943,12 +943,13 @@ def set_all_option_table(all_node_database) :
     # all_option_table
     max_abs_effect_str = str( max_abs_effect )
     all_option_table  = [
-    {'option_name': 'root_node_name',     'option_value':root_node_name},
-    {'option_name': 'in_parallel',         'option_value':'false'},
-    {'option_name': 'max_fit',             'option_value':str(max_fit)},
-    {'option_name': 'absolute_covariates', 'option_value':'one'},
-    {'option_name': 'split_covariate_name','option_value':'sex'},
-    {'option_name': 'max_abs_effect',      'option_value':max_abs_effect_str},
+    {'option_name': 'absolute_covariates',    'option_value':'one'},
+    {'option_name': 'child_prior_std_factor', 'option_value':'4.0' },
+    {'option_name': 'in_parallel',            'option_value':'false'},
+    {'option_name': 'max_abs_effect',       'option_value':max_abs_effect_str},
+    {'option_name': 'max_fit',              'option_value':str(max_fit)},
+    {'option_name': 'root_node_name',       'option_value':root_node_name},
+    {'option_name': 'split_covariate_name', 'option_value':'sex'},
     ]
     new               = False
     connection        = dismod_at.create_connection(all_node_database, new)

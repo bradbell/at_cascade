@@ -274,6 +274,7 @@ split_reference value).
 {xsrst_begin all_option_table}
 {xsrst_spell
     bnd
+    std
 }
 
 All Node Option Table
@@ -303,6 +304,15 @@ This is a space separate list of the names for the
 covariates that do not change their reference value and hence are not
 included in the :ref:`all_cov_reference_table`.
 If this option does not appear, there are no absolute covariates.
+
+child_prior_std_factor
+**********************
+This factor multiplies the parent fit posterior standard deviation
+for the value priors in the
+:ref:`create_child_node_db.child_node_databases`.
+If it is greater (less) than one, the child priors are larger (smaller)
+than the posterior corresponding to the parent node fit.
+If this option does not appear, the value one is used for the factor.
 
 in_parallel
 ***********

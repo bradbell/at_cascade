@@ -359,14 +359,15 @@ def cascade_fit_node(
     #
     # all_option
     valid = [
-        'root_node_name',
-        'max_fit',
-        'max_abs_effect',
         'absolute_covariates',
-        'split_list',
-        'split_level',
-        'split_covariate_name',
+        'child_prior_std_factor',
         'in_parallel',
+        'max_abs_effect',
+        'max_fit',
+        'split_list',
+        'root_node_name',
+        'split_covariate_name',
+        'split_level',
     ]
     all_option  = dict()
     for row in all_option_table :
