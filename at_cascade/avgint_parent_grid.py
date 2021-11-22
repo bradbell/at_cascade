@@ -149,12 +149,12 @@ def avgint_parent_grid(
         fit_tables['node'], 'node', parent_node_name
     )
     #
-    # cov_reference
-    cov_reference = dict()
+    # cov_reference_dict
+    cov_reference_dict = dict()
     for (node_id, row) in enumerate(fit_tables['node']) :
         if node_id == parent_node_id or row['parent'] == parent_node_id :
             # use None as value for absolute covariate
-            reference = n_covariate * [None]
+            reference_list = n_covariate * [None]
             #
             # fill in value for releative covariates
             for row in all_cov_reference_table :
@@ -162,14 +162,14 @@ def avgint_parent_grid(
                     row['split_reference_id'] == fit_split_reference_id :
                     covariate_id = row['covariate_id']
                     # use all_cov_reference table for relative covariates
-                    reference[covariate_id] = row['reference']
+                    reference_list[covariate_id] = row['reference']
             #
             # fill in value for splitting covariate
             if split_covaraite_id is not None :
                 referecne[split_covariate_id] = split_reference
             #
             key = (node_id, fit_split_reference_id)
-            cov_reference[key] = reference
+            cov_reference_dict[key] = reference_list
     #
     # tbl_name
     tbl_name = 'avgint'
@@ -305,7 +305,7 @@ def avgint_parent_grid(
                     time_upper = time_lower
                     #
                     # key
-                    for key in cov_reference :
+                    for key in cov_reference_dict :
                         #
                         # node_id
                         node_id = key[0]
@@ -323,7 +323,7 @@ def avgint_parent_grid(
                             time_lower,
                             time_upper,
                         ]
-                        row += cov_reference[key]
+                        row += cov_reference_dict[key]
                         row += [ age_id, time_id, ]
                         #
                         # add to row_list
