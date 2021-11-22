@@ -62,6 +62,13 @@ c_time_id
 This column identifies a row in the time table of the
 fit_node_database that this prediction is for.
 
+c_split_reference_id
+====================
+This column identifies a row in the split_reference table of the
+all_node_database that this prediction is for.
+If the split_reference table is empty (non-empty) the value
+must (must not) be ``None``.
+
 Rectangular Grid
 ================
 For each covariate multiplier that has non-null group smoothing, all of the
@@ -73,6 +80,7 @@ age time pairs in the smoothing are represented in the new avgint table.
 {xsrst_end avgint_parent_grid}
 '''
 # ----------------------------------------------------------------------------
+import copy
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
@@ -115,7 +123,7 @@ def avgint_parent_grid(
     connection.close()
     #
     # split_covariate_id, fit_split_reference_id, fit_split_reference
-    split_covaraite_id     = None
+    split_covariate_id     = None
     fit_split_reference_id = None
     fit_split_reference    = None
     cov_info = at_cascade.get_cov_info(
@@ -165,11 +173,20 @@ def avgint_parent_grid(
                     reference_list[covariate_id] = row['reference']
             #
             # fill in value for splitting covariate
-            if split_covaraite_id is not None :
-                referecne[split_covariate_id] = split_reference
+            if split_covariate_id is not None :
+                reference_list[split_covariate_id] = fit_split_reference
             #
+            # cov_reference[ (node_id, fit_split_reference_id) ]
             key = (node_id, fit_split_reference_id)
-            cov_reference_dict[key] = reference_list
+            cov_reference_dict[key] = copy.copy( reference_list )
+            #
+            if split_covariate_id is not None and node_id == parent_node_id :
+                for split_reference_id in range( len(split_reference_list) ) :
+                    if split_reference_id != fit_split_reference_id :
+                        reference = split_reference_list[split_reference_id]
+                        reference_list[split_covariate_id] = reference
+                        key = (node_id, split_reference_id)
+                        cov_reference_dict[key] = copy.copy( reference_list )
     #
     # tbl_name
     tbl_name = 'avgint'
@@ -204,8 +221,8 @@ def avgint_parent_grid(
         col_type.append( 'real' )
     #
     # add the smoothing grid columns to col_name and col_type
-    col_name += [ 'c_age_id', 'c_time_id' ]
-    col_type += 2 * ['integer']
+    col_name += [ 'c_age_id', 'c_time_id', 'c_split_reference_id' ]
+    col_type += 3 * ['integer']
     #
     # name_rate2integrand
     name_rate2integrand = {
@@ -263,7 +280,7 @@ def avgint_parent_grid(
                         time_upper,
                     ]
                     row += n_covariate * [ None ]
-                    row += [ age_id, time_id, ]
+                    row += [ age_id, time_id, fit_split_reference_id ]
                     #
                     # add to row_list
                     row_list.append( row )
@@ -310,6 +327,9 @@ def avgint_parent_grid(
                         # node_id
                         node_id = key[0]
                         #
+                        # split_reference_id
+                        split_reference_id = key[1]
+                        #
                         # row
                         subgroup_id = 0
                         weight_id   = None
@@ -324,7 +344,7 @@ def avgint_parent_grid(
                             time_upper,
                         ]
                         row += cov_reference_dict[key]
-                        row += [ age_id, time_id, ]
+                        row += [ age_id, time_id, split_reference_id ]
                         #
                         # add to row_list
                         row_list.append( row )
