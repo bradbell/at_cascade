@@ -130,7 +130,7 @@ def add_subset_grid_row(
     fit_sample,
     fit_table,
     subset_table,
-    parent_grid_row,
+    fit_grid_row,
     integrand_id,
     subset_node_id,
     child_prior_std_factor,
@@ -140,21 +140,21 @@ def add_subset_grid_row(
     # -----------------------------------------------------------------------
     #
     # parent_prior_id
-    parent_prior_id    = parent_grid_row['value_prior_id']
+    parent_prior_id    = fit_grid_row['value_prior_id']
     #
     # subset_const_value
     # subset_value_prior_id
-    subset_const_value     = parent_grid_row['const_value']
+    subset_const_value     = fit_grid_row['const_value']
     subset_value_prior_id  = None
     if subset_const_value is None :
         #
-        # parent_prior_row
-        parent_prior_row = fit_table['prior'][parent_prior_id]
+        # fit_prior_row
+        fit_prior_row = fit_table['prior'][parent_prior_id]
         #
         # subset_const_value
         # subset_value_prior_id
-        lower = parent_prior_row['lower']
-        upper = parent_prior_row['upper']
+        lower = fit_prior_row['lower']
+        upper = fit_prior_row['upper']
         if lower is None :
             lower = - math.inf
         if upper is None :
@@ -167,18 +167,18 @@ def add_subset_grid_row(
             subset_value_prior_id  = len( subset_table['prior'] )
             #
             # subset_prior_row
-            subset_prior_row = copy.copy( parent_prior_row )
+            subset_prior_row = copy.copy( fit_prior_row )
             #
             # key
-            age_id    = parent_grid_row['age_id']
-            time_id   = parent_grid_row['time_id']
+            age_id    = fit_grid_row['age_id']
+            time_id   = fit_grid_row['time_id']
             key       = (integrand_id, subset_node_id, age_id, time_id)
             #
             # mean
             mean = fit_fit_var[key]
             #
             # std
-            eta        = parent_prior_row['eta']
+            eta        = fit_prior_row['eta']
             if eta is None :
                 std  = statistics.stdev(fit_sample[key], xbar=mean)
             else:
@@ -207,30 +207,30 @@ def add_subset_grid_row(
     # -----------------------------------------------------------------------
     # dage_prior
     # -----------------------------------------------------------------------
-    parent_prior_id       = parent_grid_row['dage_prior_id']
+    parent_prior_id       = fit_grid_row['dage_prior_id']
     if parent_prior_id == None :
         subset_dage_prior_id= None
     else :
-        parent_prior_row      = fit_table['prior'][parent_prior_id]
-        subset_prior_row      = copy.copy( parent_prior_row )
+        fit_prior_row      = fit_table['prior'][parent_prior_id]
+        subset_prior_row      = copy.copy( fit_prior_row )
         subset_dage_prior_id  = len( subset_table['prior'] )
         subset_table['prior'].append( subset_prior_row )
         add_index_to_name( subset_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # dtime_prior
     # -----------------------------------------------------------------------
-    parent_prior_id       = parent_grid_row['dtime_prior_id']
+    parent_prior_id       = fit_grid_row['dtime_prior_id']
     if parent_prior_id == None :
         subset_dtime_prior_id= None
     else :
-        parent_prior_row       = fit_table['prior'][parent_prior_id]
-        subset_prior_row       = copy.copy( parent_prior_row )
+        fit_prior_row       = fit_table['prior'][parent_prior_id]
+        subset_prior_row       = copy.copy( fit_prior_row )
         subset_dtime_prior_id  = len( subset_table['prior'] )
         subset_table['prior'].append( subset_prior_row )
         add_index_to_name( subset_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # subset_grid_row
-    subset_grid_row = copy.copy( parent_grid_row )
+    subset_grid_row = copy.copy( fit_grid_row )
     subset_grid_row['value_prior_id']  = subset_value_prior_id
     subset_grid_row['const_value']     = subset_const_value
     subset_grid_row['dage_prior_id']   = subset_dage_prior_id
@@ -407,9 +407,9 @@ def create_subset_db(
         for (mulcov_id, subset_mulcov_row) in enumerate(subset_table['mulcov']) :
             assert subset_mulcov_row['subgroup_smooth_id'] is None
             #
-            # parent_smooth_id
-            parent_smooth_id = subset_mulcov_row['group_smooth_id']
-            if not parent_smooth_id is None :
+            # fit_smooth_id
+            fit_smooth_id = subset_mulcov_row['group_smooth_id']
+            if not fit_smooth_id is None :
                 #
                 # integrand_id
                 name         = 'mulcov_' + str(mulcov_id)
@@ -418,7 +418,7 @@ def create_subset_db(
                 )
                 #
                 # smooth_row
-                smooth_row = fit_table['smooth'][parent_smooth_id]
+                smooth_row = fit_table['smooth'][fit_smooth_id]
                 smooth_row = copy.copy(smooth_row)
                 assert smooth_row['mulstd_value_prior_id'] is None
                 assert smooth_row['mulstd_dage_prior_id']  is None
@@ -435,14 +435,14 @@ def create_subset_db(
                 # subset_table['smooth_grid']
                 # add rows for this smoothing
                 node_id = None
-                for parent_grid_row in fit_table['smooth_grid'] :
-                    if parent_grid_row['smooth_id'] == parent_smooth_id :
+                for fit_grid_row in fit_table['smooth_grid'] :
+                    if fit_grid_row['smooth_id'] == fit_smooth_id :
                         add_subset_grid_row(
                             fit_fit_var,
                             fit_sample,
                             fit_table,
                             subset_table,
-                            parent_grid_row,
+                            fit_grid_row,
                             integrand_id,
                             node_id,
                             child_prior_std_factor,
@@ -456,18 +456,18 @@ def create_subset_db(
             # rate_name
             rate_name        = subset_rate_row['rate_name']
             # ----------------------------------------------------------------
-            # parent_smooth_id
-            parent_smooth_id = None
+            # fit_smooth_id
+            fit_smooth_id = None
             if rate_name in name_rate2integrand :
                 assert subset_rate_row['child_nslist_id'] is None
-                parent_smooth_id = subset_rate_row['parent_smooth_id']
+                fit_smooth_id = subset_rate_row['parent_smooth_id']
             else :
                 # proper priors for omega are set by omega_constraint routine
                 assert rate_name == 'omega'
                 subset_rate_row['parent_smooth_id'] = None
                 subset_rate_row['child_smooth_id']  = None
                 subset_rate_row['child_nslist_id']  = None
-            if not parent_smooth_id is None :
+            if not fit_smooth_id is None :
                 #
                 # integrand_id
                 # only check for integrands that are used
@@ -477,7 +477,7 @@ def create_subset_db(
                 )
                 #
                 # smooth_row
-                smooth_row = fit_table['smooth'][parent_smooth_id]
+                smooth_row = fit_table['smooth'][fit_smooth_id]
                 smooth_row = copy.copy(smooth_row)
                 assert smooth_row['mulstd_value_prior_id'] is None
                 assert smooth_row['mulstd_dage_prior_id']  is None
@@ -494,26 +494,26 @@ def create_subset_db(
                 #
                 # subset_table['smooth_grid']
                 # add rows for this smoothing
-                for parent_grid_row in fit_table['smooth_grid'] :
-                    if parent_grid_row['smooth_id'] == parent_smooth_id :
+                for fit_grid_row in fit_table['smooth_grid'] :
+                    if fit_grid_row['smooth_id'] == fit_smooth_id :
                         add_subset_grid_row(
                             fit_fit_var,
                             fit_sample,
                             fit_table,
                             subset_table,
-                            parent_grid_row,
+                            fit_grid_row,
                             integrand_id,
                             subset_node_id,
                             child_prior_std_factor,
                         )
             # ----------------------------------------------------------------
-            # parent_smooth_id
-            parent_smooth_id = None
+            # fit_smooth_id
+            fit_smooth_id = None
             if rate_name in name_rate2integrand :
-                parent_smooth_id = subset_rate_row['child_smooth_id']
-            if not parent_smooth_id is None :
+                fit_smooth_id = subset_rate_row['child_smooth_id']
+            if not fit_smooth_id is None :
                 #
-                smooth_row = fit_table['smooth'][parent_smooth_id]
+                smooth_row = fit_table['smooth'][fit_smooth_id]
                 smooth_row = copy.copy(smooth_row)
                 #
                 assert smooth_row['mulstd_value_prior_id'] is None
@@ -532,16 +532,16 @@ def create_subset_db(
                 subset_rate_row['child_smooth_id'] = subset_smooth_id
                 #
                 # add rows for this smoothing to subset_table['smooth_grid']
-                for parent_grid_row in fit_table['smooth_grid'] :
-                    if parent_grid_row['smooth_id'] == parent_smooth_id :
+                for fit_grid_row in fit_table['smooth_grid'] :
+                    if fit_grid_row['smooth_id'] == fit_smooth_id :
                         #
                         # update: subset_table['smooth_grid']
-                        subset_grid_row = copy.copy( parent_grid_row )
+                        subset_grid_row = copy.copy( fit_grid_row )
                         #
                         for ty in [
                             'value_prior_id', 'dage_prior_id', 'dtime_prior_id'
                          ] :
-                            prior_id  = parent_grid_row[ty]
+                            prior_id  = fit_grid_row[ty]
                             if prior_id is None :
                                 subset_grid_row[ty] = None
                             else :
