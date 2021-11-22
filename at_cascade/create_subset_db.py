@@ -126,9 +126,9 @@ def add_index_to_name(table, name_col) :
 # recent smoothing added to subset_table['smooth']; i.e., its smoothing_id
 # is len( subset_table['smooth'] ) - 1.
 def add_subset_grid_row(
-    parent_fit_var,
-    parent_sample,
-    parent_table,
+    fit_fit_var,
+    fit_sample,
+    fit_table,
     subset_table,
     parent_grid_row,
     integrand_id,
@@ -149,7 +149,7 @@ def add_subset_grid_row(
     if subset_const_value is None :
         #
         # parent_prior_row
-        parent_prior_row = parent_table['prior'][parent_prior_id]
+        parent_prior_row = fit_table['prior'][parent_prior_id]
         #
         # subset_const_value
         # subset_value_prior_id
@@ -175,19 +175,19 @@ def add_subset_grid_row(
             key       = (integrand_id, subset_node_id, age_id, time_id)
             #
             # mean
-            mean = parent_fit_var[key]
+            mean = fit_fit_var[key]
             #
             # std
             eta        = parent_prior_row['eta']
             if eta is None :
-                std  = statistics.stdev(parent_sample[key], xbar=mean)
+                std  = statistics.stdev(fit_sample[key], xbar=mean)
             else:
                 # The asymptotic statistics were computed in log space
                 # and then transformed to original space.
                 #
                 # log_sample
                 log_sample = list()
-                for sample in parent_sample[key] :
+                for sample in fit_sample[key] :
                     log_sample.append( math.log( sample + eta ) )
                 #
                 # log_std
@@ -211,7 +211,7 @@ def add_subset_grid_row(
     if parent_prior_id == None :
         subset_dage_prior_id= None
     else :
-        parent_prior_row      = parent_table['prior'][parent_prior_id]
+        parent_prior_row      = fit_table['prior'][parent_prior_id]
         subset_prior_row      = copy.copy( parent_prior_row )
         subset_dage_prior_id  = len( subset_table['prior'] )
         subset_table['prior'].append( subset_prior_row )
@@ -223,7 +223,7 @@ def add_subset_grid_row(
     if parent_prior_id == None :
         subset_dtime_prior_id= None
     else :
-        parent_prior_row       = parent_table['prior'][parent_prior_id]
+        parent_prior_row       = fit_table['prior'][parent_prior_id]
         subset_prior_row       = copy.copy( parent_prior_row )
         subset_dtime_prior_id  = len( subset_table['prior'] )
         subset_table['prior'].append( subset_prior_row )
@@ -268,10 +268,10 @@ def create_subset_db(
         if row['option_name'] == 'child_prior_std_factor' :
             child_prior_std_factor = float( row['option_value'] )
     #
-    # parent_table
+    # fit_table
     new           = False
     connection    = dismod_at.create_connection(fit_node_database, new)
-    parent_table  = dict()
+    fit_table  = dict()
     for name in [
         'c_subset_avgint',
         'c_root_avgint',
@@ -291,7 +291,7 @@ def create_subset_db(
         'smooth_grid',
         'var',
     ] :
-        parent_table[name] = dismod_at.get_table_dict(connection, name)
+        fit_table[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
     #
     # name_rate2integrand
@@ -304,7 +304,7 @@ def create_subset_db(
     #
     # fit_split_reference_id
     cov_info = at_cascade.get_cov_info(
-        all_option_table, parent_table['covariate'], split_reference_table
+        all_option_table, fit_table['covariate'], split_reference_table
     )
     if len(split_reference_table) == 0 :
         fit_split_reference_id = None
@@ -312,11 +312,11 @@ def create_subset_db(
         fit_split_reference_id = cov_info['split_reference_id']
     #
     #
-    # parent_fit_var
-    parent_fit_var = dict()
-    for predict_row in parent_table['c_subset_predict_fit_var'] :
+    # fit_fit_var
+    fit_fit_var = dict()
+    for predict_row in fit_table['c_subset_predict_fit_var'] :
         avgint_id          = predict_row['avgint_id']
-        avgint_row         = parent_table['c_subset_avgint'][avgint_id]
+        avgint_row         = fit_table['c_subset_avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
@@ -324,14 +324,14 @@ def create_subset_db(
         split_reference_id = avgint_row['c_split_reference_id']
         if split_reference_id == fit_split_reference_id :
             key  = (integrand_id, node_id, age_id, time_id)
-            assert not key in parent_fit_var
-            parent_fit_var[key] = predict_row['avg_integrand']
+            assert not key in fit_fit_var
+            fit_fit_var[key] = predict_row['avg_integrand']
     #
-    # parent_sample
-    parent_sample = dict()
-    for predict_row in parent_table['c_subset_predict_sample'] :
+    # fit_sample
+    fit_sample = dict()
+    for predict_row in fit_table['c_subset_predict_sample'] :
         avgint_id          = predict_row['avgint_id']
-        avgint_row         = parent_table['c_subset_avgint'][avgint_id]
+        avgint_row         = fit_table['c_subset_avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
@@ -339,21 +339,21 @@ def create_subset_db(
         split_reference_id = avgint_row['c_split_reference_id']
         if split_reference_id == fit_split_reference_id :
             key  = (integrand_id, node_id, age_id, time_id)
-            if not key in parent_sample :
-                parent_sample[key] = list()
-            parent_sample[key].append( predict_row['avg_integrand'] )
+            if not key in fit_sample :
+                fit_sample[key] = list()
+            fit_sample[key].append( predict_row['avg_integrand'] )
     #
-    # parent_node_name
-    parent_node_name = None
-    for row in parent_table['option'] :
-        assert row['option_name'] != 'parent_node_id'
+    # fit_node_name
+    fit_node_name = None
+    for row in fit_table['option'] :
+        assert row['option_name'] != 'fit_node_id'
         if row['option_name'] == 'parent_node_name' :
-            parent_node_name = row['option_value']
-    assert parent_node_name is not None
+            fit_node_name = row['option_value']
+    assert fit_node_name is not None
     #
-    # parent_node_id
-    parent_node_id = at_cascade.table_name2id(
-        parent_table['node'], 'node', parent_node_name
+    # fit_node_id
+    fit_node_id = at_cascade.table_name2id(
+        fit_table['node'], 'node', fit_node_name
     )
     for subset_name in subset_databases :
         # ---------------------------------------------------------------------
@@ -369,7 +369,7 @@ def create_subset_db(
             'option',
             'rate',
         ] :
-            subset_table[name] = copy.deepcopy(parent_table[name])
+            subset_table[name] = copy.deepcopy(fit_table[name])
         subset_table['prior']       = list()
         subset_table['smooth']      = list()
         subset_table['smooth_grid'] = list()
@@ -378,9 +378,9 @@ def create_subset_db(
         #
         # subset_node_id
         subset_node_id  = at_cascade.table_name2id(
-            parent_table['node'], 'node', subset_name
+            fit_table['node'], 'node', subset_name
         )
-        assert parent_table['node'][subset_node_id]['parent'] == parent_node_id
+        assert fit_table['node'][subset_node_id]['parent'] == fit_node_id
         #
         # subset_database     = fit_node_database
         subset_database= subset_databases[subset_name]
@@ -414,11 +414,11 @@ def create_subset_db(
                 # integrand_id
                 name         = 'mulcov_' + str(mulcov_id)
                 integrand_id = at_cascade.table_name2id(
-                    parent_table['integrand'], 'integrand', name
+                    fit_table['integrand'], 'integrand', name
                 )
                 #
                 # smooth_row
-                smooth_row = parent_table['smooth'][parent_smooth_id]
+                smooth_row = fit_table['smooth'][parent_smooth_id]
                 smooth_row = copy.copy(smooth_row)
                 assert smooth_row['mulstd_value_prior_id'] is None
                 assert smooth_row['mulstd_dage_prior_id']  is None
@@ -435,12 +435,12 @@ def create_subset_db(
                 # subset_table['smooth_grid']
                 # add rows for this smoothing
                 node_id = None
-                for parent_grid_row in parent_table['smooth_grid'] :
+                for parent_grid_row in fit_table['smooth_grid'] :
                     if parent_grid_row['smooth_id'] == parent_smooth_id :
                         add_subset_grid_row(
-                            parent_fit_var,
-                            parent_sample,
-                            parent_table,
+                            fit_fit_var,
+                            fit_sample,
+                            fit_table,
                             subset_table,
                             parent_grid_row,
                             integrand_id,
@@ -473,11 +473,11 @@ def create_subset_db(
                 # only check for integrands that are used
                 integrand_name  = name_rate2integrand[rate_name]
                 integrand_id = at_cascade.table_name2id(
-                    parent_table['integrand'], 'integrand', integrand_name
+                    fit_table['integrand'], 'integrand', integrand_name
                 )
                 #
                 # smooth_row
-                smooth_row = parent_table['smooth'][parent_smooth_id]
+                smooth_row = fit_table['smooth'][parent_smooth_id]
                 smooth_row = copy.copy(smooth_row)
                 assert smooth_row['mulstd_value_prior_id'] is None
                 assert smooth_row['mulstd_dage_prior_id']  is None
@@ -494,12 +494,12 @@ def create_subset_db(
                 #
                 # subset_table['smooth_grid']
                 # add rows for this smoothing
-                for parent_grid_row in parent_table['smooth_grid'] :
+                for parent_grid_row in fit_table['smooth_grid'] :
                     if parent_grid_row['smooth_id'] == parent_smooth_id :
                         add_subset_grid_row(
-                            parent_fit_var,
-                            parent_sample,
-                            parent_table,
+                            fit_fit_var,
+                            fit_sample,
+                            fit_table,
                             subset_table,
                             parent_grid_row,
                             integrand_id,
@@ -513,7 +513,7 @@ def create_subset_db(
                 parent_smooth_id = subset_rate_row['child_smooth_id']
             if not parent_smooth_id is None :
                 #
-                smooth_row = parent_table['smooth'][parent_smooth_id]
+                smooth_row = fit_table['smooth'][parent_smooth_id]
                 smooth_row = copy.copy(smooth_row)
                 #
                 assert smooth_row['mulstd_value_prior_id'] is None
@@ -532,7 +532,7 @@ def create_subset_db(
                 subset_rate_row['child_smooth_id'] = subset_smooth_id
                 #
                 # add rows for this smoothing to subset_table['smooth_grid']
-                for parent_grid_row in parent_table['smooth_grid'] :
+                for parent_grid_row in fit_table['smooth_grid'] :
                     if parent_grid_row['smooth_id'] == parent_smooth_id :
                         #
                         # update: subset_table['smooth_grid']
@@ -545,7 +545,7 @@ def create_subset_db(
                             if prior_id is None :
                                 subset_grid_row[ty] = None
                             else :
-                                prior_row = parent_table['prior'][prior_id]
+                                prior_row = fit_table['prior'][prior_id]
                                 prior_row = copy.copy(prior_row)
                                 prior_id  = len( subset_table['prior'] )
                                 subset_table['prior'].append( prior_row )
