@@ -28,7 +28,7 @@ all_node_database
 is a python string containing the name of the :ref:`all_node_db`.
 This argument can't be ``None``.
 
-parent_node_database
+fit_node_database
 ********************
 is a python string containing the name of a dismod_at database.
 This is a :ref:`glossary.fit_node_database` which
@@ -39,7 +39,7 @@ This argument can't be ``None``.
 parent_node
 ===========
 We use *parent_node* to refer to the parent node in the
-dismod_at option table in the *parent_node_database*.
+dismod_at option table in the *fit_node_database*.
 
 sample Table
 ============
@@ -49,7 +49,7 @@ the results of a dismod_at sample command for both the fixed and random effects.
 c_subset_avgint Table
 =====================
 This is the :ref:`avgint_parent_grid` table corresponding
-to this parent_node_database.
+to this fit_node_database.
 
 c_subset_predict_sample Table
 =============================
@@ -83,12 +83,12 @@ is a python dictionary and if *subset_name* is a key for *subset_databases*,
 -   If the upper and lower limits are equal,
     the value priors are effectively the same.
     Otherwise the mean and standard deviation in the values priors
-    are replaced using the predict, in the *parent_node_database*,
+    are replaced using the predict, in the *fit_node_database*,
     for the child node. Note that if the value prior is uniform,
     the standard deviation is not used and the mean is only used to
     initialize the optimization.
 -   The avgint table is a copy of the c_root_avgint table in the
-    *parent_node_database* with the node_id replaced by the corresponding
+    *fit_node_database* with the node_id replaced by the corresponding
     child node id.
 
 This argument can't be ``None``.
@@ -244,7 +244,7 @@ def create_subset_db(
 # BEGIN syntax
 # at_cascade.create_subset_db(
     all_node_database    = None ,
-    parent_node_database = None ,
+    fit_node_database    = None ,
     subset_databases     = None ,
 # )
 # END syntax
@@ -270,7 +270,7 @@ def create_subset_db(
     #
     # parent_table
     new           = False
-    connection    = dismod_at.create_connection(parent_node_database, new)
+    connection    = dismod_at.create_connection(fit_node_database, new)
     parent_table  = dict()
     for name in [
         'c_subset_avgint',
@@ -382,9 +382,9 @@ def create_subset_db(
         )
         assert parent_table['node'][subset_node_id]['parent'] == parent_node_id
         #
-        # subset_database     = parent_node_database
+        # subset_database     = fit_node_database
         subset_database= subset_databases[subset_name]
-        shutil.copyfile(parent_node_database, subset_database)
+        shutil.copyfile(fit_node_database, subset_database)
         #
         # subset_table['option']
         for row in subset_table['option'] :
