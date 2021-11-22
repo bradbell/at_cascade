@@ -132,7 +132,7 @@ def add_child_grid_row(
     subset_table,
     parent_grid_row,
     integrand_id,
-    child_node_id,
+    subset_node_id,
     child_prior_std_factor,
 ) :
     # -----------------------------------------------------------------------
@@ -172,7 +172,7 @@ def add_child_grid_row(
             # key
             age_id    = parent_grid_row['age_id']
             time_id   = parent_grid_row['time_id']
-            key       = (integrand_id, child_node_id, age_id, time_id)
+            key       = (integrand_id, subset_node_id, age_id, time_id)
             #
             # mean
             mean = parent_fit_var[key]
@@ -376,11 +376,11 @@ def create_subset_db(
         subset_table['nslist']      = list()
         subset_table['nslist_pair'] = list()
         #
-        # child_node_id
-        child_node_id = at_cascade.table_name2id(
+        # subset_node_id
+        subset_node_id  = at_cascade.table_name2id(
             parent_table['node'], 'node', child_name
         )
-        assert parent_table['node'][child_node_id]['parent'] == parent_node_id
+        assert parent_table['node'][subset_node_id]['parent'] == parent_node_id
         #
         # child_node_database = parent_node_database
         child_database = child_node_databases[child_name]
@@ -394,7 +394,7 @@ def create_subset_db(
         # subset_table['covariate']
         for row in all_cov_reference_table :
             # Use fact that None == None is true
-            if row['node_id'] == child_node_id and \
+            if row['node_id'] == subset_node_id and \
                 row['split_reference_id'] == split_reference_id :
                 covariate_id  = row['covariate_id']
                 child_row     = subset_table['covariate'][covariate_id]
@@ -503,7 +503,7 @@ def create_subset_db(
                             subset_table,
                             parent_grid_row,
                             integrand_id,
-                            child_node_id,
+                            subset_node_id,
                             child_prior_std_factor,
                         )
             # ----------------------------------------------------------------
@@ -558,7 +558,7 @@ def create_subset_db(
         #
         # subset_table['c_root_avgint']
         for row in subset_table['c_root_avgint'] :
-            row['node_id'] = child_node_id
+            row['node_id'] = subset_node_id
         #
         # child_connection
         new        = False
