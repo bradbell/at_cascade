@@ -514,7 +514,7 @@ def cascade_fit_node(
         child_node_databases[node_name] = subdir + '/dismod.db'
     #
     # create child node databases
-    at_cascade.create_child_node_db(
+    at_cascade.create_subset_db(
         all_node_database,
         fit_node_database,
         child_node_databases

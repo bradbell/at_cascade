@@ -20,7 +20,7 @@ The at_cascade Python Module
     at_cascade/check_cascade_fit.py
     at_cascade/continue_cascade.py
     at_cascade/create_all_node_db.py
-    at_cascade/create_child_node_db.py
+    at_cascade/create_subset_db.py
     at_cascade/data4cov_reference.py
     at_cascade/get_cov_info.py
     at_cascade/get_fit_children.py
@@ -42,7 +42,7 @@ from .cascade_fit_node      import cascade_fit_node
 from .check_cascade_fit     import check_cascade_fit
 from .continue_cascade      import continue_cascade
 from .create_all_node_db    import create_all_node_db
-from .create_child_node_db  import create_child_node_db
+from .create_subset_db      import create_subset_db
 from .data4cov_reference    import data4cov_reference
 from .get_cov_info          import get_cov_info
 from .get_fit_children      import get_fit_children

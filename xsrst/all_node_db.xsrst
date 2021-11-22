@@ -309,7 +309,7 @@ child_prior_std_factor
 **********************
 This factor multiplies the parent fit posterior standard deviation
 for the value priors in the
-:ref:`create_child_node_db.child_node_databases`.
+:ref:`create_subset_db.child_node_databases`.
 If it is greater (less) than one, the child priors are larger (smaller)
 than the posterior corresponding to the parent node fit.
 If this option does not appear, the value one is used for the factor.

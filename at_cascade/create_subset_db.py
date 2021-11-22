@@ -8,7 +8,7 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin create_child_node_db}
+{xsrst_begin create_subset_db}
 {xsrst_spell
     var
 }
@@ -93,7 +93,7 @@ is a python dictionary and if *child_name* is a key for *child_node_databases*,
 
 This argument can't be ``None``.
 
-{xsrst_end create_child_node_db}
+{xsrst_end create_subset_db}
 '''
 # ----------------------------------------------------------------------------
 import math
@@ -240,9 +240,9 @@ def add_child_grid_row(
     child_grid_row['smooth_id']  = len( child_tables['smooth'] ) - 1
     child_tables['smooth_grid'].append( child_grid_row )
 # ----------------------------------------------------------------------------
-def create_child_node_db(
+def create_subset_db(
 # BEGIN syntax
-# at_cascade.create_child_node_db(
+# at_cascade.create_subset_db(
     all_node_database    = None ,
     parent_node_database = None ,
     child_node_databases = None ,

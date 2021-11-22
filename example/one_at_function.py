@@ -176,7 +176,7 @@ The following is the value prior used for the root_node
     # END parent_value_prior
 }
 The mean and standard deviation are only used for the root_node.
-The :ref:`create_child_node_db<create_child_node_db>`
+The :ref:`create_subset_db<create_subset_db>`
 routine replaces them for other nodes.
 
 dage Prior
@@ -216,7 +216,7 @@ The following is the value prior used for this smoothing:
     # END alpha_value_prior
 }
 The mean and standard deviation are only used for the root_node.
-The create_child_node_db
+The create_subset_db
 routine replaces them for other nodes.
 
 Checking The Fit
