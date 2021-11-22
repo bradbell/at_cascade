@@ -452,21 +452,21 @@ def create_subset_db(
         # subset_table['rate']
         # and corresponding entries in the following child tables:
         # smooth, smooth_grid, and prior
-        for child_rate_row in subset_table['rate'] :
+        for subset_rate_row in subset_table['rate'] :
             # rate_name
-            rate_name        = child_rate_row['rate_name']
+            rate_name        = subset_rate_row['rate_name']
             # ----------------------------------------------------------------
             # parent_smooth_id
             parent_smooth_id = None
             if rate_name in name_rate2integrand :
-                assert child_rate_row['child_nslist_id'] is None
-                parent_smooth_id = child_rate_row['parent_smooth_id']
+                assert subset_rate_row['child_nslist_id'] is None
+                parent_smooth_id = subset_rate_row['parent_smooth_id']
             else :
                 # proper priors for omega are set by omega_constraint routine
                 assert rate_name == 'omega'
-                child_rate_row['parent_smooth_id'] = None
-                child_rate_row['child_smooth_id']  = None
-                child_rate_row['child_nslist_id']  = None
+                subset_rate_row['parent_smooth_id'] = None
+                subset_rate_row['child_smooth_id']  = None
+                subset_rate_row['child_nslist_id']  = None
             if not parent_smooth_id is None :
                 #
                 # integrand_id
@@ -490,7 +490,7 @@ def create_subset_db(
                 #
                 # subset_table['rate']
                 # use the new smoothing for this rate
-                child_rate_row['parent_smooth_id'] = child_smooth_id
+                subset_rate_row['parent_smooth_id'] = child_smooth_id
                 #
                 # subset_table['smooth_grid']
                 # add rows for this smoothing
@@ -510,7 +510,7 @@ def create_subset_db(
             # parent_smooth_id
             parent_smooth_id = None
             if rate_name in name_rate2integrand :
-                parent_smooth_id = child_rate_row['child_smooth_id']
+                parent_smooth_id = subset_rate_row['child_smooth_id']
             if not parent_smooth_id is None :
                 #
                 smooth_row = parent_table['smooth'][parent_smooth_id]
@@ -529,7 +529,7 @@ def create_subset_db(
                 subset_table['smooth'].append(smooth_row)
                 #
                 # change subset_table['rate'] to use the new smoothing
-                child_rate_row['child_smooth_id'] = child_smooth_id
+                subset_rate_row['child_smooth_id'] = child_smooth_id
                 #
                 # add rows for this smoothing to subset_table['smooth_grid']
                 for parent_grid_row in parent_table['smooth_grid'] :
@@ -560,26 +560,26 @@ def create_subset_db(
         for row in subset_table['c_root_avgint'] :
             row['node_id'] = subset_node_id
         #
-        # child_connection
+        # subset_connection
         new        = False
-        child_connection = dismod_at.create_connection(subset_database, new)
+        subset_connection = dismod_at.create_connection(subset_database, new)
         #
         # replace subset_table
         for name in subset_table :
             dismod_at.replace_table(
-                child_connection, name, subset_table[name]
+                subset_connection, name, subset_table[name]
             )
         # move c_root_avgint -> avgint
-        move_table(child_connection, 'c_root_avgint', 'avgint')
+        move_table(subset_connection, 'c_root_avgint', 'avgint')
         #
         # drop the following tables:
         # c_child_avgint, c_child_predict_sample, c_child_predict_fit_var
         command  = 'DROP TABLE c_child_avgint'
-        dismod_at.sql_command(child_connection, command)
+        dismod_at.sql_command(subset_connection, command)
         command  = 'DROP TABLE c_child_predict_sample'
-        dismod_at.sql_command(child_connection, command)
+        dismod_at.sql_command(subset_connection, command)
         command  = 'DROP TABLE c_child_predict_fit_var'
-        dismod_at.sql_command(child_connection, command)
+        dismod_at.sql_command(subset_connection, command)
         #
-        # child_connection
-        child_connection.close()
+        # subset_connection
+        subset_connection.close()
