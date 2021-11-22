@@ -139,8 +139,8 @@ def add_subset_grid_row(
     # value_prior
     # -----------------------------------------------------------------------
     #
-    # parent_prior_id
-    parent_prior_id    = fit_grid_row['value_prior_id']
+    # fit_prior_id
+    fit_prior_id    = fit_grid_row['value_prior_id']
     #
     # subset_const_value
     # subset_value_prior_id
@@ -149,7 +149,7 @@ def add_subset_grid_row(
     if subset_const_value is None :
         #
         # fit_prior_row
-        fit_prior_row = fit_table['prior'][parent_prior_id]
+        fit_prior_row = fit_table['prior'][fit_prior_id]
         #
         # subset_const_value
         # subset_value_prior_id
@@ -207,11 +207,11 @@ def add_subset_grid_row(
     # -----------------------------------------------------------------------
     # dage_prior
     # -----------------------------------------------------------------------
-    parent_prior_id       = fit_grid_row['dage_prior_id']
-    if parent_prior_id == None :
+    fit_prior_id       = fit_grid_row['dage_prior_id']
+    if fit_prior_id == None :
         subset_dage_prior_id= None
     else :
-        fit_prior_row      = fit_table['prior'][parent_prior_id]
+        fit_prior_row      = fit_table['prior'][fit_prior_id]
         subset_prior_row      = copy.copy( fit_prior_row )
         subset_dage_prior_id  = len( subset_table['prior'] )
         subset_table['prior'].append( subset_prior_row )
@@ -219,11 +219,11 @@ def add_subset_grid_row(
     # -----------------------------------------------------------------------
     # dtime_prior
     # -----------------------------------------------------------------------
-    parent_prior_id       = fit_grid_row['dtime_prior_id']
-    if parent_prior_id == None :
+    fit_prior_id       = fit_grid_row['dtime_prior_id']
+    if fit_prior_id == None :
         subset_dtime_prior_id= None
     else :
-        fit_prior_row       = fit_table['prior'][parent_prior_id]
+        fit_prior_row       = fit_table['prior'][fit_prior_id]
         subset_prior_row       = copy.copy( fit_prior_row )
         subset_dtime_prior_id  = len( subset_table['prior'] )
         subset_table['prior'].append( subset_prior_row )
