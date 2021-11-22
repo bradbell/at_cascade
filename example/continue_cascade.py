@@ -391,6 +391,7 @@ def main() :
     )
     #
     # continue starting at at n2
+    fit_node_database =  fit_node_dir + '/n2/dismod.db'
     at_cascade.continue_cascade(
         all_node_database = all_node_database   ,
         fit_node_database = fit_node_database   ,
