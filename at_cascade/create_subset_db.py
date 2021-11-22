@@ -122,14 +122,14 @@ def add_index_to_name(table, name_col) :
         name = name[: -1]
     row[name_col] = name + '_' + str( len(table) )
 # ----------------------------------------------------------------------------
-# The smoothing for the new child_tables['smooth_grid'] row is the most
-# recent smoothing added to child_tables['smooth']; i.e., its smoothing_id
-# is len( child_tables['smooth'] ) - 1.
+# The smoothing for the new subset_table['smooth_grid'] row is the most
+# recent smoothing added to subset_table['smooth']; i.e., its smoothing_id
+# is len( subset_table['smooth'] ) - 1.
 def add_child_grid_row(
     parent_fit_var,
     parent_sample,
-    parent_tables,
-    child_tables,
+    parent_table,
+    subset_table,
     parent_grid_row,
     integrand_id,
     child_node_id,
@@ -149,7 +149,7 @@ def add_child_grid_row(
     if child_const_value is None :
         #
         # parent_prior_row
-        parent_prior_row = parent_tables['prior'][parent_prior_id]
+        parent_prior_row = parent_table['prior'][parent_prior_id]
         #
         # child_const_value
         # child_value_prior_id
@@ -164,7 +164,7 @@ def add_child_grid_row(
             assert child_value_prior_id is None
         else :
             assert child_const_value is None
-            child_value_prior_id = len( child_tables['prior'] )
+            child_value_prior_id = len( subset_table['prior'] )
             #
             # child_prior_row
             child_prior_row  = copy.copy( parent_prior_row )
@@ -201,9 +201,9 @@ def add_child_grid_row(
             child_prior_row['mean']        = mean
             child_prior_row['std']         = child_prior_std_factor * std
             #
-            # child_tables['prior']
-            child_tables['prior'].append( child_prior_row )
-            add_index_to_name( child_tables['prior'], 'prior_name' )
+            # subset_table['prior']
+            subset_table['prior'].append( child_prior_row )
+            add_index_to_name( subset_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # dage_prior
     # -----------------------------------------------------------------------
@@ -211,11 +211,11 @@ def add_child_grid_row(
     if parent_prior_id == None :
         child_dage_prior_id = None
     else :
-        parent_prior_row      = parent_tables['prior'][parent_prior_id]
+        parent_prior_row      = parent_table['prior'][parent_prior_id]
         child_prior_row       = copy.copy( parent_prior_row )
-        child_dage_prior_id   = len( child_tables['prior'] )
-        child_tables['prior'].append( child_prior_row )
-        add_index_to_name( child_tables['prior'], 'prior_name' )
+        child_dage_prior_id   = len( subset_table['prior'] )
+        subset_table['prior'].append( child_prior_row )
+        add_index_to_name( subset_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # dtime_prior
     # -----------------------------------------------------------------------
@@ -223,11 +223,11 @@ def add_child_grid_row(
     if parent_prior_id == None :
         child_dtime_prior_id = None
     else :
-        parent_prior_row       = parent_tables['prior'][parent_prior_id]
+        parent_prior_row       = parent_table['prior'][parent_prior_id]
         child_prior_row        = copy.copy( parent_prior_row )
-        child_dtime_prior_id   = len( child_tables['prior'] )
-        child_tables['prior'].append( child_prior_row )
-        add_index_to_name( child_tables['prior'], 'prior_name' )
+        child_dtime_prior_id   = len( subset_table['prior'] )
+        subset_table['prior'].append( child_prior_row )
+        add_index_to_name( subset_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # child_grid_row
     child_grid_row = copy.copy( parent_grid_row )
@@ -236,9 +236,9 @@ def add_child_grid_row(
     child_grid_row['dage_prior_id']   = child_dage_prior_id
     child_grid_row['dtime_prior_id']  = child_dtime_prior_id
     #
-    # child_tables['smooth_grid']
-    child_grid_row['smooth_id']  = len( child_tables['smooth'] ) - 1
-    child_tables['smooth_grid'].append( child_grid_row )
+    # subset_table['smooth_grid']
+    child_grid_row['smooth_id']  = len( subset_table['smooth'] ) - 1
+    subset_table['smooth_grid'].append( child_grid_row )
 # ----------------------------------------------------------------------------
 def create_subset_db(
 # BEGIN syntax
@@ -268,10 +268,10 @@ def create_subset_db(
         if row['option_name'] == 'child_prior_std_factor' :
             child_prior_std_factor = float( row['option_value'] )
     #
-    # parent_tables
+    # parent_table
     new           = False
     connection    = dismod_at.create_connection(parent_node_database, new)
-    parent_tables = dict()
+    parent_table  = dict()
     for name in [
         'c_child_avgint',
         'c_root_avgint',
@@ -291,7 +291,7 @@ def create_subset_db(
         'smooth_grid',
         'var',
     ] :
-        parent_tables[name] = dismod_at.get_table_dict(connection, name)
+        parent_table[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
     #
     # name_rate2integrand
@@ -304,7 +304,7 @@ def create_subset_db(
     #
     # fit_split_reference_id
     cov_info = at_cascade.get_cov_info(
-        all_option_table, parent_tables['covariate'], split_reference_table
+        all_option_table, parent_table['covariate'], split_reference_table
     )
     if len(split_reference_table) == 0 :
         fit_split_reference_id = None
@@ -314,9 +314,9 @@ def create_subset_db(
     #
     # parent_fit_var
     parent_fit_var = dict()
-    for predict_row in parent_tables['c_child_predict_fit_var'] :
+    for predict_row in parent_table['c_child_predict_fit_var'] :
         avgint_id          = predict_row['avgint_id']
-        avgint_row         = parent_tables['c_child_avgint'][avgint_id]
+        avgint_row         = parent_table['c_child_avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
@@ -329,9 +329,9 @@ def create_subset_db(
     #
     # parent_sample
     parent_sample = dict()
-    for predict_row in parent_tables['c_child_predict_sample'] :
+    for predict_row in parent_table['c_child_predict_sample'] :
         avgint_id          = predict_row['avgint_id']
-        avgint_row         = parent_tables['c_child_avgint'][avgint_id]
+        avgint_row         = parent_table['c_child_avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
@@ -345,7 +345,7 @@ def create_subset_db(
     #
     # parent_node_name
     parent_node_name = None
-    for row in parent_tables['option'] :
+    for row in parent_table['option'] :
         assert row['option_name'] != 'parent_node_id'
         if row['option_name'] == 'parent_node_name' :
             parent_node_name = row['option_value']
@@ -353,7 +353,7 @@ def create_subset_db(
     #
     # parent_node_id
     parent_node_id = at_cascade.table_name2id(
-        parent_tables['node'], 'node', parent_node_name
+        parent_table['node'], 'node', parent_node_name
     )
     for child_name in child_node_databases :
         # ---------------------------------------------------------------------
@@ -361,7 +361,7 @@ def create_subset_db(
         # ---------------------------------------------------------------------
         #
         # child_node_tables
-        child_tables = dict()
+        subset_table = dict()
         for name in [
             'c_root_avgint',
             'covariate',
@@ -369,42 +369,42 @@ def create_subset_db(
             'option',
             'rate',
         ] :
-            child_tables[name] = copy.deepcopy(parent_tables[name])
-        child_tables['prior']       = list()
-        child_tables['smooth']      = list()
-        child_tables['smooth_grid'] = list()
-        child_tables['nslist']      = list()
-        child_tables['nslist_pair'] = list()
+            subset_table[name] = copy.deepcopy(parent_table[name])
+        subset_table['prior']       = list()
+        subset_table['smooth']      = list()
+        subset_table['smooth_grid'] = list()
+        subset_table['nslist']      = list()
+        subset_table['nslist_pair'] = list()
         #
         # child_node_id
         child_node_id = at_cascade.table_name2id(
-            parent_tables['node'], 'node', child_name
+            parent_table['node'], 'node', child_name
         )
-        assert parent_tables['node'][child_node_id]['parent'] == parent_node_id
+        assert parent_table['node'][child_node_id]['parent'] == parent_node_id
         #
         # child_node_database = parent_node_database
         child_database = child_node_databases[child_name]
         shutil.copyfile(parent_node_database, child_database)
         #
-        # child_tables['option']
-        for row in child_tables['option'] :
+        # subset_table['option']
+        for row in subset_table['option'] :
             if row['option_name'] == 'parent_node_name' :
                 row['option_value'] = child_name
         #
-        # child_tables['covariate']
+        # subset_table['covariate']
         for row in all_cov_reference_table :
             # Use fact that None == None is true
             if row['node_id'] == child_node_id and \
                 row['split_reference_id'] == split_reference_id :
                 covariate_id  = row['covariate_id']
-                child_row     = child_tables['covariate'][covariate_id]
+                child_row     = subset_table['covariate'][covariate_id]
                 child_row['reference'] = row['reference']
         #
         # --------------------------------------------------------------------
-        # child_tables['mulcov']
+        # subset_table['mulcov']
         # and corresponding entries in
         # smooth, smooth_grid, and prior
-        for (mulcov_id, child_mulcov_row) in enumerate(child_tables['mulcov']) :
+        for (mulcov_id, child_mulcov_row) in enumerate(subset_table['mulcov']) :
             assert child_mulcov_row['subgroup_smooth_id'] is None
             #
             # parent_smooth_id
@@ -414,34 +414,34 @@ def create_subset_db(
                 # integrand_id
                 name         = 'mulcov_' + str(mulcov_id)
                 integrand_id = at_cascade.table_name2id(
-                    parent_tables['integrand'], 'integrand', name
+                    parent_table['integrand'], 'integrand', name
                 )
                 #
                 # smooth_row
-                smooth_row = parent_tables['smooth'][parent_smooth_id]
+                smooth_row = parent_table['smooth'][parent_smooth_id]
                 smooth_row = copy.copy(smooth_row)
                 assert smooth_row['mulstd_value_prior_id'] is None
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
                 #
-                # child_tables['smooth'], child_smooth_id
-                child_smooth_id = len(child_tables['smooth'])
+                # subset_table['smooth'], child_smooth_id
+                child_smooth_id = len(subset_table['smooth'])
                 smooth_row['smooth_name'] += f'_{child_smooth_id}'
-                child_tables['smooth'].append(smooth_row)
+                subset_table['smooth'].append(smooth_row)
                 #
-                # change child_tables['mulcov'] to use the new smoothing
+                # change subset_table['mulcov'] to use the new smoothing
                 child_mulcov_row['group_smooth_id'] = child_smooth_id
                 #
-                # child_tables['smooth_grid']
+                # subset_table['smooth_grid']
                 # add rows for this smoothing
                 node_id = None
-                for parent_grid_row in parent_tables['smooth_grid'] :
+                for parent_grid_row in parent_table['smooth_grid'] :
                     if parent_grid_row['smooth_id'] == parent_smooth_id :
                         add_child_grid_row(
                             parent_fit_var,
                             parent_sample,
-                            parent_tables,
-                            child_tables,
+                            parent_table,
+                            subset_table,
                             parent_grid_row,
                             integrand_id,
                             node_id,
@@ -449,10 +449,10 @@ def create_subset_db(
                         )
 
         # --------------------------------------------------------------------
-        # child_tables['rate']
+        # subset_table['rate']
         # and corresponding entries in the following child tables:
         # smooth, smooth_grid, and prior
-        for child_rate_row in child_tables['rate'] :
+        for child_rate_row in subset_table['rate'] :
             # rate_name
             rate_name        = child_rate_row['rate_name']
             # ----------------------------------------------------------------
@@ -473,34 +473,34 @@ def create_subset_db(
                 # only check for integrands that are used
                 integrand_name  = name_rate2integrand[rate_name]
                 integrand_id = at_cascade.table_name2id(
-                    parent_tables['integrand'], 'integrand', integrand_name
+                    parent_table['integrand'], 'integrand', integrand_name
                 )
                 #
                 # smooth_row
-                smooth_row = parent_tables['smooth'][parent_smooth_id]
+                smooth_row = parent_table['smooth'][parent_smooth_id]
                 smooth_row = copy.copy(smooth_row)
                 assert smooth_row['mulstd_value_prior_id'] is None
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
                 #
-                # : child_tables['smooth'], child_smooth_id
-                child_smooth_id = len(child_tables['smooth'])
+                # : subset_table['smooth'], child_smooth_id
+                child_smooth_id = len(subset_table['smooth'])
                 smooth_row['smooth_name'] += f'_{child_smooth_id}'
-                child_tables['smooth'].append(smooth_row)
+                subset_table['smooth'].append(smooth_row)
                 #
-                # child_tables['rate']
+                # subset_table['rate']
                 # use the new smoothing for this rate
                 child_rate_row['parent_smooth_id'] = child_smooth_id
                 #
-                # child_tables['smooth_grid']
+                # subset_table['smooth_grid']
                 # add rows for this smoothing
-                for parent_grid_row in parent_tables['smooth_grid'] :
+                for parent_grid_row in parent_table['smooth_grid'] :
                     if parent_grid_row['smooth_id'] == parent_smooth_id :
                         add_child_grid_row(
                             parent_fit_var,
                             parent_sample,
-                            parent_tables,
-                            child_tables,
+                            parent_table,
+                            subset_table,
                             parent_grid_row,
                             integrand_id,
                             child_node_id,
@@ -513,7 +513,7 @@ def create_subset_db(
                 parent_smooth_id = child_rate_row['child_smooth_id']
             if not parent_smooth_id is None :
                 #
-                smooth_row = parent_tables['smooth'][parent_smooth_id]
+                smooth_row = parent_table['smooth'][parent_smooth_id]
                 smooth_row = copy.copy(smooth_row)
                 #
                 assert smooth_row['mulstd_value_prior_id'] is None
@@ -522,20 +522,20 @@ def create_subset_db(
                 if rate_name == 'pini' :
                     assert smooth_row['n_age'] == 1
                 #
-                # update: child_tables['smooth']
+                # update: subset_table['smooth']
                 # for case where its is the parent
-                child_smooth_id = len(child_tables['smooth'])
+                child_smooth_id = len(subset_table['smooth'])
                 smooth_row['smooth_name'] += f'_{child_smooth_id}'
-                child_tables['smooth'].append(smooth_row)
+                subset_table['smooth'].append(smooth_row)
                 #
-                # change child_tables['rate'] to use the new smoothing
+                # change subset_table['rate'] to use the new smoothing
                 child_rate_row['child_smooth_id'] = child_smooth_id
                 #
-                # add rows for this smoothing to child_tables['smooth_grid']
-                for parent_grid_row in parent_tables['smooth_grid'] :
+                # add rows for this smoothing to subset_table['smooth_grid']
+                for parent_grid_row in parent_table['smooth_grid'] :
                     if parent_grid_row['smooth_id'] == parent_smooth_id :
                         #
-                        # update: child_tables['smooth_grid']
+                        # update: subset_table['smooth_grid']
                         child_grid_row = copy.copy( parent_grid_row )
                         #
                         for ty in [
@@ -545,29 +545,29 @@ def create_subset_db(
                             if prior_id is None :
                                 child_grid_row[ty] = None
                             else :
-                                prior_row = parent_tables['prior'][prior_id]
+                                prior_row = parent_table['prior'][prior_id]
                                 prior_row = copy.copy(prior_row)
-                                prior_id  = len( child_tables['prior'] )
-                                child_tables['prior'].append( prior_row )
+                                prior_id  = len( subset_table['prior'] )
+                                subset_table['prior'].append( prior_row )
                                 add_index_to_name(
-                                    child_tables['prior'], 'prior_name'
+                                    subset_table['prior'], 'prior_name'
                                 )
                                 child_grid_row[ty] = prior_id
                         child_grid_row['smooth_id']      = child_smooth_id
-                        child_tables['smooth_grid'].append( child_grid_row )
+                        subset_table['smooth_grid'].append( child_grid_row )
         #
-        # child_tables['c_root_avgint']
-        for row in child_tables['c_root_avgint'] :
+        # subset_table['c_root_avgint']
+        for row in subset_table['c_root_avgint'] :
             row['node_id'] = child_node_id
         #
         # child_connection
         new        = False
         child_connection = dismod_at.create_connection(child_database, new)
         #
-        # replace child_tables
-        for name in child_tables :
+        # replace subset_table
+        for name in subset_table :
             dismod_at.replace_table(
-                child_connection, name, child_tables[name]
+                child_connection, name, subset_table[name]
             )
         # move c_root_avgint -> avgint
         move_table(child_connection, 'c_root_avgint', 'avgint')
