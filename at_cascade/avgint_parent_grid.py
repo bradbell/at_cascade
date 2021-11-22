@@ -12,8 +12,8 @@
 {xsrst_spell
 }
 
-Predicts Parent Rates, Child Rates, and Covariate Multipliers
-#############################################################
+Predicts Rates and Covariate Multipliers on Parent Grid
+#######################################################
 
 Syntax
 ******
@@ -24,10 +24,12 @@ Syntax
 
 Purpose
 *******
-Create an avgint table that predicts the parent and child rates
-on the grid corresponding to the parent not rates.
-Also predict the covariate multiplies which have the same grid
-for the parent and child nodes.
+Create an avgint table that can be used to predict the rates and covariate
+multipliers on the parent grid.
+For child nodes, the predictions are for the
+:ref:`split_reference_table.split_reference_value` for the parent node.
+For the parent node, the predictions are for all the possible
+split reference values.
 
 all_node_database
 *****************
@@ -67,7 +69,7 @@ c_split_reference_id
 This column identifies a row in the split_reference table of the
 all_node_database that this prediction is for.
 If the split_reference table is empty (non-empty) the value
-must (must not) be ``None``.
+wiil be (will not) be ``None``.
 
 Rectangular Grid
 ================
