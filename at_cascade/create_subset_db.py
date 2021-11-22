@@ -360,7 +360,7 @@ def create_subset_db(
         # create subset_databases[subset_name]
         # ---------------------------------------------------------------------
         #
-        # child_node_tables
+        # subset_table
         subset_table = dict()
         for name in [
             'c_root_avgint',
@@ -397,18 +397,18 @@ def create_subset_db(
             if row['node_id'] == subset_node_id and \
                 row['split_reference_id'] == split_reference_id :
                 covariate_id  = row['covariate_id']
-                child_row     = subset_table['covariate'][covariate_id]
-                child_row['reference'] = row['reference']
+                subset_row    =subset_table['covariate'][covariate_id]
+                subset_row['reference'] = row['reference']
         #
         # --------------------------------------------------------------------
         # subset_table['mulcov']
         # and corresponding entries in
         # smooth, smooth_grid, and prior
-        for (mulcov_id, child_mulcov_row) in enumerate(subset_table['mulcov']) :
-            assert child_mulcov_row['subgroup_smooth_id'] is None
+        for (mulcov_id, subset_mulcov_row) in enumerate(subset_table['mulcov']) :
+            assert subset_mulcov_row['subgroup_smooth_id'] is None
             #
             # parent_smooth_id
-            parent_smooth_id = child_mulcov_row['group_smooth_id']
+            parent_smooth_id = subset_mulcov_row['group_smooth_id']
             if not parent_smooth_id is None :
                 #
                 # integrand_id
@@ -430,7 +430,7 @@ def create_subset_db(
                 subset_table['smooth'].append(smooth_row)
                 #
                 # change subset_table['mulcov'] to use the new smoothing
-                child_mulcov_row['group_smooth_id'] = child_smooth_id
+                subset_mulcov_row['group_smooth_id'] = child_smooth_id
                 #
                 # subset_table['smooth_grid']
                 # add rows for this smoothing
