@@ -166,8 +166,8 @@ def add_child_grid_row(
             assert subset_const_value is None
             subset_value_prior_id  = len( subset_table['prior'] )
             #
-            # child_prior_row
-            child_prior_row  = copy.copy( parent_prior_row )
+            # subset_prior_row
+            subset_prior_row = copy.copy( parent_prior_row )
             #
             # key
             age_id    = parent_grid_row['age_id']
@@ -197,44 +197,44 @@ def add_child_grid_row(
                 # inverse log transformation
                 std      = (math.exp(log_std) - 1) * (mean + eta)
             #
-            # child_prior_row
-            child_prior_row['mean']        = mean
-            child_prior_row['std']         = child_prior_std_factor * std
+            # subset_prior_row
+            subset_prior_row['mean']        = mean
+            subset_prior_row['std']         = child_prior_std_factor * std
             #
             # subset_table['prior']
-            subset_table['prior'].append( child_prior_row )
+            subset_table['prior'].append( subset_prior_row )
             add_index_to_name( subset_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # dage_prior
     # -----------------------------------------------------------------------
     parent_prior_id       = parent_grid_row['dage_prior_id']
     if parent_prior_id == None :
-        child_dage_prior_id = None
+        subset_dage_prior_id= None
     else :
         parent_prior_row      = parent_table['prior'][parent_prior_id]
-        child_prior_row       = copy.copy( parent_prior_row )
-        child_dage_prior_id   = len( subset_table['prior'] )
-        subset_table['prior'].append( child_prior_row )
+        subset_prior_row      = copy.copy( parent_prior_row )
+        subset_dage_prior_id  = len( subset_table['prior'] )
+        subset_table['prior'].append( subset_prior_row )
         add_index_to_name( subset_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # dtime_prior
     # -----------------------------------------------------------------------
     parent_prior_id       = parent_grid_row['dtime_prior_id']
     if parent_prior_id == None :
-        child_dtime_prior_id = None
+        subset_dtime_prior_id= None
     else :
         parent_prior_row       = parent_table['prior'][parent_prior_id]
-        child_prior_row        = copy.copy( parent_prior_row )
-        child_dtime_prior_id   = len( subset_table['prior'] )
-        subset_table['prior'].append( child_prior_row )
+        subset_prior_row       = copy.copy( parent_prior_row )
+        subset_dtime_prior_id  = len( subset_table['prior'] )
+        subset_table['prior'].append( subset_prior_row )
         add_index_to_name( subset_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # child_grid_row
     child_grid_row = copy.copy( parent_grid_row )
     child_grid_row['value_prior_id']  = subset_value_prior_id
     child_grid_row['const_value']     = subset_const_value
-    child_grid_row['dage_prior_id']   = child_dage_prior_id
-    child_grid_row['dtime_prior_id']  = child_dtime_prior_id
+    child_grid_row['dage_prior_id']   = subset_dage_prior_id
+    child_grid_row['dtime_prior_id']  = subset_dtime_prior_id
     #
     # subset_table['smooth_grid']
     child_grid_row['smooth_id']  = len( subset_table['smooth'] ) - 1
