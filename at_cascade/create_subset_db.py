@@ -424,13 +424,13 @@ def create_subset_db(
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
                 #
-                # subset_table['smooth'], child_smooth_id
-                child_smooth_id = len(subset_table['smooth'])
-                smooth_row['smooth_name'] += f'_{child_smooth_id}'
+                # subset_table['smooth'], subset_smooth_id
+                subset_smooth_id = len(subset_table['smooth'])
+                smooth_row['smooth_name'] += f'_{subset_smooth_id}'
                 subset_table['smooth'].append(smooth_row)
                 #
                 # change subset_table['mulcov'] to use the new smoothing
-                subset_mulcov_row['group_smooth_id'] = child_smooth_id
+                subset_mulcov_row['group_smooth_id'] = subset_smooth_id
                 #
                 # subset_table['smooth_grid']
                 # add rows for this smoothing
@@ -483,14 +483,14 @@ def create_subset_db(
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
                 #
-                # : subset_table['smooth'], child_smooth_id
-                child_smooth_id = len(subset_table['smooth'])
-                smooth_row['smooth_name'] += f'_{child_smooth_id}'
+                # : subset_table['smooth'], subset_smooth_id
+                subset_smooth_id = len(subset_table['smooth'])
+                smooth_row['smooth_name'] += f'_{subset_smooth_id}'
                 subset_table['smooth'].append(smooth_row)
                 #
                 # subset_table['rate']
                 # use the new smoothing for this rate
-                subset_rate_row['parent_smooth_id'] = child_smooth_id
+                subset_rate_row['parent_smooth_id'] = subset_smooth_id
                 #
                 # subset_table['smooth_grid']
                 # add rows for this smoothing
@@ -524,12 +524,12 @@ def create_subset_db(
                 #
                 # update: subset_table['smooth']
                 # for case where its is the parent
-                child_smooth_id = len(subset_table['smooth'])
-                smooth_row['smooth_name'] += f'_{child_smooth_id}'
+                subset_smooth_id = len(subset_table['smooth'])
+                smooth_row['smooth_name'] += f'_{subset_smooth_id}'
                 subset_table['smooth'].append(smooth_row)
                 #
                 # change subset_table['rate'] to use the new smoothing
-                subset_rate_row['child_smooth_id'] = child_smooth_id
+                subset_rate_row['child_smooth_id'] = subset_smooth_id
                 #
                 # add rows for this smoothing to subset_table['smooth_grid']
                 for parent_grid_row in parent_table['smooth_grid'] :
@@ -553,7 +553,7 @@ def create_subset_db(
                                     subset_table['prior'], 'prior_name'
                                 )
                                 subset_grid_row[ty] = prior_id
-                        subset_grid_row['smooth_id']      = child_smooth_id
+                        subset_grid_row['smooth_id']      = subset_smooth_id
                         subset_table['smooth_grid'].append( subset_grid_row )
         #
         # subset_table['c_root_avgint']
