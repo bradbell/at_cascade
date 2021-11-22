@@ -15,12 +15,10 @@
 # '
 # list of files and or directories that are moved to new names
 # move_paths='
-#   at_cascade/create_child_node_db.py
 # '
 # list of sed commands that map old file and directory names to new names.
 # The characters @s, @d, @n get converted to a space, dollar sign, new line.
 # move_seds='
-#   s|create_child_node_db|create_subset_db|
 # '
 # list of files that get edited by the extra_seds command
 # extra_files='
@@ -32,4 +30,6 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|create_child_node_db|create_subset_db|g
+s|c_child_predict_fit_var|c_subset_predict_fit_var|g
+s|c_child_predict_sample|c_subset_predict_sample|g
+s|c_child_avgint|c_subset_avgint|g

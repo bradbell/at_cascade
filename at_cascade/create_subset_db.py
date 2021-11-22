@@ -46,23 +46,23 @@ sample Table
 The sample table contains
 the results of a dismod_at sample command for both the fixed and random effects.
 
-c_child_avgint Table
-====================
+c_subset_avgint Table
+=====================
 This is the :ref:`avgint_parent_grid` table corresponding
 to this parent_node_database.
 
-c_child_predict_sample Table
-============================
-This table contains the predict table corresponding to a
-predict sample command using the c_child_avgint table.
-Note that the predict_id column name was changed to c_child_predict_sample_id
-(which is not the same as sample_id).
-
-c_child_predict_fit_var Table
+c_subset_predict_sample Table
 =============================
 This table contains the predict table corresponding to a
-predict fit_var command using the c_child_avgint table.
-Note that the predict_id column name was changed to c_child_predict_fit_var_id
+predict sample command using the c_subset_avgint table.
+Note that the predict_id column name was changed to c_subset_predict_sample_id
+(which is not the same as sample_id).
+
+c_subset_predict_fit_var Table
+==============================
+This table contains the predict table corresponding to a
+predict fit_var command using the c_subset_avgint table.
+Note that the predict_id column name was changed to c_subset_predict_fit_var_id
 (which is not the same as var_id).
 
 c_root_avgint Table
@@ -273,10 +273,10 @@ def create_subset_db(
     connection    = dismod_at.create_connection(parent_node_database, new)
     parent_table  = dict()
     for name in [
-        'c_child_avgint',
+        'c_subset_avgint',
         'c_root_avgint',
-        'c_child_predict_fit_var',
-        'c_child_predict_sample',
+        'c_subset_predict_fit_var',
+        'c_subset_predict_sample',
         'covariate',
         'density',
         'fit_var',
@@ -314,9 +314,9 @@ def create_subset_db(
     #
     # parent_fit_var
     parent_fit_var = dict()
-    for predict_row in parent_table['c_child_predict_fit_var'] :
+    for predict_row in parent_table['c_subset_predict_fit_var'] :
         avgint_id          = predict_row['avgint_id']
-        avgint_row         = parent_table['c_child_avgint'][avgint_id]
+        avgint_row         = parent_table['c_subset_avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
@@ -329,9 +329,9 @@ def create_subset_db(
     #
     # parent_sample
     parent_sample = dict()
-    for predict_row in parent_table['c_child_predict_sample'] :
+    for predict_row in parent_table['c_subset_predict_sample'] :
         avgint_id          = predict_row['avgint_id']
-        avgint_row         = parent_table['c_child_avgint'][avgint_id]
+        avgint_row         = parent_table['c_subset_avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
@@ -573,12 +573,12 @@ def create_subset_db(
         move_table(subset_connection, 'c_root_avgint', 'avgint')
         #
         # drop the following tables:
-        # c_child_avgint, c_child_predict_sample, c_child_predict_fit_var
-        command  = 'DROP TABLE c_child_avgint'
+        # c_subset_avgint, c_subset_predict_sample, c_subset_predict_fit_var
+        command  = 'DROP TABLE c_subset_avgint'
         dismod_at.sql_command(subset_connection, command)
-        command  = 'DROP TABLE c_child_predict_sample'
+        command  = 'DROP TABLE c_subset_predict_sample'
         dismod_at.sql_command(subset_connection, command)
-        command  = 'DROP TABLE c_child_predict_fit_var'
+        command  = 'DROP TABLE c_subset_predict_fit_var'
         dismod_at.sql_command(subset_connection, command)
         #
         # subset_connection
