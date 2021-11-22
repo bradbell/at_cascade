@@ -142,17 +142,17 @@ def add_child_grid_row(
     # parent_prior_id
     parent_prior_id    = parent_grid_row['value_prior_id']
     #
-    # child_const_value
-    # child_value_prior_id
-    child_const_value    = parent_grid_row['const_value']
-    child_value_prior_id = None
-    if child_const_value is None :
+    # subset_const_value
+    # subset_value_prior_id
+    subset_const_value     = parent_grid_row['const_value']
+    subset_value_prior_id  = None
+    if subset_const_value is None :
         #
         # parent_prior_row
         parent_prior_row = parent_table['prior'][parent_prior_id]
         #
-        # child_const_value
-        # child_value_prior_id
+        # subset_const_value
+        # subset_value_prior_id
         lower = parent_prior_row['lower']
         upper = parent_prior_row['upper']
         if lower is None :
@@ -160,11 +160,11 @@ def add_child_grid_row(
         if upper is None :
             upper = + math.inf
         if lower == upper :
-            child_const_value = lower
-            assert child_value_prior_id is None
+            subset_const_value  = lower
+            assert subset_value_prior_id is None
         else :
-            assert child_const_value is None
-            child_value_prior_id = len( subset_table['prior'] )
+            assert subset_const_value is None
+            subset_value_prior_id  = len( subset_table['prior'] )
             #
             # child_prior_row
             child_prior_row  = copy.copy( parent_prior_row )
@@ -231,8 +231,8 @@ def add_child_grid_row(
     # -----------------------------------------------------------------------
     # child_grid_row
     child_grid_row = copy.copy( parent_grid_row )
-    child_grid_row['value_prior_id']  = child_value_prior_id
-    child_grid_row['const_value']     = child_const_value
+    child_grid_row['value_prior_id']  = subset_value_prior_id
+    child_grid_row['const_value']     = subset_const_value
     child_grid_row['dage_prior_id']   = child_dage_prior_id
     child_grid_row['dtime_prior_id']  = child_dtime_prior_id
     #
