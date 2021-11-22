@@ -114,13 +114,18 @@ def avgint_parent_grid(
         fit_tables[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
     #
-    # fit_split_reference_id
+    # split_covariate_id, fit_split_reference_id, fit_split_reference
+    split_covaraite_id     = None
     fit_split_reference_id = None
+    fit_split_reference    = None
     cov_info = at_cascade.get_cov_info(
         all_option_table, fit_tables['covariate'], split_reference_table
     )
-    if 'split_reference_id' in cov_info :
+    if 'split_covariate_id' in cov_info :
+        split_covariate_id     = cov_info['split_covariate_id']
         fit_split_reference_id = cov_info['split_reference_id']
+        split_reference_list   = cov_info['split_reference_list']
+        fit_split_reference    = split_reference_list[fit_split_reference_id]
     #
     # minimum_age_id
     minimum_age_id = 0
@@ -148,15 +153,23 @@ def avgint_parent_grid(
     cov_reference = dict()
     for (node_id, row) in enumerate(fit_tables['node']) :
         if node_id == parent_node_id or row['parent'] == parent_node_id :
-            # use None as value for absolute and splitting covariate
+            # use None as value for absolute covariate
             reference = n_covariate * [None]
+            #
+            # fill in value for releative covariates
             for row in all_cov_reference_table :
                 if row['node_id'] == node_id and \
                     row['split_reference_id'] == fit_split_reference_id :
                     covariate_id = row['covariate_id']
                     # use all_cov_reference table for relative covariates
                     reference[covariate_id] = row['reference']
-            cov_reference[node_id] = reference
+            #
+            # fill in value for splitting covariate
+            if split_covaraite_id is not None :
+                referecne[split_covariate_id] = split_reference
+            #
+            key = (node_id, fit_split_reference_id)
+            cov_reference[key] = reference
     #
     # tbl_name
     tbl_name = 'avgint'
@@ -291,8 +304,11 @@ def avgint_parent_grid(
                     time_lower = fit_tables['time'][time_id]['time']
                     time_upper = time_lower
                     #
-                    # node_id
-                    for node_id in cov_reference :
+                    # key
+                    for key in cov_reference :
+                        #
+                        # node_id
+                        node_id = key[0]
                         #
                         # row
                         subgroup_id = 0
@@ -307,7 +323,7 @@ def avgint_parent_grid(
                             time_lower,
                             time_upper,
                         ]
-                        row += cov_reference[node_id]
+                        row += cov_reference[key]
                         row += [ age_id, time_id, ]
                         #
                         # add to row_list
