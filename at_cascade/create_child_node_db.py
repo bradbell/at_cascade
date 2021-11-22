@@ -302,6 +302,16 @@ def create_child_node_db(
         'chi'   : 'mtexcess',
     }
     #
+    # fit_split_reference_id
+    cov_info = at_cascade.get_cov_info(
+        all_option_table, parent_tables['covariate'], split_reference_table
+    )
+    if len(split_reference_table) == 0 :
+        fit_split_reference_id = None
+    else :
+        fit_split_reference_id = cov_info['split_reference_id']
+    #
+    #
     # parent_fit_var
     parent_fit_var = dict()
     for predict_row in parent_tables['c_child_predict_fit_var'] :
@@ -311,9 +321,11 @@ def create_child_node_db(
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
         time_id            = avgint_row['c_time_id']
-        key                = (integrand_id, node_id, age_id, time_id)
-        assert not key in parent_fit_var
-        parent_fit_var[key] = predict_row['avg_integrand']
+        split_reference_id = avgint_row['c_split_reference_id']
+        if split_reference_id == fit_split_reference_id :
+            key  = (integrand_id, node_id, age_id, time_id)
+            assert not key in parent_fit_var
+            parent_fit_var[key] = predict_row['avg_integrand']
     #
     # parent_sample
     parent_sample = dict()
@@ -324,10 +336,12 @@ def create_child_node_db(
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
         time_id            = avgint_row['c_time_id']
-        key                = (integrand_id, node_id, age_id, time_id)
-        if not key in parent_sample :
-            parent_sample[key] = list()
-        parent_sample[key].append( predict_row['avg_integrand'] )
+        split_reference_id = avgint_row['c_split_reference_id']
+        if split_reference_id == fit_split_reference_id :
+            key  = (integrand_id, node_id, age_id, time_id)
+            if not key in parent_sample :
+                parent_sample[key] = list()
+            parent_sample[key].append( predict_row['avg_integrand'] )
     #
     # parent_node_name
     parent_node_name = None
@@ -341,16 +355,6 @@ def create_child_node_db(
     parent_node_id = at_cascade.table_name2id(
         parent_tables['node'], 'node', parent_node_name
     )
-    #
-    # split_reference_id
-    cov_info = at_cascade.get_cov_info(
-        all_option_table, parent_tables['covariate'], split_reference_table
-    )
-    if len(split_reference_table) == 0 :
-        split_reference_id = None
-    else :
-        split_reference_id = cov_info['split_reference_id']
-    #
     for child_name in child_node_databases :
         # ---------------------------------------------------------------------
         # create child_node_databases[child_name]

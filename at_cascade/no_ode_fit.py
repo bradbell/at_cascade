@@ -215,6 +215,7 @@ def no_ode_fit(
 # )
 # END syntax
 ) :
+
     #
     # name_rate2integrand
     name_rate2integrand = {
@@ -233,6 +234,7 @@ def no_ode_fit(
     connection = dismod_at.create_connection(in_database, new)
     in_table = dict()
     for name in [
+        'covariate',
         'integrand',
         'mulcov',
         'node',
@@ -252,6 +254,22 @@ def no_ode_fit(
     fit_node_id   = at_cascade.table_name2id(
         in_table['node'], 'node', fit_node_name
     )
+    #
+    # fit_split_reference_id
+    new               = False
+    connection        = dismod_at.create_connection(all_node_database, new)
+    all_option_table  = dismod_at.get_table_dict(connection, 'all_option')
+    split_reference_table = \
+        dismod_at.get_table_dict(connection, 'split_reference')
+    cov_info = at_cascade.get_cov_info(
+        all_option_table, in_table['covariate'], split_reference_table
+    )
+    fit_split_reference_id = None
+    if 'split_reference_id' in cov_info :
+        fit_split_reference_id = cov_info['split_reference_id']
+    fit_split_reference_id = None
+    if 'split_reference_id' in cov_info :
+        fit_split_reference_id = cov_info['split_reference_id']
     #
     # no_ode_daabase, out_database
     index = in_database.rfind('/')
@@ -345,7 +363,13 @@ def no_ode_fit(
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
         time_id            = avgint_row['c_time_id']
-        if node_id == fit_node_id or node_id is None:
+        split_reference_id = avgint_row['c_split_reference_id']
+        #
+        # node_id is None for mulcov integrand predictions
+        include = split_reference_id == fit_split_reference_id
+        include = include and node_id == fit_node_id
+        include = include or node_id is None
+        if include :
             key = (integrand_id, age_id, time_id)
             assert not key in no_ode_fit_var
             no_ode_fit_var[key] = predict_row['avg_integrand']
