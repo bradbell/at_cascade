@@ -114,13 +114,13 @@ def avgint_parent_grid(
         fit_tables[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
     #
-    # split_reference_id
-    split_reference_id = None
+    # fit_split_reference_id
+    fit_split_reference_id = None
     cov_info = at_cascade.get_cov_info(
         all_option_table, fit_tables['covariate'], split_reference_table
     )
     if 'split_reference_id' in cov_info :
-        split_reference_id = cov_info['split_reference_id']
+        fit_split_reference_id = cov_info['split_reference_id']
     #
     # minimum_age_id
     minimum_age_id = 0
@@ -152,7 +152,7 @@ def avgint_parent_grid(
             reference = n_covariate * [None]
             for row in all_cov_reference_table :
                 if row['node_id'] == node_id and \
-                    row['split_reference_id'] == split_reference_id :
+                    row['split_reference_id'] == fit_split_reference_id :
                     covariate_id = row['covariate_id']
                     # use all_cov_reference table for relative covariates
                     reference[covariate_id] = row['reference']
