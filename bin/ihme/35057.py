@@ -1043,10 +1043,17 @@ def create_ihme_results_node(
     #
     # integrand_name2measure_id
     integrand_name2measure_id = {
-        'prevalence' : 5,
-        'Sincidence' : 6,
+        'Sincidence' : 41,
+        'remission'  : 7,
         'mtexcess'   : 9,
-        'mtspecific' : 15
+        'mtother'    : 16,
+        'mtwith'     : 13,
+        'prevalence' : 5,
+        'Tincidence' : 42,
+        'mtspecific' : 10,
+        'mtall'      : 14,
+        'mtstandard' : 12,
+        'relrisk'    : 11,
     }
     #
     # integrand_id_list

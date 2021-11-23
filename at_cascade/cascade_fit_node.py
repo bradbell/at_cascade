@@ -420,7 +420,15 @@ def cascade_fit_node(
         assert False, msg
     #
     # fit_node_name
-    fit_node_name = path_list[-1]
+    shift_name = path_list[-1]
+    is_split_reference_name = False
+    for row in split_reference_table :
+        if row['split_reference_name'] == shift_name :
+            is_split_reference_name = True
+    if is_split_reference_name :
+        fit_node_name = path_list[-2]
+    else :
+        fit_node_name = path_list[-1]
     #
     # fit_level
     root_index = path_list.index( all_option['root_node_name'] )
@@ -514,19 +522,19 @@ def cascade_fit_node(
     move_table(connection, 'avgint', 'c_shift_avgint')
     #
     # shift_name_list
-    split_level = -1
+    shift_name_list = list()
+    split_level     = -1
     if 'split_level' in all_option :
-        split_level = all_option['split_level']
+        split_level = int( all_option['split_level'] )
     if fit_level == split_level :
         cov_info = at_cascade.get_cov_info(
             all_option_table, covariate_table, split_reference_table
         )
         fit_split_reference_id = cov_info['split_reference_id']
-        for row in split_reference_table :
-            if row['split_reference_id'] != fit_split_reference_id :
+        for (row_id, row) in enumerate(split_reference_table) :
+            if row_id != fit_split_reference_id :
                 shift_name_list.append( row['split_reference_name'] )
     else :
-        shift_name_list = list()
         for node_id in fit_children[fit_node_id] :
             node_name = node_table[node_id]['node_name']
             shift_name_list.append( node_name )
