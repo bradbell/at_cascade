@@ -58,6 +58,7 @@ fit_goal_set
 This is a ``set`` with elements of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
 :ref:`glossary.fit_goal_set` .
+This argument can't be ``None``.
 
 node_table
 **********
@@ -375,16 +376,14 @@ def cascade_fit_node(
         option_value = row['option_value']
         assert option_name in valid
         all_option[option_name] = option_value
-    if 'split_level' in  all_option :
-        split_level = all_option['split_level']
-        if 0 <= int( split_level ) :
-            msg  = '0 <= split_level not yet implemented'
-            assert False, msg
     if 'in_parallel' in all_option :
         if all_option['in_parallel'] != 'false' :
             msg = f'all_option table: in_parallel = {in_parallel} '
             msg += 'not yet implemented'
             assert False, msg
+    if 'root_node_name' not in all_option :
+        msg = 'all_option_table; root_node_name does not appear'
+        assert False, msg
     #
     # fit_children
     if fit_children is None :
@@ -408,11 +407,24 @@ def cascade_fit_node(
     if fit_integrand is None :
         fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
     #
-    # fit_node_name
+    # path_list
+    if not fit_node_database.endswith('/dismod.db') :
+        msg  = f'fit_node_database = {fit_node_database} '
+        msg += 'does not end with /dismod.db'
+        assert False, msg
     path_list = fit_node_database.split('/')
-    assert len(path_list) >= 2
-    assert path_list[-1] == 'dismod.db'
-    fit_node_name = path_list[-2]
+    path_list = path_list[:-1]
+    if all_option['root_node_name'] not in path_list :
+        msg  = f'fit_node_database = {fit_node_database}\n'
+        msg += 'does not contain root_node_name = {root_node_name}'
+        assert False, msg
+    #
+    # fit_node_name
+    fit_node_name = path_list[-1]
+    #
+    # fit_level
+    root_index = path_list.index( all_option['root_node_name'] )
+    fit_level  = len(path_list) - root_index - 1
     #
     # check fit_node_name
     msg  = f'last directory in fit_node_database = {fit_node_database}\n'
@@ -501,23 +513,37 @@ def cascade_fit_node(
     # c_shift_avgint
     move_table(connection, 'avgint', 'c_shift_avgint')
     #
-    # child_node_list
-    child_node_list = fit_children[fit_node_id]
+    # shift_name_list
+    split_level = -1
+    if 'split_level' in all_option :
+        split_level = all_option['split_level']
+    if fit_level == split_level :
+        cov_info = at_cascade.get_cov_info(
+            all_option_table, covariate_table, split_reference_table
+        )
+        fit_split_reference_id = cov_info['split_reference_id']
+        for row in split_reference_table :
+            if row['split_reference_id'] != fit_split_reference_id :
+                shift_name_list.append( row['split_reference_name'] )
+    else :
+        shift_name_list = list()
+        for node_id in fit_children[fit_node_id] :
+            node_name = node_table[node_id]['node_name']
+            shift_name_list.append( node_name )
     #
-    # child_node_databases
-    child_node_databases = dict()
-    for node_id in child_node_list :
-        node_name = node_table[node_id]['node_name']
-        subdir    = fit_node_dir + '/' + node_name
+    # shift_databases
+    shift_databases = dict()
+    for shift_name in shift_name_list :
+        subdir    = fit_node_dir + '/' + shift_name
         if not os.path.exists(subdir) :
             os.makedirs(subdir)
-        child_node_databases[node_name] = subdir + '/dismod.db'
+        shift_databases[shift_name] = subdir + '/dismod.db'
     #
-    # create child node databases
+    # create shifted databases
     at_cascade.create_shift_db(
         all_node_database,
         fit_node_database,
-        child_node_databases
+        shift_databases
     )
     #
     # move c_root_avgint -> avgint
@@ -538,9 +564,9 @@ def cascade_fit_node(
     )
     move_table(connection, 'predict', 'c_predict_sample')
     #
-    # fit child node databases
-    for node_name in child_node_databases :
-        fit_node_database = child_node_databases[node_name]
+    # fit shifted databases
+    for shift_name in shift_databases :
+        fit_node_database = shift_databases[shift_name]
         cascade_fit_node(
             all_node_database ,
             fit_node_database ,

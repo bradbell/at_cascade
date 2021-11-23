@@ -251,7 +251,7 @@ def create_shift_db(
 # at_cascade.create_shift_db(
     all_node_database    = None ,
     fit_node_database    = None ,
-    shift_databases     = None ,
+    shift_databases      = None ,
 # )
 # END syntax
 ) :
@@ -318,7 +318,6 @@ def create_shift_db(
     else :
         fit_split_reference_id = cov_info['split_reference_id']
         split_covariate_id     = cov_info['split_covariate_id']
-    #
     #
     # fit_fit_var
     fit_fit_var = dict()
