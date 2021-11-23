@@ -308,14 +308,16 @@ def create_shift_db(
         'chi'   : 'mtexcess',
     }
     #
-    # fit_split_reference_id
+    # fit_split_reference_id, split_covariate_id
     cov_info = at_cascade.get_cov_info(
         all_option_table, fit_table['covariate'], split_reference_table
     )
     if len(split_reference_table) == 0 :
         fit_split_reference_id = None
+        split_covaraite_id     = None
     else :
         fit_split_reference_id = cov_info['split_reference_id']
+        split_covariate_id     = cov_info['split_covariate_id']
     #
     #
     # fit_fit_var
@@ -382,11 +384,12 @@ def create_shift_db(
         shift_table['nslist']      = list()
         shift_table['nslist_pair'] = list()
         #
-        # shift_node_name
+        # shift_node_name, shift_split_reference_id
         shift_node_name = None
-        for row in split_reference_table :
+        for (row_id, row) in enumerate(split_reference_table) :
             if row['split_reference_name'] == shift_name :
-                shift_node_name = fit_node_name
+                shift_node_name          = fit_node_name
+                shift_split_reference_id = row_id
         for row in fit_table['node'] :
             if row['node_name'] == shift_name :
                 if shift_node_name is not None :
@@ -398,7 +401,9 @@ def create_shift_db(
                     msg += f'and its parent is not the fit node '
                     msg += fit_node_name
                     assert False, msg
-                shift_node_name = shift_name
+                #
+                shift_node_name          = shift_name
+                shift_split_reference_id = fit_split_reference_id
         #
         # shift_node_id
         shift_node_id  = at_cascade.table_name2id(
@@ -416,14 +421,22 @@ def create_shift_db(
                 row['option_value'] = shift_node_name
         #
         # shift_table['covariate']
-        # set replative covariate values so correspond to shift node
+        # set relative covariate values so correspond to shift node
         for row in all_cov_reference_table :
             # use fact that None == None is true
-            if row['node_id'] == shift_node_id and \
-                row['split_reference_id'] == fit_split_reference_id :
+            if row['node_id'] == shift_node_id \
+            and row['split_reference_id'] == shift_split_reference_id :
                 covariate_id  = row['covariate_id']
-                shift_row    =shift_table['covariate'][covariate_id]
+                shift_row     = shift_table['covariate'][covariate_id]
                 shift_row['reference'] = row['reference']
+        #
+        # shift_table['covariate']
+        # set shift covaraite value
+        if shift_split_reference_id is not None :
+            split_row  = split_reference_table[shift_split_reference_id]
+            reference  = split_row['split_reference_value']
+            shift_row  = shift_table['covariate'][split_covariate_id]
+            shift_row['reference'] = reference
         #
         # --------------------------------------------------------------------
         # shift_table['mulcov']
