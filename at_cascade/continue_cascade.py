@@ -187,7 +187,7 @@ def continue_cascade(
         child_node_databases[node_name] = subdir + '/dismod.db'
     #
     # create child node databases
-    at_cascade.create_subset_db(
+    at_cascade.create_shift_db(
         all_node_database,
         fit_node_database,
         child_node_databases

@@ -187,7 +187,7 @@ The following is the value prior used for the root_node
     # END parent_value_prior
 }
 The mean and standard deviation are only used for the root_node.
-The :ref:`create_subset_db<create_subset_db>`
+The :ref:`create_shift_db<create_shift_db>`
 routine replaces them for other nodes.
 
 dage Prior
@@ -227,7 +227,7 @@ The following is the value prior used for this smoothing:
     # END alpha_value_prior
 }
 The mean and standard deviation are only used for the root_node.
-The create_subset_db
+The create_shift_db
 routine replaces them for other nodes.
 
 Gamma Smoothing

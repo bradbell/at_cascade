@@ -8,7 +8,7 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin create_subset_db}
+{xsrst_begin create_shift_db}
 {xsrst_spell
     var
 }
@@ -46,23 +46,23 @@ sample Table
 The sample table contains
 the results of a dismod_at sample command for both the fixed and random effects.
 
-c_subset_avgint Table
+c_shift_avgint Table
 =====================
 This is the :ref:`avgint_parent_grid` table corresponding
 to this fit_node_database.
 
-c_subset_predict_sample Table
+c_shift_predict_sample Table
 =============================
 This table contains the predict table corresponding to a
-predict sample command using the c_subset_avgint table.
-Note that the predict_id column name was changed to c_subset_predict_sample_id
+predict sample command using the c_shift_avgint table.
+Note that the predict_id column name was changed to c_shift_predict_sample_id
 (which is not the same as sample_id).
 
-c_subset_predict_fit_var Table
+c_shift_predict_fit_var Table
 ==============================
 This table contains the predict table corresponding to a
-predict fit_var command using the c_subset_avgint table.
-Note that the predict_id column name was changed to c_subset_predict_fit_var_id
+predict fit_var command using the c_shift_avgint table.
+Note that the predict_id column name was changed to c_shift_predict_fit_var_id
 (which is not the same as var_id).
 
 c_root_avgint Table
@@ -72,14 +72,14 @@ The c_root_avgint table contains the original version of the
 that predicts for the parent node.
 Only the node_id column has been modified from the root_node_database version.
 
-subset_databases
+shift_databases
 ********************
-is a python dictionary and if *subset_name* is a key for *subset_databases*,
-*subset_name* is a :ref:`glossary.node_name` and a child of the *parent_node*.
+is a python dictionary and if *shift_name* is a key for *shift_databases*,
+*shift_name* is a :ref:`glossary.node_name` and a child of the *parent_node*.
 
--   For each *subset_name*, *subset_databases[subset_name]* is the name of
+-   For each *shift_name*, *shift_databases[shift_name]* is the name of
     a :ref:`glossary.input_node_database` that is created by this command.
--   In this database, *subset_name* will be the :ref:`glossary.fit_node` .
+-   In this database, *shift_name* will be the :ref:`glossary.fit_node` .
 -   If the upper and lower limits are equal,
     the value priors are effectively the same.
     Otherwise the mean and standard deviation in the values priors
@@ -93,7 +93,7 @@ is a python dictionary and if *subset_name* is a key for *subset_databases*,
 
 This argument can't be ``None``.
 
-{xsrst_end create_subset_db}
+{xsrst_end create_shift_db}
 '''
 # ----------------------------------------------------------------------------
 import math
@@ -122,17 +122,17 @@ def add_index_to_name(table, name_col) :
         name = name[: -1]
     row[name_col] = name + '_' + str( len(table) )
 # ----------------------------------------------------------------------------
-# The smoothing for the new subset_table['smooth_grid'] row is the most
-# recent smoothing added to subset_table['smooth']; i.e., its smoothing_id
-# is len( subset_table['smooth'] ) - 1.
-def add_subset_grid_row(
+# The smoothing for the new shift_table['smooth_grid'] row is the most
+# recent smoothing added to shift_table['smooth']; i.e., its smoothing_id
+# is len( shift_table['smooth'] ) - 1.
+def add_shift_grid_row(
     fit_fit_var,
     fit_sample,
     fit_table,
-    subset_table,
+    shift_table,
     fit_grid_row,
     integrand_id,
-    subset_node_id,
+    shift_node_id,
     child_prior_std_factor,
 ) :
     # -----------------------------------------------------------------------
@@ -142,17 +142,17 @@ def add_subset_grid_row(
     # fit_prior_id
     fit_prior_id    = fit_grid_row['value_prior_id']
     #
-    # subset_const_value
-    # subset_value_prior_id
-    subset_const_value     = fit_grid_row['const_value']
-    subset_value_prior_id  = None
-    if subset_const_value is None :
+    # shift_const_value
+    # shift_value_prior_id
+    shift_const_value     = fit_grid_row['const_value']
+    shift_value_prior_id  = None
+    if shift_const_value is None :
         #
         # fit_prior_row
         fit_prior_row = fit_table['prior'][fit_prior_id]
         #
-        # subset_const_value
-        # subset_value_prior_id
+        # shift_const_value
+        # shift_value_prior_id
         lower = fit_prior_row['lower']
         upper = fit_prior_row['upper']
         if lower is None :
@@ -160,19 +160,19 @@ def add_subset_grid_row(
         if upper is None :
             upper = + math.inf
         if lower == upper :
-            subset_const_value  = lower
-            assert subset_value_prior_id is None
+            shift_const_value  = lower
+            assert shift_value_prior_id is None
         else :
-            assert subset_const_value is None
-            subset_value_prior_id  = len( subset_table['prior'] )
+            assert shift_const_value is None
+            shift_value_prior_id  = len( shift_table['prior'] )
             #
-            # subset_prior_row
-            subset_prior_row = copy.copy( fit_prior_row )
+            # shift_prior_row
+            shift_prior_row = copy.copy( fit_prior_row )
             #
             # key
             age_id    = fit_grid_row['age_id']
             time_id   = fit_grid_row['time_id']
-            key       = (integrand_id, subset_node_id, age_id, time_id)
+            key       = (integrand_id, shift_node_id, age_id, time_id)
             #
             # mean
             mean = fit_fit_var[key]
@@ -197,55 +197,55 @@ def add_subset_grid_row(
                 # inverse log transformation
                 std      = (math.exp(log_std) - 1) * (mean + eta)
             #
-            # subset_prior_row
-            subset_prior_row['mean']        = mean
-            subset_prior_row['std']         = child_prior_std_factor * std
+            # shift_prior_row
+            shift_prior_row['mean']        = mean
+            shift_prior_row['std']         = child_prior_std_factor * std
             #
-            # subset_table['prior']
-            subset_table['prior'].append( subset_prior_row )
-            add_index_to_name( subset_table['prior'], 'prior_name' )
+            # shift_table['prior']
+            shift_table['prior'].append( shift_prior_row )
+            add_index_to_name( shift_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # dage_prior
     # -----------------------------------------------------------------------
     fit_prior_id       = fit_grid_row['dage_prior_id']
     if fit_prior_id == None :
-        subset_dage_prior_id= None
+        shift_dage_prior_id= None
     else :
         fit_prior_row      = fit_table['prior'][fit_prior_id]
-        subset_prior_row      = copy.copy( fit_prior_row )
-        subset_dage_prior_id  = len( subset_table['prior'] )
-        subset_table['prior'].append( subset_prior_row )
-        add_index_to_name( subset_table['prior'], 'prior_name' )
+        shift_prior_row      = copy.copy( fit_prior_row )
+        shift_dage_prior_id  = len( shift_table['prior'] )
+        shift_table['prior'].append( shift_prior_row )
+        add_index_to_name( shift_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
     # dtime_prior
     # -----------------------------------------------------------------------
     fit_prior_id       = fit_grid_row['dtime_prior_id']
     if fit_prior_id == None :
-        subset_dtime_prior_id= None
+        shift_dtime_prior_id= None
     else :
         fit_prior_row       = fit_table['prior'][fit_prior_id]
-        subset_prior_row       = copy.copy( fit_prior_row )
-        subset_dtime_prior_id  = len( subset_table['prior'] )
-        subset_table['prior'].append( subset_prior_row )
-        add_index_to_name( subset_table['prior'], 'prior_name' )
+        shift_prior_row       = copy.copy( fit_prior_row )
+        shift_dtime_prior_id  = len( shift_table['prior'] )
+        shift_table['prior'].append( shift_prior_row )
+        add_index_to_name( shift_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
-    # subset_grid_row
-    subset_grid_row = copy.copy( fit_grid_row )
-    subset_grid_row['value_prior_id']  = subset_value_prior_id
-    subset_grid_row['const_value']     = subset_const_value
-    subset_grid_row['dage_prior_id']   = subset_dage_prior_id
-    subset_grid_row['dtime_prior_id']  = subset_dtime_prior_id
+    # shift_grid_row
+    shift_grid_row = copy.copy( fit_grid_row )
+    shift_grid_row['value_prior_id']  = shift_value_prior_id
+    shift_grid_row['const_value']     = shift_const_value
+    shift_grid_row['dage_prior_id']   = shift_dage_prior_id
+    shift_grid_row['dtime_prior_id']  = shift_dtime_prior_id
     #
-    # subset_table['smooth_grid']
-    subset_grid_row['smooth_id']  = len( subset_table['smooth'] ) - 1
-    subset_table['smooth_grid'].append( subset_grid_row )
+    # shift_table['smooth_grid']
+    shift_grid_row['smooth_id']  = len( shift_table['smooth'] ) - 1
+    shift_table['smooth_grid'].append( shift_grid_row )
 # ----------------------------------------------------------------------------
-def create_subset_db(
+def create_shift_db(
 # BEGIN syntax
-# at_cascade.create_subset_db(
+# at_cascade.create_shift_db(
     all_node_database    = None ,
     fit_node_database    = None ,
-    subset_databases     = None ,
+    shift_databases     = None ,
 # )
 # END syntax
 ) :
@@ -273,10 +273,10 @@ def create_subset_db(
     connection    = dismod_at.create_connection(fit_node_database, new)
     fit_table  = dict()
     for name in [
-        'c_subset_avgint',
+        'c_shift_avgint',
         'c_root_avgint',
-        'c_subset_predict_fit_var',
-        'c_subset_predict_sample',
+        'c_shift_predict_fit_var',
+        'c_shift_predict_sample',
         'covariate',
         'density',
         'fit_var',
@@ -314,9 +314,9 @@ def create_subset_db(
     #
     # fit_fit_var
     fit_fit_var = dict()
-    for predict_row in fit_table['c_subset_predict_fit_var'] :
+    for predict_row in fit_table['c_shift_predict_fit_var'] :
         avgint_id          = predict_row['avgint_id']
-        avgint_row         = fit_table['c_subset_avgint'][avgint_id]
+        avgint_row         = fit_table['c_shift_avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
@@ -329,9 +329,9 @@ def create_subset_db(
     #
     # fit_sample
     fit_sample = dict()
-    for predict_row in fit_table['c_subset_predict_sample'] :
+    for predict_row in fit_table['c_shift_predict_sample'] :
         avgint_id          = predict_row['avgint_id']
-        avgint_row         = fit_table['c_subset_avgint'][avgint_id]
+        avgint_row         = fit_table['c_shift_avgint'][avgint_id]
         integrand_id       = avgint_row['integrand_id']
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
@@ -355,13 +355,13 @@ def create_subset_db(
     fit_node_id = at_cascade.table_name2id(
         fit_table['node'], 'node', fit_node_name
     )
-    for subset_name in subset_databases :
+    for shift_name in shift_databases :
         # ---------------------------------------------------------------------
-        # create subset_databases[subset_name]
+        # create shift_databases[shift_name]
         # ---------------------------------------------------------------------
         #
-        # subset_table
-        subset_table = dict()
+        # shift_table
+        shift_table = dict()
         for name in [
             'c_root_avgint',
             'covariate',
@@ -369,46 +369,46 @@ def create_subset_db(
             'option',
             'rate',
         ] :
-            subset_table[name] = copy.deepcopy(fit_table[name])
-        subset_table['prior']       = list()
-        subset_table['smooth']      = list()
-        subset_table['smooth_grid'] = list()
-        subset_table['nslist']      = list()
-        subset_table['nslist_pair'] = list()
+            shift_table[name] = copy.deepcopy(fit_table[name])
+        shift_table['prior']       = list()
+        shift_table['smooth']      = list()
+        shift_table['smooth_grid'] = list()
+        shift_table['nslist']      = list()
+        shift_table['nslist_pair'] = list()
         #
-        # subset_node_id
-        subset_node_id  = at_cascade.table_name2id(
-            fit_table['node'], 'node', subset_name
+        # shift_node_id
+        shift_node_id  = at_cascade.table_name2id(
+            fit_table['node'], 'node', shift_name
         )
-        assert fit_table['node'][subset_node_id]['parent'] == fit_node_id
+        assert fit_table['node'][shift_node_id]['parent'] == fit_node_id
         #
-        # subset_database     = fit_node_database
-        subset_database= subset_databases[subset_name]
-        shutil.copyfile(fit_node_database, subset_database)
+        # shift_database     = fit_node_database
+        shift_database= shift_databases[shift_name]
+        shutil.copyfile(fit_node_database, shift_database)
         #
-        # subset_table['option']
-        for row in subset_table['option'] :
+        # shift_table['option']
+        for row in shift_table['option'] :
             if row['option_name'] == 'parent_node_name' :
-                row['option_value'] = subset_name
+                row['option_value'] = shift_name
         #
-        # subset_table['covariate']
+        # shift_table['covariate']
         for row in all_cov_reference_table :
             # Use fact that None == None is true
-            if row['node_id'] == subset_node_id and \
+            if row['node_id'] == shift_node_id and \
                 row['split_reference_id'] == split_reference_id :
                 covariate_id  = row['covariate_id']
-                subset_row    =subset_table['covariate'][covariate_id]
-                subset_row['reference'] = row['reference']
+                shift_row    =shift_table['covariate'][covariate_id]
+                shift_row['reference'] = row['reference']
         #
         # --------------------------------------------------------------------
-        # subset_table['mulcov']
+        # shift_table['mulcov']
         # and corresponding entries in
         # smooth, smooth_grid, and prior
-        for (mulcov_id, subset_mulcov_row) in enumerate(subset_table['mulcov']) :
-            assert subset_mulcov_row['subgroup_smooth_id'] is None
+        for (mulcov_id, shift_mulcov_row) in enumerate(shift_table['mulcov']) :
+            assert shift_mulcov_row['subgroup_smooth_id'] is None
             #
             # fit_smooth_id
-            fit_smooth_id = subset_mulcov_row['group_smooth_id']
+            fit_smooth_id = shift_mulcov_row['group_smooth_id']
             if not fit_smooth_id is None :
                 #
                 # integrand_id
@@ -424,24 +424,24 @@ def create_subset_db(
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
                 #
-                # subset_table['smooth'], subset_smooth_id
-                subset_smooth_id = len(subset_table['smooth'])
-                smooth_row['smooth_name'] += f'_{subset_smooth_id}'
-                subset_table['smooth'].append(smooth_row)
+                # shift_table['smooth'], shift_smooth_id
+                shift_smooth_id = len(shift_table['smooth'])
+                smooth_row['smooth_name'] += f'_{shift_smooth_id}'
+                shift_table['smooth'].append(smooth_row)
                 #
-                # change subset_table['mulcov'] to use the new smoothing
-                subset_mulcov_row['group_smooth_id'] = subset_smooth_id
+                # change shift_table['mulcov'] to use the new smoothing
+                shift_mulcov_row['group_smooth_id'] = shift_smooth_id
                 #
-                # subset_table['smooth_grid']
+                # shift_table['smooth_grid']
                 # add rows for this smoothing
                 node_id = None
                 for fit_grid_row in fit_table['smooth_grid'] :
                     if fit_grid_row['smooth_id'] == fit_smooth_id :
-                        add_subset_grid_row(
+                        add_shift_grid_row(
                             fit_fit_var,
                             fit_sample,
                             fit_table,
-                            subset_table,
+                            shift_table,
                             fit_grid_row,
                             integrand_id,
                             node_id,
@@ -449,24 +449,24 @@ def create_subset_db(
                         )
 
         # --------------------------------------------------------------------
-        # subset_table['rate']
+        # shift_table['rate']
         # and corresponding entries in the following child tables:
         # smooth, smooth_grid, and prior
-        for subset_rate_row in subset_table['rate'] :
+        for shift_rate_row in shift_table['rate'] :
             # rate_name
-            rate_name        = subset_rate_row['rate_name']
+            rate_name        = shift_rate_row['rate_name']
             # ----------------------------------------------------------------
             # fit_smooth_id
             fit_smooth_id = None
             if rate_name in name_rate2integrand :
-                assert subset_rate_row['child_nslist_id'] is None
-                fit_smooth_id = subset_rate_row['parent_smooth_id']
+                assert shift_rate_row['child_nslist_id'] is None
+                fit_smooth_id = shift_rate_row['parent_smooth_id']
             else :
                 # proper priors for omega are set by omega_constraint routine
                 assert rate_name == 'omega'
-                subset_rate_row['parent_smooth_id'] = None
-                subset_rate_row['child_smooth_id']  = None
-                subset_rate_row['child_nslist_id']  = None
+                shift_rate_row['parent_smooth_id'] = None
+                shift_rate_row['child_smooth_id']  = None
+                shift_rate_row['child_nslist_id']  = None
             if not fit_smooth_id is None :
                 #
                 # integrand_id
@@ -483,34 +483,34 @@ def create_subset_db(
                 assert smooth_row['mulstd_dage_prior_id']  is None
                 assert smooth_row['mulstd_dtime_prior_id'] is None
                 #
-                # : subset_table['smooth'], subset_smooth_id
-                subset_smooth_id = len(subset_table['smooth'])
-                smooth_row['smooth_name'] += f'_{subset_smooth_id}'
-                subset_table['smooth'].append(smooth_row)
+                # : shift_table['smooth'], shift_smooth_id
+                shift_smooth_id = len(shift_table['smooth'])
+                smooth_row['smooth_name'] += f'_{shift_smooth_id}'
+                shift_table['smooth'].append(smooth_row)
                 #
-                # subset_table['rate']
+                # shift_table['rate']
                 # use the new smoothing for this rate
-                subset_rate_row['parent_smooth_id'] = subset_smooth_id
+                shift_rate_row['parent_smooth_id'] = shift_smooth_id
                 #
-                # subset_table['smooth_grid']
+                # shift_table['smooth_grid']
                 # add rows for this smoothing
                 for fit_grid_row in fit_table['smooth_grid'] :
                     if fit_grid_row['smooth_id'] == fit_smooth_id :
-                        add_subset_grid_row(
+                        add_shift_grid_row(
                             fit_fit_var,
                             fit_sample,
                             fit_table,
-                            subset_table,
+                            shift_table,
                             fit_grid_row,
                             integrand_id,
-                            subset_node_id,
+                            shift_node_id,
                             child_prior_std_factor,
                         )
             # ----------------------------------------------------------------
             # fit_smooth_id
             fit_smooth_id = None
             if rate_name in name_rate2integrand :
-                fit_smooth_id = subset_rate_row['child_smooth_id']
+                fit_smooth_id = shift_rate_row['child_smooth_id']
             if not fit_smooth_id is None :
                 #
                 smooth_row = fit_table['smooth'][fit_smooth_id]
@@ -522,64 +522,64 @@ def create_subset_db(
                 if rate_name == 'pini' :
                     assert smooth_row['n_age'] == 1
                 #
-                # update: subset_table['smooth']
+                # update: shift_table['smooth']
                 # for case where its is the parent
-                subset_smooth_id = len(subset_table['smooth'])
-                smooth_row['smooth_name'] += f'_{subset_smooth_id}'
-                subset_table['smooth'].append(smooth_row)
+                shift_smooth_id = len(shift_table['smooth'])
+                smooth_row['smooth_name'] += f'_{shift_smooth_id}'
+                shift_table['smooth'].append(smooth_row)
                 #
-                # change subset_table['rate'] to use the new smoothing
-                subset_rate_row['child_smooth_id'] = subset_smooth_id
+                # change shift_table['rate'] to use the new smoothing
+                shift_rate_row['child_smooth_id'] = shift_smooth_id
                 #
-                # add rows for this smoothing to subset_table['smooth_grid']
+                # add rows for this smoothing to shift_table['smooth_grid']
                 for fit_grid_row in fit_table['smooth_grid'] :
                     if fit_grid_row['smooth_id'] == fit_smooth_id :
                         #
-                        # update: subset_table['smooth_grid']
-                        subset_grid_row = copy.copy( fit_grid_row )
+                        # update: shift_table['smooth_grid']
+                        shift_grid_row = copy.copy( fit_grid_row )
                         #
                         for ty in [
                             'value_prior_id', 'dage_prior_id', 'dtime_prior_id'
                          ] :
                             prior_id  = fit_grid_row[ty]
                             if prior_id is None :
-                                subset_grid_row[ty] = None
+                                shift_grid_row[ty] = None
                             else :
                                 prior_row = fit_table['prior'][prior_id]
                                 prior_row = copy.copy(prior_row)
-                                prior_id  = len( subset_table['prior'] )
-                                subset_table['prior'].append( prior_row )
+                                prior_id  = len( shift_table['prior'] )
+                                shift_table['prior'].append( prior_row )
                                 add_index_to_name(
-                                    subset_table['prior'], 'prior_name'
+                                    shift_table['prior'], 'prior_name'
                                 )
-                                subset_grid_row[ty] = prior_id
-                        subset_grid_row['smooth_id']      = subset_smooth_id
-                        subset_table['smooth_grid'].append( subset_grid_row )
+                                shift_grid_row[ty] = prior_id
+                        shift_grid_row['smooth_id']      = shift_smooth_id
+                        shift_table['smooth_grid'].append( shift_grid_row )
         #
-        # subset_table['c_root_avgint']
-        for row in subset_table['c_root_avgint'] :
-            row['node_id'] = subset_node_id
+        # shift_table['c_root_avgint']
+        for row in shift_table['c_root_avgint'] :
+            row['node_id'] = shift_node_id
         #
-        # subset_connection
+        # shift_connection
         new        = False
-        subset_connection = dismod_at.create_connection(subset_database, new)
+        shift_connection = dismod_at.create_connection(shift_database, new)
         #
-        # replace subset_table
-        for name in subset_table :
+        # replace shift_table
+        for name in shift_table :
             dismod_at.replace_table(
-                subset_connection, name, subset_table[name]
+                shift_connection, name, shift_table[name]
             )
         # move c_root_avgint -> avgint
-        move_table(subset_connection, 'c_root_avgint', 'avgint')
+        move_table(shift_connection, 'c_root_avgint', 'avgint')
         #
         # drop the following tables:
-        # c_subset_avgint, c_subset_predict_sample, c_subset_predict_fit_var
-        command  = 'DROP TABLE c_subset_avgint'
-        dismod_at.sql_command(subset_connection, command)
-        command  = 'DROP TABLE c_subset_predict_sample'
-        dismod_at.sql_command(subset_connection, command)
-        command  = 'DROP TABLE c_subset_predict_fit_var'
-        dismod_at.sql_command(subset_connection, command)
+        # c_shift_avgint, c_shift_predict_sample, c_shift_predict_fit_var
+        command  = 'DROP TABLE c_shift_avgint'
+        dismod_at.sql_command(shift_connection, command)
+        command  = 'DROP TABLE c_shift_predict_sample'
+        dismod_at.sql_command(shift_connection, command)
+        command  = 'DROP TABLE c_shift_predict_fit_var'
+        dismod_at.sql_command(shift_connection, command)
         #
-        # subset_connection
-        subset_connection.close()
+        # shift_connection
+        shift_connection.close()

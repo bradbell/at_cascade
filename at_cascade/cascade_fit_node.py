@@ -486,20 +486,20 @@ def cascade_fit_node(
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'sample', 'asymptotic', 'both', '20' ]
     )
-    # c_subset_predict_fit_var
+    # c_shift_predict_fit_var
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
     )
-    move_table(connection, 'predict', 'c_subset_predict_fit_var')
+    move_table(connection, 'predict', 'c_shift_predict_fit_var')
     #
-    # c_subset_predict_sample
+    # c_shift_predict_sample
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
-    move_table(connection, 'predict', 'c_subset_predict_sample')
+    move_table(connection, 'predict', 'c_shift_predict_sample')
     #
-    # c_subset_avgint
-    move_table(connection, 'avgint', 'c_subset_avgint')
+    # c_shift_avgint
+    move_table(connection, 'avgint', 'c_shift_avgint')
     #
     # child_node_list
     child_node_list = fit_children[fit_node_id]
@@ -514,7 +514,7 @@ def cascade_fit_node(
         child_node_databases[node_name] = subdir + '/dismod.db'
     #
     # create child node databases
-    at_cascade.create_subset_db(
+    at_cascade.create_shift_db(
         all_node_database,
         fit_node_database,
         child_node_databases
