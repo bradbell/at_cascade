@@ -13,7 +13,7 @@
     var
 }
 
-Create Child Database From Fit in Parent Database
+Create Database With Shifted Covariate References
 #################################################
 
 Syntax
@@ -29,16 +29,16 @@ is a python string containing the name of the :ref:`all_node_db`.
 This argument can't be ``None``.
 
 fit_node_database
-********************
+*****************
 is a python string containing the name of a dismod_at database.
 This is a :ref:`glossary.fit_node_database` which
 has two predict tables (mentioned below).
 These tables are used to create priors in the child node databases.
 This argument can't be ``None``.
 
-parent_node
-===========
-We use *parent_node* to refer to the parent node in the
+fit_node
+========
+We use *fit_node* to refer to the parent node in the
 dismod_at option table in the *fit_node_database*.
 
 sample Table
@@ -47,19 +47,19 @@ The sample table contains
 the results of a dismod_at sample command for both the fixed and random effects.
 
 c_shift_avgint Table
-=====================
+====================
 This is the :ref:`avgint_parent_grid` table corresponding
 to this fit_node_database.
 
 c_shift_predict_sample Table
-=============================
+============================
 This table contains the predict table corresponding to a
 predict sample command using the c_shift_avgint table.
 Note that the predict_id column name was changed to c_shift_predict_sample_id
 (which is not the same as sample_id).
 
 c_shift_predict_fit_var Table
-==============================
+=============================
 This table contains the predict table corresponding to a
 predict fit_var command using the c_shift_avgint table.
 Note that the predict_id column name was changed to c_shift_predict_fit_var_id
@@ -73,23 +73,29 @@ that predicts for the parent node.
 Only the node_id column has been modified from the root_node_database version.
 
 shift_databases
-********************
-is a python dictionary and if *shift_name* is a key for *shift_databases*,
-*shift_name* is a :ref:`glossary.node_name` and a child of the *parent_node*.
+***************
+is a python dictionary, we use the notation *shift_name* for the
+keys in this database ``dict``.
+If *shift_name* is a :ref:`split_reference_table.split_reference_name`,
+the node is the *fit_node*.
 
 -   For each *shift_name*, *shift_databases[shift_name]* is the name of
     a :ref:`glossary.input_node_database` that is created by this command.
--   In this database, *shift_name* will be the :ref:`glossary.fit_node` .
+-   If *shift_name* is a :ref:`split_reference_table.split_reference_name`,
+    the node corresponding to this shift database is the fit_node.
+    Otherwise *shift_name* is a child node of the fit_name
+    and is the node corresponding to this shift database.
 -   If the upper and lower limits are equal,
     the value priors are effectively the same.
     Otherwise the mean and standard deviation in the values priors
     are replaced using the predict, in the *fit_node_database*,
-    for the child node. Note that if the value prior is uniform,
+    that corresponds to this shift database.
+    Note that if the value prior is uniform,
     the standard deviation is not used and the mean is only used to
     initialize the optimization.
 -   The avgint table is a copy of the c_root_avgint table in the
     *fit_node_database* with the node_id replaced by the corresponding
-    child node id.
+    shift node id.
 
 This argument can't be ``None``.
 
@@ -376,26 +382,45 @@ def create_shift_db(
         shift_table['nslist']      = list()
         shift_table['nslist_pair'] = list()
         #
+        # shift_node_name
+        shift_node_name = None
+        for row in split_reference_table :
+            if row['split_reference_name'] == shift_name :
+                shift_node_name = fit_node_name
+        for row in fit_table['node'] :
+            if row['node_name'] == shift_name :
+                if shift_node_name is not None :
+                    msg  = f'{shift_name} is both a split_reference_name '
+                    msg += 'and a node_name'
+                    assert False, msg
+                if row['parent'] != fit_node_id :
+                    msg  = f'shift_name = {shift_name} is node name\n'
+                    msg += f'and its parent is not the fit node '
+                    msg += fit_node_name
+                    assert False, msg
+                shift_node_name = shift_name
+        #
         # shift_node_id
         shift_node_id  = at_cascade.table_name2id(
-            fit_table['node'], 'node', shift_name
+            fit_table['node'], 'node', shift_node_name
         )
-        assert fit_table['node'][shift_node_id]['parent'] == fit_node_id
         #
         # shift_database     = fit_node_database
         shift_database= shift_databases[shift_name]
         shutil.copyfile(fit_node_database, shift_database)
         #
         # shift_table['option']
+        # set parent_node_name to shift_node_name
         for row in shift_table['option'] :
             if row['option_name'] == 'parent_node_name' :
-                row['option_value'] = shift_name
+                row['option_value'] = shift_node_name
         #
         # shift_table['covariate']
+        # set replative covariate values so correspond to shift node
         for row in all_cov_reference_table :
-            # Use fact that None == None is true
+            # use fact that None == None is true
             if row['node_id'] == shift_node_id and \
-                row['split_reference_id'] == split_reference_id :
+                row['split_reference_id'] == fit_split_reference_id :
                 covariate_id  = row['covariate_id']
                 shift_row    =shift_table['covariate'][covariate_id]
                 shift_row['reference'] = row['reference']
