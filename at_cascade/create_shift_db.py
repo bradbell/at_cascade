@@ -74,30 +74,42 @@ Only the node_id column has been modified from the root_node_database version.
 
 shift_databases
 ***************
-is a python dictionary, we use the notation *shift_name* for the
-keys in this database ``dict``.
+This argument can't be ``None`` and is a python dictionary.
+We use the notation *shift_name* for the keys in this ``dict``.
+
+shift_name
+==========
+For each *shift_name*, *shift_databases[shift_name]* is the name of
+a :ref:`glossary.input_node_database` that is created by this command.
+
+split_reference_name
+====================
 If *shift_name* is a :ref:`split_reference_table.split_reference_name`,
-the node is the *fit_node*.
+the node corresponding to this shift database is the fit_node.
 
--   For each *shift_name*, *shift_databases[shift_name]* is the name of
-    a :ref:`glossary.input_node_database` that is created by this command.
--   If *shift_name* is a :ref:`split_reference_table.split_reference_name`,
-    the node corresponding to this shift database is the fit_node.
-    Otherwise *shift_name* is a child node of the fit_name
-    and is the node corresponding to this shift database.
--   If the upper and lower limits are equal,
-    the value priors are effectively the same.
-    Otherwise the mean and standard deviation in the values priors
-    are replaced using the predict, in the *fit_node_database*,
-    that corresponds to this shift database.
-    Note that if the value prior is uniform,
-    the standard deviation is not used and the mean is only used to
-    initialize the optimization.
--   The avgint table is a copy of the c_root_avgint table in the
-    *fit_node_database* with the node_id replaced by the corresponding
-    shift node id.
+Child Node
+==========
+If *shift_name* is the node name for a child of fit_node,
+the child is the node corresponding to this shift database.
 
-This argument can't be ``None``.
+Value Priors
+============
+If the upper and lower limits are equal,
+the value priors in fit_database and the shift_databases
+are effectively the same.
+Otherwise the mean and standard deviation in the values priors
+are replaced using the predict tables in the *fit_node_database*.
+Note that if the value prior is uniform,
+the standard deviation is not used and the mean is only used to
+initialize the optimization.
+
+avgint Table
+============
+The avgint table, in the shift_databases,
+is a copy of the c_root_avgint table in the
+*fit_node_database* with the node_id replaced by the node corresponding
+to he shift_database.
+
 
 {xsrst_end create_shift_db}
 '''
@@ -139,7 +151,7 @@ def add_shift_grid_row(
     fit_grid_row,
     integrand_id,
     shift_node_id,
-    child_prior_std_factor,
+    shift_prior_std_factor,
 ) :
     # -----------------------------------------------------------------------
     # value_prior
@@ -205,7 +217,7 @@ def add_shift_grid_row(
             #
             # shift_prior_row
             shift_prior_row['mean']        = mean
-            shift_prior_row['std']         = child_prior_std_factor * std
+            shift_prior_row['std']         = shift_prior_std_factor * std
             #
             # shift_table['prior']
             shift_table['prior'].append( shift_prior_row )
@@ -268,11 +280,11 @@ def create_shift_db(
     )
     connection.close()
     #
-    # child_prior_std_factor
-    child_prior_std_factor = 1.0
+    # shift_prior_std_factor
+    shift_prior_std_factor = 1.0
     for row in all_option_table :
-        if row['option_name'] == 'child_prior_std_factor' :
-            child_prior_std_factor = float( row['option_value'] )
+        if row['option_name'] == 'shift_prior_std_factor' :
+            shift_prior_std_factor = float( row['option_value'] )
     #
     # fit_table
     new           = False
@@ -482,7 +494,7 @@ def create_shift_db(
                             fit_grid_row,
                             integrand_id,
                             node_id,
-                            child_prior_std_factor,
+                            shift_prior_std_factor,
                         )
 
         # --------------------------------------------------------------------
@@ -541,7 +553,7 @@ def create_shift_db(
                             fit_grid_row,
                             integrand_id,
                             shift_node_id,
-                            child_prior_std_factor,
+                            shift_prior_std_factor,
                         )
             # ----------------------------------------------------------------
             # fit_smooth_id

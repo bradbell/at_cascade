@@ -944,7 +944,7 @@ def set_all_option_table(all_node_database) :
     max_abs_effect_str = str( max_abs_effect )
     all_option_table  = [
     {'option_name': 'absolute_covariates',    'option_value':'one'},
-    {'option_name': 'child_prior_std_factor', 'option_value':'4.0' },
+    {'option_name': 'shift_prior_std_factor', 'option_value':'4.0' },
     {'option_name': 'in_parallel',            'option_value':'false'},
     {'option_name': 'max_abs_effect',       'option_value':max_abs_effect_str},
     {'option_name': 'max_fit',              'option_value':str(max_fit)},

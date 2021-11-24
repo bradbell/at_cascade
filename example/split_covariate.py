@@ -224,7 +224,7 @@ fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 # BEGIN all_option_table
 all_option            = {
     'split_covariate_name':  'sex',
-    'child_prior_std_factor': 1e3,
+    'shift_prior_std_factor': 1e3,
     'split_level':              0,
 }
 # END all_option_table

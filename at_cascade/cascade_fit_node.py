@@ -384,7 +384,7 @@ def cascade_fit_node(
     # all_option
     valid = [
         'absolute_covariates',
-        'child_prior_std_factor',
+        'shift_prior_std_factor',
         'in_parallel',
         'max_abs_effect',
         'max_fit',
