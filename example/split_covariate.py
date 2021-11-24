@@ -22,14 +22,14 @@ Nodes
 *****
 The following is a diagram of the node tree for this example.
 The :ref:`glossary.root_node` is n0,
-the :ref:`glossary.fit_goal_set` is {n3, n4, n2},
+the :ref:`glossary.fit_goal_set`
 and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
           /-----/\-----\
-        n1             (n2)
+        n1              n2
        /  \            /  \
-    (n3)  (n4)       n5    n6
+    (n3)  (n4)      (n5)  (n6)
 
 fit_goal_set
 ============
@@ -204,11 +204,14 @@ import at_cascade
 # global varables
 # -----------------------------------------------------------------------------
 # BEGIN fit_goal_set
-fit_goal_set = { 'n3', 'n4', 'n2' }
+fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 # END fit_goal_set
 #
 # BEGIN split_reference_table
-all_option            = {'split_covariate_name': 'sex'}
+all_option            = {
+    'split_covariate_name':  'sex',
+    'child_prior_std_factor': 1e3,
+}
 split_reference_table = [
     {'split_reference_name': 'female', 'split_reference_value': 1.0},
     {'split_reference_name': 'both',   'split_reference_value': 2.0},
@@ -243,14 +246,23 @@ for row in split_reference_table :
 # ----------------------------------------------------------------------------
 # BEGIN rate_true
 def rate_true(rate, a, t, n, c) :
+    true_iota = {
+        'n3' : 1e-2,
+        'n4' : 2e-2,
+        'n5' : 3e-2,
+        'n6' : 4e-2
+    }
+    true_iota['n1'] = (true_iota['n3'] + true_iota['n4']) / 2.9
+    true_iota['n2'] = (true_iota['n5'] + true_iota['n6']) / 2.9
+    true_iota['n0'] = (true_iota['n1'] + true_iota['n2']) / 2.9
     sex    = c[0]
     income = c[1]
-    r_0    = all_cov_reference['n0']['income'][split_index]
+    r_0    = all_cov_reference[n]['income'][split_index]
     effect = alpha_true * ( income - r_0 )
     if rate == 'iota' :
-        return 1e-2 * exp(effect)
+        return true_iota[n] * exp(effect)
     if rate == 'omega' :
-        return 2e-2 * exp(effect)
+        return 2.0 * true_iota[n] * exp(effect)
     return 0.0
 # END rate_true
 # ----------------------------------------------------------------------------
@@ -261,7 +273,7 @@ def root_node_db(file_name) :
         split_reference_list[split_index],
         all_cov_reference['n0']['income'][split_index],
     ]
-    iota_n0        = rate_true('iota', None, None, None, covariate_list)
+    iota_n0        = rate_true('iota', None, None, 'n0', covariate_list)
     # END iota_50
     #
     # prior_table
@@ -389,15 +401,18 @@ def root_node_db(file_name) :
         'hold_out':     False,
     }
     for node in leaf_set :
-        sex        = split_reference_list[split_index]
-        income     = all_cov_reference[node]['income'][split_index]
-        meas_value = rate_true('iota', None, None, None, [ None, income ])
-        row['node']       = node
-        row['meas_value'] = meas_value
-        row['sex']        = sex
-        row['income']     = income
-        row['meas_std']   = meas_value / 10.0
-        data_table.append( copy.copy(row) )
+        sex              = split_reference_list[split_index]
+        reference_income = all_cov_reference[node]['income'][split_index]
+        for factor in [ 0.5, 1.0, 2.0 ] :
+            income = factor * reference_income
+            c      = [sex, income]
+            meas_value = rate_true('iota', None, None, node, c)
+            row['node']       = node
+            row['meas_value'] = meas_value
+            row['sex']        = sex
+            row['income']     = income
+            row['meas_std']   = meas_value / 10.0
+            data_table.append( copy.copy(row) )
     #
     # age_grid
     age_grid = [ 0.0, 100.0 ]
@@ -479,7 +494,7 @@ def main() :
                     sex    = split_reference_list[k]
                     income = all_cov_reference[node_name]['income'][k]
                     cov    = [ sex, income ]
-                    omega  = rate_true('omega', None, None, None, cov)
+                    omega  = rate_true('omega', None, None, node_name, cov)
                     mtall_data[node_name][k].append( omega )
     #
     # Create all_node.db
@@ -516,18 +531,15 @@ def main() :
     )
     #
     # check results
-    for goal_dir in [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2' ] :
+    for goal_dir in [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2/n5', 'n0/n2/n6' ] :
         goal_database = goal_dir + '/dismod.db'
         at_cascade.check_cascade_fit(
             rate_true          = rate_true,
             all_node_database  = all_node_database,
             fit_node_database  = goal_database,
-            relative_tolerance = 1e-2,
+            relative_tolerance = 1e-4,
         )
     #
-    # check that fits were not run for n5 and n6
-    for not_fit_dir in [ 'n0/n2/n5', 'n0/n2/n6' ] :
-        assert not os.path.exists( not_fit_dir )
 #
 main()
 print('split_covariate: OK')
