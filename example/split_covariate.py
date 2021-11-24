@@ -29,7 +29,7 @@ and the leaf nodes are {n3, n4, n5, n6}::
           /-----/\-----\
         n1              n2
        /  \            /  \
-    (n3)  (n4)      (n5)  (n6)
+     n3    n4        n5    n6
 
 fit_goal_set
 ============
@@ -45,17 +45,35 @@ The only non-zero dismod_at rates for this example are
 
 Splitting Covariate
 ===================
-This cascade is set up to split by sex reference value; see
-:ref:`split_reference_table`:
+This cascade is set up to split by the sex covariate at level zero:
+{xsrst_file
+    # BEGIN all_option_table
+    # END all_option_table
+}
+The :ref:`split_reference_table` for this example is:
 {xsrst_file
     # BEGIN split_reference_table
     # END split_reference_table
 }
+The cascade computation tree is::
+
+                /-------------n0-------------\
+          /---female---\                /----male----\
+        n1              n2            n1              n2
+       /  \            /  \          /  \            /  \
+     n3    n4        n5    n6      n3    n4        n5    n6
+
+The sex reference value for the root node (n0) corresponds to both:
+{xsrst_file
+    # BEGIN root_split_reference_id
+    # END   root_split_reference_id
+}
+
 
 Covariate
 *********
 There are two covariates for this example, sex and income.
-The reference value for income depends on the value of sex;
+The reference value for income depends on both the node and sex;
 see :ref:`create_all_node_db.all_cov_reference`:
 {xsrst_file
     # BEGIN all_cov_reference
@@ -207,12 +225,14 @@ import at_cascade
 fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 # END fit_goal_set
 #
-# BEGIN split_reference_table
+# BEGIN all_option_table
 all_option            = {
     'split_covariate_name':  'sex',
     'child_prior_std_factor': 1e3,
     'split_level':              0,
 }
+# END all_otption_table
+# BEGIN split_reference_table
 split_reference_table = [
     {'split_reference_name': 'female', 'split_reference_value': 1.0},
     {'split_reference_name': 'both',   'split_reference_value': 2.0},
@@ -220,9 +240,9 @@ split_reference_table = [
 ]
 # END split_reference_table
 #
-# BEGIN split_index
-split_index = 1
-# END split_index
+# BEGIN root_split_reference_id
+root_split_reference_id = 1
+# END root_split_reference_id
 #
 # BEGIN all_cov_reference
 all_cov_reference = dict()
@@ -247,6 +267,7 @@ for row in split_reference_table :
 # ----------------------------------------------------------------------------
 # BEGIN rate_true
 def rate_true(rate, a, t, n, c) :
+    # true_iota
     true_iota = {
         'n3' : 1e-2,
         'n4' : 2e-2,
@@ -256,10 +277,20 @@ def rate_true(rate, a, t, n, c) :
     true_iota['n1'] = (true_iota['n3'] + true_iota['n4']) / 2.9
     true_iota['n2'] = (true_iota['n5'] + true_iota['n6']) / 2.9
     true_iota['n0'] = (true_iota['n1'] + true_iota['n2']) / 2.9
+    #
+    # effect
     sex    = c[0]
     income = c[1]
-    r_0    = all_cov_reference[n]['income'][split_index]
-    effect = alpha_true * ( income - r_0 )
+    #
+    # split_reference_id
+    split_reference_id = None
+    for (row_id, row) in enumerate(split_reference_table) :
+        if row['split_reference_value'] == sex :
+            split_reference_id = row_id
+    #
+    r_income = all_cov_reference[n]['income'][split_reference_id]
+    effect   = alpha_true * ( income - r_income )
+    #
     if rate == 'iota' :
         return true_iota[n] * exp(effect)
     if rate == 'omega' :
@@ -270,11 +301,10 @@ def rate_true(rate, a, t, n, c) :
 def root_node_db(file_name) :
     #
     # iota_n0
-    covariate_list = [
-        split_reference_list[split_index],
-        all_cov_reference['n0']['income'][split_index],
-    ]
-    iota_n0        = rate_true('iota', None, None, 'n0', covariate_list)
+    sex       = split_reference_list[root_split_reference_id]
+    income    = all_cov_reference['n0']['income'][root_split_reference_id]
+    c         = [ sex, income ]
+    iota_n0   = rate_true('iota', None, None, 'n0', c)
     # END iota_50
     #
     # prior_table
@@ -344,14 +374,12 @@ def root_node_db(file_name) :
     #
     # covariate_table
     covariate_table = list()
-    covariate_table.append( {
-        'name':     'sex',
-        'reference': split_reference_list[split_index],
-    } )
-    covariate_table.append( {
-        'name':     'income',
-        'reference': all_cov_reference['n0']['income'][split_index],
-    } )
+    sex    = split_reference_list[root_split_reference_id]
+    income =  all_cov_reference['n0']['income'][root_split_reference_id]
+    covariate_table.append(
+        { 'name': 'sex',      'reference': sex, 'max_difference': 1.1 }
+    )
+    covariate_table.append( { 'name':  'income',  'reference': income } )
     #
     # mulcov_table
     mulcov_table = [ {
@@ -401,19 +429,22 @@ def root_node_db(file_name) :
         'density':      'gaussian',
         'hold_out':     False,
     }
-    for node in leaf_set :
-        sex              = split_reference_list[split_index]
-        reference_income = all_cov_reference[node]['income'][split_index]
-        for factor in [ 0.5, 1.0, 2.0 ] :
-            income = factor * reference_income
-            c      = [sex, income]
-            meas_value = rate_true('iota', None, None, node, c)
-            row['node']       = node
-            row['meas_value'] = meas_value
-            row['sex']        = sex
-            row['income']     = income
-            row['meas_std']   = meas_value / 10.0
-            data_table.append( copy.copy(row) )
+    assert split_reference_table[0]['split_reference_name'] == 'female'
+    assert split_reference_table[2]['split_reference_name'] == 'male'
+    for split_reference_id in [ 0, 2 ] :
+        for node in leaf_set :
+            sex      = split_reference_list[split_reference_id]
+            r_income = all_cov_reference[node]['income'][split_reference_id]
+            for factor in [ 0.5, 1.0, 2.0 ] :
+                income = factor * r_income
+                c      = [sex, income]
+                meas_value = rate_true('iota', None, None, node, c)
+                row['node']       = node
+                row['meas_value'] = meas_value
+                row['sex']        = sex
+                row['income']     = income
+                row['meas_std']   = meas_value / 10.0
+                data_table.append( copy.copy(row) )
     #
     # age_grid
     age_grid = [ 0.0, 100.0 ]
@@ -539,7 +570,7 @@ def main() :
                 rate_true          = rate_true,
                 all_node_database  = all_node_database,
                 fit_node_database  = goal_database,
-                relative_tolerance = 1e-4,
+                relative_tolerance = 1e-5,
             )
     #
 #
