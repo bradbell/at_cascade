@@ -950,6 +950,7 @@ def set_all_option_table(all_node_database) :
     {'option_name': 'max_fit',              'option_value':str(max_fit)},
     {'option_name': 'root_node_name',       'option_value':root_node_name},
     {'option_name': 'split_covariate_name', 'option_value':'sex'},
+    {'option_name': 'split_level',          'option_value':'3'},
     ]
     new               = False
     connection        = dismod_at.create_connection(all_node_database, new)

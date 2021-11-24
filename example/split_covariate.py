@@ -16,7 +16,8 @@
 
 Example Using split_reference Table
 ###################################
-For this example everything is constant w.r.t. age and time.
+This example splits the analysis by sex.
+To simplify the example everything is constant w.r.t. age and time.
 
 Nodes
 *****
@@ -44,7 +45,7 @@ The only non-zero dismod_at rates for this example are
 :ref:`glossary.iota`.and :ref:`glossary.omega`.
 
 Splitting Covariate
-===================
+*******************
 This cascade is set up to split by the sex covariate at level zero:
 {xsrst_file
     # BEGIN all_option_table
@@ -63,12 +64,11 @@ The cascade computation tree is::
        /  \            /  \          /  \            /  \
      n3    n4        n5    n6      n3    n4        n5    n6
 
-The sex reference value for the root node (n0) corresponds to both:
+The sex reference value for the root node (n0) corresponds to both sexes:
 {xsrst_file
     # BEGIN root_split_reference_id
-    # END   root_split_reference_id
+    # END root_split_reference_id
 }
-
 
 Covariate
 *********
@@ -78,10 +78,6 @@ see :ref:`create_all_node_db.all_cov_reference`:
 {xsrst_file
     # BEGIN all_cov_reference
     # END all_cov_reference
-}
-{xsrst_file
-    # BEGIN split_reference_list
-    # END split_reference_list
 }
 
 alpha
@@ -105,7 +101,7 @@ Simulated Data
 
 mtall
 =====
-The ref:`all_mtall` data fro this example is simulated as equal to
+The ref:`all_mtall` data for this example is simulated as equal to
 the true value for omega (see rate_true directly below) and there is
 no :ref:`all_mtspecific` data for this example.
 
@@ -114,10 +110,8 @@ rate_true(rate, a, t, n, c)
 For *rate* equal to iota or omega,
 this is the true value for *rate*
 in node *n* at age *a*, time *t*, and covariate values *c=[sex,income]*.
-The covariate values are a list in the
-same order as the covariate table.
-The values *a*, *t*, *n*, *sex*
-are not used by this function for this example.
+The covariate values are a list in the same order as the covariate table.
+The values *a* and *t* are not used by this function for this example.
 {xsrst_file
     # BEGIN rate_true
     # END rate_true
@@ -129,16 +123,18 @@ The only simulated integrand for this example is :ref:`glossary.sincidence`
 which is a direct measurement of iota.
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
-*y_i = rate_true('iota', None, None, None, [None, I_i])*
-where *I_i* is the income for the i-th measurement.
+*y_i = rate_true('iota', None, None, n, [sex, I_i])*
+where *n* is the node, *sex* is the sex covariate value, and
+*I_i* is the income for the i-th measurement.
 The data is modeled as having noise even though there is no simulated noise.
 
-n_i
-===
-Data is only simulated for the leaf nodes; i.e.,
-each *n_i* is in the set { n3, n4, n5, n6 }.
+Cases Simulated
+===============
+Data is simulated for the leaf nodes for female, male sexes; i.e.,
+each *n_i* is in the set { n3, n4, n5, n6 } and the female, male sexes.
 Since the data does not have any nose, the data residuals are a measure
-of how good the fit is for the nodes in the fit_goal_set.
+of how good the fit is for the nodes in the fit_goal_set below the female
+and male sexes.
 
 Parent Rate Smoothing
 *********************
@@ -231,17 +227,24 @@ all_option            = {
     'child_prior_std_factor': 1e3,
     'split_level':              0,
 }
-# END all_otption_table
+# END all_option_table
+#
 # BEGIN split_reference_table
 split_reference_table = [
     {'split_reference_name': 'female', 'split_reference_value': 1.0},
     {'split_reference_name': 'both',   'split_reference_value': 2.0},
     {'split_reference_name': 'male',   'split_reference_value': 3.0},
 ]
+split_reference_list = list()
+for row in split_reference_table :
+    split_reference_list.append( row['split_reference_value'] )
 # END split_reference_table
 #
 # BEGIN root_split_reference_id
 root_split_reference_id = 1
+assert  \
+split_reference_table[root_split_reference_id]['split_reference_name']=='both'
+
 # END root_split_reference_id
 #
 # BEGIN all_cov_reference
@@ -256,12 +259,6 @@ for node_id in range(7) :
 # BEGIN alpha_true
 alpha_true = - 0.2
 # END alpha_true
-#
-# BEGIN split_reference_list
-split_reference_list = list()
-for row in split_reference_table :
-    split_reference_list.append( row['split_reference_value'] )
-# END split_reference_list
 # ----------------------------------------------------------------------------
 # functions
 # ----------------------------------------------------------------------------

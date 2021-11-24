@@ -44,10 +44,19 @@ This argument can't be ``None``.
 
 fit_node
 ========
-The *fit_node_database* must be *fit_node*\ ``/dismod.db``,
-or end with the text ``/``\ *fit_node*\ ``/dismod.db``
+The *fit_node_database* must be one of the following cases,
 where *fit_node* is the name of the :ref:`glossary.fit_node`
-for this database.
+for this database:
+
+1. *fit_node*\ ``/dismod.db`` (in this case
+   :ref:`glossary.fit_node` is also the :ref:`glossary.root_node`).
+
+2. It ends with ``/``\ *fit_node*\ ``/dismod.db``
+
+3. It ends with ``/``\ *fit_node*\ ``/``\ *split_name*\ ``/dismod.db``,
+   where *split_name* is a value in the
+   :ref:`split_reference_table.split_reference_name` column of the
+   split_reference table.
 
 fit_node_dir
 ============
@@ -106,7 +115,6 @@ trace_fit
 if ``True``, ( ``False`` ) the progress of the dismod at fit commands
 will be printed on standard output during the optimization.
 
-
 Output dismod.db
 ****************
 The results for this fit are in the
@@ -115,9 +123,6 @@ The *.csv* files in *fit_node_dir* can be created using the
 dismod_at db2csv command.
 The dismod_at function ``plot_rate_fit`` and ``plot_data_fit``
 can be used to crate the corresponding plots.
-Furthermore, for each child node of *fit_node_name* that is in the
-:ref:`glossary.fit_node_set`, there is a sub-directory
-with the results for that child node.
 
 fit_var
 =======
@@ -152,6 +157,24 @@ log
 ===
 The log table contains a summary of the operations preformed on dismod.db
 between it's input and output state.
+
+Output Directories
+******************
+The results of the fits for the following cases
+are also computed by cascade_fit with *fit_node_database* corresponding
+to the sub-directories:
+
+1. If the level of the *fit_node_dir* below the root_node is equal to
+   :ref:`all_option_table.split_level`, the sub-directories will be
+   *fit_node_dir*\ ``/``\ *split_name* where *split_name* is a value in
+   in the split_reference_name column of the split_reference table.
+   The *split_name* corresponding to the *fit_node* will not be included
+   in this splitting.
+
+2. If the level of the *fit_node_dir* is not equal to the split level,
+   the sub-directories will be
+   *fit_node_dir*\ ``/``\ *child_name* where *child_name* is the name of
+   a child of *fit_node_name* that is in the :ref:`glossary.fit_node_set`,
 
 {xsrst_end cascade_fit_node}
 '''
