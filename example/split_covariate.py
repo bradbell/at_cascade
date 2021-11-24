@@ -211,6 +211,7 @@ fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 all_option            = {
     'split_covariate_name':  'sex',
     'child_prior_std_factor': 1e3,
+    'split_level':              0,
 }
 split_reference_table = [
     {'split_reference_name': 'female', 'split_reference_value': 1.0},
@@ -220,7 +221,7 @@ split_reference_table = [
 # END split_reference_table
 #
 # BEGIN split_index
-split_index = 2
+split_index = 1
 # END split_index
 #
 # BEGIN all_cov_reference
@@ -531,14 +532,15 @@ def main() :
     )
     #
     # check results
-    for goal_dir in [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2/n5', 'n0/n2/n6' ] :
-        goal_database = goal_dir + '/dismod.db'
-        at_cascade.check_cascade_fit(
-            rate_true          = rate_true,
-            all_node_database  = all_node_database,
-            fit_node_database  = goal_database,
-            relative_tolerance = 1e-4,
-        )
+    for sex in [ 'male', 'female' ] :
+        for subdir in [ 'n1/n3', 'n1/n4', 'n2/n5', 'n2/n6' ] :
+            goal_database = f'n0/{sex}/{subdir}/dismod.db'
+            at_cascade.check_cascade_fit(
+                rate_true          = rate_true,
+                all_node_database  = all_node_database,
+                fit_node_database  = goal_database,
+                relative_tolerance = 1e-4,
+            )
     #
 #
 main()
