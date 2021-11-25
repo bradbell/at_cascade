@@ -341,7 +341,7 @@ The following is the value prior used for the root_node
     :language: py
 
 The mean and standard deviation are only used for the root_node.
-The :ref:`create_child_node_db<create_child_node_db>`
+The :ref:`create_shift_db<create_shift_db>`
 routine replaces them for other nodes.
 
 .. meta::
@@ -417,7 +417,7 @@ The following is the value prior used for this smoothing:
     :language: py
 
 The mean and standard deviation are only used for the root_node.
-The create_child_node_db
+The create_shift_db
 routine replaces them for other nodes.
 
 .. meta::

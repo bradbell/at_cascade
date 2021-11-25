@@ -25,6 +25,7 @@
 <meta content="c_predict_fit_var" name="keywords" />
 <meta content="c_predict_sample" name="keywords" />
 <meta content="log" name="keywords" />
+<meta content="output, directories" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -115,7 +116,7 @@
 <li class="toctree-l3"><a class="reference internal" href="check_cascade_fit.html">check_cascade_fit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="continue_cascade.html">continue_cascade</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_all_node_db.html">create_all_node_db</a></li>
-<li class="toctree-l3"><a class="reference internal" href="create_child_node_db.html">create_child_node_db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create_shift_db.html">create_shift_db</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data4cov_reference.html">data4cov_reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_cov_info.html">get_cov_info</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_fit_children.html">get_fit_children</a></li>
@@ -239,6 +240,7 @@
 <li><p><a class="reference internal" href="#log" id="id22">log</a></p></li>
 </ul>
 </li>
+<li><p><a class="reference internal" href="#output-directories" id="id23">Output Directories</a></p></li>
 </ul>
 </div>
 <div class="section" id="syntax">
@@ -273,10 +275,18 @@ extra properties listed under
 This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <div class="section" id="fit-node">
 <span id="cascade-fit-node-fit-node-database-fit-node"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id7">fit_node</a><a class="headerlink" href="#fit-node" title="Permalink to this headline">¶</a></h4>
-<p>The <em>fit_node_database</em> must be <em>fit_node</em><code class="docutils literal notranslate"><span class="pre">/dismod.db</span></code>,
-or end with the text <code class="docutils literal notranslate"><span class="pre">/</span></code><em>fit_node</em><code class="docutils literal notranslate"><span class="pre">/dismod.db</span></code>
+<p>The <em>fit_node_database</em> must be one of the following cases,
 where <em>fit_node</em> is the name of the <a class="reference internal" href="glossary.html#glossary-fit-node"><span class="std std-ref">fit_node</span></a>
-for this database.</p>
+for this database:</p>
+<ol class="arabic simple">
+<li><p><em>fit_node</em><code class="docutils literal notranslate"><span class="pre">/dismod.db</span></code> (in this case
+<a class="reference internal" href="glossary.html#glossary-fit-node"><span class="std std-ref">fit_node</span></a> is also the <a class="reference internal" href="glossary.html#glossary-root-node"><span class="std std-ref">root_node</span></a>).</p></li>
+<li><p>It ends with <code class="docutils literal notranslate"><span class="pre">/</span></code><em>fit_node</em><code class="docutils literal notranslate"><span class="pre">/dismod.db</span></code></p></li>
+<li><p>It ends with <code class="docutils literal notranslate"><span class="pre">/</span></code><em>fit_node</em><code class="docutils literal notranslate"><span class="pre">/</span></code><em>split_name</em><code class="docutils literal notranslate"><span class="pre">/dismod.db</span></code>,
+where <em>split_name</em> is a value in the
+<a class="reference internal" href="split_reference_table.html#split-reference-table-split-reference-name"><span class="std std-ref">split_reference_name</span></a> column of the
+split_reference table.</p></li>
+</ol>
 </div>
 <div class="section" id="fit-node-dir">
 <span id="cascade-fit-node-fit-node-database-fit-node-dir"></span><span id="index-5"></span><h4><a class="toc-backref" href="#id8">fit_node_dir</a><a class="headerlink" href="#fit-node-dir" title="Permalink to this headline">¶</a></h4>
@@ -287,7 +297,8 @@ for this database.</p>
 <span id="cascade-fit-node-fit-goal-set"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id9">fit_goal_set</a><a class="headerlink" href="#fit-goal-set" title="Permalink to this headline">¶</a></h3>
 <p>This is a <code class="docutils literal notranslate"><span class="pre">set</span></code> with elements of type <code class="docutils literal notranslate"><span class="pre">int</span></code> (<code class="docutils literal notranslate"><span class="pre">str</span></code>)
 specifying the node_id (node_name) for each element of the
-<a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a> .</p>
+<a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a> .
+This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </div>
 <div class="section" id="node-table">
 <span id="cascade-fit-node-node-table"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id10">node_table</a><a class="headerlink" href="#node-table" title="Permalink to this headline">¶</a></h3>
@@ -342,10 +353,7 @@ will be printed on standard output during the optimization.</p>
 The <em>.csv</em> files in <em>fit_node_dir</em> can be created using the
 dismod_at db2csv command.
 The dismod_at function <code class="docutils literal notranslate"><span class="pre">plot_rate_fit</span></code> and <code class="docutils literal notranslate"><span class="pre">plot_data_fit</span></code>
-can be used to crate the corresponding plots.
-Furthermore, for each child node of <em>fit_node_name</em> that is in the
-<a class="reference internal" href="glossary.html#glossary-fit-node-set"><span class="std std-ref">fit_node_set</span></a>, there is a sub-directory
-with the results for that child node.</p>
+can be used to crate the corresponding plots.</p>
 <div class="section" id="fit-var">
 <span id="cascade-fit-node-output-dismod-db-fit-var"></span><span id="index-15"></span><h4><a class="toc-backref" href="#id18">fit_var</a><a class="headerlink" href="#fit-var" title="Permalink to this headline">¶</a></h4>
 <p>The fit_var table correspond to the posterior
@@ -378,9 +386,27 @@ Note that the predict_id column name was changed to c_predict_sample_id
 <span id="cascade-fit-node-output-dismod-db-log"></span><span id="index-19"></span><h4><a class="toc-backref" href="#id22">log</a><a class="headerlink" href="#log" title="Permalink to this headline">¶</a></h4>
 <p>The log table contains a summary of the operations preformed on dismod.db
 between it’s input and output state.</p>
+</div>
+</div>
+<div class="section" id="output-directories">
+<span id="cascade-fit-node-output-directories"></span><span id="index-20"></span><h3><a class="toc-backref" href="#id23">Output Directories</a><a class="headerlink" href="#output-directories" title="Permalink to this headline">¶</a></h3>
+<p>The results of the fits for the following cases
+are also computed by cascade_fit with <em>fit_node_database</em> corresponding
+to the sub-directories:</p>
+<ol class="arabic simple">
+<li><p>If the level of the <em>fit_node_dir</em> below the root_node is equal to
+<a class="reference internal" href="all_option_table.html#all-option-table-split-level"><span class="std std-ref">split_level</span></a>, the sub-directories will be
+<em>fit_node_dir</em><code class="docutils literal notranslate"><span class="pre">/</span></code><em>split_name</em> where <em>split_name</em> is a value in
+in the split_reference_name column of the split_reference table.
+The <em>split_name</em> corresponding to the <em>fit_node</em> will not be included
+in this splitting.</p></li>
+<li><p>If the level of the <em>fit_node_dir</em> is not equal to the split level,
+the sub-directories will be
+<em>fit_node_dir</em><code class="docutils literal notranslate"><span class="pre">/</span></code><em>child_name</em> where <em>child_name</em> is the name of
+a child of <em>fit_node_name</em> that is in the <a class="reference internal" href="glossary.html#glossary-fit-node-set"><span class="std std-ref">fit_node_set</span></a>,</p></li>
+</ol>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/cascade_fit_node.py</span></code></p>
-</div>
 </div>
 </div>
 </div>

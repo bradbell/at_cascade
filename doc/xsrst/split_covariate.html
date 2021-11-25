@@ -17,7 +17,7 @@
 <meta content="mtall" name="keywords" />
 <meta content="rate_true(rate, , a, , t, , n, , c)" name="keywords" />
 <meta content="y_i" name="keywords" />
-<meta content="n_i" name="keywords" />
+<meta content="cases, simulated" name="keywords" />
 <meta content="parent, rate, smoothing" name="keywords" />
 <meta content="value, prior" name="keywords" />
 <meta content="alpha, smoothing" name="keywords" />
@@ -205,11 +205,8 @@
 <li><p><a class="reference internal" href="#fit-goal-set" id="id4">fit_goal_set</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#rates" id="id5">Rates</a></p>
-<ul>
+<li><p><a class="reference internal" href="#rates" id="id5">Rates</a></p></li>
 <li><p><a class="reference internal" href="#splitting-covariate" id="id6">Splitting Covariate</a></p></li>
-</ul>
-</li>
 <li><p><a class="reference internal" href="#covariate" id="id7">Covariate</a></p>
 <ul>
 <li><p><a class="reference internal" href="#alpha" id="id8">alpha</a></p></li>
@@ -221,7 +218,7 @@
 <li><p><a class="reference internal" href="#mtall" id="id11">mtall</a></p></li>
 <li><p><a class="reference internal" href="#rate-true-rate-a-t-n-c" id="id12">rate_true(rate, a, t, n, c)</a></p></li>
 <li><p><a class="reference internal" href="#y-i" id="id13">y_i</a></p></li>
-<li><p><a class="reference internal" href="#n-i" id="id14">n_i</a></p></li>
+<li><p><a class="reference internal" href="#cases-simulated" id="id14">Cases Simulated</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#parent-rate-smoothing" id="id15">Parent Rate Smoothing</a></p>
@@ -237,23 +234,24 @@
 <li><p><a class="reference internal" href="#checking-the-fit" id="id19">Checking The Fit</a></p></li>
 </ul>
 </div>
-<p>For this example everything is constant w.r.t. age and time.</p>
+<p>This example splits the analysis by sex.
+To simplify the example everything is constant w.r.t. age and time.</p>
 <div class="section" id="nodes">
 <span id="split-covariate-nodes"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id3">Nodes</a><a class="headerlink" href="#nodes" title="Permalink to this headline">¶</a></h3>
 <p>The following is a diagram of the node tree for this example.
 The <a class="reference internal" href="glossary.html#glossary-root-node"><span class="std std-ref">root_node</span></a> is n0,
-the <a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a> is {n3, n4, n2},
+the <a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a>
 and the leaf nodes are {n3, n4, n5, n6}:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="n">n0</span>
-      <span class="o">/-----/</span>\<span class="o">-----</span>\
-    <span class="n">n1</span>             <span class="p">(</span><span class="n">n2</span><span class="p">)</span>
-   <span class="o">/</span>  \            <span class="o">/</span>  \
-<span class="p">(</span><span class="n">n3</span><span class="p">)</span>  <span class="p">(</span><span class="n">n4</span><span class="p">)</span>       <span class="n">n5</span>    <span class="n">n6</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>           <span class="n">n0</span>
+     <span class="o">/-----/</span>\<span class="o">-----</span>\
+   <span class="n">n1</span>              <span class="n">n2</span>
+  <span class="o">/</span>  \            <span class="o">/</span>  \
+<span class="n">n3</span>    <span class="n">n4</span>        <span class="n">n5</span>    <span class="n">n6</span>
 </pre></div>
 </div>
 <div class="section" id="fit-goal-set">
 <span id="split-covariate-nodes-fit-goal-set"></span><span id="index-2"></span><h4><a class="toc-backref" href="#id4">fit_goal_set</a><a class="headerlink" href="#fit-goal-set" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">fit_goal_set</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span> <span class="p">}</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">fit_goal_set</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -262,24 +260,48 @@ and the leaf nodes are {n3, n4, n5, n6}:</p>
 <span id="split-covariate-rates"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id5">Rates</a><a class="headerlink" href="#rates" title="Permalink to this headline">¶</a></h3>
 <p>The only non-zero dismod_at rates for this example are
 <a class="reference internal" href="glossary.html#glossary-iota"><span class="std std-ref">iota</span></a>.and <a class="reference internal" href="glossary.html#glossary-omega"><span class="std std-ref">omega</span></a>.</p>
+</div>
 <div class="section" id="splitting-covariate">
-<span id="split-covariate-rates-splitting-covariate"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id6">Splitting Covariate</a><a class="headerlink" href="#splitting-covariate" title="Permalink to this headline">¶</a></h4>
-<p>This cascade is set up to split by sex reference value; see
-<a class="reference internal" href="split_reference_table.html#id1"><span class="std std-ref">Split Reference Table</span></a>:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">all_option</span>            <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;split_covariate_name&#39;</span><span class="p">:</span> <span class="s1">&#39;sex&#39;</span><span class="p">}</span>
-<span class="n">split_reference_table</span> <span class="o">=</span> <span class="p">[</span>
+<span id="split-covariate-splitting-covariate"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id6">Splitting Covariate</a><a class="headerlink" href="#splitting-covariate" title="Permalink to this headline">¶</a></h3>
+<p>This cascade is set up to split by the sex covariate at level zero:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">all_option</span>            <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;split_covariate_name&#39;</span><span class="p">:</span>  <span class="s1">&#39;sex&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;shift_prior_std_factor&#39;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">,</span>
+    <span class="s1">&#39;split_level&#39;</span><span class="p">:</span>              <span class="mi">0</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="split_reference_table.html#id1"><span class="std std-ref">Split Reference Table</span></a> for this example is:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">split_reference_table</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span><span class="s1">&#39;split_reference_name&#39;</span><span class="p">:</span> <span class="s1">&#39;female&#39;</span><span class="p">,</span> <span class="s1">&#39;split_reference_value&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
     <span class="p">{</span><span class="s1">&#39;split_reference_name&#39;</span><span class="p">:</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span>   <span class="s1">&#39;split_reference_value&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">},</span>
     <span class="p">{</span><span class="s1">&#39;split_reference_name&#39;</span><span class="p">:</span> <span class="s1">&#39;male&#39;</span><span class="p">,</span>   <span class="s1">&#39;split_reference_value&#39;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">},</span>
 <span class="p">]</span>
+<span class="n">split_reference_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">split_reference_table</span> <span class="p">:</span>
+    <span class="n">split_reference_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;split_reference_value&#39;</span><span class="p">]</span> <span class="p">)</span>
 </pre></div>
 </div>
+<p>The cascade computation tree is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>           <span class="o">/-------------</span><span class="n">n0</span><span class="o">-------------</span>\
+     <span class="o">/---</span><span class="n">female</span><span class="o">---</span>\                <span class="o">/----</span><span class="n">male</span><span class="o">----</span>\
+   <span class="n">n1</span>              <span class="n">n2</span>            <span class="n">n1</span>              <span class="n">n2</span>
+  <span class="o">/</span>  \            <span class="o">/</span>  \          <span class="o">/</span>  \            <span class="o">/</span>  \
+<span class="n">n3</span>    <span class="n">n4</span>        <span class="n">n5</span>    <span class="n">n6</span>      <span class="n">n3</span>    <span class="n">n4</span>        <span class="n">n5</span>    <span class="n">n6</span>
+</pre></div>
+</div>
+<p>The sex reference value for the root node (n0) corresponds to both sexes:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">root_split_reference_id</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">assert</span>  \
+<span class="n">split_reference_table</span><span class="p">[</span><span class="n">root_split_reference_id</span><span class="p">][</span><span class="s1">&#39;split_reference_name&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;both&#39;</span>
+
+</pre></div>
 </div>
 </div>
 <div class="section" id="covariate">
 <span id="split-covariate-covariate"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id7">Covariate</a><a class="headerlink" href="#covariate" title="Permalink to this headline">¶</a></h3>
 <p>There are two covariates for this example, sex and income.
-The reference value for income depends on the value of sex;
+The reference value for income depends on both the node and sex;
 see <a class="reference internal" href="create_all_node_db.html#create-all-node-db-all-cov-reference"><span class="std std-ref">all_cov_reference</span></a>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">all_cov_reference</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">node_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="p">:</span>
@@ -287,11 +309,6 @@ see <a class="reference internal" href="create_all_node_db.html#create-all-node-
     <span class="n">all_cov_reference</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;income&#39;</span> <span class="p">:</span> <span class="p">[</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">node_id</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">node_id</span> <span class="o">/</span> <span class="mf">10.0</span> <span class="p">]</span>
     <span class="p">}</span>
-</pre></div>
-</div>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">split_reference_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">split_reference_table</span> <span class="p">:</span>
-    <span class="n">split_reference_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;split_reference_value&#39;</span><span class="p">]</span> <span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="alpha">
@@ -314,7 +331,7 @@ The true value for <em>alpha</em> (used which simulating the data) is</p>
 <span id="split-covariate-simulated-data"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id10">Simulated Data</a><a class="headerlink" href="#simulated-data" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="mtall">
 <span id="split-covariate-simulated-data-mtall"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id11">mtall</a><a class="headerlink" href="#mtall" title="Permalink to this headline">¶</a></h4>
-<p>The ref:<cite>all_mtall</cite> data fro this example is simulated as equal to
+<p>The ref:<cite>all_mtall</cite> data for this example is simulated as equal to
 the true value for omega (see rate_true directly below) and there is
 no <a class="reference internal" href="all_mtspecific.html#id1"><span class="std std-ref">All Node mtspecific Values</span></a> data for this example.</p>
 </div>
@@ -323,19 +340,37 @@ no <a class="reference internal" href="all_mtspecific.html#id1"><span class="std
 <p>For <em>rate</em> equal to iota or omega,
 this is the true value for <em>rate</em>
 in node <em>n</em> at age <em>a</em>, time <em>t</em>, and covariate values <em>c=[sex,income]</em>.
-The covariate values are a list in the
-same order as the covariate table.
-The values <em>a</em>, <em>t</em>, <em>n</em>, <em>sex</em>
-are not used by this function for this example.</p>
+The covariate values are a list in the same order as the covariate table.
+The values <em>a</em> and <em>t</em> are not used by this function for this example.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">rate_true</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># true_iota</span>
+    <span class="n">true_iota</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;n3&#39;</span> <span class="p">:</span> <span class="mf">1e-2</span><span class="p">,</span>
+        <span class="s1">&#39;n4&#39;</span> <span class="p">:</span> <span class="mf">2e-2</span><span class="p">,</span>
+        <span class="s1">&#39;n5&#39;</span> <span class="p">:</span> <span class="mf">3e-2</span><span class="p">,</span>
+        <span class="s1">&#39;n6&#39;</span> <span class="p">:</span> <span class="mf">4e-2</span>
+    <span class="p">}</span>
+    <span class="n">true_iota</span><span class="p">[</span><span class="s1">&#39;n1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">true_iota</span><span class="p">[</span><span class="s1">&#39;n3&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">true_iota</span><span class="p">[</span><span class="s1">&#39;n4&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.9</span>
+    <span class="n">true_iota</span><span class="p">[</span><span class="s1">&#39;n2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">true_iota</span><span class="p">[</span><span class="s1">&#39;n5&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">true_iota</span><span class="p">[</span><span class="s1">&#39;n6&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.9</span>
+    <span class="n">true_iota</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">true_iota</span><span class="p">[</span><span class="s1">&#39;n1&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">true_iota</span><span class="p">[</span><span class="s1">&#39;n2&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.9</span>
+    <span class="c1">#</span>
+    <span class="c1"># effect</span>
     <span class="n">sex</span>    <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">income</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">r_0</span>    <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">[</span><span class="s1">&#39;n0&#39;</span><span class="p">][</span><span class="s1">&#39;income&#39;</span><span class="p">][</span><span class="n">split_index</span><span class="p">]</span>
-    <span class="n">effect</span> <span class="o">=</span> <span class="n">alpha_true</span> <span class="o">*</span> <span class="p">(</span> <span class="n">income</span> <span class="o">-</span> <span class="n">r_0</span> <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="c1"># split_reference_id</span>
+    <span class="n">split_reference_id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">row_id</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">split_reference_table</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;split_reference_value&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">sex</span> <span class="p">:</span>
+            <span class="n">split_reference_id</span> <span class="o">=</span> <span class="n">row_id</span>
+    <span class="c1">#</span>
+    <span class="n">r_income</span> <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="s1">&#39;income&#39;</span><span class="p">][</span><span class="n">split_reference_id</span><span class="p">]</span>
+    <span class="n">effect</span>   <span class="o">=</span> <span class="n">alpha_true</span> <span class="o">*</span> <span class="p">(</span> <span class="n">income</span> <span class="o">-</span> <span class="n">r_income</span> <span class="p">)</span>
+    <span class="c1">#</span>
     <span class="k">if</span> <span class="n">rate</span> <span class="o">==</span> <span class="s1">&#39;iota&#39;</span> <span class="p">:</span>
-        <span class="k">return</span> <span class="mf">1e-2</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="n">effect</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">true_iota</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="n">effect</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">rate</span> <span class="o">==</span> <span class="s1">&#39;omega&#39;</span> <span class="p">:</span>
-        <span class="k">return</span> <span class="mf">2e-2</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="n">effect</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">true_iota</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="n">effect</span><span class="p">)</span>
     <span class="k">return</span> <span class="mf">0.0</span>
 </pre></div>
 </div>
@@ -346,16 +381,18 @@ are not used by this function for this example.</p>
 which is a direct measurement of iota.
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
-<em>y_i = rate_true(‘iota’, None, None, None, [None, I_i])</em>
-where <em>I_i</em> is the income for the i-th measurement.
+<em>y_i = rate_true(‘iota’, None, None, n, [sex, I_i])</em>
+where <em>n</em> is the node, <em>sex</em> is the sex covariate value, and
+<em>I_i</em> is the income for the i-th measurement.
 The data is modeled as having noise even though there is no simulated noise.</p>
 </div>
-<div class="section" id="n-i">
-<span id="split-covariate-simulated-data-n-i"></span><span id="index-12"></span><h4><a class="toc-backref" href="#id14">n_i</a><a class="headerlink" href="#n-i" title="Permalink to this headline">¶</a></h4>
-<p>Data is only simulated for the leaf nodes; i.e.,
-each <em>n_i</em> is in the set { n3, n4, n5, n6 }.
+<div class="section" id="cases-simulated">
+<span id="split-covariate-simulated-data-cases-simulated"></span><span id="index-12"></span><h4><a class="toc-backref" href="#id14">Cases Simulated</a><a class="headerlink" href="#cases-simulated" title="Permalink to this headline">¶</a></h4>
+<p>Data is simulated for the leaf nodes for female, male sexes; i.e.,
+each <em>n_i</em> is in the set { n3, n4, n5, n6 } and the female, male sexes.
 Since the data does not have any nose, the data residuals are a measure
-of how good the fit is for the nodes in the fit_goal_set.</p>
+of how good the fit is for the nodes in the fit_goal_set below the female
+and male sexes.</p>
 </div>
 </div>
 <div class="section" id="parent-rate-smoothing">
@@ -377,7 +414,7 @@ priors because there is only one age and one time point in the smoothing grid.</
 </pre></div>
 </div>
 <p>The mean and standard deviation are only used for the root_node.
-The <a class="reference internal" href="create_child_node_db.html#id1"><span class="std std-ref">create_child_node_db</span></a>
+The <a class="reference internal" href="create_shift_db.html#id1"><span class="std std-ref">create_shift_db</span></a>
 routine replaces them for other nodes.</p>
 </div>
 </div>
@@ -399,7 +436,7 @@ so it does not have dage or dtime priors.</p>
 </pre></div>
 </div>
 <p>The mean and standard deviation are only used for the root_node.
-The create_child_node_db
+The create_shift_db
 routine replaces them for other nodes.</p>
 </div>
 </div>

@@ -5,21 +5,26 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta content="create_child_node_db, create, child, database, from, fit, in, parent, database" name="keywords" />
+  <meta content="create_shift_db, create, database, with, shifted, covariate, references" name="keywords" />
 <meta content="syntax" name="keywords" />
 <meta content="all_node_database" name="keywords" />
-<meta content="parent_node_database" name="keywords" />
-<meta content="parent_node" name="keywords" />
+<meta content="fit_node_database" name="keywords" />
+<meta content="fit_node" name="keywords" />
 <meta content="sample, table" name="keywords" />
-<meta content="c_child_avgint, table" name="keywords" />
-<meta content="c_child_predict_sample, table" name="keywords" />
-<meta content="c_child_predict_fit_var, table" name="keywords" />
+<meta content="c_shift_avgint, table" name="keywords" />
+<meta content="c_shift_predict_sample, table" name="keywords" />
+<meta content="c_shift_predict_fit_var, table" name="keywords" />
 <meta content="c_root_avgint, table" name="keywords" />
-<meta content="child_node_databases" name="keywords" />
+<meta content="shift_databases" name="keywords" />
+<meta content="shift_name" name="keywords" />
+<meta content="split_reference_name" name="keywords" />
+<meta content="child, node" name="keywords" />
+<meta content="value, priors" name="keywords" />
+<meta content="avgint, table" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>create_child_node_db &mdash; at_cascade  documentation</title>
+  <title>create_shift_db &mdash; at_cascade  documentation</title>
   
 
   
@@ -106,7 +111,7 @@
 <li class="toctree-l3"><a class="reference internal" href="check_cascade_fit.html">check_cascade_fit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="continue_cascade.html">continue_cascade</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_all_node_db.html">create_all_node_db</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">create_child_node_db</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">create_shift_db</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data4cov_reference.html">data4cov_reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_cov_info.html">get_cov_info</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_fit_children.html">get_fit_children</a></li>
@@ -169,13 +174,13 @@
         
           <li><a href="module.html">module</a> &raquo;</li>
         
-      <li>create_child_node_db</li>
+      <li>create_shift_db</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/xsrst/create_child_node_db.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/xsrst/create_shift_db.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -190,108 +195,133 @@
             
   <p class="hidden"><span class="math notranslate nohighlight">\(\newcommand{\B}[1]{ {\bf #1} }\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\R}[1]{ {\rm #1} }\)</span></p>
-<div class="section" id="create-child-node-db">
-<h1>create_child_node_db<a class="headerlink" href="#create-child-node-db" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="create-child-database-from-fit-in-parent-database">
-<span id="id1"></span><h2>Create Child Database From Fit in Parent Database<a class="headerlink" href="#create-child-database-from-fit-in-parent-database" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="create-shift-db">
+<h1>create_shift_db<a class="headerlink" href="#create-shift-db" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="create-database-with-shifted-covariate-references">
+<span id="id1"></span><h2>Create Database With Shifted Covariate References<a class="headerlink" href="#create-database-with-shifted-covariate-references" title="Permalink to this headline">¶</a></h2>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#syntax" id="id2">Syntax</a></p></li>
 <li><p><a class="reference internal" href="#all-node-database" id="id3">all_node_database</a></p></li>
-<li><p><a class="reference internal" href="#parent-node-database" id="id4">parent_node_database</a></p>
+<li><p><a class="reference internal" href="#fit-node-database" id="id4">fit_node_database</a></p>
 <ul>
-<li><p><a class="reference internal" href="#parent-node" id="id5">parent_node</a></p></li>
+<li><p><a class="reference internal" href="#fit-node" id="id5">fit_node</a></p></li>
 <li><p><a class="reference internal" href="#sample-table" id="id6">sample Table</a></p></li>
-<li><p><a class="reference internal" href="#c-child-avgint-table" id="id7">c_child_avgint Table</a></p></li>
-<li><p><a class="reference internal" href="#c-child-predict-sample-table" id="id8">c_child_predict_sample Table</a></p></li>
-<li><p><a class="reference internal" href="#c-child-predict-fit-var-table" id="id9">c_child_predict_fit_var Table</a></p></li>
+<li><p><a class="reference internal" href="#c-shift-avgint-table" id="id7">c_shift_avgint Table</a></p></li>
+<li><p><a class="reference internal" href="#c-shift-predict-sample-table" id="id8">c_shift_predict_sample Table</a></p></li>
+<li><p><a class="reference internal" href="#c-shift-predict-fit-var-table" id="id9">c_shift_predict_fit_var Table</a></p></li>
 <li><p><a class="reference internal" href="#c-root-avgint-table" id="id10">c_root_avgint Table</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#child-node-databases" id="id11">child_node_databases</a></p></li>
+<li><p><a class="reference internal" href="#shift-databases" id="id11">shift_databases</a></p>
+<ul>
+<li><p><a class="reference internal" href="#shift-name" id="id12">shift_name</a></p></li>
+<li><p><a class="reference internal" href="#split-reference-name" id="id13">split_reference_name</a></p></li>
+<li><p><a class="reference internal" href="#child-node" id="id14">Child Node</a></p></li>
+<li><p><a class="reference internal" href="#value-priors" id="id15">Value Priors</a></p></li>
+<li><p><a class="reference internal" href="#avgint-table" id="id16">avgint Table</a></p></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="section" id="syntax">
-<span id="create-child-node-db-syntax"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># at_cascade.create_child_node_db(</span>
+<span id="create-shift-db-syntax"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># at_cascade.create_shift_db(</span>
     <span class="n">all_node_database</span>    <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
-    <span class="n">parent_node_database</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
-    <span class="n">child_node_databases</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
+    <span class="n">fit_node_database</span>    <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
+    <span class="n">shift_databases</span>      <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
 <span class="c1"># )</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="all-node-database">
-<span id="create-child-node-db-all-node-database"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">all_node_database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h3>
+<span id="create-shift-db-all-node-database"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">all_node_database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h3>
 <p>is a python string containing the name of the <a class="reference internal" href="all_node_db.html#id1"><span class="std std-ref">The All Node DataBase</span></a>.
 This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </div>
-<div class="section" id="parent-node-database">
-<span id="create-child-node-db-parent-node-database"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">parent_node_database</a><a class="headerlink" href="#parent-node-database" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="fit-node-database">
+<span id="create-shift-db-fit-node-database"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">fit_node_database</a><a class="headerlink" href="#fit-node-database" title="Permalink to this headline">¶</a></h3>
 <p>is a python string containing the name of a dismod_at database.
 This is a <a class="reference internal" href="glossary.html#glossary-fit-node-database"><span class="std std-ref">fit_node_database</span></a> which
 has two predict tables (mentioned below).
 These tables are used to create priors in the child node databases.
 This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
-<div class="section" id="parent-node">
-<span id="create-child-node-db-parent-node-database-parent-node"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">parent_node</a><a class="headerlink" href="#parent-node" title="Permalink to this headline">¶</a></h4>
-<p>We use <em>parent_node</em> to refer to the parent node in the
-dismod_at option table in the <em>parent_node_database</em>.</p>
+<div class="section" id="fit-node">
+<span id="create-shift-db-fit-node-database-fit-node"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id5">fit_node</a><a class="headerlink" href="#fit-node" title="Permalink to this headline">¶</a></h4>
+<p>We use <em>fit_node</em> to refer to the parent node in the
+dismod_at option table in the <em>fit_node_database</em>.</p>
 </div>
 <div class="section" id="sample-table">
-<span id="create-child-node-db-parent-node-database-sample-table"></span><span id="index-5"></span><h4><a class="toc-backref" href="#id6">sample Table</a><a class="headerlink" href="#sample-table" title="Permalink to this headline">¶</a></h4>
+<span id="create-shift-db-fit-node-database-sample-table"></span><span id="index-5"></span><h4><a class="toc-backref" href="#id6">sample Table</a><a class="headerlink" href="#sample-table" title="Permalink to this headline">¶</a></h4>
 <p>The sample table contains
 the results of a dismod_at sample command for both the fixed and random effects.</p>
 </div>
-<div class="section" id="c-child-avgint-table">
-<span id="create-child-node-db-parent-node-database-c-child-avgint-table"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id7">c_child_avgint Table</a><a class="headerlink" href="#c-child-avgint-table" title="Permalink to this headline">¶</a></h4>
-<p>This is the <a class="reference internal" href="avgint_parent_grid.html#id1"><span class="std std-ref">Predicts Parent Rates, Child Rates, and Covariate Multipliers</span></a> table corresponding
-to this parent_node_database.</p>
+<div class="section" id="c-shift-avgint-table">
+<span id="create-shift-db-fit-node-database-c-shift-avgint-table"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id7">c_shift_avgint Table</a><a class="headerlink" href="#c-shift-avgint-table" title="Permalink to this headline">¶</a></h4>
+<p>This is the <a class="reference internal" href="avgint_parent_grid.html#id1"><span class="std std-ref">Predicts Rates and Covariate Multipliers on Parent Grid</span></a> table corresponding
+to this fit_node_database.</p>
 </div>
-<div class="section" id="c-child-predict-sample-table">
-<span id="create-child-node-db-parent-node-database-c-child-predict-sample-table"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id8">c_child_predict_sample Table</a><a class="headerlink" href="#c-child-predict-sample-table" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="c-shift-predict-sample-table">
+<span id="create-shift-db-fit-node-database-c-shift-predict-sample-table"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id8">c_shift_predict_sample Table</a><a class="headerlink" href="#c-shift-predict-sample-table" title="Permalink to this headline">¶</a></h4>
 <p>This table contains the predict table corresponding to a
-predict sample command using the c_child_avgint table.
-Note that the predict_id column name was changed to c_child_predict_sample_id
+predict sample command using the c_shift_avgint table.
+Note that the predict_id column name was changed to c_shift_predict_sample_id
 (which is not the same as sample_id).</p>
 </div>
-<div class="section" id="c-child-predict-fit-var-table">
-<span id="create-child-node-db-parent-node-database-c-child-predict-fit-var-table"></span><span id="index-8"></span><h4><a class="toc-backref" href="#id9">c_child_predict_fit_var Table</a><a class="headerlink" href="#c-child-predict-fit-var-table" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="c-shift-predict-fit-var-table">
+<span id="create-shift-db-fit-node-database-c-shift-predict-fit-var-table"></span><span id="index-8"></span><h4><a class="toc-backref" href="#id9">c_shift_predict_fit_var Table</a><a class="headerlink" href="#c-shift-predict-fit-var-table" title="Permalink to this headline">¶</a></h4>
 <p>This table contains the predict table corresponding to a
-predict fit_var command using the c_child_avgint table.
-Note that the predict_id column name was changed to c_child_predict_fit_var_id
+predict fit_var command using the c_shift_avgint table.
+Note that the predict_id column name was changed to c_shift_predict_fit_var_id
 (which is not the same as var_id).</p>
 </div>
 <div class="section" id="c-root-avgint-table">
-<span id="create-child-node-db-parent-node-database-c-root-avgint-table"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id10">c_root_avgint Table</a><a class="headerlink" href="#c-root-avgint-table" title="Permalink to this headline">¶</a></h4>
+<span id="create-shift-db-fit-node-database-c-root-avgint-table"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id10">c_root_avgint Table</a><a class="headerlink" href="#c-root-avgint-table" title="Permalink to this headline">¶</a></h4>
 <p>The c_root_avgint table contains the original version of the
 <a class="reference internal" href="glossary.html#glossary-root-node-database"><span class="std std-ref">root_node_database</span></a> avgint table
 that predicts for the parent node.
 Only the node_id column has been modified from the root_node_database version.</p>
 </div>
 </div>
-<div class="section" id="child-node-databases">
-<span id="create-child-node-db-child-node-databases"></span><span id="index-10"></span><h3><a class="toc-backref" href="#id11">child_node_databases</a><a class="headerlink" href="#child-node-databases" title="Permalink to this headline">¶</a></h3>
-<p>is a python dictionary and if <em>child_name</em> is a key for <em>child_node_databases</em>,
-<em>child_name</em> is a <a class="reference internal" href="glossary.html#glossary-node-name"><span class="std std-ref">node_name</span></a> and a child of the <em>parent_node</em>.</p>
-<ul class="simple">
-<li><p>For each <em>child_name</em>, <em>child_node_databases[child_name]</em> is the name of
-a <a class="reference internal" href="glossary.html#glossary-input-node-database"><span class="std std-ref">input_node_database</span></a> that is created by this command.</p></li>
-<li><p>In this database, <em>child_name</em> will be the <a class="reference internal" href="glossary.html#glossary-fit-node"><span class="std std-ref">fit_node</span></a> .</p></li>
-<li><p>If the upper and lower limits are equal,
-the value priors are effectively the same.
+<div class="section" id="shift-databases">
+<span id="create-shift-db-shift-databases"></span><span id="index-10"></span><h3><a class="toc-backref" href="#id11">shift_databases</a><a class="headerlink" href="#shift-databases" title="Permalink to this headline">¶</a></h3>
+<p>This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code> and is a python dictionary.
+We use the notation <em>shift_name</em> for the keys in this <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p>
+<div class="section" id="shift-name">
+<span id="create-shift-db-shift-databases-shift-name"></span><span id="index-11"></span><h4><a class="toc-backref" href="#id12">shift_name</a><a class="headerlink" href="#shift-name" title="Permalink to this headline">¶</a></h4>
+<p>For each <em>shift_name</em>, <em>shift_databases[shift_name]</em> is the name of
+a <a class="reference internal" href="glossary.html#glossary-input-node-database"><span class="std std-ref">input_node_database</span></a> that is created by this command.</p>
+</div>
+<div class="section" id="split-reference-name">
+<span id="create-shift-db-shift-databases-split-reference-name"></span><span id="index-12"></span><h4><a class="toc-backref" href="#id13">split_reference_name</a><a class="headerlink" href="#split-reference-name" title="Permalink to this headline">¶</a></h4>
+<p>If <em>shift_name</em> is a <a class="reference internal" href="split_reference_table.html#split-reference-table-split-reference-name"><span class="std std-ref">split_reference_name</span></a>,
+the node corresponding to this shift database is the fit_node.</p>
+</div>
+<div class="section" id="child-node">
+<span id="create-shift-db-shift-databases-child-node"></span><span id="index-13"></span><h4><a class="toc-backref" href="#id14">Child Node</a><a class="headerlink" href="#child-node" title="Permalink to this headline">¶</a></h4>
+<p>If <em>shift_name</em> is the node name for a child of fit_node,
+the child is the node corresponding to this shift database.</p>
+</div>
+<div class="section" id="value-priors">
+<span id="create-shift-db-shift-databases-value-priors"></span><span id="index-14"></span><h4><a class="toc-backref" href="#id15">Value Priors</a><a class="headerlink" href="#value-priors" title="Permalink to this headline">¶</a></h4>
+<p>If the upper and lower limits are equal,
+the value priors in fit_database and the shift_databases
+are effectively the same.
 Otherwise the mean and standard deviation in the values priors
-are replaced using the predict, in the <em>parent_node_database</em>,
-for the child node. Note that if the value prior is uniform,
+are replaced using the predict tables in the <em>fit_node_database</em>.
+Note that if the value prior is uniform,
 the standard deviation is not used and the mean is only used to
-initialize the optimization.</p></li>
-<li><p>The avgint table is a copy of the c_root_avgint table in the
-<em>parent_node_database</em> with the node_id replaced by the corresponding
-child node id.</p></li>
-</ul>
-<p>This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+initialize the optimization.</p>
+</div>
+<div class="section" id="avgint-table">
+<span id="create-shift-db-shift-databases-avgint-table"></span><span id="index-15"></span><h4><a class="toc-backref" href="#id16">avgint Table</a><a class="headerlink" href="#avgint-table" title="Permalink to this headline">¶</a></h4>
+<p>The avgint table, in the shift_databases,
+is a copy of the c_root_avgint table in the
+<em>fit_node_database</em> with the node_id replaced by the node corresponding
+to he shift_database.</p>
 <hr class="docutils" />
-<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/create_child_node_db.py</span></code></p>
+<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/create_shift_db.py</span></code></p>
+</div>
 </div>
 </div>
 </div>

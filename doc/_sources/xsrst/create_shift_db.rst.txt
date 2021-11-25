@@ -1,0 +1,220 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!
+create_shift_db
+!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: create_shift_db, create, database, with, shifted, covariate, references
+
+.. index:: create_shift_db, create, database, with, shifted, covariate, references
+
+.. _create_shift_db:
+
+Create Database With Shifted Covariate References
+#################################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _create_shift_db.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/create_shift_db.py
+    :lines: 263-267
+    :language: py
+
+.. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _create_shift_db.all_node_database:
+
+all_node_database
+*****************
+is a python string containing the name of the :ref:`all_node_db`.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: fit_node_database
+
+.. index:: fit_node_database
+
+.. _create_shift_db.fit_node_database:
+
+fit_node_database
+*****************
+is a python string containing the name of a dismod_at database.
+This is a :ref:`glossary.fit_node_database` which
+has two predict tables (mentioned below).
+These tables are used to create priors in the child node databases.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: fit_node
+
+.. index:: fit_node
+
+.. _create_shift_db.fit_node_database.fit_node:
+
+fit_node
+========
+We use *fit_node* to refer to the parent node in the
+dismod_at option table in the *fit_node_database*.
+
+.. meta::
+   :keywords: sample, table
+
+.. index:: sample, table
+
+.. _create_shift_db.fit_node_database.sample_table:
+
+sample Table
+============
+The sample table contains
+the results of a dismod_at sample command for both the fixed and random effects.
+
+.. meta::
+   :keywords: c_shift_avgint, table
+
+.. index:: c_shift_avgint, table
+
+.. _create_shift_db.fit_node_database.c_shift_avgint_table:
+
+c_shift_avgint Table
+====================
+This is the :ref:`avgint_parent_grid` table corresponding
+to this fit_node_database.
+
+.. meta::
+   :keywords: c_shift_predict_sample, table
+
+.. index:: c_shift_predict_sample, table
+
+.. _create_shift_db.fit_node_database.c_shift_predict_sample_table:
+
+c_shift_predict_sample Table
+============================
+This table contains the predict table corresponding to a
+predict sample command using the c_shift_avgint table.
+Note that the predict_id column name was changed to c_shift_predict_sample_id
+(which is not the same as sample_id).
+
+.. meta::
+   :keywords: c_shift_predict_fit_var, table
+
+.. index:: c_shift_predict_fit_var, table
+
+.. _create_shift_db.fit_node_database.c_shift_predict_fit_var_table:
+
+c_shift_predict_fit_var Table
+=============================
+This table contains the predict table corresponding to a
+predict fit_var command using the c_shift_avgint table.
+Note that the predict_id column name was changed to c_shift_predict_fit_var_id
+(which is not the same as var_id).
+
+.. meta::
+   :keywords: c_root_avgint, table
+
+.. index:: c_root_avgint, table
+
+.. _create_shift_db.fit_node_database.c_root_avgint_table:
+
+c_root_avgint Table
+===================
+The c_root_avgint table contains the original version of the
+:ref:`glossary.root_node_database` avgint table
+that predicts for the parent node.
+Only the node_id column has been modified from the root_node_database version.
+
+.. meta::
+   :keywords: shift_databases
+
+.. index:: shift_databases
+
+.. _create_shift_db.shift_databases:
+
+shift_databases
+***************
+This argument can't be ``None`` and is a python dictionary.
+We use the notation *shift_name* for the keys in this ``dict``.
+
+.. meta::
+   :keywords: shift_name
+
+.. index:: shift_name
+
+.. _create_shift_db.shift_databases.shift_name:
+
+shift_name
+==========
+For each *shift_name*, *shift_databases[shift_name]* is the name of
+a :ref:`glossary.input_node_database` that is created by this command.
+
+.. meta::
+   :keywords: split_reference_name
+
+.. index:: split_reference_name
+
+.. _create_shift_db.shift_databases.split_reference_name:
+
+split_reference_name
+====================
+If *shift_name* is a :ref:`split_reference_table.split_reference_name`,
+the node corresponding to this shift database is the fit_node.
+
+.. meta::
+   :keywords: child, node
+
+.. index:: child, node
+
+.. _create_shift_db.shift_databases.child_node:
+
+Child Node
+==========
+If *shift_name* is the node name for a child of fit_node,
+the child is the node corresponding to this shift database.
+
+.. meta::
+   :keywords: value, priors
+
+.. index:: value, priors
+
+.. _create_shift_db.shift_databases.value_priors:
+
+Value Priors
+============
+If the upper and lower limits are equal,
+the value priors in fit_database and the shift_databases
+are effectively the same.
+Otherwise the mean and standard deviation in the values priors
+are replaced using the predict tables in the *fit_node_database*.
+Note that if the value prior is uniform,
+the standard deviation is not used and the mean is only used to
+initialize the optimization.
+
+.. meta::
+   :keywords: avgint, table
+
+.. index:: avgint, table
+
+.. _create_shift_db.shift_databases.avgint_table:
+
+avgint Table
+============
+The avgint table, in the shift_databases,
+is a copy of the c_root_avgint table in the
+*fit_node_database* with the node_id replaced by the node corresponding
+to he shift_database.
+
+----
+
+xsrst input file: ``at_cascade/create_shift_db.py``

@@ -22,7 +22,8 @@ Example Using split_reference Table
 .. contents::
    :local:
 
-For this example everything is constant w.r.t. age and time.
+This example splits the analysis by sex.
+To simplify the example everything is constant w.r.t. age and time.
 
 .. meta::
    :keywords: nodes
@@ -35,14 +36,14 @@ Nodes
 *****
 The following is a diagram of the node tree for this example.
 The :ref:`glossary.root_node` is n0,
-the :ref:`glossary.fit_goal_set` is {n3, n4, n2},
+the :ref:`glossary.fit_goal_set`
 and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
           /-----/\-----\
-        n1             (n2)
+        n1              n2
        /  \            /  \
-    (n3)  (n4)       n5    n6
+     n3    n4        n5    n6
 
 .. meta::
    :keywords: fit_goal_set
@@ -55,7 +56,7 @@ fit_goal_set
 ============
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 207-207
+    :lines: 221-221
     :language: py
 
 .. meta::
@@ -75,15 +76,34 @@ The only non-zero dismod_at rates for this example are
 
 .. index:: splitting, covariate
 
-.. _split_covariate.rates.splitting_covariate:
+.. _split_covariate.splitting_covariate:
 
 Splitting Covariate
-===================
-This cascade is set up to split by sex reference value; see
-:ref:`split_reference_table`:
+*******************
+This cascade is set up to split by the sex covariate at level zero:
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 211-216
+    :lines: 225-229
+    :language: py
+
+The :ref:`split_reference_table` for this example is:
+
+.. literalinclude:: ../../example/split_covariate.py
+    :lines: 233-240
+    :language: py
+
+The cascade computation tree is::
+
+                /-------------n0-------------\
+          /---female---\                /----male----\
+        n1              n2            n1              n2
+       /  \            /  \          /  \            /  \
+     n3    n4        n5    n6      n3    n4        n5    n6
+
+The sex reference value for the root node (n0) corresponds to both sexes:
+
+.. literalinclude:: ../../example/split_covariate.py
+    :lines: 244-247
     :language: py
 
 .. meta::
@@ -96,16 +116,11 @@ This cascade is set up to split by sex reference value; see
 Covariate
 *********
 There are two covariates for this example, sex and income.
-The reference value for income depends on the value of sex;
+The reference value for income depends on both the node and sex;
 see :ref:`create_all_node_db.all_cov_reference`:
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 224-229
-    :language: py
-
-
-.. literalinclude:: ../../example/split_covariate.py
-    :lines: 237-239
+    :lines: 251-256
     :language: py
 
 .. meta::
@@ -124,7 +139,7 @@ This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 233-233
+    :lines: 260-260
     :language: py
 
 .. meta::
@@ -157,7 +172,7 @@ Simulated Data
 
 mtall
 =====
-The ref:`all_mtall` data fro this example is simulated as equal to
+The ref:`all_mtall` data for this example is simulated as equal to
 the true value for omega (see rate_true directly below) and there is
 no :ref:`all_mtspecific` data for this example.
 
@@ -173,13 +188,11 @@ rate_true(rate, a, t, n, c)
 For *rate* equal to iota or omega,
 this is the true value for *rate*
 in node *n* at age *a*, time *t*, and covariate values *c=[sex,income]*.
-The covariate values are a list in the
-same order as the covariate table.
-The values *a*, *t*, *n*, *sex*
-are not used by this function for this example.
+The covariate values are a list in the same order as the covariate table.
+The values *a* and *t* are not used by this function for this example.
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 245-254
+    :lines: 266-295
     :language: py
 
 .. meta::
@@ -195,23 +208,25 @@ The only simulated integrand for this example is :ref:`glossary.sincidence`
 which is a direct measurement of iota.
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
-*y_i = rate_true('iota', None, None, None, [None, I_i])*
-where *I_i* is the income for the i-th measurement.
+*y_i = rate_true('iota', None, None, n, [sex, I_i])*
+where *n* is the node, *sex* is the sex covariate value, and
+*I_i* is the income for the i-th measurement.
 The data is modeled as having noise even though there is no simulated noise.
 
 .. meta::
-   :keywords: n_i
+   :keywords: cases, simulated
 
-.. index:: n_i
+.. index:: cases, simulated
 
-.. _split_covariate.simulated_data.n_i:
+.. _split_covariate.simulated_data.cases_simulated:
 
-n_i
-===
-Data is only simulated for the leaf nodes; i.e.,
-each *n_i* is in the set { n3, n4, n5, n6 }.
+Cases Simulated
+===============
+Data is simulated for the leaf nodes for female, male sexes; i.e.,
+each *n_i* is in the set { n3, n4, n5, n6 } and the female, male sexes.
 Since the data does not have any nose, the data residuals are a measure
-of how good the fit is for the nodes in the fit_goal_set.
+of how good the fit is for the nodes in the fit_goal_set below the female
+and male sexes.
 
 .. meta::
    :keywords: parent, rate, smoothing
@@ -238,11 +253,11 @@ Value Prior
 The following is the value prior used for the root_node
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 271-278
+    :lines: 311-318
     :language: py
 
 The mean and standard deviation are only used for the root_node.
-The :ref:`create_child_node_db<create_child_node_db>`
+The :ref:`create_shift_db<create_shift_db>`
 routine replaces them for other nodes.
 
 .. meta::
@@ -270,11 +285,11 @@ Value Prior
 The following is the value prior used for this smoothing:
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 283-289
+    :lines: 323-329
     :language: py
 
 The mean and standard deviation are only used for the root_node.
-The create_child_node_db
+The create_shift_db
 routine replaces them for other nodes.
 
 .. meta::

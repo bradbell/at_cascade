@@ -5,14 +5,14 @@ avgint_parent_grid
 !!!!!!!!!!!!!!!!!!
 
 .. meta::
-   :keywords: avgint_parent_grid, predicts, parent, rates, , child, rates, , covariate, multipliers
+   :keywords: avgint_parent_grid, predicts, rates, covariate, multipliers, on, parent, grid
 
-.. index:: avgint_parent_grid, predicts, parent, rates, , child, rates, , covariate, multipliers
+.. index:: avgint_parent_grid, predicts, rates, covariate, multipliers, on, parent, grid
 
 .. _avgint_parent_grid:
 
-Predicts Parent Rates, Child Rates, and Covariate Multipliers
-#############################################################
+Predicts Rates and Covariate Multipliers on Parent Grid
+#######################################################
 .. contents::
    :local:
 
@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/avgint_parent_grid.py
-    :lines: 81-84
+    :lines: 91-94
     :language: py
 
 .. meta::
@@ -39,10 +39,12 @@ Syntax
 
 Purpose
 *******
-Create an avgint table that predicts the parent and child rates
-on the grid corresponding to the parent not rates.
-Also predict the covariate multiplies which have the same grid
-for the parent and child nodes.
+Create an avgint table that can be used to predict the rates and covariate
+multipliers on the parent grid.
+For child nodes, the predictions are for the
+:ref:`split_reference_table.split_reference_value` for the parent node.
+For the parent node, the predictions are for all the possible
+split reference values.
 
 .. meta::
    :keywords: all_node_database
@@ -118,6 +120,20 @@ c_time_id
 =========
 This column identifies a row in the time table of the
 fit_node_database that this prediction is for.
+
+.. meta::
+   :keywords: c_split_reference_id
+
+.. index:: c_split_reference_id
+
+.. _avgint_parent_grid.avgint_table.c_split_reference_id:
+
+c_split_reference_id
+====================
+This column identifies a row in the split_reference table of the
+all_node_database that this prediction is for.
+If the split_reference table is empty (non-empty) the value
+wiil be (will not) be ``None``.
 
 .. meta::
    :keywords: rectangular, grid

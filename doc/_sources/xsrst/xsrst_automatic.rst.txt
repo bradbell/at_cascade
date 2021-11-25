@@ -36,12 +36,12 @@ Table of Contents
 |
 | :ref:`4<module>` The at_cascade Python Module
 |
-|  |space| :ref:`4.1<avgint_parent_grid>` Predicts Parent Rates, Child Rates, and Covariate Multipliers
+|  |space| :ref:`4.1<avgint_parent_grid>` Predicts Rates and Covariate Multipliers on Parent Grid
 |  |space| :ref:`4.2<cascade_fit_node>` Cascade a Fit Starting at a Node
 |  |space| :ref:`4.3<check_cascade_fit>` Check the Cascade Results for a Node
 |  |space| :ref:`4.4<continue_cascade>` Continue Cascade From a Fit Node
 |  |space| :ref:`4.5<create_all_node_db>` Create an All Node Database
-|  |space| :ref:`4.6<create_child_node_db>` Create Child Database From Fit in Parent Database
+|  |space| :ref:`4.6<create_shift_db>` Create Database With Shifted Covariate References
 |  |space| :ref:`4.7<data4cov_reference>` Use Data Table Average Covariates for Reference
 |  |space| :ref:`4.8<get_cov_info>` Get Covariate Information
 |  |space| :ref:`4.9<get_fit_children>` Determine the Set of Nodes to Fit
