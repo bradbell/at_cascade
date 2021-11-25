@@ -1017,7 +1017,7 @@ def drill() :
             trace_fit         = True,
         )
 # ---------------------------------------------------------------------------
-# create_ihme_results_node( predict_node_database )
+# create_ihme_results_node( fit_node_database )
 def create_ihme_results_node(
     fit_node_database   = None ,
     age_group_dict      = None ,
@@ -1040,20 +1040,36 @@ def create_ihme_results_node(
     integrand_table = dismod_at.get_table_dict(connection, 'integrand')
     age_table       = dismod_at.get_table_dict(connection, 'age')
     time_table      = dismod_at.get_table_dict(connection, 'time')
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
     connection.close()
+    #
+    # all_option_table, split_reference_table
+    all_node_database = 'all_node.db'
+    new               = False
+    connection        = dismod_at.create_connection(all_node_database, new)
+    all_option_table  = dismod_at.get_table_dict(connection, 'all_option')
+    split_reference_table = \
+        dismod_at.get_table_dict(connection, 'split_reference')
+    connection.close()
+    #
+    # split_reference_id
+    cov_info = at_cascade.get_cov_info(
+        all_option_table, covariate_table, split_reference_table
+    )
+    split_reference_id    = cov_info['split_reference_id']
     #
     # integrand_name2measure_id
     integrand_name2measure_id = {
         'Sincidence' : 41,
-        'remission'  : 7,
+        # 'remission'  : 7,
         'mtexcess'   : 9,
-        'mtother'    : 16,
-        'mtwith'     : 13,
+        # 'mtother'    : 16,
+        # 'mtwith'     : 13,
         'prevalence' : 5,
-        'Tincidence' : 42,
+        # 'Tincidence' : 42,
         'mtspecific' : 10,
-        'mtall'      : 14,
-        'mtstandard' : 12,
+        # 'mtall'      : 14,
+        # 'mtstandard' : 12,
         'relrisk'    : 11,
     }
     #
@@ -1065,8 +1081,8 @@ def create_ihme_results_node(
         )
         integrand_id_list.append( integrand_id )
     #
-    # sex2sex_id
-    sex2sex_id = {'Male' : 1,  'Female' : 2}
+    # sex_name2sex_id
+    sex_name2sex_id = {'male' : 1,  'female' : 2, 'both' : 3}
     #
     # year_grid
     # year_id is output file is in demographer notation
@@ -1101,61 +1117,72 @@ def create_ihme_results_node(
     avgint_table = list()
     #
     # sex
-    for sex in sex2sex_id :
-        if sex == 'Female' :
-            x_0 = -0.5
-        else :
-            assert sex == 'Male'
-            x_0 = +0.5
+    sex = split_reference_table[split_reference_id]['split_reference_value']
+    #
+    # sex_name
+    sex_name = split_reference_table[split_reference_id]['split_reference_name']
+    #
+    # sex_id
+    sex_id = sex_name2sex_id[sex_name]
+    #
+    # obesity_fun_male
+    obesity_fun_male = interpolate_obesity[location_id]['Male']
+    #
+    # obesity_fun_female
+    obesity_fun_female = interpolate_obesity[location_id]['Female']
+    #
+    # ldi_fun
+    ldi_fun = interpolate_ldi[location_id]['Both']
+    #
+    # age_index
+    for age_index in range( len(age_group_id_list) ) :
         #
-        # obesity_fun
-        obesity_fun = interpolate_obesity[location_id][sex]
+        # age_group_id
+        age_group_id = age_group_id_list[age_index]
         #
-        # ldi_fun
-        ldi_fun = interpolate_ldi[location_id]['Both']
+        # age_lower, age_upper, age
+        age_lower = age_group_dict[age_group_id]['age_lower']
+        age_upper = age_group_dict[age_group_id]['age_upper']
+        age       = (age_lower + age_upper) / 2.0
         #
-        # age_index
-        for age_index in range( len(age_group_id_list) ) :
+        # time
+        for time in year_grid :
             #
-            # age_group_id
-            age_group_id = age_group_id_list[age_index]
+            # obesity
+            if sex_name == 'male' :
+                obesity = obesity_fun_male(age, time, grid = False)
+            elif sex_name == 'female' :
+                obesity = obesity_fun_female(age, time, grid = False)
+            else :
+                obesity  = obesity_fun_male(age, time, grid = False)
+                obesity += obesity_fun_female(age, time, grid = False)
+                obesity /= 2.0
             #
-            # age_lower, age_upper, age
-            age_lower = age_group_dict[age_group_id]['age_lower']
-            age_upper = age_group_dict[age_group_id]['age_upper']
-            age       = (age_lower + age_upper) / 2.0
+            # log_ldi
+            ldi     = ldi_fun(time)
+            log_ldi = math.log10( ldi )
             #
-            # time
-            for time in year_grid :
+            for integrand_id in integrand_id_list :
                 #
-                # obesity
-                obesity = obesity_fun(age, time, grid = False)
-                #
-                # log_ldi
-                ldi     = ldi_fun(time)
-                log_ldi = math.log10( ldi )
-                #
-                for integrand_id in integrand_id_list :
-                    #
-                    # row
-                    # Covariates are in same order as covariate_table in the
-                    # create_root_node_database routine above.
-                    row = {
-                        'integrand_id'    : integrand_id,
-                        'node_id'         : fit_node_id,
-                        'subgroup_id'     : 0,
-                        'weight_id'       : None,
-                        'age_lower'       : age_lower,
-                        'age_upper'       : age_upper,
-                        'time_lower'      : time,
-                        'time_upper'      : time,
-                        'x_0'             : x_0,
-                        'x_1'             : 1.0,
-                        'x_2'             : obesity,
-                        'x_3'             : log_ldi,
-                        'c_age_group_id'  : age_group_id,
-                    }
-                    avgint_table.append( row )
+                # row
+                # Covariates are in same order as covariate_table in the
+                # create_root_node_database routine above.
+                row = {
+                    'integrand_id'    : integrand_id,
+                    'node_id'         : fit_node_id,
+                    'subgroup_id'     : 0,
+                    'weight_id'       : None,
+                    'age_lower'       : age_lower,
+                    'age_upper'       : age_upper,
+                    'time_lower'      : time,
+                    'time_upper'      : time,
+                    'x_0'             : sex,
+                    'x_1'             : 1.0,
+                    'x_2'             : obesity,
+                    'x_3'             : log_ldi,
+                    'c_age_group_id'  : age_group_id,
+                }
+                avgint_table.append( row )
     #
     # avgint_table
     new        = False
@@ -1163,7 +1190,7 @@ def create_ihme_results_node(
     dismod_at.replace_table(connection, 'avgint', avgint_table)
     connection.close()
     #
-    # prefict sample
+    # predict sample
     dismod_at.system_command_prc(
         [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     )
@@ -1190,8 +1217,6 @@ def create_ihme_results_node(
     #
     # plot_data
     plot_data = dict()
-    plot_data['Male']   = dict()
-    plot_data['Female'] = dict()
     #
     # avgint_row
     for (avgint_id, avgint_row) in enumerate( avgint_table ) :
@@ -1201,14 +1226,8 @@ def create_ihme_results_node(
         integrand_name  = integrand_table[integrand_id]['integrand_name']
         measure_id      = integrand_name2measure_id[integrand_name]
         #
-        # sex_id
         x_0 = avgint_row['x_0']
-        if x_0 == -0.5 :
-            sex = 'Male'
-        else :
-            assert x_0 == + 0.5
-            sex = 'Female'
-        sex_id = sex2sex_id[sex]
+        assert x_0 == sex
         #
         # obesity
         obesity = avgint_row['x_2']
@@ -1217,9 +1236,9 @@ def create_ihme_results_node(
         log_ldi = avgint_row['x_3']
         ldi     = math.exp( math.log(10.0) * log_ldi )
         #
-        # plot_data[sex][integrand_name]
-        if integrand_name not in plot_data[sex] :
-            plot_data[sex][integrand_name] = list()
+        # plot_data[integrand_name]
+        if integrand_name not in plot_data :
+            plot_data[integrand_name] = list()
         #
         # age_group_id
         age_group_id  = avgint_row['c_age_group_id']
@@ -1277,8 +1296,8 @@ def create_ihme_results_node(
             'std'   : std,
         }
         #
-        # plot_data[sex][integrand_name]
-        plot_data[sex][integrand_name].append( row )
+        # plot_data[integrand_name]
+        plot_data[integrand_name].append( row )
     #
     # output_csv
     write_csv(output_csv, output_table)
@@ -1296,16 +1315,15 @@ def create_ihme_results_node(
     }
     #
     # output_pdf
-    for sex in [ 'Female', 'Male' ] :
-        output_pdf = f'{fit_node_dir}/ihme_{sex}.pdf'
-        print(output_pdf)
-        plot_title = f'{fit_node_name}: {sex}'
-        dismod_at.plot_curve(
-            pdf_file   = output_pdf      ,
-            plot_limit = plot_limit      ,
-            plot_title = plot_title      ,
-            plot_data  = plot_data[sex]  ,
-        )
+    output_pdf = f'{fit_node_dir}/ihme_{sex_name}.pdf'
+    print(output_pdf)
+    plot_title = f'{fit_node_name}: {sex_name}'
+    dismod_at.plot_curve(
+        pdf_file   = output_pdf      ,
+        plot_limit = plot_limit      ,
+        plot_title = plot_title      ,
+        plot_data  = plot_data       ,
+    )
 # ---------------------------------------------------------------------------
 def create_ihme_results(
     fit_node_database   = None ,
@@ -1319,11 +1337,20 @@ def create_ihme_results(
     # root_node_database
     root_node_database = 'root_node.db'
     #
+    # all_node_database
+    all_node_database = 'all_node.db'
+    #
     # node_table
     new        = False
     connection = dismod_at.create_connection(root_node_database, new)
     node_table = dismod_at.get_table_dict(connection, 'node')
     connection.close()
+    #
+    # split_reference_table
+    new        = False
+    connection            = dismod_at.create_connection(all_node_database, new)
+    split_reference_table = \
+        dismod_at.get_table_dict(connection, 'split_reference')
     #
     # fit_children
     if fit_children is None :
@@ -1347,7 +1374,7 @@ def create_ihme_results(
     if age_group_dict is None :
         age_group_dict = get_age_group_dict(age_group_table_csv)
     #
-    # interpolate_obesity
+    # both
     if interpolate_obesity is None :
         one_age_group = False
         interpolate_obesity  = get_interpolate_covariate(
@@ -1371,6 +1398,7 @@ def create_ihme_results(
     node_info_table = get_table_csv( node_table_info )
     location_id = int( node_info_table[fit_node_id]['location_id'] )
     if location_id in interpolate_obesity and location_id in interpolate_ldi :
+        # can only compute resutls when have relative covariate values
         #
         # fit_node results
         create_ihme_results_node(
@@ -1384,12 +1412,23 @@ def create_ihme_results(
     index = fit_node_database.find('/dismod.db')
     fit_node_dir = fit_node_database[0 : index]
     #
-    # results for children
-    for child_node_id in fit_children[fit_node_id] :
-        child_node_name = node_table[child_node_id]['node_name']
-        child_node_database = f'{fit_node_dir}/{child_node_name}/dismod.db'
+    # shift_name_list
+    shift_name_list = list()
+    for row in split_reference_table :
+        shift_name = row['split_reference_name']
+        dir_name   = f'{fit_node_dir}/{shift_name}'
+        if os.path.isdir(dir_name) :
+            shift_name_list.append( shift_name )
+    if len(shift_name_list) == 0 :
+        for child_node_id in fit_children[fit_node_id] :
+            shift_name = node_table[child_node_id]['node_name']
+            shift_name_list.append( shift_name )
+    #
+    # results at next level
+    for shift_name in shift_name_list :
+        shift_node_database = f'{fit_node_dir}/{shift_name}/dismod.db'
         create_ihme_results(
-            fit_node_database   = child_node_database   ,
+            fit_node_database   = shift_node_database   ,
             fit_children        = fit_children          ,
             age_group_dict      = age_group_dict        ,
             interpolate_obesity = interpolate_obesity   ,
