@@ -43,8 +43,9 @@ dismod_at option table in the *fit_node_database*.
 
 sample Table
 ============
-The sample table contains
-the results of a dismod_at sample command for both the fixed and random effects.
+This table is not used if *predict_sample* is false.
+Otherwise it  contains the results of a dismod_at sample command
+for both the fixed and random effects.
 
 c_shift_avgint Table
 ====================
@@ -53,7 +54,8 @@ to this fit_node_database.
 
 c_shift_predict_sample Table
 ============================
-This table contains the predict table corresponding to a
+This table is not used if *predict_sample* is false.
+Otherwise it contains the predict table corresponding to a
 predict sample command using the c_shift_avgint table.
 Note that the predict_id column name was changed to c_shift_predict_sample_id
 (which is not the same as sample_id).
@@ -92,13 +94,22 @@ Child Node
 If *shift_name* is the node name for a child of fit_node,
 the child is the node corresponding to this shift database.
 
+Fit Node
+========
+If *shift_name* is the name of the *fit_node*,
+the node corresponding to this shift database is the fit_node.
+This case is used by :ref:`no_ode_fit` to create priors without shifting
+the covariate references.
+
 Value Priors
 ============
 If the upper and lower limits are equal,
 the value priors in fit_database and the shift_databases
 are effectively the same.
-Otherwise the mean and standard deviation in the values priors
+Otherwise the mean in the value priors
 are replaced using the predict tables in the *fit_node_database*.
+If *predict_sample* is true,
+the standard deviations in the value priors are also replaced.
 Note that if the value prior is uniform,
 the standard deviation is not used and the mean is only used to
 initialize the optimization.
@@ -109,6 +120,14 @@ The avgint table, in the shift_databases,
 is a copy of the c_root_avgint table in the
 *fit_node_database* with the node_id replaced by the node corresponding
 to he shift_database.
+
+predict_sample
+**************
+If this argument is ``True`` the sample table and the c_shift_predict_sample
+table must be in the *fit_node_database*.
+In this case both the means and standard deviations in the value priors
+are replaced using the results of the fit.
+Otherwise, only the means are replaced.
 
 
 {xsrst_end create_shift_db}
@@ -192,32 +211,35 @@ def add_shift_grid_row(
             time_id   = fit_grid_row['time_id']
             key       = (integrand_id, shift_node_id, age_id, time_id)
             #
-            # mean
-            mean = fit_fit_var[key]
+            # shift_prior_row['mean']
+            mean                     = fit_fit_var[key]
+            shift_prior_row['mean']  = mean
             #
-            # std
-            eta        = fit_prior_row['eta']
-            if eta is None :
-                std  = statistics.stdev(fit_sample[key], xbar=mean)
-            else:
-                # The asymptotic statistics were computed in log space
-                # and then transformed to original space.
+            # if predict_sample
+            if len(fit_sample) > 0 :
                 #
-                # log_sample
-                log_sample = list()
-                for sample in fit_sample[key] :
-                    log_sample.append( math.log( sample + eta ) )
+                # std
+                eta        = fit_prior_row['eta']
+                if eta is None :
+                    std  = statistics.stdev(fit_sample[key], xbar=mean)
+                else:
+                    # The asymptotic statistics were computed in log space
+                    # and then transformed to original space.
+                    #
+                    # log_sample
+                    log_sample = list()
+                    for sample in fit_sample[key] :
+                        log_sample.append( math.log( sample + eta ) )
+                    #
+                    # log_std
+                    log_mean = math.log(mean + eta)
+                    log_std  = statistics.stdev(log_sample, xbar = log_mean)
+                    #
+                    # inverse log transformation
+                    std      = (math.exp(log_std) - 1) * (mean + eta)
                 #
-                # log_std
-                log_mean = math.log(mean + eta)
-                log_std  = statistics.stdev(log_sample, xbar = log_mean)
-                #
-                # inverse log transformation
-                std      = (math.exp(log_std) - 1) * (mean + eta)
-            #
-            # shift_prior_row
-            shift_prior_row['mean']        = mean
-            shift_prior_row['std']         = shift_prior_std_factor * std
+                # shift_prior_row['std']
+                shift_prior_row['std']         = shift_prior_std_factor * std
             #
             # shift_table['prior']
             shift_table['prior'].append( shift_prior_row )
@@ -264,6 +286,7 @@ def create_shift_db(
     all_node_database    = None ,
     fit_node_database    = None ,
     shift_databases      = None ,
+    predict_sample       = True ,
 # )
 # END syntax
 ) :
@@ -294,7 +317,6 @@ def create_shift_db(
         'c_shift_avgint',
         'c_root_avgint',
         'c_shift_predict_fit_var',
-        'c_shift_predict_sample',
         'covariate',
         'density',
         'fit_var',
@@ -304,12 +326,14 @@ def create_shift_db(
         'option',
         'prior',
         'rate',
-        'sample',
         'smooth',
         'smooth_grid',
         'var',
     ] :
         fit_table[name] = dismod_at.get_table_dict(connection, name)
+    if predict_sample :
+        for name in [ 'c_shift_predict_sample', 'sample' ] :
+            fit_table[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
     #
     # name_rate2integrand
@@ -348,19 +372,20 @@ def create_shift_db(
     #
     # fit_sample
     fit_sample = dict()
-    for predict_row in fit_table['c_shift_predict_sample'] :
-        avgint_id          = predict_row['avgint_id']
-        avgint_row         = fit_table['c_shift_avgint'][avgint_id]
-        integrand_id       = avgint_row['integrand_id']
-        node_id            = avgint_row['node_id']
-        age_id             = avgint_row['c_age_id']
-        time_id            = avgint_row['c_time_id']
-        split_reference_id = avgint_row['c_split_reference_id']
-        if split_reference_id == fit_split_reference_id :
-            key  = (integrand_id, node_id, age_id, time_id)
-            if not key in fit_sample :
-                fit_sample[key] = list()
-            fit_sample[key].append( predict_row['avg_integrand'] )
+    if predict_sample :
+        for predict_row in fit_table['c_shift_predict_sample'] :
+            avgint_id          = predict_row['avgint_id']
+            avgint_row         = fit_table['c_shift_avgint'][avgint_id]
+            integrand_id       = avgint_row['integrand_id']
+            node_id            = avgint_row['node_id']
+            age_id             = avgint_row['c_age_id']
+            time_id            = avgint_row['c_time_id']
+            split_reference_id = avgint_row['c_split_reference_id']
+            if split_reference_id == fit_split_reference_id :
+                key  = (integrand_id, node_id, age_id, time_id)
+                if not key in fit_sample :
+                    fit_sample[key] = list()
+                fit_sample[key].append( predict_row['avg_integrand'] )
     #
     # fit_node_name
     fit_node_name = None
@@ -407,14 +432,19 @@ def create_shift_db(
                     msg  = f'{shift_name} is both a split_reference_name '
                     msg += 'and a node_name'
                     assert False, msg
-                if row['parent'] != fit_node_id :
-                    msg  = f'shift_name = {shift_name} is node name\n'
-                    msg += f'and its parent is not the fit node '
-                    msg += fit_node_name
-                    assert False, msg
-                #
-                shift_node_name          = shift_name
-                shift_split_reference_id = fit_split_reference_id
+                if row['parent'] == fit_node_id :
+                    shift_node_name          = shift_name
+                    shift_split_reference_id = fit_split_reference_id
+        if shift_node_name is None :
+            if shift_name != fit_node_name :
+                msg  = f'shift_name = {shift_name}, '
+                msg += f'fit_node_name = {fit_node_name}\n'
+                msg += 'shift_name is not a split_reference_name, '
+                msg += 'or the fit_node_name, or a child of the fit node.'
+                assert False, msg
+            #
+            shift_node_name          = fit_node_name
+            shift_split_reference_id = fit_split_reference_id
         #
         # shift_node_id
         shift_node_id  = at_cascade.table_name2id(
@@ -625,10 +655,13 @@ def create_shift_db(
         # c_shift_avgint, c_shift_predict_sample, c_shift_predict_fit_var
         command  = 'DROP TABLE c_shift_avgint'
         dismod_at.sql_command(shift_connection, command)
-        command  = 'DROP TABLE c_shift_predict_sample'
-        dismod_at.sql_command(shift_connection, command)
+        #
         command  = 'DROP TABLE c_shift_predict_fit_var'
         dismod_at.sql_command(shift_connection, command)
+        #
+        if predict_sample :
+            command  = 'DROP TABLE c_shift_predict_sample'
+            dismod_at.sql_command(shift_connection, command)
         #
         # shift_connection
         shift_connection.close()

@@ -489,17 +489,16 @@ def cascade_fit_node(
     # integrand_table
     integrand_table = dismod_at.get_table_dict(connection, 'integrand')
     #
-    # add omega to model
+    # omega_constraint
     at_cascade.omega_constraint(all_node_database, fit_node_database)
-    message       = 'omege_contraint'
-    add_log_entry(connection, message)
+    add_log_entry(connection, 'omega_constriant')
     #
     # move avgint -> c_root_avgint
     move_table(connection, 'avgint', 'c_root_avgint')
     #
     # avgint_parent_grid
-    add_log_entry(connection, 'avgint_parent_grid')
     at_cascade.avgint_parent_grid(all_node_database, fit_node_database)
+    add_log_entry(connection, 'avgint_parent_grid')
     #
     # init
     dismod_at.system_command_prc( [ 'dismod_at', fit_node_database, 'init' ] )
