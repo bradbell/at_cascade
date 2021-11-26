@@ -7,53 +7,77 @@
 # This program is distributed under the terms of the
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+# These settings can be easily changed without understand the code below:
 #
-# working_directory (input and output files are relative to this location)
+# working_directory
+# This directory is relative to your copy of the at_cascade git directory.
+# The input and output files are relative to this directory.
 working_directory = 'ihme_db/35057'
 #
-# input table file names
+# input file names
 location_table_csv  = 'location_map.csv'
 ldi_table_csv       = 'ldi_covariate_data.csv'
-obesity_table_csv   = 'obesity_covariate_data_age_specific.csv'
+obesity_table_csv   = 'gbd_2020_obesity_covariate_updated.csv'
 data_table_csv      = 'overall_diabetes_input_data_crosswalkv35057.csv'
 emr_table_csv       = 'diabetes_emr.csv'
 age_group_table_csv = 'age_metadata_gbd2020.csv'
 all_node_other      = '../475876/all_node.db'
 root_node_other     = '../475876/dismod.db'
 #
-# data and node table input information
+# data and node table information that was extracted from the input files
 data_table_info     = 'data_info.csv'
 node_table_info     = 'node_info.csv'
 #
 # root_node_name
+# name of the node where the cascade will start
 root_node_name      = 'Global'
 #
-# maximum number of data row per integrand to include in a fit
+# split_level
+# Level, below the root node, where the cascade will split Female and Male,
+# 0 = Global, 1 = High-income, 2 = High-income_North_America, ...
+split_level         = 3
+#
+# shift_prior_std_factor
+# Factor that multipliers standard deviation that is passed down the cascade.
+shift_prior_std_factor = 4.0
+#
+# mas_fit
+# Maximum number of data rows per integrand to include in a fit.
 max_fit             = 250
 #
-# maximum absolute effect for covriate multipliers
+# max_abs_effect
+# Maximum absolute effect for any covriate multiplier.
 max_abs_effect      = 5.0
 #
-# maximum number of data points to plot per integrand
+# max_plot
+# Maximum number of data points to plot per integrand.
 max_plot            = 2000
 #
-# gamma for each integrand is this value times the median for the integrand
+# gamma_factor
+# The gamma for each integrand is this factor times the median
+# of the data for the integrand.
 gamma_factor        = 1e-2
 #
-# random_seed (if zero, use clock for random seed)
+# random_seed
+# If this seed is zero, the clock is used for the random seed.
+# Otherwise this value is used. In either case the actual seed is reported.
 random_seed = 0
 #
-# Name of the node that we are drilling to
-fit_goal_set = { 'New_York' }
+# fit_goal_set
+# Name of the nodes, below the rooot node, that we are drilling to.
+fit_goal_set = { 'California', 'Iowa', 'Mississippi', 'New_York' }
 #
 # all_age_group_id_list
+# The integer codes of the IHME ages groups that span all ages.
 all_age_group_id_list = [ 22, 27 ]
 #
 # sex_name2sex_id
-sex_name2sex_id = {'Male' : 1,  'Female' : 2, 'both' : 3}
+# Mapping from sex name to IHME sex_id.
+sex_name2sex_id = {'Male' : 1,  'Female' : 2, 'Both' : 3}
 #
 # sex_name2covariate_value
+# Mapping from sex name to dismod_at covariate value.
 sex_name2covariate_value = { 'Female' : -0.5, 'Both' : 0.0, 'Male' : +0.5 }
 # -----------------------------------------------------------------------------
 #
@@ -571,6 +595,13 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'effected':  'chi',
             'group':     'world',
             'smooth':    'alpha_smooth',
+        },{
+            # alpha_chi_sex
+            'covariate': 'sex',
+            'type':      'rate_value',
+            'effected':  'chi',
+            'group':     'world',
+            'smooth':    'alpha_smooth',
         }
     ]
     for integrand in integrand_median :
@@ -769,7 +800,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     #
     # option_table
     option_table = [
-        { 'name':'parent_node_name',     'value':'Global'},
+        { 'name':'parent_node_name',     'value':root_node_name},
         { 'name':'zero_sum_child_rate',  'value':'iota chi'},
         { 'name':'random_seed',          'value':str(random_seed)},
         { 'name':'trace_init_fit_model', 'value':'true'},
@@ -828,7 +859,7 @@ def create_all_node_database(all_node_database, root_node_database) :
     #
     # mtall_index, mtspecific_index
     # Change sex_id -> split_reference_id and map its values
-    # 2 -> 0 (female), 3 -> 1 (both), 1 -> 2 (male)
+    # 2 -> 0 (Female), 3 -> 1 (both), 1 -> 2 (Male)
     split_map = { 1:2, 2:0, 3:1}
     for tbl_name in [ 'mtall_index', 'mtspecific_index' ] :
         command  = 'ALTER TABLE ' + tbl_name + ' '
@@ -957,13 +988,16 @@ def set_all_option_table(all_node_database) :
     max_abs_effect_str = str( max_abs_effect )
     all_option_table  = [
     {'option_name': 'absolute_covariates',    'option_value':'one'},
-    {'option_name': 'shift_prior_std_factor', 'option_value':'4.0' },
     {'option_name': 'in_parallel',            'option_value':'false'},
-    {'option_name': 'max_abs_effect',       'option_value':max_abs_effect_str},
-    {'option_name': 'max_fit',              'option_value':str(max_fit)},
-    {'option_name': 'root_node_name',       'option_value':root_node_name},
-    {'option_name': 'split_covariate_name', 'option_value':'sex'},
-    {'option_name': 'split_level',          'option_value':'4'},
+    {'option_name': 'split_covariate_name',   'option_value':'sex'},
+    #
+    {'option_name': 'max_abs_effect',   'option_value':max_abs_effect_str},
+    {'option_name': 'max_fit',          'option_value':str(max_fit)},
+    {'option_name': 'root_node_name',   'option_value':root_node_name},
+    {'option_name': 'split_level',      'option_value':str(split_level)},
+    {   'option_name':  'shift_prior_std_factor',
+        'option_value': str(shift_prior_std_factor)
+    },
     ]
     new               = False
     connection        = dismod_at.create_connection(all_node_database, new)
@@ -1130,7 +1164,8 @@ def create_ihme_results_node(
     sex = split_reference_table[split_reference_id]['split_reference_value']
     #
     # sex_name
-    sex_name = split_reference_table[split_reference_id]['split_reference_name']
+    sex_name = \
+        split_reference_table[split_reference_id]['split_reference_name']
     #
     # sex_id
     sex_id = sex_name2sex_id[sex_name]
@@ -1325,9 +1360,9 @@ def create_ihme_results_node(
     }
     #
     # output_pdf
-    output_pdf = f'{fit_node_dir}/ihme_{sex_name}.pdf'
+    output_pdf = f'{fit_node_dir}/ihme.pdf'
     print(output_pdf)
-    plot_title = f'{fit_node_name}: {sex_name}'
+    plot_title = f'{fit_node_name}.{sex_name}'
     dismod_at.plot_curve(
         pdf_file   = output_pdf      ,
         plot_limit = plot_limit      ,
