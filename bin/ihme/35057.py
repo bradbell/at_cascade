@@ -49,6 +49,12 @@ fit_goal_set = { 'New_York' }
 #
 # all_age_group_id_list
 all_age_group_id_list = [ 22, 27 ]
+#
+# sex_name2sex_id
+sex_name2sex_id = {'Male' : 1,  'Female' : 2, 'both' : 3}
+#
+# sex_name2covariate_value
+sex_name2covariate_value = { 'Female' : -0.5, 'Both' : 0.0, 'Male' : +0.5 }
 # -----------------------------------------------------------------------------
 #
 import numpy
@@ -250,10 +256,15 @@ def get_emr_table(file_name, age_group_dict) :
         lower        = float( row_in['lower'] )
         upper        = float( row_in['upper'] )
         meas_std     = (upper - lower) / 2.0
+        sex_id       = int( row_in['sex_id'] )
+        sex_name     = None
+        for key in sex_name2sex_id :
+            if sex_name2sex_id[key] == sex_id :
+                sex_name = key
         row_out = dict()
         row_out['csv_row_id']   = csv_row_id
         row_out['location_id']  = int( row_in['location_id'] )
-        row_out['sex']          = 'Both'
+        row_out['sex']          = sex_name
         row_out['time_lower']   = year_id
         row_out['time_upper']   = year_id + 1.0
         row_out['age_lower']    = age_group_dict[age_group_id]['age_lower']
@@ -603,12 +614,11 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     ]
     #
     # data_table
-    sex_map = { 'Female':-0.5, 'Both':0.0, 'Male':+0.5 }
     data_table = list()
     for row_in in csv_data_table :
         node_id   = int( row_in['node_id'] )
         node_name = node_table[node_id]['name']
-        sex       = sex_map[ row_in['sex'] ]
+        sex       = sex_name2covariate_value[ row_in['sex'] ]
         if row_in['obesity'] == '' :
             obesity = None
         else :
@@ -836,7 +846,10 @@ def create_all_node_database(all_node_database, root_node_database) :
     tbl_name = 'split_reference'
     col_name = [ 'split_reference_name', 'split_reference_value' ]
     col_type = [ 'text',                 'real']
-    row_list = [ ['female', -0.5], ['both', 0.0], ['male', 0.5] ]
+    row_list = list()
+    for sex_name in sex_name2covariate_value :
+        row = [ sex_name , sex_name2covariate_value[sex_name] ]
+        row_list.append( row )
     dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
     #
     # connection
@@ -950,7 +963,7 @@ def set_all_option_table(all_node_database) :
     {'option_name': 'max_fit',              'option_value':str(max_fit)},
     {'option_name': 'root_node_name',       'option_value':root_node_name},
     {'option_name': 'split_covariate_name', 'option_value':'sex'},
-    {'option_name': 'split_level',          'option_value':'3'},
+    {'option_name': 'split_level',          'option_value':'4'},
     ]
     new               = False
     connection        = dismod_at.create_connection(all_node_database, new)
@@ -1081,9 +1094,6 @@ def create_ihme_results_node(
         )
         integrand_id_list.append( integrand_id )
     #
-    # sex_name2sex_id
-    sex_name2sex_id = {'male' : 1,  'female' : 2, 'both' : 3}
-    #
     # year_grid
     # year_id is output file is in demographer notation
     year_grid = [ 1990.5, 1995.5, 2000.5, 2005.5, 2010.5, 2015.5, 2020.5 ]
@@ -1149,9 +1159,9 @@ def create_ihme_results_node(
         for time in year_grid :
             #
             # obesity
-            if sex_name == 'male' :
+            if sex_name == 'Male' :
                 obesity = obesity_fun_male(age, time, grid = False)
-            elif sex_name == 'female' :
+            elif sex_name == 'Female' :
                 obesity = obesity_fun_female(age, time, grid = False)
             else :
                 obesity  = obesity_fun_male(age, time, grid = False)

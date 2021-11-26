@@ -439,7 +439,8 @@ def cascade_fit_node(
     path_list = path_list[:-1]
     if all_option['root_node_name'] not in path_list :
         msg  = f'fit_node_database = {fit_node_database}\n'
-        msg += 'does not contain root_node_name = {root_node_name}'
+        msg += 'does not contain root_node_name = '
+        msg += all_option['root_node_name']
         assert False, msg
     #
     # fit_node_name
@@ -458,9 +459,10 @@ def cascade_fit_node(
     fit_level  = len(path_list) - root_index - 1
     #
     # check fit_node_name
-    msg  = f'last directory in fit_node_database = {fit_node_database}\n'
-    msg += 'is not the same as parent_node_name in its option table'
     parent_node_name = at_cascade.get_parent_node(fit_node_database)
+    msg  = f'last directory in fit_node_database = {fit_node_database}\n'
+    msg += 'is not a split_reference_name and is not '
+    msg += f'fit_node_name = {parent_node_name}'
     assert fit_node_name == parent_node_name, msg
     #
     # fit_node_id

@@ -57,9 +57,8 @@ will be printed on standard output during the optimization.
 
 {xsrst_end   continue_cascade}
 '''
-import os
-import sys
 import time
+import os
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
@@ -103,14 +102,88 @@ def move_table(connection, src_name, dst_name) :
 # ----------------------------------------------------------------------------
 def continue_cascade(
 # BEGIN syntax
-# continue_cascade(
-    all_node_database = None ,
-    fit_node_database = None ,
-    fit_goal_set      = None ,
+# at_cascade.continue_cascade(
+    all_node_database = None,
+    fit_node_database = None,
+    fit_goal_set      = None,
     trace_fit         = False,
 # )
 # END syntax
 ) :
+    assert not all_node_database is None
+    assert not fit_node_database is None
+    assert not fit_goal_set is None
+    #
+    # node_table, log_table, covariate_table
+    new             = False
+    connection      = dismod_at.create_connection(fit_node_database, new)
+    node_table      = dismod_at.get_table_dict(connection, 'node')
+    log_table       = dismod_at.get_table_dict(connection, 'log')
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    connection.close()
+    #
+    # all_option_table, split_reference_table
+    new              = False
+    connection       = dismod_at.create_connection(all_node_database, new)
+    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+    split_reference_table = dismod_at.get_table_dict(
+        connection, 'split_reference'
+    )
+    connection.close()
+    #
+    # root_node_name, split_level
+    root_node_name   = None
+    split_level      = -1
+    for row in all_option_table :
+        if row['option_name'] == 'root_node_name' :
+            root_node_name = row['option_value']
+        if row['option_name'] == 'split_level' :
+            split_level = int( row['option_value'] )
+    #
+    # fit_children
+    root_node_id = at_cascade.table_name2id(
+        node_table, 'node', root_node_name
+    )
+    fit_children = at_cascade.get_fit_children(
+        root_node_id, fit_goal_set, node_table
+    )
+    #
+    # path_list
+    if not fit_node_database.endswith('/dismod.db') :
+        msg  = f'fit_node_database = {fit_node_database} '
+        msg += 'does not end with /dismod.db'
+        assert False, msg
+    path_list = fit_node_database.split('/')
+    path_list = path_list[:-1]
+    if root_node_name not in path_list :
+        msg  = f'fit_node_database = {fit_node_database}\n'
+        msg += f'does not contain root_node_name = {root_node_name}'
+        assert False, msg
+    #
+    # fit_node_name
+    shift_name = path_list[-1]
+    is_split_reference_name = False
+    for row in split_reference_table :
+        if row['split_reference_name'] == shift_name :
+            is_split_reference_name = True
+    if is_split_reference_name :
+        fit_node_name = path_list[-2]
+    else :
+        fit_node_name = path_list[-1]
+    #
+    # fit_level
+    root_index = path_list.index( root_node_name )
+    fit_level  = len(path_list) - root_index - 1
+    #
+    # check fit_node_name
+    parent_node_name = at_cascade.get_parent_node(fit_node_database)
+    msg  = f'last directory in fit_node_database = {fit_node_database}\n'
+    msg += 'is not a split_reference_name and is not '
+    msg += f'fit_node_name = {parent_node_name}'
+    assert fit_node_name == parent_node_name, msg
+    #
+    # fit_node_id
+    fit_node_id = at_cascade.table_name2id(node_table, 'node', fit_node_name)
     #
     # fit_node_dir
     fit_node_dir = fit_node_database[ : - len('dismod.db') - 1 ]
@@ -119,93 +192,48 @@ def continue_cascade(
     new        = False
     connection = dismod_at.create_connection(fit_node_database, new)
     #
-    # log_table, node_table
-    log_table  = dismod_at.get_table_dict(connection, 'log')
-    node_table = dismod_at.get_table_dict(connection, 'node')
-    #
     # move avgint -> c_root_avgint
     move_table(connection, 'avgint', 'c_root_avgint')
     #
-    # connection
-    connection.close()
+    # shift_name_list
+    shift_name_list = list()
+    if fit_level == split_level :
+        cov_info = at_cascade.get_cov_info(
+            all_option_table, covariate_table, split_reference_table
+        )
+        fit_split_reference_id = cov_info['split_reference_id']
+        for (row_id, row) in enumerate(split_reference_table) :
+            if row_id != fit_split_reference_id :
+                shift_name_list.append( row['split_reference_name'] )
+    else :
+        for node_id in fit_children[fit_node_id] :
+            node_name = node_table[node_id]['node_name']
+            shift_name_list.append( node_name )
     #
-    # fit_ok, sample_ok
-    fit_ok    = False
-    sample_ok = False
-    for log_id in range(len( log_table) ) :
-        message_type = log_table[log_id]['message_type']
-        message      = log_table[log_id]['message']
-        if message_type == 'command' and message.startswith('begin fit both') :
-            #
-            # fit_ok
-            message_type = log_table[log_id + 1]['message_type']
-            message      = log_table[log_id + 1]['message']
-            fit_ok       =  message_type == 'command' and message == 'end fit'
-            #
-            # sample_ok
-            message_type = log_table[log_id + 3]['message_type']
-            message      = log_table[log_id + 3]['message']
-            sample_ok    =  message_type=='command' and message=='end sample'
-    msg  =  'Cannot find successful fit and sample at end of log table in\n'
-    msg += fit_node_database
-    assert fit_ok and sample_ok, msg
-    #
-    # root_node_id
-    new              = False
-    connection       = dismod_at.create_connection(all_node_database, new)
-    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
-    root_node_name   = None
-    for row in all_option_table :
-        if row['option_name'] == 'root_node_name' :
-            root_node_name = row['option_value']
-    connection.close()
-    msg = 'Cannot find root_node_name in all_option_table'
-    assert not root_node_name is None, msg
-    root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
-    #
-    # parent_node_id
-    parent_node_name = at_cascade.get_parent_node(fit_node_database)
-    parent_node_id   = at_cascade.table_name2id(
-        node_table, 'node', parent_node_name
-    )
-    #
-    # fit_children
-    fit_children= at_cascade.get_fit_children(
-        root_node_id, fit_goal_set, node_table
-    )
-    #
-    # child_node_list
-    child_node_list = fit_children[parent_node_id]
-    #
-    # child_node_databases
-    child_node_databases = dict()
-    for node_id in child_node_list :
-        node_name = node_table[node_id]['node_name']
-        subdir    = fit_node_dir + '/' + node_name
+    # shift_databases
+    shift_databases = dict()
+    for shift_name in shift_name_list :
+        subdir    = fit_node_dir + '/' + shift_name
         if not os.path.exists(subdir) :
             os.makedirs(subdir)
-        child_node_databases[node_name] = subdir + '/dismod.db'
+        shift_databases[shift_name] = subdir + '/dismod.db'
     #
-    # create child node databases
+    # create shifted databases
     at_cascade.create_shift_db(
         all_node_database,
         fit_node_database,
-        child_node_databases
+        shift_databases
     )
     #
-    # move c_root_avgint table -> avgint table
-    # creae_child_node_db expects this
-    new        = False
-    connection = dismod_at.create_connection(fit_node_database, new)
+    # move c_root_avgint -> avgint
     move_table(connection, 'c_root_avgint', 'avgint')
-    connection.close()
     #
     # fit_integrand
     fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
     #
-    # fit child node databases
-    for node_name in child_node_databases :
-        fit_node_database = child_node_databases[node_name]
+    # fit shifted databases
+    for shift_name in shift_databases :
+        fit_node_database = shift_databases[shift_name]
         at_cascade.cascade_fit_node(
             all_node_database ,
             fit_node_database ,
@@ -215,3 +243,6 @@ def continue_cascade(
             fit_integrand     ,
             trace_fit         ,
         )
+    #
+    # connection
+    connection.close()
