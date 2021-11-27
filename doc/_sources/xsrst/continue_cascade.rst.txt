@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/continue_cascade.py
-    :lines: 106-111
+    :lines: 105-110
     :language: py
 
 .. meta::

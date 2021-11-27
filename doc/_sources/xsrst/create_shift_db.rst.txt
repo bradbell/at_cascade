@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_shift_db.py
-    :lines: 263-267
+    :lines: 285-290
     :language: py
 
 .. meta::
@@ -78,8 +78,9 @@ dismod_at option table in the *fit_node_database*.
 
 sample Table
 ============
-The sample table contains
-the results of a dismod_at sample command for both the fixed and random effects.
+This table is not used if *predict_sample* is false.
+Otherwise it  contains the results of a dismod_at sample command
+for both the fixed and random effects.
 
 .. meta::
    :keywords: c_shift_avgint, table
@@ -102,7 +103,8 @@ to this fit_node_database.
 
 c_shift_predict_sample Table
 ============================
-This table contains the predict table corresponding to a
+This table is not used if *predict_sample* is false.
+Otherwise it contains the predict table corresponding to a
 predict sample command using the c_shift_avgint table.
 Note that the predict_id column name was changed to c_shift_predict_sample_id
 (which is not the same as sample_id).
@@ -184,6 +186,20 @@ If *shift_name* is the node name for a child of fit_node,
 the child is the node corresponding to this shift database.
 
 .. meta::
+   :keywords: fit, node
+
+.. index:: fit, node
+
+.. _create_shift_db.shift_databases.fit_node:
+
+Fit Node
+========
+If *shift_name* is the name of the *fit_node*,
+the node corresponding to this shift database is the fit_node.
+This case is used by :ref:`no_ode_fit` to create priors without shifting
+the covariate references.
+
+.. meta::
    :keywords: value, priors
 
 .. index:: value, priors
@@ -195,8 +211,10 @@ Value Priors
 If the upper and lower limits are equal,
 the value priors in fit_database and the shift_databases
 are effectively the same.
-Otherwise the mean and standard deviation in the values priors
+Otherwise the mean in the value priors
 are replaced using the predict tables in the *fit_node_database*.
+If *predict_sample* is true,
+the standard deviations in the value priors are also replaced.
 Note that if the value prior is uniform,
 the standard deviation is not used and the mean is only used to
 initialize the optimization.
@@ -214,6 +232,21 @@ The avgint table, in the shift_databases,
 is a copy of the c_root_avgint table in the
 *fit_node_database* with the node_id replaced by the node corresponding
 to he shift_database.
+
+.. meta::
+   :keywords: predict_sample
+
+.. index:: predict_sample
+
+.. _create_shift_db.predict_sample:
+
+predict_sample
+**************
+If this argument is ``True`` the sample table and the c_shift_predict_sample
+table must be in the *fit_node_database*.
+In this case both the means and standard deviations in the value priors
+are replaced using the results of the fit.
+Otherwise, only the means are replaced.
 
 ----
 
