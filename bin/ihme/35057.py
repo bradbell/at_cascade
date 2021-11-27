@@ -8,7 +8,7 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # ----------------------------------------------------------------------------
-# These settings can be easily changed without understand the code below:
+# These settings can be easily changed without understanding the code below:
 #
 # working_directory
 # This directory is relative to your copy of the at_cascade git directory.
