@@ -25,6 +25,9 @@ age_group_table_csv = 'age_metadata_gbd2020.csv'
 all_node_other      = '../475876/all_node.db'
 root_node_other     = '../475876/dismod.db'
 #
+# directory where results will be written
+ihme_output_dir = '/ihme/j/Project/nfrqe/DisMod_AT/testing_results'
+#
 # data and node table information that was extracted from the input files
 data_table_info     = 'data_info.csv'
 node_table_info     = 'node_info.csv'
@@ -48,7 +51,7 @@ max_fit             = 250
 #
 # max_abs_effect
 # Maximum absolute effect for any covriate multiplier.
-max_abs_effect      = 5.0
+max_abs_effect      = 2.0
 #
 # max_plot
 # Maximum number of data points to plot per integrand.
@@ -85,6 +88,7 @@ import numpy
 from scipy.interpolate import  UnivariateSpline
 from scipy.interpolate import  RectBivariateSpline
 import statistics
+import datetime
 import time
 import random
 import math
@@ -1081,6 +1085,8 @@ def create_ihme_results_node(
     index        = fit_node_database.rfind('/')
     fit_node_dir = fit_node_database[0:index]
     #
+    print(fit_node_dir)
+    #
     # integrand_table, age_table, time_table
     new        = False
     connection      = dismod_at.create_connection(fit_node_database, new)
@@ -1141,8 +1147,10 @@ def create_ihme_results_node(
         if age_group_id not in all_age_group_id_list :
             age_group_id_list.append( age_group_id )
     #
-    # fit_node_id, location_id
+    # fit_node_name
     fit_node_name   = at_cascade.get_parent_node(fit_node_database)
+    #
+    # fit_node_id, location_id
     node_info_table = get_table_csv( node_table_info )
     location_id     = None
     fit_node_id     = None
@@ -1155,7 +1163,7 @@ def create_ihme_results_node(
     #
     # output_csv
     output_csv = f'{fit_node_dir}/ihme.csv'
-    print( output_csv )
+    print('ihme.csv')
     #
     # avgint_table
     avgint_table = list()
@@ -1236,13 +1244,22 @@ def create_ihme_results_node(
     connection.close()
     #
     # predict sample
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
-    )
+    print( 'sample' )
+    command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
+    dismod_at.system_command_prc(command, print_command = False )
     #
     # db2csv
-    print(f'dismod_at.db2csv_command({fit_node_database})')
+    print( 'db2csv' )
     dismod_at.db2csv_command(fit_node_database)
+    #
+    # rate.pdf
+    pdf_file = f'{fit_node_dir}/rate.pdf'
+    print( 'rate.pdf' )
+    plot_title = f'{fit_node_name}.{sex_name}'
+    rate_set   = { 'iota', 'chi', 'omega' }
+    dismod_at.plot_rate_fit(
+        fit_node_database, rate_set, pdf_file, plot_title
+    )
     #
     # predict_table
     new           = False
@@ -1359,12 +1376,12 @@ def create_ihme_results_node(
         'time_max' : time_max,
     }
     #
-    # output_pdf
-    output_pdf = f'{fit_node_dir}/ihme.pdf'
-    print(output_pdf)
+    # ihme.pdf
+    pdf_file = f'{fit_node_dir}/ihme.pdf'
+    print( 'ihme.pdf' )
     plot_title = f'{fit_node_name}.{sex_name}'
     dismod_at.plot_curve(
-        pdf_file   = output_pdf      ,
+        pdf_file   = pdf_file      ,
         plot_limit = plot_limit      ,
         plot_title = plot_title      ,
         plot_data  = plot_data       ,
@@ -1480,15 +1497,134 @@ def create_ihme_results(
             interpolate_ldi     = interpolate_ldi       ,
         )
 # ----------------------------------------------------------------------------
+def copy_ihme_results(
+    fit_node_database = None ,
+    fit_children      = None ,
+    date              = None ,
+) :
+    assert fit_node_database is not None
+    #
+    if date is None :
+        date = str( datetime.date.today() ).replace('-', '.')
+    #
+    # root_node_database
+    root_node_database = 'root_node.db'
+    #
+    # all_node_database
+    all_node_database = 'all_node.db'
+    #
+    # node_table
+    new        = False
+    connection = dismod_at.create_connection(root_node_database, new)
+    node_table = dismod_at.get_table_dict(connection, 'node')
+    connection.close()
+    #
+    # split_reference_table
+    new        = False
+    connection            = dismod_at.create_connection(all_node_database, new)
+    split_reference_table = \
+        dismod_at.get_table_dict(connection, 'split_reference')
+    #
+    # fit_children
+    if fit_children is None :
+        #
+        # root_node_name
+        root_node_name = at_cascade.get_parent_node(root_node_database)
+        #
+        # root_node_id
+        root_node_id = at_cascade.table_name2id(
+            node_table, 'node', root_node_name
+        )
+        #
+        # fit_children
+        fit_children = at_cascade.get_fit_children(
+            root_node_id = root_node_id ,
+            fit_goal_set = fit_goal_set ,
+            node_table   = node_table   ,
+        )
+    #
+    # fit_node_id
+    fit_node_name = at_cascade.get_parent_node(fit_node_database)
+    fit_node_id   = at_cascade.table_name2id(
+        node_table, 'node', fit_node_name
+    )
+    #
+    # fit_node_dir
+    index = fit_node_database.find('/dismod.db')
+    fit_node_dir = fit_node_database[0 : index]
+    #
+    # to_dir
+    to_dir = f'{ihme_output_dir}/{date}'
+    if not os.path.exists(to_dir) :
+        os.makedirs(to_dir)
+    #
+    # sex
+    sex_name = 'Both'
+    for name in [ 'Female', 'Male' ] :
+        if 0 < fit_node_dir.find(name) :
+            sex_name = name
+    #
+    # check if ihme results have been computed for this node
+    if not os.path.exists( f'{fit_node_dir}/ihme.csv' ) :
+        print( f'skipping {fit_node_dir}' )
+    else :
+        print( f'copying {fit_node_dir}' )
+        #
+        # to_dir
+        to_dir = f'{to_dir}/{fit_node_name}.{sex_name}'
+        if not os.path.exists(to_dir) :
+            os.makedirs(to_dir)
+        #
+        # file_list
+        file_list = [
+            'variable.csv', 'data.csv', 'rate.pdf', 'ihme.csv', 'ihme.pdf'
+        ]
+        # file
+        for file in file_list :
+            #
+            # from_path
+            from_path = f'{fit_node_dir}/{file}'
+            #
+            # to_path
+            to_path = f'{to_dir}/{file}'
+            #
+            # copy file
+            print( file )
+            shutil.copyfile(from_path, to_path)
+    #
+    # shift_name_list
+    shift_name_list = list()
+    for row in split_reference_table :
+        shift_name = row['split_reference_name']
+        dir_name   = f'{fit_node_dir}/{shift_name}'
+        if os.path.isdir(dir_name) :
+            shift_name_list.append( shift_name )
+    if len(shift_name_list) == 0 :
+        for child_node_id in fit_children[fit_node_id] :
+            shift_name = node_table[child_node_id]['node_name']
+            shift_name_list.append( shift_name )
+    #
+    # results at next level
+    for shift_name in shift_name_list :
+        shift_node_database = f'{fit_node_dir}/{shift_name}/dismod.db'
+        copy_ihme_results(
+            fit_node_database   = shift_node_database   ,
+            fit_children        = fit_children          ,
+            date                = date                  ,
+        )
+# ----------------------------------------------------------------------------
 def main() :
     #
     # command_line_option
     command_line_ok = False
     if len(sys.argv) == 2 :
         command_line_option = sys.argv[1]
-        command_line_ok =  command_line_option in [ 'drill', 'predict' ]
+        command_line_ok =  command_line_option in [
+            'drill', 'predict', 'copy'
+        ]
     if not command_line_ok :
-        usage = 'usage: bin/ihme/35057.py (drill|predict)'
+        usage  = 'usage: bin/ihme/35057.py (drill|predict|copy)'
+        usage += 'drill must run first, then predict, then copy'
         sys.exit(usage)
     #
     if command_line_option == 'drill' :
@@ -1505,13 +1641,20 @@ def main() :
         #
         # drill
         drill()
-    else :
+    elif command_line_option == 'predict' :
         # change into working directory and create root_node_name subdirectory
         os.chdir(working_directory)
         #
         # start at the fit for the root node
         fit_node_database = f'{root_node_name}/dismod.db'
         create_ihme_results(fit_node_database)
+    else :
+        # change into working directory and create root_node_name subdirectory
+        os.chdir(working_directory)
+        #
+        # start at the fit for the root node
+        fit_node_database = f'{root_node_name}/dismod.db'
+        copy_ihme_results(fit_node_database)
 # ----------------------------------------------------------------------------
 main()
 print(sys.argv[0] + ': OK')
