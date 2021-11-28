@@ -56,13 +56,6 @@ the split_reference table and
 covariate reference can depend on the corresponding
 split covariance reference value.
 
-split_reference_table
-*********************
-This argument can't be ``None`` and
-specifies the possible reference values for the splitting covariate.
-It must be a ``list`` of ``dict`` representation of the
-:ref:`split_reference_table`.
-
 all_option
 **********
 This argument can't be ``None``.
@@ -74,6 +67,13 @@ The value corresponding to the key is the
 in the same row of the all_option_table.
 Note that keys must have type ``str`` and all the values will be converted
 to ``str``.
+
+split_reference_table
+*********************
+This specifies the possible reference values for the splitting covariate.
+It must be a ``list`` of ``dict`` representation of the
+:ref:`split_reference_table`.
+If this argument is ``None``, the split_reference_table is empty.
 
 omega_grid
 **********
@@ -122,7 +122,6 @@ If *mtall_data* is ``None`` the
 :ref:`all_mtall.all_mtall_table` and
 :ref:`all_mtall.mtall_index_table` will be empty.
 
-
 mtspecific_data
 ***************
 This is a python dictionary with a key for each node name
@@ -170,26 +169,32 @@ def create_all_node_db(
     all_node_database         = None,
     root_node_database        = None,
     all_cov_reference         = None,
-    split_reference_table     = None,
     all_option                = None,
+    split_reference_table     = None,
     omega_grid                = None,
     mtall_data                = None,
     mtspecific_data           = None,
 # )
 # END syntax
-):
+) :
+    # split_reference_list
+    if split_reference_table is None :
+        split_reference_table = list()
+    #
+    # some asserts
     assert type(all_node_database)      is str
     assert type(root_node_database)     is str
     assert type(all_cov_reference)      is dict
-    assert type(split_reference_table)  is list
     assert type(all_option)             is dict
-    assert 'root_node_name' in all_option
+    assert type(split_reference_table)  is list
     if omega_grid is None :
         assert mtall_data is None
         assert mtspecific_data is None
     else :
         assert type(omega_grid) is dict
         assert type(mtall_data) is dict
+    #
+    assert 'root_node_name' in all_option
     #
     # n_split
     n_split = 1

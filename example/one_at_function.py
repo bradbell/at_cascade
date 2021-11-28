@@ -566,7 +566,6 @@ def main() :
         all_node_database       = all_node_database,
         root_node_database      = root_node_database,
         all_cov_reference       = all_cov_reference,
-        split_reference_table   = list(),
         all_option              = all_option,
     )
     #

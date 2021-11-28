@@ -21,11 +21,13 @@ Release Notes for 2021
 
 11-28
 *****
-Change the :ref:`create_all_node_db.all_option` argument to
-create_all_node_db to be a complete representation of the
-:ref:`all_option_table`.
-This reduces the amount of necessary documentation.
-It also requires that root_node_name be in the all_option argument.
+1.  Change the :ref:`create_all_node_db.all_option` argument to
+    create_all_node_db to be a complete representation of the
+    :ref:`all_option_table`.
+    This reduces the amount of necessary documentation.
+    It also requires that root_node_name be in the all_option argument.
+2.  Change the :ref:`create_all_node_db.split_reference_table` argument to
+    have a default value (corresponding to the empty table).
 
 
 {xsrst_end 2021}
