@@ -46,14 +46,9 @@ def main() :
     tbl_name = 'all_option'
     col_name = [ 'option_name', 'option_value' ]
     col_type = [ 'text',        'text'         ]
-    split_level          = '-1 '
     split_covariate_name = 'sex'
-    split_list = split_level + split_covariate_name
-    for reference in split_reference_list :
-        split_list += ' ' + str(reference)
     row_list = [
         [ 'root_node_name',       'n0' ],
-        [ 'split_level',          split_level ],
         [ 'split_covariate_name', split_covariate_name ],
         [ 'absolute_covariates', absolute_covariates ],
     ]

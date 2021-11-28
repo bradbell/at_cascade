@@ -122,23 +122,24 @@ def continue_cascade(
     covariate_table = dismod_at.get_table_dict(connection, 'covariate')
     connection.close()
     #
-    # all_option_table, split_reference_table
+    # all_option_table, split_reference_table, node_split_set
     new              = False
     connection       = dismod_at.create_connection(all_node_database, new)
     all_option_table = dismod_at.get_table_dict(connection, 'all_option')
     split_reference_table = dismod_at.get_table_dict(
         connection, 'split_reference'
     )
+    node_split_table = dismod_at.get_table_dict(connection, 'node_split')
+    node_split_set = set()
+    for row in node_split_table :
+        node_split_set.add( node_split_table['node_id'] )
     connection.close()
     #
-    # root_node_name, split_level
+    # root_node_name
     root_node_name   = None
-    split_level      = -1
     for row in all_option_table :
         if row['option_name'] == 'root_node_name' :
             root_node_name = row['option_value']
-        if row['option_name'] == 'split_level' :
-            split_level = int( row['option_value'] )
     #
     # fit_children
     root_node_id = at_cascade.table_name2id(
@@ -160,13 +161,13 @@ def continue_cascade(
         msg += f'does not contain root_node_name = {root_node_name}'
         assert False, msg
     #
-    # fit_node_name
+    # fit_node_name, split_fit_level
     shift_name = path_list[-1]
-    is_split_reference_name = False
+    split_fit_level = False
     for row in split_reference_table :
         if row['split_reference_name'] == shift_name :
-            is_split_reference_name = True
-    if is_split_reference_name :
+            split_fit_level = True
+    if split_fit_level :
         fit_node_name = path_list[-2]
     else :
         fit_node_name = path_list[-1]
@@ -197,7 +198,8 @@ def continue_cascade(
     #
     # shift_name_list
     shift_name_list = list()
-    if fit_level == split_level :
+    split_next_level = fit_node_id in node_split_set and not split_fit_level
+    if split_next_level :
         cov_info = at_cascade.get_cov_info(
             all_option_table, covariate_table, split_reference_table
         )
@@ -235,13 +237,15 @@ def continue_cascade(
     for shift_name in shift_databases :
         fit_node_database = shift_databases[shift_name]
         at_cascade.cascade_fit_node(
-            all_node_database ,
-            fit_node_database ,
-            fit_goal_set      ,
-            node_table        ,
-            fit_children      ,
-            fit_integrand     ,
-            trace_fit         ,
+            all_node_database      ,
+            fit_node_database      ,
+            fit_goal_set           ,
+            node_table             ,
+            split_reference_table  ,
+            node_split_set         ,
+            fit_children           ,
+            fit_integrand          ,
+            trace_fit              ,
         )
     #
     # connection

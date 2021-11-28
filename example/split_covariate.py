@@ -56,6 +56,13 @@ The :ref:`split_reference_table` for this example is:
     # BEGIN split_reference_table
     # END split_reference_table
 }
+The :ref:`node_split_table` for this example is
+{xsrst_file
+    # BEGIN node_split_table
+    # END node_split_table
+}
+Note that we have used node_name (instead of node_id) here and let
+:ref:`create_all_node_db` do the conversion to node_id.
 The cascade computation tree is::
 
                 /-------------n0-------------\
@@ -226,9 +233,9 @@ all_option            = {
     'root_node_name':        'n0',
     'split_covariate_name':  'sex',
     'shift_prior_std_factor': 1e3,
-    'split_level':              0,
 }
 # END all_option_table
+#
 #
 # BEGIN split_reference_table
 split_reference_table = [
@@ -240,6 +247,9 @@ split_reference_list = list()
 for row in split_reference_table :
     split_reference_list.append( row['split_reference_value'] )
 # END split_reference_table
+# BEGIN node_split_table
+node_split_table = [ { 'node_name' :   'n0'} ]
+# END node_split_table
 #
 # BEGIN root_split_reference_id
 root_split_reference_id = 1
@@ -534,6 +544,7 @@ def main() :
         root_node_database     = root_node_database,
         all_cov_reference      = all_cov_reference,
         split_reference_table  = split_reference_table,
+        node_split_table       = node_split_table,
         all_option             = all_option,
         omega_grid             = omega_grid,
         mtall_data             = mtall_data,

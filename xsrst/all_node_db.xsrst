@@ -361,17 +361,6 @@ covariate.
 If :ref:`split_reference_table` is empty (is not empty)
 this option must not (must) appear.
 
-split_level
-***********
-is a text representation of a non-negative integer specifying
-the level at which to split the cascade.
-If split_level < 0 the split occurred above the root node
-and no more splitting is done.
-Level 0 corresponds to splitting after fitting the root_node,
-level 1 to splitting after fitting the children of the root_node,
-and so on.
-If :ref:`split_reference_table` is empty this option must not appear.
-
 {xsrst_end all_option_table}
 ------------------------------------------------------------------------------
 {xsrst_begin split_reference_table}
@@ -398,4 +387,29 @@ This column has type ``real`` and contains the possible reference values for
 the splitting covariate.
 
 {xsrst_end split_reference_table}
+------------------------------------------------------------------------------
+{xsrst_begin node_split_table}
+
+Node Split Table
+################
+This table specifies the nodes at which the cascade will be split
+by the value of the splitting covariate.
+If this table is not empty,
+the :ref:`all_option_table.split_covariate_name`
+must appear and the
+:ref:`split_reference_table` must not be empty.
+
+node_split_id
+*************
+is the :ref:`all_node_db.primary_key` for this table.
+
+node_id
+*******
+This column has type ``integer`` and contains a dismod_at node_id
+at which the analysis will be split by the splitting covariate; i.e.,
+this node will be fit both before and after the splitting.
+The set of values in this column determine the
+:ref:`glossary.node_split_set`.
+
+{xsrst_end node_split_table}
 ------------------------------------------------------------------------------

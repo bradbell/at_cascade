@@ -69,20 +69,28 @@ specifying the node_id (node_name) for each element of the
 :ref:`glossary.fit_goal_set` .
 This argument can't be ``None``.
 
-node_table
-**********
-This is a python list where
-*node_table[node_id]* is a python dictionary representation of the
-corresponding row of the dismod_at node table.
-(The primary key is not included because it is equal to the list index.)
-This node table is the same as the node table in *fit_node_database*.
-It is the same for all the fits and
-passing it as an argument avoids reading it each time.
+node_table, split_reference_table
+*********************************
+These arguments are python lists where each element of the list
+is a python dictionary.
+They contain the information in the corresponding tables.
+The primary key is not included because it is equal to the list index.
+These tables are the same for all the fits and
+passing it as an argument avoids reading and storing multiple copies.
 
 default
 =======
-If *node_table* is ``None``, it will be read by ``cascade_fit_node``
+If one of these arguments is ``None``, it will be read by ``cascade_fit_node``
 and reused by recursive calls to this routine.
+
+node_split_set
+**************
+This is a ``set`` containing the nodes in :ref:`node_split_table`; i.e.
+:ref:`glossary.node_split_set`.
+If this argument is ``None``, the node_split_table will be read by
+``cascade_fit_node`` and *node_split_set** will be
+reused by recursive calls to this routine.
+
 
 fit_children
 ************
@@ -164,15 +172,15 @@ The results of the fits for the following cases
 are also computed by cascade_fit with *fit_node_database* corresponding
 to the sub-directories:
 
-1. If the level of the *fit_node_dir* below the root_node is equal to
-   :ref:`all_option_table.split_level`, the sub-directories will be
+1. If the *fit_node_dir* ends with a node name in the
+   :ref:`glossary.node_split_set`, the sub-directories will be
    *fit_node_dir*\ ``/``\ *split_name* where *split_name* is a value in
    in the split_reference_name column of the split_reference table.
-   The *split_name* corresponding to the *fit_node* will not be included
-   in this splitting.
+   The split_reference_name corresponding to the *fit_node_database* will not
+   be included in this splitting.
 
-2. If the level of the *fit_node_dir* is not equal to the split level,
-   the sub-directories will be
+2. If the *fit_node_dir* does not end with a node name in the
+   :ref:`glossary.node_split_set`, the sub-directories will be
    *fit_node_dir*\ ``/``\ *child_name* where *child_name* is the name of
    a child of *fit_node_name* that is in the :ref:`glossary.fit_node_set`,
 
@@ -353,6 +361,7 @@ def cascade_fit_node(
     fit_goal_set            = None,
     node_table              = None,
     split_reference_table   = None,
+    node_split_set          = None,
     fit_children            = None,
     fit_integrand           = None,
     trace_fit               = False,
@@ -380,6 +389,22 @@ def cascade_fit_node(
             connection, 'split_reference'
         )
     #
+    # node_split_set
+    if node_split_set is None :
+        node_split_table = dismod_at.get_table_dict(connection, 'node_split')
+        node_split_set = set()
+        for row in node_split_table :
+            node_split_set.add( row['node_id'] )
+        for node_id in node_split_set :
+            ancestor_id = node_table[node_id]['parent']
+            if ancestor_id in node_split_set :
+                node_name     = node_table[node_id]['node_name']
+                ancestor_name = node_table[ancestor_id]['node_name']
+                msg  = f'{node_name} and {ancestor_name} '
+                msg += 'are in the node_split set\n'
+                msg += f'and {node_name} is a descendant of {ancestor_name}'
+                assert False, msg
+    #
     # all_option_table, all_cov_reference_table, split_refrence_table
     all_option_table = dismod_at.get_table_dict(connection, 'all_option')
     all_cov_reference_table = dismod_at.get_table_dict(
@@ -399,7 +424,6 @@ def cascade_fit_node(
         'split_list',
         'root_node_name',
         'split_covariate_name',
-        'split_level',
     ]
     all_option  = dict()
     for row in all_option_table :
@@ -451,13 +475,13 @@ def cascade_fit_node(
         msg += all_option['root_node_name']
         assert False, msg
     #
-    # fit_node_name
-    shift_name = path_list[-1]
-    is_split_reference_name = False
+    # fit_node_name, split_fit_level
+    shift_name      = path_list[-1]
+    split_fit_level = False
     for row in split_reference_table :
         if row['split_reference_name'] == shift_name :
-            is_split_reference_name = True
-    if is_split_reference_name :
+            split_fit_level = True
+    if split_fit_level :
         fit_node_name = path_list[-2]
     else :
         fit_node_name = path_list[-1]
@@ -555,10 +579,8 @@ def cascade_fit_node(
     #
     # shift_name_list
     shift_name_list = list()
-    split_level     = -1
-    if 'split_level' in all_option :
-        split_level = int( all_option['split_level'] )
-    if fit_level == split_level :
+    split_next_level = fit_node_id in node_split_set and not split_fit_level
+    if split_next_level :
         cov_info = at_cascade.get_cov_info(
             all_option_table, covariate_table, split_reference_table
         )
@@ -613,6 +635,7 @@ def cascade_fit_node(
             fit_goal_set          ,
             node_table            ,
             split_reference_table ,
+            node_split_set        ,
             fit_children          ,
             fit_integrand         ,
             trace_fit             ,

@@ -73,7 +73,17 @@ split_reference_table
 This specifies the possible reference values for the splitting covariate.
 It must be a ``list`` of ``dict`` representation of the
 :ref:`split_reference_table`.
-If this argument is ``None``, the split_reference_table is empty.
+If this argument is ``None``, the split_reference table is empty.
+
+node_split_table
+****************
+This specifies the node at which the cascade will split by the value
+of the splitting covariate.
+It must be a ``list`` of ``dict`` representation of the
+:ref:`node_split_table` with one key for each ``dict``.
+If the key is node_id (node_name) the corresponding value is
+the ``int`` ( ``str`` ) representation of the node_id (node_name).
+If this argument is ``None``, the node_split table is empty.
 
 omega_grid
 **********
@@ -171,6 +181,7 @@ def create_all_node_db(
     all_cov_reference         = None,
     all_option                = None,
     split_reference_table     = None,
+    node_split_table          = None,
     omega_grid                = None,
     mtall_data                = None,
     mtspecific_data           = None,
@@ -180,6 +191,10 @@ def create_all_node_db(
     # split_reference_list
     if split_reference_table is None :
         split_reference_table = list()
+    #
+    # node_split_table
+    if node_split_table is None :
+        node_split_table = list()
     #
     # some asserts
     assert type(all_node_database)      is str
@@ -447,6 +462,22 @@ def create_all_node_db(
         name  = row['split_reference_name']
         value = row['split_reference_value']
         row_list.append( [ name, value ] )
+    dismod_at.create_table(
+        all_connection, tbl_name, col_name, col_type, row_list
+    )
+    #
+    # node_split table
+    tbl_name = 'node_split'
+    col_name = [ 'node_id' ]
+    col_type = [ 'integer' ]
+    row_list = list()
+    for row in node_split_table :
+        if 'node_id' in row :
+            node_id = row['node_id']
+        else :
+            node_name = row['node_name']
+            node_id   = at_cascade.table_name2id(node_table, 'node', node_name)
+        row_list.append( [ node_id ] )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )

@@ -26,8 +26,12 @@ Release Notes for 2021
     :ref:`all_option_table`.
     This reduces the amount of necessary documentation.
     It also requires that root_node_name be in the all_option argument.
+
 2.  Change the :ref:`create_all_node_db.split_reference_table` argument to
     have a default value (corresponding to the empty table).
+
+3.  Change split_level in the all_option table to the
+    :ref:`node_split_table`.
 
 
 {xsrst_end 2021}

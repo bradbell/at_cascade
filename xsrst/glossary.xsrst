@@ -167,6 +167,15 @@ node_name
 *********
 Is the *node_name* for a node in the *root_node_database* node table.
 
+node_split_set
+**************
+This is the set of nodes at which the cascade is split by the value
+of the splitting covariate.
+No node in this set can be a descendant (or ancestor) of another
+node in this set.
+(Becasue the splitting can only occur once in the path from the
+*root_node* to any other node.)
+
 ode_integrand
 **************
 The following integrands requires solving the dismod_at ode to model
