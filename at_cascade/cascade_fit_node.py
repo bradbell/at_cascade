@@ -348,13 +348,14 @@ def check_covariate_reference(
 def cascade_fit_node(
 # BEGIN syntax
 # at_cascade.cascade_fit_node(
-    all_node_database = None,
-    fit_node_database = None,
-    fit_goal_set      = None,
-    node_table        = None,
-    fit_children      = None,
-    fit_integrand     = None,
-    trace_fit         = False,
+    all_node_database       = None,
+    fit_node_database       = None,
+    fit_goal_set            = None,
+    node_table              = None,
+    split_reference_table   = None,
+    fit_children            = None,
+    fit_integrand           = None,
+    trace_fit               = False,
 # )
 # END syntax
 ) :
@@ -368,9 +369,16 @@ def cascade_fit_node(
         connection  = dismod_at.create_connection(fit_node_database, new)
         node_table  = dismod_at.get_table_dict(connection, 'node')
         connection.close()
+    #
     # connection
     new         = False
     connection  = dismod_at.create_connection(all_node_database, new)
+    #
+    # split_reference_table :
+    if split_reference_table is None :
+        split_reference_table = dismod_at.get_table_dict(
+            connection, 'split_reference'
+        )
     #
     # all_option_table, all_cov_reference_table, split_refrence_table
     all_option_table = dismod_at.get_table_dict(connection, 'all_option')
@@ -600,13 +608,14 @@ def cascade_fit_node(
     for shift_name in shift_databases :
         fit_node_database = shift_databases[shift_name]
         cascade_fit_node(
-            all_node_database ,
-            fit_node_database ,
-            fit_goal_set      ,
-            node_table        ,
-            fit_children      ,
-            fit_integrand     ,
-            trace_fit         ,
+            all_node_database     ,
+            fit_node_database     ,
+            fit_goal_set          ,
+            node_table            ,
+            split_reference_table ,
+            fit_children          ,
+            fit_integrand         ,
+            trace_fit             ,
         )
     #
     # connection
