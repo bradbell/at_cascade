@@ -361,12 +361,13 @@ def main() :
     #
     # Create all_node.db
     all_node_database = 'all_node.db'
+    all_option        = { 'root_node_name': 'n0' }
     at_cascade.create_all_node_db(
         all_node_database       = all_node_database,
         root_node_database      = root_node_database,
         all_cov_reference       = all_cov_reference,
         split_reference_table  = list(),
-        all_option             = dict(),
+        all_option             = all_option,
     )
     #
     # fit_node_dir

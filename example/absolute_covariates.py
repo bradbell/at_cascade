@@ -217,7 +217,10 @@ fit_goal_set = { 'n3', 'n4', 'n2' }
 # END fit_goal_set
 #
 # BEGIN split_reference_table
-all_option            = {'split_covariate_name': 'sex'}
+all_option            = {
+    'root_node_name':       'n0',
+    'split_covariate_name': 'sex',
+}
 split_reference_table = [
     {'split_reference_name': 'female', 'split_reference_value': 1.0},
     {'split_reference_name': 'both',   'split_reference_value': 2.0},

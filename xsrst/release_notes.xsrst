@@ -1,0 +1,31 @@
+-----------------------------------------------------------------------------
+at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
+          Copyright (C) 2021-21 University of Washington
+             (Bradley M. Bell bradbell@uw.edu)
+
+This program is distributed under the terms of the
+    GNU Affero General Public License version 3.0 or later
+see http://www.gnu.org/licenses/agpl.txt
+-----------------------------------------------------------------------------
+{xsrst_begin_parent release_notes}
+
+Release Notes for at_cascade
+############################
+
+{xsrst_end release_notes}
+-----------------------------------------------------------------------------
+{xsrst_begin 2021}
+
+Release Notes for 2021
+######################
+
+11-28
+*****
+Change the :ref:`create_all_node_db.all_option` argument to
+create_all_node_db to be a complete representation of the
+:ref:`all_option_table`.
+This reduces the amount of necessary documentation.
+It also requires that root_node_name be in the all_option argument.
+
+
+{xsrst_end 2021}

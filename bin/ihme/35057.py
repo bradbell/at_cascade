@@ -82,6 +82,24 @@ sex_name2sex_id = {'Male' : 1,  'Female' : 2, 'Both' : 3}
 # sex_name2covariate_value
 # Mapping from sex name to dismod_at covariate value.
 sex_name2covariate_value = { 'Female' : -0.5, 'Both' : 0.0, 'Male' : +0.5 }
+#
+# integrand_name2measure_id
+# Mappping from the dismod_at integrand name to IHME measure_id;
+# see the heading Integrand, I_i(a, t) in the web page
+# https://bradbell.github.io/dismod_at/doc/avg_integrand.htm
+integrand_name2measure_id = {
+    'Sincidence' : 41,
+    'remission'  : 7,
+    'mtexcess'   : 9,
+    'mtother'    : 16,
+    'mtwith'     : 13,
+    'prevalence' : 5,
+    'Tincidence' : 42,
+    'mtspecific' : 10,
+    'mtall'      : 14,
+    'mtstandard' : 12,
+    'relrisk'    : 11,
+}
 # -----------------------------------------------------------------------------
 #
 import numpy
@@ -621,7 +639,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     #
     # integrand_table
     integrand_table = list()
-    for integrand_name in integrand_median :
+    for integrand_name in integrand_name2measure_id :
         row = { 'name' : integrand_name, 'minimum_meas_cv' : '0.1' }
         integrand_table.append( row )
     for j in range( len(mulcov_table) ) :
@@ -814,12 +832,12 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         #
         { 'name':'quasi_fixed',                  'value':'false' },
         { 'name':'tolerance_fixed',              'value':'1e-8'},
-        { 'name':'max_num_iter_fixed',           'value':'30'},
+        { 'name':'max_num_iter_fixed',           'value':'35'},
         { 'name':'print_level_fixed',            'value':'5'},
         { 'name':'accept_after_max_steps_fixed', 'value':'10'},
     ]
     # Diabetes does not have enough incidence data to estimate
-    # both iota and chi without mtexcess. Alos see he minimum_cv setting
+    # both iota and chi without mtexcess. Also see the minimum_cv setting
     # for mtexcess in the integand table.
     # { 'name':'hold_out_integrand',   'value':'mtexcess'},
     #
@@ -1110,21 +1128,6 @@ def create_ihme_results_node(
         all_option_table, covariate_table, split_reference_table
     )
     split_reference_id    = cov_info['split_reference_id']
-    #
-    # integrand_name2measure_id
-    integrand_name2measure_id = {
-        'Sincidence' : 41,
-        # 'remission'  : 7,
-        'mtexcess'   : 9,
-        # 'mtother'    : 16,
-        # 'mtwith'     : 13,
-        'prevalence' : 5,
-        # 'Tincidence' : 42,
-        'mtspecific' : 10,
-        # 'mtall'      : 14,
-        # 'mtstandard' : 12,
-        'relrisk'    : 11,
-    }
     #
     # integrand_id_list
     integrand_id_list = list()
@@ -1623,7 +1626,7 @@ def main() :
             'drill', 'predict', 'copy'
         ]
     if not command_line_ok :
-        usage  = 'usage: bin/ihme/35057.py (drill|predict|copy)'
+        usage  = 'usage: bin/ihme/35057.py (drill|predict|copy)\n'
         usage += 'drill must run first, then predict, then copy'
         sys.exit(usage)
     #

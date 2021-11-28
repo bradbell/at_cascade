@@ -52,7 +52,7 @@ def main() :
     for reference in split_reference_list :
         split_list += ' ' + str(reference)
     row_list = [
-        [ 'split_list',           split_list ],
+        [ 'root_node_name',       'n0' ],
         [ 'split_level',          split_level ],
         [ 'split_covariate_name', split_covariate_name ],
         [ 'absolute_covariates', absolute_covariates ],

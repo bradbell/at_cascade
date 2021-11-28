@@ -9,9 +9,6 @@
 # -----------------------------------------------------------------------------
 '''
 {xsrst_begin create_all_node_db}
-{xsrst_spell
-    bool
-}
 
 Create an All Node Database
 ###########################
@@ -69,39 +66,14 @@ It must be a ``list`` of ``dict`` representation of the
 all_option
 **********
 This argument can't be ``None``.
-It is a dictionary with the possible keys below.  Note that
-:ref:`all_option_table.root_node_name` is deduced from the
-*root_node_database* and hence not included in the possible keys.
-
-absolute_covariates
-===================
-If this key is present, it is a ``str`` specifying the
-:ref:`all_option_table.absolute_covariates`.
-Otherwise, there absolute_covariates does not appear in the all_option table.
-
-split_level
-===========
-If this key is present, it is an ``int`` specifying the
-:ref:`all_option_table.split_level`.
-Otherwise, there is no split_level in the all_option table.
-
-split_covariate_name
-====================
-If this key is present, it is a ``str`` specifying the
-:ref:`all_option_table.split_covariate_name`.
-Otherwise, there is no split_covariate_name in the all_option table.
-
-in_parallel
-===========
-If this key is present, it is a ``bool`` specifying
-:ref:`all_option_table.in_parallel`.
-Otherwise, there is no in_parallel in the all_option table.
-
-max_fit
-=======
-If this key is present, it is a ``int`` specifying the
-:ref:`all_option_table.max_fit`.
-Otherwise, there is no max_fit in the all_option table.
+It is a ``dict`` with a key equal to each
+:ref:`all_option_table.table_format.option_name` that appears in the
+all_option table.
+The value corresponding to the key is the
+:ref:`all_option_table.table_format.option_value`
+in the same row of the all_option_table.
+Note that keys must have type ``str`` and all the values will be converted
+to ``str``.
 
 omega_grid
 **********
@@ -211,6 +183,7 @@ def create_all_node_db(
     assert type(all_cov_reference)      is dict
     assert type(split_reference_table)  is list
     assert type(all_option)             is dict
+    assert 'root_node_name' in all_option
     if omega_grid is None :
         assert mtall_data is None
         assert mtspecific_data is None
@@ -443,12 +416,15 @@ def create_all_node_db(
     )
     #
     # all_option table
+    if root_node_name != all_option['root_node_name' ] :
+        tmp  = all_option['root_node_name']
+        msg  = f'root_node_name in all_option is {tmp} '
+        msg += f'while in the option table it is {root_node_name}'
+        assert False, msg
     tbl_name = 'all_option'
     col_name = [ 'option_name', 'option_value' ]
     col_type = [ 'text',        'text']
-    row_list = [
-        ['root_node_name', root_node_name ]
-    ]
+    row_list = list()
     for key in all_option :
         option_name = key
         option_value = str( all_option[key] )
