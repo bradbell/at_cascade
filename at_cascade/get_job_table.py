@@ -64,21 +64,26 @@ job_table
 *********
 The return value *job_table* is a ``list``.
 Each row of the list is a ``dict`` with the following keys:
-shift_node_id, shift_reference_id, fit_node_id, fit_reference_id.
-The shift pair is a job that can be run in parallel.
-The fit pair is a job that must be completed before the shift job can be run.
-
+node_id, split_reference_id, job_id.
+The pair node_id, split_reference_id identifies a job that can be run.
+In the special case where the pair is start_node_id, start_split_reference_id,
+the job_id is None.
 
 
 {xsrst_end get_job_table}
 '''
 # -----------------------------------------------------------------------------
+import dismod_at
+import at_cascade
+# -----------------------------------------------------------------------------
 def get_shift_job_table(
+    job_id                     ,
     fit_node_id                ,
     fit_split_reference_id     ,
     root_split_reference_id    ,
     split_reference_table      ,
     node_split_set             ,
+    fit_children               ,
 ) :
     #
     # already_split
@@ -102,10 +107,9 @@ def get_shift_job_table(
     for shift_split_reference_id in shift_reference_set :
         for shift_node_id in shift_node_set :
             row = {
-                'shift_node_id'            : shift_node_id,
-                'shift_split_reference_id' : shift_split_reference_id,
-                'fit_node_id'              : fit_node_id,
-                'fit_split_reference_id'   : fit_split_reference_id,
+                'node_id'            : shift_node_id,
+                'split_reference_id' : shift_split_reference_id,
+                'job_id'             : job_id,
             }
             shift_job_table.append( row )
     #
@@ -147,9 +151,10 @@ def get_job_table(
     #
     # root_node_name
     root_node_name = None
-    for row in all_option_table :
+    for row in all_table['all_option'] :
         if row['option_name'] == 'root_node_name' :
-            root_node_naem = row['option_value']
+            root_node_name = row['option_value']
+    assert root_node_name is not None
     #
     # root_node_id
     root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
@@ -166,37 +171,37 @@ def get_job_table(
     root_split_reference_id = cov_info['split_reference_id']
     #
     # job_table
-    job_table = get_shift_job_table(
-        start_node_id,
-        start_split_reference_id,
-        root_split_reference_id,
-        all_table['split_reference'],
-        node_split_set,
-    )
+    job_table = [ {
+        'node_id'            : start_node_id,
+        'split_reference_id' : start_split_reference_id,
+        'job_id'             : None,
+    } ]
     #
-    # job_index
-    job_index = 0
+    # job_id
+    job_id = 0
     #
-    while job_index < len(job_table) :
+    while job_id < len(job_table) :
         #
         # node_id, split_reference
-        row                = job_table[job_index]
-        node_id            = row['shift_node_id']
-        split_reference_id = row['shift_split_reference_id']
-        #
-        # job_index
-        job_index += 1
+        row                = job_table[job_id]
+        node_id            = row['node_id']
+        split_reference_id = row['split_reference_id']
         #
         # child_job_table
         child_job_table    = get_shift_job_table(
+            job_id,
             node_id,
             split_reference_id,
             root_split_reference_id,
             all_table['split_reference'],
             node_split_set,
+            fit_children,
         )
         #
         # job_table
         job_table += child_job_table
+        #
+        # job_id
+        job_id += 1
     #
     return job_table
