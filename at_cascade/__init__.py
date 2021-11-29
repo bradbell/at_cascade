@@ -25,6 +25,7 @@ The at_cascade Python Module
     at_cascade/get_cov_info.py
     at_cascade/get_fit_children.py
     at_cascade/get_fit_integrand.py
+    at_cascade/get_job_table.py
     at_cascade/get_parent_node.py
     at_cascade/get_var_id.py
     at_cascade/no_ode_fit.py
@@ -47,6 +48,7 @@ from .data4cov_reference    import data4cov_reference
 from .get_cov_info          import get_cov_info
 from .get_fit_children      import get_fit_children
 from .get_fit_integrand     import get_fit_integrand
+from .get_job_table		    import get_job_table
 from .get_parent_node       import get_parent_node
 from .get_var_id            import get_var_id
 from .no_ode_fit            import no_ode_fit

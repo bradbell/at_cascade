@@ -132,7 +132,7 @@ def continue_cascade(
     node_split_table = dismod_at.get_table_dict(connection, 'node_split')
     node_split_set = set()
     for row in node_split_table :
-        node_split_set.add( node_split_table['node_id'] )
+        node_split_set.add( row['node_id'] )
     connection.close()
     #
     # root_node_name

@@ -64,7 +64,8 @@ random_seed = 0
 #
 # fit_goal_set
 # Name of the nodes that we are drilling to (must be below root_node).
-fit_goal_set = {'California', 'Mississippi', 'Germany', 'Ireland' }
+# fit_goal_set = {'California', 'Mississippi', 'Germany', 'Ireland' }
+fit_goal_set = { 'Global' }
 #
 # split_fit_set
 # Name of the nodes where we are splitting from Both to Female, Male
@@ -717,6 +718,13 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
             'std'     :    1.0,
             'eta'     :    1e-7,
         },{
+            'name'    :    'parent_pini_value',
+            'density' :    'gaussian',
+            'lower'   :    0.0,
+            'upper'   :    1e-4,
+            'mean'    :    1e-5,
+            'std'     :    1.0,
+        },{
             'name'    :    'parent_rate_delta',
             'density' :    'log_gaussian',
             'lower'   :    None,
@@ -759,23 +767,17 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     fun = lambda a, t :  \
         ('parent_rate_value', 'parent_rate_delta', 'parent_rate_delta')
     smooth_table.append({
-        'name':     'parent_iota',
-        'age_id':   grid_age_id,
-        'time_id':  grid_time_id,
-        'fun':      fun
-    })
-    smooth_table.append({
-        'name':     'parent_chi',
+        'name':     'parent_rate',
         'age_id':   grid_age_id,
         'time_id':  grid_time_id,
         'fun':      fun
     })
     fun = lambda a, t :  \
-        ('parent_rate_value', None, 'parent_rate_delta')
+        ('parent_pini_value', None, None)
     smooth_table.append({
         'name':     'parent_pini',
         'age_id':   [0],
-        'time_id':  grid_time_id,
+        'time_id':  [0],
         'fun':      fun
     })
     #
@@ -812,15 +814,15 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
     rate_table = [
         {
             'name':          'pini',
-            'parent_smooth': None,
+            'parent_smooth': 'parent_pini',
             'child_smooth':  None,
         },{
             'name':           'iota',
-            'parent_smooth': 'parent_iota',
+            'parent_smooth': 'parent_rate',
             'child_smooth':  'child_smooth',
         },{
             'name':           'chi',
-            'parent_smooth': 'parent_chi',
+            'parent_smooth': 'parent_rate',
             'child_smooth':  'child_smooth',
         }
     ]
@@ -1056,7 +1058,10 @@ def drill() :
     connection.close()
     #
     # extract info from raw csv files
-    create_csv_info_files()
+    if os.path.exists(data_table_info) and os.path.exists(node_table_info) :
+        print(f'using existing {data_table_info} and {node_table_info}')
+    else :
+        create_csv_info_files()
     #
     # create root_node.db
     create_root_node_database(
