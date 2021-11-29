@@ -36,11 +36,6 @@ node_table_info     = 'node_info.csv'
 # name of the node where the cascade will start
 root_node_name      = 'Global'
 #
-# split_level
-# Level, below the root node, where the cascade will split Female and Male,
-# 0 = Global, 1 = High-income, 2 = High-income_North_America, ...
-split_level         = 3
-#
 # shift_prior_std_factor
 # Factor that multipliers standard deviation that is passed down the cascade.
 shift_prior_std_factor = 4.0
@@ -68,8 +63,12 @@ gamma_factor        = 1e-2
 random_seed = 0
 #
 # fit_goal_set
-# Name of the nodes, below the rooot node, that we are drilling to.
-fit_goal_set = { 'California', 'Iowa', 'Mississippi', 'New_York' }
+# Name of the nodes that we are drilling to (must be below root_node).
+fit_goal_set = {'California', 'Mississippi', 'Germany', 'Ireland' }
+#
+# split_fit_set
+# Name of the nodes where we are splitting from Both to Female, Male
+split_fit_set = {'United_States_of_America', 'Western_Europe'}
 #
 # all_age_group_id_list
 # The integer codes of the IHME ages groups that span all ages.
@@ -905,6 +904,16 @@ def create_all_node_database(all_node_database, root_node_database) :
         row_list.append( row )
     dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
     #
+    # node_split table
+    tbl_name = 'node_split'
+    col_name = [ 'node_id' ]
+    col_type = [ 'integer' ]
+    row_list = list()
+    for node_name in split_fit_set :
+        node_id = at_cascade.table_name2id(node_table, 'node', node_name)
+        row_list.append( [ node_id ] )
+    dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
+    #
     # connection
     connection.close()
     #
@@ -1016,7 +1025,6 @@ def set_all_option_table(all_node_database) :
     {'option_name': 'max_abs_effect',   'option_value':max_abs_effect_str},
     {'option_name': 'max_fit',          'option_value':str(max_fit)},
     {'option_name': 'root_node_name',   'option_value':root_node_name},
-    {'option_name': 'split_level',      'option_value':str(split_level)},
     {   'option_name':  'shift_prior_std_factor',
         'option_value': str(shift_prior_std_factor)
     },

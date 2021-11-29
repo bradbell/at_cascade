@@ -306,9 +306,9 @@ def no_ode_fit(
             ])
     #
     # max_num_iter_fixed
-    # command  = [ 'dismod_at', no_ode_database ]
-    # command += [ 'set', 'option', 'max_num_iter_fixed', '150' ]
-    # dismod_at.system_command_prc(command )
+    command  = [ 'dismod_at', no_ode_database ]
+    command += [ 'set', 'option', 'max_num_iter_fixed', '100' ]
+    dismod_at.system_command_prc(command )
     #
     # fit both
     command = [ 'dismod_at', no_ode_database, 'fit', 'both' ]
