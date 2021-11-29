@@ -99,6 +99,12 @@ integrand_name2measure_id = {
     'mtstandard' : 12,
     'relrisk'    : 11,
 }
+#
+# copy_file_list
+# Files, created by predict command, that are copied to ihme_output_dir
+copy_file_list = [
+    'variable.csv', 'data.csv', 'ihme.csv', 'rate.pdf', 'ihme.pdf', 'data.pdf'
+]
 # -----------------------------------------------------------------------------
 #
 import numpy
@@ -1272,6 +1278,17 @@ def create_ihme_results_node(
         fit_node_database, rate_set, pdf_file, plot_title
     )
     #
+    # data.pdf
+    pdf_file = f'{fit_node_dir}/data.pdf'
+    print( 'data.pdf' )
+    plot_title = f'{fit_node_name}.{sex_name}'
+    dismod_at.plot_data_fit(
+        database   = fit_node_database,
+        pdf_file   = pdf_file,
+        plot_title = plot_title,
+        max_plot   = max_plot,
+    )
+    #
     # predict_table
     new           = False
     connection    = dismod_at.create_connection(fit_node_database, new)
@@ -1606,12 +1623,8 @@ def copy_ihme_results(
         if not os.path.exists(to_dir) :
             os.makedirs(to_dir)
         #
-        # file_list
-        file_list = [
-            'variable.csv', 'data.csv', 'rate.pdf', 'ihme.csv', 'ihme.pdf'
-        ]
         # file
-        for file in file_list :
+        for file in copy_file_list :
             #
             # from_path
             from_path = f'{fit_node_dir}/{file}'
