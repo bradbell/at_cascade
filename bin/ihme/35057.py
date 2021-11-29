@@ -1372,6 +1372,26 @@ def create_ihme_results_node(
         # plot_data[integrand_name]
         plot_data[integrand_name].append( row )
     #
+    # z_name
+    z_list = list( plot_data.keys() )
+    for z_name in z_list :
+        #
+        # max_std, max_value
+        max_std   = 0.0
+        max_value = 0.0
+        for row in plot_data[z_name] :
+            max_value = max(max_value, row['std'])
+            max_std   = max(max_std, row['std'])
+        #
+        if max_value == 0.0 :
+            # remove both plots for this integrand
+            del plot_data[z_name]
+        #
+        elif max_std == 0.0 :
+            # remove std plot for this integrand
+            for row in plot_data[z_name] :
+                del row['std']
+    #
     # output_csv
     write_csv(output_csv, output_table)
     #
