@@ -14,17 +14,28 @@
 (n3,s0) (n4,s0)  (n3,s2) (n4,s2)
 '''
 check_job_table = [
-{ 'node_id' : 0,  'split_reference_id' : 1, 'job_id' : None }, # (n0,s1) j0
-{ 'node_id' : 1,  'split_reference_id' : 1, 'job_id' : 0    }, # (n1,s1) j1
-{ 'node_id' : 2,  'split_reference_id' : 1, 'job_id' : 0    }, # (n2,s1) j2
-{ 'node_id' : 1,  'split_reference_id' : 0, 'job_id' : 1    }, # (n1,s0) j3
-{ 'node_id' : 1,  'split_reference_id' : 2, 'job_id' : 1    }, # (n1,s2) j4
-{ 'node_id' : 5,  'split_reference_id' : 1, 'job_id' : 2    }, # (n5,s1) j4
-{ 'node_id' : 6,  'split_reference_id' : 1, 'job_id' : 2    }, # (n5,s1) j6
-{ 'node_id' : 3,  'split_reference_id' : 0, 'job_id' : 3    }, # (n3,s0) j7
-{ 'node_id' : 4,  'split_reference_id' : 0, 'job_id' : 3    }, # (n4,s0) j8
-{ 'node_id' : 3,  'split_reference_id' : 2, 'job_id' : 4    }, # (n3,s2) j9
-{ 'node_id' : 4,  'split_reference_id' : 2, 'job_id' : 4    }, # (n4,s2) j10
+# (n0,s1) j0
+{ 'fit_node_id' : 0,  'split_reference_id' : 1, 'parent_job_id' : None },
+# (n1,s1) j1
+{ 'fit_node_id' : 1,  'split_reference_id' : 1, 'parent_job_id' : 0    },
+# (n2,s1) j2
+{ 'fit_node_id' : 2,  'split_reference_id' : 1, 'parent_job_id' : 0    },
+# (n1,s0) j3
+{ 'fit_node_id' : 1,  'split_reference_id' : 0, 'parent_job_id' : 1    },
+# (n1,s2) j4
+{ 'fit_node_id' : 1,  'split_reference_id' : 2, 'parent_job_id' : 1    },
+# (n5,s1) j4
+{ 'fit_node_id' : 5,  'split_reference_id' : 1, 'parent_job_id' : 2    },
+# (n5,s1) j6
+{ 'fit_node_id' : 6,  'split_reference_id' : 1, 'parent_job_id' : 2    },
+# (n3,s0) j7
+{ 'fit_node_id' : 3,  'split_reference_id' : 0, 'parent_job_id' : 3    },
+# (n4,s0) j8
+{ 'fit_node_id' : 4,  'split_reference_id' : 0, 'parent_job_id' : 3    },
+# (n3,s2) j9
+{ 'fit_node_id' : 3,  'split_reference_id' : 2, 'parent_job_id' : 4    },
+# (n4,s2) j10
+{ 'fit_node_id' : 4,  'split_reference_id' : 2, 'parent_job_id' : 4    },
 ]
 # -----------------------------------------------------------------------------
 # imports

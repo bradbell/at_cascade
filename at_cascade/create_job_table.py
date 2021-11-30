@@ -63,11 +63,25 @@ This is the :ref:`glossary.fit_goal_set`.
 job_table
 *********
 The return value *job_table* is a ``list``.
-Each row of the list is a ``dict`` with the following keys:
-node_id, split_reference_id, job_id.
-The pair node_id, split_reference_id identifies a job that can be run.
-In the special case where the pair is start_node_id, start_split_reference_id,
-the job_id is None.
+We use *this_job_id* to denote the index of a row in the list.
+The corresponding ``dict`` has the following keys:
+
+fit_node_id
+===========
+This is the node_id for the :ref:`glossary.fit_node` for this *this_job_id*.
+
+split_reference_id
+==================
+If the split_reference table is empty, this is ``None``.
+Otherwise it is the :ref:`split_reference_table.split_reference_id`
+for this *this_job_id*; i.e. the splitting covariate has this reference
+value.
+
+parent_job_id
+=============
+This is the job_id corresponding to the parent job.
+The parent job (and only the parent job)
+must have completed before this job can be run.
 
 
 {xsrst_end create_job_table}
@@ -76,7 +90,7 @@ the job_id is None.
 import dismod_at
 import at_cascade
 # -----------------------------------------------------------------------------
-def get_shift_job_table(
+def get_child_job_table(
     job_id                     ,
     fit_node_id                ,
     fit_split_reference_id     ,
@@ -102,18 +116,18 @@ def get_shift_job_table(
     else :
         shift_node_set = fit_children[ fit_node_id ]
     #
-    # shift_job_table
-    shift_job_table = list()
+    # child_job_table
+    child_job_table = list()
     for shift_split_reference_id in shift_reference_set :
         for shift_node_id in shift_node_set :
             row = {
-                'node_id'            : shift_node_id,
+                'fit_node_id'        : shift_node_id,
                 'split_reference_id' : shift_split_reference_id,
-                'job_id'             : job_id,
+                'parent_job_id'      : job_id,
             }
-            shift_job_table.append( row )
+            child_job_table.append( row )
     #
-    return shift_job_table
+    return child_job_table
 # -----------------------------------------------------------------------------
 def create_job_table(
 # BEGIN syntax
@@ -179,9 +193,9 @@ def create_job_table(
     #
     # job_table
     job_table = [ {
-        'node_id'            : start_node_id,
+        'fit_node_id'        : start_node_id,
         'split_reference_id' : start_split_reference_id,
-        'job_id'             : None,
+        'parent_job_id'      : None,
     } ]
     #
     # job_id
@@ -191,11 +205,11 @@ def create_job_table(
         #
         # node_id, split_reference
         row                = job_table[job_id]
-        node_id            = row['node_id']
+        node_id            = row['fit_node_id']
         split_reference_id = row['split_reference_id']
         #
         # child_job_table
-        child_job_table    = get_shift_job_table(
+        child_job_table    = get_child_job_table(
             job_id,
             node_id,
             split_reference_id,
