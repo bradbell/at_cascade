@@ -64,8 +64,7 @@ random_seed = 0
 #
 # fit_goal_set
 # Name of the nodes that we are drilling to (must be below root_node).
-# fit_goal_set = {'California', 'Mississippi', 'Germany', 'Ireland' }
-fit_goal_set = { 'Global' }
+fit_goal_set = {'California', 'Mississippi', 'Germany', 'Ireland' }
 #
 # split_fit_set
 # Name of the nodes where we are splitting from Both to Female, Male
