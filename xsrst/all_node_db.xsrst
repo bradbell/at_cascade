@@ -354,6 +354,14 @@ is the name of the :ref:`glossary.root_node` in the node table of the
 :ref:`glossary.root_node_database` .
 (The node table is the same in all the dismod_at databases.)
 
+root_split_reference_name
+*************************
+This is the `split_reference_table.split_reference_name`
+corresponding to the root_node_database.
+If :ref:`split_reference_table` is empty (is not empty)
+this option must not (must) appear.
+
+
 split_covariate_name
 ********************
 is the name, in the root_node_database covariate table, of the splitting

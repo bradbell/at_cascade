@@ -423,6 +423,7 @@ def cascade_fit_node(
         'max_fit',
         'split_list',
         'root_node_name',
+        'root_split_reference_name',
         'split_covariate_name',
     ]
     all_option  = dict()
@@ -439,6 +440,12 @@ def cascade_fit_node(
     if 'root_node_name' not in all_option :
         msg = 'all_option_table; root_node_name does not appear'
         assert False, msg
+    if len(split_reference_table) == 0 :
+        assert 'root_split_reference_name' not in all_option
+        assert 'split_covariate_name' not in all_option
+    else :
+        assert 'root_split_reference_name' in all_option
+        assert 'split_covariate_name' in all_option
     #
     # fit_children
     if fit_children is None :

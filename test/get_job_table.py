@@ -55,9 +55,10 @@ fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 #
 # BEGIN all_option_table
 all_option            = {
-    'root_node_name':        'n0',
-    'split_covariate_name':  'sex',
-    'shift_prior_std_factor': 1e3,
+    'root_node_name':              'n0',
+    'root_split_reference_name':   'both',
+    'split_covariate_name':        'sex',
+    'shift_prior_std_factor':       1e3,
 }
 # END all_option_table
 #
