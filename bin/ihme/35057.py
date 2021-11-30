@@ -22,6 +22,8 @@ obesity_table_csv   = 'gbd_2020_obesity_covariate_updated.csv'
 data_table_csv      = 'overall_diabetes_input_data_crosswalkv35057.csv'
 emr_table_csv       = 'diabetes_emr.csv'
 age_group_table_csv = 'age_metadata_gbd2020.csv'
+obesity_table_csv   = \
+    'gbd_2020_obesity_covariate_updated_high_level_locs_added.csv'
 #
 # Use other database for mtall and mtspecific informaiton
 # must also use its node table to make this information correct
@@ -416,7 +418,12 @@ def create_csv_info_files() :
     # data_table
     assert set( data_table[0].keys() ) == set( emr_table[0].keys() )
     data_table += emr_table
-    #
+    # ------------------------------------------------------------------------
+    # Code that uses location_map_csv to create node table is commented out
+    # because we are using the node table in root_node_other so that the
+    # mtall_index and mtspecific_index tables in all_node_other are correct
+    # -----------------------------------------------------------------------
+    '''
     # location_table
     location_table = get_location_table(location_table_csv)
     #
@@ -461,6 +468,51 @@ def create_csv_info_files() :
                 parent           = row['parent']
                 node_name        = f'{location_name}_{parent}'
                 row['node_name'] = node_name
+    '''
+    #
+    # node_table, location_id2node_id
+    location_id2node_id = dict()
+    new                 = False
+    connection          = dismod_at.create_connection(root_node_other, new)
+    other_node_table    = dismod_at.get_table_dict(connection, 'node')
+    connection.close()
+    node_table      = list()
+    node_name_set   = set()
+    double_name_set = set()
+    for (node_id, row_in) in enumerate( other_node_table ) :
+        parent                  = row_in['parent']
+        location_id             = row_in['c_location_id']
+        #
+        # node_name
+        node_name               = row_in['node_name']
+        node_name = node_name.replace(' ', '_')
+        node_name = node_name.replace("'", '_')
+        #
+        # node_name_set, double_name_set
+        if node_name in node_name_set :
+            double_name_set.add( node_id )
+        else :
+            node_name_set.add( node_name )
+
+        #
+        #
+        # node_table
+        row_out = dict()
+        row_out['node_name']    = node_name
+        row_out['location_id']  = location_id
+        row_out['parent']       = parent
+        node_table.append(row_out)
+        #
+        # location_id2node_id
+        location_id2node_id[location_id] = node_id
+    #
+    # node_table
+    for node_id in double_name_set :
+        row              = node_table[node_id]
+        node_name        = row['node_name']
+        location_id      = row['location_id']
+        node_name        = f'{node_name}_{location_id}'
+        row['node_name'] = node_name
     #
     # create node_table_info
     write_csv(node_table_info, node_table)
@@ -510,14 +562,24 @@ def create_csv_info_files() :
             row['hold_out'] = 1
     #
     # change location_id to node_id
+    data_table_ok = list()
+    bad_location  = set()
     for row in data_table :
         location_id      = row['location_id']
-        node_id          = location_id2node_id[location_id]
-        row['node_id']   = node_id
-        del row['location_id']
+        if location_id in location_id2node_id :
+            node_id          = location_id2node_id[location_id]
+            row['node_id']   = node_id
+            del row['location_id']
+            data_table_ok.append(row)
+        else :
+            bad_location.add( location_id )
     #
     # create data_table_info
-    write_csv(data_table_info, data_table)
+    write_csv(data_table_info, data_table_ok)
+    #
+    # data that was skipped because we are using other_node_table
+    if 0 < len(bad_location) :
+        print(f'skipped data for the following locations\n{bad_location}')
     #
     print('end create_csv_info_files')
 # -----------------------------------------------------------------------------
@@ -1028,9 +1090,10 @@ def set_all_option_table(all_node_database) :
     # all_option_table
     max_abs_effect_str = str( max_abs_effect )
     all_option_table  = [
-    {'option_name': 'absolute_covariates',    'option_value':'one'},
-    {'option_name': 'in_parallel',            'option_value':'false'},
-    {'option_name': 'split_covariate_name',   'option_value':'sex'},
+    {'option_name': 'absolute_covariates',         'option_value':'one'},
+    {'option_name': 'in_parallel',                 'option_value':'false'},
+    {'option_name': 'split_covariate_name',        'option_value':'sex'},
+    {'option_name': 'root_split_reference_name',   'option_value':'Both'},
     #
     {'option_name': 'max_abs_effect',   'option_value':max_abs_effect_str},
     {'option_name': 'max_fit',          'option_value':str(max_fit)},
