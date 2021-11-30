@@ -19,10 +19,18 @@ Release Notes for at_cascade
 Release Notes for 2021
 ######################
 
+11-30
+*****
+Change the name get_job_table to :ref:`create_job_table`.
+
 11-29
 *****
-Add :ref:`all_option_table.root_split_reference_name`
-to the all_option table.
+1.  Add get_job_table. This routine is under construction and planned
+    and part of a re-factoring for parallel processing.
+
+2.  Add :ref:`all_option_table.root_split_reference_name`
+    to the all_option table (so that get_job_table can use any
+    fit_node_database).
 
 11-28
 *****

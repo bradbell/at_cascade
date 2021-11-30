@@ -8,7 +8,7 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin get_job_table}
+{xsrst_begin create_job_table}
 
 Table of Jobs That Can Run in Parallel
 ######################################
@@ -70,7 +70,7 @@ In the special case where the pair is start_node_id, start_split_reference_id,
 the job_id is None.
 
 
-{xsrst_end get_job_table}
+{xsrst_end create_job_table}
 '''
 # -----------------------------------------------------------------------------
 import dismod_at
@@ -115,9 +115,9 @@ def get_shift_job_table(
     #
     return shift_job_table
 # -----------------------------------------------------------------------------
-def get_job_table(
+def create_job_table(
 # BEGIN syntax
-# job_table = at_cascade.get_job_table(
+# job_table = at_cascade.create_job_table(
     all_node_database          = None,
     fit_node_database          = None,
     start_node_id              = None,
