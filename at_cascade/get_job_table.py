@@ -37,10 +37,10 @@ is a python string specifying the location of the
 relative to the current working directory.
 This argument can't be ``None``.
 
-root_node_database
-******************
-is a python string specifying the location of the
-:ref:`glossary.root_node_database`
+fit_node_database
+*****************
+is a python string specifying the location of a
+:ref:`glossary.fit_node_database`
 relative to the current working directory.
 This argument can't be ``None``.
 
@@ -119,7 +119,7 @@ def get_job_table(
 # BEGIN syntax
 # job_table = at_cascade.get_job_table(
     all_node_database          = None,
-    root_node_database         = None,
+    fit_node_database          = None,
     start_node_id              = None,
     start_split_reference_id   = None,
     fit_goal_set               = None,
@@ -128,9 +128,8 @@ def get_job_table(
 ) :
     #
     # node_table, covariate_table
-    root_table      = dict()
     new             = False
-    connection      = dismod_at.create_connection(root_node_database, new)
+    connection      = dismod_at.create_connection(fit_node_database, new)
     node_table      = dismod_at.get_table_dict(connection, 'node')
     covariate_table = dismod_at.get_table_dict(connection, 'covariate')
     connection.close()
@@ -165,10 +164,18 @@ def get_job_table(
     )
     #
     # root_split_reference_id
-    cov_info = at_cascade.get_cov_info(
-        all_table['all_option'], covariate_table, all_table['split_reference']
-    )
-    root_split_reference_id = cov_info['split_reference_id']
+    root_split_reference_name = None
+    for row in all_table['all_option'] :
+        if row['option_name'] == 'root_split_reference_name' :
+            root_split_reference_name = row['option_value']
+    if root_split_reference_name is None :
+        root_split_reference_id = None
+    else :
+        root_split_reference_id = at_cascade.table_name2id(
+            all_table['split_reference'],
+            'split_reference',
+            root_split_reference_name
+        )
     #
     # job_table
     job_table = [ {

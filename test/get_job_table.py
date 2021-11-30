@@ -380,7 +380,7 @@ def main() :
     root_node_id = 0
     job_table = at_cascade.get_job_table(
         all_node_database         = all_node_database,
-        root_node_database        = root_node_database,
+        fit_node_database         = root_node_database,
         start_node_id             = root_node_id,
         start_split_reference_id  = root_split_reference_id,
         fit_goal_set              = fit_goal_set,
