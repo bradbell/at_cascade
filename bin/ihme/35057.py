@@ -22,6 +22,9 @@ obesity_table_csv   = 'gbd_2020_obesity_covariate_updated.csv'
 data_table_csv      = 'overall_diabetes_input_data_crosswalkv35057.csv'
 emr_table_csv       = 'diabetes_emr.csv'
 age_group_table_csv = 'age_metadata_gbd2020.csv'
+#
+# Use other database for mtall and mtspecific informaiton
+# must also use its node table to make this information correct
 all_node_other      = '../475876/all_node.db'
 root_node_other     = '../475876/dismod.db'
 #
@@ -417,6 +420,51 @@ def create_csv_info_files() :
     # location_table
     location_table = get_location_table(location_table_csv)
     #
+    # location_id2node_id
+    location_id2node_id = dict()
+    for (node_id, row) in enumerate(location_table) :
+        location_id = row['location_id']
+        location_id2node_id[location_id]  = node_id
+    #
+    # node_table
+    node_table      = list()
+    node_name_set   = set()
+    double_name_set = set()
+    for (node_id, row_in) in enumerate(location_table) :
+        location_name        = row_in['location_name']
+        location_id          = row_in['location_id']
+        parent_location_id   = row_in['parent_id']
+        if parent_location_id == location_id :
+            parent_node_id = None
+        else :
+            parent_node_id = location_id2node_id[parent_location_id]
+        row_out = dict()
+        row_out['node_id']       = node_id
+        row_out['node_name']     = location_name
+        row_out['parent']        = parent_node_id
+        row_out['location_id']   = location_id
+        node_table.append(row_out)
+        #
+        # double_name_set
+        if location_name in node_name_set :
+            double_name_set.add( location_name )
+        #
+        # node_name_set
+        node_name_set.add( location_name )
+    #
+    # location_name
+    for location_name in double_name_set :
+        # row
+        for row in node_table :
+            if row['node_name'] == location_name :
+                # add parent to node_name for this row
+                parent           = row['parent']
+                node_name        = f'{location_name}_{parent}'
+                row['node_name'] = node_name
+    #
+    # create node_table_info
+    write_csv(node_table_info, node_table)
+    #
     # interpolate_obesity
     one_age_group = False
     interpolate_obesity  = get_interpolate_covariate(
@@ -428,12 +476,6 @@ def create_csv_info_files() :
     interpolate_ldi  = get_interpolate_covariate(
         ldi_table_csv, age_group_dict, one_age_group
     )
-    #
-    # location_id2node_id
-    location_id2node_id = dict()
-    for (node_id, row) in enumerate(location_table) :
-        location_id = row['location_id']
-        location_id2node_id[location_id]  = node_id
     #
     # add covariates to data_table
     for row in data_table :
@@ -476,45 +518,6 @@ def create_csv_info_files() :
     #
     # create data_table_info
     write_csv(data_table_info, data_table)
-    #
-    # node_table
-    node_table      = list()
-    node_name_set   = set()
-    double_name_set = set()
-    for (node_id, row_in) in enumerate(location_table) :
-        location_name        = row_in['location_name']
-        location_id          = row_in['location_id']
-        parent_location_id   = row_in['parent_id']
-        if parent_location_id == location_id :
-            parent_node_id = None
-        else :
-            parent_node_id = location_id2node_id[parent_location_id]
-        row_out = dict()
-        row_out['node_id']       = node_id
-        row_out['node_name']     = location_name
-        row_out['parent']        = parent_node_id
-        row_out['location_id']   = location_id
-        node_table.append(row_out)
-        #
-        # double_name_set
-        if location_name in node_name_set :
-            double_name_set.add( location_name )
-        #
-        # node_name_set
-        node_name_set.add( location_name )
-    #
-    # location_name
-    for location_name in double_name_set :
-        # row
-        for row in node_table :
-            if row['node_name'] == location_name :
-                # add parent to node_name for this row
-                parent           = row['parent']
-                node_name        = f'{location_name}_{parent}'
-                row['node_name'] = node_name
-    #
-    # create node_table_info
-    write_csv(node_table_info, node_table)
     #
     print('end create_csv_info_files')
 # -----------------------------------------------------------------------------
