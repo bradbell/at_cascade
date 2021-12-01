@@ -1,0 +1,54 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!
+node_split_table
+!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: node_split_table, node, split, table
+
+.. index:: node_split_table, node, split, table
+
+.. _node_split_table:
+
+Node Split Table
+################
+.. contents::
+   :local:
+
+This table specifies the nodes at which the cascade will be split
+by the value of the splitting covariate.
+If this table is not empty,
+the :ref:`all_option_table.split_covariate_name`
+must appear and the
+:ref:`split_reference_table` must not be empty.
+
+.. meta::
+   :keywords: node_split_id
+
+.. index:: node_split_id
+
+.. _node_split_table.node_split_id:
+
+node_split_id
+*************
+is the :ref:`all_node_db.primary_key` for this table.
+
+.. meta::
+   :keywords: node_id
+
+.. index:: node_id
+
+.. _node_split_table.node_id:
+
+node_id
+*******
+This column has type ``integer`` and contains a dismod_at node_id
+at which the analysis will be split by the splitting covariate; i.e.,
+this node will be fit both before and after the splitting.
+The set of values in this column determine the
+:ref:`glossary.node_split_set`.
+
+----
+
+xsrst input file: ``xsrst/all_node_db.xsrst``

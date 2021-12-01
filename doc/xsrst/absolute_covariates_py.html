@@ -103,6 +103,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release_notes.html">release_notes</a></li>
 </ul>
 </li>
 </ul>
@@ -209,7 +210,11 @@
 <span class="c1"># END fit_goal_set</span>
 <span class="c1">#</span>
 <span class="c1"># BEGIN split_reference_table</span>
-<span class="n">all_option</span>            <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;split_covariate_name&#39;</span><span class="p">:</span> <span class="s1">&#39;sex&#39;</span><span class="p">}</span>
+<span class="n">all_option</span>            <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;root_node_name&#39;</span><span class="p">:</span>            <span class="s1">&#39;n0&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;root_split_reference_name&#39;</span><span class="p">:</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;split_covariate_name&#39;</span><span class="p">:</span>      <span class="s1">&#39;sex&#39;</span><span class="p">,</span>
+<span class="p">}</span>
 <span class="n">split_reference_table</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span><span class="s1">&#39;split_reference_name&#39;</span><span class="p">:</span> <span class="s1">&#39;female&#39;</span><span class="p">,</span> <span class="s1">&#39;split_reference_value&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
     <span class="p">{</span><span class="s1">&#39;split_reference_name&#39;</span><span class="p">:</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span>   <span class="s1">&#39;split_reference_value&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">},</span>

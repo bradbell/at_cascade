@@ -103,6 +103,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release_notes.html">release_notes</a></li>
 </ul>
 </li>
 </ul>
@@ -570,12 +571,12 @@
     <span class="c1"># Create all_node.db</span>
     <span class="c1"># We could get all_cov_reference from here, but we do not need to</span>
     <span class="n">all_node_database</span> <span class="o">=</span> <span class="s1">&#39;all_node.db&#39;</span>
+    <span class="n">all_option</span>        <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;root_node_name&#39;</span><span class="p">:</span> <span class="s1">&#39;n0&#39;</span> <span class="p">}</span>
     <span class="n">at_cascade</span><span class="o">.</span><span class="n">create_all_node_db</span><span class="p">(</span>
         <span class="n">all_node_database</span>       <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
         <span class="n">root_node_database</span>      <span class="o">=</span> <span class="n">root_node_database</span><span class="p">,</span>
         <span class="n">all_cov_reference</span>       <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">,</span>
-        <span class="n">split_reference_table</span>   <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span>
-        <span class="n">all_option</span>              <span class="o">=</span> <span class="nb">dict</span><span class="p">(),</span>
+        <span class="n">all_option</span>              <span class="o">=</span> <span class="n">all_option</span><span class="p">,</span>
         <span class="n">omega_grid</span>              <span class="o">=</span> <span class="n">omega_grid</span><span class="p">,</span>
         <span class="n">mtall_data</span>              <span class="o">=</span> <span class="n">mtall_data</span><span class="p">,</span>
     <span class="p">)</span>

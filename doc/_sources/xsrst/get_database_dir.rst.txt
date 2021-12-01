@@ -1,0 +1,141 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!
+get_database_dir
+!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: get_database_dir, get, database, directory, corresponding, to, fit
+
+.. index:: get_database_dir, get, database, directory, corresponding, to, fit
+
+.. _get_database_dir:
+
+Get Database Directory Corresponding To a Fit
+#############################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _get_database_dir.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/get_database_dir.py
+    :lines: 83-91
+    :language: py
+
+.. meta::
+   :keywords: node_table
+
+.. index:: node_table
+
+.. _get_database_dir.node_table:
+
+node_table
+**********
+is the node_table for this cascade as a ``list'' of ``dict``.
+It can't be ``None``.
+
+.. meta::
+   :keywords: split_reference_table
+
+.. index:: split_reference_table
+
+.. _get_database_dir.split_reference_table:
+
+split_reference_table
+*********************
+is the :ref:`split_reference_table` as a ``list`` of ``dict``.
+It can't be ``None``.
+If the list has lenght zero,
+we say that the table is empty.
+
+.. meta::
+   :keywords: node_split_set
+
+.. index:: node_split_set
+
+.. _get_database_dir.node_split_set:
+
+node_split_set
+**************
+If :ref:`split_reference_table` is empty,
+this argument must be None.
+Otherwise it is a ``set`` of ``int`` containing the
+:ref:`node_split_table.node_id` values that appear in the
+node_spit table.
+
+.. meta::
+   :keywords: root_node_id
+
+.. index:: root_node_id
+
+.. _get_database_dir.root_node_id:
+
+root_node_id
+************
+is the node_id for the :ref:`glossary.root_node`.
+
+.. meta::
+   :keywords: root_split_reference_id
+
+.. index:: root_split_reference_id
+
+.. _get_database_dir.root_split_reference_id:
+
+root_split_reference_id
+***********************
+If :ref:`split_reference_table` is empty,
+this argument must be None.
+Otherwise it is an ``int`` specifying the
+:ref:`split_reference_table.split_reference_id`
+that the root node corresponds to.
+
+.. meta::
+   :keywords: fit_node_id
+
+.. index:: fit_node_id
+
+.. _get_database_dir.fit_node_id:
+
+fit_node_id
+***********
+This argument is an ``int`` is the node_id for the  :ref:`glossary.fit_node`.
+It can't be ``None``.
+
+.. meta::
+   :keywords: fit_split_reference_id
+
+.. index:: fit_split_reference_id
+
+.. _get_database_dir.fit_split_reference_id:
+
+fit_split_reference_id
+**********************
+If :ref:`split_reference_table` is empty,
+this argument must be None.
+Otherwise it is an ``int`` specifying the
+:ref:`split_reference_table.split_reference_id`
+that the fit corresponds to.
+
+.. meta::
+   :keywords: database_dir
+
+.. index:: database_dir
+
+.. _get_database_dir.database_dir:
+
+database_dir
+************
+The return value is a ``str`` containg the name of the directory
+where the database corresponding to he fit is located.
+
+----
+
+xsrst input file: ``at_cascade/get_database_dir.py``

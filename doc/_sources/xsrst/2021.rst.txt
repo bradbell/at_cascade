@@ -1,0 +1,82 @@
+.. include:: ../preamble.rst
+
+!!!!
+2021
+!!!!
+
+.. meta::
+   :keywords: 2021, release, notes, for, 2021
+
+.. index:: 2021, release, notes, for, 2021
+
+.. _2021:
+
+Release Notes for 2021
+######################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: 12-01
+
+.. index:: 12-01
+
+.. _2021.12-01:
+
+12-01
+*****
+Add :ref:`get_database_dir<get_database_dir>`.
+This routine is for use with parallel processing.
+
+.. meta::
+   :keywords: 11-30
+
+.. index:: 11-30
+
+.. _2021.11-30:
+
+11-30
+*****
+Change the name get_job_table to
+:ref:`create_job_table<create_job_table>`.
+
+.. meta::
+   :keywords: 11-29
+
+.. index:: 11-29
+
+.. _2021.11-29:
+
+11-29
+*****
+1.  Add get_job_table. This routine is under construction and planned
+    and part of a re-factoring for parallel processing.
+
+2.  Add :ref:`all_option_table.root_split_reference_name`
+    to the all_option table (so that get_job_table can use any
+    fit_node_database).
+
+.. meta::
+   :keywords: 11-28
+
+.. index:: 11-28
+
+.. _2021.11-28:
+
+11-28
+*****
+1.  Change the :ref:`create_all_node_db.all_option` argument to
+    create_all_node_db to be a complete representation of the
+    :ref:`all_option_table`.
+    This reduces the amount of necessary documentation.
+    It also requires that root_node_name be in the all_option argument.
+
+2.  Change the :ref:`create_all_node_db.split_reference_table` argument to
+    have a default value (corresponding to the empty table).
+
+3.  Change split_level in the all_option table to the
+    :ref:`node_split_table`.
+
+----
+
+xsrst input file: ``xsrst/release_notes.xsrst``

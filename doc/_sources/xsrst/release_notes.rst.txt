@@ -1,0 +1,33 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!
+release_notes
+!!!!!!!!!!!!!
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   2021
+
+.. meta::
+   :keywords: release_notes, release, notes, for, at_cascade
+
+.. index:: release_notes, release, notes, for, at_cascade
+
+.. _release_notes:
+
+Release Notes for at_cascade
+############################
+.. contents::
+   :local:
+
+.. csv-table::
+    :header: "Child", "Title"
+    :widths: 20, 80
+
+    "2021", :ref:`2021`
+
+----
+
+xsrst input file: ``xsrst/release_notes.xsrst``

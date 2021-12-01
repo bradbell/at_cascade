@@ -103,6 +103,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release_notes.html">release_notes</a></li>
 </ul>
 </li>
 </ul>
@@ -210,11 +211,13 @@
 <span class="c1">#</span>
 <span class="c1"># BEGIN all_option_table</span>
 <span class="n">all_option</span>            <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;split_covariate_name&#39;</span><span class="p">:</span>  <span class="s1">&#39;sex&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;shift_prior_std_factor&#39;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">,</span>
-    <span class="s1">&#39;split_level&#39;</span><span class="p">:</span>              <span class="mi">0</span><span class="p">,</span>
+    <span class="s1">&#39;root_node_name&#39;</span><span class="p">:</span>             <span class="s1">&#39;n0&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;root_split_reference_name&#39;</span><span class="p">:</span>  <span class="s1">&#39;both&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;split_covariate_name&#39;</span><span class="p">:</span>       <span class="s1">&#39;sex&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;shift_prior_std_factor&#39;</span><span class="p">:</span>      <span class="mf">1e3</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="c1"># END all_option_table</span>
+<span class="c1">#</span>
 <span class="c1">#</span>
 <span class="c1"># BEGIN split_reference_table</span>
 <span class="n">split_reference_table</span> <span class="o">=</span> <span class="p">[</span>
@@ -226,6 +229,9 @@
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">split_reference_table</span> <span class="p">:</span>
     <span class="n">split_reference_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;split_reference_value&#39;</span><span class="p">]</span> <span class="p">)</span>
 <span class="c1"># END split_reference_table</span>
+<span class="c1"># BEGIN node_split_table</span>
+<span class="n">node_split_table</span> <span class="o">=</span> <span class="p">[</span> <span class="p">{</span> <span class="s1">&#39;node_name&#39;</span> <span class="p">:</span>   <span class="s1">&#39;n0&#39;</span><span class="p">}</span> <span class="p">]</span>
+<span class="c1"># END node_split_table</span>
 <span class="c1">#</span>
 <span class="c1"># BEGIN root_split_reference_id</span>
 <span class="n">root_split_reference_id</span> <span class="o">=</span> <span class="mi">1</span>
@@ -520,6 +526,7 @@
         <span class="n">root_node_database</span>     <span class="o">=</span> <span class="n">root_node_database</span><span class="p">,</span>
         <span class="n">all_cov_reference</span>      <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">,</span>
         <span class="n">split_reference_table</span>  <span class="o">=</span> <span class="n">split_reference_table</span><span class="p">,</span>
+        <span class="n">node_split_table</span>       <span class="o">=</span> <span class="n">node_split_table</span><span class="p">,</span>
         <span class="n">all_option</span>             <span class="o">=</span> <span class="n">all_option</span><span class="p">,</span>
         <span class="n">omega_grid</span>             <span class="o">=</span> <span class="n">omega_grid</span><span class="p">,</span>
         <span class="n">mtall_data</span>             <span class="o">=</span> <span class="n">mtall_data</span><span class="p">,</span>

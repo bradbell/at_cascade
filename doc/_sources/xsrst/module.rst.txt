@@ -13,9 +13,11 @@ module
    check_cascade_fit
    continue_cascade
    create_all_node_db
+   create_job_table
    create_shift_db
    data4cov_reference
    get_cov_info
+   get_database_dir
    get_fit_children
    get_fit_integrand
    get_parent_node
@@ -46,9 +48,11 @@ The at_cascade Python Module
     "check_cascade_fit", :ref:`check_cascade_fit`
     "continue_cascade", :ref:`continue_cascade`
     "create_all_node_db", :ref:`create_all_node_db`
+    "create_job_table", :ref:`create_job_table`
     "create_shift_db", :ref:`create_shift_db`
     "data4cov_reference", :ref:`data4cov_reference`
     "get_cov_info", :ref:`get_cov_info`
+    "get_database_dir", :ref:`get_database_dir`
     "get_fit_children", :ref:`get_fit_children`
     "get_fit_integrand", :ref:`get_fit_integrand`
     "get_parent_node", :ref:`get_parent_node`

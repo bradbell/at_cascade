@@ -12,6 +12,7 @@ at_cascade
    all_node_db
    example
    module
+   release_notes
 
 .. meta::
    :keywords: at_cascade, cascading, dismod_at, analysis, from, parent, to, child, regions
@@ -37,13 +38,13 @@ Under Construction
 This package is under construction and not yet usable.
 
 .. meta::
-   :keywords: version, 2021.11.27
+   :keywords: version, 2021.12.1
 
-.. index:: version, 2021.11.27
+.. index:: version, 2021.12.1
 
-.. _at_cascade.version_2021_11_27:
+.. _at_cascade.version_2021_12_1:
 
-Version 2021.11.27
+Version 2021.12.1
 ******************
 
 .. meta::
@@ -74,6 +75,7 @@ Children
     "all_node_db", :ref:`all_node_db`
     "example", :ref:`example`
     "module", :ref:`module`
+    "release_notes", :ref:`release_notes`
 
 ----
 

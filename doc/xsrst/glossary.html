@@ -32,6 +32,7 @@
 <meta content="mtother" name="keywords" />
 <meta content="mtspecific" name="keywords" />
 <meta content="node_name" name="keywords" />
+<meta content="node_split_set" name="keywords" />
 <meta content="ode_integrand" name="keywords" />
 <meta content="omega" name="keywords" />
 <meta content="omega_grid" name="keywords" />
@@ -129,6 +130,7 @@
 <li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
 <li class="toctree-l2"><a class="reference internal" href="example.html">example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release_notes.html">release_notes</a></li>
 </ul>
 </li>
 </ul>
@@ -237,18 +239,19 @@
 <li><p><a class="reference internal" href="#mtother" id="id27">mtother</a></p></li>
 <li><p><a class="reference internal" href="#mtspecific" id="id28">mtspecific</a></p></li>
 <li><p><a class="reference internal" href="#node-name" id="id29">node_name</a></p></li>
-<li><p><a class="reference internal" href="#ode-integrand" id="id30">ode_integrand</a></p></li>
-<li><p><a class="reference internal" href="#omega" id="id31">omega</a></p></li>
-<li><p><a class="reference internal" href="#omega-grid" id="id32">omega_grid</a></p></li>
-<li><p><a class="reference internal" href="#prevalence" id="id33">prevalence</a></p></li>
-<li><p><a class="reference internal" href="#rate-value" id="id34">rate_value</a></p></li>
-<li><p><a class="reference internal" href="#relative-covariate" id="id35">Relative Covariate</a></p></li>
-<li><p><a class="reference internal" href="#remission" id="id36">remission</a></p></li>
-<li><p><a class="reference internal" href="#rho" id="id37">rho</a></p></li>
-<li><p><a class="reference internal" href="#root-node" id="id38">root_node</a></p></li>
-<li><p><a class="reference internal" href="#root-node-database" id="id39">root_node_database</a></p></li>
-<li><p><a class="reference internal" href="#sincidence" id="id40">Sincidence</a></p></li>
-<li><p><a class="reference internal" href="#top-directory" id="id41">top_directory</a></p></li>
+<li><p><a class="reference internal" href="#node-split-set" id="id30">node_split_set</a></p></li>
+<li><p><a class="reference internal" href="#ode-integrand" id="id31">ode_integrand</a></p></li>
+<li><p><a class="reference internal" href="#omega" id="id32">omega</a></p></li>
+<li><p><a class="reference internal" href="#omega-grid" id="id33">omega_grid</a></p></li>
+<li><p><a class="reference internal" href="#prevalence" id="id34">prevalence</a></p></li>
+<li><p><a class="reference internal" href="#rate-value" id="id35">rate_value</a></p></li>
+<li><p><a class="reference internal" href="#relative-covariate" id="id36">Relative Covariate</a></p></li>
+<li><p><a class="reference internal" href="#remission" id="id37">remission</a></p></li>
+<li><p><a class="reference internal" href="#rho" id="id38">rho</a></p></li>
+<li><p><a class="reference internal" href="#root-node" id="id39">root_node</a></p></li>
+<li><p><a class="reference internal" href="#root-node-database" id="id40">root_node_database</a></p></li>
+<li><p><a class="reference internal" href="#sincidence" id="id41">Sincidence</a></p></li>
+<li><p><a class="reference internal" href="#top-directory" id="id42">top_directory</a></p></li>
 </ul>
 </div>
 <div class="section" id="chi">
@@ -397,32 +400,41 @@ This is also denoted by <span class="math notranslate nohighlight">\(\iota(a, t)
 <span id="glossary-node-name"></span><span id="index-26"></span><h3><a class="toc-backref" href="#id29">node_name</a><a class="headerlink" href="#node-name" title="Permalink to this headline">¶</a></h3>
 <p>Is the <em>node_name</em> for a node in the <em>root_node_database</em> node table.</p>
 </div>
+<div class="section" id="node-split-set">
+<span id="glossary-node-split-set"></span><span id="index-27"></span><h3><a class="toc-backref" href="#id30">node_split_set</a><a class="headerlink" href="#node-split-set" title="Permalink to this headline">¶</a></h3>
+<p>This is the set of nodes at which the cascade is split by the value
+of the splitting covariate.
+No node in this set can be a descendant (or ancestor) of another
+node in this set.
+(Becasue the splitting can only occur once in the path from the
+<em>root_node</em> to any other node.)</p>
+</div>
 <div class="section" id="ode-integrand">
-<span id="glossary-ode-integrand"></span><span id="index-27"></span><h3><a class="toc-backref" href="#id30">ode_integrand</a><a class="headerlink" href="#ode-integrand" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-ode-integrand"></span><span id="index-28"></span><h3><a class="toc-backref" href="#id31">ode_integrand</a><a class="headerlink" href="#ode-integrand" title="Permalink to this headline">¶</a></h3>
 <p>The following integrands requires solving the dismod_at ode to model
 and hence each of them is called an <em>ode_integrand</em>:
 susceptible, withC, prevalence, Tprevalence, mtspecific, mtall, mtstandard.</p>
 </div>
 <div class="section" id="omega">
-<span id="glossary-omega"></span><span id="index-28"></span><h3><a class="toc-backref" href="#id31">omega</a><a class="headerlink" href="#omega" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-omega"></span><span id="index-29"></span><h3><a class="toc-backref" href="#id32">omega</a><a class="headerlink" href="#omega" title="Permalink to this headline">¶</a></h3>
 <p>The model rate for other cause mortality as a function of age and time.
 This is also denoted by <span class="math notranslate nohighlight">\(\omega(a, t)\)</span>.</p>
 </div>
 <div class="section" id="omega-grid">
-<span id="glossary-omega-grid"></span><span id="index-29"></span><h3><a class="toc-backref" href="#id32">omega_grid</a><a class="headerlink" href="#omega-grid" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-omega-grid"></span><span id="index-30"></span><h3><a class="toc-backref" href="#id33">omega_grid</a><a class="headerlink" href="#omega-grid" title="Permalink to this headline">¶</a></h3>
 <p>A single age-time grid used for the <em>omega</em> constraints.</p>
 </div>
 <div class="section" id="prevalence">
-<span id="glossary-prevalence"></span><span id="index-30"></span><h3><a class="toc-backref" href="#id33">prevalence</a><a class="headerlink" href="#prevalence" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-prevalence"></span><span id="index-31"></span><h3><a class="toc-backref" href="#id34">prevalence</a><a class="headerlink" href="#prevalence" title="Permalink to this headline">¶</a></h3>
 <p>This is the ratio the number of people with the condition
 divided by the number of people currently alive.</p>
 </div>
 <div class="section" id="rate-value">
-<span id="glossary-rate-value"></span><span id="index-31"></span><h3><a class="toc-backref" href="#id34">rate_value</a><a class="headerlink" href="#rate-value" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-rate-value"></span><span id="index-32"></span><h3><a class="toc-backref" href="#id35">rate_value</a><a class="headerlink" href="#rate-value" title="Permalink to this headline">¶</a></h3>
 <p>The abbreviation used for rate value covariate multiplier.</p>
 </div>
 <div class="section" id="relative-covariate">
-<span id="glossary-relative-covariate"></span><span id="index-32"></span><h3><a class="toc-backref" href="#id35">Relative Covariate</a><a class="headerlink" href="#relative-covariate" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-relative-covariate"></span><span id="index-33"></span><h3><a class="toc-backref" href="#id36">Relative Covariate</a><a class="headerlink" href="#relative-covariate" title="Permalink to this headline">¶</a></h3>
 <p>A relative covariate is any covariate that is not an
 <a class="reference internal" href="all_option_table.html#all-option-table-absolute-covariates"><span class="std std-ref">absolute covariate</span></a>
 and is not the splitting covariate
@@ -432,33 +444,33 @@ The reference value for a relative covariate can depend on the node
 and the value of the splitting covariate.</p>
 </div>
 <div class="section" id="remission">
-<span id="glossary-remission"></span><span id="index-33"></span><h3><a class="toc-backref" href="#id36">remission</a><a class="headerlink" href="#remission" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-remission"></span><span id="index-34"></span><h3><a class="toc-backref" href="#id37">remission</a><a class="headerlink" href="#remission" title="Permalink to this headline">¶</a></h3>
 <p>The abbreviation used for the remission integrand.
 This corresponds to a directly measurement of <em>rho</em></p>
 </div>
 <div class="section" id="rho">
-<span id="glossary-rho"></span><span id="index-34"></span><h3><a class="toc-backref" href="#id37">rho</a><a class="headerlink" href="#rho" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-rho"></span><span id="index-35"></span><h3><a class="toc-backref" href="#id38">rho</a><a class="headerlink" href="#rho" title="Permalink to this headline">¶</a></h3>
 <p>The mode rate for remission as a function of age an time.
 This is also denoted by <span class="math notranslate nohighlight">\(\rho(a, t)\)</span>.</p>
 </div>
 <div class="section" id="root-node">
-<span id="glossary-root-node"></span><span id="index-35"></span><h3><a class="toc-backref" href="#id38">root_node</a><a class="headerlink" href="#root-node" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-root-node"></span><span id="index-36"></span><h3><a class="toc-backref" href="#id39">root_node</a><a class="headerlink" href="#root-node" title="Permalink to this headline">¶</a></h3>
 <p>The top level node for this cascade; see
 <a class="reference internal" href="all_option_table.html#all-option-table-root-node-name"><span class="std std-ref">root_node_name</span></a>.</p>
 </div>
 <div class="section" id="root-node-database">
-<span id="glossary-root-node-database"></span><span id="index-36"></span><h3><a class="toc-backref" href="#id39">root_node_database</a><a class="headerlink" href="#root-node-database" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-root-node-database"></span><span id="index-37"></span><h3><a class="toc-backref" href="#id40">root_node_database</a><a class="headerlink" href="#root-node-database" title="Permalink to this headline">¶</a></h3>
 <p>This is a dismod_at database where the <em>root_node</em> is the
 parent node in the dismod_at option table.
 This must satisfy all the conditions for a <a class="reference internal" href="#glossary-input-node-database"><span class="std std-ref">input_node_database</span></a>.</p>
 </div>
 <div class="section" id="sincidence">
-<span id="glossary-sincidence"></span><span id="index-37"></span><h3><a class="toc-backref" href="#id40">Sincidence</a><a class="headerlink" href="#sincidence" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-sincidence"></span><span id="index-38"></span><h3><a class="toc-backref" href="#id41">Sincidence</a><a class="headerlink" href="#sincidence" title="Permalink to this headline">¶</a></h3>
 <p>The abbreviation used for the susceptible incidence integrand.
 This corresponds to a directly measurement of <a class="reference internal" href="#glossary-iota"><span class="std std-ref">iota</span></a>.</p>
 </div>
 <div class="section" id="top-directory">
-<span id="glossary-top-directory"></span><span id="index-38"></span><h3><a class="toc-backref" href="#id41">top_directory</a><a class="headerlink" href="#top-directory" title="Permalink to this headline">¶</a></h3>
+<span id="glossary-top-directory"></span><span id="index-39"></span><h3><a class="toc-backref" href="#id42">top_directory</a><a class="headerlink" href="#top-directory" title="Permalink to this headline">¶</a></h3>
 <p>Directory where the input data is located.</p>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">xsrst/glossary.xsrst</span></code></p>
