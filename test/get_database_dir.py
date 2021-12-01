@@ -40,7 +40,7 @@ root_node_id            = 0      # n0
 root_split_reference_id = 1     # both
 #
 # node n1 before spliting by sex
-database_name = at_cascade.get_database_name(
+database_dir = at_cascade.get_database_dir(
     node_table              = node_table ,
     split_reference_table   = split_reference_table,
     node_split_set          = node_split_set,
@@ -49,10 +49,10 @@ database_name = at_cascade.get_database_name(
     fit_node_id             = 1,                       # n1
     fit_split_reference_id  = root_split_reference_id, # both
 )
-assert database_name == 'n0/n1'
+assert database_dir == 'n0/n1'
 #
 # node n1 after spliting by sex
-database_name = at_cascade.get_database_name(
+database_dir = at_cascade.get_database_dir(
     node_table              = node_table ,
     split_reference_table   = split_reference_table,
     node_split_set          = node_split_set,
@@ -61,10 +61,10 @@ database_name = at_cascade.get_database_name(
     fit_node_id             = 1, # n1
     fit_split_reference_id  = 0, # female
 )
-assert database_name == 'n0/n1/female'
+assert database_dir == 'n0/n1/female'
 #
 # node n5
-database_name = at_cascade.get_database_name(
+database_dir = at_cascade.get_database_dir(
     node_table              = node_table ,
     split_reference_table   = split_reference_table,
     node_split_set          = node_split_set,
@@ -73,7 +73,7 @@ database_name = at_cascade.get_database_name(
     fit_node_id             = 5, # n5
     fit_split_reference_id  = 2, # male
 )
-assert database_name == 'n0/n2/male/n5'
+assert database_dir == 'n0/n2/male/n5'
 #
-print('get_database_name: OK')
+print('get_database_dir: OK')
 sys.exit(0)

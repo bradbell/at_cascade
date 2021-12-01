@@ -15,18 +15,22 @@ Release Notes for at_cascade
 {xsrst_end release_notes}
 -----------------------------------------------------------------------------
 {xsrst_begin 2021}
+{xsrst_spell
+    dir
+}
 
 Release Notes for 2021
 ######################
 
 12-01
 *****
-Add :ref:`get_database_name`.
+Add :ref:`get_database_dir<get_database_dir>`.
 This routine is for use with parallel processing.
 
 11-30
 *****
-Change the name get_job_table to :ref:`create_job_table`.
+Change the name get_job_table to
+:ref:`create_job_table<create_job_table>`.
 
 11-29
 *****

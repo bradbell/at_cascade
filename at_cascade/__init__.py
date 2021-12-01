@@ -24,7 +24,7 @@ The at_cascade Python Module
     at_cascade/create_shift_db.py
     at_cascade/data4cov_reference.py
     at_cascade/get_cov_info.py
-    at_cascade/get_database_name.py
+    at_cascade/get_database_dir.py
     at_cascade/get_fit_children.py
     at_cascade/get_fit_integrand.py
     at_cascade/get_parent_node.py
@@ -48,7 +48,7 @@ from .create_job_table      import create_job_table
 from .create_shift_db       import create_shift_db
 from .data4cov_reference    import data4cov_reference
 from .get_cov_info          import get_cov_info
-from .get_database_name     import get_database_name
+from .get_database_dir      import get_database_dir
 from .get_fit_children      import get_fit_children
 from .get_fit_integrand     import get_fit_integrand
 from .get_parent_node       import get_parent_node

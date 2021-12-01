@@ -8,10 +8,13 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin get_database_name}
+{xsrst_begin get_database_dir}
+{xsrst_spell
+    dir
+}
 
-Get Database Name Corresponding To a Fit
-########################################
+Get Database Directory Corresponding To a Fit
+#############################################
 
 Syntax
 ******
@@ -65,19 +68,19 @@ Otherwise it is an ``int`` specifying the
 :ref:`split_reference_table.split_reference_id`
 that the fit corresponds to.
 
-database_name
-*************
-The return value is a ``str`` containg the name of the database
-corresponding to he fit.
+database_dir
+************
+The return value is a ``str`` containg the name of the directory
+where the database corresponding to he fit is located.
 
 
-{xsrst_end get_database_name}
+{xsrst_end get_database_dir}
 '''
 import dismod_at
 # ----------------------------------------------------------------------------
-def get_database_name(
+def get_database_dir(
 # BEGIN syntax
-# database_name = at_cascade.get_database_name(
+# database_dir = at_cascade.get_database_dir(
     node_table              = None,
     split_reference_table   = None,
     node_split_set          = None,
@@ -93,8 +96,8 @@ def get_database_name(
     row = split_reference_table[fit_split_reference_id]
     fit_split_reference_name = row['split_reference_name']
     #
-    # database_name
-    database_name = ''
+    # database_dir
+    database_dir = ''
     #
     # node_id, split_reference_id
     node_id            = fit_node_id
@@ -108,15 +111,15 @@ def get_database_name(
         #
         # next node_id, split_reference_id pair
         if split :
-            # database_name
-            database_name      = f'{fit_split_reference_name}/{database_name}'
+            # database_dir
+            database_dir      = f'{fit_split_reference_name}/{database_dir}'
             split_reference_id = root_split_reference_id
         else :
-            # database_name
+            # database_dir
             node_name     = node_table[node_id]['node_name']
-            database_name = f'{node_name}/{database_name}'
+            database_dir = f'{node_name}/{database_dir}'
             node_id       = node_table[node_id]['parent']
     #
-    # database_name
-    database_name = database_name[:-1]
-    return database_name
+    # database_dir
+    database_dir = database_dir[:-1]
+    return database_dir
