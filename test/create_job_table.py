@@ -24,7 +24,7 @@ check_job_table = [
 { 'fit_node_id' : 1,  'split_reference_id' : 0, 'parent_job_id' : 1    },
 # (n1,s2) j4
 { 'fit_node_id' : 1,  'split_reference_id' : 2, 'parent_job_id' : 1    },
-# (n5,s1) j4
+# (n5,s1) j5
 { 'fit_node_id' : 5,  'split_reference_id' : 1, 'parent_job_id' : 2    },
 # (n5,s1) j6
 { 'fit_node_id' : 6,  'split_reference_id' : 1, 'parent_job_id' : 2    },
@@ -37,6 +37,14 @@ check_job_table = [
 # (n4,s2) j10
 { 'fit_node_id' : 4,  'split_reference_id' : 2, 'parent_job_id' : 4    },
 ]
+#
+for job_id in range(5) :
+    check_job_table[job_id]['start_child_job_id'] = 2 * job_id + 1
+    check_job_table[job_id]['end_child_job_id']   = 2 * job_id + 3
+#
+for job_id in range(5, 11) :
+    check_job_table[job_id]['start_child_job_id'] = len(check_job_table)
+    check_job_table[job_id]['end_child_job_id']   = len(check_job_table)
 # -----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------

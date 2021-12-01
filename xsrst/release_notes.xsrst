@@ -30,6 +30,9 @@ Release Notes for 2021
 2.  Change fit_node_database base create_job_table argument to
     :ref:`create_job_table.node_table`.
 
+3.  Add :ref:`create_job_table.job_table.start_child_job_id` and
+    :ref:`create_job_table.job_table.end_child_job_id` to the job table.
+
 11-30
 *****
 Change the name get_job_table to

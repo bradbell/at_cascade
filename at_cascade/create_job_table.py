@@ -66,20 +66,36 @@ The corresponding ``dict`` has the following keys:
 
 fit_node_id
 ===========
-This is the node_id for the :ref:`glossary.fit_node` for this *this_job_id*.
+This is an ``int`` containing the node_id for the
+:ref:`glossary.fit_node` for this *this_job_id*.
 
 split_reference_id
 ==================
 If the split_reference table is empty, this is ``None``.
-Otherwise it is the :ref:`split_reference_table.split_reference_id`
+Otherwise it is an ``int`` containing the
+:ref:`split_reference_table.split_reference_id`
 for this *this_job_id*; i.e. the splitting covariate has this reference
 value.
 
 parent_job_id
 =============
-This is the job_id corresponding to the parent job.
+This is an ``int` containing the job_id corresponding to the parent job.
 The parent job (and only the parent job)
 must have completed before this job can be run.
+
+start_child_job_id
+==================
+This is the job_id for the first job that can run as soon as this job
+is completed. The start_child_job_id is alwasy greater than the job_id
+for the current row. The simplest way to run the jobs is in job table
+order (not in parallel).
+
+end_child_job_id
+================
+This is the job_id plus one for the last job that can run as soon as
+this job is completed. If end_child_job_id is equal to start_child_job_id,
+there are no jobs that require the results of this job.
+Note that this job is the parent of each job between the start and end,
 
 
 {xsrst_end create_job_table}
@@ -210,8 +226,14 @@ def create_job_table(
             fit_children,
         )
         #
+        # table[job_id]['start_child_job_id']
+        row['start_child_job_id'] = len(job_table)
+        #
         # job_table
         job_table += child_job_table
+        #
+        # table[job_id]['end_child_job_id']
+        row['end_child_job_id'] = len(job_table)
         #
         # job_id
         job_id += 1
