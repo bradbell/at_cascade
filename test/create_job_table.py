@@ -349,6 +349,7 @@ def main() :
     # omega_grid
     new          = False
     connection   = dismod_at.create_connection(root_node_database, new)
+    node_table   = dismod_at.get_table_dict(connection, 'node')
     age_table    = dismod_at.get_table_dict(connection, 'age')
     time_table   = dismod_at.get_table_dict(connection, 'time')
     age_id_list  = list( range( len(age_table) ) )
@@ -391,7 +392,7 @@ def main() :
     root_node_id = 0
     job_table = at_cascade.create_job_table(
         all_node_database         = all_node_database,
-        fit_node_database         = root_node_database,
+        node_table                = node_table,
         start_node_id             = root_node_id,
         start_split_reference_id  = root_split_reference_id,
         fit_goal_set              = fit_goal_set,

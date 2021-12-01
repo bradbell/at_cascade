@@ -37,11 +37,9 @@ is a python string specifying the location of the
 relative to the current working directory.
 This argument can't be ``None``.
 
-fit_node_database
-*****************
-is a python string specifying the location of a
-:ref:`glossary.fit_node_database`
-relative to the current working directory.
+node_table
+**********
+is a ``list`` of ``dict`` containing the node table for this cascade.
 This argument can't be ``None``.
 
 start_node_id
@@ -133,20 +131,13 @@ def create_job_table(
 # BEGIN syntax
 # job_table = at_cascade.create_job_table(
     all_node_database          = None,
-    fit_node_database          = None,
+    node_table                 = None,
     start_node_id              = None,
     start_split_reference_id   = None,
     fit_goal_set               = None,
 # )
 # END syntax
 ) :
-    #
-    # node_table, covariate_table
-    new             = False
-    connection      = dismod_at.create_connection(fit_node_database, new)
-    node_table      = dismod_at.get_table_dict(connection, 'node')
-    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
-    connection.close()
     #
     # all_table
     all_table = dict()

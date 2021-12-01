@@ -24,8 +24,11 @@ Release Notes for 2021
 
 12-01
 *****
-Add :ref:`get_database_dir<get_database_dir>`.
-This routine is for use with parallel processing.
+1.  Add :ref:`get_database_dir<get_database_dir>`.
+    This routine is for use with parallel processing.
+
+2.  Change fit_node_database base create_job_table argument to
+    :ref:`create_job_table.node_table`.
 
 11-30
 *****
