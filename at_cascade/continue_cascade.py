@@ -114,11 +114,10 @@ def continue_cascade(
     assert not fit_node_database is None
     assert not fit_goal_set is None
     #
-    # node_table, log_table, covariate_table
+    # node_table, covariate_table
     new             = False
     connection      = dismod_at.create_connection(fit_node_database, new)
     node_table      = dismod_at.get_table_dict(connection, 'node')
-    log_table       = dismod_at.get_table_dict(connection, 'log')
     covariate_table = dismod_at.get_table_dict(connection, 'covariate')
     connection.close()
     #
