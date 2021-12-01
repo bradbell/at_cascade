@@ -19,6 +19,11 @@ Release Notes for at_cascade
 Release Notes for 2021
 ######################
 
+12-01
+*****
+Add :ref:`get_database_name`.
+This routine is for use with parallel processing.
+
 11-30
 *****
 Change the name get_job_table to :ref:`create_job_table`.

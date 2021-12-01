@@ -498,6 +498,7 @@ def create_csv_info_files() :
         #
         # node_table
         row_out = dict()
+        row_out['node_id']      = node_id
         row_out['node_name']    = node_name
         row_out['location_id']  = location_id
         row_out['parent']       = parent
@@ -592,6 +593,7 @@ def get_table_csv(file_name) :
     return table
 # ---------------------------------------------------------------------------
 def create_root_node_database(file_name, other_age_table, other_time_table) :
+    print('begin create_root_node_database')
     #
     # csv_data_table, csv_node_table
     csv_data_table = get_table_csv( data_table_info )
@@ -934,6 +936,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
          mulcov_table,
          option_table
     )
+    print('end create_root_node_database')
 # ---------------------------------------------------------------------------
 def create_all_node_database(all_node_database, root_node_database) :
     #
@@ -1765,6 +1768,7 @@ def main() :
     else :
         # change into working directory and create root_node_name subdirectory
         os.chdir(working_directory)
+        #
         #
         # start at the fit for the root node
         fit_node_database = f'{root_node_name}/dismod.db'
