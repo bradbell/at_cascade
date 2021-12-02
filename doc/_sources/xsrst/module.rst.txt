@@ -9,7 +9,7 @@ module
    :hidden:
 
    avgint_parent_grid
-   cascade_fit_node
+   cascade_root_node
    check_cascade_fit
    continue_cascade
    create_all_node_db
@@ -24,6 +24,7 @@ module
    get_var_id
    no_ode_fit
    omega_constraint
+   run_one_job
    table_name2id
 
 .. meta::
@@ -44,7 +45,7 @@ The at_cascade Python Module
     :widths: 20, 80
 
     "avgint_parent_grid", :ref:`avgint_parent_grid`
-    "cascade_fit_node", :ref:`cascade_fit_node`
+    "cascade_root_node", :ref:`cascade_root_node`
     "check_cascade_fit", :ref:`check_cascade_fit`
     "continue_cascade", :ref:`continue_cascade`
     "create_all_node_db", :ref:`create_all_node_db`
@@ -59,6 +60,7 @@ The at_cascade Python Module
     "get_var_id", :ref:`get_var_id`
     "no_ode_fit", :ref:`no_ode_fit`
     "omega_constraint", :ref:`omega_constraint`
+    "run_one_job", :ref:`run_one_job`
     "table_name2id", :ref:`table_name2id`
 
 .. END_SORT_THIS_LINE_MINUS_2

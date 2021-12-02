@@ -37,7 +37,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_job_table.py
-    :lines: 134-140
+    :lines: 153-159
     :language: py
 
 .. meta::
@@ -69,17 +69,15 @@ relative to the current working directory.
 This argument can't be ``None``.
 
 .. meta::
-   :keywords: fit_node_database
+   :keywords: node_table
 
-.. index:: fit_node_database
+.. index:: node_table
 
-.. _create_job_table.fit_node_database:
+.. _create_job_table.node_table:
 
-fit_node_database
-*****************
-is a python string specifying the location of a
-:ref:`glossary.fit_node_database`
-relative to the current working directory.
+node_table
+**********
+is a ``list`` of ``dict`` containing the node table for this cascade.
 This argument can't be ``None``.
 
 .. meta::
@@ -107,6 +105,8 @@ This, together with *start_node_id*
 corresponds to a completed fit that we are starting from.
 Only jobs that depend on the start jobs completion will be included in
 the job table.
+This is ``None`` if and only if
+:ref:`split_reference_table` is empty.
 
 .. meta::
    :keywords: fit_goal_set
@@ -129,8 +129,18 @@ This is the :ref:`glossary.fit_goal_set`.
 job_table
 *********
 The return value *job_table* is a ``list``.
-We use *this_job_id* to denote the index of a row in the list.
-The corresponding ``dict`` has the following keys:
+
+.. meta::
+   :keywords: job_id
+
+.. index:: job_id
+
+.. _create_job_table.job_table.job_id:
+
+job_id
+======
+We use *this_job_id* to denote the index of a row in the job_table list.
+The value *job_table[job_id]* is a ``dict`` with the following keys:
 
 .. meta::
    :keywords: fit_node_id
@@ -141,7 +151,8 @@ The corresponding ``dict`` has the following keys:
 
 fit_node_id
 ===========
-This is the node_id for the :ref:`glossary.fit_node` for this *this_job_id*.
+This is an ``int`` containing the node_id for the
+:ref:`glossary.fit_node` for this *this_job_id*.
 
 .. meta::
    :keywords: split_reference_id
@@ -153,7 +164,8 @@ This is the node_id for the :ref:`glossary.fit_node` for this *this_job_id*.
 split_reference_id
 ==================
 If the split_reference table is empty, this is ``None``.
-Otherwise it is the :ref:`split_reference_table.split_reference_id`
+Otherwise it is an ``int`` containing the
+:ref:`split_reference_table.split_reference_id`
 for this *this_job_id*; i.e. the splitting covariate has this reference
 value.
 
@@ -166,9 +178,37 @@ value.
 
 parent_job_id
 =============
-This is the job_id corresponding to the parent job.
+This is an ``int`` containing the job_id corresponding to the parent job.
 The parent job (and only the parent job)
 must have completed before this job can be run.
+
+.. meta::
+   :keywords: start_child_job_id
+
+.. index:: start_child_job_id
+
+.. _create_job_table.job_table.start_child_job_id:
+
+start_child_job_id
+==================
+This is the job_id for the first job that can run as soon as this job
+is completed. The start_child_job_id is alwasy greater than the job_id
+for the current row. The simplest way to run the jobs is in job table
+order (not in parallel).
+
+.. meta::
+   :keywords: end_child_job_id
+
+.. index:: end_child_job_id
+
+.. _create_job_table.job_table.end_child_job_id:
+
+end_child_job_id
+================
+This is the job_id plus one for the last job that can run as soon as
+this job is completed. If end_child_job_id is equal to start_child_job_id,
+there are no jobs that require the results of this job.
+Note that this job is the parent of each job between the start and end,
 
 ----
 

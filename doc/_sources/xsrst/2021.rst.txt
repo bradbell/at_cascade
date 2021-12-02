@@ -17,6 +17,23 @@ Release Notes for 2021
    :local:
 
 .. meta::
+   :keywords: 12-02
+
+.. index:: 12-02
+
+.. _2021.12-02:
+
+12-02
+*****
+1.  The :ref:`no_ode_fit` routine was setting the dismod_at
+    max_num_iter_fixed option to 100 for all fits.
+    This has been fixed and the option table setting is now used for all fits.
+
+2.  Move cascade_fit_node to :ref:`cascade_root_node` (better name now that
+    the routine is not recursive. In addition, change the fit_node_database
+    argument name to :ref:`cascade_root_node.root_node_database`.
+
+.. meta::
    :keywords: 12-01
 
 .. index:: 12-01
@@ -25,8 +42,14 @@ Release Notes for 2021
 
 12-01
 *****
-Add :ref:`get_database_dir<get_database_dir>`.
-This routine is for use with parallel processing.
+1.  Add :ref:`get_database_dir<get_database_dir>`.
+    This routine is for use with parallel processing.
+
+2.  Change fit_node_database base create_job_table argument to
+    :ref:`create_job_table.node_table`.
+
+3.  Add :ref:`create_job_table.job_table.start_child_job_id` and
+    :ref:`create_job_table.job_table.end_child_job_id` to the job table.
 
 .. meta::
    :keywords: 11-30

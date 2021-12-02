@@ -38,7 +38,7 @@ Table of Contents
 | :ref:`4<module>` The at_cascade Python Module
 |
 |  |space| :ref:`4.1<avgint_parent_grid>` Predicts Rates and Covariate Multipliers on Parent Grid
-|  |space| :ref:`4.2<cascade_fit_node>` Cascade a Fit Starting at a Node
+|  |space| :ref:`4.2<cascade_root_node>` Cascade Fits Starting at Root Node
 |  |space| :ref:`4.3<check_cascade_fit>` Check the Cascade Results for a Node
 |  |space| :ref:`4.4<continue_cascade>` Continue Cascade From a Fit Node
 |  |space| :ref:`4.5<create_all_node_db>` Create an All Node Database
@@ -53,7 +53,8 @@ Table of Contents
 |  |space| :ref:`4.14<get_var_id>` Map Var Table Values to its Primary Key
 |  |space| :ref:`4.15<no_ode_fit>` Do A No Ode Fit For One Node
 |  |space| :ref:`4.16<omega_constraint>` Set Omega Constraints in a Fit Node Database
-|  |space| :ref:`4.17<table_name2id>` Map a Table Row Name to The Row Index
+|  |space| :ref:`4.17<run_one_job>` Run One Job
+|  |space| :ref:`4.18<table_name2id>` Map a Table Row Name to The Row Index
 |
 | :ref:`5<release_notes>` Release Notes for at_cascade
 |  |space| :ref:`5.1<2021>` Release Notes for 2021

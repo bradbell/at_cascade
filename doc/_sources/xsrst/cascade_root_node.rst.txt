@@ -1,0 +1,183 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!!
+cascade_root_node
+!!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: cascade_root_node, cascade, fits, starting, at, root, node
+
+.. index:: cascade_root_node, cascade, fits, starting, at, root, node
+
+.. _cascade_root_node:
+
+Cascade Fits Starting at Root Node
+##################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _cascade_root_node.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/cascade_root_node.py
+    :lines: 115-120
+    :language: py
+
+.. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _cascade_root_node.all_node_database:
+
+all_node_database
+*****************
+is a python string specifying the location of the
+:ref:`all_node_db<all_node_db>`
+relative to the current working directory.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: root_node_database
+
+.. index:: root_node_database
+
+.. _cascade_root_node.root_node_database:
+
+root_node_database
+******************
+is a python string specifying the location of the dismod_at
+:ref:`glossary.root_node` database relative to the current working directory.
+It must *root_node_name*\ ``/dismod.db``; see
+:ref:`all_option_table.root_node_name`.
+On input, this is an :ref:`glossary.input_node_database`.
+Upon return, it is a :ref:`glossary.fit_node_database` with the
+extra properties listed under
+:ref:`cascade_root_node.output_dismod_db` below.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: fit_goal_set
+
+.. index:: fit_goal_set
+
+.. _cascade_root_node.fit_goal_set:
+
+fit_goal_set
+************
+This is a ``set`` with elements of type ``int`` (``str``)
+specifying the node_id (node_name) for each element of the
+:ref:`glossary.fit_goal_set` .
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: trace_fit
+
+.. index:: trace_fit
+
+.. _cascade_root_node.trace_fit:
+
+trace_fit
+*********
+if ``True``, ( ``False`` ) the progress of the dismod at fit commands
+will be printed on standard output during the optimization.
+
+.. meta::
+   :keywords: output, dismod.db
+
+.. index:: output, dismod.db
+
+.. _cascade_root_node.output_dismod_db:
+
+Output dismod.db
+****************
+There is a ``dismod.db`` output file for every row in the
+:ref:`create_job_table.job_table`.
+Upon return,
+the results for this fit are in ``dismod.db`` in the corresponding directory;
+see :ref:`get_database_dir`.
+The *.csv* files can be created using the
+dismod_at db2csv command.
+The dismod_at function ``plot_rate_fit`` and ``plot_data_fit``
+can be used to crate the corresponding plots.
+
+.. meta::
+   :keywords: fit_var
+
+.. index:: fit_var
+
+.. _cascade_root_node.output_dismod_db.fit_var:
+
+fit_var
+=======
+The fit_var table correspond to the posterior
+mean for the model variables for  this job; i.e., this
+:ref:`create_job_table.job_table.fit_node_id` and
+:ref:`create_job_table.job_table.split_reference_id`.
+
+.. meta::
+   :keywords: sample
+
+.. index:: sample
+
+.. _cascade_root_node.output_dismod_db.sample:
+
+sample
+======
+The sample table contains the corresponding samples from the posterior
+distribution for the model variables for this job.
+
+.. meta::
+   :keywords: c_predict_fit_var
+
+.. index:: c_predict_fit_var
+
+.. _cascade_root_node.output_dismod_db.c_predict_fit_var:
+
+c_predict_fit_var
+=================
+The c_predict_fit_var table contains the predict table corresponding to the
+predict fit_var command using the avgint table in the
+root_node_database except that values in the node_id column
+has been replaced by this fit_node_id.
+Note that the predict_id column name was changed to c_predict_fit_var_id
+(which is not the same as var_id).
+
+.. meta::
+   :keywords: c_predict_sample
+
+.. index:: c_predict_sample
+
+.. _cascade_root_node.output_dismod_db.c_predict_sample:
+
+c_predict_sample
+================
+The c_predict_sample table contains the predict table corresponding to the
+predict sample command using the avgint table in the
+root_node_database except that values in the node_id column
+has been replaced by this fit_node_id.
+Note that the predict_id column name was changed to c_predict_sample_id
+(which is not the same as sample_id).
+
+.. meta::
+   :keywords: log
+
+.. index:: log
+
+.. _cascade_root_node.output_dismod_db.log:
+
+log
+===
+The log table contains a summary of the operations preformed on dismod.db
+between it's input and output state.
+
+----
+
+xsrst input file: ``at_cascade/cascade_root_node.py``

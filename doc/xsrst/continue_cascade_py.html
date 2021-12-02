@@ -429,10 +429,10 @@
     <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">root_node_database</span><span class="p">,</span> <span class="n">fit_node_database</span><span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># cascade starting at n0</span>
-    <span class="n">at_cascade</span><span class="o">.</span><span class="n">cascade_fit_node</span><span class="p">(</span>
-        <span class="n">all_node_database</span> <span class="o">=</span> <span class="n">all_node_database</span>  <span class="p">,</span>
-        <span class="n">fit_node_database</span> <span class="o">=</span> <span class="n">fit_node_database</span>  <span class="p">,</span>
-        <span class="n">fit_goal_set</span>      <span class="o">=</span> <span class="n">first_fit_goal_set</span> <span class="p">,</span>
+    <span class="n">at_cascade</span><span class="o">.</span><span class="n">cascade_root_node</span><span class="p">(</span>
+        <span class="n">all_node_database</span>  <span class="o">=</span> <span class="n">all_node_database</span>  <span class="p">,</span>
+        <span class="n">root_node_database</span> <span class="o">=</span> <span class="n">fit_node_database</span>  <span class="p">,</span>
+        <span class="n">fit_goal_set</span>       <span class="o">=</span> <span class="n">first_fit_goal_set</span> <span class="p">,</span>
     <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># continue starting at at n2</span>

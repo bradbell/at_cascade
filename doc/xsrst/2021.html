@@ -6,6 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="2021, release, notes, for, 2021" name="keywords" />
+<meta content="12-02" name="keywords" />
 <meta content="12-01" name="keywords" />
 <meta content="11-30" name="keywords" />
 <meta content="11-29" name="keywords" />
@@ -176,24 +177,42 @@
 <span id="id2"></span><h2>Release Notes for 2021<a class="headerlink" href="#release-notes-for-2021" title="Permalink to this headline">¶</a></h2>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#id3" id="id11">12-01</a></p></li>
-<li><p><a class="reference internal" href="#id5" id="id12">11-30</a></p></li>
-<li><p><a class="reference internal" href="#id7" id="id13">11-29</a></p></li>
-<li><p><a class="reference internal" href="#id9" id="id14">11-28</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id13">12-02</a></p></li>
+<li><p><a class="reference internal" href="#id5" id="id14">12-01</a></p></li>
+<li><p><a class="reference internal" href="#id7" id="id15">11-30</a></p></li>
+<li><p><a class="reference internal" href="#id9" id="id16">11-29</a></p></li>
+<li><p><a class="reference internal" href="#id11" id="id17">11-28</a></p></li>
 </ul>
 </div>
 <div class="section" id="id3">
-<span id="index-1"></span><span id="id4"></span><h3><a class="toc-backref" href="#id11">12-01</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<p>Add <a class="reference internal" href="get_database_dir.html#id1"><span class="std std-ref">get_database_dir</span></a>.
-This routine is for use with parallel processing.</p>
+<span id="index-1"></span><span id="id4"></span><h3><a class="toc-backref" href="#id13">12-02</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p>The <a class="reference internal" href="no_ode_fit.html#id1"><span class="std std-ref">Do A No Ode Fit For One Node</span></a> routine was setting the dismod_at
+max_num_iter_fixed option to 100 for all fits.
+This has been fixed and the option table setting is now used for all fits.</p></li>
+<li><p>Move cascade_fit_node to <a class="reference internal" href="cascade_root_node.html#id1"><span class="std std-ref">Cascade Fits Starting at Root Node</span></a> (better name now that
+the routine is not recursive. In addition, change the fit_node_database
+argument name to <a class="reference internal" href="cascade_root_node.html#cascade-root-node-root-node-database"><span class="std std-ref">root_node_database</span></a>.</p></li>
+</ol>
 </div>
 <div class="section" id="id5">
-<span id="index-2"></span><span id="id6"></span><h3><a class="toc-backref" href="#id12">11-30</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<span id="index-2"></span><span id="id6"></span><h3><a class="toc-backref" href="#id14">12-01</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Add <a class="reference internal" href="get_database_dir.html#id1"><span class="std std-ref">get_database_dir</span></a>.
+This routine is for use with parallel processing.</p></li>
+<li><p>Change fit_node_database base create_job_table argument to
+<a class="reference internal" href="create_job_table.html#create-job-table-node-table"><span class="std std-ref">node_table</span></a>.</p></li>
+<li><p>Add <a class="reference internal" href="create_job_table.html#create-job-table-job-table-start-child-job-id"><span class="std std-ref">start_child_job_id</span></a> and
+<a class="reference internal" href="create_job_table.html#create-job-table-job-table-end-child-job-id"><span class="std std-ref">end_child_job_id</span></a> to the job table.</p></li>
+</ol>
+</div>
+<div class="section" id="id7">
+<span id="index-3"></span><span id="id8"></span><h3><a class="toc-backref" href="#id15">11-30</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p>Change the name get_job_table to
 <a class="reference internal" href="create_job_table.html#id1"><span class="std std-ref">create_job_table</span></a>.</p>
 </div>
-<div class="section" id="id7">
-<span id="index-3"></span><span id="id8"></span><h3><a class="toc-backref" href="#id13">11-29</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<span id="index-4"></span><span id="id10"></span><h3><a class="toc-backref" href="#id16">11-29</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><p>Add get_job_table. This routine is under construction and planned
 and part of a re-factoring for parallel processing.</p></li>
@@ -202,8 +221,8 @@ to the all_option table (so that get_job_table can use any
 fit_node_database).</p></li>
 </ol>
 </div>
-<div class="section" id="id9">
-<span id="index-4"></span><span id="id10"></span><h3><a class="toc-backref" href="#id14">11-28</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<span id="index-5"></span><span id="id12"></span><h3><a class="toc-backref" href="#id17">11-28</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><p>Change the <a class="reference internal" href="create_all_node_db.html#create-all-node-db-all-option"><span class="std std-ref">all_option</span></a> argument to
 create_all_node_db to be a complete representation of the
