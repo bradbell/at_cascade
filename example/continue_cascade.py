@@ -385,9 +385,9 @@ def main() :
     #
     # cascade starting at n0
     at_cascade.cascade_root_node(
-        all_node_database = all_node_database  ,
-        fit_node_database = fit_node_database  ,
-        fit_goal_set      = first_fit_goal_set ,
+        all_node_database  = all_node_database  ,
+        root_node_database = fit_node_database  ,
+        fit_goal_set       = first_fit_goal_set ,
     )
     #
     # continue starting at at n2

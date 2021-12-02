@@ -30,7 +30,8 @@ Release Notes for 2021
     This has been fixed and the option table setting is now used for all fits.
 
 2.  Move cascade_fit_node to :ref:`cascade_root_node` (better name now that
-    the routine is not recursive.
+    the routine is not recursive. In addition, change the fit_node_database
+    argument name to :ref:`cascade_root_node.root_node_database`.
 
 12-01
 *****

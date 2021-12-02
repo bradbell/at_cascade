@@ -10,13 +10,12 @@
 '''
 {xsrst_begin cascade_root_node}
 {xsrst_spell
-    dir
     csv
     var
 }
 
-Cascade a Fit Starting at a Node
-################################
+Cascade Fits Starting at Root Node
+##################################
 
 Syntax
 ******
@@ -32,8 +31,8 @@ is a python string specifying the location of the
 relative to the current working directory.
 This argument can't be ``None``.
 
-fit_node_database
-*****************
+root_node_database
+******************
 is a python string specifying the location of the dismod_at
 :ref:`glossary.root_node` database relative to the current working directory.
 It must *root_node_name*\ ``/dismod.db``; see
@@ -58,9 +57,12 @@ will be printed on standard output during the optimization.
 
 Output dismod.db
 ****************
+There is a ``dismod.db`` output file for every row in the
+:ref:`create_job_table.job_table`.
 Upon return,
-the results for this fit are in the *fit_node_database.
-The *.csv* files in *fit_node_dir* can be created using the
+the results for this fit are in ``dismod.db`` in the corresponding directory;
+see :ref:`get_database_dir`.
+The *.csv* files can be created using the
 dismod_at db2csv command.
 The dismod_at function ``plot_rate_fit`` and ``plot_data_fit``
 can be used to crate the corresponding plots.
@@ -68,19 +70,21 @@ can be used to crate the corresponding plots.
 fit_var
 =======
 The fit_var table correspond to the posterior
-mean for the model variables for the fit_node.
+mean for the model variables for  this job; i.e., this
+:ref:`create_job_table.job_table.fit_node_id` and
+:ref:`create_job_table.job_table.split_reference_id`.
 
 sample
 ======
 The sample table contains the corresponding samples from the posterior
-distribution for the model variables for the fit_node.
+distribution for the model variables for this job.
 
 c_predict_fit_var
 =================
 The c_predict_fit_var table contains the predict table corresponding to the
 predict fit_var command using the avgint table in the
-fit_node_database except that values in the node_id column
-has been replaced by the node_id for this fit_node.
+root_node_database except that values in the node_id column
+has been replaced by this fit_node_id.
 Note that the predict_id column name was changed to c_predict_fit_var_id
 (which is not the same as var_id).
 
@@ -88,8 +92,8 @@ c_predict_sample
 ================
 The c_predict_sample table contains the predict table corresponding to the
 predict sample command using the avgint table in the
-fit_node_database except that values in the node_id column
-has been replaced by the node_id for this fit_node.
+root_node_database except that values in the node_id column
+has been replaced by this fit_node_id.
 Note that the predict_id column name was changed to c_predict_sample_id
 (which is not the same as sample_id).
 
@@ -97,12 +101,6 @@ log
 ===
 The log table contains a summary of the operations preformed on dismod.db
 between it's input and output state.
-
-Other Nodes and Splits
-**********************
-For each job in the :ref:`create_job_table.job_table` corresponding to
-the root node, there is a corresponding database with the results of the
-corresponding fit.
 
 {xsrst_end cascade_root_node}
 '''
@@ -116,19 +114,19 @@ def cascade_root_node(
 # BEGIN syntax
 # at_cascade.cascade_root_node(
     all_node_database       = None,
-    fit_node_database       = None,
+    root_node_database      = None,
     fit_goal_set            = None,
     trace_fit               = False,
 # )
 # END syntax
 ) :
-    assert all_node_database  is not None
-    assert fit_node_database  is not None
-    assert fit_goal_set       is not None
+    assert all_node_database   is not None
+    assert root_node_database  is not None
+    assert fit_goal_set        is not None
     #
     # node_table, covariate_table
     new             = False
-    connection      = dismod_at.create_connection(fit_node_database, new)
+    connection      = dismod_at.create_connection(root_node_database, new)
     node_table      = dismod_at.get_table_dict(connection, 'node')
     covariate_table = dismod_at.get_table_dict(connection, 'covariate')
     connection.close()
@@ -150,24 +148,24 @@ def cascade_root_node(
     assert root_node_name is not None
     #
     # check root_node_name
-    parent_node_name = at_cascade.get_parent_node(fit_node_database)
+    parent_node_name = at_cascade.get_parent_node(root_node_database)
     if parent_node_name != root_node_name :
         msg  = f'{fit_node_databse} parent_node_name = {parent_node_name}\n'
         msg  = f'{all_node_database} root_node_name = {root_node_name}'
         assert False, smg
     #
-    # check fit_node_database
+    # check root_node_database
     check = f'{root_node_name}/dismod.db'
-    if fit_node_database != check :
-        msg  = f'fit_node_database = {fit_node_database}\n'
+    if root_node_database != check :
+        msg  = f'root_node_database = {root_node_database}\n'
         msg += f'root_node_name/dismod.db = {check}\n'
         assert False, msg
     #
     # fit_integrand
-    fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
+    fit_integrand = at_cascade.get_fit_integrand(root_node_database)
     #
     # fit_node_id
-    fit_node_name = at_cascade.get_parent_node(fit_node_database)
+    fit_node_name = at_cascade.get_parent_node(root_node_database)
     fit_node_id   = at_cascade.table_name2id(node_table, 'node', fit_node_name)
     #
     # fit_split_reference_id
