@@ -83,6 +83,7 @@ shift_name
 ==========
 For each *shift_name*, *shift_databases[shift_name]* is the name of
 a :ref:`glossary.input_node_database` that is created by this command.
+The corresponding directory is assumed to alread exist.
 
 split_reference_name
 ====================
@@ -452,7 +453,7 @@ def create_shift_db(
         )
         #
         # shift_database     = fit_node_database
-        shift_database= shift_databases[shift_name]
+        shift_database = shift_databases[shift_name]
         shutil.copyfile(fit_node_database, shift_database)
         #
         # shift_table['option']

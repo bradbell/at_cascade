@@ -53,6 +53,8 @@ This, together with *start_node_id*
 corresponds to a completed fit that we are starting from.
 Only jobs that depend on the start jobs completion will be included in
 the job table.
+This is ``None`` if and only if
+:ref:`split_reference_table` is empty.
 
 fit_goal_set
 ************
@@ -61,8 +63,11 @@ This is the :ref:`glossary.fit_goal_set`.
 job_table
 *********
 The return value *job_table* is a ``list``.
-We use *this_job_id* to denote the index of a row in the list.
-The corresponding ``dict`` has the following keys:
+
+job_id
+======
+We use *this_job_id* to denote the index of a row in the job_table list.
+The value *job_table[job_id]* is a ``dict`` with the following keys:
 
 fit_node_id
 ===========
@@ -79,7 +84,7 @@ value.
 
 parent_job_id
 =============
-This is an ``int` containing the job_id corresponding to the parent job.
+This is an ``int`` containing the job_id corresponding to the parent job.
 The parent job (and only the parent job)
 must have completed before this job can be run.
 

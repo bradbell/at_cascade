@@ -42,81 +42,12 @@ extra properties listed under
 :ref:`cascade_fit_node.output_dismod_db` below.
 This argument can't be ``None``.
 
-fit_node
-========
-The *fit_node_database* must be one of the following cases,
-where *fit_node* is the name of the :ref:`glossary.fit_node`
-for this database:
-
-1. *fit_node*\ ``/dismod.db`` (in this case
-   :ref:`glossary.fit_node` is also the :ref:`glossary.root_node`).
-
-2. It ends with ``/``\ *fit_node*\ ``/dismod.db``
-
-3. It ends with ``/``\ *fit_node*\ ``/``\ *split_name*\ ``/dismod.db``,
-   where *split_name* is a value in the
-   :ref:`split_reference_table.split_reference_name` column of the
-   split_reference table.
-
-fit_node_dir
-============
-is the directory where the *fit_node_database* is located.
-
 fit_goal_set
 ************
 This is a ``set`` with elements of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
 :ref:`glossary.fit_goal_set` .
 This argument can't be ``None``.
-
-node_table, split_reference_table
-*********************************
-These arguments are python lists where each element of the list
-is a python dictionary.
-They contain the information in the corresponding tables.
-The primary key is not included because it is equal to the list index.
-These tables are the same for all the fits and
-passing it as an argument avoids reading and storing multiple copies.
-
-default
-=======
-If one of these arguments is ``None``, it will be read by ``cascade_fit_node``
-and reused by recursive calls to this routine.
-
-node_split_set
-**************
-This is a ``set`` containing the nodes in :ref:`node_split_table`; i.e.
-:ref:`glossary.node_split_set`.
-If this argument is ``None``, the node_split_table will be read by
-``cascade_fit_node`` and *node_split_set** will be
-reused by recursive calls to this routine.
-
-
-fit_children
-************
-is the python list of python lists.
-For each valid *node_id*, *fit_children[node_id]* is the list of
-children of *node* that must be fit in order to fit the
-:ref`glossary.fit_goal_set`;
-see :ref:`get_fit_children.fit_children` .
-
-default
-=======
-If *fit_children* is ``None``, it will be computed by ``cascade_fit_node``
-and reused by recursive calls to this routine.
-
-fit_integrand
-*************
-is the python set.
-Each integrand_id in *fit_integrand* appears in the data table in
-*fit_node_database*.
-Furthermore all such integrand_id that appear in the a row of the data table
-that has hold_out equal to zero are included.
-
-default
-=======
-If *fit_integrand* is ``None``, it will be computed by ``cascade_fit_node``
-and reused by recursive calls to this routine.
 
 trace_fit
 *********
@@ -186,172 +117,11 @@ to the sub-directories:
 
 {xsrst_end cascade_fit_node}
 '''
+# ----------------------------------------------------------------------------
 import time
 import os
 import dismod_at
 import at_cascade
-# ----------------------------------------------------------------------------
-def child_node_id_list(node_table, parent_node_id) :
-    result = list()
-    for (node_id, row) in enumerate(node_table) :
-        if row['parent'] == parent_node_id :
-            result.append(node_id)
-    return result
-# ----------------------------------------------------------------------------
-def create_empty_log_table(connection) :
-    #
-    cmd  = 'create table if not exists log('
-    cmd += ' log_id        integer primary key,'
-    cmd += ' message_type  text               ,'
-    cmd += ' table_name    text               ,'
-    cmd += ' row_id        integer            ,'
-    cmd += ' unix_time     integer            ,'
-    cmd += ' message       text               )'
-    dismod_at.sql_command(connection, cmd)
-    #
-    # log table
-    empty_list = list()
-    dismod_at.replace_table(connection, 'log', empty_list)
-# ----------------------------------------------------------------------------
-def add_log_entry(connection, message) :
-    #
-    # log_table
-    log_table = dismod_at.get_table_dict(connection, 'log')
-    #
-    # seconds
-    seconds   = int( time.time() )
-    #
-    # message_type
-    message_type = 'at_cascade'
-    #
-    # cmd
-    cmd = 'insert into log'
-    cmd += ' (log_id,message_type,table_name,row_id,unix_time,message) values('
-    cmd += str( len(log_table) ) + ','     # log_id
-    cmd += f'"{message_type}",'            # message_type
-    cmd += 'null,'                         # table_name
-    cmd += 'null,'                         # row_id
-    cmd += str(seconds) + ','              # unix_time
-    cmd += f'"{message}")'                 # message
-    dismod_at.sql_command(connection, cmd)
-# ----------------------------------------------------------------------------
-def move_table(connection, src_name, dst_name) :
-    #
-    command     = 'DROP TABLE IF EXISTS ' + dst_name
-    dismod_at.sql_command(connection, command)
-    #
-    command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
-    command    += src_name + '_id TO ' + dst_name + '_id'
-    dismod_at.sql_command(connection, command)
-    #
-    command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
-    dismod_at.sql_command(connection, command)
-    #
-    # log table
-    message      = f'move table {src_name} to {dst_name}'
-    add_log_entry(connection, message)
-# ----------------------------------------------------------------------------
-def set_avgint_node_id(connection, fit_node_id) :
-    avgint_table = dismod_at.get_table_dict(connection, 'avgint')
-    for row in avgint_table :
-        row['node_id'] = fit_node_id
-    dismod_at.replace_table(connection, 'avgint', avgint_table)
-# ----------------------------------------------------------------------------
-def check_covariate_reference(
-    fit_node_id,
-    covariate_table,
-    all_option_table,
-    all_cov_reference_table,
-    split_reference_table
-) :
-    #
-    # cov_info
-    cov_info = at_cascade.get_cov_info(
-        all_option_table, covariate_table, split_reference_table
-    )
-    #
-    # rel_covariate_id_set
-    rel_covariate_id_set = cov_info['rel_covariate_id_set']
-    #
-    # check_reference_set
-    check_reference_set = set()
-    # ------------------------------------------------------------------------
-    if len( split_reference_table ) == 0 :
-        for row in all_cov_reference_table :
-            assert row['split_reference_id'] is None
-            if row['node_id'] == fit_node_id :
-                covariate_id = row['covariate_id']
-                #
-                if covariate_id in check_reference_set :
-                    msg  = 'split_reference_table is empty and '
-                    msg += 'more than one row in all_cov_reference table has\n'
-                    msg += f'node_id = {fit_node_id} '
-                    msg += f'covariate_id = {covariate_id}'
-                    assert False, msg
-                #
-                reference = covariate_table[covariate_id]['reference']
-                if row['reference'] != reference :
-                    msg  = 'split_reference_table is empty and '
-                    msg += 'covariate references for '
-                    msg += f'node_id = {fit_node_id} '
-                    msg += f'covariate_id = {covariate_id} are different in\n'
-                    msg += 'covariate and all_cov_reference tables'
-                    assert False, msg
-                #
-                # check_reference_set
-                check_reference_set.add(covariate_id)
-        #
-        if check_reference_set != rel_covariate_id_set :
-            msg  = f'node_id = {fit_node_id} all_cov_reference_table has '
-            msg += 'reference values for following set of covaraite_id\n'
-            msg += f'{check_reference_set}\n'
-            msg += 'but this is not equal to the set of relative covariates\n'
-            msg += f'{rel_covariate_id_set}'
-            assert False, msg
-        return
-    # ------------------------------------------------------------------------
-    #
-    # split_reference_id
-    split_reference_id = cov_info['split_reference_id']
-    #
-    for row in all_cov_reference_table :
-        assert not row['split_reference_id'] is None
-        covariate_id = row['covariate_id']
-        if row['node_id'] == fit_node_id and \
-            row['split_reference_id'] == split_reference_id :
-            #
-            if covariate_id in check_reference_set :
-                msg  = 'More than one row in all_cov_reference table has\n'
-                msg += f'node_id = {fit_node_id} '
-                msg += f'split_reference_id = {split_reference_id} and '
-                msg += f'covariate_id = {covariate_id}'
-                assert False, msg
-                #
-            reference = covariate_table[covariate_id]['reference']
-            if row['reference'] != reference :
-                row_reference = row['reference']
-                covariate_name = covariate_table[covariate_id]['covariate_name']
-                msg  = f'Covariate references for {covariate_name} '
-                msg += f'at node_id {fit_node_id} '
-                msg += f' and split_reference_id {split_reference_id}:\n'
-                msg += f'covariate_id = {covariate_id}:\n'
-                msg += f'is {reference} in covariate table and '
-                msg += f'{row_reference} in all_cov_reference table'
-                assert False, msg
-            #
-            # check_reference_set
-            check_reference_set.add(covariate_id)
-    #
-    if check_reference_set != rel_covariate_id_set :
-        msg  = f'node_id = {fit_node_id}, '
-        msg += f'split_reference_id = {split_reference_id}\n'
-        msg += 'all_cov_reference_table has reference values '
-        msg += 'for following set of covaraite_id\n'
-        msg += f'{check_reference_set}\n'
-        msg += 'but this is not equal to the set of relative covariates\n'
-        msg += f'{rel_covariate_id_set}'
-        assert False, msg
-    return
 # ----------------------------------------------------------------------------
 def cascade_fit_node(
 # BEGIN syntax
@@ -359,294 +129,64 @@ def cascade_fit_node(
     all_node_database       = None,
     fit_node_database       = None,
     fit_goal_set            = None,
-    node_table              = None,
-    split_reference_table   = None,
-    node_split_set          = None,
-    fit_children            = None,
-    fit_integrand           = None,
     trace_fit               = False,
 # )
 # END syntax
 ) :
-    assert not all_node_database is None
-    assert not fit_node_database is None
-    assert not fit_goal_set is None
+    assert all_node_database is not None
+    assert fit_node_database is not None
+    assert fit_goal_set      is not None
     #
-    # node_table
-    if node_table is None :
-        new         = False
-        connection  = dismod_at.create_connection(fit_node_database, new)
-        node_table  = dismod_at.get_table_dict(connection, 'node')
-        connection.close()
+    # node_table, covariate_table
+    new             = False
+    connection      = dismod_at.create_connection(fit_node_database, new)
+    node_table      = dismod_at.get_table_dict(connection, 'node')
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    connection.close()
     #
-    # connection
+    # split_reference_table, all_option_table
     new         = False
     connection  = dismod_at.create_connection(all_node_database, new)
-    #
-    # split_reference_table :
-    if split_reference_table is None :
-        split_reference_table = dismod_at.get_table_dict(
-            connection, 'split_reference'
-        )
-    #
-    # node_split_set
-    if node_split_set is None :
-        node_split_table = dismod_at.get_table_dict(connection, 'node_split')
-        node_split_set = set()
-        for row in node_split_table :
-            node_split_set.add( row['node_id'] )
-        for node_id in node_split_set :
-            ancestor_id = node_table[node_id]['parent']
-            if ancestor_id in node_split_set :
-                node_name     = node_table[node_id]['node_name']
-                ancestor_name = node_table[ancestor_id]['node_name']
-                msg  = f'{node_name} and {ancestor_name} '
-                msg += 'are in the node_split set\n'
-                msg += f'and {node_name} is a descendant of {ancestor_name}'
-                assert False, msg
-    #
-    # all_option_table, all_cov_reference_table, split_refrence_table
-    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
-    all_cov_reference_table = dismod_at.get_table_dict(
-        connection, 'all_cov_reference'
-    )
     split_reference_table = dismod_at.get_table_dict(
         connection, 'split_reference'
     )
-    #
-    # all_option
-    valid = [
-        'absolute_covariates',
-        'shift_prior_std_factor',
-        'in_parallel',
-        'max_abs_effect',
-        'max_fit',
-        'split_list',
-        'root_node_name',
-        'root_split_reference_name',
-        'split_covariate_name',
-    ]
-    all_option  = dict()
-    for row in all_option_table :
-        option_name  = row['option_name']
-        option_value = row['option_value']
-        assert option_name in valid
-        all_option[option_name] = option_value
-    if 'in_parallel' in all_option :
-        if all_option['in_parallel'] != 'false' :
-            msg = f'all_option table: in_parallel = {in_parallel} '
-            msg += 'not yet implemented'
-            assert False, msg
-    if 'root_node_name' not in all_option :
-        msg = 'all_option_table; root_node_name does not appear'
-        assert False, msg
-    if len(split_reference_table) == 0 :
-        assert 'root_split_reference_name' not in all_option
-        assert 'split_covariate_name' not in all_option
-    else :
-        assert 'root_split_reference_name' in all_option
-        assert 'split_covariate_name' in all_option
-    #
-    # fit_children
-    if fit_children is None :
-        #
-        # root_node_id
-        root_node_name   = all_option['root_node_name']
-        assert not root_node_name is None
-        root_node_id = at_cascade.table_name2id(
-            node_table, 'node', root_node_name
-        )
-        #
-        # fit_children
-        fit_children = at_cascade.get_fit_children(
-            root_node_id, fit_goal_set, node_table
-        )
-    #
-    # connection
+    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
     connection.close()
     #
     # fit_integrand
-    if fit_integrand is None :
-        fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
-    #
-    # path_list
-    if not fit_node_database.endswith('/dismod.db') :
-        msg  = f'fit_node_database = {fit_node_database} '
-        msg += 'does not end with /dismod.db'
-        assert False, msg
-    path_list = fit_node_database.split('/')
-    path_list = path_list[:-1]
-    if all_option['root_node_name'] not in path_list :
-        msg  = f'fit_node_database = {fit_node_database}\n'
-        msg += 'does not contain root_node_name = '
-        msg += all_option['root_node_name']
-        assert False, msg
-    #
-    # fit_node_name, split_fit_level
-    shift_name      = path_list[-1]
-    split_fit_level = False
-    for row in split_reference_table :
-        if row['split_reference_name'] == shift_name :
-            split_fit_level = True
-    if split_fit_level :
-        fit_node_name = path_list[-2]
-    else :
-        fit_node_name = path_list[-1]
-    #
-    # fit_level
-    root_index = path_list.index( all_option['root_node_name'] )
-    fit_level  = len(path_list) - root_index - 1
-    #
-    # check fit_node_name
-    parent_node_name = at_cascade.get_parent_node(fit_node_database)
-    msg  = f'last directory in fit_node_database = {fit_node_database}\n'
-    msg += 'is not a split_reference_name and is not '
-    msg += f'fit_node_name = {parent_node_name}'
-    assert fit_node_name == parent_node_name, msg
+    fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
     #
     # fit_node_id
-    fit_node_id = at_cascade.table_name2id(node_table, 'node', fit_node_name)
+    fit_node_name = at_cascade.get_parent_node(fit_node_database)
+    fit_node_id   = at_cascade.table_name2id(node_table, 'node', fit_node_name)
     #
-    # fit_node_dir
-    fit_node_dir = fit_node_database[ : - len('dismod.db') - 1 ]
-    #
-    # connection
-    new        = False
-    connection = dismod_at.create_connection(fit_node_database, new)
-    #
-    # log table
-    create_empty_log_table(connection)
-    #
-    # check covariate references for this fit node
-    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
-    check_covariate_reference(
-        fit_node_id,
-        covariate_table,
-        all_option_table,
-        all_cov_reference_table,
-        split_reference_table
-    )
-    #
-    # integrand_table
-    integrand_table = dismod_at.get_table_dict(connection, 'integrand')
-    #
-    # omega_constraint
-    at_cascade.omega_constraint(all_node_database, fit_node_database)
-    add_log_entry(connection, 'omega_constriant')
-    #
-    # move avgint -> c_root_avgint
-    move_table(connection, 'avgint', 'c_root_avgint')
-    #
-    # avgint_parent_grid
-    at_cascade.avgint_parent_grid(all_node_database, fit_node_database)
-    add_log_entry(connection, 'avgint_parent_grid')
-    #
-    # init
-    dismod_at.system_command_prc( [ 'dismod_at', fit_node_database, 'init' ] )
-    #
-    # enforce max_fit
-    if 'max_fit' in all_option :
-        max_fit = all_option['max_fit']
-        for integrand_id in fit_integrand :
-            integrand_name = integrand_table[integrand_id]['integrand_name']
-            dismod_at.system_command_prc([
-                'dismod_at', fit_node_database,
-                'hold_out', integrand_name, max_fit
-            ])
-    #
-    # enforce max_abs_effect
-    if 'max_abs_effect' in all_option:
-        max_abs_effect = all_option['max_abs_effect']
-        dismod_at.system_command_prc([
-            'dismod_at', fit_node_database, 'bnd_mulcov', max_abs_effect
-        ])
-    #
-    # fit
-    command = [ 'dismod_at', fit_node_database, 'fit', 'both' ]
-    dismod_at.system_command_prc(command, return_stdout = not trace_fit )
-    #
-    # sample
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'sample', 'asymptotic', 'both', '20' ]
-    )
-    # c_shift_predict_fit_var
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
-    )
-    move_table(connection, 'predict', 'c_shift_predict_fit_var')
-    #
-    # c_shift_predict_sample
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
-    )
-    move_table(connection, 'predict', 'c_shift_predict_sample')
-    #
-    # c_shift_avgint
-    move_table(connection, 'avgint', 'c_shift_avgint')
-    #
-    # shift_name_list
-    shift_name_list = list()
-    split_next_level = fit_node_id in node_split_set and not split_fit_level
-    if split_next_level :
+    # fit_split_reference_id
+    if len(split_reference_table) == 0 :
+        fit_split_reference_id = None
+    else :
         cov_info = at_cascade.get_cov_info(
             all_option_table, covariate_table, split_reference_table
         )
         fit_split_reference_id = cov_info['split_reference_id']
-        for (row_id, row) in enumerate(split_reference_table) :
-            if row_id != fit_split_reference_id :
-                shift_name_list.append( row['split_reference_name'] )
-    else :
-        for node_id in fit_children[fit_node_id] :
-            node_name = node_table[node_id]['node_name']
-            shift_name_list.append( node_name )
     #
-    # shift_databases
-    shift_databases = dict()
-    for shift_name in shift_name_list :
-        subdir    = fit_node_dir + '/' + shift_name
-        if not os.path.exists(subdir) :
-            os.makedirs(subdir)
-        shift_databases[shift_name] = subdir + '/dismod.db'
-    #
-    # create shifted databases
-    at_cascade.create_shift_db(
-        all_node_database,
-        fit_node_database,
-        shift_databases
+    # job_table
+    job_table = at_cascade.create_job_table(
+        all_node_database          = all_node_database,
+        node_table                 = node_table,
+        start_node_id              = fit_node_id,
+        start_split_reference_id   = fit_split_reference_id,
+        fit_goal_set               = fit_goal_set,
     )
     #
-    # move c_root_avgint -> avgint
-    move_table(connection, 'c_root_avgint', 'avgint')
-    #
-    # node_id for predictions for fit_node
-    set_avgint_node_id(connection, fit_node_id)
-    #
-    # c_predict_fit_var
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
-    )
-    move_table(connection, 'predict', 'c_predict_fit_var')
-    #
-    # c_predict_sample
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
-    )
-    move_table(connection, 'predict', 'c_predict_sample')
-    #
-    # fit shifted databases
-    for shift_name in shift_databases :
-        fit_node_database = shift_databases[shift_name]
-        cascade_fit_node(
-            all_node_database     ,
-            fit_node_database     ,
-            fit_goal_set          ,
-            node_table            ,
-            split_reference_table ,
-            node_split_set        ,
-            fit_children          ,
-            fit_integrand         ,
-            trace_fit             ,
+    # job_id
+    for job_id in range( len(job_table) ) :
+        #
+        # run_job
+        at_cascade.run_one_job(
+            job_table         = job_table ,
+            run_job_id        = job_id ,
+            all_node_database = all_node_database,
+            node_table        = node_table,
+            fit_integrand     = fit_integrand,
+            trace_fit         = trace_fit,
         )
-    #
-    # connection
-    connection.close()

@@ -93,8 +93,9 @@ def get_database_dir(
 ) :
     #
     # fit_split_reference_name
-    row = split_reference_table[fit_split_reference_id]
-    fit_split_reference_name = row['split_reference_name']
+    if 0 < len(split_reference_table) :
+        row = split_reference_table[fit_split_reference_id]
+        fit_split_reference_name = row['split_reference_name']
     #
     # database_dir
     database_dir = ''
@@ -111,13 +112,20 @@ def get_database_dir(
         #
         # next node_id, split_reference_id pair
         if split :
+            assert 0 < len(split_reference_table)
+            #
             # database_dir
             database_dir      = f'{fit_split_reference_name}/{database_dir}'
+            #
+            # split_reference_id
             split_reference_id = root_split_reference_id
         else :
+            #
             # database_dir
             node_name     = node_table[node_id]['node_name']
             database_dir = f'{node_name}/{database_dir}'
+            #
+            # node_id
             node_id       = node_table[node_id]['parent']
     #
     # database_dir

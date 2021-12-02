@@ -239,11 +239,6 @@ def continue_cascade(
             all_node_database      ,
             fit_node_database      ,
             fit_goal_set           ,
-            node_table             ,
-            split_reference_table  ,
-            node_split_set         ,
-            fit_children           ,
-            fit_integrand          ,
             trace_fit              ,
         )
     #

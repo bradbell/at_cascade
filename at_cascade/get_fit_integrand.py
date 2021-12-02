@@ -45,7 +45,7 @@ import dismod_at
 # ----------------------------------------------------------------------------
 def get_fit_integrand(
 # BEGIN syntax
-# data_integrand = at_cascade.get_fit_integrand(
+# fit_integrand = at_cascade.get_fit_integrand(
     fit_node_database = None ,
 # )
 # END syntax
