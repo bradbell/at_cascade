@@ -121,72 +121,61 @@ def continue_cascade(
     covariate_table = dismod_at.get_table_dict(connection, 'covariate')
     connection.close()
     #
-    # all_option_table, split_reference_table, node_split_set
+    # split_reference_table, all_option, node_split_table
     new              = False
     connection       = dismod_at.create_connection(all_node_database, new)
     all_option_table = dismod_at.get_table_dict(connection, 'all_option')
-    split_reference_table = dismod_at.get_table_dict(
-        connection, 'split_reference'
-    )
     node_split_table = dismod_at.get_table_dict(connection, 'node_split')
-    node_split_set = set()
-    for row in node_split_table :
-        node_split_set.add( row['node_id'] )
+    split_reference_table = \
+        dismod_at.get_table_dict(connection, 'split_reference')
     connection.close()
     #
-    # root_node_name
+    # root_node_id
     root_node_name   = None
     for row in all_option_table :
         if row['option_name'] == 'root_node_name' :
             root_node_name = row['option_value']
+    assert root_node_name is not None
+    root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
     #
-    # fit_children
-    root_node_id = at_cascade.table_name2id(
-        node_table, 'node', root_node_name
-    )
-    fit_children = at_cascade.get_fit_children(
-        root_node_id, fit_goal_set, node_table
-    )
+    # root_split_reference_id
+    root_split_reference_id = None
+    for row in all_option_table :
+        if row['option_name'] == 'root_split_reference_id' :
+            root_split_reference_id = row['option_value']
     #
-    # path_list
-    if not fit_node_database.endswith('/dismod.db') :
-        msg  = f'fit_node_database = {fit_node_database} '
-        msg += 'does not end with /dismod.db'
-        assert False, msg
-    path_list = fit_node_database.split('/')
-    path_list = path_list[:-1]
-    if root_node_name not in path_list :
-        msg  = f'fit_node_database = {fit_node_database}\n'
-        msg += f'does not contain root_node_name = {root_node_name}'
-        assert False, msg
-    #
-    # fit_node_name, split_fit_level
-    shift_name = path_list[-1]
-    split_fit_level = False
-    for row in split_reference_table :
-        if row['split_reference_name'] == shift_name :
-            split_fit_level = True
-    if split_fit_level :
-        fit_node_name = path_list[-2]
-    else :
-        fit_node_name = path_list[-1]
-    #
-    # fit_level
-    root_index = path_list.index( root_node_name )
-    fit_level  = len(path_list) - root_index - 1
-    #
-    # check fit_node_name
-    parent_node_name = at_cascade.get_parent_node(fit_node_database)
-    msg  = f'last directory in fit_node_database = {fit_node_database}\n'
-    msg += 'is not a split_reference_name and is not '
-    msg += f'fit_node_name = {parent_node_name}'
-    assert fit_node_name == parent_node_name, msg
+    # fit_integrand
+    fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
     #
     # fit_node_id
-    fit_node_id = at_cascade.table_name2id(node_table, 'node', fit_node_name)
+    fit_node_name = at_cascade.get_parent_node(fit_node_database)
+    fit_node_id   = at_cascade.table_name2id(node_table, 'node', fit_node_name)
     #
-    # fit_node_dir
-    fit_node_dir = fit_node_database[ : - len('dismod.db') - 1 ]
+    # fit_split_reference_id
+    if len(split_reference_table) == 0 :
+        fit_split_reference_id = None
+    else :
+        cov_info = at_cascade.get_cov_info(
+            all_option_table, covariate_table, split_reference_table
+        )
+        fit_split_reference_id = cov_info['split_reference_id']
+    #
+    # job_table
+    job_table = at_cascade.create_job_table(
+        all_node_database          = all_node_database,
+        node_table                 = node_table,
+        start_node_id              = fit_node_id,
+        start_split_reference_id   = fit_split_reference_id,
+        fit_goal_set               = fit_goal_set,
+    )
+    #
+    # check job_table[0]
+    assert fit_node_id == job_table[0]['fit_node_id']
+    assert fit_split_reference_id == job_table[0]['split_reference_id']
+    #
+    # start_child_job_id, end_child_job_id
+    start_child_job_id = job_table[0]['start_child_job_id']
+    end_child_job_id   = job_table[0]['end_child_job_id']
     #
     # connection
     new        = False
@@ -195,29 +184,42 @@ def continue_cascade(
     # move avgint -> c_root_avgint
     move_table(connection, 'avgint', 'c_root_avgint')
     #
-    # shift_name_list
-    shift_name_list = list()
-    split_next_level = fit_node_id in node_split_set and not split_fit_level
-    if split_next_level :
-        cov_info = at_cascade.get_cov_info(
-            all_option_table, covariate_table, split_reference_table
-        )
-        fit_split_reference_id = cov_info['split_reference_id']
-        for (row_id, row) in enumerate(split_reference_table) :
-            if row_id != fit_split_reference_id :
-                shift_name_list.append( row['split_reference_name'] )
-    else :
-        for node_id in fit_children[fit_node_id] :
-            node_name = node_table[node_id]['node_name']
-            shift_name_list.append( node_name )
+    # node_split_set
+    node_split_set = set()
+    for row in node_split_table :
+        node_split_set.add( row['node_id'] )
     #
     # shift_databases
     shift_databases = dict()
-    for shift_name in shift_name_list :
-        subdir    = fit_node_dir + '/' + shift_name
-        if not os.path.exists(subdir) :
-            os.makedirs(subdir)
-        shift_databases[shift_name] = subdir + '/dismod.db'
+    for job_id in range(start_child_job_id, end_child_job_id) :
+        #
+        # shift_node_id
+        shift_node_id = job_table[job_id]['fit_node_id']
+        #
+        # shift_split_reference_id
+        shift_split_reference_id = job_table[job_id]['split_reference_id']
+        #
+        # shift_database_dir
+        shift_database_dir = at_cascade.get_database_dir(
+            node_table              = node_table,
+            split_reference_table   = split_reference_table,
+            node_split_set          = node_split_set,
+            root_node_id            = root_node_id,
+            root_split_reference_id = root_split_reference_id,
+            fit_node_id             = shift_node_id ,
+            fit_split_reference_id  = shift_split_reference_id,
+        )
+        if not os.path.exists(shift_database_dir) :
+            os.makedirs(shift_database_dir)
+        #
+        # shift_node_database
+        shift_node_database = f'{shift_database_dir}/dismod.db'
+        #
+        # shift_name
+        shift_name = shift_database_dir.split('/')[-1]
+        #
+        # shfit_databases
+        shift_databases[shift_name] = shift_node_database
     #
     # create shifted databases
     at_cascade.create_shift_db(
@@ -229,18 +231,19 @@ def continue_cascade(
     # move c_root_avgint -> avgint
     move_table(connection, 'c_root_avgint', 'avgint')
     #
-    # fit_integrand
-    fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
-    #
-    # fit shifted databases
-    for shift_name in shift_databases :
-        fit_node_database = shift_databases[shift_name]
-        at_cascade.cascade_fit_node(
-            all_node_database      ,
-            fit_node_database      ,
-            fit_goal_set           ,
-            trace_fit              ,
-        )
-    #
     # connection
     connection.close()
+    #
+    # job_id
+    # skip job_id zero becasue this fit was already done
+    for job_id in range( 1, len(job_table) ) :
+        #
+        # run_job
+        at_cascade.run_one_job(
+            job_table         = job_table ,
+            run_job_id        = job_id ,
+            all_node_database = all_node_database,
+            node_table        = node_table,
+            fit_integrand     = fit_integrand,
+            trace_fit         = trace_fit,
+        )

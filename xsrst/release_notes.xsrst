@@ -17,10 +17,17 @@ Release Notes for at_cascade
 {xsrst_begin 2021}
 {xsrst_spell
     dir
+    iter
 }
 
 Release Notes for 2021
 ######################
+
+12-02
+*****
+The :ref:`no_ode_fit` routine was setting the dismod_at
+max_num_iter_fixed option to 100 for all fits.
+This has been fixed and the option table setting is now used for all fits.
 
 12-01
 *****

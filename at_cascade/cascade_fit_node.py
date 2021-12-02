@@ -34,8 +34,10 @@ This argument can't be ``None``.
 
 fit_node_database
 *****************
-is a python string specifying the location of a dismod_at database
-relative to the current working directory.
+is a python string specifying the location of the dismod_at
+:ref:`glossary.root_node` database relative to the current working directory.
+It must *root_node_name*\ ``/dismod.db``; see
+:ref:`all_option_table.root_node_name`.
 On input, this is an :ref:`glossary.input_node_database`.
 Upon return, it is a :ref:`glossary.fit_node_database` with the
 extra properties listed under
@@ -56,8 +58,8 @@ will be printed on standard output during the optimization.
 
 Output dismod.db
 ****************
-The results for this fit are in the
-*fit_node_dir*\ ``/dismod.db`` dismod_at database.
+Upon return,
+the results for this fit are in the *fit_node_database.
 The *.csv* files in *fit_node_dir* can be created using the
 dismod_at db2csv command.
 The dismod_at function ``plot_rate_fit`` and ``plot_data_fit``
@@ -77,7 +79,7 @@ c_predict_fit_var
 =================
 The c_predict_fit_var table contains the predict table corresponding to the
 predict fit_var command using the avgint table in the
-root_node_database except that values in the node_id column
+fit_node_database except that values in the node_id column
 has been replaced by the node_id for this fit_node.
 Note that the predict_id column name was changed to c_predict_fit_var_id
 (which is not the same as var_id).
@@ -86,34 +88,21 @@ c_predict_sample
 ================
 The c_predict_sample table contains the predict table corresponding to the
 predict sample command using the avgint table in the
-root_node_database except that values in the node_id column
+fit_node_database except that values in the node_id column
 has been replaced by the node_id for this fit_node.
 Note that the predict_id column name was changed to c_predict_sample_id
 (which is not the same as sample_id).
-
 
 log
 ===
 The log table contains a summary of the operations preformed on dismod.db
 between it's input and output state.
 
-Output Directories
-******************
-The results of the fits for the following cases
-are also computed by cascade_fit with *fit_node_database* corresponding
-to the sub-directories:
-
-1. If the *fit_node_dir* ends with a node name in the
-   :ref:`glossary.node_split_set`, the sub-directories will be
-   *fit_node_dir*\ ``/``\ *split_name* where *split_name* is a value in
-   in the split_reference_name column of the split_reference table.
-   The split_reference_name corresponding to the *fit_node_database* will not
-   be included in this splitting.
-
-2. If the *fit_node_dir* does not end with a node name in the
-   :ref:`glossary.node_split_set`, the sub-directories will be
-   *fit_node_dir*\ ``/``\ *child_name* where *child_name* is the name of
-   a child of *fit_node_name* that is in the :ref:`glossary.fit_node_set`,
+Other Nodes and Splits
+**********************
+For each job in the :ref:`create_job_table.job_table` corresponding to
+the root node, there is a corresponding database with the results of the
+corresponding fit.
 
 {xsrst_end cascade_fit_node}
 '''
@@ -133,9 +122,9 @@ def cascade_fit_node(
 # )
 # END syntax
 ) :
-    assert all_node_database is not None
-    assert fit_node_database is not None
-    assert fit_goal_set      is not None
+    assert all_node_database  is not None
+    assert fit_node_database  is not None
+    assert fit_goal_set       is not None
     #
     # node_table, covariate_table
     new             = False
@@ -152,6 +141,27 @@ def cascade_fit_node(
     )
     all_option_table = dismod_at.get_table_dict(connection, 'all_option')
     connection.close()
+    #
+    # root_node_name
+    root_node_name = None
+    for row in all_option_table :
+        if row['option_name'] == 'root_node_name' :
+            root_node_name = row['option_value']
+    assert root_node_name is not None
+    #
+    # check root_node_name
+    parent_node_name = at_cascade.get_parent_node(fit_node_database)
+    if parent_node_name != root_node_name :
+        msg  = f'{fit_node_databse} parent_node_name = {parent_node_name}\n'
+        msg  = f'{all_node_database} root_node_name = {root_node_name}'
+        assert False, smg
+    #
+    # check fit_node_database
+    check = f'{root_node_name}/dismod.db'
+    if fit_node_database != check :
+        msg  = f'fit_node_database = {fit_node_database}\n'
+        msg += f'root_node_name/dismod.db = {check}\n'
+        assert False, msg
     #
     # fit_integrand
     fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
