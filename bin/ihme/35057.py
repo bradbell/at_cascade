@@ -1166,7 +1166,7 @@ def drill() :
     #
     # cascade starting at root node
     if True :
-        at_cascade.cascade_fit_node(
+        at_cascade.cascade_root_node(
             all_node_database = all_node_database,
             fit_node_database = fit_node_database,
             fit_goal_set      = fit_goal_set,

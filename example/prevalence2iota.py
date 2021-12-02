@@ -245,8 +245,8 @@ to the constant returned by the lambda function in this smoothing:
 Checking The Fit
 ****************
 The results of the fit are in the
-:ref:`cascade_fit_node.output_dismod_db.c_predict_sample` and
-:ref:`cascade_fit_node.output_dismod_db.c_predict_fit_var`
+:ref:`cascade_root_node.output_dismod_db.c_predict_sample` and
+:ref:`cascade_root_node.output_dismod_db.c_predict_fit_var`
 tables of the fit_node_database corresponding to each node.
 The :ref:`check_cascade_fit<check_cascade_fit>`
 routine uses these tables to check that fit against the truth.
@@ -680,7 +680,7 @@ def main() :
     shutil.copyfile(root_node_database, fit_node_database)
     #
     # cascade starting at root node
-    at_cascade.cascade_fit_node(
+    at_cascade.cascade_root_node(
         all_node_database = all_node_database ,
         fit_node_database = fit_node_database ,
         fit_goal_set      = fit_goal_set      ,

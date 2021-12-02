@@ -53,8 +53,8 @@ is a python string specifying the location of a
 dismod_at database relative to the current working directory.
 It is a :ref:`glossary.fit_node_database` with the
 extra properties listed under
-:ref:`cascade_fit_node.output_dismod_db`
-in the cascade_fit_node documentation.
+:ref:`cascade_root_node.output_dismod_db`
+in the cascade_root_node documentation.
 This argument can't be ``None``.
 
 relative_tolerance

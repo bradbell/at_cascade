@@ -39,9 +39,9 @@ fit_node_database
 is a python string specifying the location of a dismod_at database
 relative to the current working directory.
 This is a :ref:`glossary.fit_node_database` with the
-final state after running :ref:`cascade_fit_node` on this database.
+final state after running :ref:`cascade_root_node` on this database.
 The necessary state of *fit_node_database* is reached before
-cascade_fit_node starts runs on any of its child nodes.
+cascade_root_node starts runs on any of its child nodes.
 
 fit_goal_set
 ************

@@ -349,7 +349,7 @@ plot_set = dismod_at.plot_rate_fit(
 dismod_at.system_command_prc([ 'dismodat.py', no_ode_database, 'db2csv' ])
 #
 # cascade starting at root node
-at_cascade.cascade_fit_node(all_node_copy, fit_node_database, trace_fit = True)
+at_cascade.cascade_root_node(all_node_copy, fit_node_database, trace_fit = True)
 #
 print(f'all_node_database = {all_node_copy}')
 print(f'fit_node_database = {fit_node_database}')

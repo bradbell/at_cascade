@@ -15,25 +15,21 @@
 # '
 # list of files and or directories that are moved to new names
 # move_paths='
-#   at_cascade/get_database_name.py
-#   test/get_database_name.py
+#   at_cascade/cascade_fit_node.py
 # '
 # list of sed commands that map old file and directory names to new names.
 # The characters @s, @d, @n get converted to a space, dollar sign, new line.
 # move_seds='
-#   s|get_database_name|get_database_dir|
+#   s|cascade_fit_node|cascade_root_node|
 # '
 # list of files that get edited by the extra_seds command
 # extra_files='
-#   at_cascade/get_database_dir.py
-#   test/get_database_dir.py
 # '
 # list of sed commands that are applied to the extra files,
 # after the other sed commands in this file.
 # The characters @s, @d, @n get converted to a space, dollar sign, new line.
 # extra_seds='
-#   s|database_name|database_dir|g
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|get_database_name|get_database_dir|g
+s|cascade_fit_node|cascade_root_node|g

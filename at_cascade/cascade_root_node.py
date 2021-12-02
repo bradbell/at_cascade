@@ -8,7 +8,7 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin cascade_fit_node}
+{xsrst_begin cascade_root_node}
 {xsrst_spell
     dir
     csv
@@ -41,7 +41,7 @@ It must *root_node_name*\ ``/dismod.db``; see
 On input, this is an :ref:`glossary.input_node_database`.
 Upon return, it is a :ref:`glossary.fit_node_database` with the
 extra properties listed under
-:ref:`cascade_fit_node.output_dismod_db` below.
+:ref:`cascade_root_node.output_dismod_db` below.
 This argument can't be ``None``.
 
 fit_goal_set
@@ -104,7 +104,7 @@ For each job in the :ref:`create_job_table.job_table` corresponding to
 the root node, there is a corresponding database with the results of the
 corresponding fit.
 
-{xsrst_end cascade_fit_node}
+{xsrst_end cascade_root_node}
 '''
 # ----------------------------------------------------------------------------
 import time
@@ -112,9 +112,9 @@ import os
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
-def cascade_fit_node(
+def cascade_root_node(
 # BEGIN syntax
-# at_cascade.cascade_fit_node(
+# at_cascade.cascade_root_node(
     all_node_database       = None,
     fit_node_database       = None,
     fit_goal_set            = None,
