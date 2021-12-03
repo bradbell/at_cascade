@@ -84,21 +84,34 @@ shared_number_cpu_inuse = 0
 shared_job_wait_list    = list()
 # ----------------------------------------------------------------------------
 def run_parallel_job(
-    job_table         = None,
-    this_job_id       = None,
-    all_node_database = None,
-    node_table        = None,
-    fit_integrand     = None,
-    trace_fit         = None,
-    skip_this_job     = None,
-    max_number_cpu    = None,
-    lock              = None,
+    job_table,
+    this_job_id,
+    all_node_database,
+    node_table,
+    fit_integrand,
+    trace_fit,
+    skip_this_job,
+    max_number_cpu,
+    master_process,
+    lock,
+    event,
 ) :
+    assert type(job_table) is list
+    assert type(this_job_id) is int
+    assert type(all_node_database) is str
+    assert type(node_table) is list
+    assert type(fit_integrand) is set
+    assert type(trace_fit) is bool
+    assert type(skip_this_job) is bool
+    assert type(max_number_cpu) is int
+    assert type(master_process) is bool
+    #
     global shared_number_cpu_inuse
     global shared_job_wait_list
     #
     # run start job
     if not skip_this_job :
+        assert master_process
         at_cascade.run_one_job(
             job_table         = job_table,
             run_job_id        = this_job_id ,
@@ -159,6 +172,9 @@ def run_parallel_job(
         # skip_child_job
         skip_child_job = False
         #
+        # is_child_master_process
+        is_child_master_process = False
+        #
         # spawn the new processes
         for i in range(n_cpu_spawn) :
             #
@@ -170,9 +186,11 @@ def run_parallel_job(
                 node_table,
                 fit_integrand,
                 trace_fit,
-                lock,
                 skip_child_job,
                 max_number_cpu,
+                is_child_master_process,
+                lock,
+                event,
             )
             target = run_parallel_job
             p = multiprocessing.Process(target = target, args = args)
@@ -182,15 +200,17 @@ def run_parallel_job(
         #
         # run the last child job with the current process
         run_parallel_job(
-            job_table         = job_table,
-            this_job_id       = job_run_list[n_cpu_spawn],
-            all_node_database = all_node_database,
-            node_table        = node_table,
-            fit_integrand     = fit_integrand,
-            trace_fit         = trace_fit,
-            lock              = lock,
-            skip_this_job     = skip_child_job,
-            max_number_cpu    = max_number_cpu,
+            job_table,
+            job_run_list[n_cpu_spawn] ,
+            all_node_database,
+            node_table,
+            fit_integrand,
+            trace_fit,
+            skip_child_job,
+            max_number_cpu,
+            master_process,
+            lock,
+            event,
         )
 # ----------------------------------------------------------------------------
 def run_parallel(
@@ -225,8 +245,14 @@ def run_parallel(
     # shared_job_wait_list
     shared_job_wait_list = list()
     #
+    # master_process
+    master_process = True
+    #
     # lock
     lock = multiprocessing.Lock()
+    #
+    # event
+    event = multiprocessing.Event()
     #
     # run_parallel_job
     run_parallel_job(
@@ -238,5 +264,7 @@ def run_parallel(
         trace_fit,
         skip_start_job,
         max_number_cpu,
-        lock
+        master_process,
+        lock,
+        event,
     )
