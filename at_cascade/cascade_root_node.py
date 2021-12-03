@@ -107,6 +107,7 @@ between it's input and output state.
 # ----------------------------------------------------------------------------
 import time
 import os
+import multiprocessing
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
@@ -186,15 +187,23 @@ def cascade_root_node(
         fit_goal_set               = fit_goal_set,
     )
     #
-    # job_id
-    for job_id in range( len(job_table) ) :
-        #
-        # run_job
-        at_cascade.run_one_job(
-            job_table         = job_table ,
-            run_job_id        = job_id ,
-            all_node_database = all_node_database,
-            node_table        = node_table,
-            fit_integrand     = fit_integrand,
-            trace_fit         = trace_fit,
-        )
+    # start_job_id
+    start_job_id = 0
+    #
+    # skip_start_job
+    skip_start_job = False
+    #
+    # max_number_cpu
+    max_number_cpu = 1
+    #
+    # run_parallel_job
+    at_cascade.run_parallel(
+        job_table         = job_table ,
+        start_job_id      = start_job_id,
+        all_node_database = all_node_database,
+        node_table        = node_table,
+        fit_integrand     = fit_integrand,
+        trace_fit         = trace_fit,
+        skip_start_job    = skip_start_job,
+        max_number_cpu    = max_number_cpu,
+    )

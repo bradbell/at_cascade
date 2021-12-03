@@ -24,34 +24,34 @@ Syntax
     # END syntax
 }
 
+Default Value
+*************
+None of the arguments to this routine can be ``None``.
 
 job_table
 *********
 This is a :ref:`create_job_table.job_table` containing the jobs
 necessary to fit the :ref:`glossary.fit_goal_set`.
-This argument can't be ``None``.
 
 run_job_id
 **********
 This is the :ref:`create_job_table.job_table.job_id`
 for the job that is run.
 
-node_table
-**********
-is a ``list`` of ``dict`` containing the node table for this cascade.
-This argument can't be ``None``.
-
-fit_integrand
-*************
-is a ``set`` of integrand_id values that occur in the data table; see
-:ref:`get_fit_integrand`.
-
 all_node_database
 *****************
 is a python string specifying the location of the
 :ref:`all_node_db<all_node_db>`
 relative to the current working directory.
-This argument can't be ``None``.
+
+node_table
+**********
+is a ``list`` of ``dict`` containing the node table for this cascade.
+
+fit_integrand
+*************
+is a ``set`` of integrand_id values that occur in the data table; see
+:ref:`get_fit_integrand`.
 
 trace_fit
 *********
@@ -69,7 +69,6 @@ to *run_job_id*.
 Upon Input
 ==========
 On input, *fit_node_database* is an :ref:`glossary.input_node_database`.
-This argument can't be ``None``.
 
 fit_var
 =======
@@ -183,10 +182,15 @@ def run_one_job(
     all_node_database = None,
     node_table        = None,
     fit_integrand     = None,
-    trace_fit         = False,
+    trace_fit         = None,
 # )
 # END syntax
 ) :
+    assert job_table         is not None
+    assert run_job_id        is not None
+    assert all_node_database is not None
+    assert node_table        is not None
+    assert trace_fit         is not None
     #
     # fit_node_id
     fit_node_id = job_table[run_job_id]['fit_node_id']

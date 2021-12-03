@@ -59,10 +59,10 @@ def worker(node, lock):
             node = do_set[i]
             p = multiprocessing.Process(
                 target = worker ,
-                args   = (node, lock,)
+                args   = (node, lock)
             )
-        p.deamon = True
-        p.start()
+            p.deamon = True
+            p.start()
         #
         node = do_set[0]
         worker(node, lock)

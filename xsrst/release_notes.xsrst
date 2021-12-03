@@ -23,6 +23,12 @@ Release Notes for at_cascade
 Release Notes for 2021
 ######################
 
+12-03
+*****
+Add the :ref:`run_parallel` for running jobs in parallel.
+This routine works when :ref:`run_parallel.max_number_cpu` is one,
+but the true parallel case is under construction.
+
 12-02
 *****
 1.  The :ref:`no_ode_fit` routine was setting the dismod_at

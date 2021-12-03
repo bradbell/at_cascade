@@ -13,9 +13,6 @@
 Table of Jobs That Can Run in Parallel
 ######################################
 
-Under Construction
-******************
-
 Syntax
 ******
 {xsrst_file
