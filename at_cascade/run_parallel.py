@@ -231,7 +231,7 @@ def run_parallel_job(
                     # then go back to the while True point above
                     event.clear()
                     lock.release()
-                    evant.wait()
+                    event.wait()
                     lock.acquire()
                 else :
                     # return this processor
@@ -276,10 +276,13 @@ def run_parallel_job(
             # spawn the new processes
             for i in range(n_cpu_spawn) :
                 #
+                # job_id
+                job_id = int( job_id_wait[i] )
+                #
                 # p
                 args = (
                     job_table,
-                    job_id_wait[i] ,
+                    job_id,
                     all_node_database,
                     node_table,
                     fit_integrand,
@@ -297,7 +300,7 @@ def run_parallel_job(
                 p.start()
             #
             # job_id
-            job_id = job_id_wait[n_cpu_spawn]
+            job_id = int( job_id_wait[n_cpu_spawn] )
             #
             # run_one_job
             # do not want the lock to be aquired during this operation
