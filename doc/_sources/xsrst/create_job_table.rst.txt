@@ -17,16 +17,6 @@ Table of Jobs That Can Run in Parallel
    :local:
 
 .. meta::
-   :keywords: under, construction
-
-.. index:: under, construction
-
-.. _create_job_table.under_construction:
-
-Under Construction
-******************
-
-.. meta::
    :keywords: syntax
 
 .. index:: syntax
@@ -37,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_job_table.py
-    :lines: 153-159
+    :lines: 150-156
     :language: py
 
 .. meta::

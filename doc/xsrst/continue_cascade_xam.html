@@ -8,6 +8,7 @@
   <meta content="continue_cascade_xam, example, continuing, cascade" name="keywords" />
 <meta content="nodes" name="keywords" />
 <meta content="fit_goal_set" name="keywords" />
+<meta content="parallel, processing" name="keywords" />
 <meta content="rates" name="keywords" />
 <meta content="covariate" name="keywords" />
 <meta content="simulated, data" name="keywords" />
@@ -116,6 +117,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wish_list.html">wish_list</a></li>
 <li class="toctree-l2"><a class="reference internal" href="release_notes.html">release_notes</a></li>
 </ul>
 </li>
@@ -202,26 +204,27 @@
 <li><p><a class="reference internal" href="#fit-goal-set" id="id4">fit_goal_set</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#rates" id="id5">Rates</a></p></li>
-<li><p><a class="reference internal" href="#covariate" id="id6">Covariate</a></p></li>
-<li><p><a class="reference internal" href="#simulated-data" id="id7">Simulated Data</a></p>
+<li><p><a class="reference internal" href="#parallel-processing" id="id5">Parallel Processing</a></p></li>
+<li><p><a class="reference internal" href="#rates" id="id6">Rates</a></p></li>
+<li><p><a class="reference internal" href="#covariate" id="id7">Covariate</a></p></li>
+<li><p><a class="reference internal" href="#simulated-data" id="id8">Simulated Data</a></p>
 <ul>
-<li><p><a class="reference internal" href="#rate-true-rate-a-t-n-c" id="id8">rate_true(rate, a, t, n, c)</a></p></li>
-<li><p><a class="reference internal" href="#y-i" id="id9">y_i</a></p></li>
-<li><p><a class="reference internal" href="#n-i" id="id10">n_i</a></p></li>
+<li><p><a class="reference internal" href="#rate-true-rate-a-t-n-c" id="id9">rate_true(rate, a, t, n, c)</a></p></li>
+<li><p><a class="reference internal" href="#y-i" id="id10">y_i</a></p></li>
+<li><p><a class="reference internal" href="#n-i" id="id11">n_i</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#parent-rate-smoothing" id="id11">Parent Rate Smoothing</a></p>
+<li><p><a class="reference internal" href="#parent-rate-smoothing" id="id12">Parent Rate Smoothing</a></p>
 <ul>
-<li><p><a class="reference internal" href="#value-prior" id="id12">Value Prior</a></p></li>
+<li><p><a class="reference internal" href="#value-prior" id="id13">Value Prior</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#child-rate-smoothing" id="id13">Child Rate Smoothing</a></p>
+<li><p><a class="reference internal" href="#child-rate-smoothing" id="id14">Child Rate Smoothing</a></p>
 <ul>
-<li><p><a class="reference internal" href="#continue-cascade-xam-child-rate-smoothing-value-prior" id="id14">Value Prior</a></p></li>
+<li><p><a class="reference internal" href="#continue-cascade-xam-child-rate-smoothing-value-prior" id="id15">Value Prior</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#checking-the-fit" id="id15">Checking The Fit</a></p></li>
+<li><p><a class="reference internal" href="#checking-the-fit" id="id16">Checking The Fit</a></p></li>
 </ul>
 </div>
 <p>For this example everything is constant in age and time.</p>
@@ -250,19 +253,35 @@ After that finishes, the cascade is continued from node n2
 using the second fit_goal_set.</p>
 </div>
 </div>
+<div class="section" id="parallel-processing">
+<span id="continue-cascade-xam-parallel-processing"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id5">Parallel Processing</a><a class="headerlink" href="#parallel-processing" title="Permalink to this headline">¶</a></h3>
+<p>This example sets <a class="reference internal" href="all_option_table.html#all-option-table-max-number-cpu"><span class="std std-ref">max_number_cpu</span></a>
+as an example of parallel processing.
+The results for nodes n3 and n4 are computed in parallel
+during the call to <a class="reference internal" href="cascade_root_node.html#id1"><span class="std std-ref">cascade_root_node</span></a>.
+The results for nodes n5 and n6 are computed in parallel
+during the call to <a class="reference internal" href="continue_cascade.html#id1"><span class="std std-ref">continue_cascade</span></a>.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">all_option</span>  <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;root_node_name&#39;</span><span class="p">:</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;max_number_cpu&#39;</span><span class="p">:</span>  <span class="s1">&#39;2&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>see <a class="reference internal" href="create_all_node_db.html#create-all-node-db-all-option"><span class="std std-ref">all_option</span></a>.</p>
+</div>
 <div class="section" id="rates">
-<span id="continue-cascade-xam-rates"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id5">Rates</a><a class="headerlink" href="#rates" title="Permalink to this headline">¶</a></h3>
+<span id="continue-cascade-xam-rates"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id6">Rates</a><a class="headerlink" href="#rates" title="Permalink to this headline">¶</a></h3>
 <p>The only non-zero dismod_at rate for this example is
 <a class="reference internal" href="glossary.html#glossary-iota"><span class="std std-ref">iota</span></a>.</p>
 </div>
 <div class="section" id="covariate">
-<span id="continue-cascade-xam-covariate"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id6">Covariate</a><a class="headerlink" href="#covariate" title="Permalink to this headline">¶</a></h3>
+<span id="continue-cascade-xam-covariate"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id7">Covariate</a><a class="headerlink" href="#covariate" title="Permalink to this headline">¶</a></h3>
 <p>There are no covariates for this example.</p>
 </div>
 <div class="section" id="simulated-data">
-<span id="continue-cascade-xam-simulated-data"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id7">Simulated Data</a><a class="headerlink" href="#simulated-data" title="Permalink to this headline">¶</a></h3>
+<span id="continue-cascade-xam-simulated-data"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id8">Simulated Data</a><a class="headerlink" href="#simulated-data" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="rate-true-rate-a-t-n-c">
-<span id="continue-cascade-xam-simulated-data-rate-true-rate-a-t-n-c"></span><span id="index-6"></span><h4><a class="toc-backref" href="#id8">rate_true(rate, a, t, n, c)</a><a class="headerlink" href="#rate-true-rate-a-t-n-c" title="Permalink to this headline">¶</a></h4>
+<span id="continue-cascade-xam-simulated-data-rate-true-rate-a-t-n-c"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id9">rate_true(rate, a, t, n, c)</a><a class="headerlink" href="#rate-true-rate-a-t-n-c" title="Permalink to this headline">¶</a></h4>
 <p>For <em>rate</em> equal to iota,
 this is the true value for <em>rate</em>
 in node <em>n</em> at age <em>a</em>, time <em>t</em>, and covariate values <em>c</em>.
@@ -284,7 +303,7 @@ The values <em>a</em>, <em>t</em>. <em>c</em>, are not used by this function for
 </div>
 </div>
 <div class="section" id="y-i">
-<span id="continue-cascade-xam-simulated-data-y-i"></span><span id="index-7"></span><h4><a class="toc-backref" href="#id9">y_i</a><a class="headerlink" href="#y-i" title="Permalink to this headline">¶</a></h4>
+<span id="continue-cascade-xam-simulated-data-y-i"></span><span id="index-8"></span><h4><a class="toc-backref" href="#id10">y_i</a><a class="headerlink" href="#y-i" title="Permalink to this headline">¶</a></h4>
 <p>The only simulated integrand for this example is <a class="reference internal" href="glossary.html#glossary-sincidence"><span class="std std-ref">Sincidence</span></a>
 which is a direct measurement of iota.
 This data is simulated without any noise; i.e.,
@@ -293,7 +312,7 @@ the i-th measurement is simulated as
 The data is modeled as having noise even though there is no simulated noise.</p>
 </div>
 <div class="section" id="n-i">
-<span id="continue-cascade-xam-simulated-data-n-i"></span><span id="index-8"></span><h4><a class="toc-backref" href="#id10">n_i</a><a class="headerlink" href="#n-i" title="Permalink to this headline">¶</a></h4>
+<span id="continue-cascade-xam-simulated-data-n-i"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id11">n_i</a><a class="headerlink" href="#n-i" title="Permalink to this headline">¶</a></h4>
 <p>Data is only simulated for the leaf nodes; i.e.,
 each <em>n_i</em> is in the set { n3, n4, n5, n6 }.
 Since the data does not have any nose, the data residuals are a measure
@@ -301,12 +320,12 @@ of how good the fit is for the nodes in the fit goal sets.</p>
 </div>
 </div>
 <div class="section" id="parent-rate-smoothing">
-<span id="continue-cascade-xam-parent-rate-smoothing"></span><span id="index-9"></span><h3><a class="toc-backref" href="#id11">Parent Rate Smoothing</a><a class="headerlink" href="#parent-rate-smoothing" title="Permalink to this headline">¶</a></h3>
+<span id="continue-cascade-xam-parent-rate-smoothing"></span><span id="index-10"></span><h3><a class="toc-backref" href="#id12">Parent Rate Smoothing</a><a class="headerlink" href="#parent-rate-smoothing" title="Permalink to this headline">¶</a></h3>
 <p>This is the iota smoothing used for the fit_node.
 There are no <a class="reference internal" href="glossary.html#glossary-dage"><span class="std std-ref">dage</span></a> or <a class="reference internal" href="glossary.html#glossary-dtime"><span class="std std-ref">dtime</span></a>
 priors because there is only one age and one time point.</p>
 <div class="section" id="value-prior">
-<span id="continue-cascade-xam-parent-rate-smoothing-value-prior"></span><span id="index-10"></span><h4><a class="toc-backref" href="#id12">Value Prior</a><a class="headerlink" href="#value-prior" title="Permalink to this headline">¶</a></h4>
+<span id="continue-cascade-xam-parent-rate-smoothing-value-prior"></span><span id="index-11"></span><h4><a class="toc-backref" href="#id13">Value Prior</a><a class="headerlink" href="#value-prior" title="Permalink to this headline">¶</a></h4>
 <p>The following is the value prior used for the root_node</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span>        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;parent_value_prior&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
@@ -324,13 +343,13 @@ routine replaces them for other nodes.</p>
 </div>
 </div>
 <div class="section" id="child-rate-smoothing">
-<span id="continue-cascade-xam-child-rate-smoothing"></span><span id="index-11"></span><h3><a class="toc-backref" href="#id13">Child Rate Smoothing</a><a class="headerlink" href="#child-rate-smoothing" title="Permalink to this headline">¶</a></h3>
+<span id="continue-cascade-xam-child-rate-smoothing"></span><span id="index-12"></span><h3><a class="toc-backref" href="#id14">Child Rate Smoothing</a><a class="headerlink" href="#child-rate-smoothing" title="Permalink to this headline">¶</a></h3>
 <p>This is the smoothing used for the
 random effect for each child of the fit_node.
 There are no dage or dtime
 priors because there is only one age and one time point in this smoothing.</p>
 <div class="section" id="continue-cascade-xam-child-rate-smoothing-value-prior">
-<span id="index-12"></span><span id="id2"></span><h4><a class="toc-backref" href="#id14">Value Prior</a><a class="headerlink" href="#continue-cascade-xam-child-rate-smoothing-value-prior" title="Permalink to this headline">¶</a></h4>
+<span id="index-13"></span><span id="id2"></span><h4><a class="toc-backref" href="#id15">Value Prior</a><a class="headerlink" href="#continue-cascade-xam-child-rate-smoothing-value-prior" title="Permalink to this headline">¶</a></h4>
 <p>The following is the value prior used for the children of the fit_node:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span>        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;child_value_prior&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
@@ -342,7 +361,7 @@ priors because there is only one age and one time point in this smoothing.</p>
 </div>
 </div>
 <div class="section" id="checking-the-fit">
-<span id="continue-cascade-xam-checking-the-fit"></span><span id="index-13"></span><h3><a class="toc-backref" href="#id15">Checking The Fit</a><a class="headerlink" href="#checking-the-fit" title="Permalink to this headline">¶</a></h3>
+<span id="continue-cascade-xam-checking-the-fit"></span><span id="index-14"></span><h3><a class="toc-backref" href="#id16">Checking The Fit</a><a class="headerlink" href="#checking-the-fit" title="Permalink to this headline">¶</a></h3>
 <p>The results of the fit are in the
 <a class="reference internal" href="cascade_root_node.html#cascade-root-node-output-dismod-db-c-predict-sample"><span class="std std-ref">c_predict_sample</span></a> and
 <a class="reference internal" href="cascade_root_node.html#cascade-root-node-output-dismod-db-c-predict-fit-var"><span class="std std-ref">c_predict_fit_var</span></a>

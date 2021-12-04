@@ -1,0 +1,336 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta content="run_parallel, run, with, specified, maximum, number, processes" name="keywords" />
+<meta content="syntax" name="keywords" />
+<meta content="default, value" name="keywords" />
+<meta content="job_table" name="keywords" />
+<meta content="start_job_id" name="keywords" />
+<meta content="all_node_database" name="keywords" />
+<meta content="node_table" name="keywords" />
+<meta content="fit_integrand" name="keywords" />
+<meta content="trace_fit" name="keywords" />
+<meta content="fit_node_database" name="keywords" />
+<meta content="skip_start_job" name="keywords" />
+<meta content="max_number_cpu" name="keywords" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>run_parallel &mdash; at_cascade  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="table_name2id" href="table_name2id.html" />
+    <link rel="prev" title="run_one_job" href="run_one_job.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> at_cascade
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="xsrst_automatic.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xsrst_automatic.html#link-to-index">Link to Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="at_cascade.html">at_cascade</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="glossary.html">glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="all_node_db.html">all_node_db</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">example</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="module.html">module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="avgint_parent_grid.html">avgint_parent_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cascade_root_node.html">cascade_root_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="check_cascade_fit.html">check_cascade_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="continue_cascade.html">continue_cascade</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create_all_node_db.html">create_all_node_db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create_job_table.html">create_job_table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="create_shift_db.html">create_shift_db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data4cov_reference.html">data4cov_reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="get_cov_info.html">get_cov_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="get_database_dir.html">get_database_dir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="get_fit_children.html">get_fit_children</a></li>
+<li class="toctree-l3"><a class="reference internal" href="get_fit_integrand.html">get_fit_integrand</a></li>
+<li class="toctree-l3"><a class="reference internal" href="get_parent_node.html">get_parent_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="get_var_id.html">get_var_id</a></li>
+<li class="toctree-l3"><a class="reference internal" href="no_ode_fit.html">no_ode_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="omega_constraint.html">omega_constraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="run_one_job.html">run_one_job</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">run_parallel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="table_name2id.html">table_name2id</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="wish_list.html">wish_list</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release_notes.html">release_notes</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">at_cascade</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="at_cascade.html">at_cascade</a> &raquo;</li>
+        
+          <li><a href="module.html">module</a> &raquo;</li>
+        
+      <li>run_parallel</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/xsrst/run_parallel.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <p class="hidden"><span class="math notranslate nohighlight">\(\newcommand{\B}[1]{ {\bf #1} }\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\R}[1]{ {\rm #1} }\)</span></p>
+<div class="section" id="run-parallel">
+<h1>run_parallel<a class="headerlink" href="#run-parallel" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="run-with-specified-maximum-number-of-processes">
+<span id="id1"></span><h2>Run With Specified Maximum Number of Processes<a class="headerlink" href="#run-with-specified-maximum-number-of-processes" title="Permalink to this headline">¶</a></h2>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#syntax" id="id2">Syntax</a></p></li>
+<li><p><a class="reference internal" href="#default-value" id="id3">Default Value</a></p></li>
+<li><p><a class="reference internal" href="#job-table" id="id4">job_table</a></p></li>
+<li><p><a class="reference internal" href="#start-job-id" id="id5">start_job_id</a></p></li>
+<li><p><a class="reference internal" href="#all-node-database" id="id6">all_node_database</a></p></li>
+<li><p><a class="reference internal" href="#node-table" id="id7">node_table</a></p></li>
+<li><p><a class="reference internal" href="#fit-integrand" id="id8">fit_integrand</a></p></li>
+<li><p><a class="reference internal" href="#trace-fit" id="id9">trace_fit</a></p></li>
+<li><p><a class="reference internal" href="#fit-node-database" id="id10">fit_node_database</a></p></li>
+<li><p><a class="reference internal" href="#skip-start-job" id="id11">skip_start_job</a></p></li>
+<li><p><a class="reference internal" href="#max-number-cpu" id="id12">max_number_cpu</a></p></li>
+</ul>
+</div>
+<div class="section" id="syntax">
+<span id="run-parallel-syntax"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># at_cascade.run_parallel(</span>
+    <span class="n">job_table</span>         <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">start_job_id</span>      <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">all_node_database</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">node_table</span>        <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fit_integrand</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">trace_fit</span>         <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">skip_start_job</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_number_cpu</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="c1"># )</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="default-value">
+<span id="run-parallel-default-value"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">Default Value</a><a class="headerlink" href="#default-value" title="Permalink to this headline">¶</a></h3>
+<p>None of the arguments to this routine can be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</div>
+<div class="section" id="job-table">
+<span id="run-parallel-job-table"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">job_table</a><a class="headerlink" href="#job-table" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="run_one_job.html#run-one-job-job-table"><span class="std std-ref">job_table</span></a></p>
+</div>
+<div class="section" id="start-job-id">
+<span id="run-parallel-start-job-id"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id5">start_job_id</a><a class="headerlink" href="#start-job-id" title="Permalink to this headline">¶</a></h3>
+<p>This is the <a class="reference internal" href="create_job_table.html#create-job-table-job-table-job-id"><span class="std std-ref">job_id</span></a>
+for the starting job.
+The run_parallel routine will not return until this job,
+and all it descendants in the job table, have been run.</p>
+</div>
+<div class="section" id="all-node-database">
+<span id="run-parallel-all-node-database"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id6">all_node_database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="run_one_job.html#run-one-job-all-node-database"><span class="std std-ref">all_node_database</span></a></p>
+</div>
+<div class="section" id="node-table">
+<span id="run-parallel-node-table"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id7">node_table</a><a class="headerlink" href="#node-table" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="run_one_job.html#run-one-job-node-table"><span class="std std-ref">node_table</span></a></p>
+</div>
+<div class="section" id="fit-integrand">
+<span id="run-parallel-fit-integrand"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id8">fit_integrand</a><a class="headerlink" href="#fit-integrand" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="run_one_job.html#run-one-job-fit-integrand"><span class="std std-ref">fit_integrand</span></a></p>
+</div>
+<div class="section" id="trace-fit">
+<span id="run-parallel-trace-fit"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id9">trace_fit</a><a class="headerlink" href="#trace-fit" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="run_one_job.html#run-one-job-trace-fit"><span class="std std-ref">trace_fit</span></a></p>
+</div>
+<div class="section" id="fit-node-database">
+<span id="run-parallel-fit-node-database"></span><span id="index-9"></span><h3><a class="toc-backref" href="#id10">fit_node_database</a><a class="headerlink" href="#fit-node-database" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="run_one_job.html#run-one-job-fit-node-database"><span class="std std-ref">fit_node_database</span></a></p>
+</div>
+<div class="section" id="skip-start-job">
+<span id="run-parallel-skip-start-job"></span><span id="index-10"></span><h3><a class="toc-backref" href="#id11">skip_start_job</a><a class="headerlink" href="#skip-start-job" title="Permalink to this headline">¶</a></h3>
+<p>If this is true (false) the job corresponding to <em>start_job_id</em>
+will be skipped (will not be skipped).
+If this argument is true, the start job must have already been run.
+This is useful when continuing a cascade.</p>
+</div>
+<div class="section" id="max-number-cpu">
+<span id="run-parallel-max-number-cpu"></span><span id="index-11"></span><h3><a class="toc-backref" href="#id12">max_number_cpu</a><a class="headerlink" href="#max-number-cpu" title="Permalink to this headline">¶</a></h3>
+<p>This is the maximum number of cpus (processes) to use.
+This must be greater than zero.
+If it is one, the jobs are run sequentially; i.e., not in parallel.</p>
+<hr class="docutils" />
+<p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/run_parallel.py</span></code></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="table_name2id.html" class="btn btn-neutral float-right" title="table_name2id" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="run_one_job.html" class="btn btn-neutral float-left" title="run_one_job" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

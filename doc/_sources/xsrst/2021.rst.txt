@@ -17,6 +17,22 @@ Release Notes for 2021
    :local:
 
 .. meta::
+   :keywords: 12-03
+
+.. index:: 12-03
+
+.. _2021.12-03:
+
+12-03
+*****
+1.  Add the :ref:`run_parallel` routine which
+    runs :ref:`create_job_table.job_table` jobs
+    sequentially (in parallel) when :ref:`run_parallel.max_number_cpu` is
+    one (greater than one).
+
+2.  Add a :ref:`wish_list` for at_cascade.
+
+.. meta::
    :keywords: 12-02
 
 .. index:: 12-02

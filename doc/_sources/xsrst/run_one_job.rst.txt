@@ -27,8 +27,19 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/run_one_job.py
-    :lines: 180-187
+    :lines: 179-186
     :language: py
+
+.. meta::
+   :keywords: default, value
+
+.. index:: default, value
+
+.. _run_one_job.default_value:
+
+Default Value
+*************
+None of the arguments to this routine can be ``None``.
 
 .. meta::
    :keywords: job_table
@@ -41,7 +52,6 @@ job_table
 *********
 This is a :ref:`create_job_table.job_table` containing the jobs
 necessary to fit the :ref:`glossary.fit_goal_set`.
-This argument can't be ``None``.
 
 .. meta::
    :keywords: run_job_id
@@ -56,6 +66,19 @@ This is the :ref:`create_job_table.job_table.job_id`
 for the job that is run.
 
 .. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _run_one_job.all_node_database:
+
+all_node_database
+*****************
+is a python string specifying the location of the
+:ref:`all_node_db<all_node_db>`
+relative to the current working directory.
+
+.. meta::
    :keywords: node_table
 
 .. index:: node_table
@@ -65,7 +88,6 @@ for the job that is run.
 node_table
 **********
 is a ``list`` of ``dict`` containing the node table for this cascade.
-This argument can't be ``None``.
 
 .. meta::
    :keywords: fit_integrand
@@ -78,20 +100,6 @@ fit_integrand
 *************
 is a ``set`` of integrand_id values that occur in the data table; see
 :ref:`get_fit_integrand`.
-
-.. meta::
-   :keywords: all_node_database
-
-.. index:: all_node_database
-
-.. _run_one_job.all_node_database:
-
-all_node_database
-*****************
-is a python string specifying the location of the
-:ref:`all_node_db<all_node_db>`
-relative to the current working directory.
-This argument can't be ``None``.
 
 .. meta::
    :keywords: trace_fit
@@ -130,7 +138,6 @@ to *run_job_id*.
 Upon Input
 ==========
 On input, *fit_node_database* is an :ref:`glossary.input_node_database`.
-This argument can't be ``None``.
 
 .. meta::
    :keywords: fit_var

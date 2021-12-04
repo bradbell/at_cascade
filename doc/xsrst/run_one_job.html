@@ -7,11 +7,12 @@
   <meta charset="utf-8">
   <meta content="run_one_job, run, one, job" name="keywords" />
 <meta content="syntax" name="keywords" />
+<meta content="default, value" name="keywords" />
 <meta content="job_table" name="keywords" />
 <meta content="run_job_id" name="keywords" />
+<meta content="all_node_database" name="keywords" />
 <meta content="node_table" name="keywords" />
 <meta content="fit_integrand" name="keywords" />
-<meta content="all_node_database" name="keywords" />
 <meta content="trace_fit" name="keywords" />
 <meta content="fit_node_database" name="keywords" />
 <meta content="upon, input" name="keywords" />
@@ -52,7 +53,7 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="table_name2id" href="table_name2id.html" />
+    <link rel="next" title="run_parallel" href="run_parallel.html" />
     <link rel="prev" title="omega_constraint" href="omega_constraint.html" /> 
 </head>
 
@@ -122,9 +123,11 @@
 <li class="toctree-l3"><a class="reference internal" href="no_ode_fit.html">no_ode_fit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="omega_constraint.html">omega_constraint</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">run_one_job</a></li>
+<li class="toctree-l3"><a class="reference internal" href="run_parallel.html">run_parallel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="table_name2id.html">table_name2id</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="wish_list.html">wish_list</a></li>
 <li class="toctree-l2"><a class="reference internal" href="release_notes.html">release_notes</a></li>
 </ul>
 </li>
@@ -205,20 +208,21 @@
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#syntax" id="id3">Syntax</a></p></li>
-<li><p><a class="reference internal" href="#job-table" id="id4">job_table</a></p></li>
-<li><p><a class="reference internal" href="#run-job-id" id="id5">run_job_id</a></p></li>
-<li><p><a class="reference internal" href="#node-table" id="id6">node_table</a></p></li>
-<li><p><a class="reference internal" href="#fit-integrand" id="id7">fit_integrand</a></p></li>
-<li><p><a class="reference internal" href="#all-node-database" id="id8">all_node_database</a></p></li>
-<li><p><a class="reference internal" href="#trace-fit" id="id9">trace_fit</a></p></li>
-<li><p><a class="reference internal" href="#fit-node-database" id="id10">fit_node_database</a></p>
+<li><p><a class="reference internal" href="#default-value" id="id4">Default Value</a></p></li>
+<li><p><a class="reference internal" href="#job-table" id="id5">job_table</a></p></li>
+<li><p><a class="reference internal" href="#run-job-id" id="id6">run_job_id</a></p></li>
+<li><p><a class="reference internal" href="#all-node-database" id="id7">all_node_database</a></p></li>
+<li><p><a class="reference internal" href="#node-table" id="id8">node_table</a></p></li>
+<li><p><a class="reference internal" href="#fit-integrand" id="id9">fit_integrand</a></p></li>
+<li><p><a class="reference internal" href="#trace-fit" id="id10">trace_fit</a></p></li>
+<li><p><a class="reference internal" href="#fit-node-database" id="id11">fit_node_database</a></p>
 <ul>
-<li><p><a class="reference internal" href="#upon-input" id="id11">Upon Input</a></p></li>
-<li><p><a class="reference internal" href="#fit-var" id="id12">fit_var</a></p></li>
-<li><p><a class="reference internal" href="#sample" id="id13">sample</a></p></li>
-<li><p><a class="reference internal" href="#c-predict-fit-var" id="id14">c_predict_fit_var</a></p></li>
-<li><p><a class="reference internal" href="#c-predict-sample" id="id15">c_predict_sample</a></p></li>
-<li><p><a class="reference internal" href="#log" id="id16">log</a></p></li>
+<li><p><a class="reference internal" href="#upon-input" id="id12">Upon Input</a></p></li>
+<li><p><a class="reference internal" href="#fit-var" id="id13">fit_var</a></p></li>
+<li><p><a class="reference internal" href="#sample" id="id14">sample</a></p></li>
+<li><p><a class="reference internal" href="#c-predict-fit-var" id="id15">c_predict_fit_var</a></p></li>
+<li><p><a class="reference internal" href="#c-predict-sample" id="id16">c_predict_sample</a></p></li>
+<li><p><a class="reference internal" href="#log" id="id17">log</a></p></li>
 </ul>
 </li>
 </ul>
@@ -231,69 +235,69 @@
     <span class="n">all_node_database</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">node_table</span>        <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">fit_integrand</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">trace_fit</span>         <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">trace_fit</span>         <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="c1"># )</span>
 </pre></div>
 </div>
 </div>
+<div class="section" id="default-value">
+<span id="run-one-job-default-value"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id4">Default Value</a><a class="headerlink" href="#default-value" title="Permalink to this headline">¶</a></h3>
+<p>None of the arguments to this routine can be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</div>
 <div class="section" id="job-table">
-<span id="run-one-job-job-table"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id4">job_table</a><a class="headerlink" href="#job-table" title="Permalink to this headline">¶</a></h3>
+<span id="run-one-job-job-table"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id5">job_table</a><a class="headerlink" href="#job-table" title="Permalink to this headline">¶</a></h3>
 <p>This is a <a class="reference internal" href="create_job_table.html#create-job-table-job-table"><span class="std std-ref">job_table</span></a> containing the jobs
-necessary to fit the <a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a>.
-This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+necessary to fit the <a class="reference internal" href="glossary.html#glossary-fit-goal-set"><span class="std std-ref">fit_goal_set</span></a>.</p>
 </div>
 <div class="section" id="run-job-id">
-<span id="run-one-job-run-job-id"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id5">run_job_id</a><a class="headerlink" href="#run-job-id" title="Permalink to this headline">¶</a></h3>
+<span id="run-one-job-run-job-id"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id6">run_job_id</a><a class="headerlink" href="#run-job-id" title="Permalink to this headline">¶</a></h3>
 <p>This is the <a class="reference internal" href="create_job_table.html#create-job-table-job-table-job-id"><span class="std std-ref">job_id</span></a>
 for the job that is run.</p>
 </div>
+<div class="section" id="all-node-database">
+<span id="run-one-job-all-node-database"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id7">all_node_database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h3>
+<p>is a python string specifying the location of the
+<a class="reference internal" href="all_node_db.html#id1"><span class="std std-ref">all_node_db</span></a>
+relative to the current working directory.</p>
+</div>
 <div class="section" id="node-table">
-<span id="run-one-job-node-table"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id6">node_table</a><a class="headerlink" href="#node-table" title="Permalink to this headline">¶</a></h3>
-<p>is a <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">dict</span></code> containing the node table for this cascade.
-This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<span id="run-one-job-node-table"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id8">node_table</a><a class="headerlink" href="#node-table" title="Permalink to this headline">¶</a></h3>
+<p>is a <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">dict</span></code> containing the node table for this cascade.</p>
 </div>
 <div class="section" id="fit-integrand">
-<span id="run-one-job-fit-integrand"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id7">fit_integrand</a><a class="headerlink" href="#fit-integrand" title="Permalink to this headline">¶</a></h3>
+<span id="run-one-job-fit-integrand"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id9">fit_integrand</a><a class="headerlink" href="#fit-integrand" title="Permalink to this headline">¶</a></h3>
 <p>is a <code class="docutils literal notranslate"><span class="pre">set</span></code> of integrand_id values that occur in the data table; see
 <a class="reference internal" href="get_fit_integrand.html#id1"><span class="std std-ref">Determine the Set of Integrands in Data Table</span></a>.</p>
 </div>
-<div class="section" id="all-node-database">
-<span id="run-one-job-all-node-database"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id8">all_node_database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h3>
-<p>is a python string specifying the location of the
-<a class="reference internal" href="all_node_db.html#id1"><span class="std std-ref">all_node_db</span></a>
-relative to the current working directory.
-This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
-</div>
 <div class="section" id="trace-fit">
-<span id="run-one-job-trace-fit"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id9">trace_fit</a><a class="headerlink" href="#trace-fit" title="Permalink to this headline">¶</a></h3>
+<span id="run-one-job-trace-fit"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id10">trace_fit</a><a class="headerlink" href="#trace-fit" title="Permalink to this headline">¶</a></h3>
 <p>if <code class="docutils literal notranslate"><span class="pre">True</span></code>, ( <code class="docutils literal notranslate"><span class="pre">False</span></code> ) the progress of the dismod at fit commands
 will be printed on standard output during the optimization.</p>
 </div>
 <div class="section" id="fit-node-database">
-<span id="run-one-job-fit-node-database"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id10">fit_node_database</a><a class="headerlink" href="#fit-node-database" title="Permalink to this headline">¶</a></h3>
+<span id="run-one-job-fit-node-database"></span><span id="index-9"></span><h3><a class="toc-backref" href="#id11">fit_node_database</a><a class="headerlink" href="#fit-node-database" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="glossary.html#glossary-fit-node-database"><span class="std std-ref">fit_node_database</span></a> for this fit is
 <em>fit_node_dir</em><code class="docutils literal notranslate"><span class="pre">/dismod.db</span></code> where <em>fit_node_dir</em>
 is the <a class="reference internal" href="get_database_dir.html#get-database-dir-database-dir"><span class="std std-ref">database_dir</span></a> returned by
 get_database_dir for the fit node and split_reference_id corresponding
 to <em>run_job_id</em>.</p>
 <div class="section" id="upon-input">
-<span id="run-one-job-fit-node-database-upon-input"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id11">Upon Input</a><a class="headerlink" href="#upon-input" title="Permalink to this headline">¶</a></h4>
-<p>On input, <em>fit_node_database</em> is an <a class="reference internal" href="glossary.html#glossary-input-node-database"><span class="std std-ref">input_node_database</span></a>.
-This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<span id="run-one-job-fit-node-database-upon-input"></span><span id="index-10"></span><h4><a class="toc-backref" href="#id12">Upon Input</a><a class="headerlink" href="#upon-input" title="Permalink to this headline">¶</a></h4>
+<p>On input, <em>fit_node_database</em> is an <a class="reference internal" href="glossary.html#glossary-input-node-database"><span class="std std-ref">input_node_database</span></a>.</p>
 </div>
 <div class="section" id="fit-var">
-<span id="run-one-job-fit-node-database-fit-var"></span><span id="index-10"></span><h4><a class="toc-backref" href="#id12">fit_var</a><a class="headerlink" href="#fit-var" title="Permalink to this headline">¶</a></h4>
+<span id="run-one-job-fit-node-database-fit-var"></span><span id="index-11"></span><h4><a class="toc-backref" href="#id13">fit_var</a><a class="headerlink" href="#fit-var" title="Permalink to this headline">¶</a></h4>
 <p>Upon return, the fit_var table correspond to the posterior
 mean for the model variables for the fit_node.</p>
 </div>
 <div class="section" id="sample">
-<span id="run-one-job-fit-node-database-sample"></span><span id="index-11"></span><h4><a class="toc-backref" href="#id13">sample</a><a class="headerlink" href="#sample" title="Permalink to this headline">¶</a></h4>
+<span id="run-one-job-fit-node-database-sample"></span><span id="index-12"></span><h4><a class="toc-backref" href="#id14">sample</a><a class="headerlink" href="#sample" title="Permalink to this headline">¶</a></h4>
 <p>Upon return,
 the sample table contains the corresponding samples from the posterior
 distribution for the model variables for the fit_node.</p>
 </div>
 <div class="section" id="c-predict-fit-var">
-<span id="run-one-job-fit-node-database-c-predict-fit-var"></span><span id="index-12"></span><h4><a class="toc-backref" href="#id14">c_predict_fit_var</a><a class="headerlink" href="#c-predict-fit-var" title="Permalink to this headline">¶</a></h4>
+<span id="run-one-job-fit-node-database-c-predict-fit-var"></span><span id="index-13"></span><h4><a class="toc-backref" href="#id15">c_predict_fit_var</a><a class="headerlink" href="#c-predict-fit-var" title="Permalink to this headline">¶</a></h4>
 <p>Upon return,
 the c_predict_fit_var table contains the predict table corresponding to the
 predict fit_var command using the avgint table in the
@@ -303,7 +307,7 @@ Note that the predict_id column name was changed to c_predict_fit_var_id
 (which is not the same as var_id).</p>
 </div>
 <div class="section" id="c-predict-sample">
-<span id="run-one-job-fit-node-database-c-predict-sample"></span><span id="index-13"></span><h4><a class="toc-backref" href="#id15">c_predict_sample</a><a class="headerlink" href="#c-predict-sample" title="Permalink to this headline">¶</a></h4>
+<span id="run-one-job-fit-node-database-c-predict-sample"></span><span id="index-14"></span><h4><a class="toc-backref" href="#id16">c_predict_sample</a><a class="headerlink" href="#c-predict-sample" title="Permalink to this headline">¶</a></h4>
 <p>Upon return,
 the c_predict_sample table contains the predict table corresponding to the
 predict sample command using the avgint table in the
@@ -313,7 +317,7 @@ Note that the predict_id column name was changed to c_predict_sample_id
 (which is not the same as sample_id).</p>
 </div>
 <div class="section" id="log">
-<span id="run-one-job-fit-node-database-log"></span><span id="index-14"></span><h4><a class="toc-backref" href="#id16">log</a><a class="headerlink" href="#log" title="Permalink to this headline">¶</a></h4>
+<span id="run-one-job-fit-node-database-log"></span><span id="index-15"></span><h4><a class="toc-backref" href="#id17">log</a><a class="headerlink" href="#log" title="Permalink to this headline">¶</a></h4>
 <p>Upon return,
 the log table contains a summary of the operations preformed on dismod.db
 between it’s input and output state.</p>
@@ -332,7 +336,7 @@ between it’s input and output state.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="table_name2id.html" class="btn btn-neutral float-right" title="table_name2id" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="run_parallel.html" class="btn btn-neutral float-right" title="run_parallel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="omega_constraint.html" class="btn btn-neutral float-left" title="omega_constraint" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

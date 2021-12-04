@@ -25,6 +25,7 @@ module
    no_ode_fit
    omega_constraint
    run_one_job
+   run_parallel
    table_name2id
 
 .. meta::
@@ -61,6 +62,7 @@ The at_cascade Python Module
     "no_ode_fit", :ref:`no_ode_fit`
     "omega_constraint", :ref:`omega_constraint`
     "run_one_job", :ref:`run_one_job`
+    "run_parallel", :ref:`run_parallel`
     "table_name2id", :ref:`table_name2id`
 
 .. END_SORT_THIS_LINE_MINUS_2

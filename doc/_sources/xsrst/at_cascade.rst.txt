@@ -12,6 +12,7 @@ at_cascade
    all_node_db
    example
    module
+   wish_list
    release_notes
 
 .. meta::
@@ -27,24 +28,13 @@ Cascading Dismod_at Analysis From Parent To Child Regions
    :local:
 
 .. meta::
-   :keywords: under, construction
+   :keywords: version, 2021.12.4
 
-.. index:: under, construction
+.. index:: version, 2021.12.4
 
-.. _at_cascade.under_construction:
+.. _at_cascade.version_2021_12_4:
 
-Under Construction
-******************
-This package is under construction and not yet usable.
-
-.. meta::
-   :keywords: version, 2021.12.2
-
-.. index:: version, 2021.12.2
-
-.. _at_cascade.version_2021_12_2:
-
-Version 2021.12.2
+Version 2021.12.4
 ******************
 
 .. meta::
@@ -75,6 +65,7 @@ Children
     "all_node_db", :ref:`all_node_db`
     "example", :ref:`example`
     "module", :ref:`module`
+    "wish_list", :ref:`wish_list`
     "release_notes", :ref:`release_notes`
 
 ----

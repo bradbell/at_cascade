@@ -56,12 +56,34 @@ fit_goal_set
 ============
 
 .. literalinclude:: ../../example/continue_cascade.py
-    :lines: 163-164
+    :lines: 177-178
     :language: py
 
 A cascade using the first fit_goal_set is started at node n0.
 After that finishes, the cascade is continued from node n2
 using the second fit_goal_set.
+
+.. meta::
+   :keywords: parallel, processing
+
+.. index:: parallel, processing
+
+.. _continue_cascade_xam.parallel_processing:
+
+Parallel Processing
+*******************
+This example sets :ref:`all_option_table.max_number_cpu`
+as an example of parallel processing.
+The results for nodes n3 and n4 are computed in parallel
+during the call to :ref:`cascade_root_node<cascade_root_node>`.
+The results for nodes n5 and n6 are computed in parallel
+during the call to :ref:`continue_cascade<continue_cascade>`.
+
+.. literalinclude:: ../../example/continue_cascade.py
+    :lines: 181-184
+    :language: py
+
+see :ref:`create_all_node_db.all_option`.
 
 .. meta::
    :keywords: rates
@@ -111,7 +133,7 @@ in node *n* at age *a*, time *t*, and covariate values *c*.
 The values *a*, *t*. *c*, are not used by this function for this example.
 
 .. literalinclude:: ../../example/continue_cascade.py
-    :lines: 171-183
+    :lines: 190-202
     :language: py
 
 .. meta::
@@ -169,7 +191,7 @@ Value Prior
 The following is the value prior used for the root_node
 
 .. literalinclude:: ../../example/continue_cascade.py
-    :lines: 196-203
+    :lines: 215-222
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -202,7 +224,7 @@ Value Prior
 The following is the value prior used for the children of the fit_node:
 
 .. literalinclude:: ../../example/continue_cascade.py
-    :lines: 208-212
+    :lines: 227-231
     :language: py
 
 .. meta::

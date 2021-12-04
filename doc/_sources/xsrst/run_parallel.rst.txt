@@ -1,0 +1,153 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!
+run_parallel
+!!!!!!!!!!!!
+
+.. meta::
+   :keywords: run_parallel, run, with, specified, maximum, number, processes
+
+.. index:: run_parallel, run, with, specified, maximum, number, processes
+
+.. _run_parallel:
+
+Run With Specified Maximum Number of Processes
+##############################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _run_parallel.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/run_parallel.py
+    :lines: 337-346
+    :language: py
+
+.. meta::
+   :keywords: default, value
+
+.. index:: default, value
+
+.. _run_parallel.default_value:
+
+Default Value
+*************
+None of the arguments to this routine can be ``None``.
+
+.. meta::
+   :keywords: job_table
+
+.. index:: job_table
+
+.. _run_parallel.job_table:
+
+job_table
+*********
+:ref:`run_one_job.job_table`
+
+.. meta::
+   :keywords: start_job_id
+
+.. index:: start_job_id
+
+.. _run_parallel.start_job_id:
+
+start_job_id
+************
+This is the :ref:`create_job_table.job_table.job_id`
+for the starting job.
+The run_parallel routine will not return until this job,
+and all it descendants in the job table, have been run.
+
+.. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _run_parallel.all_node_database:
+
+all_node_database
+*****************
+:ref:`run_one_job.all_node_database`
+
+.. meta::
+   :keywords: node_table
+
+.. index:: node_table
+
+.. _run_parallel.node_table:
+
+node_table
+**********
+:ref:`run_one_job.node_table`
+
+.. meta::
+   :keywords: fit_integrand
+
+.. index:: fit_integrand
+
+.. _run_parallel.fit_integrand:
+
+fit_integrand
+*************
+:ref:`run_one_job.fit_integrand`
+
+.. meta::
+   :keywords: trace_fit
+
+.. index:: trace_fit
+
+.. _run_parallel.trace_fit:
+
+trace_fit
+*********
+:ref:`run_one_job.trace_fit`
+
+.. meta::
+   :keywords: fit_node_database
+
+.. index:: fit_node_database
+
+.. _run_parallel.fit_node_database:
+
+fit_node_database
+*****************
+:ref:`run_one_job.fit_node_database`
+
+.. meta::
+   :keywords: skip_start_job
+
+.. index:: skip_start_job
+
+.. _run_parallel.skip_start_job:
+
+skip_start_job
+**************
+If this is true (false) the job corresponding to *start_job_id*
+will be skipped (will not be skipped).
+If this argument is true, the start job must have already been run.
+This is useful when continuing a cascade.
+
+.. meta::
+   :keywords: max_number_cpu
+
+.. index:: max_number_cpu
+
+.. _run_parallel.max_number_cpu:
+
+max_number_cpu
+**************
+This is the maximum number of cpus (processes) to use.
+This must be greater than zero.
+If it is one, the jobs are run sequentially; i.e., not in parallel.
+
+----
+
+xsrst input file: ``at_cascade/run_parallel.py``
