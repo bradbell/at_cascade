@@ -165,14 +165,15 @@ def run_parallel_job(
         )
     #
     # lock
+    # must lock before access shared data
     lock.acquire()
     #
-    # shared_job_run
+    # shared_job_run, shared_job_done
     if not skip_this_job :
         assert not shared_job_wait[this_job_id]
         assert     shared_job_run[this_job_id]
         assert not shared_job_done[this_job_id]
-        shared_job_run[this_job_id]   = False
+        shared_job_run[this_job_id]  = False
         shared_job_done[this_job_id] = True
     #
     # shared_job_wait
@@ -313,7 +314,7 @@ def run_parallel_job(
             # lock
             lock.acquire()
             #
-            # shared_job_run
+            # shared_job_run, shared_job_done
             assert not shared_job_wait[job_id]
             assert     shared_job_run[job_id]
             assert not  shared_job_done[job_id]
