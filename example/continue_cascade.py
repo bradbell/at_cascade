@@ -42,6 +42,20 @@ A cascade using the first fit_goal_set is started at node n0.
 After that finishes, the cascade is continued from node n2
 using the second fit_goal_set.
 
+Parallel Processing
+*******************
+This example sets :ref:`all_option_table.max_number_cpu`
+as an example of parallel processing.
+The results for nodes n3 and n4 are computed in parallel
+during the call to :ref:`cascade_root_node<cascade_root_node>`.
+The results for nodes n5 and n6 are computed in parallel
+during the call to :ref:`continue_cascade<continue_cascade>`.
+{xsrst_file
+    # BEGIN all_option
+    # END all_option
+}
+see :ref:`create_all_node_db.all_option`.
+
 Rates
 *****
 The only non-zero dismod_at rate for this example is
@@ -163,7 +177,12 @@ import at_cascade
 first_fit_goal_set  = { 'n3', 'n4', 'n2' }
 second_fit_goal_set = { 'n5', 'n6' }
 # END fit_goal_set
-#
+# BEGIN all_option
+all_option  = {
+    'root_node_name': 'n0',
+    'max_number_cpu':  '2',
+}
+# END all_option
 # ----------------------------------------------------------------------------
 # functions
 # ----------------------------------------------------------------------------
@@ -361,7 +380,6 @@ def main() :
     #
     # Create all_node.db
     all_node_database = 'all_node.db'
-    all_option        = { 'root_node_name': 'n0' }
     at_cascade.create_all_node_db(
         all_node_database       = all_node_database,
         root_node_database      = root_node_database,

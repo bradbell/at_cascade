@@ -131,12 +131,17 @@ def continue_cascade(
         dismod_at.get_table_dict(connection, 'split_reference')
     connection.close()
     #
-    # root_node_id
-    root_node_name   = None
+    # root_node_name, max_number_cpu
+    root_node_name = None
+    max_number_cpu = 1
     for row in all_option_table :
         if row['option_name'] == 'root_node_name' :
             root_node_name = row['option_value']
+        if row['option_name'] == 'max_number_cpu' :
+            max_number_cpu = int( row['option_value'] )
     assert root_node_name is not None
+    #
+    # root_node_id
     root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
     #
     # root_split_reference_id
@@ -243,9 +248,6 @@ def continue_cascade(
     #
     # skip_start_job
     skip_start_job = True
-    #
-    # max_number_cpu
-    max_number_cpu = 1
     #
     # run_parallel_job
     at_cascade.run_parallel(

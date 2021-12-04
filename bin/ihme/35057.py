@@ -9,6 +9,7 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # ----------------------------------------------------------------------------
 # These settings can be easily changed without understanding the code below:
+import multiprocessing
 #
 # working_directory
 # This directory is relative to your copy of the at_cascade git directory.
@@ -45,8 +46,13 @@ root_node_name      = 'Global'
 # Factor that multipliers standard deviation that is passed down the cascade.
 shift_prior_std_factor = 4.0
 #
-# mas_fit
-# Maximum number of data rows per integrand to include in a fit.
+# max_number_cpu
+# maximum number of processors, if one, run sequentally, otherwise
+# run at most max_number_cpu jobs at at time.
+max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
+#
+# max_fit
+# Maximum number of data rows per integrand to include in a f
 max_fit             = 250
 #
 # max_abs_effect
@@ -1101,6 +1107,7 @@ def set_all_option_table(all_node_database) :
     {'option_name': 'max_abs_effect',   'option_value':max_abs_effect_str},
     {'option_name': 'max_fit',          'option_value':str(max_fit)},
     {'option_name': 'root_node_name',   'option_value':root_node_name},
+    {'option_name': 'max_number_cpu',   'option_value':str(max_number_cpu)},
     {   'option_name':  'shift_prior_std_factor',
         'option_value': str(shift_prior_std_factor)
     },

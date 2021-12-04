@@ -25,9 +25,10 @@ Release Notes for 2021
 
 12-03
 *****
-Add the :ref:`run_parallel` for running jobs in parallel.
-This routine works when :ref:`run_parallel.max_number_cpu` is one,
-but the true parallel case is under construction.
+Add the :ref:`run_parallel` routine which
+runs :ref:`create_job_table.job_table` jobs
+sequentially (in parallel) when :ref:`run_parallel.max_number_cpu` is
+one (greater than one).
 
 12-02
 *****

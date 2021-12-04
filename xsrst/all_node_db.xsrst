@@ -275,6 +275,7 @@ split_reference value).
 {xsrst_spell
     bnd
     std
+    cpus
 }
 
 All Node Option Table
@@ -314,11 +315,14 @@ If it is greater (less) than one, the child priors are larger (smaller)
 than the posterior corresponding to the parent node fit.
 If this option does not appear, the value one is used for the factor.
 
-in_parallel
-***********
-If this option is  ``true`` ( ``false``)
-fitting of each of the nodes will be run in parallel (sequentially).
-If this option does not appear, the cascade will be run sequentially.
+max_number_cpu
+**************
+This is the maximum number of cpus (processors) that
+:ref:`cascade_root_node` or :ref:`continue_cascade` can use.
+If this is one (more than one) the jobs in the
+:ref:`create_job_table.job_table`
+will be run in sequentially (in parallel).
+If this option does not appear, the value one is used.
 
 max_abs_effect
 **************

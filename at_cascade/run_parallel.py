@@ -16,9 +16,6 @@
 Run With Specified Maximum Number of Processes
 ##############################################
 
-Under Construction
-******************
-
 Syntax
 ******
 {xsrst_file
