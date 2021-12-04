@@ -10,6 +10,7 @@ see http://www.gnu.org/licenses/agpl.txt
 {xsrst_begin wish_list}
 {xsrst_spell
     stdout
+    podman
 }
 
 Wish List or at_cascade
@@ -57,6 +58,8 @@ data table from a different database.
 Packaging
 *********
 Create a pip package for at_cascade; see
-`<https://packaging.python.org>`_
+`python packaging <https://packaging.python.org>`_.
+In addition, create a docker / podman image that include dismod_at
+and can run the cascade.
 
 {xsrst_end wish_list}

@@ -1684,6 +1684,12 @@ def copy_ihme_results(
     if not os.path.exists(to_dir) :
         os.makedirs(to_dir)
     #
+    # copy this file
+    print('35057.py')
+    from_path = '../../bin/ihme/35057.py'
+    to_path   = f'{to_dir}/35057.py'
+    shutil.copyfile(from_path, to_path)
+    #
     # sex
     sex_name = 'Both'
     for name in [ 'Female', 'Male' ] :
