@@ -1,0 +1,62 @@
+-----------------------------------------------------------------------------
+at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
+          Copyright (C) 2021-21 University of Washington
+             (Bradley M. Bell bradbell@uw.edu)
+
+This program is distributed under the terms of the
+    GNU Affero General Public License version 3.0 or later
+see http://www.gnu.org/licenses/agpl.txt
+-----------------------------------------------------------------------------
+{xsrst_begin wish_list}
+{xsrst_spell
+    stdout
+}
+
+Wish List or at_cascade
+#######################
+
+Parallel Processing
+*******************
+1.  Put standard output for each job in a file called stdout
+    in the directory corresponding to the job.
+    Currently standard output has the output for all the running jobs
+    mixed together on a line by line basis.
+
+2.  Report what jobs are running and what jobs have been completed
+    on standard output and in a file.
+
+3.  Add detection and graceful handling of the case where a job hangs; e.g.,
+    report which jobs completed and which hung.
+
+4.  The shared memory pointers currently use fixed names. This should be
+    changed to use names generated bo the shared memory routine to
+    allow for multiple cascades to run on the same system.
+
+Convergence Problem
+*******************
+Looking a the log file for United_States_of_America
+(in a run of the diabetes test case),
+one notices that dismod_at did not detect convergence.
+Comparing the  results the iota fixed effects for
+United_States_of_America and its parent region
+High-income_North_America, one sees they are very close.
+I think the problem with detecting convergence is scaling by
+the derivative at a point that is too close to the optimal solution.
+It would be nice if the cascade had an option to move the starting and scaling
+point away from the prior mean.
+
+Disk Space
+**********
+Certain tables are the same in every dismod_at database; i.e.
+for each node and each sex; see
+:ref:`glossary.fit_node_database.constant_tables`.
+The data is one of these and can be very large.
+It would be nice of there was an option in dismod_at to read the
+data table from a different database.
+
+Packaging
+*********
+Create a pip package for at_cascade; see
+`<https://packaging.python.org>`_
+
+{xsrst_end wish_list}

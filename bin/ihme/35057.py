@@ -1258,10 +1258,6 @@ def create_ihme_results_node(
     assert location_id is not None
     assert fit_node_id is not None
     #
-    # output_csv
-    output_csv = f'{fit_node_dir}/ihme.csv'
-    print('ihme.csv')
-    #
     # avgint_table
     avgint_table = list()
     #
@@ -1489,7 +1485,9 @@ def create_ihme_results_node(
             for row in plot_data[z_name] :
                 del row['std']
     #
-    # output_csv
+    # ihme.cs
+    output_csv = f'{fit_node_dir}/ihme.csv'
+    print('ihme.csv')
     write_csv(output_csv, output_table)
     #
     # plot_limit

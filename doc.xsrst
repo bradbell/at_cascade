@@ -26,6 +26,7 @@ Children
     xsrst/all_node_db.xsrst
     example/example.xsrst
     at_cascade/__init__.py
+    xsrst/wish_list.xsrst
     xsrst/release_notes.xsrst
 }
 
