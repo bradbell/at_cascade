@@ -306,24 +306,6 @@ covariates that do not change their reference value and hence are not
 included in the :ref:`all_cov_reference_table`.
 If this option does not appear, there are no absolute covariates.
 
-shift_prior_std_factor
-**********************
-This factor multiplies the parent fit posterior standard deviation
-for the :ref:`create_shift_db.shift_databases.value_priors`
-in the shifted databases.
-If it is greater (less) than one, the child priors are larger (smaller)
-than the posterior corresponding to the parent node fit.
-If this option does not appear, the value one is used for the factor.
-
-max_number_cpu
-**************
-This is the maximum number of cpus (processors) that
-:ref:`cascade_root_node` or :ref:`continue_cascade` can use.
-If this is one (more than one) the jobs in the
-:ref:`create_job_table.job_table`
-will be run in sequentially (in parallel).
-If this option does not appear, the value one is used.
-
 max_abs_effect
 **************
 If this option appears, it specifies an extra bound on the
@@ -351,6 +333,15 @@ are held out so that only this number are included in the fit.
 If this option does not appear, all of the data for each integrand is included
 (unless held out in the root_node data table or option table).
 
+max_number_cpu
+**************
+This is the maximum number of cpus (processors) that
+:ref:`cascade_root_node` or :ref:`continue_cascade` can use.
+If this is one (more than one) the jobs in the
+:ref:`create_job_table.job_table`
+will be run in sequentially (in parallel).
+If this option does not appear, the value one is used.
+
 root_node_name
 **************
 This option_name must appear and the corresponding option_value
@@ -364,6 +355,15 @@ This is the `split_reference_table.split_reference_name`
 corresponding to the root_node_database.
 If :ref:`split_reference_table` is empty (is not empty)
 this option must not (must) appear.
+
+shift_prior_std_factor
+**********************
+This factor multiplies the parent fit posterior standard deviation
+for the :ref:`create_shift_db.shift_databases.value_priors`
+in the shifted databases.
+If it is greater (less) than one, the child priors are larger (smaller)
+than the posterior corresponding to the parent node fit.
+If this option does not appear, the value one is used for the factor.
 
 
 split_covariate_name
