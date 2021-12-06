@@ -18,6 +18,7 @@ The at_cascade Python Module
     at_cascade/avgint_parent_grid.py
     at_cascade/cascade_root_node.py
     at_cascade/check_cascade_fit.py
+    at_cascade/check_log.py
     at_cascade/continue_cascade.py
     at_cascade/create_all_node_db.py
     at_cascade/create_job_table.py
@@ -44,6 +45,7 @@ The at_cascade Python Module
 from .avgint_parent_grid    import avgint_parent_grid
 from .cascade_root_node     import cascade_root_node
 from .check_cascade_fit     import check_cascade_fit
+from .check_log             import check_log
 from .continue_cascade      import continue_cascade
 from .create_all_node_db    import create_all_node_db
 from .create_job_table      import create_job_table

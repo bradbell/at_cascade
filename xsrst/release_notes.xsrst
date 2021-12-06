@@ -23,6 +23,13 @@ Release Notes for at_cascade
 Release Notes for 2021
 ######################
 
+12-05
+*****
+1.  Add the :ref:`check_log` routine.
+
+2.  Add the :ref:`all_option_table.perturb_optimization_scaling` option
+    and list options in alphabetical order.
+
 12-03
 *****
 1.  Add the :ref:`run_parallel` routine which

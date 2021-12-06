@@ -1756,10 +1756,10 @@ def main() :
     if len(sys.argv) == 2 :
         command_line_option = sys.argv[1]
         command_line_ok =  command_line_option in [
-            'drill', 'predict', 'copy'
+            'drill', 'check', 'predict', 'copy'
         ]
     if not command_line_ok :
-        usage  = 'usage: bin/ihme/35057.py (drill|predict|copy)\n'
+        usage  = 'usage: bin/ihme/35057.py (drill|check|predict|copy)\n'
         usage += 'drill must run first, then predict, then copy'
         sys.exit(usage)
     #
@@ -1777,6 +1777,15 @@ def main() :
         #
         # drill
         drill()
+    elif command_line_option == 'check' :
+        # change into working directory and create root_node_name subdirectory
+        os.chdir(working_directory)
+        #
+        at_cascade.check_log(
+            all_node_database  = 'all_node.db',
+            root_node_database = f'{root_node_name}/dismod.db',
+            fit_goal_set       = fit_goal_set,
+        )
     elif command_line_option == 'predict' :
         # change into working directory and create root_node_name subdirectory
         os.chdir(working_directory)
