@@ -81,6 +81,7 @@ random_seed = 0
 # fit_goal_set
 # Name of the nodes that we are drilling to (must be below root_node).
 fit_goal_set = {'California', 'Mississippi', 'Germany', 'Ireland' }
+fit_goal_set = {'California', 'Mississippi'}
 #
 # split_fit_set
 # Name of the nodes where we are splitting from Both to Female, Male
@@ -1634,12 +1635,41 @@ def create_ihme_results(
 def copy_ihme_results(
     fit_node_database = None ,
     fit_children      = None ,
+    root_level        = None ,
     date              = None ,
 ) :
     assert fit_node_database is not None
     #
+    if root_level is None :
+        root_level = True
+    #
     if date is None :
         date = str( datetime.date.today() ).replace('-', '.')
+    #
+    #
+    # to_dir
+    to_dir = f'{ihme_output_dir}/{date}'
+    if not os.path.exists(to_dir) :
+        os.makedirs(to_dir)
+    #
+    if root_level :
+        for file_name in [ 'error', 'warning' ] :
+            if os.path.exists(file_name) :
+                print( f'copying {file_name}' )
+                from_path = file_name
+                to_path   = f'{to_dir}/{file_name}'
+                shutil.copyfile(from_path, to_path)
+            else :
+                msg  = f'Can not find {working_directory}/{file_name}\n'
+                msg += 'Use the following command to create it\n'
+                msg += f'bin/ihme/35057.py {file_name}'
+                assert False, msg
+        #
+        # copy this file
+        print ('copying 35057.py')
+        from_path = '../../bin/ihme/35057.py'
+        to_path   = f'{to_dir}/35057.py'
+        shutil.copyfile(from_path, to_path)
     #
     # root_node_database
     root_node_database = 'root_node.db'
@@ -1687,17 +1717,6 @@ def copy_ihme_results(
     index = fit_node_database.find('/dismod.db')
     fit_node_dir = fit_node_database[0 : index]
     #
-    # to_dir
-    to_dir = f'{ihme_output_dir}/{date}'
-    if not os.path.exists(to_dir) :
-        os.makedirs(to_dir)
-    #
-    # copy this file
-    print('35057.py')
-    from_path = '../../bin/ihme/35057.py'
-    to_path   = f'{to_dir}/35057.py'
-    shutil.copyfile(from_path, to_path)
-    #
     # sex
     sex_name = 'Both'
     for name in [ 'Female', 'Male' ] :
@@ -1725,7 +1744,7 @@ def copy_ihme_results(
             to_path = f'{to_dir}/{file}'
             #
             # copy file
-            print( file )
+            print( f'    {file}' )
             shutil.copyfile(from_path, to_path)
     #
     # shift_name_list
@@ -1746,8 +1765,36 @@ def copy_ihme_results(
         copy_ihme_results(
             fit_node_database   = shift_node_database   ,
             fit_children        = fit_children          ,
+            root_level          = False                 ,
             date                = date                  ,
         )
+# ----------------------------------------------------------------------------
+def write_log_message(message_type) :
+    #
+    # message_dict
+    message_dict = at_cascade.check_log(
+        message_type       = message_type,
+        all_node_database  = 'all_node.db',
+        root_node_database = f'{root_node_name}/dismod.db',
+        fit_goal_set       = fit_goal_set,
+    )
+    #
+    # file_ptr
+    file_ptr = open(message_type, 'w')
+    #
+    first_key = True
+    for key in message_dict :
+        #
+        # first_key
+        if not first_key :
+            file_ptr.write('\n')
+        first_key = False
+        #
+        file_ptr.write( f'{key}\n' )
+        for message in message_dict[key] :
+            file_ptr.write( f'{message}\n' )
+    #
+    file_ptr.close()
 # ----------------------------------------------------------------------------
 def main() :
     #
@@ -1756,20 +1803,31 @@ def main() :
     if len(sys.argv) == 2 :
         command_line_option = sys.argv[1]
         command_line_ok =  command_line_option in [
-            'drill', 'check', 'predict', 'copy'
+            'drill', 'warning', 'error', 'predict', 'copy'
         ]
     if not command_line_ok :
-        usage  = 'usage: bin/ihme/35057.py (drill|check|predict|copy)\n'
+        usage  = 'usage: bin/ihme/35057.py (drill|error|warning|predict|copy)\n'
         usage += 'drill must run first, then predict, then copy'
         sys.exit(usage)
     #
+    # the drill command is special
+    if command_line_option != 'drill' :
+        # change into working directory
+        os.chdir(working_directory)
+    #
     if command_line_option == 'drill' :
         #
-        # remove old verison of working_directory/root_node_name
+        # remove old working_directory/root_node_name
         if os.path.exists(working_directory + '/' + root_node_name) :
             # rmtree is dangerous so make sure working_directory is as expected
             assert working_directory == 'ihme_db/35057'
             shutil.rmtree(working_directory + '/' + root_node_name)
+        #
+        # remove old working_directory/error working_directory/warning
+        if os.path.exists(working_directory + '/error') :
+            os.remove(working_directory + '/error')
+        if os.path.exists(working_directory + '/warning') :
+            os.remove(working_directory + '/warning')
         #
         # change into working directory and create root_node_name subdirectory
         os.chdir(working_directory)
@@ -1777,28 +1835,20 @@ def main() :
         #
         # drill
         drill()
-    elif command_line_option == 'check' :
-        # change into working directory and create root_node_name subdirectory
-        os.chdir(working_directory)
+    elif command_line_option in [ 'error', 'warning' ] :
         #
-        at_cascade.check_log(
-            all_node_database  = 'all_node.db',
-            root_node_database = f'{root_node_name}/dismod.db',
-            fit_goal_set       = fit_goal_set,
-        )
+        # write_log_message
+        message_type = command_line_option
+        write_log_message(message_type)
     elif command_line_option == 'predict' :
-        # change into working directory and create root_node_name subdirectory
-        os.chdir(working_directory)
         #
-        # start at the fit for the root node
+        # create_ihme_results
         fit_node_database = f'{root_node_name}/dismod.db'
         create_ihme_results(fit_node_database)
     else :
-        # change into working directory and create root_node_name subdirectory
-        os.chdir(working_directory)
+        assert command_line_option == 'copy'
         #
-        #
-        # start at the fit for the root node
+        # copy_ihme_results
         fit_node_database = f'{root_node_name}/dismod.db'
         copy_ihme_results(fit_node_database)
 # ----------------------------------------------------------------------------

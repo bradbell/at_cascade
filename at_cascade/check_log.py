@@ -24,6 +24,11 @@ Purpose
 *******
 Read all the logs for a cascade and prints any warning or error messages.
 
+message_type
+************
+is an ``str`` equal to ``error`` or ``warning``.
+The corresponding messages are returned.
+
 all_node_database
 *****************
 is a python string specifying the location of the
@@ -50,6 +55,17 @@ specifying the node_id (node_name) for each element of the
 :ref:`glossary.fit_goal_set` .
 This argument can't be ``None``.
 
+message_dict
+************
+the return value is a ``dict``.
+The keys in *message_dict* at ``str`` of the following form
+
+    *node_name*\ ``.``\ *split_reference_name*
+
+or each node, split reference value that has messages of the specified type.
+The value *message_dict{key]* is a ``list`` of ``str``
+containing the messages.
+
 {xsrst_end check_log}
 '''
 # ----------------------------------------------------------------------------
@@ -61,16 +77,20 @@ import at_cascade
 # ----------------------------------------------------------------------------
 def check_log(
 # BEGIN syntax
-# at_cascade.check_log(
+# message_dict = at_cascade.check_log(
+    message_type            = None,
     all_node_database       = None,
     root_node_database      = None,
     fit_goal_set            = None,
 # )
 # END syntax
 ) :
-    assert all_node_database   is not None
-    assert root_node_database  is not None
-    assert fit_goal_set        is not None
+    assert type(message_type)        is str
+    assert type(all_node_database)   is str
+    assert type(root_node_database)  is str
+    assert type(fit_goal_set)        is set
+    #
+    assert message_type in [ 'error', 'warning' ]
     #
     # node_table, covariate_table
     new             = False
@@ -142,6 +162,9 @@ def check_log(
     for row in node_split_table :
         node_split_set.add( row['node_id'] )
     #
+    # message_dict
+    message_dict = dict()
+    #
     # job_id
     for job_id in range( len(job_table) ) :
         #
@@ -176,21 +199,17 @@ def check_log(
         log_table  = dismod_at.get_table_dict(connection, 'log')
         connection.close()
         #
-        # printed_header
-        printed_header = False
+        # key
+        key = f'\n{node_name}.{split_reference_name}'
         #
         # row
         for row in log_table :
             #
-            # message_type
-            message_type = row['message_type']
-            #
-            if message_type in [ 'error', 'warning'] :
+            if row['message_type'] == message_type :
                 #
-                # printed_header
-                if not printed_header :
-                    print( f'\n{node_name}.{split_reference_name}' )
-                    printed_header = True
-                message = row['message']
-                print( f'{message_type}: {message}' )
-    return
+                # message_dict
+                if key not in message_dict :
+                    message_dict[key] = list()
+                message_dict[key].append( row['message'] )
+    #
+    return message_dict
