@@ -42,6 +42,11 @@ node_table_info     = 'node_info.csv'
 # name of the node where the cascade will start
 root_node_name      = 'Global'
 #
+# perturb_optimization_scaling
+# amount to randomly move the optimization scaling point (in log space of
+# a multiplier).
+perturb_optimization_scaling = 0.2
+#
 # shift_prior_std_factor
 # Factor that multipliers standard deviation that is passed down the cascade.
 shift_prior_std_factor = 4.0
@@ -1110,6 +1115,9 @@ def set_all_option_table(all_node_database) :
     {'option_name': 'max_number_cpu',   'option_value':str(max_number_cpu)},
     {   'option_name':  'shift_prior_std_factor',
         'option_value': str(shift_prior_std_factor)
+    },
+    {   'option_name':  'perturb_optimization_scaling',
+        'option_value': str(perturb_optimization_scaling)
     },
     ]
     new               = False

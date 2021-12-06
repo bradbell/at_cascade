@@ -152,41 +152,40 @@ def cascade_root_node(
     assert root_node_name is not None
     #
     # check root_node_name
-    parent_node_name = at_cascade.get_parent_node(root_node_database)
-    if parent_node_name != root_node_name :
-        msg  = f'{fit_node_databse} parent_node_name = {parent_node_name}\n'
+    check_node_name = at_cascade.get_parent_node(root_node_database)
+    if check_node_name != root_node_name :
+        msg  = f'{fit_node_databse} parent_node_name = {check_node_name}\n'
         msg  = f'{all_node_database} root_node_name = {root_node_name}'
         assert False, smg
     #
     # check root_node_database
-    check = f'{root_node_name}/dismod.db'
-    if root_node_database != check :
+    check_database = f'{root_node_name}/dismod.db'
+    if root_node_database != check_database :
         msg  = f'root_node_database = {root_node_database}\n'
-        msg += f'root_node_name/dismod.db = {check}\n'
+        msg += f'root_node_name/dismod.db = {check_database}\n'
         assert False, msg
     #
     # fit_integrand
     fit_integrand = at_cascade.get_fit_integrand(root_node_database)
     #
-    # fit_node_id
-    fit_node_name = at_cascade.get_parent_node(root_node_database)
-    fit_node_id   = at_cascade.table_name2id(node_table, 'node', fit_node_name)
+    # root_node_id
+    root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
     #
-    # fit_split_reference_id
+    # root_split_reference_id
     if len(split_reference_table) == 0 :
-        fit_split_reference_id = None
+        root_split_reference_id = None
     else :
         cov_info = at_cascade.get_cov_info(
             all_option_table, covariate_table, split_reference_table
         )
-        fit_split_reference_id = cov_info['split_reference_id']
+        root_split_reference_id = cov_info['split_reference_id']
     #
     # job_table
     job_table = at_cascade.create_job_table(
         all_node_database          = all_node_database,
         node_table                 = node_table,
-        start_node_id              = fit_node_id,
-        start_split_reference_id   = fit_split_reference_id,
+        start_node_id              = root_node_id,
+        start_split_reference_id   = root_split_reference_id,
         fit_goal_set               = fit_goal_set,
     )
     #

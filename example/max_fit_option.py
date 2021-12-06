@@ -89,7 +89,7 @@ Since the data does not have any nose, the data residuals are a measure
 of how good the fit is for the nodes in the fit_goal_set.
 
 max_fit_option
-==============
+**************
 This is the value of the :ref:`all_option_table.max_fit` option.
 It is also te number of data values per leaf.
 Thus the leaf nodes fit all their data while the other nodes only fit
@@ -97,6 +97,15 @@ a randomly chosen subset of their data.
 {xsrst_file
     # BEGIN max_fit_option
     # END max_fit_option
+}
+
+perturb_optimization_scaling
+****************************
+This is the value of the :ref:`all_option_table.perturb_optimization_scaling` option.
+It is only included as an example of using this option and is not necessary.
+{xsrst_file
+    # BEGIN perturb_optimization_scaling
+    # END perturb_optimization_scaling
 }
 
 Parent Rate Smoothing
@@ -193,6 +202,10 @@ print('max_fit_option: random_seed = ', random_seed)
 # BEGIN max_fit_option
 max_fit_option = 10
 # END max_fit_option
+#
+# BEGIN perturb_optimization_scaling
+perturb_optimization_scaling = 0.2
+# END perturb_optimization_scaling
 #
 # ----------------------------------------------------------------------------
 # functions
@@ -394,8 +407,9 @@ def main() :
     # Create all_node.db
     all_node_database = 'all_node.db'
     all_option        = {
-        'root_node_name' : 'n0',
-        'max_fit' :         max_fit_option,
+        'root_node_name'               : 'n0',
+        'max_fit'                      : max_fit_option,
+        'perturb_optimization_scaling' : perturb_optimization_scaling,
     }
     at_cascade.create_all_node_db(
         all_node_database     = all_node_database,

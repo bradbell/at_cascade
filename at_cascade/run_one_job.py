@@ -230,6 +230,17 @@ def run_one_job(
             all_table['split_reference'], 'split_reference', name
         )
     #
+    # perturb_optimization_scaling
+    key = 'perturb_optimization_scaling'
+    if key in all_option_dict :
+        perturb_optimization_scaling = all_option_dict[key]
+        if float(perturb_optimization_scaling) < 0.0 :
+            msg = 'run_one_job: perturb_optimization_scaling = '
+            msg += perturb_optimization_scaling
+            assert False, msg
+    else :
+        perturb_optimization_scaling = '0'
+    #
     # node_split_set
     node_split_set = set()
     for row in all_table['node_split'] :
@@ -268,7 +279,7 @@ def run_one_job(
     # init
     dismod_at.system_command_prc( [ 'dismod_at', fit_node_database, 'init' ] )
     #
-    # enforce max_fit
+    # max_fit
     if 'max_fit' in all_option_dict :
         max_fit = all_option_dict['max_fit']
         for integrand_id in fit_integrand :
@@ -278,11 +289,18 @@ def run_one_job(
                 'hold_out', integrand_name, max_fit
             ])
     #
-    # enforce max_abs_effect
+    # max_abs_effect
     if 'max_abs_effect' in all_option_dict:
         max_abs_effect = all_option_dict['max_abs_effect']
         dismod_at.system_command_prc([
             'dismod_at', fit_node_database, 'bnd_mulcov', max_abs_effect
+        ])
+    #
+    # perturb_optimization_scaling
+    if 0 < float( perturb_optimization_scaling ) :
+        sigma = perturb_optimization_scaling
+        dismod_at.system_command_prc([
+            'dismodat.py', fit_node_database, 'perturb', 'scale_var', sigma
         ])
     #
     # fit
