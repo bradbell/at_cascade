@@ -544,7 +544,7 @@ def create_all_node_db(
         mulcov_id = row['mulcov_id']
         #
         # row_list
-        row_list.append( [ node_id, split_reference_id, mulcvo_id ] )
+        row_list.append( [ fit_node_id, split_reference_id, mulcov_id ] )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )
