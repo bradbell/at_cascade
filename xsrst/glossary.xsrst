@@ -15,7 +15,6 @@ see http://www.gnu.org/licenses/agpl.txt
     smoothings
     dage
     dtime
-    mulcov
 }
 
 Glossary
@@ -142,6 +141,14 @@ iota
 The model rate for incidence,
 relative to the susceptible population, as a function of age and time.
 This is also denoted by :math:`\iota(a, t)`.
+
+job
+***
+A job corresponds to one row of the :ref:`create_job_table.job_table`; i.e.,
+one fit node and split_reference_id.
+The results for a job is its fit and the value priors for its child jobs;
+see :ref:`create_job_table.job_table.start_child_job_id` and
+*end_child_job_id*\ .
 
 meas_noise
 **********

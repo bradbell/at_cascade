@@ -82,8 +82,36 @@ of the splitting covariate.
 It must be a ``list`` of ``dict`` representation of the
 :ref:`node_split_table` with one key for each ``dict``.
 If the key is node_id (node_name) the corresponding value is
-the ``int`` ( ``str`` ) representation of the node_id (node_name).
+the ``int`` ( ``str`` ) representation of the node.
 If this argument is ``None``, the node_split table is empty.
+
+mulcov_freeze_table
+*******************
+This specifies the jobs at which the cascade will freeze specific
+covariate multipliers.
+If this argument is ``None``, the node_split table is empty.
+Otherwise, it must be a ``list`` of ``dict`` representation of the
+:ref:`mulcov_freeze_table` with the following keys for each ``dict``:
+
+fit_node_id, fit_node_name
+==========================
+The value *mulcov_freeze_table*\ ``["fit_node_id"]`` is an
+``int`` representation of the fit_node_id for this job or
+*mulcov_freeze_table*\ ``["fit_node_name"]`` is a
+``str`` representation of the corresponding node name.
+
+split_reference_id
+==================
+The value *mulcov_freeze_table*\ ``["split_reference_id"]`` is an
+``int`` representation of the split_reference_id for this job or
+*mulcov_freeze_table*\ ``["split_reference_name"]`` is a
+``str`` representation of the corresponding split reference name.
+
+mulcov_id
+=========
+The value *mulcov_freeze_table*\ ``["mulcov_id"]`` is an
+``int`` representation of the mulcov_id for the covariate multiplier
+that is frozen.
 
 omega_grid
 **********
@@ -182,6 +210,7 @@ def create_all_node_db(
     all_option                = None,
     split_reference_table     = None,
     node_split_table          = None,
+    mulcov_freeze_table       = None,
     omega_grid                = None,
     mtall_data                = None,
     mtspecific_data           = None,
@@ -195,6 +224,10 @@ def create_all_node_db(
     # node_split_table
     if node_split_table is None :
         node_split_table = list()
+    #
+    # mulcov_freeze_table
+    if mulcov_freeze_table is None :
+        mulcov_freeze_table = list()
     #
     # some asserts
     assert type(all_node_database)      is str
@@ -478,6 +511,40 @@ def create_all_node_db(
             node_name = row['node_name']
             node_id   = at_cascade.table_name2id(node_table, 'node', node_name)
         row_list.append( [ node_id ] )
+    dismod_at.create_table(
+        all_connection, tbl_name, col_name, col_type, row_list
+    )
+    #
+    # mulcov_freeze table
+    tbl_name = 'mulcov_freeze'
+    col_name = [ 'fit_node_id', 'split_reference_id', 'mulcov_id' ]
+    col_type = [ 'integer',     'integer',            'integer'   ]
+    row_list = list()
+    for row in mulcov_freeze_table :
+        #
+        # fit_node_id
+        if 'fit_node_id' in row :
+            fit_node_id = row['fit_node_id']
+        else :
+            fit_node_name = row['fit_node_name']
+            fit_node_id   = at_cascade.table_name2id(
+                node_table, 'fit_node', fit_node_name
+            )
+        #
+        # split_reference_id
+        if 'split_reference_id' in row :
+            split_reference_id = row['split_reference_id']
+        else :
+            split_reference_name = row['split_reference_name']
+            split_reference_id   = at_cascade.table_name2id(
+                split_reference_table, 'split_reference', split_reference_name
+            )
+        #
+        # mulcov_id
+        mulcov_id = row['mulcov_id']
+        #
+        # row_list
+        row_list.append( [ node_id, split_reference_id, mulcvo_id ] )
     dismod_at.create_table(
         all_connection, tbl_name, col_name, col_type, row_list
     )

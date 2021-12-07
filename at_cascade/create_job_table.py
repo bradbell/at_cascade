@@ -22,10 +22,10 @@ Syntax
 
 Purpose
 *******
-This routine returns a list of shift (node_id, split_reference_id) pairs
-with a corresponding fit (node_id, split_reference_id) pair.
-Each shift pairs requires the corresponding fit pair to have completed before
-it can be run.
+This routine returns a list of (fit_node_id, split_reference_id) pairs
+that define a dismod_at fit.
+In addition, it specifies which job needs to run before this job,
+and which jobs can be run after this job.
 
 all_node_database
 *****************

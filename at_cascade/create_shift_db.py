@@ -292,21 +292,23 @@ def create_shift_db(
 # END syntax
 ) :
     # ------------------------------------------------------------------------
-    # all_option_table, all_cov_reference_table
+    #
+    # all_table
     new        = False
     connection = dismod_at.create_connection(all_node_database, new)
-    all_option_table = dismod_at.get_table_dict( connection, 'all_option')
-    all_cov_reference_table = dismod_at.get_table_dict(
-        connection, 'all_cov_reference'
-    )
-    split_reference_table = dismod_at.get_table_dict(
-        connection, 'split_reference'
-    )
+    all_table  = dict()
+    for name in [
+        'all_option',
+        'all_cov_reference',
+        'split_reference',
+        'mulcov_freeze',
+    ] :
+        all_table[name] =  dismod_at.get_table_dict(connection, name)
     connection.close()
     #
     # shift_prior_std_factor
     shift_prior_std_factor = 1.0
-    for row in all_option_table :
+    for row in all_table['all_option'] :
         if row['option_name'] == 'shift_prior_std_factor' :
             shift_prior_std_factor = float( row['option_value'] )
     #
@@ -347,9 +349,11 @@ def create_shift_db(
     #
     # fit_split_reference_id, split_covariate_id
     cov_info = at_cascade.get_cov_info(
-        all_option_table, fit_table['covariate'], split_reference_table
+        all_table['all_option'],
+        fit_table['covariate'],
+        all_table['split_reference']
     )
-    if len(split_reference_table) == 0 :
+    if len(all_table['split_reference']) == 0 :
         fit_split_reference_id = None
         split_covaraite_id     = None
     else :
@@ -423,7 +427,7 @@ def create_shift_db(
         #
         # shift_node_name, shift_split_reference_id
         shift_node_name = None
-        for (row_id, row) in enumerate(split_reference_table) :
+        for (row_id, row) in enumerate(all_table['split_reference']) :
             if row['split_reference_name'] == shift_name :
                 shift_node_name          = fit_node_name
                 shift_split_reference_id = row_id
@@ -464,7 +468,7 @@ def create_shift_db(
         #
         # shift_table['covariate']
         # set relative covariate values so correspond to shift node
-        for row in all_cov_reference_table :
+        for row in all_table['all_cov_reference'] :
             # use fact that None == None is true
             if row['node_id'] == shift_node_id \
             and row['split_reference_id'] == shift_split_reference_id :
@@ -475,7 +479,7 @@ def create_shift_db(
         # shift_table['covariate']
         # set shift covaraite value
         if shift_split_reference_id is not None :
-            split_row  = split_reference_table[shift_split_reference_id]
+            split_row  = all_table['split_reference'][shift_split_reference_id]
             reference  = split_row['split_reference_value']
             shift_row  = shift_table['covariate'][split_covariate_id]
             shift_row['reference'] = reference

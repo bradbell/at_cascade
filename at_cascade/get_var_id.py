@@ -14,7 +14,6 @@
     mulstd
     dage
     dtime
-    mulcov
     meas
 }
 

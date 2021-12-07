@@ -435,3 +435,34 @@ The set of values in this column determine the
 
 {xsrst_end node_split_table}
 ------------------------------------------------------------------------------
+{xsrst_begin mulcov_freeze_table}
+
+Mulcov Freeze Table
+###################
+This table specifies the :ref:`jobs<glossary.job>`
+at which the cascade will freeze the value of covariate multipliers
+at the prior mean; i.e., the lower and upper limit for the covariate
+multiplier will be mean of the value prior determined by the parent job;
+see :ref:`create_job_table.job_table.parent_job_id` in the job table.
+
+mulcov_freeze_id
+****************
+is the :ref:`all_node_db.primary_key` for this table.
+
+fit_node_id
+***********
+is the :ref:`create_job_table.job_table.fit_node_id` for the job
+that will freeze the multiplier.
+
+split_reference_id
+******************
+is the :ref:`create_job_table.job_table.split_reference_id` for the job
+that will freeze the multiplier.
+
+mulcov_id
+*********
+is the primary key in the dismod_at mulcov table for the multiplier
+that is frozen.
+
+{xsrst_end mulcov_freeze_table}
+------------------------------------------------------------------------------
