@@ -23,6 +23,12 @@ Release Notes for at_cascade
 Release Notes for 2021
 ######################
 
+12-06
+*****
+Add the :ref:`mulcov_freeze` table which enables one to freeze the
+value of a covariate multiplier so it is the same for all fits
+below a certain point.
+
 12-05
 *****
 1.  Add the :ref:`check_log` routine.
