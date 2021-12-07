@@ -172,6 +172,7 @@ def add_shift_grid_row(
     integrand_id,
     shift_node_id,
     shift_prior_std_factor,
+    freeze,
 ) :
     # -----------------------------------------------------------------------
     # value_prior
@@ -189,10 +190,19 @@ def add_shift_grid_row(
         # fit_prior_row
         fit_prior_row = fit_table['prior'][fit_prior_id]
         #
+        # key
+        age_id    = fit_grid_row['age_id']
+        time_id   = fit_grid_row['time_id']
+        key       = (integrand_id, shift_node_id, age_id, time_id)
+        #
         # shift_const_value
         # shift_value_prior_id
-        lower = fit_prior_row['lower']
-        upper = fit_prior_row['upper']
+        if freeze :
+            lower = fit_fit_var[key]
+            upper = fit_fit_var[key]
+        else :
+            lower = fit_prior_row['lower']
+            upper = fit_prior_row['upper']
         if lower is None :
             lower = - math.inf
         if upper is None :
@@ -206,11 +216,6 @@ def add_shift_grid_row(
             #
             # shift_prior_row
             shift_prior_row = copy.copy( fit_prior_row )
-            #
-            # key
-            age_id    = fit_grid_row['age_id']
-            time_id   = fit_grid_row['time_id']
-            key       = (integrand_id, shift_node_id, age_id, time_id)
             #
             # shift_prior_row['mean']
             mean                     = fit_fit_var[key]
@@ -456,6 +461,13 @@ def create_shift_db(
             fit_table['node'], 'node', shift_node_name
         )
         #
+        # mulcov_freeze_set
+        mulcov_freeze_set = set()
+        for row in all_table['mulcov_freeze'] :
+            if shift_node_id == row['fit_node_id'] :
+                if shift_split_reference_id == row['split_reference_id'] :
+                    mulcov_freese_set.add( row['mulcov_id'] )
+        #
         # shift_database     = fit_node_database
         shift_database = shift_databases[shift_name]
         shutil.copyfile(fit_node_database, shift_database)
@@ -516,6 +528,9 @@ def create_shift_db(
                 # change shift_table['mulcov'] to use the new smoothing
                 shift_mulcov_row['group_smooth_id'] = shift_smooth_id
                 #
+                # freeze
+                freeze = mulcov_id in mulcov_freeze_set
+                #
                 # shift_table['smooth_grid']
                 # add rows for this smoothing
                 node_id = None
@@ -530,6 +545,7 @@ def create_shift_db(
                             integrand_id,
                             node_id,
                             shift_prior_std_factor,
+                            freeze,
                         )
 
         # --------------------------------------------------------------------
@@ -576,6 +592,9 @@ def create_shift_db(
                 # use the new smoothing for this rate
                 shift_rate_row['parent_smooth_id'] = shift_smooth_id
                 #
+                # freeze
+                freeze = False
+                #
                 # shift_table['smooth_grid']
                 # add rows for this smoothing
                 for fit_grid_row in fit_table['smooth_grid'] :
@@ -589,6 +608,7 @@ def create_shift_db(
                             integrand_id,
                             shift_node_id,
                             shift_prior_std_factor,
+                            freeze,
                         )
             # ----------------------------------------------------------------
             # fit_smooth_id
