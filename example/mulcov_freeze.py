@@ -276,7 +276,7 @@ fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 # END fit_goal_set
 #
 # BEGIN random_seed
-random_seed = 0
+random_seed =  0
 if random_seed == 0 :
     random_seed = int( time.time() )
 random.seed(random_seed)
@@ -640,9 +640,9 @@ def main() :
         #
         eps = sys.float_info.epsilon
         if '/n1/' in fit_dir :
-            assert abs( 1.0 -  alpha / alpha_n1 ) < 3.0 * eps
+            assert abs( 1.0 -  alpha / alpha_n1 ) < 10.0 * eps
         else :
-            assert abs( 1.0 - alpha / alpha_n1 ) > 3.0 * eps
+            assert abs( 1.0 - alpha / alpha_n1 ) > 10.0 * eps
 #
 main()
 print('mulcov_freeze: OK')
