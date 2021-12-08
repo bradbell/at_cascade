@@ -23,6 +23,12 @@ Release Notes for at_cascade
 Release Notes for 2021
 ######################
 
+12-08
+*****
+Remove the convergence problem :ref:`wish_list` entry becasue it was completed
+when the :ref:`all_option_table.perturb_optimization_scaling` option
+was added.
+
 12-06
 *****
 Add the :ref:`mulcov_freeze` table which enables one to freeze the

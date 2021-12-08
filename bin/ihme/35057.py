@@ -81,11 +81,26 @@ random_seed = 0
 # fit_goal_set
 # Name of the nodes that we are drilling to (must be below root_node).
 fit_goal_set = {'California', 'Mississippi', 'Germany', 'Ireland' }
-fit_goal_set = {'California', 'Mississippi'}
 #
 # split_fit_set
 # Name of the nodes where we are splitting from Both to Female, Male
 split_fit_set = {'United_States_of_America', 'Western_Europe'}
+#
+# mulcov_freeze_info
+# Freeze the covariate multiplier on obesity that affects iota and do the
+# freeze at United_States_of_America and Western_Europe.
+mulcov_freeze_list = [
+        {   'node':       'United_States_of_America',
+            'sex':        'Both',
+            'rate' :      'iota',
+            'covariate' : 'obesity',
+        },{
+            'node':       'Western_Europe',
+            'sex':        'Both',
+            'rate' :      'iota',
+            'covariate' : 'obesity',
+        },
+]
 #
 # all_age_group_id_list
 # The integer codes of the IHME ages groups that span all ages.
@@ -917,7 +932,7 @@ def create_root_node_database(file_name, other_age_table, other_time_table) :
         #
         { 'name':'quasi_fixed',                  'value':'false' },
         { 'name':'tolerance_fixed',              'value':'1e-8'},
-        { 'name':'max_num_iter_fixed',           'value':'35'},
+        { 'name':'max_num_iter_fixed',           'value':'40'},
         { 'name':'print_level_fixed',            'value':'5'},
         { 'name':'accept_after_max_steps_fixed', 'value':'10'},
     ]
@@ -956,9 +971,12 @@ def create_all_node_database(all_node_database, root_node_database) :
     shutil.copyfile(all_node_other, all_node_database)
     #
     # node_table
-    new        = False
-    connection = dismod_at.create_connection(root_node_database, new)
-    node_table = dismod_at.get_table_dict(connection, 'node')
+    new             = False
+    connection      = dismod_at.create_connection(root_node_database, new)
+    node_table      = dismod_at.get_table_dict(connection, 'node')
+    rate_table      = dismod_at.get_table_dict(connection, 'rate')
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    mulcov_table    = dismod_at.get_table_dict(connection, 'mulcov')
     connection.close()
     #
     # connection
@@ -981,14 +999,20 @@ def create_all_node_database(all_node_database, root_node_database) :
             row['split_reference_id'] = split_reference_id
         dismod_at.replace_table( connection, tbl_name, this_table)
     #
-    # split_reference table
+    # split_reference_table
+    split_reference_table = list()
     tbl_name = 'split_reference'
     col_name = [ 'split_reference_name', 'split_reference_value' ]
     col_type = [ 'text',                 'real']
     row_list = list()
     for sex_name in sex_name2covariate_value :
-        row = [ sex_name , sex_name2covariate_value[sex_name] ]
+        sex_value = sex_name2covariate_value[sex_name]
+        row = [ sex_name , sex_value ]
         row_list.append( row )
+        row = dict()
+        row['split_reference_name']  = sex_name
+        row['split_reference_value'] = sex_value
+        split_reference_table.append( row )
     dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
     #
     # node_split table
@@ -999,6 +1023,43 @@ def create_all_node_database(all_node_database, root_node_database) :
     for node_name in split_fit_set :
         node_id = at_cascade.table_name2id(node_table, 'node', node_name)
         row_list.append( [ node_id ] )
+    dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
+    #
+    # mulcov_freeze table
+    tbl_name = 'mulcov_freeze'
+    col_name = [ 'fit_node_id', 'split_reference_id', 'mulcov_id'  ]
+    col_type = [ 'integer',     'integer',            'integer' ]
+    row_list = list()
+    for freeze_row in mulcov_freeze_list :
+        rate_name      = freeze_row['rate']
+        covariate_name = freeze_row['covariate']
+        node_name      = freeze_row['node']
+        sex            = freeze_row['sex']
+        #
+        rate_id        = at_cascade.table_name2id(
+            rate_table, 'rate', rate_name
+        )
+        covariate_id   = at_cascade.table_name2id(
+            covariate_table, 'covariate', covariate_name
+        )
+        fit_node_id    = at_cascade.table_name2id(
+            node_table, 'node', node_name
+        )
+        #
+        mulcov_id = None
+        for (row_id, row) in enumerate(mulcov_table) :
+            if row['mulcov_type'] == 'rate_value' :
+                if row['rate_id'] == rate_id :
+                    if row['covariate_id'] == covariate_id :
+                        mulcov_id = row_id
+        assert mulcov_id is not None
+        #
+        split_reference_id = None
+        for (row_id, row) in enumerate(split_reference_table) :
+            if row['split_reference_name'] == sex :
+                split_reference_id = row_id
+        #
+        row_list.append( [ fit_node_id, split_reference_id, mulcov_id ] )
     dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
     #
     # connection

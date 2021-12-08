@@ -612,19 +612,19 @@ def main() :
             relative_tolerance = 2e-3,
         )
     #
-    # alpha_n0
+    # alpha_n1
     new            = False
-    connection     = dismod_at.create_connection('n0/dismod.db', new)
+    connection     = dismod_at.create_connection('n0/n1/dismod.db', new)
     var_table      = dismod_at.get_table_dict(connection, 'var')
     fit_var_table  = dismod_at.get_table_dict(connection, 'fit_var')
     connection.close()
     for (var_id, var_row) in enumerate(var_table) :
         if var_row['var_type'] == 'mulcov_rate_value' :
-            alpha_n0 = fit_var_table[var_id]['fit_var_value']
+            alpha_n1 = fit_var_table[var_id]['fit_var_value']
     #
     # fit_dir
     for fit_dir in [
-        'n0/n1', 'n0/n2', 'n0/n1/n3', 'n0/n1/n4', 'n0/n2/n5', 'n0/n2/n6'
+        'n0', 'n0/n2', 'n0/n1/n3', 'n0/n1/n4', 'n0/n2/n5', 'n0/n2/n6'
     ] :
         #
         # alpha
@@ -639,10 +639,10 @@ def main() :
                 alpha = fit_var_table[var_id]['fit_var_value']
         #
         eps = sys.float_info.epsilon
-        if '/n1' in fit_dir :
-            assert abs( 1.0 -  alpha / alpha_n0 ) < 3.0 * eps
+        if '/n1/' in fit_dir :
+            assert abs( 1.0 -  alpha / alpha_n1 ) < 3.0 * eps
         else :
-            assert abs( 1.0 - alpha / alpha_n0 ) > 3.0 * eps
+            assert abs( 1.0 - alpha / alpha_n1 ) > 3.0 * eps
 #
 main()
 print('mulcov_freeze: OK')

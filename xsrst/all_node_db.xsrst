@@ -441,8 +441,9 @@ Mulcov Freeze Table
 ###################
 This table specifies the :ref:`jobs<glossary.job>`
 at which the cascade will freeze the value of covariate multipliers
-at the prior mean; i.e., the lower and upper limit for the covariate
-multiplier will be mean of the value prior determined by the parent job;
+for its descendants (starting with its child jobs).
+To be specific, the lower and upper limit for the covariate
+multiplier in descendants of the job will be optimal value determined by job;
 see :ref:`create_job_table.job_table.parent_job_id` in the job table.
 
 mulcov_freeze_id

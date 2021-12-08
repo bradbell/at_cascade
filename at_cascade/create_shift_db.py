@@ -464,8 +464,8 @@ def create_shift_db(
         # mulcov_freeze_set
         mulcov_freeze_set = set()
         for row in all_table['mulcov_freeze'] :
-            if shift_node_id == row['fit_node_id'] :
-                if shift_split_reference_id == row['split_reference_id'] :
+            if fit_node_id == row['fit_node_id'] :
+                if fit_split_reference_id == row['split_reference_id'] :
                     mulcov_freeze_set.add( row['mulcov_id'] )
         #
         # shift_database     = fit_node_database
