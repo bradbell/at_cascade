@@ -17,6 +17,46 @@ Release Notes for 2021
    :local:
 
 .. meta::
+   :keywords: 12-08
+
+.. index:: 12-08
+
+.. _2021.12-08:
+
+12-08
+*****
+Remove the convergence problem :ref:`wish_list` entry becasue it was completed
+when the :ref:`all_option_table.perturb_optimization_scaling` option
+was added.
+
+.. meta::
+   :keywords: 12-06
+
+.. index:: 12-06
+
+.. _2021.12-06:
+
+12-06
+*****
+Add the :ref:`mulcov_freeze` table which enables one to freeze the
+value of a covariate multiplier so it is the same for all fits
+below a certain point.
+
+.. meta::
+   :keywords: 12-05
+
+.. index:: 12-05
+
+.. _2021.12-05:
+
+12-05
+*****
+1.  Add the :ref:`check_log` routine.
+
+2.  Add the :ref:`all_option_table.perturb_optimization_scaling` option
+    and list options in alphabetical order.
+
+.. meta::
    :keywords: 12-03
 
 .. index:: 12-03

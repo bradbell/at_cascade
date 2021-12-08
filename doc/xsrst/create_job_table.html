@@ -108,6 +108,7 @@
 <li class="toctree-l3"><a class="reference internal" href="avgint_parent_grid.html">avgint_parent_grid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cascade_root_node.html">cascade_root_node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="check_cascade_fit.html">check_cascade_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="check_log.html">check_log</a></li>
 <li class="toctree-l3"><a class="reference internal" href="continue_cascade.html">continue_cascade</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_all_node_db.html">create_all_node_db</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">create_job_table</a></li>
@@ -239,10 +240,10 @@
 </div>
 <div class="section" id="purpose">
 <span id="create-job-table-purpose"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">Purpose</a><a class="headerlink" href="#purpose" title="Permalink to this headline">¶</a></h3>
-<p>This routine returns a list of shift (node_id, split_reference_id) pairs
-with a corresponding fit (node_id, split_reference_id) pair.
-Each shift pairs requires the corresponding fit pair to have completed before
-it can be run.</p>
+<p>This routine returns a list of (fit_node_id, split_reference_id) pairs
+that define a dismod_at fit.
+In addition, it specifies which job needs to run before this job,
+and which jobs can be run after this job.</p>
 </div>
 <div class="section" id="all-node-database">
 <span id="create-job-table-all-node-database"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">all_node_database</a><a class="headerlink" href="#all-node-database" title="Permalink to this headline">¶</a></h3>

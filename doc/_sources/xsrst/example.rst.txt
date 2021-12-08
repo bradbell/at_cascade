@@ -11,6 +11,7 @@ example
    absolute_covariates
    continue_cascade_xam
    max_fit_option
+   mulcov_freeze
    no_ode_xam
    one_at_function
    prevalence2iota
@@ -37,6 +38,7 @@ The at_cascade Examples
     "absolute_covariates", :ref:`absolute_covariates`
     "continue_cascade_xam", :ref:`continue_cascade_xam`
     "max_fit_option", :ref:`max_fit_option`
+    "mulcov_freeze", :ref:`mulcov_freeze`
     "no_ode_xam", :ref:`no_ode_xam`
     "one_at_function", :ref:`one_at_function`
     "prevalence2iota", :ref:`prevalence2iota`

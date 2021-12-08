@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/get_var_id.py
-    :lines: 67-78
+    :lines: 66-77
     :language: py
 
 .. meta::

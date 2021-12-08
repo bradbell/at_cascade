@@ -1,0 +1,75 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!!!!
+mulcov_freeze_table
+!!!!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: mulcov_freeze_table, mulcov, freeze, table
+
+.. index:: mulcov_freeze_table, mulcov, freeze, table
+
+.. _mulcov_freeze_table:
+
+Mulcov Freeze Table
+###################
+.. contents::
+   :local:
+
+This table specifies the :ref:`jobs<glossary.job>`
+at which the cascade will freeze the value of covariate multipliers
+for its descendants (starting with its child jobs).
+To be specific, the lower and upper limit for the covariate
+multiplier in descendants of the job will be optimal value determined by job;
+see :ref:`create_job_table.job_table.parent_job_id` in the job table.
+
+.. meta::
+   :keywords: mulcov_freeze_id
+
+.. index:: mulcov_freeze_id
+
+.. _mulcov_freeze_table.mulcov_freeze_id:
+
+mulcov_freeze_id
+****************
+is the :ref:`all_node_db.primary_key` for this table.
+
+.. meta::
+   :keywords: fit_node_id
+
+.. index:: fit_node_id
+
+.. _mulcov_freeze_table.fit_node_id:
+
+fit_node_id
+***********
+is the :ref:`create_job_table.job_table.fit_node_id` for the job
+that will freeze the multiplier.
+
+.. meta::
+   :keywords: split_reference_id
+
+.. index:: split_reference_id
+
+.. _mulcov_freeze_table.split_reference_id:
+
+split_reference_id
+******************
+is the :ref:`create_job_table.job_table.split_reference_id` for the job
+that will freeze the multiplier.
+
+.. meta::
+   :keywords: mulcov_id
+
+.. index:: mulcov_id
+
+.. _mulcov_freeze_table.mulcov_id:
+
+mulcov_id
+*********
+is the primary key in the dismod_at mulcov table for the multiplier
+that is frozen.
+
+----
+
+xsrst input file: ``xsrst/all_node_db.xsrst``

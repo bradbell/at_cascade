@@ -1,0 +1,123 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!
+check_log
+!!!!!!!!!
+
+.. meta::
+   :keywords: check_log, checks, logs, for, warnings, errors
+
+.. index:: check_log, checks, logs, for, warnings, errors
+
+.. _check_log:
+
+Checks Logs For Warnings and Errors
+###################################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _check_log.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/check_log.py
+    :lines: 80-85
+    :language: py
+
+.. meta::
+   :keywords: purpose
+
+.. index:: purpose
+
+.. _check_log.purpose:
+
+Purpose
+*******
+Read all the logs for a cascade and prints any warning or error messages.
+
+.. meta::
+   :keywords: message_type
+
+.. index:: message_type
+
+.. _check_log.message_type:
+
+message_type
+************
+is an ``str`` equal to ``error`` or ``warning``.
+The corresponding messages are returned.
+
+.. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _check_log.all_node_database:
+
+all_node_database
+*****************
+is a python string specifying the location of the
+:ref:`all_node_db<all_node_db>`
+relative to the current working directory.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: root_node_database
+
+.. index:: root_node_database
+
+.. _check_log.root_node_database:
+
+root_node_database
+******************
+is a python string specifying the location of the dismod_at
+:ref:`glossary.root_node` database relative to the current working directory.
+It must *root_node_name*\ ``/dismod.db``; see
+:ref:`all_option_table.root_node_name`.
+On input, this is an :ref:`glossary.input_node_database`.
+Upon return, it is a :ref:`glossary.fit_node_database` with the
+extra properties listed under
+:ref:`cascade_root_node.output_dismod_db` below.
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: fit_goal_set
+
+.. index:: fit_goal_set
+
+.. _check_log.fit_goal_set:
+
+fit_goal_set
+************
+This is a ``set`` with elements of type ``int`` (``str``)
+specifying the node_id (node_name) for each element of the
+:ref:`glossary.fit_goal_set` .
+This argument can't be ``None``.
+
+.. meta::
+   :keywords: message_dict
+
+.. index:: message_dict
+
+.. _check_log.message_dict:
+
+message_dict
+************
+the return value is a ``dict``.
+The keys in *message_dict* at ``str`` of the following form
+
+    *node_name*\ ``.``\ *split_reference_name*
+
+or each node, split reference value that has messages of the specified type.
+The value *message_dict{key]* is a ``list`` of ``str``
+containing the messages.
+
+----
+
+xsrst input file: ``at_cascade/check_log.py``

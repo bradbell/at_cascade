@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_all_node_db.py
-    :lines: 178-188
+    :lines: 206-217
     :language: py
 
 .. meta::
@@ -141,8 +141,64 @@ of the splitting covariate.
 It must be a ``list`` of ``dict`` representation of the
 :ref:`node_split_table` with one key for each ``dict``.
 If the key is node_id (node_name) the corresponding value is
-the ``int`` ( ``str`` ) representation of the node_id (node_name).
+the ``int`` ( ``str`` ) representation of the node.
 If this argument is ``None``, the node_split table is empty.
+
+.. meta::
+   :keywords: mulcov_freeze_table
+
+.. index:: mulcov_freeze_table
+
+.. _create_all_node_db.mulcov_freeze_table:
+
+mulcov_freeze_table
+*******************
+This specifies the jobs at which the cascade will freeze specific
+covariate multipliers.
+If this argument is ``None``, the node_split table is empty.
+Otherwise, it must be a ``list`` of ``dict`` representation of the
+:ref:`mulcov_freeze_table` with the following keys for each ``dict``:
+
+.. meta::
+   :keywords: fit_node_id, , fit_node_name
+
+.. index:: fit_node_id, , fit_node_name
+
+.. _create_all_node_db.mulcov_freeze_table.fit_node_id,_fit_node_name:
+
+fit_node_id, fit_node_name
+==========================
+The value *mulcov_freeze_table*\ ``["fit_node_id"]`` is an
+``int`` representation of the fit_node_id for this job or
+*mulcov_freeze_table*\ ``["fit_node_name"]`` is a
+``str`` representation of the corresponding node name.
+
+.. meta::
+   :keywords: split_reference_id
+
+.. index:: split_reference_id
+
+.. _create_all_node_db.mulcov_freeze_table.split_reference_id:
+
+split_reference_id
+==================
+The value *mulcov_freeze_table*\ ``["split_reference_id"]`` is an
+``int`` representation of the split_reference_id for this job or
+*mulcov_freeze_table*\ ``["split_reference_name"]`` is a
+``str`` representation of the corresponding split reference name.
+
+.. meta::
+   :keywords: mulcov_id
+
+.. index:: mulcov_id
+
+.. _create_all_node_db.mulcov_freeze_table.mulcov_id:
+
+mulcov_id
+=========
+The value *mulcov_freeze_table*\ ``["mulcov_id"]`` is an
+``int`` representation of the mulcov_id for the covariate multiplier
+that is frozen.
 
 .. meta::
    :keywords: omega_grid

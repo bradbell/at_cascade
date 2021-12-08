@@ -5,9 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta content="wish_list, wish, list, or, at_cascade" name="keywords" />
+  <meta content="wish_list, wish, list, for, at_cascade" name="keywords" />
 <meta content="parallel, processing" name="keywords" />
-<meta content="convergence, problem" name="keywords" />
 <meta content="disk, space" name="keywords" />
 <meta content="packaging" name="keywords" />
 
@@ -169,14 +168,13 @@
 <span class="math notranslate nohighlight">\(\newcommand{\R}[1]{ {\rm #1} }\)</span></p>
 <div class="section" id="wish-list">
 <h1>wish_list<a class="headerlink" href="#wish-list" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="wish-list-or-at-cascade">
-<span id="id1"></span><h2>Wish List or at_cascade<a class="headerlink" href="#wish-list-or-at-cascade" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="wish-list-for-at-cascade">
+<span id="id1"></span><h2>Wish List for at_cascade<a class="headerlink" href="#wish-list-for-at-cascade" title="Permalink to this headline">¶</a></h2>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#parallel-processing" id="id2">Parallel Processing</a></p></li>
-<li><p><a class="reference internal" href="#convergence-problem" id="id3">Convergence Problem</a></p></li>
-<li><p><a class="reference internal" href="#disk-space" id="id4">Disk Space</a></p></li>
-<li><p><a class="reference internal" href="#packaging" id="id5">Packaging</a></p></li>
+<li><p><a class="reference internal" href="#disk-space" id="id3">Disk Space</a></p></li>
+<li><p><a class="reference internal" href="#packaging" id="id4">Packaging</a></p></li>
 </ul>
 </div>
 <div class="section" id="parallel-processing">
@@ -189,27 +187,17 @@ mixed together on a line by line basis.</p></li>
 <li><p>Report what jobs are running and what jobs have been completed
 on standard output and in a file.</p></li>
 <li><p>Add detection and graceful handling of the case where a job hangs; e.g.,
-report which jobs completed and which hung.</p></li>
+report which jobs completed and which hung.
+For example, a <code class="docutils literal notranslate"><span class="pre">try</span></code> <code class="docutils literal notranslate"><span class="pre">except</span></code> block could be added for the call to
+<code class="docutils literal notranslate"><span class="pre">run_one_job</span></code>, and the corresponding child jobs could be aborted when
+an exception occurs.</p></li>
 <li><p>The shared memory pointers currently use fixed names. This should be
 changed to use names generated bo the shared memory routine to
 allow for multiple cascades to run on the same system.</p></li>
 </ol>
 </div>
-<div class="section" id="convergence-problem">
-<span id="wish-list-convergence-problem"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">Convergence Problem</a><a class="headerlink" href="#convergence-problem" title="Permalink to this headline">¶</a></h3>
-<p>Looking a the log file for United_States_of_America
-(in a run of the diabetes test case),
-one notices that dismod_at did not detect convergence.
-Comparing the  results the iota fixed effects for
-United_States_of_America and its parent region
-High-income_North_America, one sees they are very close.
-I think the problem with detecting convergence is scaling by
-the derivative at a point that is too close to the optimal solution.
-It would be nice if the cascade had an option to move the starting and scaling
-point away from the prior mean.</p>
-</div>
 <div class="section" id="disk-space">
-<span id="wish-list-disk-space"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">Disk Space</a><a class="headerlink" href="#disk-space" title="Permalink to this headline">¶</a></h3>
+<span id="wish-list-disk-space"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">Disk Space</a><a class="headerlink" href="#disk-space" title="Permalink to this headline">¶</a></h3>
 <p>Certain tables are the same in every dismod_at database; i.e.
 for each node and each sex; see
 <a class="reference internal" href="glossary.html#glossary-fit-node-database-constant-tables"><span class="std std-ref">Constant Tables</span></a>.
@@ -218,9 +206,11 @@ It would be nice of there was an option in dismod_at to read the
 data table from a different database.</p>
 </div>
 <div class="section" id="packaging">
-<span id="wish-list-packaging"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id5">Packaging</a><a class="headerlink" href="#packaging" title="Permalink to this headline">¶</a></h3>
+<span id="wish-list-packaging"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">Packaging</a><a class="headerlink" href="#packaging" title="Permalink to this headline">¶</a></h3>
 <p>Create a pip package for at_cascade; see
-<a class="reference external" href="https://packaging.python.org">https://packaging.python.org</a></p>
+<a class="reference external" href="https://packaging.python.org">python packaging</a>.
+In addition, create a docker / podman image that include dismod_at
+and can run the cascade.</p>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">xsrst/wish_list.xsrst</span></code></p>
 </div>

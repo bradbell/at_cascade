@@ -1,0 +1,26 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!
+mulcov_freeze_py
+!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: mulcov_freeze_py, mulcov_freeze:, python, source, code
+
+.. index:: mulcov_freeze_py, mulcov_freeze:, python, source, code
+
+.. _mulcov_freeze_py:
+
+mulcov_freeze: Python Source Code
+#################################
+.. contents::
+   :local:
+
+
+.. literalinclude:: ../../example/mulcov_freeze.py
+    :lines: 251-649
+    :language: py
+
+----
+
+xsrst input file: ``example/mulcov_freeze.py``

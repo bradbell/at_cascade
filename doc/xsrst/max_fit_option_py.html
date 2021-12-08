@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="no_ode_xam" href="no_ode_xam.html" />
+    <link rel="next" title="mulcov_freeze" href="mulcov_freeze.html" />
     <link rel="prev" title="max_fit_option" href="max_fit_option.html" /> 
 </head>
 
@@ -96,6 +96,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">max_fit_option_py</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="mulcov_freeze.html">mulcov_freeze</a></li>
 <li class="toctree-l3"><a class="reference internal" href="no_ode_xam.html">no_ode_xam</a></li>
 <li class="toctree-l3"><a class="reference internal" href="one_at_function.html">one_at_function</a></li>
 <li class="toctree-l3"><a class="reference internal" href="prevalence2iota.html">prevalence2iota</a></li>
@@ -221,6 +222,10 @@
 <span class="c1"># BEGIN max_fit_option</span>
 <span class="n">max_fit_option</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="c1"># END max_fit_option</span>
+<span class="c1">#</span>
+<span class="c1"># BEGIN perturb_optimization_scaling</span>
+<span class="n">perturb_optimization_scaling</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="c1"># END perturb_optimization_scaling</span>
 <span class="c1">#</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># functions</span>
@@ -422,8 +427,9 @@
     <span class="c1"># Create all_node.db</span>
     <span class="n">all_node_database</span> <span class="o">=</span> <span class="s1">&#39;all_node.db&#39;</span>
     <span class="n">all_option</span>        <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;root_node_name&#39;</span> <span class="p">:</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;max_fit&#39;</span> <span class="p">:</span>         <span class="n">max_fit_option</span><span class="p">,</span>
+        <span class="s1">&#39;root_node_name&#39;</span>               <span class="p">:</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;max_fit&#39;</span>                      <span class="p">:</span> <span class="n">max_fit_option</span><span class="p">,</span>
+        <span class="s1">&#39;perturb_optimization_scaling&#39;</span> <span class="p">:</span> <span class="n">perturb_optimization_scaling</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">at_cascade</span><span class="o">.</span><span class="n">create_all_node_db</span><span class="p">(</span>
         <span class="n">all_node_database</span>     <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
@@ -506,7 +512,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="no_ode_xam.html" class="btn btn-neutral float-right" title="no_ode_xam" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="mulcov_freeze.html" class="btn btn-neutral float-right" title="mulcov_freeze" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="max_fit_option.html" class="btn btn-neutral float-left" title="max_fit_option" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
