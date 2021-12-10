@@ -78,10 +78,6 @@ gamma_factor        = 1e-2
 # Otherwise this value is used. In either case the actual seed is reported.
 random_seed = 0
 #
-# fit_goal_set
-# Name of the nodes that we are drilling to (must be below root_node).
-fit_goal_set = {'California', 'Mississippi', 'Germany', 'Ireland' }
-#
 # split_fit_set
 # Name of the nodes where we are splitting from Both to Female, Male
 split_fit_set = {'United_States_of_America', 'Western_Europe'}
@@ -101,6 +97,7 @@ mulcov_freeze_list = [
             'covariate' : 'obesity',
         },
 ]
+mulcov_freeze_list = list()
 #
 # all_age_group_id_list
 # The integer codes of the IHME ages groups that span all ages.
@@ -137,6 +134,55 @@ integrand_name2measure_id = {
 copy_file_list = [
     'variable.csv', 'data.csv', 'ihme.csv', 'rate.pdf', 'ihme.pdf', 'data.pdf'
 ]
+#
+# fit_goal_set
+# Name of the nodes that we are drilling to (must be below root_node).
+fit_goal_set = {'California', 'Mississippi', 'Germany', 'Ireland' }
+#
+# Areas that are not in node table
+# 'Malopolskie', 'Bashkorkorstan', 'Sao_Paulo',
+fit_goal_set = {
+    'Taiwan_(Province_of_China)',
+    'Shanghai',
+    'Thailand',
+    'Philippines',
+    'Fiji',
+    'Papua_New_Guinea',
+    'Uzbekistan',
+    'Mongolia',
+    'Republic_of_Moldova',
+    'New_Zealand_Maori_population',
+    'New_Zealand_non-Maori_population',
+    'Kagoshima',
+    'Republic_of_Korea',
+    'Greenland',
+    'California',
+    'Mississippi',
+    'Argentina',
+    'Uruguay',
+    'Germany',
+    'Ireland',
+    'Tower_Hamlets',
+    'Peru',
+    'Bolivia_(Plurinational_State_of)',
+    'Barbados',
+    'Saint_Lucia',
+    'Honduras',
+    'Tamaulipas',
+    'Paraguay',
+    'Oman',
+    'Golestan',
+    'Punjab,_Rural',
+    'Bangladesh',
+    'Democratic_Republic_of_the_Congo',
+    'Angola',
+    'Rwanda',
+    'Ethiopia',
+    'Lesotho',
+    'Eastern_Cape',
+    'Togo',
+    'Edo',
+}
 # -----------------------------------------------------------------------------
 #
 import numpy
@@ -1318,7 +1364,7 @@ def create_ihme_results_node(
     fit_node_name   = at_cascade.get_parent_node(fit_node_database)
     #
     # fit_node_id, location_id
-    node_info_table = get_table_csv( node_table_info )
+    node_info_table = get_table_csv(node_table_info )
     location_id     = None
     fit_node_id     = None
     for row in node_info_table :
