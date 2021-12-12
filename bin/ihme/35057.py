@@ -1308,12 +1308,12 @@ def create_ihme_results_node(
     assert interpolate_obesity is not None
     assert interpolate_ldi is not None
     #
+    trace_file = open('create_ihme_results', 'a')
+    #
     # fit_node_dir
     assert fit_node_database.endswith('/dismod.db')
     index        = fit_node_database.rfind('/')
     fit_node_dir = fit_node_database[0:index]
-    #
-    print(fit_node_dir)
     #
     # integrand_table, age_table, time_table
     new        = False
@@ -1373,6 +1373,17 @@ def create_ihme_results_node(
             fit_node_id = int( row['node_id'] )
     assert location_id is not None
     assert fit_node_id is not None
+    #
+    skip = location_id not in interpolate_obesity
+    skip = skip or location_id not in interpolate_ldi
+    if skip :
+        print(f'skipping {fit_node_dir}')
+        trace_file.write(f'skipping {fit_node_dir}\n')
+        trace_file.flush()
+    else :
+        print(fit_node_dir)
+        trace_file.write(fit_node_dir + '\n')
+        trace_file.flush()
     #
     # avgint_table
     avgint_table = list()
@@ -1454,16 +1465,22 @@ def create_ihme_results_node(
     #
     # predict sample
     print( 'sample' )
+    trace_file.write( 'sample\n' )
+    trace_file.flush()
     command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     dismod_at.system_command_prc(command, print_command = False )
     #
     # db2csv
     print( 'db2csv' )
+    trace_file.write( 'db2csv\n'  )
+    trace_file.flush()
     dismod_at.db2csv_command(fit_node_database)
     #
     # rate.pdf
     pdf_file = f'{fit_node_dir}/rate.pdf'
     print( 'rate.pdf' )
+    trace_file.write( 'rate.pdf\n' )
+    trace_file.flush()
     plot_title = f'{fit_node_name}.{sex_name}'
     rate_set   = { 'iota', 'chi', 'omega' }
     dismod_at.plot_rate_fit(
@@ -1473,6 +1490,8 @@ def create_ihme_results_node(
     # data.pdf
     pdf_file = f'{fit_node_dir}/data.pdf'
     print( 'data.pdf' )
+    trace_file.write( 'data.pdf\n' )
+    trace_file.flush()
     plot_title = f'{fit_node_name}.{sex_name}'
     dismod_at.plot_data_fit(
         database   = fit_node_database,
@@ -1604,6 +1623,8 @@ def create_ihme_results_node(
     # ihme.cs
     output_csv = f'{fit_node_dir}/ihme.csv'
     print('ihme.csv')
+    trace_file.write('ihme.csv\n')
+    trace_file.flush()
     write_csv(output_csv, output_table)
     #
     # plot_limit
@@ -1621,6 +1642,8 @@ def create_ihme_results_node(
     # ihme.pdf
     pdf_file = f'{fit_node_dir}/ihme.pdf'
     print( 'ihme.pdf' )
+    trace_file.write( 'ihme.pdf\n' )
+    trace_file.flush()
     plot_title = f'{fit_node_name}.{sex_name}'
     dismod_at.plot_curve(
         pdf_file   = pdf_file      ,
@@ -1630,113 +1653,100 @@ def create_ihme_results_node(
     )
 # ---------------------------------------------------------------------------
 def create_ihme_results(
-    fit_node_database   = None ,
-    fit_children        = None ,
-    age_group_dict      = None ,
-    interpolate_obesity = None ,
-    interpolate_ldi     = None ,
+    root_node_database   = None ,
+    age_group_dict       = None ,
+    interpolate_obesity  = None ,
+    interpolate_ldi      = None ,
 ) :
-    assert fit_node_database is not None
-    #
-    # root_node_database
-    root_node_database = 'root_node.db'
+    assert root_node_database is not None
     #
     # all_node_database
     all_node_database = 'all_node.db'
     #
-    # node_table
+    # node_table, covariate_table
     new        = False
-    connection = dismod_at.create_connection(root_node_database, new)
-    node_table = dismod_at.get_table_dict(connection, 'node')
+    connection      = dismod_at.create_connection(root_node_database, new)
+    node_table      = dismod_at.get_table_dict(connection, 'node')
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
     connection.close()
     #
-    # split_reference_table
+    # all_option_table, split_reference_table, node_split
     new        = False
     connection            = dismod_at.create_connection(all_node_database, new)
+    all_option_table      =  dismod_at.get_table_dict(connection, 'all_option')
+    node_split_table      =  dismod_at.get_table_dict(connection, 'node_split')
     split_reference_table = \
         dismod_at.get_table_dict(connection, 'split_reference')
+    connection.close()
     #
-    # fit_children
-    if fit_children is None :
-        #
-        # root_node_name
-        root_node_name = at_cascade.get_parent_node(root_node_database)
-        #
-        # root_node_id
-        root_node_id = at_cascade.table_name2id(
+    # node_split_set
+    node_split_set = set()
+    for row in node_split_table :
+        node_split_set.add( row['node_id'] )
+    #
+    # root_node_id
+    root_node_name = at_cascade.get_parent_node(root_node_database)
+    root_node_id   = at_cascade.table_name2id(
             node_table, 'node', root_node_name
-        )
-        #
-        # fit_children
-        fit_children = at_cascade.get_fit_children(
-            root_node_id = root_node_id ,
-            fit_goal_set = fit_goal_set ,
-            node_table   = node_table   ,
-        )
-    #
-    # age_group_dict
-    if age_group_dict is None :
-        age_group_dict = get_age_group_dict(age_group_table_csv)
-    #
-    # both
-    if interpolate_obesity is None :
-        one_age_group = False
-        interpolate_obesity  = get_interpolate_covariate(
-            obesity_table_csv, age_group_dict, one_age_group
-        )
-    #
-    # interpolate_ldi
-    if interpolate_ldi is None :
-        one_age_group = True
-        interpolate_ldi  = get_interpolate_covariate(
-            ldi_table_csv, age_group_dict, one_age_group
-        )
-    #
-    # fit_node_id
-    fit_node_name = at_cascade.get_parent_node(fit_node_database)
-    fit_node_id   = at_cascade.table_name2id(
-        node_table, 'node', fit_node_name
     )
     #
-    # location_id
-    node_info_table = get_table_csv( node_table_info )
-    location_id = int( node_info_table[fit_node_id]['location_id'] )
-    if location_id in interpolate_obesity and location_id in interpolate_ldi :
-        # can only compute resutls when have relative covariate values
+    # root_split_reference_id
+    if len(split_reference_table) == 0 :
+        root_split_refernence_id = None
+    else :
+        cov_info = at_cascade.get_cov_info(
+            all_option_table      = all_option_table ,
+            covariate_table       = covariate_table ,
+            split_reference_table = split_reference_table,
+        )
+        root_split_reference_id = cov_info['split_reference_id']
+    #
+    # job_table
+    job_table = at_cascade.create_job_table(
+        all_node_database          = all_node_database       ,
+        node_table                 = node_table              ,
+        start_node_id              = root_node_id            ,
+        start_split_reference_id   = root_split_reference_id ,
+        fit_goal_set               = fit_goal_set            ,
+    )
+    # age_group_dict
+    age_group_dict = get_age_group_dict(age_group_table_csv)
+    #
+    # interpolate_obesity
+    one_age_group = False
+    interpolate_obesity  = get_interpolate_covariate(
+        obesity_table_csv, age_group_dict, one_age_group
+    )
+    #
+    # interpolate_ldi
+    one_age_group = True
+    interpolate_ldi  = get_interpolate_covariate(
+        ldi_table_csv, age_group_dict, one_age_group
+    )
+    #
+    # job_row
+    for job_row in job_table :
         #
-        # fit_node results
+        # fit_database
+        fit_node_id            = job_row['fit_node_id']
+        fit_split_reference_id = job_row['split_reference_id']
+        database_dir           = at_cascade.get_database_dir(
+            node_table              = node_table               ,
+            split_reference_table   = split_reference_table    ,
+            node_split_set          = node_split_set           ,
+            root_node_id            = root_node_id             ,
+            root_split_reference_id = root_split_reference_id  ,
+            fit_node_id             = fit_node_id              ,
+            fit_split_reference_id  = fit_split_reference_id   ,
+        )
+        fit_node_database = f'{database_dir}/dismod.db'
+        #
+        # create_ihme_results_node
         create_ihme_results_node(
             fit_node_database   = fit_node_database   ,
             age_group_dict      = age_group_dict      ,
             interpolate_obesity = interpolate_obesity ,
             interpolate_ldi     = interpolate_ldi     ,
-        )
-    #
-    # fit_node_dir
-    index = fit_node_database.find('/dismod.db')
-    fit_node_dir = fit_node_database[0 : index]
-    #
-    # shift_name_list
-    shift_name_list = list()
-    for row in split_reference_table :
-        shift_name = row['split_reference_name']
-        dir_name   = f'{fit_node_dir}/{shift_name}'
-        if os.path.isdir(dir_name) :
-            shift_name_list.append( shift_name )
-    if len(shift_name_list) == 0 :
-        for child_node_id in fit_children[fit_node_id] :
-            shift_name = node_table[child_node_id]['node_name']
-            shift_name_list.append( shift_name )
-    #
-    # results at next level
-    for shift_name in shift_name_list :
-        shift_node_database = f'{fit_node_dir}/{shift_name}/dismod.db'
-        create_ihme_results(
-            fit_node_database   = shift_node_database   ,
-            fit_children        = fit_children          ,
-            age_group_dict      = age_group_dict        ,
-            interpolate_obesity = interpolate_obesity   ,
-            interpolate_ldi     = interpolate_ldi       ,
         )
 # ----------------------------------------------------------------------------
 def copy_ihme_results(
@@ -1948,6 +1958,8 @@ def main() :
         message_type = command_line_option
         write_log_message(message_type)
     elif command_line_option == 'predict' :
+        if os.path.exists('create_ihme_results') :
+            os.remove('create_ihme_results')
         #
         # create_ihme_results
         fit_node_database = f'{root_node_name}/dismod.db'
