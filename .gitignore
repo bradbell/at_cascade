@@ -29,6 +29,7 @@
 #
 # python compiled files
 /at_cascade/__pycache__
+/at_cascade/ihme/__pycache__
 # --------------------------------
 # file extensions in any directory
 # --------------------------------
