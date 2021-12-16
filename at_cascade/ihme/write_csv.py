@@ -9,6 +9,8 @@
 # -----------------------------------------------------------------------------
 import csv
 # -----------------------------------------------------------------------------
+#
+# write_csv(file_name, table)
 def write_csv(file_name, table) :
     fieldnames  = table[0].keys()
     file_ptr    = open(file_name, 'w')

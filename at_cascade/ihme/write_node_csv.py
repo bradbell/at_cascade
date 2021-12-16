@@ -10,6 +10,8 @@
 import csv
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
+#
+# write_node_csv()
 def write_node_csv() :
     #
     # location_table
@@ -58,9 +60,10 @@ def write_node_csv() :
             parent = location_id2node_id[parent_id]
         #
         row_out = {
-            'node_id':   node_id,
-            'node_name': node_name,
-            'parent':    parent,
+            'node_id':       node_id,
+            'node_name':     node_name,
+            'parent':        parent,
+            'location_id':   location_id,
         }
         node_table.append(row_out)
     #
