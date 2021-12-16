@@ -660,7 +660,7 @@ def display_no_ode_fit(fit_node_dir) :
     rate_set = [ 'iota', 'chi' ]
     pdf_file = pdf_dir + '/rate.pdf'
     plot_title = 'rate'
-    dismod_at.plot_rate_fit(database, rate_set, pdf_file, plot_title)
+    dismod_at.plot_rate_fit(database, pdf_file, plot_title, rate_set)
     #
     # db2csv
     dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
