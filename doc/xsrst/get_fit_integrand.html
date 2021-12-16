@@ -1,73 +1,36 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  <meta content="get_fit_integrand, determine, the, set, integrands, in, data, table" name="keywords" />
+  <meta charset="utf-8" /><meta content="get_fit_integrand, determine, the, set, integrands, in, data, table" name="keywords" />
 <meta content="syntax" name="keywords" />
 <meta content="fit_node_database" name="keywords" />
 <meta content="fit_integrand" name="keywords" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>get_fit_integrand &mdash; at_cascade  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="get_parent_node" href="get_parent_node.html" />
     <link rel="prev" title="get_fit_children" href="get_fit_children.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> at_cascade
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -75,17 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="xsrst_automatic.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="xsrst_automatic.html#link-to-index">Link to Index</a></li>
@@ -122,78 +75,38 @@
 </li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">at_cascade</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../index.html">Docs</a> &raquo;</li>
-        
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="at_cascade.html">at_cascade</a> &raquo;</li>
-        
           <li><a href="module.html">module</a> &raquo;</li>
-        
       <li>get_fit_integrand</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-            
             <a href="../_sources/xsrst/get_fit_integrand.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <p class="hidden"><span class="math notranslate nohighlight">\(\newcommand{\B}[1]{ {\bf #1} }\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\R}[1]{ {\rm #1} }\)</span></p>
 <div class="section" id="get-fit-integrand">
-<h1>get_fit_integrand<a class="headerlink" href="#get-fit-integrand" title="Permalink to this headline">¶</a></h1>
+<h1>get_fit_integrand<a class="headerlink" href="#get-fit-integrand" title="Permalink to this headline"></a></h1>
 <div class="section" id="determine-the-set-of-integrands-in-data-table">
-<span id="id1"></span><h2>Determine the Set of Integrands in Data Table<a class="headerlink" href="#determine-the-set-of-integrands-in-data-table" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2>Determine the Set of Integrands in Data Table<a class="headerlink" href="#determine-the-set-of-integrands-in-data-table" title="Permalink to this headline"></a></h2>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#syntax" id="id2">Syntax</a></p></li>
@@ -202,7 +115,7 @@
 </ul>
 </div>
 <div class="section" id="syntax">
-<span id="get-fit-integrand-syntax"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<span id="get-fit-integrand-syntax"></span><span id="index-1"></span><h3><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline"></a></h3>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># fit_integrand = at_cascade.get_fit_integrand(</span>
     <span class="n">fit_node_database</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span>
 <span class="c1"># )</span>
@@ -210,7 +123,7 @@
 </div>
 </div>
 <div class="section" id="fit-node-database">
-<span id="get-fit-integrand-fit-node-database"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">fit_node_database</a><a class="headerlink" href="#fit-node-database" title="Permalink to this headline">¶</a></h3>
+<span id="get-fit-integrand-fit-node-database"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">fit_node_database</a><a class="headerlink" href="#fit-node-database" title="Permalink to this headline"></a></h3>
 <p>is a python string specifying the location of a
 <a class="reference internal" href="glossary.html#glossary-fit-node-database"><span class="std std-ref">fit_node_database</span></a>
 relative to the current working directory.
@@ -219,7 +132,7 @@ it is the same data table as the data table in the root_node_database.
 This argument can’t be None.</p>
 </div>
 <div class="section" id="fit-integrand">
-<span id="get-fit-integrand-fit-integrand"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">fit_integrand</a><a class="headerlink" href="#fit-integrand" title="Permalink to this headline">¶</a></h3>
+<span id="get-fit-integrand-fit-integrand"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">fit_integrand</a><a class="headerlink" href="#fit-integrand" title="Permalink to this headline"></a></h3>
 <p>The return value <em>fit_integrand</em> is a python set of integrand_id
 that appear in the data table in the <em>fit_node_database</em>.
 Furthermore there is a row in the data table
@@ -232,51 +145,33 @@ where each such integrand_id is not held out.</p>
 
 
            </div>
-           
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="get_parent_node.html" class="btn btn-neutral float-right" title="get_parent_node" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="get_fit_children.html" class="btn btn-neutral float-left" title="get_fit_children" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="get_fit_children.html" class="btn btn-neutral float-left" title="get_fit_children" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="get_parent_node.html" class="btn btn-neutral float-right" title="get_parent_node" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; Copyright 2021
-
-    </p>
+    <p>&#169; Copyright 2021.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
