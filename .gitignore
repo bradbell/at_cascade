@@ -13,9 +13,9 @@
 # ------------------------
 # used to build documentation
 /build/
-/sphinx/_build/
 /sphinx/xsrst/
 /sphinx/_static/
+/sphinx/index.rst
 #
 # used to store and install external packages
 /external/
@@ -26,6 +26,10 @@
 # used to cache local changes (instead of using git cache)
 /new/
 /new.*/
+#
+# python compiled files
+/at_cascade/__pycache__
+/at_cascade/ihme/__pycache__
 # --------------------------------
 # file extensions in any directory
 # --------------------------------
