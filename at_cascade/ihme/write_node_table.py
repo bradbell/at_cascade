@@ -7,12 +7,19 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
+import os
 import csv
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
 #
-# write_node_csv()
-def write_node_csv() :
+# write_node_table()
+def write_node_table() :
+    node_table_file = at_cascade.ihme.node_table_file
+    if os.path.exists(node_table_file) :
+        print( f'Using existing {node_table_file}' )
+        return
+    else :
+        print( f'Creating {node_table_file}' )
     #
     # location_table
     file_ptr        = open(at_cascade.ihme.location_csv_file)
@@ -67,4 +74,4 @@ def write_node_csv() :
         }
         node_table.append(row_out)
     #
-    at_cascade.ihme.write_csv(at_cascade.ihme.node_csv_file, node_table)
+    at_cascade.ihme.write_csv(node_table_file, node_table)

@@ -13,7 +13,7 @@ location_csv_file  = 'ihme_db/DisMod_AT/metadata/gbd2019_location_map.csv'
 age_group_csv_file = 'ihme_db/DisMod_AT/metadata/gbd2019_age_metadata.csv'
 #
 # intermediate result files for all diseases
-node_csv_file        = 'ihme_db/DisMod_AT/node_table.csv'
+node_table_file = 'ihme_db/DisMod_AT/node_table.csv'
 #
 # age_groud_id for age groups that span all ages
 all_age_group_id_set = [22, 27]
@@ -53,5 +53,5 @@ from .get_age_group_id_dict       import get_age_group_id_dict
 from .get_interpolate_covariate   import get_interpolate_covariate
 from .write_csv                   import write_csv
 from .write_data_table            import write_data_table
-from .write_node_csv              import write_node_csv
+from .write_node_table            import write_node_table
 # END_SORT_THIS_LINE_MINUS_1

@@ -7,6 +7,7 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
+import os
 import csv
 import math
 import at_cascade.ihme
@@ -150,6 +151,12 @@ def write_data_table(
     assert type(covariate_csv_file_list) is list
     assert type(data_table_file) is str
     #
+    if os.path.exists(data_table_file) :
+        print( f'Using existing {data_table_file}' )
+        return
+    else :
+        print( f'Creating {data_table_file}' )
+    #
     # age_group_id_dict
     age_group_id_dict = at_cascade.ihme.get_age_group_id_dict()
     #
@@ -164,7 +171,7 @@ def write_data_table(
     data_table += csmr_table
     #
     # location_id2node_id
-    file_ptr            = open(at_cascade.ihme.node_csv_file)
+    file_ptr            = open(at_cascade.ihme.node_table_file)
     reader              = csv.DictReader(file_ptr)
     location_id2node_id = dict()
     node_id             = 0
