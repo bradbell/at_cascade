@@ -44,6 +44,9 @@ def main() :
         covariate_csv_file_list = covariate_csv_file_list,
         data_table_file         = data_table_file,
     )
+    #
+    # write_mtall_tables
+    at_cascade.ihme.write_mtall_tables()
 # ----------------------------------------------------------------------------
 main()
 print('diabetes.py: OK')

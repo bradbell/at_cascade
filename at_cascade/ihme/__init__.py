@@ -11,16 +11,23 @@
 # input files for all diseases
 location_csv_file  = 'ihme_db/DisMod_AT/metadata/gbd2019_location_map.csv'
 age_group_csv_file = 'ihme_db/DisMod_AT/metadata/gbd2019_age_metadata.csv'
+mtall_csv_file     = 'ihme_db/DisMod_AT/mtall/gbd2019_all_cause_mortality.csv'
 #
 # intermediate result files for all diseases
-node_table_file = 'ihme_db/DisMod_AT/node_table.csv'
+node_table_file         = 'ihme_db/DisMod_AT/node_table.csv'
+all_mtall_table_file    = 'ihme_db/DisMod_AT/all_mtall_table.csv'
+mtall_index_table_file  = 'ihme_db/DisMod_AT/mtall_index_table.csv'
+omega_table_file        = 'ihme_db/DisMod_AT/omega_table.csv'
 #
 # age_groud_id for age groups that span all ages
 all_age_group_id_set = [22, 27]
 #
-# sex_name2sex_id
-# Mapping from sex name to IHME sex_id.
-sex_name2sex_id = {'Male' : 1,  'Female' : 2, 'Both' : 3}
+# sex_info_dict
+sex_info_dict = {
+'Female' : { 'sex_id' : 2, 'covariate_value' :-0.5, 'split_reference_id' : 0},
+'Both'   : { 'sex_id' : 3, 'covariate_value' : 0.0, 'split_reference_id' : 1},
+'Male'   : { 'sex_id' : 1, 'covariate_value' : 0.5, 'split_reference_id' : 2},
+}
 #
 # gbd_version
 gbd_version = 'gbd2019_'
@@ -53,5 +60,6 @@ from .get_age_group_id_dict       import get_age_group_id_dict
 from .get_interpolate_covariate   import get_interpolate_covariate
 from .write_csv                   import write_csv
 from .write_data_table            import write_data_table
+from .write_mtall_tables          import write_mtall_tables
 from .write_node_table            import write_node_table
 # END_SORT_THIS_LINE_MINUS_1

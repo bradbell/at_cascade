@@ -77,6 +77,7 @@ def get_data_table(data_csv_file) :
         }
         #
         data_table.append( row_out )
+    file_ptr.close()
     return data_table
 # -----------------------------------------------------------------------------
 #
@@ -134,6 +135,7 @@ def get_csmr_table(csmr_csv_file, age_group_id_dict) :
         if sex_name != 'Both' :
             assert sex_name in { 'Male', 'Female' }
             csmr_table.append( row_out )
+    file_ptr.close()
     return csmr_table
 # -----------------------------------------------------------------------------
 #
@@ -180,6 +182,7 @@ def write_data_table(
         location_id = int( row['location_id'] )
         location_id2node_id[location_id] = node_id
         node_id += 1
+    file_ptr.close()
     #
     # data_table
     for row in data_table :
