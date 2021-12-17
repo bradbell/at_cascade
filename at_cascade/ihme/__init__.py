@@ -52,6 +52,6 @@ covariate_short_name = {
 from .get_age_group_id_dict       import get_age_group_id_dict
 from .get_interpolate_covariate   import get_interpolate_covariate
 from .write_csv                   import write_csv
-from .write_data_csv              import write_data_csv
+from .write_data_table            import write_data_table
 from .write_node_csv              import write_node_csv
 # END_SORT_THIS_LINE_MINUS_1

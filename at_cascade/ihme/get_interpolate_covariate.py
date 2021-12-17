@@ -97,9 +97,6 @@ def get_interpolate_covariate(covariate_csv_file, age_group_id_dict) :
         }
         covariate_table.append(row)
     #
-    # check_rectangular_grid
-    check_rectangular_grid(covariate_csv_file, covariate_table)
-    #
     # age_group_id_set
     age_group_id_set = set()
     for row in covariate_table :
@@ -194,14 +191,23 @@ def get_interpolate_covariate(covariate_csv_file, age_group_id_dict) :
                 #
                 # covariate_grid
                 for (index, triple) in enumerate(this_list) :
+                    # age, time
                     age        = triple[0]
                     time       = triple[1]
                     #
+                    # age_index, time_index
                     age_index  = int( index / n_time )
                     time_index = index % n_time
                     #
-                    assert age  == age_grid[age_index]
-                    assert time == time_grid[time_index]
+                    # check_rectangular_grid
+                    if age  != age_grid[age_index] \
+                    or time != time_grid[time_index ] :
+                        check_rectangular_grid(
+                            covariate_csv_file,
+                            covariate_table
+                        )
+                        assert False
+                    #
                     covariate_grid[age_index][time_index] = triple[2]
                 #
                 # interpolate_covariate

@@ -136,8 +136,19 @@ def get_csmr_table(csmr_csv_file, age_group_id_dict) :
     return csmr_table
 # -----------------------------------------------------------------------------
 #
-# write_data_csv(data_csv_file, csmr_csv_file, covariate_csv_file_list)
-def write_data_csv(data_csv_file, csmr_csv_file, covariate_csv_file_list) :
+# write_data_table(
+#   data_csv_file, csmr_csv_file, covariate_csv_file_list, data_table_file
+# )
+def write_data_table(
+    data_csv_file           = None,
+    csmr_csv_file           = None,
+    covariate_csv_file_list = None,
+    data_table_file         = None,
+    ) :
+    assert type(data_csv_file) is str
+    assert type(csmr_csv_file) is str
+    assert type(covariate_csv_file_list) is list
+    assert type(data_table_file) is str
     #
     # age_group_id_dict
     age_group_id_dict = at_cascade.ihme.get_age_group_id_dict()
@@ -224,5 +235,5 @@ def write_data_csv(data_csv_file, csmr_csv_file, covariate_csv_file_list) :
                 # row[covariate_name]
                 row[covariate_name] = value
     #
-    # data_csv_file
-    at_cascade.ihme.write_csv(data_csv_file, data_table)
+    # data_table_file
+    at_cascade.ihme.write_csv(data_table_file, data_table)
