@@ -13,7 +13,7 @@ import at_cascade.ihme
 # age_group_id_dict = get_age_group_id_dict()
 def get_age_group_id_dict() :
     all_age_group_id_set = at_cascade.ihme.all_age_group_id_set
-    file_name            = at_cascade.ihme.age_group_csv_file
+    file_name            = at_cascade.ihme.age_group_inp_file
     file_ptr             = open(file_name)
     reader               = csv.DictReader(file_ptr)
     age_group_id_dict    = dict()

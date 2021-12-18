@@ -13,9 +13,9 @@ import math
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
 #
-# data_table = get_data_table(data_csv_file)
-def get_data_table(data_csv_file) :
-    file_ptr   = open(data_csv_file)
+# data_table = get_data_table(data_inp_file)
+def get_data_table(data_inp_file) :
+    file_ptr   = open(data_inp_file)
     reader     = csv.DictReader(file_ptr)
     data_table = list()
     for row_in in reader :
@@ -81,9 +81,9 @@ def get_data_table(data_csv_file) :
     return data_table
 # -----------------------------------------------------------------------------
 #
-# csmr_table = get_csmr_table(csmr_csv_file, age_group_id_dict)
-def get_csmr_table(csmr_csv_file, age_group_id_dict) :
-    file_ptr   = open(csmr_csv_file)
+# csmr_table = get_csmr_table(csmr_inp_file, age_group_id_dict)
+def get_csmr_table(csmr_inp_file, age_group_id_dict) :
+    file_ptr   = open(csmr_inp_file)
     reader     = csv.DictReader(file_ptr)
     csmr_table = list()
     for row_in in reader :
@@ -140,16 +140,16 @@ def get_csmr_table(csmr_csv_file, age_group_id_dict) :
 # -----------------------------------------------------------------------------
 #
 # write_data_table(
-#   data_csv_file, csmr_csv_file, covariate_csv_file_list, data_table_file
+#   data_inp_file, csmr_inp_file, covariate_csv_file_list, data_table_file
 # )
 def write_data_table(
-    data_csv_file           = None,
-    csmr_csv_file           = None,
+    data_inp_file           = None,
+    csmr_inp_file           = None,
     covariate_csv_file_list = None,
     data_table_file         = None,
     ) :
-    assert type(data_csv_file) is str
-    assert type(csmr_csv_file) is str
+    assert type(data_inp_file) is str
+    assert type(csmr_inp_file) is str
     assert type(covariate_csv_file_list) is list
     assert type(data_table_file) is str
     #
@@ -163,10 +163,10 @@ def write_data_table(
     age_group_id_dict = at_cascade.ihme.get_age_group_id_dict()
     #
     # data_table
-    data_table = get_data_table(data_csv_file)
+    data_table = get_data_table(data_inp_file)
     #
     # csmr_table
-    csmr_table = get_csmr_table(csmr_csv_file, age_group_id_dict)
+    csmr_table = get_csmr_table(csmr_inp_file, age_group_id_dict)
     #
     # data_table
     assert set( data_table[0].keys() ) == set( csmr_table[0].keys() )

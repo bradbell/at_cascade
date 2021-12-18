@@ -17,7 +17,7 @@ import at_cascade.ihme
 def write_mtall_tables() :
     #
     # global constants
-    mtall_csv_file          = at_cascade.ihme.mtall_csv_file
+    mtall_inp_file          = at_cascade.ihme.mtall_inp_file
     all_mtall_table_file    = at_cascade.ihme.all_mtall_table_file
     mtall_index_table_file  = at_cascade.ihme.mtall_index_table_file
     omega_table_file        = at_cascade.ihme.omega_table_file
@@ -62,7 +62,7 @@ def write_mtall_tables() :
     file_ptr.close()
     #
     # mtall_dict
-    file_ptr       = open(mtall_csv_file)
+    file_ptr       = open(mtall_inp_file)
     reader         = csv.DictReader(file_ptr)
     mtall_dict     = dict()
     for row in reader :
@@ -79,7 +79,7 @@ def write_mtall_tables() :
         if year_id not in mtall_dict[location_id][sex_id] :
             mtall_dict[location_id][sex_id][year_id] = dict()
         if age_group_id in mtall_dict[location_id][sex_id][year_id] :
-            msg  = f'file = {mtall_csv_file}, '
+            msg  = f'file = {mtall_inp_file}, '
             msg += f'location_id = {location_id}, '
             msg += f'sex_id = {sex_id}, '
             msg += f'year_id = {year_id}.\n'
@@ -99,7 +99,7 @@ def write_mtall_tables() :
                 age_group_id_set = set(keys)
                 if previous_age_group_id_set != age_group_id_set \
                 and previous_age_group_id_set is not None :
-                    msg  = f'file = {mtall_csv_file}, '
+                    msg  = f'file = {mtall_inp_file}, '
                     msg += f'location_id = {location_id}, '
                     msg += f'sex_id = {sex_id}, '
                     msg += f'year_id = {year_id}, '
@@ -124,7 +124,7 @@ def write_mtall_tables() :
             year_id_set = set( keys )
             if previous_year_id_set != year_id_set \
             and previous_year_id_set is not None :
-                msg  = f'file = {mtall_csv_file}, '
+                msg  = f'file = {mtall_inp_file}, '
                 msg += f'location_id = {location_id}, '
                 msg += f'sex_id = {sex_id}, '
                 msg += f'year_id_set =\n{year_id_set}\n'

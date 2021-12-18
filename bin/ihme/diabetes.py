@@ -17,11 +17,14 @@ for covariate_name in covariate_name_list :
     file_name += '_covariate.csv'
     covariate_csv_file_list.append(file_name)
 #
-# data_csv_file
+# input files
 data_dir        = 'ihme_db/DisMod_AT/testing/diabetes/data'
-data_csv_file   = f'{data_dir}/gbd2019_diabetes_crosswalk_12437.csv'
-csmr_csv_file   = f'{data_dir}/gbd2019_diabetes_csmr.csv'
-data_table_file = f'{data_dir}/data_table.csv'
+data_inp_file   = f'{data_dir}/gbd2019_diabetes_crosswalk_12437.csv'
+csmr_inp_file   = f'{data_dir}/gbd2019_diabetes_csmr.csv'
+#
+# intermediate files
+results_dir     = 'ihme_db/DisMod_AT/results'
+data_table_file = f'{results_dir}/data_table.csv'
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -39,8 +42,8 @@ def main() :
     #
     # write_data_table
     at_cascade.ihme.write_data_table(
-        data_csv_file           = data_csv_file,
-        csmr_csv_file           = csmr_csv_file,
+        data_inp_file           = data_inp_file,
+        csmr_inp_file           = csmr_inp_file,
         covariate_csv_file_list = covariate_csv_file_list,
         data_table_file         = data_table_file,
     )

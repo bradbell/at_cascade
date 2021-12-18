@@ -22,7 +22,7 @@ def write_node_table() :
         print( f'Creating {node_table_file}' )
     #
     # location_table
-    file_ptr        = open(at_cascade.ihme.location_csv_file)
+    file_ptr        = open(at_cascade.ihme.location_inp_file)
     reader          = csv.DictReader(file_ptr)
     location_table  = list()
     location_id_set = set()
