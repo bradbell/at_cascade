@@ -17,6 +17,7 @@ import at_cascade.ihme
 def write_mtall_tables() :
     #
     # global constants
+    age_group_inp_file      = at_cascade.ihme.age_group_inp_file
     mtall_inp_file          = at_cascade.ihme.mtall_inp_file
     all_mtall_table_file    = at_cascade.ihme.all_mtall_table_file
     mtall_index_table_file  = at_cascade.ihme.mtall_index_table_file
@@ -136,13 +137,36 @@ def write_mtall_tables() :
             previous_sex_id           = sex_id
             previous_year_id_set      = year_id_set
     #
+    # year_id_list
+    year_id_list = sorted( year_id_set )
+    #
+    # age_group_id_list
+    age_group_id_dict = at_cascade.ihme.get_age_group_id_dict()
+    metadata_set      = set( age_group_id_dict.keys() )
+    if not age_group_id_set.issubset(metadata_set) :
+        msg  = f'In {mtall_inp_file} age_group_id_set =\n'
+        msg += f'{age_group_id_set}\n'
+        msg += 'This set is not a subset of the following set:\n'
+        msg += f'In {age_group_inp_file} age_group_id_set =\n'
+        msg += f'{metadata_set}'
+        assert False, msg
+    fun  = lambda age_group_id : age_group_id_dict[age_group_id]['age_mid']
+    age_group_id_list = sorted(age_group_id_set, key=fun)
+    #
     # omega_table
     year_id_list       = list( year_id_set )
     age_group_id_list  = list( age_group_id_set )
     omega_table        = list()
     for year_id in year_id_list :
         for age_group_id in age_group_id_list :
-            row = { 'year_id' : year_id,  'age_group_id' : age_group_id }
+            age_lower = age_group_id_dict[age_group_id]['age_lower']
+            age_upper = age_group_id_dict[age_group_id]['age_upper']
+            row = {
+                'year_id'      : year_id,
+                'age_group_id' : age_group_id,
+                'age_lowr'     : age_lower,
+                'age_upper'    : age_upper
+            }
             omega_table.append( row )
     #
     # all_mtall_table
