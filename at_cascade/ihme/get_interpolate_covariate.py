@@ -105,8 +105,9 @@ def get_interpolate_covariate(covariate_csv_file, age_group_id_dict) :
     # one_age_group
     one_age_group = len( age_group_id_set ) == 1
     if not one_age_group :
-        all_age_group_id_set = at_cascade.ihme.all_age_group_id_set
-        assert len( age_group_id_set.intersection(all_age_group_id_set) ) == 0
+        aggregate_age_group_id_set = at_cascade.ihme.aggregate_age_group_id_set
+        temp = age_group_id_set.intersection(aggregate_age_group_id_set)
+        assert len( temp ) == 0
     #
     # triple_list
     triple_list = dict()

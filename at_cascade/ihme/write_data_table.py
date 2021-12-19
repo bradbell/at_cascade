@@ -160,17 +160,24 @@ def write_data_table(
         print( f'Creating {data_table_file}' )
     #
     # age_group_id_dict
-    age_group_id_dict = at_cascade.ihme.get_age_group_id_dict()
+    age_group_id_table = at_cascade.ihme.get_age_group_id_table()
+    age_group_id_dict   = dict()
+    for key in age_group_id_table :
+        row = age_group_id_table[key]
+        age_group_id_dict[ row['age_group_id'] ] = row
     #
     # data_table
     data_table = get_data_table(data_inp_file)
     #
-    # csmr_table
-    csmr_table = get_csmr_table(csmr_inp_file, age_group_id_dict)
-    #
-    # data_table
-    assert set( data_table[0].keys() ) == set( csmr_table[0].keys() )
-    data_table += csmr_table
+    # This data is not for fitting but rather to adjust the omega constraint
+    # 2DO: remove get_csmr_table from this file.
+    if False :
+        # csmr_table
+        csmr_table = get_csmr_table(csmr_inp_file, age_group_id_dict)
+        #
+        # data_table
+        assert set( data_table[0].keys() ) == set( csmr_table[0].keys() )
+        data_table += csmr_table
     #
     # location_id2node_id
     file_ptr            = open(at_cascade.ihme.node_table_file)

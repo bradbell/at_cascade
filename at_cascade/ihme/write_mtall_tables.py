@@ -43,6 +43,15 @@ def write_mtall_tables() :
         for file in output_file_list :
             print( file )
     #
+    # age_group_id_set, age_group_id_dict
+    age_group_id_table = at_cascade.ihme.get_age_group_id_table()
+    age_group_id_set   = set()
+    age_group_id_dict  = dict()
+    for row in age_group_id_table :
+        age_group_id = row[ 'age_group_id' ]
+        age_group_id_set.add( age_group_id )
+        age_group_id_dict[age_group_id] = row
+    #
     # sex_id2split_reference_id
     sex_id2split_reference_id = dict()
     for sex_name in sex_info_dict :
@@ -62,33 +71,40 @@ def write_mtall_tables() :
         node_id += 1
     file_ptr.close()
     #
-    # mtall_dict
-    file_ptr       = open(mtall_inp_file)
-    reader         = csv.DictReader(file_ptr)
-    mtall_dict     = dict()
+    # mtall_dict, age_group_id_subset
+    file_ptr            = open(mtall_inp_file)
+    reader              = csv.DictReader(file_ptr)
+    mtall_dict          = dict()
+    age_group_id_subset = set()
     for row in reader :
         age_group_id = int( row['age_group_id'] )
-        location_id  = int( row['location_id'] )
-        sex_id       = int( row['sex_id'] )
-        year_id      = int( row['year_id'] )
-        mean         = float( row['mean'] )
-        #
-        if location_id not in mtall_dict :
-            mtall_dict[location_id] = dict()
-        if sex_id not in mtall_dict[location_id] :
-            mtall_dict[location_id][sex_id] = dict()
-        if year_id not in mtall_dict[location_id][sex_id] :
-            mtall_dict[location_id][sex_id][year_id] = dict()
-        if age_group_id in mtall_dict[location_id][sex_id][year_id] :
-            msg  = f'file = {mtall_inp_file}, '
-            msg += f'location_id = {location_id}, '
-            msg += f'sex_id = {sex_id}, '
-            msg += f'year_id = {year_id}.\n'
-            msg += f'The age_group_id {age_group_id} appears more than once.'
-            assert False, msg
-        mtall_dict[location_id][sex_id][year_id][age_group_id] = mean
+        if age_group_id in age_group_id_set :
+            #
+            # age_group_id_set
+            age_group_id_subset.add( age_group_id )
+            #
+            # mtall_dict
+            location_id  = int( row['location_id'] )
+            sex_id       = int( row['sex_id'] )
+            year_id      = int( row['year_id'] )
+            mean         = float( row['mean'] )
+            if location_id not in mtall_dict :
+                mtall_dict[location_id] = dict()
+            if sex_id not in mtall_dict[location_id] :
+                mtall_dict[location_id][sex_id] = dict()
+            if year_id not in mtall_dict[location_id][sex_id] :
+                mtall_dict[location_id][sex_id][year_id] = dict()
+            if age_group_id in mtall_dict[location_id][sex_id][year_id] :
+                msg  = f'file = {mtall_inp_file}, with '
+                msg += f'location_id = {location_id}, '
+                msg += f'sex_id = {sex_id}, and '
+                msg += f'year_id = {year_id}.\n'
+                msg += f'The age_group_id {age_group_id} '
+                msg += 'appears more than once.'
+                assert False, msg
+            mtall_dict[location_id][sex_id][year_id][age_group_id] = mean
     #
-    # check age_group_id_set
+    # age_group_id_set
     previous_location_id      = None
     previous_sex_id           = None
     previous_year_id          = None
@@ -114,6 +130,8 @@ def write_mtall_tables() :
                 previous_sex_id           = sex_id
                 previous_year_id          = year_id
                 previous_age_group_id_set = age_group_id_set
+    assert age_group_id_set == age_group_id_subset
+    #
     #
     # check year_id_set
     previous_location_id = None
@@ -141,21 +159,10 @@ def write_mtall_tables() :
     year_id_list = sorted( year_id_set )
     #
     # age_group_id_list
-    age_group_id_dict = at_cascade.ihme.get_age_group_id_dict()
-    metadata_set      = set( age_group_id_dict.keys() )
-    if not age_group_id_set.issubset(metadata_set) :
-        msg  = f'In {mtall_inp_file} age_group_id_set =\n'
-        msg += f'{age_group_id_set}\n'
-        msg += 'This set is not a subset of the following set:\n'
-        msg += f'In {age_group_inp_file} age_group_id_set =\n'
-        msg += f'{metadata_set}'
-        assert False, msg
-    fun  = lambda age_group_id : age_group_id_dict[age_group_id]['age_mid']
-    age_group_id_list = sorted(age_group_id_set, key=fun)
+    fun = lambda age_group_id : age_group_id_dict[age_group_id]['age_mid']
+    age_group_id_list = sorted( age_group_id_set, key = fun )
     #
     # omega_table
-    year_id_list       = list( year_id_set )
-    age_group_id_list  = list( age_group_id_set )
     omega_table        = list()
     for year_id in year_id_list :
         for age_group_id in age_group_id_list :
@@ -164,7 +171,7 @@ def write_mtall_tables() :
             row = {
                 'year_id'      : year_id,
                 'age_group_id' : age_group_id,
-                'age_lowr'     : age_lower,
+                'age_lower'    : age_lower,
                 'age_upper'    : age_upper
             }
             omega_table.append( row )

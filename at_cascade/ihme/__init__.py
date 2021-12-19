@@ -19,8 +19,8 @@ all_mtall_table_file    = 'ihme_db/DisMod_AT/results/all_mtall_table.csv'
 mtall_index_table_file  = 'ihme_db/DisMod_AT/results/mtall_index_table.csv'
 omega_table_file        = 'ihme_db/DisMod_AT/results/omega_table.csv'
 #
-# age_groud_id for age groups that span all ages
-all_age_group_id_set = [22, 27]
+# age group id's that are aggregates of other age groups
+aggregate_age_group_id_set = {22, 27}
 #
 # sex_info_dict
 sex_info_dict = {
@@ -56,7 +56,7 @@ covariate_short_name = {
 #
 # ----------------------------------------------------------------------------
 # BEGIN_SORT_THIS_LINE_PLUS_1
-from .get_age_group_id_dict       import get_age_group_id_dict
+from .get_age_group_id_table      import get_age_group_id_table
 from .get_interpolate_covariate   import get_interpolate_covariate
 from .write_csv                   import write_csv
 from .write_data_table            import write_data_table
