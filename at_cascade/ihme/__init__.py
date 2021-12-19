@@ -17,7 +17,8 @@ mtall_inp_file     = 'ihme_db/DisMod_AT/mtall/gbd2019_all_cause_mortality.csv'
 node_table_file         = 'ihme_db/DisMod_AT/results/node_table.csv'
 all_mtall_table_file    = 'ihme_db/DisMod_AT/results/all_mtall_table.csv'
 mtall_index_table_file  = 'ihme_db/DisMod_AT/results/mtall_index_table.csv'
-omega_table_file        = 'ihme_db/DisMod_AT/results/omega_table.csv'
+omega_age_table_file    = 'ihme_db/DisMod_AT/results/omega_age_table.csv'
+omega_time_table_file   = 'ihme_db/DisMod_AT/results/omega_time_table.csv'
 #
 # age group id's that are aggregates of other age groups
 aggregate_age_group_id_set = {22, 27}

@@ -14,6 +14,8 @@ import at_cascade.ihme
 # -----------------------------------------------------------------------------
 #
 # write_node_tables()
+# all_mtall_table_file, mtall_index_table_file, omega_age_table_file,
+# omega_time_table_file.
 def write_mtall_tables() :
     #
     # global constants
@@ -21,12 +23,16 @@ def write_mtall_tables() :
     mtall_inp_file          = at_cascade.ihme.mtall_inp_file
     all_mtall_table_file    = at_cascade.ihme.all_mtall_table_file
     mtall_index_table_file  = at_cascade.ihme.mtall_index_table_file
-    omega_table_file        = at_cascade.ihme.omega_table_file
+    omega_age_table_file    = at_cascade.ihme.omega_age_table_file
+    omega_time_table_file   = at_cascade.ihme.omega_time_table_file
     sex_info_dict           = at_cascade.ihme.sex_info_dict
     #
     # output_file_list
     output_file_list = [
-        all_mtall_table_file, mtall_index_table_file, omega_table_file
+        all_mtall_table_file,
+        mtall_index_table_file,
+        omega_age_table_file,
+        omega_time_table_file,
     ]
     #
     # done
@@ -162,19 +168,22 @@ def write_mtall_tables() :
     fun = lambda age_group_id : age_group_id_dict[age_group_id]['age_mid']
     age_group_id_list = sorted( age_group_id_set, key = fun )
     #
-    # omega_table
-    omega_table        = list()
+    # omega_age_table
+    omega_age_table  = list()
+    for age_group_id in age_group_id_list :
+        age_mid = age_group_id_dict[age_group_id]['age_mid']
+        row = {
+            'age_group_id' : age_group_id,
+            'age'          : age_mid,
+        }
+        omega_age_table.append( row )
+    #
+    # omega_time_table
+    omega_time_table  = list()
     for year_id in year_id_list :
-        for age_group_id in age_group_id_list :
-            age_lower = age_group_id_dict[age_group_id]['age_lower']
-            age_upper = age_group_id_dict[age_group_id]['age_upper']
-            row = {
-                'year_id'      : year_id,
-                'age_group_id' : age_group_id,
-                'age_lower'    : age_lower,
-                'age_upper'    : age_upper
-            }
-            omega_table.append( row )
+        time = year_id + 0.5
+        row = { 'time' : time }
+        omega_time_table.append( row )
     #
     # all_mtall_table
     # mtall_index_table
@@ -191,8 +200,8 @@ def write_mtall_tables() :
                 'split_reference_id' : split_reference_id
             }
             mtall_index_table.append(row)
-            for year_id in mtall_dict[location_id][sex_id] :
-                for age_group_id in mtall_dict[location_id][sex_id][year_id] :
+            for year_id in year_id_list :
+                for age_group_id in age_group_id_list :
                     all_mtall_value = \
                         mtall_dict[location_id][sex_id][year_id][age_group_id]
                     row = { 'all_mtall_value' : all_mtall_value }
@@ -205,5 +214,8 @@ def write_mtall_tables() :
     # mtall_index_table_file
     at_cascade.ihme.write_csv(mtall_index_table_file, mtall_index_table)
     #
-    # omega_table_file
-    at_cascade.ihme.write_csv(omega_table_file, omega_table)
+    # omega_age_table_file
+    at_cascade.ihme.write_csv(omega_age_table_file, omega_age_table)
+    #
+    # omega_time_table_file
+    at_cascade.ihme.write_csv(omega_time_table_file, omega_time_table)

@@ -13,6 +13,7 @@ import at_cascade.ihme
 # -----------------------------------------------------------------------------
 #
 # write_node_table()
+# creates at_cascade.ihme.node_table_file
 def write_node_table() :
     node_table_file = at_cascade.ihme.node_table_file
     if os.path.exists(node_table_file) :
