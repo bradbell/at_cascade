@@ -19,6 +19,9 @@ def get_age_group_id_table() :
     # age_group_inp_file
     age_group_inp_file         = at_cascade.ihme.age_group_inp_file
     #
+    # age_grid_n_digits
+    age_grid_n_digits          = at_cascade.ihme.age_grid_n_digits
+    #
     # age_group_id_table
     file_ptr            = open(age_group_inp_file)
     reader              = csv.DictReader(file_ptr)
@@ -46,6 +49,11 @@ def get_age_group_id_table() :
         age_group_id = row['age_group_id']
         age_lower    = row['age_lower']
         age_upper    = row['age_upper']
+        age_mid      = row['age_mid']
+        age_mid      = round(age_mid, age_grid_n_digits)
+        if age_mid < age_lower or age_upper < age_mid :
+            msg  = f'age_grid_n_digits = {age_grid_n_digits} not large enough'
+            assert False, msg
         if age_lower > age_upper :
             msg  = f'In {age_group_inp_file}\n'
             msg += f'for age_group_id = {age_group_id}, '

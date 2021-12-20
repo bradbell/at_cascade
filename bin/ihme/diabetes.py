@@ -158,6 +158,7 @@ def write_root_node_database() :
     age_grid_id_list = list( range(0, len(age_list) ) )
     for row in table_in['omega_age'] :
         age = float( row['age'] )
+        age = round(age, at_cascade.ihme.age_grid_n_digits)
         if age not in age_list :
             age_list.append(age)
     if age_min < min( age_list ) :
@@ -494,7 +495,9 @@ def main() :
     #
     # write_mulcov_freeze_table
     at_cascade.ihme.write_mulcov_freeze_table(mulcov_freeze_list)
-
+    #
+    # write_all_node_database
+    at_cascade.ihme.write_all_node_database()
 # ----------------------------------------------------------------------------
 main()
 print('diabetes.py: OK')

@@ -38,8 +38,17 @@ sex_info_dict = {
 'Male'   : { 'sex_id' : 1, 'covariate_value' : 0.5, 'split_reference_id' : 2},
 }
 #
+# split_node_name_set
+# Name of the nodes where we are splitting from Both to Female, Male
+split_node_name_set = {'102_United_States_of_America', '73_Western_Europe'}
+#
 # gbd_version
 gbd_version = 'gbd2019_'
+#
+# age_grid_n_digits
+# Number of digits of precison in age grid values (used so conversion to
+# ascii and back yields same result).
+age_grid_n_digits = 8
 #
 # integrand_name2measure_id
 # Mappping from the dismod_at integrand name to IHME measure_id;
@@ -84,6 +93,7 @@ covariate_short_name = {
 from .get_age_group_id_table      import get_age_group_id_table
 from .get_interpolate_covariate   import get_interpolate_covariate
 from .get_table_csv               import get_table_csv
+from .write_all_node_database     import write_all_node_database
 from .write_all_option_table      import write_all_option_table
 from .write_csv                   import write_csv
 from .write_data_table            import write_data_table

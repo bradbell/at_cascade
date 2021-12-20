@@ -172,6 +172,8 @@ def write_mtall_tables() :
     omega_age_table  = list()
     for age_group_id in age_group_id_list :
         age_mid = age_group_id_dict[age_group_id]['age_mid']
+        # used so can match after converting to ascii and back
+        age_mid = round(age_mid, at_cascade.ihme.age_grid_n_digits)
         row = {
             'age_group_id' : age_group_id,
             'age'          : age_mid,
@@ -195,8 +197,8 @@ def write_mtall_tables() :
         for sex_id in mtall_dict[location_id] :
             split_reference_id = sex_id2split_reference_id[sex_id]
             row = {
-                'mtall_index' :        all_mtall_id,
-                'node_id' :            node_id,
+                'all_mtall_id'       : all_mtall_id,
+                'node_id'            : node_id,
                 'split_reference_id' : split_reference_id
             }
             mtall_index_table.append(row)

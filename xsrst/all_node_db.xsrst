@@ -162,7 +162,7 @@ This column has type ``integer`` and specifies a node by its index
 in the root node database node table.
 
 split_reference_id
-******************
+==================
 This column has type ``integer`` and it specifies the
 index of a value in
 :ref:`split_reference_table`.
