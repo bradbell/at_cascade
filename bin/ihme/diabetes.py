@@ -60,6 +60,23 @@ max_fit             = 250
 # max_abs_effect
 # Maximum absolute effect for any covriate multiplier.
 max_abs_effect      = 2.0
+#
+# mulcov_freeze_list
+# Freeze the covariate multiplier on obesity that affects iota and do the
+# freeze at United_States_of_America and Western_Europe.
+mulcov_freeze_list = [
+        {   'node'      : '102_United_States_of_America',
+            'sex'       : 'Both',
+            'rate'      : 'iota',
+            'covariate' : 'obesity',
+        },{
+            'node'      : '73_Western_Europe',
+            'sex'       : 'Both',
+            'rate'      : 'iota',
+            'covariate' : 'obesity',
+        },
+]
+# mulcov_freeze_list = list()
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -474,6 +491,9 @@ def main() :
         max_fit                      = max_fit,
         max_number_cpu               = max_number_cpu,
     )
+    #
+    # write_mulcov_freeze_table
+    at_cascade.ihme.write_mulcov_freeze_table(mulcov_freeze_list)
 
 # ----------------------------------------------------------------------------
 main()

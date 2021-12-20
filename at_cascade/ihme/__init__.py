@@ -14,12 +14,13 @@ age_group_inp_file = 'ihme_db/DisMod_AT/metadata/gbd2019_age_metadata.csv'
 mtall_inp_file     = 'ihme_db/DisMod_AT/mtall/gbd2019_all_cause_mortality.csv'
 #
 # intermediate result files for all diseases
-node_table_file         = 'ihme_db/DisMod_AT/results/node_table.csv'
-all_mtall_table_file    = 'ihme_db/DisMod_AT/results/all_mtall_table.csv'
-mtall_index_table_file  = 'ihme_db/DisMod_AT/results/mtall_index_table.csv'
-omega_age_table_file    = 'ihme_db/DisMod_AT/results/omega_age_table.csv'
-omega_time_table_file   = 'ihme_db/DisMod_AT/results/omega_time_table.csv'
-all_option_table_file   = 'ihme_db/DisMod_AT/results/all_option_table.csv'
+node_table_file          = 'ihme_db/DisMod_AT/results/node_table.csv'
+all_mtall_table_file     = 'ihme_db/DisMod_AT/results/all_mtall_table.csv'
+mtall_index_table_file   = 'ihme_db/DisMod_AT/results/mtall_index_table.csv'
+omega_age_table_file     = 'ihme_db/DisMod_AT/results/omega_age_table.csv'
+omega_time_table_file    = 'ihme_db/DisMod_AT/results/omega_time_table.csv'
+all_option_table_file    = 'ihme_db/DisMod_AT/results/all_option_table.csv'
+mulcov_freeze_table_file = 'ihme_db/DisMod_AT/results/mulcov_freeze_table.csv'
 #
 # root_node_database
 root_node_database = 'ihme_db/DisMod_AT/results/root_node.db'
@@ -87,5 +88,6 @@ from .write_all_option_table      import write_all_option_table
 from .write_csv                   import write_csv
 from .write_data_table            import write_data_table
 from .write_mtall_tables          import write_mtall_tables
+from .write_mulcov_freeze_table   import write_mulcov_freeze_table
 from .write_node_table            import write_node_table
 # END_SORT_THIS_LINE_MINUS_1
