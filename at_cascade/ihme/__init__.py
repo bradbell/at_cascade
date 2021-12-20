@@ -20,6 +20,9 @@ mtall_index_table_file  = 'ihme_db/DisMod_AT/results/mtall_index_table.csv'
 omega_age_table_file    = 'ihme_db/DisMod_AT/results/omega_age_table.csv'
 omega_time_table_file   = 'ihme_db/DisMod_AT/results/omega_time_table.csv'
 #
+# root_node_database_file
+root_node_database = 'ihme_db/DisMod_AT/results/root_node.db'
+#
 # age group id's that are aggregates of other age groups
 aggregate_age_group_id_set = {22, 27}
 #
@@ -32,6 +35,22 @@ sex_info_dict = {
 #
 # gbd_version
 gbd_version = 'gbd2019_'
+#
+# integrand_name2measure_id
+# Mappping from the dismod_at integrand name to IHME measure_id;
+integrand_name2measure_id = {
+    'Sincidence' : 41,
+    'remission'  : 7,
+    'mtexcess'   : 9,
+    'mtother'    : 16,
+    'mtwith'     : 13,
+    'prevalence' : 5,
+    'Tincidence' : 42,
+    'mtspecific' : 10,
+    'mtall'      : 14,
+    'mtstandard' : 12,
+    'relrisk'    : 11,
+}
 #
 # covaraite_short_name
 covariate_short_name = {
@@ -59,6 +78,7 @@ covariate_short_name = {
 # BEGIN_SORT_THIS_LINE_PLUS_1
 from .get_age_group_id_table      import get_age_group_id_table
 from .get_interpolate_covariate   import get_interpolate_covariate
+from .get_table_csv               import get_table_csv
 from .write_csv                   import write_csv
 from .write_data_table            import write_data_table
 from .write_mtall_tables          import write_mtall_tables

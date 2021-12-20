@@ -63,15 +63,15 @@ def write_node_table() :
         #
         node_name = f'{location_id}_{location_name}'
         if parent_id == location_id :
-            parent = None
+            parent_node_id = None
         else :
-            parent = location_id2node_id[parent_id]
+            parent_node_id = location_id2node_id[parent_id]
         #
         row_out = {
-            'node_id':       node_id,
-            'node_name':     node_name,
-            'parent':        parent,
-            'location_id':   location_id,
+            'node_id':          node_id,
+            'node_name':        node_name,
+            'parent_node_id':   parent_node_id,
+            'location_id':      location_id,
         }
         node_table.append(row_out)
     #

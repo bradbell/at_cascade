@@ -162,9 +162,9 @@ def write_data_table(
     # age_group_id_dict
     age_group_id_table = at_cascade.ihme.get_age_group_id_table()
     age_group_id_dict   = dict()
-    for key in age_group_id_table :
-        row = age_group_id_table[key]
-        age_group_id_dict[ row['age_group_id'] ] = row
+    for row in age_group_id_table :
+        age_group_id = row['age_group_id']
+        age_group_id_dict[age_group_id] = row
     #
     # data_table
     data_table = get_data_table(data_inp_file)
