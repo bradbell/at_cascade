@@ -37,12 +37,36 @@ gamma_factor        = 1e-2
 # If this seed is zero, the clock is used for the random seed.
 # Otherwise this value is used. In either case the actual seed is reported.
 random_seed = 0
+#
+# perturb_optimization_scaling
+# amount to randomly move the optimization scaling point (in log space of
+# a multiplier).
+perturb_optimization_scaling = 0.2
+#
+# shift_prior_std_factor
+# Factor that multipliers standard deviation that is passed down the cascade.
+shift_prior_std_factor = 4.0
+#
+# max_number_cpu
+# maximum number of processors, if one, run sequentally, otherwise
+# run at most max_number_cpu jobs at at time.
+import multiprocessing
+max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
+#
+# max_fit
+# Maximum number of data rows per integrand to include in a f
+max_fit             = 250
+#
+# max_abs_effect
+# Maximum absolute effect for any covriate multiplier.
+max_abs_effect      = 2.0
 # ----------------------------------------------------------------------------
 import os
 import sys
 import statistics
 import math
 import copy
+import time
 import dismod_at
 #
 current_directory = os.getcwd()
@@ -50,14 +74,15 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
     sys.path.insert(0, current_directory)
 #
 import at_cascade.ihme
-# ----------------------------------------------------------------------------
 #
+# random.seed
+if random_seed == 0 :
+    random_seed = int( time.time() )
+print('random_seed = ', random_seed)
+# ----------------------------------------------------------------------------
 # write_root_node_database
 # data_table_file, node_tble_file, omega_age_table_file, omega_time_table_file
 def write_root_node_database() :
-    #
-    print('begin create_root_node_database')
-    #
     # root_node_database
     root_node_database = at_cascade.ihme.root_node_database
     #
@@ -420,7 +445,6 @@ def write_root_node_database() :
          mulcov_table,
          option_table
     )
-    print('end create_root_node_database')
 # ----------------------------------------------------------------------------
 def main() :
     #
@@ -440,6 +464,17 @@ def main() :
     #
     # write_root_node_database
     write_root_node_database()
+    #
+    # write_all_option_table
+    at_cascade.ihme.write_all_option_table(
+        root_node_name               = root_node_name ,
+        shift_prior_std_factor       = shift_prior_std_factor,
+        perturb_optimization_scaling = perturb_optimization_scaling,
+        max_abs_effect               = max_abs_effect,
+        max_fit                      = max_fit,
+        max_number_cpu               = max_number_cpu,
+    )
+
 # ----------------------------------------------------------------------------
 main()
 print('diabetes.py: OK')
