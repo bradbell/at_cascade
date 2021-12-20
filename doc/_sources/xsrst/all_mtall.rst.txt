@@ -105,10 +105,10 @@ in the root node database node table.
 
 .. index:: split_reference_id
 
-.. _all_mtall.split_reference_id:
+.. _all_mtall.mtall_index_table.split_reference_id:
 
 split_reference_id
-******************
+==================
 This column has type ``integer`` and it specifies the
 index of a value in
 :ref:`split_reference_table`.
@@ -120,7 +120,7 @@ the values in this column must be (must not be) null.
 
 .. index:: all_mtall_id
 
-.. _all_mtall.split_reference_id.all_mtall_id:
+.. _all_mtall.mtall_index_table.all_mtall_id:
 
 all_mtall_id
 ============
