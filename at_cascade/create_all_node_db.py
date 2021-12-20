@@ -39,7 +39,7 @@ It is a python dictionary with a key equal to the node name for
 each node in the node table in root_node_database.
 If *node_name* is a node name,
 *all_cov_reference[node_name]* is a python dictionary with a key equal to the
- name for each :ref:`glossary.relative_covariate`.
+name for each :ref:`glossary.relative_covariate`.
 If *covariate_name* is an relative covariate name,
 
 | |tab| *all_cov_reference[node_name][covariate_name]*
