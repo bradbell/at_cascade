@@ -1149,7 +1149,7 @@ def display_results(database, plot_title) :
             rate_set.add( row['rate_name'] )
     pdf_file = pdf_dir + '/rate.pdf'
     plot_set = dismod_at.plot_rate_fit(
-        database, rate_set, pdf_file, plot_title
+        database, pdf_file, plot_title, rate_set
     )
     #
     # db2csv

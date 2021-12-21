@@ -77,6 +77,10 @@ max_fit             = 250
 # Maximum absolute effect for any covriate multiplier.
 max_abs_effect      = 2.0
 #
+# max_plot
+# Maximum number of data points to plot per integrand.
+max_plot            = 2000
+#
 # mulcov_freeze_list
 # Freeze the covariate multiplier on obesity that affects iota and do the
 # freeze at United_States_of_America and Western_Europe.
@@ -508,6 +512,7 @@ at_cascade.ihme.main(
     root_node_name  = root_node_name,
     max_fit         = max_fit,
     max_abs_effect  = max_abs_effect,
+    max_plot        = max_plot,
     setup_function  = setup_function,
 )
 print('diabetes.py: OK')

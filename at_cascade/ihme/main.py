@@ -10,7 +10,46 @@
 import sys
 import os
 import shutil
+import dismod_at
 import at_cascade.ihme
+# ---------------------------------------------------------------------------
+def display(database, max_plot) :
+    #
+    # pdf_file
+    index      = database.rfind('/')
+    pdf_dir    = database[0:index]
+    #
+    # plot_title
+    index      = pdf_dir.rfind('/')
+    plot_title = pdf_dir[index+1:]
+    #
+    # integrand_table, rate_table
+    new             = False
+    connection      = dismod_at.create_connection(database, new)
+    integrand_table = dismod_at.get_table_dict(connection, 'integrand')
+    rate_table      = dismod_at.get_table_dict(connection, 'rate')
+    #
+    # data.pdf
+    pdf_file = pdf_dir + '/data.pdf'
+    n_point_list = dismod_at.plot_data_fit(
+        database     = database,
+        pdf_file     = pdf_file,
+        plot_title   = plot_title,
+        max_plot     = max_plot,
+    )
+    #
+    # rate.pdf
+    rate_set = set()
+    for row in rate_table :
+        if not row['parent_smooth_id'] is None :
+            rate_set.add( row['rate_name'] )
+    pdf_file = pdf_dir + '/rate.pdf'
+    plot_set = dismod_at.plot_rate_fit(
+        database, pdf_file, plot_title, rate_set
+    )
+    #
+    # db2csv
+    dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
 # ----------------------------------------------------------------------------
 def drill(root_node_name, max_fit, max_abs_effect) :
     #
@@ -35,11 +74,13 @@ def main(
     root_node_name   = None,
     max_fit          = None,
     max_abs_effect   = None,
+    max_plot         = None,
     setup_function   = None,
 ) :
     assert type(root_node_name) == str
     assert type(max_fit) == int
     assert type(max_abs_effect) == float
+    assert type(max_plot) == int
     assert setup_function is not None
     #
     # results_dir
@@ -49,24 +90,34 @@ def main(
     root_node_dir = f'{results_dir}/{root_node_name}'
     #
     # command
-    command_set = { 'setup', 'cleanup', 'drill' }
+    command_set = { 'setup', 'cleanup', 'drill', 'display' }
     command     = None
     if len(sys.argv) == 2 :
         command = sys.argv[1]
+    if len(sys.argv) == 3 :
+        if sys.argv[1] == 'display' :
+            command  = sys.argv[1]
+            database = sys.argv[2]
     if command not in command_set :
         program = sys.argv[0].split('/')[-1]
-        msg  =  f'usage: bin/ihme/{program} command\n'
-        msg +=  '       where command is one of the following:\n'
+        msg  = f'usage: bin/ihme/{program} command\n'
+        msg += f'       bin/ihme/{program} display database\n'
+        msg +=  'where command is one of the following:\n'
         msg +=  'setup:   create at_cascade input databases from csv files\n'
         msg += f'cleanup: remove {root_node_dir}\n'
         msg +=  'drill:   run cascade from root node to goal nodes\n'
+        msg +=  'display: display result from a drill\n'
         sys.exit(msg)
+    #
+    # setup
     if command == 'setup' :
         setup_function()
+    #
+    # cleanup
     elif command == 'cleanup' :
         if not os.path.exists( root_node_dir ) :
             msg  = f'cleanup: Cannot find {root_node_dir}'
-            sys.exit(msg)
+            assert False, msg
         #
         # rmtree if dangerous so make sure results_dir is as expected
         if root_node_dir != f'ihme_db/DisMod_AT/results/{root_node_name}' :
@@ -77,15 +128,29 @@ def main(
             assert False, msg
         print( f'removing {root_node_dir}' )
         shutil.rmtree( root_node_dir )
+    #
+    # drill
     elif command == 'drill' :
         if os.path.exists( root_node_dir ) :
             program = sys.argv[0]
             msg  = f'drill: {root_node_dir} exists. '
             msg += 'Use following to remove it\n'
             msg += f'{program} cleanup'
-            sys.exit(msg)
+            assert False, msg
         print( f'creating {root_node_dir}' )
         os.makedirs( root_node_dir )
         drill(root_node_name, max_fit, max_abs_effect)
+    #
+    # display
+    elif command == 'display' :
+        if not database.startswith( root_node_dir ) :
+            msg  = 'display: database does not begin with\n'
+            msg += root_node_dir
+            assert False, msg
+        if not database.endswith( '/dismod.db' ) :
+            msg  = 'display: database does not end with /dismod.db'
+            assert False, msg
+        display(database, max_plot)
+    #
     else :
         assert False
