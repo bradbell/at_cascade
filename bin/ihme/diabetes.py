@@ -8,6 +8,23 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # ----------------------------------------------------------------------------
+import os
+import sys
+import statistics
+import math
+import copy
+import time
+import dismod_at
+import multiprocessing
+import shutil
+#
+if os.path.isfile( os.getcwd() + '/at_cascade/__init__.py' ) :
+    sys.path.insert(0, os.getcwd())
+#
+import at_cascade.ihme
+# ----------------------------------------------------------------------------
+# Begin settings that can be changed without understand this program
+# ----------------------------------------------------------------------------
 # covariate_csv_file_list
 covariate_name_list = [ 'ldi', 'obesity_prevalence' ]
 covariate_csv_file_list = [
@@ -21,7 +38,7 @@ data_inp_file   = f'{data_dir}/gbd2019_diabetes_crosswalk_12437.csv'
 csmr_inp_file   = f'{data_dir}/gbd2019_diabetes_csmr.csv'
 #
 # intermediate files
-results_dir     = 'ihme_db/DisMod_AT/results'
+results_dir     = at_cascade.ihme.results_dir
 data_table_file = f'{results_dir}/data_table.csv'
 #
 # root_node_name
@@ -50,7 +67,6 @@ shift_prior_std_factor = 4.0
 # max_number_cpu
 # maximum number of processors, if one, run sequentally, otherwise
 # run at most max_number_cpu jobs at at time.
-import multiprocessing
 max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
 #
 # max_fit
@@ -78,19 +94,8 @@ mulcov_freeze_list = [
 ]
 # mulcov_freeze_list = list()
 # ----------------------------------------------------------------------------
-import os
-import sys
-import statistics
-import math
-import copy
-import time
-import dismod_at
-#
-current_directory = os.getcwd()
-if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-    sys.path.insert(0, current_directory)
-#
-import at_cascade.ihme
+# End settings that can be changed without understand this program
+# ----------------------------------------------------------------------------
 #
 # random.seed
 if random_seed == 0 :
@@ -464,7 +469,7 @@ def write_root_node_database() :
          option_table
     )
 # ----------------------------------------------------------------------------
-def main() :
+def setup_function() :
     #
     # write_node_table
     at_cascade.ihme.write_node_table()
@@ -499,6 +504,11 @@ def main() :
     # write_all_node_database
     at_cascade.ihme.write_all_node_database()
 # ----------------------------------------------------------------------------
-main()
+at_cascade.ihme.main(
+    root_node_name  = root_node_name,
+    max_fit         = max_fit,
+    max_abs_effect  = max_abs_effect,
+    setup_function  = setup_function,
+)
 print('diabetes.py: OK')
 sys.exit(0)

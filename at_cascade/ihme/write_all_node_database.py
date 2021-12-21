@@ -39,7 +39,7 @@ def write_all_node_database() :
         print( f'Using existing {all_node_database}' )
         return
     else :
-        print( f'Creating {all_node_database}' )
+        print( f'Begin: creating {all_node_database}' )
     #
     # intermediate files
     all_option_table_file    = at_cascade.ihme.all_option_table_file
@@ -204,11 +204,29 @@ def write_all_node_database() :
     col_list = [ ('all_mtall_value', 'real') ]
     write_table(connection, all_mtall_table, tbl_name, col_list)
     #
-    # mtspecific_table
+    # mtspecific_index_table
+    mtspecific_index_table = list()
+    tbl_name = 'mtspecific_index'
+    col_list = [
+        ('node_id', 'integer'),
+        ('split_reference_id', 'integer'),
+        ('all_mtspecific_id', 'integer'),
+    ]
+    write_table(connection, mtspecific_index_table, tbl_name, col_list)
+    #
+    # all_mtspecific_table
     all_mtspecific_table   = list()
-    tbl_name = 'mtall_specific'
+    tbl_name = 'all_mtspecific'
     col_list = [ ('all_mtspecific_value', 'real') ]
     write_table(connection, all_mtspecific_table, tbl_name, col_list)
     #
     # connection
     connection.close()
+    #
+    # data4cov_reference
+    at_cascade.data4cov_reference(
+        root_node_database = at_cascade.ihme.root_node_database,
+        all_node_database  = at_cascade.ihme.all_node_database,
+        trace_interval     = 100,
+    )
+    print( f'End: creating {all_node_database}' )

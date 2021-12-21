@@ -13,20 +13,23 @@ location_inp_file  = 'ihme_db/DisMod_AT/metadata/gbd2019_location_map.csv'
 age_group_inp_file = 'ihme_db/DisMod_AT/metadata/gbd2019_age_metadata.csv'
 mtall_inp_file     = 'ihme_db/DisMod_AT/mtall/gbd2019_all_cause_mortality.csv'
 #
+# results_dir
+results_dir              = 'ihme_db/DisMod_AT/results'
+#
 # intermediate result files for all diseases
-node_table_file          = 'ihme_db/DisMod_AT/results/node_table.csv'
-all_mtall_table_file     = 'ihme_db/DisMod_AT/results/all_mtall_table.csv'
-mtall_index_table_file   = 'ihme_db/DisMod_AT/results/mtall_index_table.csv'
-omega_age_table_file     = 'ihme_db/DisMod_AT/results/omega_age_table.csv'
-omega_time_table_file    = 'ihme_db/DisMod_AT/results/omega_time_table.csv'
-all_option_table_file    = 'ihme_db/DisMod_AT/results/all_option_table.csv'
-mulcov_freeze_table_file = 'ihme_db/DisMod_AT/results/mulcov_freeze_table.csv'
+node_table_file          = f'{results_dir}/node_table.csv'
+all_mtall_table_file     = f'{results_dir}/all_mtall_table.csv'
+mtall_index_table_file   = f'{results_dir}/mtall_index_table.csv'
+omega_age_table_file     = f'{results_dir}/omega_age_table.csv'
+omega_time_table_file    = f'{results_dir}/omega_time_table.csv'
+all_option_table_file    = f'{results_dir}/all_option_table.csv'
+mulcov_freeze_table_file = f'{results_dir}/mulcov_freeze_table.csv'
 #
 # root_node_database
-root_node_database = 'ihme_db/DisMod_AT/results/root_node.db'
+root_node_database = f'{results_dir}/root_node.db'
 #
 # all_node_database
-all_node_database = 'ihme_db/DisMod_AT/results/all_node.db'
+all_node_database = f'{results_dir}/all_node.db'
 #
 # age group id's that are aggregates of other age groups
 aggregate_age_group_id_set = {22, 27}
@@ -90,6 +93,7 @@ covariate_short_name = {
 #
 # ----------------------------------------------------------------------------
 # BEGIN_SORT_THIS_LINE_PLUS_1
+from .main                        import main
 from .get_age_group_id_table      import get_age_group_id_table
 from .get_interpolate_covariate   import get_interpolate_covariate
 from .get_table_csv               import get_table_csv

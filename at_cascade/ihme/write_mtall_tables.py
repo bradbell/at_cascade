@@ -42,7 +42,7 @@ def write_mtall_tables() :
     if done :
         print( f'Using existing mtall_tables:')
         for file in output_file_list :
-            print( file )
+            print( '    ' + file )
         return
     else :
         print( f'Createing mtall_tables:')
