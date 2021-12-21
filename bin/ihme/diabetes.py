@@ -81,6 +81,15 @@ max_abs_effect      = 2.0
 # Maximum number of data points to plot per integrand.
 max_plot            = 2000
 #
+# fit_goal_set
+# Name of the nodes that we are drilling to (must be below root_node).
+fit_goal_set = {
+    '527_California',
+    '547_Mississippi',
+    '81_Germany',
+    '84_Ireland'
+}
+#
 # mulcov_freeze_list
 # Freeze the covariate multiplier on obesity that affects iota and do the
 # freeze at United_States_of_America and Western_Europe.
@@ -274,6 +283,14 @@ def write_root_node_database() :
         is_outlier  = int( row_in['is_outlier'] )
         sex_name    = row_in['sex_name']
         #
+        # Kludge where input file has the wrong value.
+        # Rmove this code when is_outlier is fixed.
+        if row_in['integrand_name'] == 'mtexcess' :
+            assert is_outlier == 1
+            hold_out = 0
+        else :
+            hold_out = is_outlier
+        #
         node_id     = location_id2node_id[location_id]
         node_name = node_table[node_id]['name']
         sex       = sex_name2covariate_value[ row_in['sex_name'] ]
@@ -300,7 +317,7 @@ def write_root_node_database() :
             'one'             : 1.0,
             'obesity'         : obesity,
             'log_ldi'         : log_ldi,
-            'hold_out'        : is_outlier,
+            'hold_out'        : hold_out,
             'density'         : 'gaussian',
             'meas_value'      : float( row_in['meas_value'] ),
             'meas_std'        : float( row_in['meas_std'] ),
@@ -510,6 +527,7 @@ def setup_function() :
 # ----------------------------------------------------------------------------
 at_cascade.ihme.main(
     root_node_name  = root_node_name,
+    fit_goal_set    = fit_goal_set,
     max_fit         = max_fit,
     max_abs_effect  = max_abs_effect,
     max_plot        = max_plot,

@@ -51,7 +51,7 @@ def display(database, max_plot) :
     # db2csv
     dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
 # ----------------------------------------------------------------------------
-def drill(root_node_name, max_fit, max_abs_effect) :
+def drill(root_node_name, fit_goal_set, max_fit, max_abs_effect) :
     #
     # all_node_database
     all_node_database = at_cascade.ihme.all_node_database
@@ -69,15 +69,25 @@ def drill(root_node_name, max_fit, max_abs_effect) :
     )
     results_dir = at_cascade.ihme.results_dir
     assert fit_node_database == f'{results_dir}/{root_node_name}/dismod.db'
+    #
+    # cascade_root_node
+    at_cascade.cascade_root_node(
+        all_node_database  = all_node_database,
+        root_node_database = fit_node_database,
+        fit_goal_set       = fit_goal_set,
+        trace_fit         = True,
+    )
 # ----------------------------------------------------------------------------
 def main(
     root_node_name   = None,
+    fit_goal_set     = None,
     max_fit          = None,
     max_abs_effect   = None,
     max_plot         = None,
     setup_function   = None,
 ) :
     assert type(root_node_name) == str
+    assert type(fit_goal_set) == set
     assert type(max_fit) == int
     assert type(max_abs_effect) == float
     assert type(max_plot) == int
@@ -139,7 +149,7 @@ def main(
             assert False, msg
         print( f'creating {root_node_dir}' )
         os.makedirs( root_node_dir )
-        drill(root_node_name, max_fit, max_abs_effect)
+        drill(root_node_name, fit_goal_set, max_fit, max_abs_effect)
     #
     # display
     elif command == 'display' :

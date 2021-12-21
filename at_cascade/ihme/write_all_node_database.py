@@ -139,9 +139,12 @@ def write_all_node_database() :
     # node_split_table
     node_split_table = list()
     for node_name in at_cascade.ihme.split_node_name_set :
-        node_split_table.append( { 'node_name' : node_name } )
+        node_id = at_cascade.table_name2id(
+            root_table['node'], 'node', node_name
+        )
+        node_split_table.append( { 'node_id' : node_id } )
     tbl_name = 'node_split'
-    col_list = [ ('node_name', 'text') ]
+    col_list = [ ('node_id', 'integer') ]
     write_table(connection, node_split_table, tbl_name, col_list)
     #
     # mulcov_freeze_table
