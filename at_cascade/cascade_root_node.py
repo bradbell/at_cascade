@@ -125,6 +125,10 @@ def cascade_root_node(
     assert root_node_database  is not None
     assert fit_goal_set        is not None
     #
+    # base_directory
+    index = all_node_database.rfind('/')
+    base_directory = all_node_database[0 : index]
+    #
     # node_table, covariate_table
     new             = False
     connection      = dismod_at.create_connection(root_node_database, new)
@@ -152,17 +156,18 @@ def cascade_root_node(
     assert root_node_name is not None
     #
     # check root_node_name
-    check_node_name = at_cascade.get_parent_node(root_node_database)
-    if check_node_name != root_node_name :
-        msg  = f'{fit_node_databse} parent_node_name = {check_node_name}\n'
+    expect_node_name = at_cascade.get_parent_node(root_node_database)
+    if expect_node_name != root_node_name :
+        msg  = f'{fit_node_databse} parent_node_name = {expect_node_name}\n'
         msg  = f'{all_node_database} root_node_name = {root_node_name}'
         assert False, smg
     #
-    # check root_node_database
-    check_database = f'{root_node_name}/dismod.db'
-    if root_node_database != check_database :
+    # expect root_node_database
+    expect_database = f'{base_directory}/{root_node_name}/dismod.db'
+    if root_node_database != expect_database :
+        msg  = f'base_directory = {base_directory}\n'
         msg  = f'root_node_database = {root_node_database}\n'
-        msg += f'root_node_name/dismod.db = {check_database}\n'
+        msg += f'expected {expect_database}\n'
         assert False, msg
     #
     # fit_integrand

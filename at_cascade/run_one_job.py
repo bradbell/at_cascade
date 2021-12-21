@@ -192,6 +192,10 @@ def run_one_job(
     assert node_table        is not None
     assert trace_fit         is not None
     #
+    # base_directory
+    index = all_node_database.rfind('/')
+    base_directory = all_node_database[0 : index]
+    #
     # fit_node_id
     fit_node_id = job_table[run_job_id]['fit_node_id']
     #
@@ -247,7 +251,7 @@ def run_one_job(
         node_split_set.add( row['node_id'] )
     #
     # fit_node_database
-    fit_database_dir = at_cascade.get_database_dir(
+    database_dir = at_cascade.get_database_dir(
         node_table              = node_table,
         split_reference_table   = all_table['split_reference'],
         node_split_set          = node_split_set,
@@ -256,7 +260,7 @@ def run_one_job(
         fit_node_id             = fit_node_id ,
         fit_split_reference_id  = fit_split_reference_id,
     )
-    fit_node_database = f'{fit_database_dir}/dismod.db'
+    fit_node_database = f'{base_directory}/{database_dir}/dismod.db'
     #
     # check fit_node_database
     parent_node_name = at_cascade.get_parent_node(fit_node_database)
@@ -346,7 +350,7 @@ def run_one_job(
         shift_split_reference_id = job_table[job_id]['split_reference_id']
         #
         # shift_database_dir
-        shift_database_dir = at_cascade.get_database_dir(
+        database_dir = at_cascade.get_database_dir(
             node_table              = node_table,
             split_reference_table   = all_table['split_reference'],
             node_split_set          = node_split_set,
@@ -355,6 +359,7 @@ def run_one_job(
             fit_node_id             = shift_node_id ,
             fit_split_reference_id  = shift_split_reference_id,
         )
+        shift_database_dir = f'{base_directory}/{database_dir}'
         if not os.path.exists(shift_database_dir) :
             os.makedirs(shift_database_dir)
         #

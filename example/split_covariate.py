@@ -501,13 +501,12 @@ def root_node_db(file_name) :
 # ----------------------------------------------------------------------------
 def main() :
     # -------------------------------------------------------------------------
-    # wrok_dir
-    work_dir = 'build/example'
-    distutils.dir_util.mkpath(work_dir)
-    os.chdir(work_dir)
+    # base_directory
+    base_directory = 'build/example'
+    distutils.dir_util.mkpath(base_directory)
     #
     # Create root_node.db
-    root_node_database  = 'root_node.db'
+    root_node_database  = f'{base_directory}/root_node.db'
     root_node_db(root_node_database)
     #
     # omega_grid
@@ -539,7 +538,7 @@ def main() :
                     mtall_data[node_name][k].append( omega )
     #
     # Create all_node.db
-    all_node_database = 'all_node.db'
+    all_node_database = f'{base_directory}/all_node.db'
     at_cascade.create_all_node_db(
         all_node_database      = all_node_database,
         root_node_database     = root_node_database,
@@ -552,13 +551,11 @@ def main() :
     )
     #
     # fit_node_dir
-    fit_node_dir = 'n0'
+    fit_node_dir = f'{base_directory}/n0'
     if os.path.exists(fit_node_dir) :
         # rmtree is very dangerous so make sure fit_node_dir is as expected
-        os.chdir('../..')
-        assert work_dir == 'build/example'
-        shutil.rmtree(work_dir + '/' + fit_node_dir)
-        os.chdir(work_dir)
+        assert fit_node_dir == 'build/example/n0'
+        shutil.rmtree( fit_node_dir )
     os.makedirs(fit_node_dir )
     #
     # fit_node_database
@@ -575,7 +572,7 @@ def main() :
     # check results
     for sex in [ 'male', 'female' ] :
         for subdir in [ 'n1/n3', 'n1/n4', 'n2/n5', 'n2/n6' ] :
-            goal_database = f'n0/{sex}/{subdir}/dismod.db'
+            goal_database = f'{base_directory}/n0/{sex}/{subdir}/dismod.db'
             at_cascade.check_cascade_fit(
                 rate_true          = rate_true,
                 all_node_database  = all_node_database,

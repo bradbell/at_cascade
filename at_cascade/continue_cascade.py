@@ -62,6 +62,7 @@ import os
 import multiprocessing
 import dismod_at
 import at_cascade
+import distutils.dir_util
 # ----------------------------------------------------------------------------
 def add_log_entry(connection, message) :
     #
@@ -114,6 +115,11 @@ def continue_cascade(
     assert not all_node_database is None
     assert not fit_node_database is None
     assert not fit_goal_set is None
+    #
+    # base_directory
+    base_directory = 'build/example'
+    distutils.dir_util.mkpath(base_directory)
+    #
     #
     # node_table, covariate_table
     new             = False
@@ -206,7 +212,7 @@ def continue_cascade(
         shift_split_reference_id = job_table[job_id]['split_reference_id']
         #
         # shift_database_dir
-        shift_database_dir = at_cascade.get_database_dir(
+        database_dir = at_cascade.get_database_dir(
             node_table              = node_table,
             split_reference_table   = split_reference_table,
             node_split_set          = node_split_set,
@@ -215,6 +221,7 @@ def continue_cascade(
             fit_node_id             = shift_node_id ,
             fit_split_reference_id  = shift_split_reference_id,
         )
+        shift_database_dir = f'{base_directory}/{database_dir}'
         if not os.path.exists(shift_database_dir) :
             os.makedirs(shift_database_dir)
         #

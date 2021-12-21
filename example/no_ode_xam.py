@@ -749,13 +749,12 @@ def check_no_ode_fit(fit_node_dir) :
 # ----------------------------------------------------------------------------
 def main() :
     # -------------------------------------------------------------------------
-    # wrok_dir
-    work_dir = 'build/example'
-    distutils.dir_util.mkpath(work_dir)
-    os.chdir(work_dir)
+    # base_directory
+    base_directory = 'build/example'
+    distutils.dir_util.mkpath(base_directory)
     #
     # Create root_node.db
-    root_node_database  = 'root_node.db'
+    root_node_database  = f'{base_directory}/root_node.db'
     root_node_db(root_node_database)
     #
     # all_cov_reference
@@ -800,7 +799,7 @@ def main() :
     #
     # Create all_node.db
     # We could get all_cov_reference from here, but we do not need to
-    all_node_database = 'all_node.db'
+    all_node_database = f'{base_directory}/all_node.db'
     all_option        = { 'root_node_name': 'n0' }
     at_cascade.create_all_node_db(
         all_node_database       = all_node_database,
@@ -813,13 +812,11 @@ def main() :
     )
     #
     # fit_node_dir
-    fit_node_dir = 'n0'
+    fit_node_dir = f'{base_directory}/n0'
     if os.path.exists(fit_node_dir) :
         # rmtree is very dangerous so make sure fit_node_dir is as expected
-        os.chdir('../..')
-        assert work_dir == 'build/example'
-        shutil.rmtree(work_dir + '/' + fit_node_dir)
-        os.chdir(work_dir)
+        assert fit_node_dir == 'build/example/n0'
+        shutil.rmtree( fit_node_dir )
     os.makedirs(fit_node_dir )
     #
     # fit_node_database
@@ -846,7 +843,7 @@ def main() :
     #
     # check results
     for goal_dir in [ 'n0/n1', 'n0/n2' ] :
-        goal_database = goal_dir + '/dismod.db'
+        goal_database = f'{base_directory}/{goal_dir}/dismod.db'
         at_cascade.check_cascade_fit(
             rate_true         = rate_true,
             all_node_database = all_node_database,
