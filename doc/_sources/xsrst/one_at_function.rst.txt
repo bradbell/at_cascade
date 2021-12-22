@@ -35,8 +35,8 @@ functions below do not depend on time.
 Nodes
 *****
 The following is a diagram of the node tree for this example.
-The :ref:`glossary.root_node` is n0,
-the :ref:`glossary.fit_goal_set` is {n3, n4, n2},
+The :ref:`glossary.root_node` is n1,
+the :ref:`glossary.fit_goal_set` is {n3, n4},
 and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
