@@ -71,7 +71,9 @@ that the fit corresponds to.
 database_dir
 ************
 The return value is a ``str`` containg the name of the directory
-where the database corresponding to he fit is located.
+where the database corresponding to he fit is located relative to
+the :ref:`glossary.base_directory`.
+It begins with *root_node_name*\ ``/`` .
 
 
 {xsrst_end get_database_dir}
@@ -104,7 +106,7 @@ def get_database_dir(
     node_id            = fit_node_id
     split_reference_id = fit_split_reference_id
     #
-    while node_id is not None :
+    while node_id not in [ None, root_node_id ] :
         #
         # split
         split = root_split_reference_id != split_reference_id \
@@ -127,6 +129,23 @@ def get_database_dir(
             #
             # node_id
             node_id       = node_table[node_id]['parent']
+    if node_id is None :
+        fit_node_name  = node_table[fit_node_id]['node_name']
+        root_node_name = node_table[root_node_id]['node_name']
+        msg  = f'{fit_node_name} is not a descendent of the root node '
+        msg += root_node_name
+        assert False, msg
+    #
+    split =  root_split_reference_id != split_reference_id \
+        and root_node_id in node_split_set
+    if split :
+        assert 0 < len(split_reference_table)
+        #
+        # database_dir
+        database_dir = f'{fit_split_reference_name}/{database_dir}'
+    #
+    root_node_name = node_table[root_node_id]['node_name']
+    database_dir = f'{root_node_name}/{database_dir}'
     #
     # database_dir
     database_dir = database_dir[:-1]

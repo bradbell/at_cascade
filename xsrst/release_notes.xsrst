@@ -25,9 +25,13 @@ Release Notes for 2021
 
 12-21
 *****
-The output files are now relative to the
-:ref:`glossary.base_directory` (they used to be relative to the
-current working directory).
+1.  The output files are now relative to the
+    :ref:`glossary.base_directory` (they used to be relative to the
+    current working directory).
+
+2.  Starting from a :ref:`glossary.root_node` that was not at the top
+    of the node tree did not work. The :ref:`one_at_function` was
+    modified to test for this problem and the problem was fixed.
 
 12-08
 *****

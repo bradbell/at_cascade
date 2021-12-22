@@ -23,8 +23,8 @@ functions below do not depend on time.
 Nodes
 *****
 The following is a diagram of the node tree for this example.
-The :ref:`glossary.root_node` is n0,
-the :ref:`glossary.fit_goal_set` is {n3, n4, n2},
+The :ref:`glossary.root_node` is n1,
+the :ref:`glossary.fit_goal_set` is {n3, n4},
 and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
@@ -267,7 +267,7 @@ import at_cascade
 # global varables
 # -----------------------------------------------------------------------------
 # BEGIN fit_goal_set
-fit_goal_set = { 'n3', 'n4', 'n2' }
+fit_goal_set = { 'n3', 'n4' }
 # END fit_goal_set
 #
 # BEGIN random_seed
@@ -509,7 +509,7 @@ def root_node_db(file_name) :
     #
     # option_table
     option_table = [
-        { 'name':'parent_node_name',      'value':'n0'},
+        { 'name':'parent_node_name',      'value':'n1'},
         { 'name':'rate_case',             'value':'iota_pos_rho_zero'},
         { 'name': 'zero_sum_child_rate',  'value':'iota'},
         { 'name':'quasi_fixed',           'value':'false'},
@@ -560,7 +560,7 @@ def main() :
     #
     # Create all_node.db
     all_node_database = f'{base_directory}/all_node.db'
-    all_option        = { 'root_node_name': 'n0' }
+    all_option        = { 'root_node_name': 'n1' }
     at_cascade.create_all_node_db(
         all_node_database       = all_node_database,
         root_node_database      = root_node_database,
@@ -569,11 +569,13 @@ def main() :
     )
     #
     # fit_node_dir
-    fit_node_dir = f'{base_directory}/n0'
-    if os.path.exists(fit_node_dir) :
-        # rmtree is very dangerous so make sure fit_node_dir is as expected
-        assert fit_node_dir == 'build/example/n0'
-        shutil.rmtree( fit_node_dir )
+    for node_name in [ 'n0', 'n1' ] :
+        fit_node_dir = f'{base_directory}/{node_name}'
+        if os.path.exists(fit_node_dir) :
+            # rmtree is very dangerous so make sure fit_node_dir is as expected
+            assert fit_node_dir == f'build/example/{node_name}'
+            shutil.rmtree( fit_node_dir )
+    fit_node_dir = f'{base_directory}/n1'
     os.makedirs(fit_node_dir )
     #
     # fit_node_database
@@ -588,7 +590,7 @@ def main() :
     )
     #
     # check results
-    for goal_dir in [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2' ] :
+    for goal_dir in [ 'n1/n3', 'n1/n4' ] :
         goal_database = f'{base_directory}/{goal_dir}/dismod.db'
         at_cascade.check_cascade_fit(
             rate_true = rate_true,
@@ -598,7 +600,7 @@ def main() :
         )
     #
     # check that fits were not run for n5 and n6
-    for not_fit_dir in [ 'n0/n2/n5', 'n0/n2/n6' ] :
+    for not_fit_dir in [ f'{base_directory}/n0', '{base_directory}/n2' ] :
         assert not os.path.exists( not_fit_dir )
 #
 main()
