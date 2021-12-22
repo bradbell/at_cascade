@@ -23,6 +23,12 @@ Release Notes for at_cascade
 Release Notes for 2021
 ######################
 
+12-21
+*****
+The output files are now relative to the
+:ref:`glossary.base_directory` (they used to be relative to the
+current working directory).
+
 12-08
 *****
 Remove the convergence problem :ref:`wish_list` entry becasue it was completed

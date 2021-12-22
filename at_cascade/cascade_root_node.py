@@ -35,8 +35,11 @@ root_node_database
 ******************
 is a python string specifying the location of the dismod_at
 :ref:`glossary.root_node` database relative to the current working directory.
-It must *root_node_name*\ ``/dismod.db``; see
-:ref:`all_option_table.root_node_name`.
+It must
+
+    *base_directory*\ ``/``\ *root_node_name*\ ``/dismod.db``
+
+see :ref:`glossary.base_directory` and :ref:`all_option_table.root_node_name`.
 On input, this is an :ref:`glossary.input_node_database`.
 Upon return, it is a :ref:`glossary.fit_node_database` with the
 extra properties listed under
