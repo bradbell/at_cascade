@@ -47,7 +47,7 @@ def write_mtall_tables() :
     else :
         print( f'Createing mtall_tables:')
         for file in output_file_list :
-            print( file )
+            print( '    ' + file )
     #
     # age_group_id_set, age_group_id_dict
     age_group_id_table = at_cascade.ihme.get_age_group_id_table()
@@ -93,7 +93,7 @@ def write_mtall_tables() :
             location_id  = int( row['location_id'] )
             sex_id       = int( row['sex_id'] )
             year_id      = int( row['year_id'] )
-            mean         = float( row['mean'] )
+            val          = float( row['val'] )
             if location_id not in mtall_dict :
                 mtall_dict[location_id] = dict()
             if sex_id not in mtall_dict[location_id] :
@@ -108,7 +108,7 @@ def write_mtall_tables() :
                 msg += f'The age_group_id {age_group_id} '
                 msg += 'appears more than once.'
                 assert False, msg
-            mtall_dict[location_id][sex_id][year_id][age_group_id] = mean
+            mtall_dict[location_id][sex_id][year_id][age_group_id] = val
     #
     # age_group_id_set
     previous_location_id      = None
@@ -202,11 +202,19 @@ def write_mtall_tables() :
                 'split_reference_id' : split_reference_id
             }
             mtall_index_table.append(row)
-            for year_id in year_id_list :
-                for age_group_id in age_group_id_list :
+            for age_group_id in age_group_id_list :
+                for year_id in year_id_list :
                     all_mtall_value = \
                         mtall_dict[location_id][sex_id][year_id][age_group_id]
-                    row = { 'all_mtall_value' : all_mtall_value }
+                    row = {
+                        'all_mtall_id'    : all_mtall_id,
+                        'location_id'     : location_id,
+                        'node_id'         : node_id,
+                        'sex_id'          : sex_id,
+                        'year_id'         : year_id,
+                        'age_group_id'    : age_group_id,
+                        'all_mtall_value' : all_mtall_value ,
+                    }
                     all_mtall_table.append(row)
                     all_mtall_id += 1
     #

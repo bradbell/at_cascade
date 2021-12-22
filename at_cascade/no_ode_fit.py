@@ -271,7 +271,13 @@ def no_ode_fit(
     # hold_out_integrand
     hold_out_integrand = list()
     use_ode = [
-        'prevalence', 'Tincidence', 'mtspecific', 'mtall', 'mtstandard'
+        'susceptible',
+        'withC',
+        'prevalence',
+        'Tincidence',
+        'mtspecific',
+        'mtall',
+        'mtstandard',
     ]
     for row in in_table['integrand'] :
         integrand_name = row['integrand_name']
