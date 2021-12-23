@@ -111,12 +111,14 @@ def main(
     if command not in command_set :
         program = sys.argv[0].split('/')[-1]
         msg  = f'usage: bin/ihme/{program} command\n'
-        msg += f'       bin/ihme/{program} display database\n'
+        msg += f'       bin/ihme/{program} display  database\n'
+        msg += f'       bin/ihme/{program} continue database\n'
         msg +=  'where command is one of the following:\n'
-        msg +=  'setup:   create at_cascade input databases from csv files\n'
-        msg += f'cleanup: remove {root_node_dir}\n'
-        msg +=  'drill:   run cascade from root node to goal nodes\n'
-        msg +=  'display: display result from a drill\n'
+        msg +=  'setup:    create at_cascade input databases from csv files\n'
+        msg += f'cleanup:  remove {root_node_dir}\n'
+        msg +=  'drill:    run cascade from root node to goal nodes\n'
+        msg +=  'display:  display results that are in database\n'
+        msg +=  'continue: continue cascade starting at database\n'
         sys.exit(msg)
     #
     # setup

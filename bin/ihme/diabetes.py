@@ -89,6 +89,11 @@ fit_goal_set = {
     '81_Germany',
     '84_Ireland'
 }
+fit_goal_set = { '1_Global' }
+#
+# node_split_name_set
+# Name of the nodes where we are splitting from Both to Female, Male
+node_split_name_set = {'102_United_States_of_America', '73_Western_Europe'}
 #
 # mulcov_freeze_list
 # Freeze the covariate multiplier on obesity that affects iota and do the
@@ -522,6 +527,9 @@ def setup_function() :
     #
     # write_mulcov_freeze_table
     at_cascade.ihme.write_mulcov_freeze_table(mulcov_freeze_list)
+    #
+    # write_node_split_table
+    at_cascade.ihme.write_node_split_table(node_split_name_set)
     #
     # write_all_node_database
     at_cascade.ihme.write_all_node_database()

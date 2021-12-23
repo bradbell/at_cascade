@@ -7,6 +7,7 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
+import os
 import csv
 import dismod_at
 import at_cascade.ihme
@@ -14,11 +15,16 @@ import at_cascade.ihme
 #
 def write_mulcov_freeze_table(mulcov_freeze_list) :
     #
-    # root_node_database
-    root_node_database = at_cascade.ihme.root_node_database
-    #
     # mulcov_freeze_table_file
     mulcov_freeze_table_file = at_cascade.ihme.mulcov_freeze_table_file
+    if os.path.exists(mulcov_freeze_table_file) :
+        print( f'Using existing {mulcov_freeze_table_file}' )
+        return
+    else :
+        print( f'Creating {mulcov_freeze_table_file}' )
+    #
+    # root_node_database
+    root_node_database = at_cascade.ihme.root_node_database
     #
     # root_table
     new        = False
@@ -26,6 +32,7 @@ def write_mulcov_freeze_table(mulcov_freeze_list) :
     root_table = dict()
     for tbl_name in [ 'covariate', 'mulcov', 'node', 'rate' ] :
         root_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
+    connection.close()
     #
     # mulcov_freeze_table
     mulcov_freeze_table = list()
@@ -71,9 +78,11 @@ def write_mulcov_freeze_table(mulcov_freeze_list) :
         }
         mulcov_freeze_table.append( row_out )
     #
+    #
+    # mulcov_freeze_table_file
     fieldnames = [ 'fit_node_id', 'split_reference_id', 'mulcov' ]
     at_cascade.ihme.write_csv(
-       file_name   =  mulcov_freeze_table_file,
+       file_name   = mulcov_freeze_table_file,
         table      = mulcov_freeze_table,
         fieldnames = fieldnames,
     )

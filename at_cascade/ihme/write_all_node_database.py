@@ -42,12 +42,15 @@ def write_all_node_database() :
         print( f'Begin: creating {all_node_database}' )
     #
     # intermediate files
+    # BEGIN_SORT_THIS_LINE_PLUS_1
+    all_mtall_table_file     = at_cascade.ihme.all_mtall_table_file
     all_option_table_file    = at_cascade.ihme.all_option_table_file
+    mtall_index_table_file   = at_cascade.ihme.mtall_index_table_file
     mulcov_freeze_table_file = at_cascade.ihme.mulcov_freeze_table_file
+    node_split_table_file    = at_cascade.ihme.node_split_table_file
     omega_age_table_file     = at_cascade.ihme.omega_age_table_file
     omega_time_table_file    = at_cascade.ihme.omega_time_table_file
-    all_mtall_table_file     = at_cascade.ihme.all_mtall_table_file
-    mtall_index_table_file   = at_cascade.ihme.mtall_index_table_file
+    # END_SORT_THIS_LINE_MINUS_1
     #
     # root_node_database
     root_node_database = at_cascade.ihme.root_node_database
@@ -137,12 +140,9 @@ def write_all_node_database() :
     write_table(connection, all_cov_reference_table, tbl_name, col_list)
     #
     # node_split_table
-    node_split_table = list()
-    for node_name in at_cascade.ihme.split_node_name_set :
-        node_id = at_cascade.table_name2id(
-            root_table['node'], 'node', node_name
-        )
-        node_split_table.append( { 'node_id' : node_id } )
+    node_split_table = at_cascade.ihme.get_table_csv( node_split_table_file )
+    for row in node_split_table :
+        row['node_id'] = int( row['node_id'] )
     tbl_name = 'node_split'
     col_list = [ ('node_id', 'integer') ]
     write_table(connection, node_split_table, tbl_name, col_list)

@@ -7,6 +7,7 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
+import os
 import csv
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
@@ -26,6 +27,14 @@ def write_all_option_table(
     assert type(perturb_optimization_scaling) == float
     assert type(max_fit)                      == int
     assert type(max_number_cpu)               == int
+    #
+    # all_option_table_file
+    all_option_table_file = at_cascade.ihme.all_option_table_file
+    if os.path.exists(all_option_table_file) :
+        print( f'Using existing {all_option_table_file}' )
+        return
+    else :
+        print( f'Creating {all_option_table_file}' )
     #
     # all_option
     all_option = {
@@ -47,6 +56,4 @@ def write_all_option_table(
         all_option_table.append( row )
     #
     # all_option_table_file
-    all_option_table_file = at_cascade.ihme.all_option_table_file
-    #
     at_cascade.ihme.write_csv(all_option_table_file, all_option_table)
