@@ -88,7 +88,7 @@ def get_database_dir(
     node_split_set          = None,
     root_node_id            = None,
     root_split_reference_id = None,
-    fit_node_id             = None ,
+    fit_node_id             = None,
     fit_split_reference_id  = None,
 # )
 # END syntax

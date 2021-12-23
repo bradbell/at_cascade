@@ -71,4 +71,9 @@ def write_mulcov_freeze_table(mulcov_freeze_list) :
         }
         mulcov_freeze_table.append( row_out )
     #
-    at_cascade.ihme.write_csv(mulcov_freeze_table_file, mulcov_freeze_table)
+    fieldnames = [ 'fit_node_id', 'split_reference_id', 'mulcov' ]
+    at_cascade.ihme.write_csv(
+       file_name   =  mulcov_freeze_table_file,
+        table      = mulcov_freeze_table,
+        fieldnames = fieldnames,
+    )

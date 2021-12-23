@@ -11,8 +11,15 @@ import csv
 # -----------------------------------------------------------------------------
 #
 # write_csv(file_name, table)
-def write_csv(file_name, table) :
-    fieldnames  = table[0].keys()
+def write_csv(
+    file_name  = None,
+    table      = None,
+    fieldnames = None,
+) :
+    assert file_name is not None
+    assert table is not None
+    if fieldnames is None :
+        fieldnames  = table[0].keys()
     file_ptr    = open(file_name, 'w')
     writer      = csv.DictWriter(file_ptr, fieldnames = fieldnames)
     writer.writeheader()

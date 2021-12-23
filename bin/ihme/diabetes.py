@@ -93,19 +93,19 @@ fit_goal_set = {
 # mulcov_freeze_list
 # Freeze the covariate multiplier on obesity that affects iota and do the
 # freeze at United_States_of_America and Western_Europe.
-mulcov_freeze_list = [
-        {   'node'      : '102_United_States_of_America',
-            'sex'       : 'Both',
-            'rate'      : 'iota',
-            'covariate' : 'obesity',
-        },{
-            'node'      : '73_Western_Europe',
-            'sex'       : 'Both',
-            'rate'      : 'iota',
-            'covariate' : 'obesity',
-        },
-]
-# mulcov_freeze_list = list()
+# mulcov_freeze_list = [
+#         {   'node'      : '102_United_States_of_America',
+#             'sex'       : 'Both',
+#             'rate'      : 'iota',
+#             'covariate' : 'obesity',
+#         },{
+#             'node'      : '73_Western_Europe',
+#             'sex'       : 'Both',
+#             'rate'      : 'iota',
+#             'covariate' : 'obesity',
+#         },
+# ]
+mulcov_freeze_list = list()
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understand this program
 # ----------------------------------------------------------------------------
@@ -120,6 +120,7 @@ print('random_seed = ', random_seed)
 def write_root_node_database() :
     # root_node_database
     root_node_database = at_cascade.ihme.root_node_database
+    print( 'Creating ' + root_node_database )
     #
     # table_in
     table_in = dict()
@@ -333,7 +334,7 @@ def write_root_node_database() :
             'lower'   :    1e-7,
             'upper'   :    1.0,
             'mean'    :    1e-2,
-            'std'     :    1.0,
+            'std'     :    3.0,
             'eta'     :    1e-7,
         },{
             'name'    :    'parent_pini_value',
@@ -348,7 +349,7 @@ def write_root_node_database() :
             'lower'   :    None,
             'upper'   :    None,
             'mean'    :    0.0,
-            'std'     :    0.20,
+            'std'     :    1.0,
             'eta'     :    1e-7,
         },{
             'name'    :   'child_rate_value',
