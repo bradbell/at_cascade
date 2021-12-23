@@ -100,12 +100,12 @@ def main(
     root_node_dir = f'{results_dir}/{root_node_name}'
     #
     # command
-    command_set = { 'setup', 'cleanup', 'drill', 'display' }
+    command_set = { 'setup', 'cleanup', 'drill', 'display', 'continue' }
     command     = None
     if len(sys.argv) == 2 :
         command = sys.argv[1]
     if len(sys.argv) == 3 :
-        if sys.argv[1] == 'display' :
+        if sys.argv[1] in [ 'display' , 'continue' ] :
             command  = sys.argv[1]
             database = sys.argv[2]
     if command not in command_set :
@@ -151,16 +151,24 @@ def main(
         os.makedirs( root_node_dir )
         drill(root_node_name, fit_goal_set, max_fit, max_abs_effect)
     #
-    # display
-    elif command == 'display' :
+    # display or continue
+    elif command in [ 'display', 'continue'] :
         if not database.startswith( root_node_dir ) :
-            msg  = 'display: database does not begin with\n'
+            msg  = '{command}: database does not begin with\n'
             msg += root_node_dir
             assert False, msg
         if not database.endswith( '/dismod.db' ) :
-            msg  = 'display: database does not end with /dismod.db'
+            msg  = '{command}: database does not end with /dismod.db'
             assert False, msg
-        display(database, max_plot)
+        if command == 'display' :
+            display(database, max_plot)
+        else :
+            at_cascade.continue_cascade(
+                all_node_database = at_cascade.ihme.all_node_database,
+                fit_node_database = database,
+                fit_goal_set      = fit_goal_set,
+                trace_fit         = True,
+            )
     #
     else :
         assert False

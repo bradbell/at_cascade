@@ -153,8 +153,13 @@ def continue_cascade(
     # root_split_reference_id
     root_split_reference_id = None
     for row in all_option_table :
-        if row['option_name'] == 'root_split_reference_id' :
-            root_split_reference_id = row['option_value']
+        if row['option_name'] == 'root_split_reference_name' :
+            root_split_reference_name = row['option_value']
+            root_split_reference_id = at_cascade.table_name2id(
+                split_reference_table,
+                'split_reference',
+                root_split_reference_name
+            )
     #
     # fit_integrand
     fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
