@@ -103,7 +103,8 @@ def main(
     command_set = { 'setup', 'cleanup', 'drill', 'display', 'continue' }
     command     = None
     if len(sys.argv) == 2 :
-        command = sys.argv[1]
+        if sys.argv[1] not in [ 'display', 'continue' ] :
+            command = sys.argv[1]
     if len(sys.argv) == 3 :
         if sys.argv[1] in [ 'display' , 'continue' ] :
             command  = sys.argv[1]
@@ -156,11 +157,11 @@ def main(
     # display or continue
     elif command in [ 'display', 'continue'] :
         if not database.startswith( root_node_dir ) :
-            msg  = '{command}: database does not begin with\n'
+            msg  = f'{command}: database does not begin with\n'
             msg += root_node_dir
             assert False, msg
         if not database.endswith( '/dismod.db' ) :
-            msg  = '{command}: database does not end with /dismod.db'
+            msg  = f'{command}: database does not end with /dismod.db'
             assert False, msg
         if command == 'display' :
             display(database, max_plot)

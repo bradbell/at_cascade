@@ -117,9 +117,8 @@ def continue_cascade(
     assert not fit_goal_set is None
     #
     # base_directory
-    base_directory = 'build/example'
-    distutils.dir_util.mkpath(base_directory)
-    #
+    index = all_node_database.rfind('/')
+    base_directory = all_node_database[0 : index]
     #
     # node_table, covariate_table
     new             = False

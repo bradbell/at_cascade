@@ -83,13 +83,16 @@ max_plot            = 2000
 #
 # fit_goal_set
 # Name of the nodes that we are drilling to (must be below root_node).
-fit_goal_set = {
-    '527_California',
-    '547_Mississippi',
-    '81_Germany',
-    '84_Ireland'
-}
-fit_goal_set = { '1_Global' }
+# You can change this setting and then run
+#   bin/ihme/diabetes.py continue database
+# fit_goal_set = {
+#     '527_California',
+#     '547_Mississippi',
+#     '81_Germany',
+#     '84_Ireland'
+# }
+# fit_goal_set = { '1_Global' }
+fit_goal_set = { '64_High-income' }
 #
 # node_split_name_set
 # Name of the nodes where we are splitting from Both to Female, Male
