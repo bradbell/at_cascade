@@ -59,7 +59,7 @@ Covariate
 *********
 There is one covariate for this example, income.
 The reference value for income is the average income corresponding
-to the :ref:`glossary.fit_node`.
+to the :ref:`glossary.root_node`.
 
 I_n
 ===
@@ -181,7 +181,7 @@ and in the root_node:
 
 iota and chi
 ============
-This is the smoothing used in the fit_node model for the rates.
+This is the smoothing used in the root_node model for the rates.
 Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
 There are no :ref:`glossary.dtime` priors because there is only one time point.
@@ -206,7 +206,7 @@ routine replaces them for other nodes.
 
 dage Prior
 ==========
-The following is the dage prior used for the fit_node:
+The following is the dage prior used for the root_node:
 {xsrst_file
     # BEGIN parent_dage_prior
     # END parent_dage_prior
@@ -215,13 +215,13 @@ The following is the dage prior used for the fit_node:
 Child Rate Smoothing
 ********************
 This is the smoothing used for the
-random effect for each child of the fit_node.
+random effect for each child of the root_node.
 There are no :ref:`glossary.dage` or dtime
 priors because there is only one age and one time point in this smoothing.
 
 Value Prior
 ===========
-The following is the value prior used for the children of the fit_node:
+The following is the value prior used for the children of the root_node:
 {xsrst_file
     # BEGIN child_value_prior
     # END child_value_prior
@@ -249,7 +249,7 @@ Checking The Fit
 The results of the fit are in the
 :ref:`cascade_root_node.output_dismod_db.c_predict_sample` and
 :ref:`cascade_root_node.output_dismod_db.c_predict_fit_var`
-tables of the fit_node_database corresponding to each node.
+tables of the root_node_database corresponding to each node.
 The :ref:`check_cascade_fit<check_cascade_fit>`
 routine uses these tables to check that fit against the truth.
 
@@ -639,13 +639,13 @@ def root_node_db(file_name) :
         option_table
     )
 # ---------------------------------------------------------------------------
-def display_no_ode_fit(fit_node_dir) :
+def display_no_ode_fit(root_node_dir) :
     #
     # database
-    database = fit_node_dir + '/no_ode/dismod.db'
+    database = root_node_dir + '/no_ode/dismod.db'
     #
     # pdf_file
-    pdf_dir  = fit_node_dir + '/no_ode'
+    pdf_dir  = root_node_dir + '/no_ode'
     #
     # data.pdf
     integrand_list = [ 'Sincidence', 'mtexcess', 'prevalence' ]
@@ -665,10 +665,10 @@ def display_no_ode_fit(fit_node_dir) :
     # db2csv
     dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
 # ----------------------------------------------------------------------------
-def check_no_ode_fit(fit_node_dir) :
+def check_no_ode_fit(root_node_dir) :
     #
     # no_ode_database
-    no_ode_database = fit_node_dir + '/no_ode/dismod.db'
+    no_ode_database = root_node_dir + '/no_ode/dismod.db'
     #
     # predict
     dismod_at.system_command_prc([
@@ -814,34 +814,34 @@ def main() :
         mtspecific_data         = mtspecific_data,
     )
     #
-    # fit_node_dir
-    fit_node_dir = f'{results_dir}/n0'
-    if os.path.exists(fit_node_dir) :
-        # rmtree is very dangerous so make sure fit_node_dir is as expected
-        assert fit_node_dir == 'build/example/n0'
-        shutil.rmtree( fit_node_dir )
-    os.makedirs(fit_node_dir )
+    # root_node_dir
+    root_node_dir = f'{results_dir}/n0'
+    if os.path.exists(root_node_dir) :
+        # rmtree is very dangerous so make sure root_node_dir is as expected
+        assert root_node_dir == 'build/example/n0'
+        shutil.rmtree( root_node_dir )
+    os.makedirs(root_node_dir )
     #
-    # fit_node_database
-    out_database = at_cascade.no_ode_fit(
+    # root_node_database
+    root_fit_database = at_cascade.no_ode_fit(
         all_node_database = all_node_database,
-        in_database       = root_node_database,
+        root_node_database       = root_node_database,
         all_option_dict   = all_option,
         trace_fit         = False,
     )
-    fit_node_database =  fit_node_dir + '/dismod.db'
-    assert out_database == fit_node_database
+    root_node_database =  root_node_dir + '/dismod.db'
+    assert root_fit_database == root_node_database
     #
     # check_no_ode_fit
-    check_no_ode_fit(fit_node_dir)
+    check_no_ode_fit(root_node_dir)
     #
     # display_no_ode_fit
-    display_no_ode_fit(fit_node_dir)
+    display_no_ode_fit(root_node_dir)
     #
     # cascade starting at root node
     at_cascade.cascade_root_node(
         all_node_database  = all_node_database ,
-        root_node_database = fit_node_database ,
+        root_node_database = root_node_database ,
         fit_goal_set       = fit_goal_set      ,
     )
     #
@@ -849,9 +849,9 @@ def main() :
     for goal_dir in [ 'n0/n1', 'n0/n2' ] :
         goal_database = f'{results_dir}/{goal_dir}/dismod.db'
         at_cascade.check_cascade_fit(
-            rate_true         = rate_true,
-            all_node_database = all_node_database,
-            fit_node_database = goal_database,
+            rate_true          = rate_true,
+            all_node_database  = all_node_database,
+            fit_node_database  = goal_database,
             relative_tolerance = 1e-2,
         )
 #

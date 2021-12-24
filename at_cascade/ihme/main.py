@@ -113,10 +113,10 @@ def drill(root_node_name, fit_goal_set) :
     #
     # no_ode_fit
     fit_node_database = at_cascade.no_ode_fit(
-        all_node_database = all_node_database,
-        in_database       = root_node_database,
-        all_option_dict   = all_option_dict,
-        trace_fit         = True,
+        all_node_database  = all_node_database,
+        root_node_database = root_node_database,
+        all_option_dict    = all_option_dict,
+        trace_fit          = True,
     )
     results_dir = all_option_dict['results_dir']
     assert fit_node_database == f'{results_dir}/{root_node_name}/dismod.db'

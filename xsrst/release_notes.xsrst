@@ -34,6 +34,9 @@ Release Notes for 2021
 3.  Replace :ref:`no_ode_fit` max_fit and max_abs_effect arguments by
     :ref:`no_ode_fit.all_option_dict`.
 
+4.  In no_ode_fit, change in_database to :ref:`no_ode_fit.root_node_database`,
+    and change out_database to :ref:`no_ode_fit.root_fit_database`.
+
 12-21
 *****
 1.  The output files are now relative to the base_directory

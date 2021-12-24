@@ -29,21 +29,11 @@ all_node_database
 is a python string containing the name of the :ref:`all_node_db`.
 This argument can't be ``None``.
 
-in_database
-***********
-is a python string specifying the location of a
-:ref:`glossary.input_node_database`
-relative to the current working directory.
+root_node_database
+******************
+is a python string specifying the location of the
+:ref:`glossary.root_node_database`.
 This argument can't be ``None``.
-
-in_dir
-======
-is the directory where the *in_database* is located.
-
-fit_node
-========
-This is the name of the
-:ref:`glossary.fit_node` for the *in_database* and *out_database*.
 
 all_option_dict
 ***************
@@ -64,23 +54,25 @@ no_ode_database
 ***************
 An intermediate database is stored in the file
 
-    *in_dir*\ /\ *fit_node*\ /no_ode/dismod.db
+    *results_dir*\ /\ *root_node_name*\ /no_ode/dismod.db
 
+see :ref:`all_option_table.results_dir`
+and :ref:`all_option_table.root_node_name`.
 This contains the results of fitting without the ODE integrands
 so they can be plotted and converted to csv files.
 It has the :ref:`omega_constraint` so that the residuals for
 the ODE integrands make sense.
 The ODE integrands are not included (are included) for a fit using
-the *no_ode_database* (*out_database*).
+the *no_ode_database* (*root_fit_database*).
 
-out_database
-************
-The return value *out_database* is equal to
+root_fit_database
+*****************
+The return value *root_fit_database* is equal to
 
-    *in_dir*\ /\ *fit_node*\ /dismod.db
+    *results_dir*\ /\ *root_node_name*\ /dismod.db
 
-which can't be the same file name as *in_database*.
-This is an input_node_database similar to *in_database*.
+which can't be the same file name as *root_node_database*.
+This is an input_node_database similar to *root_node_database*.
 The difference is that the mean value in the priors for the fixed effects
 have been replace by the optimal estimate for fitting with out the integrands
 that use the ODE.
@@ -162,26 +154,30 @@ def add_index_to_name(table, name_col) :
 # ----------------------------------------------------------------------------
 def no_ode_fit(
 # BEGIN syntax
-# out_database = at_cascade.no_ode_fit(
-    all_node_database = None,
-    in_database       = None,
-    all_option_dict   = None,
-    trace_fit         = False,
+# root_fit_database = at_cascade.no_ode_fit(
+    all_node_database   = None,
+    root_node_database  = None,
+    all_option_dict     = None,
+    trace_fit           = False,
 # )
 # END syntax
 ) :
     assert type(all_node_database) == str
-    assert type(in_database) == str
+    assert type(root_node_database) == str
     assert type(all_option_dict) == dict
     assert type(trace_fit) == bool
     #
-    # max_fit, max_abs_effect
+    # results_dir, max_fit, max_abs_effect
+    results_dir    = None
     max_fit        = None
     max_abs_effect = None
+    if 'results_dir' in all_option_dict :
+        results_dir =  all_option_dict['results_dir']
     if 'max_fit' in all_option_dict :
         max_fit = int( all_option_dict['max_fit'] )
     if 'max_abs_effect' in all_option_dict :
         max_abs_effect = float( all_option_dict['max_abs_effect'] )
+    assert results_dir is not None
     #
     # name_rate2integrand
     name_rate2integrand = {
@@ -193,12 +189,12 @@ def no_ode_fit(
     #
     # fit_integrand
     if not max_fit is None :
-        fit_integrand = at_cascade.get_fit_integrand(in_database)
+        fit_integrand = at_cascade.get_fit_integrand(root_node_database)
     #
-    # in_table
+    # root_table
     new        = False
-    connection = dismod_at.create_connection(in_database, new)
-    in_table = dict()
+    connection = dismod_at.create_connection(root_node_database, new)
+    root_table = dict()
     for name in [
         'covariate',
         'integrand',
@@ -210,51 +206,44 @@ def no_ode_fit(
         'smooth',
         'smooth_grid'
     ] :
-        in_table[name] = dismod_at.get_table_dict(connection, name)
+        root_table[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
     #
-    # fit_node_name
-    fit_node_name = at_cascade.get_parent_node(in_database)
+    # root_node_name
+    root_node_name = at_cascade.get_parent_node(root_node_database)
     #
-    # fit_node_id
-    fit_node_id   = at_cascade.table_name2id(
-        in_table['node'], 'node', fit_node_name
+    # root_node_id
+    root_node_id   = at_cascade.table_name2id(
+        root_table['node'], 'node', root_node_name
     )
     #
-    # fit_split_reference_id
+    # root_split_reference_id
     new               = False
     connection        = dismod_at.create_connection(all_node_database, new)
     all_option_table  = dismod_at.get_table_dict(connection, 'all_option')
     split_reference_table = \
         dismod_at.get_table_dict(connection, 'split_reference')
     cov_info = at_cascade.get_cov_info(
-        all_option_table, in_table['covariate'], split_reference_table
+        all_option_table, root_table['covariate'], split_reference_table
     )
-    fit_split_reference_id = None
+    root_split_reference_id = None
     if 'split_reference_id' in cov_info :
-        fit_split_reference_id = cov_info['split_reference_id']
-    fit_split_reference_id = None
+        root_split_reference_id = cov_info['split_reference_id']
+    root_split_reference_id = None
     if 'split_reference_id' in cov_info :
-        fit_split_reference_id = cov_info['split_reference_id']
+        root_split_reference_id = cov_info['split_reference_id']
     #
-    # no_ode_daabase, out_database
-    index = in_database.rfind('/')
-    if 0 <= index :
-        in_dir          = in_database[: index]
-        out_database    = f'{in_dir}/{fit_node_name}/dismod.db'
-        no_ode_database = f'{in_dir}/{fit_node_name}/no_ode/dismod.db'
-        os.makedirs(f'{in_dir}/{fit_node_name}/no_ode')
-    else :
-        out_database    = f'{fit_node_name}/dismod.db'
-        no_ode_database = f'{fit_node_name}/no_ode/dismod.db'
-        os.makedirs(f'{fit_node_name}/no_ode')
-    #
-    msg   = f'in_database and out_database are equal'
-    assert not in_database == out_database, msg
+    # no_ode_daabase, root_fit_database
+    root_fit_database    = f'{results_dir}/{root_node_name}/dismod.db'
+    no_ode_database      = f'{results_dir}/{root_node_name}/no_ode/dismod.db'
+    os.makedirs(f'{results_dir}/{root_node_name}/no_ode')
+    if root_node_database == root_fit_database :
+        msg   = f'root_node_database and root_fit_database are equal'
+        assert False, msg
     # ------------------------------------------------------------------------
     # no_ode_database
     # ------------------------------------------------------------------------
-    shutil.copyfile(in_database, no_ode_database)
+    shutil.copyfile(root_node_database, no_ode_database)
     #
     # connection
     new        = False
@@ -285,7 +274,7 @@ def no_ode_fit(
         'mtall',
         'mtstandard',
     ]
-    for row in in_table['integrand'] :
+    for row in root_table['integrand'] :
         integrand_name = row['integrand_name']
         if integrand_name in use_ode :
             hold_out_integrand.append( integrand_name )
@@ -307,7 +296,7 @@ def no_ode_fit(
     # enforce max_fit
     if not max_fit is None :
         for integrand_id in fit_integrand :
-            row            = in_table['integrand'][integrand_id]
+            row            = root_table['integrand'][integrand_id]
             integrand_name = row['integrand_name']
             dismod_at.system_command_prc([
                 'dismod_at',
@@ -336,8 +325,8 @@ def no_ode_fit(
     # c_shift_avgint
     move_table(connection, 'avgint', 'c_shift_avgint')
     #
-    # out_database
-    shift_databases = { fit_node_name : out_database }
+    # root_fit_database
+    shift_databases = { root_node_name : root_fit_database }
     at_cascade.create_shift_db(
         all_node_database = all_node_database ,
         fit_node_database = no_ode_database   ,
@@ -350,14 +339,14 @@ def no_ode_fit(
     #
     # restore hold_out_integrand
     hold_out_integrand = ''
-    for row in in_table['option'] :
+    for row in root_table['option'] :
         if row['option_name'] == 'hold_out_integrand' :
             hold_out_integrand = row['option_value']
     name  = 'hold_out_integrand'
     value = hold_out_integrand
     dismod_at.system_command_prc(
-        [ 'dismod_at', out_database, 'set', 'option', name, value ]
+        [ 'dismod_at', root_fit_database, 'set', 'option', name, value ]
     )
-    dismod_at.system_command_prc([ 'dismod_at', out_database, 'init' ])
+    dismod_at.system_command_prc([ 'dismod_at', root_fit_database, 'init' ])
     #
-    return out_database
+    return root_fit_database
