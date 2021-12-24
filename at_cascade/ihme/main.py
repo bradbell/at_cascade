@@ -64,7 +64,7 @@ def write_message_type_file(message_type, fit_goal_set) :
     #
     file_ptr.close()
 # ---------------------------------------------------------------------------
-def display(database, max_plot) :
+def display(database) :
     #
     # pdf_file
     index      = database.rfind('/')
@@ -82,6 +82,7 @@ def display(database, max_plot) :
     #
     # data.pdf
     pdf_file = pdf_dir + '/data.pdf'
+    max_plot = int( all_option_dict['max_plot'] )
     n_point_list = dismod_at.plot_data_fit(
         database     = database,
         pdf_file     = pdf_file,
@@ -102,7 +103,7 @@ def display(database, max_plot) :
     # db2csv
     dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
 # ----------------------------------------------------------------------------
-def drill(root_node_name, fit_goal_set, max_fit, max_abs_effect) :
+def drill(root_node_name, fit_goal_set) :
     #
     # all_node_database
     all_node_database = at_cascade.ihme.all_node_database
@@ -131,16 +132,10 @@ def drill(root_node_name, fit_goal_set, max_fit, max_abs_effect) :
 def main(
     root_node_name   = None,
     fit_goal_set     = None,
-    max_fit          = None,
-    max_abs_effect   = None,
-    max_plot         = None,
     setup_function   = None,
 ) :
     assert type(root_node_name) == str
     assert type(fit_goal_set) == set
-    assert type(max_fit) == int
-    assert type(max_abs_effect) == float
-    assert type(max_plot) == int
     assert setup_function is not None
     #
     # command
@@ -208,7 +203,7 @@ def main(
             assert False, msg
         print( f'creating {root_node_dir}' )
         os.makedirs( root_node_dir )
-        drill(root_node_name, fit_goal_set, max_fit, max_abs_effect)
+        drill(root_node_name, fit_goal_set)
     #
     # error or warning
     elif command in [ 'error', 'warning' ] :
@@ -226,7 +221,7 @@ def main(
             msg  = f'{command}: database does not end with /dismod.db'
             assert False, msg
         if command == 'display' :
-            display(database, max_plot)
+            display(database)
         else :
             at_cascade.continue_cascade(
                 all_node_database = at_cascade.ihme.all_node_database,

@@ -545,9 +545,6 @@ def setup_function() :
 at_cascade.ihme.main(
     root_node_name  = root_node_name,
     fit_goal_set    = fit_goal_set,
-    max_fit         = max_fit,
-    max_abs_effect  = max_abs_effect,
-    max_plot        = max_plot,
     setup_function  = setup_function,
 )
 print('diabetes.py: OK')
