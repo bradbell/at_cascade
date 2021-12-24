@@ -641,9 +641,9 @@ def main() :
         #
         eps = sys.float_info.epsilon
         if '/n1/' in fit_dir :
-            assert abs( 1.0 -  alpha / alpha_n1 ) < 10.0 * eps
+            assert abs( 1.0 -  alpha / alpha_n1 ) < 20.0 * eps
         else :
-            assert abs( 1.0 - alpha / alpha_n1 ) > 10.0 * eps
+            assert abs( 1.0 - alpha / alpha_n1 ) > 20.0 * eps
 #
 main()
 print('mulcov_freeze: OK')

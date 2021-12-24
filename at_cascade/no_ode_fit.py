@@ -45,19 +45,15 @@ fit_node
 This is the name of the
 :ref:`glossary.fit_node` for the *in_database* and *out_database*.
 
-max_fit
-*******
-is an ``int`` containing the value of :ref:`all_option_table.max_fit` in the
-all option table.
-If max_fit does not appear in the all option table,
-*max_fit* should be None.
-
-max_abs_effect
-**************
-is a ``float`` containing the value of :ref:`all_option_table.max_abs_effect`
-in the all option table.
-If max_abs_effect does not appear in the all option table,
-*max_abs_effect* should be None.
+all_option_dict
+***************
+is a ``dict`` containing the values in the all_option table.
+This dictionary has a key for each
+:ref:`all_option_table.table_format.option_name`
+and the corresponding value is
+:ref:`all_option_table.table_format.option_value`.
+If an option does not appear in the table, the corresponding key
+does not appear in *all_option_dict*.
 
 trace_fit
 *********
@@ -169,13 +165,23 @@ def no_ode_fit(
 # out_database = at_cascade.no_ode_fit(
     all_node_database = None,
     in_database       = None,
-    max_fit           = None,
-    max_abs_effect    = None,
+    all_option_dict   = None,
     trace_fit         = False,
 # )
 # END syntax
 ) :
-
+    assert type(all_node_database) == str
+    assert type(in_database) == str
+    assert type(all_option_dict) == dict
+    assert type(trace_fit) == bool
+    #
+    # max_fit, max_abs_effect
+    max_fit        = None
+    max_abs_effect = None
+    if 'max_fit' in all_option_dict :
+        max_fit = int( all_option_dict['max_fit'] )
+    if 'max_abs_effect' in all_option_dict :
+        max_abs_effect = float( all_option_dict['max_abs_effect'] )
     #
     # name_rate2integrand
     name_rate2integrand = {

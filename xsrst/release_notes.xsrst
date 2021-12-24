@@ -25,8 +25,14 @@ Release Notes for 2021
 
 12-24
 *****
-The base_directory was changed to the :ref:`all_option_table.results_dir`
-and now a required option the all_option table.
+1.  The base_directory was changed to the :ref:`all_option_table.results_dir`
+    and now a required option the all_option table.
+
+2.  Change required precision in example/mulcov_freeze.py to reduce probability
+    of random test failure.
+
+3.  Replace :ref:`no_ode_fit` max_fit and max_abs_effect arguments by
+    :ref:`no_ode_fit.all_option_dict`.
 
 12-21
 *****

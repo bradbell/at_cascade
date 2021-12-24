@@ -826,7 +826,8 @@ def main() :
     out_database = at_cascade.no_ode_fit(
         all_node_database = all_node_database,
         in_database       = root_node_database,
-        trace_fit         = False
+        all_option_dict   = all_option,
+        trace_fit         = False,
     )
     fit_node_database =  fit_node_dir + '/dismod.db'
     assert out_database == fit_node_database
