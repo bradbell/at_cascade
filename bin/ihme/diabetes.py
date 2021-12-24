@@ -37,9 +37,8 @@ data_dir        = 'ihme_db/DisMod_AT/testing/diabetes/data'
 data_inp_file   = f'{data_dir}/gbd2019_diabetes_crosswalk_12437.csv'
 csmr_inp_file   = f'{data_dir}/gbd2019_diabetes_csmr.csv'
 #
-# intermediate files
-results_dir     = at_cascade.ihme.results_dir
-data_table_file = f'{results_dir}/data_table.csv'
+# results_dir
+results_dir = 'ihme_db/DisMod_AT/results'
 #
 # root_node_name
 # name of the node where the cascade will start
@@ -122,6 +121,12 @@ mulcov_freeze_list = list()
 if random_seed == 0 :
     random_seed = int( time.time() )
 print('random_seed = ', random_seed)
+# -----------------------------------------------------------------------------
+def get_file_path(csv_file_key) :
+    csv_file  = at_cascade.ihme.csv_file
+    file_name = csv_file[csv_file_key]
+    file_name = f'{results_dir}/{file_name}'
+    return file_name
 # ----------------------------------------------------------------------------
 # write_root_node_database
 # data_table_file, node_tble_file, omega_age_table_file, omega_time_table_file
@@ -130,20 +135,18 @@ def write_root_node_database() :
     root_node_database = at_cascade.ihme.root_node_database
     print( 'Creating ' + root_node_database )
     #
+    data_table_file       = get_file_path('data')
+    node_table_file       = get_file_path('node')
+    omega_age_table_file  = get_file_path('omega_age')
+    omega_time_table_file = get_file_path('omega_time')
+    #
     # table_in
     table_in = dict()
-    table_in['data'] = at_cascade.ihme.get_table_csv(
-        data_table_file
-    )
-    table_in['node'] = at_cascade.ihme.get_table_csv(
-        at_cascade.ihme.node_table_file
-    )
-    table_in['omega_age'] = at_cascade.ihme.get_table_csv(
-        at_cascade.ihme.omega_age_table_file
-    )
-    table_in['omega_time'] = at_cascade.ihme.get_table_csv(
-        at_cascade.ihme.omega_time_table_file
-    )
+    table_in['data']      = at_cascade.ihme.get_table_csv(data_table_file )
+    table_in['node']      = at_cascade.ihme.get_table_csv(node_table_file )
+    table_in['omega_age'] = at_cascade.ihme.get_table_csv(omega_age_table_file)
+    table_in['omega_time'] = \
+        at_cascade.ihme.get_table_csv(omega_time_table_file)
     # sex_name2covariate_value
     sex_name2covariate_value = dict()
     sex_info_dict            = at_cascade.ihme.sex_info_dict
@@ -502,24 +505,26 @@ def write_root_node_database() :
 def setup_function() :
     #
     # write_node_table
-    at_cascade.ihme.write_node_table()
+    at_cascade.ihme.write_node_table(results_dir)
     #
     # write_data_table
     at_cascade.ihme.write_data_table(
+        results_dir             = results_dir,
         data_inp_file           = data_inp_file,
         csmr_inp_file           = csmr_inp_file,
         covariate_csv_file_list = covariate_csv_file_list,
-        data_table_file         = data_table_file,
     )
     #
     # write_mtall_tables
-    at_cascade.ihme.write_mtall_tables()
+    at_cascade.ihme.write_mtall_tables(results_dir)
     #
     # write_root_node_database
+    # This routine is in this file so not necessary to pass results_dir
     write_root_node_database()
     #
     # write_all_option_table
     at_cascade.ihme.write_all_option_table(
+        results_dir                  = results_dir,
         root_node_name               = root_node_name ,
         shift_prior_std_factor       = shift_prior_std_factor,
         perturb_optimization_scaling = perturb_optimization_scaling,
@@ -529,13 +534,13 @@ def setup_function() :
     )
     #
     # write_mulcov_freeze_table
-    at_cascade.ihme.write_mulcov_freeze_table(mulcov_freeze_list)
+    at_cascade.ihme.write_mulcov_freeze_table(results_dir, mulcov_freeze_list)
     #
     # write_node_split_table
-    at_cascade.ihme.write_node_split_table(node_split_name_set)
+    at_cascade.ihme.write_node_split_table(results_dir, node_split_name_set)
     #
     # write_all_node_database
-    at_cascade.ihme.write_all_node_database()
+    at_cascade.ihme.write_all_node_database(results_dir)
 # ----------------------------------------------------------------------------
 at_cascade.ihme.main(
     root_node_name  = root_node_name,

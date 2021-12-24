@@ -13,10 +13,11 @@ import dismod_at
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
 #
-def write_node_split_table(node_split_name_set) :
+def write_node_split_table(results_dur, node_split_name_set) :
     #
     # node_split_table_file
-    node_split_table_file = at_cascade.ihme.node_split_table_file
+    node_split_table_file = at_cascade.ihme.csv_file['node_split']
+    node_split_table_file = f'{results_dur}/{node_split_table_file}'
     if os.path.exists(node_split_table_file) :
         print( f'Using existing {node_split_table_file}' )
         return

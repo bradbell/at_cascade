@@ -13,10 +13,11 @@ import dismod_at
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
 #
-def write_mulcov_freeze_table(mulcov_freeze_list) :
+def write_mulcov_freeze_table(results_dir, mulcov_freeze_list) :
     #
     # mulcov_freeze_table_file
-    mulcov_freeze_table_file = at_cascade.ihme.mulcov_freeze_table_file
+    mulcov_freeze_table_file = at_cascade.ihme.csv_file['mulcov_freeze']
+    mulcov_freeze_table_file = f'{results_dir}/{mulcov_freeze_table_file}'
     if os.path.exists(mulcov_freeze_table_file) :
         print( f'Using existing {mulcov_freeze_table_file}' )
         return

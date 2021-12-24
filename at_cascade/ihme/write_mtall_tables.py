@@ -12,19 +12,26 @@ import csv
 import at_cascade.ihme
 #
 # -----------------------------------------------------------------------------
+def get_file_path(results_dir, csv_file_key) :
+    csv_file  = at_cascade.ihme.csv_file
+    file_name = csv_file[csv_file_key]
+    file_name = f'{results_dir}/{file_name}'
+    return file_name
+# -----------------------------------------------------------------------------
 #
-# write_node_tables()
+# write_node_tables(results_dir)
 # all_mtall_table_file, mtall_index_table_file, omega_age_table_file,
 # omega_time_table_file.
-def write_mtall_tables() :
+def write_mtall_tables(results_dir) :
     #
     # global constants
     age_group_inp_file      = at_cascade.ihme.age_group_inp_file
     mtall_inp_file          = at_cascade.ihme.mtall_inp_file
-    all_mtall_table_file    = at_cascade.ihme.all_mtall_table_file
-    mtall_index_table_file  = at_cascade.ihme.mtall_index_table_file
-    omega_age_table_file    = at_cascade.ihme.omega_age_table_file
-    omega_time_table_file   = at_cascade.ihme.omega_time_table_file
+    all_mtall_table_file    = get_file_path(results_dir, 'all_mtall')
+    mtall_index_table_file  = get_file_path(results_dir, 'mtall_index')
+    node_table_file         = get_file_path(results_dir, 'node')
+    omega_age_table_file    = get_file_path(results_dir, 'omega_age')
+    omega_time_table_file   = get_file_path(results_dir, 'omega_time')
     sex_info_dict           = at_cascade.ihme.sex_info_dict
     #
     # output_file_list
@@ -66,7 +73,7 @@ def write_mtall_tables() :
         sex_id2split_reference_id[sex_id] = split_reference_id
     #
     # location_id2node_id
-    file_ptr            = open(at_cascade.ihme.node_table_file)
+    file_ptr            = open(node_table_file)
     reader              = csv.DictReader(file_ptr)
     location_id2node_id = dict()
     node_id             = 0

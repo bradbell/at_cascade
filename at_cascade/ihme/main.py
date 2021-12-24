@@ -13,6 +13,23 @@ import shutil
 import dismod_at
 import at_cascade.ihme
 # ----------------------------------------------------------------------------
+all_option_dict = None
+def set_all_option_dict() :
+    global all_option_dict
+    #
+    # all_node_database
+    all_node_database = at_cascade.ihme.all_node_database
+    #
+    # all_node_table
+    new              = False
+    connection       = dismod_at.create_connection(all_node_database, new)
+    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+    #
+    # all_option_dict
+    all_option_dict = dict()
+    for row in all_option_table :
+        all_option_dict[ row['option_name'] ] = row['option_value']
+# ----------------------------------------------------------------------------
 def write_message_type_file(message_type, fit_goal_set) :
     #
     # all_node_database
@@ -97,11 +114,10 @@ def drill(root_node_name, fit_goal_set, max_fit, max_abs_effect) :
     fit_node_database = at_cascade.no_ode_fit(
         all_node_database = all_node_database,
         in_database       = root_node_database,
-        max_fit           = max_fit,
-        max_abs_effect    = max_abs_effect,
+        all_option_dict   = all_option_dict,
         trace_fit         = True,
     )
-    results_dir = at_cascade.ihme.results_dir
+    results_dir = all_option_dict['results_dir']
     assert fit_node_database == f'{results_dir}/{root_node_name}/dismod.db'
     #
     # cascade_root_node
@@ -126,12 +142,6 @@ def main(
     assert type(max_abs_effect) == float
     assert type(max_plot) == int
     assert setup_function is not None
-    #
-    # results_dir
-    results_dir = at_cascade.ihme.results_dir
-    #
-    # root_node_dir
-    root_node_dir = f'{results_dir}/{root_node_name}'
     #
     # command
     command_set = {
@@ -161,9 +171,19 @@ def main(
     # setup
     if command == 'setup' :
         setup_function()
+        return
+    #
+    # all_option_dict
+    set_all_option_dict()
+    #
+    # results_dir
+    results_dir = all_option_dict['results_dir']
+    #
+    # root_node_dir
+    root_node_dir = f'{results_dir}/{root_node_name}'
     #
     # cleanup
-    elif command == 'cleanup' :
+    if command == 'cleanup' :
         if not os.path.exists( root_node_dir ) :
             msg  = f'cleanup: Cannot find {root_node_dir}'
             assert False, msg

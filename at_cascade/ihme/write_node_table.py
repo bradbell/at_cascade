@@ -14,8 +14,11 @@ import at_cascade.ihme
 #
 # write_node_table()
 # creates at_cascade.ihme.node_table_file
-def write_node_table() :
-    node_table_file = at_cascade.ihme.node_table_file
+def write_node_table(results_dir) :
+    #
+    # node_table_file
+    node_table_file = at_cascade.ihme.csv_file['node']
+    node_table_file = f'{results_dir}/{node_table_file}'
     if os.path.exists(node_table_file) :
         print( f'Using existing {node_table_file}' )
         return

@@ -13,26 +13,28 @@ location_inp_file  = 'ihme_db/DisMod_AT/metadata/gbd2019_location_map.csv'
 age_group_inp_file = 'ihme_db/DisMod_AT/metadata/gbd2019_age_metadata.csv'
 mtall_inp_file     = 'ihme_db/DisMod_AT/mtall/gbd2019_all_cause_mortality.csv'
 #
-# results_dir
-results_dir              = 'ihme_db/DisMod_AT/results'
-#
-# intermediate result files for all diseases
+# Intermediate result files that are used for all diseases.
+# This names are relative to the results_dir in the all_option table.
 # BEGIN_SORT_THIS_LINE_PLUS_1
-all_mtall_table_file     = f'{results_dir}/all_mtall_table.csv'
-all_option_table_file    = f'{results_dir}/all_option_table.csv'
-mtall_index_table_file   = f'{results_dir}/mtall_index_table.csv'
-mulcov_freeze_table_file = f'{results_dir}/mulcov_freeze_table.csv'
-node_split_table_file    = f'{results_dir}/node_split_table.csv'
-node_table_file          = f'{results_dir}/node_table.csv'
-omega_age_table_file     = f'{results_dir}/omega_age_table.csv'
-omega_time_table_file    = f'{results_dir}/omega_time_table.csv'
+csv_file = {
+    'all_mtall'     : 'all_mtall_table.csv',
+    'all_option'    : 'all_option_table.csv',
+    'data'          : 'data_table.csv',
+    'mtall_index'   : 'mtall_index_table.csv',
+    'mulcov_freeze' : 'mulcov_freeze_table.csv',
+    'node_split'    : 'node_split_table.csv',
+    'node'          : 'node_table.csv',
+    'omega_age'     : 'omega_age_table.csv',
+    'omega_time'    : 'omega_time_table.csv',
+}
+#
 # END_SORT_THIS_LINE_MINUS_1
 #
 # root_node_database
-root_node_database = f'{results_dir}/root_node.db'
+root_node_database = 'ihme_db/DisMod_AT/results/root_node.db'
 #
 # all_node_database
-all_node_database = f'{results_dir}/all_node.db'
+all_node_database = 'ihme_db/DisMod_AT/results/all_node.db'
 #
 # age group id's that are aggregates of other age groups
 aggregate_age_group_id_set = {22, 27}

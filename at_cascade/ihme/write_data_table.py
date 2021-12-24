@@ -143,21 +143,29 @@ def get_csmr_table(csmr_inp_file, age_group_id_dict) :
 #   data_inp_file, csmr_inp_file, covariate_csv_file_list, data_table_file
 # )
 def write_data_table(
+    results_dir             = None,
     data_inp_file           = None,
     csmr_inp_file           = None,
     covariate_csv_file_list = None,
-    data_table_file         = None,
     ) :
+    assert type(results_dir) is str
     assert type(data_inp_file) is str
     assert type(csmr_inp_file) is str
     assert type(covariate_csv_file_list) is list
-    assert type(data_table_file) is str
+    #
+    # data_table_file
+    data_table_file = at_cascade.ihme.csv_file['data']
+    data_table_file = f'{results_dir}/{data_table_file}'
     #
     if os.path.exists(data_table_file) :
         print( f'Using existing {data_table_file}' )
         return
     else :
         print( f'Creating {data_table_file}' )
+    #
+    # node_table_file
+    node_table_file = at_cascade.ihme.csv_file['node']
+    node_table_file = f'{results_dir}/{node_table_file}'
     #
     # age_group_id_dict
     age_group_id_table = at_cascade.ihme.get_age_group_id_table()
@@ -180,7 +188,7 @@ def write_data_table(
         data_table += csmr_table
     #
     # location_id2node_id
-    file_ptr            = open(at_cascade.ihme.node_table_file)
+    file_ptr            = open(node_table_file)
     reader              = csv.DictReader(file_ptr)
     location_id2node_id = dict()
     node_id             = 0
