@@ -12,6 +12,40 @@ import os
 import shutil
 import dismod_at
 import at_cascade.ihme
+# ----------------------------------------------------------------------------
+def write_message_type_file(message_type, fit_goal_set) :
+    #
+    # all_node_database
+    all_node_database = at_cascade.ihme.all_node_database
+    #
+    # root_node_database
+    root_node_database = at_cascade.ihme.root_node_database
+    #
+    #
+    # message_dict
+    message_dict = at_cascade.check_log(
+        message_type       = message_type,
+        all_node_database  = all_node_database,
+        root_node_database = root_node_database,
+        fit_goal_set       = fit_goal_set,
+    )
+    #
+    # file_ptr
+    file_ptr = open(message_type, 'w')
+    #
+    first_key = True
+    for key in message_dict :
+        #
+        # first_key
+        if not first_key :
+            file_ptr.write('\n')
+        first_key = False
+        #
+        file_ptr.write( f'{key}\n' )
+        for message in message_dict[key] :
+            file_ptr.write( f'{message}\n' )
+    #
+    file_ptr.close()
 # ---------------------------------------------------------------------------
 def display(database, max_plot) :
     #
@@ -100,7 +134,9 @@ def main(
     root_node_dir = f'{results_dir}/{root_node_name}'
     #
     # command
-    command_set = { 'setup', 'cleanup', 'drill', 'display', 'continue' }
+    command_set = {
+        'setup', 'cleanup', 'drill', 'display', 'continue', 'error', 'warning',
+     }
     command     = None
     if len(sys.argv) == 2 :
         if sys.argv[1] not in [ 'display', 'continue' ] :
@@ -153,6 +189,12 @@ def main(
         print( f'creating {root_node_dir}' )
         os.makedirs( root_node_dir )
         drill(root_node_name, fit_goal_set, max_fit, max_abs_effect)
+    #
+    # error or warning
+    elif command in [ 'error', 'warning' ] :
+        #
+        message_type = command
+        write_message_type_file(message_type, fit_goal_set)
     #
     # display or continue
     elif command in [ 'display', 'continue'] :

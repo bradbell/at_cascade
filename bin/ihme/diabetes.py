@@ -62,7 +62,7 @@ perturb_optimization_scaling = 0.2
 #
 # shift_prior_std_factor
 # Factor that multipliers standard deviation that is passed down the cascade.
-shift_prior_std_factor = 4.0
+shift_prior_std_factor = 2.0
 #
 # max_number_cpu
 # maximum number of processors, if one, run sequentally, otherwise
@@ -85,14 +85,14 @@ max_plot            = 2000
 # Name of the nodes that we are drilling to (must be below root_node).
 # You can change this setting and then run
 #   bin/ihme/diabetes.py continue database
-# fit_goal_set = {
-#     '527_California',
-#     '547_Mississippi',
-#     '81_Germany',
-#     '84_Ireland'
-# }
 # fit_goal_set = { '1_Global' }
-fit_goal_set = { '64_High-income' }
+# fit_goal_set = { '64_High-income' }
+fit_goal_set = {
+    '527_California',
+    '547_Mississippi',
+    '81_Germany',
+    '84_Ireland'
+}
 #
 # node_split_name_set
 # Name of the nodes where we are splitting from Both to Female, Male
@@ -365,7 +365,7 @@ def write_root_node_database() :
             'lower'   :   None,
             'upper'   :   None,
             'mean'    :   0.0,
-            'std'     :   1.0,
+            'std'     :   .1,
         },{
             'name'    :   'alpha_value',
             'density' :   'gaussian',
