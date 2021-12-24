@@ -553,12 +553,12 @@ def root_node_db(file_name) :
 # ----------------------------------------------------------------------------
 def main() :
     # -------------------------------------------------------------------------
-    # base_directory
-    base_directory = 'build/example'
-    distutils.dir_util.mkpath(base_directory)
+    # results_dir
+    results_dir = 'build/example'
+    distutils.dir_util.mkpath(results_dir)
     #
     # Create root_node.db
-    root_node_database  = f'{base_directory}/root_node.db'
+    root_node_database  = f'{results_dir}/root_node.db'
     root_node_db(root_node_database)
     #
     # all_cov_reference
@@ -570,8 +570,11 @@ def main() :
         }
     #
     # Create all_node.db
-    all_node_database = f'{base_directory}/all_node.db'
-    all_option        = { 'root_node_name': 'n0' }
+    all_node_database = f'{results_dir}/all_node.db'
+    all_option        = {
+        'results_dir':    results_dir,
+        'root_node_name': 'n0',
+    }
     at_cascade.create_all_node_db(
         all_node_database       = all_node_database,
         root_node_database      = root_node_database,
@@ -581,7 +584,7 @@ def main() :
     )
     #
     # fit_node_dir
-    fit_node_dir = f'{base_directory}/n0'
+    fit_node_dir = f'{results_dir}/n0'
     if os.path.exists(fit_node_dir) :
         # rmtree is very dangerous so make sure fit_node_dir is as expected
         assert fit_node_dir == 'build/example/n0'
@@ -601,7 +604,7 @@ def main() :
     #
     # check results
     for goal_dir in [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2/n5', 'n0/n2/n6' ] :
-        goal_database = f'{base_directory}/{goal_dir}/dismod.db'
+        goal_database = f'{results_dir}/{goal_dir}/dismod.db'
         at_cascade.check_cascade_fit(
             rate_true = rate_true,
             all_node_database  = all_node_database,
@@ -611,7 +614,7 @@ def main() :
     #
     # alpha_n1
     new            = False
-    database       = f'{base_directory}/n0/n1/dismod.db'
+    database       = f'{results_dir}/n0/n1/dismod.db'
     connection     = dismod_at.create_connection(database, new)
     var_table      = dismod_at.get_table_dict(connection, 'var')
     fit_var_table  = dismod_at.get_table_dict(connection, 'fit_var')
@@ -627,7 +630,7 @@ def main() :
         #
         # alpha
         new            = False
-        database       = f'{base_directory}/{fit_dir}/dismod.db'
+        database       = f'{results_dir}/{fit_dir}/dismod.db'
         connection     = dismod_at.create_connection(database, new)
         var_table      = dismod_at.get_table_dict(connection, 'var')
         fit_var_table  = dismod_at.get_table_dict(connection, 'fit_var')

@@ -116,10 +116,6 @@ def continue_cascade(
     assert not fit_node_database is None
     assert not fit_goal_set is None
     #
-    # base_directory
-    index = all_node_database.rfind('/')
-    base_directory = all_node_database[0 : index]
-    #
     # node_table, covariate_table
     new             = False
     connection      = dismod_at.create_connection(fit_node_database, new)
@@ -136,14 +132,18 @@ def continue_cascade(
         dismod_at.get_table_dict(connection, 'split_reference')
     connection.close()
     #
-    # root_node_name, max_number_cpu
+    # results_dir, root_node_name, max_number_cpu
+    results_dir    = None
     root_node_name = None
     max_number_cpu = 1
     for row in all_option_table :
+        if row['option_name'] == 'results_dir' :
+            results_dir = row['option_value']
         if row['option_name'] == 'root_node_name' :
             root_node_name = row['option_value']
         if row['option_name'] == 'max_number_cpu' :
             max_number_cpu = int( row['option_value'] )
+    assert results_dir is not None
     assert root_node_name is not None
     #
     # root_node_id
@@ -225,7 +225,7 @@ def continue_cascade(
             fit_node_id             = shift_node_id ,
             fit_split_reference_id  = shift_split_reference_id,
         )
-        shift_database_dir = f'{base_directory}/{database_dir}'
+        shift_database_dir = f'{results_dir}/{database_dir}'
         if not os.path.exists(shift_database_dir) :
             os.makedirs(shift_database_dir)
         #

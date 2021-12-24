@@ -12,6 +12,7 @@
 {xsrst_spell
     csv
     var
+    dir
 }
 
 Cascade Fits Starting at Root Node
@@ -37,9 +38,10 @@ is a python string specifying the location of the dismod_at
 :ref:`glossary.root_node` database relative to the current working directory.
 It must
 
-    *base_directory*\ ``/``\ *root_node_name*\ ``/dismod.db``
+    *results_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
 
-see :ref:`glossary.base_directory` and :ref:`all_option_table.root_node_name`.
+see :ref:`all_option_table.results_dir`
+and :ref:`all_option_table.root_node_name`.
 On input, this is an :ref:`glossary.input_node_database`.
 Upon return, it is a :ref:`glossary.fit_node_database` with the
 extra properties listed under
@@ -128,10 +130,6 @@ def cascade_root_node(
     assert root_node_database  is not None
     assert fit_goal_set        is not None
     #
-    # base_directory
-    index = all_node_database.rfind('/')
-    base_directory = all_node_database[0 : index]
-    #
     # node_table, covariate_table
     new             = False
     connection      = dismod_at.create_connection(root_node_database, new)
@@ -148,14 +146,18 @@ def cascade_root_node(
     all_option_table = dismod_at.get_table_dict(connection, 'all_option')
     connection.close()
     #
-    # root_node_name, max_number_cpu
+    # root_node_name, max_number_cpu, results_dir
+    results_dir    = None
     root_node_name = None
     max_number_cpu = 1
     for row in all_option_table :
+        if row['option_name'] == 'results_dir' :
+            results_dir = row['option_value']
         if row['option_name'] == 'root_node_name' :
             root_node_name = row['option_value']
         if row['option_name'] == 'max_number_cpu' :
             max_number_cpu = int( row['option_value'] )
+    assert results_dir is not None
     assert root_node_name is not None
     #
     # check root_node_name
@@ -166,9 +168,9 @@ def cascade_root_node(
         assert False, smg
     #
     # expect root_node_database
-    expect_database = f'{base_directory}/{root_node_name}/dismod.db'
+    expect_database = f'{results_dir}/{root_node_name}/dismod.db'
     if root_node_database != expect_database :
-        msg  = f'base_directory = {base_directory}\n'
+        msg  = f'results_dir = {results_dir}\n'
         msg  = f'root_node_database = {root_node_database}\n'
         msg += f'expected {expect_database}\n'
         assert False, msg

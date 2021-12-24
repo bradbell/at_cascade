@@ -48,6 +48,7 @@ def main() :
     col_type = [ 'text',        'text'         ]
     split_covariate_name = 'sex'
     row_list = [
+        [ 'results_dir',          '.'  ],
         [ 'root_node_name',       'n0' ],
         [ 'split_covariate_name', split_covariate_name ],
         [ 'absolute_covariates', absolute_covariates ],

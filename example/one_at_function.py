@@ -542,12 +542,12 @@ def root_node_db(file_name) :
 # ----------------------------------------------------------------------------
 def main() :
     # -------------------------------------------------------------------------
-    # base_directory
-    base_directory = 'build/example'
-    distutils.dir_util.mkpath(base_directory)
+    # results_dir
+    results_dir = 'build/example'
+    distutils.dir_util.mkpath(results_dir)
     #
     # Create root_node.db
-    root_node_database  = f'{base_directory}/root_node.db'
+    root_node_database  = f'{results_dir}/root_node.db'
     root_node_db(root_node_database)
     #
     # all_cov_reference
@@ -559,8 +559,11 @@ def main() :
         }
     #
     # Create all_node.db
-    all_node_database = f'{base_directory}/all_node.db'
-    all_option        = { 'root_node_name': 'n1' }
+    all_node_database = f'{results_dir}/all_node.db'
+    all_option        = {
+        'results_dir':    results_dir,
+        'root_node_name': 'n1',
+    }
     at_cascade.create_all_node_db(
         all_node_database       = all_node_database,
         root_node_database      = root_node_database,
@@ -570,12 +573,12 @@ def main() :
     #
     # fit_node_dir
     for node_name in [ 'n0', 'n1' ] :
-        fit_node_dir = f'{base_directory}/{node_name}'
+        fit_node_dir = f'{results_dir}/{node_name}'
         if os.path.exists(fit_node_dir) :
             # rmtree is very dangerous so make sure fit_node_dir is as expected
             assert fit_node_dir == f'build/example/{node_name}'
             shutil.rmtree( fit_node_dir )
-    fit_node_dir = f'{base_directory}/n1'
+    fit_node_dir = f'{results_dir}/n1'
     os.makedirs(fit_node_dir )
     #
     # fit_node_database
@@ -591,7 +594,7 @@ def main() :
     #
     # check results
     for goal_dir in [ 'n1/n3', 'n1/n4' ] :
-        goal_database = f'{base_directory}/{goal_dir}/dismod.db'
+        goal_database = f'{results_dir}/{goal_dir}/dismod.db'
         at_cascade.check_cascade_fit(
             rate_true = rate_true,
             all_node_database  = all_node_database,
@@ -600,7 +603,7 @@ def main() :
         )
     #
     # check that fits were not run for n5 and n6
-    for not_fit_dir in [ f'{base_directory}/n0', '{base_directory}/n2' ] :
+    for not_fit_dir in [ f'{results_dir}/n0', '{results_dir}/n2' ] :
         assert not os.path.exists( not_fit_dir )
 #
 main()
