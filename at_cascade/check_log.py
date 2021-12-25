@@ -39,14 +39,7 @@ This argument can't be ``None``.
 root_node_database
 ******************
 is a python string specifying the location of the dismod_at
-:ref:`glossary.root_node` database relative to the current working directory.
-It must *root_node_name*\ ``/dismod.db``; see
-:ref:`all_option_table.root_node_name`.
-On input, this is an :ref:`glossary.input_node_database`.
-Upon return, it is a :ref:`glossary.fit_node_database` with the
-extra properties listed under
-:ref:`cascade_root_node.output_dismod_db` below.
-This argument can't be ``None``.
+:ref:`glossary.root_node_database`.
 
 fit_goal_set
 ************
@@ -65,6 +58,7 @@ The keys in *message_dict* at ``str`` of the following form
 or each node, split reference value that has messages of the specified type.
 The value *message_dict{key]* is a ``list`` of ``str``
 containing the messages.
+If this list is empty, there are no messages.
 
 {xsrst_end check_log}
 '''
@@ -109,32 +103,23 @@ def check_log(
     node_split_table = dismod_at.get_table_dict(connection, 'node_split')
     connection.close()
     #
-    # root_node_name, max_number_cpu
+    # root_node_name
+    results_dir    = None
     root_node_name = None
-    max_number_cpu = 1
     for row in all_option_table :
+        if row['option_name'] == 'results_dir' :
+            results_dir = row['option_value']
         if row['option_name'] == 'root_node_name' :
             root_node_name = row['option_value']
-        if row['option_name'] == 'max_number_cpu' :
-            max_number_cpu = int( row['option_value'] )
+    assert results_dir is not None
     assert root_node_name is not None
     #
     # check root_node_name
-    check_node_name = at_cascade.get_parent_node(root_node_database)
-    if check_node_name != root_node_name :
-        msg  = f'{fit_node_databse} parent_node_name = {check_node_name}\n'
+    parent_node_name = at_cascade.get_parent_node(root_node_database)
+    if parent_node_name != root_node_name :
+        msg  = f'{root_node_database} parent_node_name = {parent_node_name}\n'
         msg  = f'{all_node_database} root_node_name = {root_node_name}'
         assert False, smg
-    #
-    # check root_node_database
-    check_database = f'{root_node_name}/dismod.db'
-    if root_node_database != check_database :
-        msg  = f'root_node_database = {root_node_database}\n'
-        msg += f'root_node_name/dismod.db = {check_database}\n'
-        assert False, msg
-    #
-    # fit_integrand
-    fit_integrand = at_cascade.get_fit_integrand(root_node_database)
     #
     # root_node_id
     root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
@@ -175,7 +160,7 @@ def check_log(
         fit_split_reference_id = job_table[job_id]['split_reference_id']
         #
         # fit_node_database
-        fit_database_dir = at_cascade.get_database_dir(
+        database_dir = at_cascade.get_database_dir(
             node_table              = node_table,
             split_reference_table   = split_reference_table,
             node_split_set          = node_split_set,
@@ -184,7 +169,7 @@ def check_log(
             fit_node_id             = fit_node_id ,
             fit_split_reference_id  = fit_split_reference_id,
         )
-        fit_node_database = f'{fit_database_dir}/dismod.db'
+        fit_node_database = f'{results_dir}/{database_dir}/dismod.db'
         #
         # node_name
         node_name = node_table[fit_node_id]['node_name']
@@ -193,23 +178,27 @@ def check_log(
         row                  = split_reference_table[fit_split_reference_id]
         split_reference_name = row['split_reference_name']
         #
-        # log_table
-        new        = False
-        connection = dismod_at.create_connection(fit_node_database, new)
-        log_table  = dismod_at.get_table_dict(connection, 'log')
-        connection.close()
-        #
         # key
         key = f'\n{node_name}.{split_reference_name}'
         #
-        # row
-        for row in log_table :
+        # log_table
+        if not os.path.exists(fit_node_database) :
+            message = f'Missing fit_node_database {fit_node_database}'
+            message_dict[key] = [ message ]
+        else :
+            new        = False
+            connection = dismod_at.create_connection(fit_node_database, new)
+            log_table  = dismod_at.get_table_dict(connection, 'log')
+            connection.close()
             #
-            if row['message_type'] == message_type :
+            # row
+            for row in log_table :
                 #
-                # message_dict
-                if key not in message_dict :
-                    message_dict[key] = list()
-                message_dict[key].append( row['message'] )
+                if row['message_type'] == message_type :
+                    #
+                    # message_dict
+                    if key not in message_dict :
+                        message_dict[key] = list()
+                    message_dict[key].append( row['message'] )
     #
     return message_dict

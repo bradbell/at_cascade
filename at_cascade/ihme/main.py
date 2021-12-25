@@ -47,8 +47,14 @@ def write_message_type_file(message_type, fit_goal_set) :
         fit_goal_set       = fit_goal_set,
     )
     #
+    # results_dir
+    results_dir = all_option_dict['results_dir']
+    #
+    # file_name
+    file_name = f'{results_dir}/{message_type}'
+    #
     # file_ptr
-    file_ptr = open(message_type, 'w')
+    file_ptr = open(file_name, 'w')
     #
     first_key = True
     for key in message_dict :
@@ -148,7 +154,7 @@ def main(
         msg += f'       bin/ihme/{program} continue database\n'
         msg +=  'where command is one of the following:\n'
         msg +=  'setup:    create at_cascade input databases from csv files\n'
-        msg += f'cleanup:  remove {root_node_dir}\n'
+        msg += f'cleanup:  remove root_node_dir\n'
         msg +=  'drill:    run cascade from root node to goal nodes\n'
         msg +=  'display:  display results that are in database\n'
         msg +=  'continue: continue cascade starting at database\n'
