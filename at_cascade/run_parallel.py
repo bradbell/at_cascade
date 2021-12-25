@@ -387,7 +387,7 @@ def run_parallel(
     )
     # -------------------------------------------------------------------------
     # shared_job_done
-    done= numpy.empty(len(job_table), dtype = bool )
+    tmp = numpy.empty(len(job_table), dtype = bool )
     shm_job_done = shared_memory.SharedMemory(
         create = True, size = tmp.nbytes, name = 'at_cascade_job_done'
     )
