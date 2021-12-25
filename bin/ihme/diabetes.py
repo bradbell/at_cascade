@@ -41,7 +41,8 @@ results_dir = 'ihme_db/DisMod_AT/results'
 #
 # root_node_name
 # name of the node where the cascade will start
-root_node_name      = '1_Global'
+# root_node_name      = '1_Global'
+root_node_name      = '64_High-income'
 #
 # gamma_factor
 # The gamma for each integrand is this factor times the median
@@ -545,6 +546,7 @@ at_cascade.ihme.main(
     root_node_name  = root_node_name,
     fit_goal_set    = fit_goal_set,
     setup_function  = setup_function,
+    max_plot        = max_plot,
 )
 print('diabetes.py: OK')
 sys.exit(0)

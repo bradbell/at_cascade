@@ -81,7 +81,8 @@ value.
 
 parent_job_id
 =============
-This is an ``int`` containing the job_id corresponding to the parent job.
+This is an ``int`` containing the job_id corresponding to the parent job
+wich must be greater than the job_id for this row of the job table.
 The parent job (and only the parent job)
 must have completed before this job can be run.
 

@@ -70,7 +70,7 @@ def write_message_type_file(message_type, fit_goal_set) :
     #
     file_ptr.close()
 # ---------------------------------------------------------------------------
-def display(database) :
+def display(database, max_plot) :
     #
     # pdf_file
     index      = database.rfind('/')
@@ -88,7 +88,6 @@ def display(database) :
     #
     # data.pdf
     pdf_file = pdf_dir + '/data.pdf'
-    max_plot = int( all_option_dict['max_plot'] )
     n_point_list = dismod_at.plot_data_fit(
         database     = database,
         pdf_file     = pdf_file,
@@ -130,10 +129,12 @@ def main(
     root_node_name   = None,
     fit_goal_set     = None,
     setup_function   = None,
+    max_plot         = None,
 ) :
     assert type(root_node_name) == str
     assert type(fit_goal_set) == set
     assert setup_function is not None
+    assert type(max_plot) == int
     #
     # command
     command_set = {
@@ -218,7 +219,7 @@ def main(
             msg  = f'{command}: database does not end with /dismod.db'
             assert False, msg
         if command == 'display' :
-            display(database)
+            display(database, max_plot)
         else :
             at_cascade.continue_cascade(
                 all_node_database = at_cascade.ihme.all_node_database,
