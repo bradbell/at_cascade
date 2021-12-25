@@ -80,6 +80,7 @@ The last operation on this table is a dismod_at init command.
 
 {xsrst_end no_ode_fit}
 '''
+import datetime
 import time
 import math
 import sys
@@ -88,6 +89,28 @@ import shutil
 import copy
 import dismod_at
 import at_cascade
+# -----------------------------------------------------------------------------
+def system_command(command, file_stdout) :
+    if file_stdout is None :
+        dismod_at.system_command_prc(
+            command,
+            print_command = True,
+            return_stdout = False,
+            return_stderr = False,
+            file_stdout   = None,
+            file_stderr   = None,
+            write_command = False,
+        )
+    else :
+        dismod_at.system_command_prc(
+            command,
+            print_command = False,
+            return_stdout = False,
+            return_stderr = False,
+            file_stdout   = file_stdout,
+            file_stderr   = None,
+            write_command = True,
+        )
 # -----------------------------------------------------------------------------
 def create_empty_log_table(connection) :
     #
@@ -240,6 +263,16 @@ def no_ode_fit(
     if root_node_database == root_fit_database :
         msg   = f'root_node_database and root_fit_database are equal'
         assert False, msg
+    #
+    # trace_file_name, file_stdout
+    trace_file_name = None
+    file_stdout     = None
+    if trace_fit :
+        trace_file_name = f'{results_dir}/{root_node_name}/no_ode/trace.out'
+        file_stdout    = open(trace_file_name, 'w')
+        now            = datetime.datetime.now()
+        current_time   = now.strftime("%H:%M:%S")
+        print( f'Begin: {current_time}: {trace_file_name}' )
     # ------------------------------------------------------------------------
     # no_ode_database
     # ------------------------------------------------------------------------
@@ -280,31 +313,35 @@ def no_ode_fit(
             hold_out_integrand.append( integrand_name )
     name  = 'hold_out_integrand'
     value = ' '.join(hold_out_integrand)
-    dismod_at.system_command_prc(
-        [ 'dismod_at', no_ode_database, 'set', 'option', name, value ]
-    )
+    command = [
+        'dismod_at', no_ode_database, 'set', 'option', name, value
+    ]
+    system_command(command, file_stdout)
     #
     # init
-    dismod_at.system_command_prc([ 'dismod_at', no_ode_database, 'init' ])
+    command = [ 'dismod_at', no_ode_database, 'init' ]
+    system_command(command, file_stdout)
     #
     # bnd_mulcov
     if not max_abs_effect is None :
-        dismod_at.system_command_prc([
+        command = [
             'dismod_at', no_ode_database, 'bnd_mulcov', str(max_abs_effect)
-        ])
+        ]
+        system_command(command, file_stdout)
     #
     # enforce max_fit
     if not max_fit is None :
         for integrand_id in fit_integrand :
             row            = root_table['integrand'][integrand_id]
             integrand_name = row['integrand_name']
-            dismod_at.system_command_prc([
+            command = [
                 'dismod_at',
                 no_ode_database,
                 'hold_out',
                 integrand_name,
                 str(max_fit),
-            ])
+            ]
+            system_command(command, file_stdout)
     #
     # max_num_iter_fixed
     # Pass max_num_iter_fixed as an argument to no_ode and then restore
@@ -315,11 +352,11 @@ def no_ode_fit(
     #
     # fit both
     command = [ 'dismod_at', no_ode_database, 'fit', 'both' ]
-    dismod_at.system_command_prc(command, return_stdout = not trace_fit )
+    system_command(command, file_stdout)
     #
     # c_shift_predict_fit_var
     command = [ 'dismod_at', no_ode_database, 'predict', 'fit_var' ]
-    dismod_at.system_command_prc(command)
+    system_command(command, file_stdout)
     move_table(connection, 'predict', 'c_shift_predict_fit_var')
     #
     # c_shift_avgint
@@ -344,9 +381,14 @@ def no_ode_fit(
             hold_out_integrand = row['option_value']
     name  = 'hold_out_integrand'
     value = hold_out_integrand
-    dismod_at.system_command_prc(
-        [ 'dismod_at', root_fit_database, 'set', 'option', name, value ]
-    )
-    dismod_at.system_command_prc([ 'dismod_at', root_fit_database, 'init' ])
+    command = [
+        'dismod_at', root_fit_database, 'set', 'option', name, value
+    ]
+    system_command(command, file_stdout)
+    #
+    if trace_fit :
+        now            = datetime.datetime.now()
+        current_time   = now.strftime("%H:%M:%S")
+        print( f'End:   {current_time}: {trace_file_name}' )
     #
     return root_fit_database

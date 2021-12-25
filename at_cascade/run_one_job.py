@@ -110,10 +110,33 @@ between it's input and output state.
 {xsrst_end run_one_job}
 '''
 # ----------------------------------------------------------------------------
+import datetime
 import os
 import time
 import dismod_at
 import at_cascade
+# -----------------------------------------------------------------------------
+def system_command(command, file_stdout) :
+    if file_stdout is None :
+        dismod_at.system_command_prc(
+            command,
+            print_command = True,
+            return_stdout = False,
+            return_stderr = False,
+            file_stdout   = None,
+            file_stderr   = None,
+            write_command = False,
+        )
+    else :
+        dismod_at.system_command_prc(
+            command,
+            print_command = False,
+            return_stdout = False,
+            return_stderr = False,
+            file_stdout   = file_stdout,
+            file_stderr   = None,
+            write_command = True,
+        )
 # ----------------------------------------------------------------------------
 def set_avgint_node_id(connection, fit_node_id) :
     avgint_table = dismod_at.get_table_dict(connection, 'avgint')
@@ -261,6 +284,16 @@ def run_one_job(
     )
     fit_node_database = f'{results_dir}/{database_dir}/dismod.db'
     #
+    # trace_file_name, file_stdout
+    trace_file_name = None
+    file_stdout     = None
+    if trace_fit :
+        trace_file_name = f'{results_dir}/{database_dir}/trace.out'
+        file_stdout    = open(trace_file_name, 'w')
+        now            = datetime.datetime.now()
+        current_time   = now.strftime("%H:%M:%S")
+        print( f'Begin: {current_time}: {trace_file_name}' )
+    #
     # check fit_node_database
     parent_node_name = at_cascade.get_parent_node(fit_node_database)
     assert parent_node_name == node_table[fit_node_id]['node_name']
@@ -280,40 +313,45 @@ def run_one_job(
     add_log_entry(connection, 'omega_constraint')
     #
     # init
-    dismod_at.system_command_prc( [ 'dismod_at', fit_node_database, 'init' ] )
+    command = [ 'dismod_at', fit_node_database, 'init' ]
+    system_command(command, file_stdout)
     #
     # max_fit
     if 'max_fit' in all_option_dict :
         max_fit = all_option_dict['max_fit']
         for integrand_id in fit_integrand :
             integrand_name = integrand_table[integrand_id]['integrand_name']
-            dismod_at.system_command_prc([
+            command = [
                 'dismod_at', fit_node_database,
                 'hold_out', integrand_name, max_fit
-            ])
+            ]
+            system_command(command, file_stdout)
     #
     # max_abs_effect
     if 'max_abs_effect' in all_option_dict:
         max_abs_effect = all_option_dict['max_abs_effect']
-        dismod_at.system_command_prc([
+        command =[
             'dismod_at', fit_node_database, 'bnd_mulcov', max_abs_effect
-        ])
+        ]
+        system_command(command, file_stdout)
     #
     # perturb_optimization_scaling
     if 0 < float( perturb_optimization_scaling ) :
         sigma = perturb_optimization_scaling
-        dismod_at.system_command_prc([
+        command = [
             'dismodat.py', fit_node_database, 'perturb', 'scale_var', sigma
-        ])
+        ]
+        system_command(command, file_stdout)
     #
     # fit
     command = [ 'dismod_at', fit_node_database, 'fit', 'both' ]
-    dismod_at.system_command_prc(command, return_stdout = not trace_fit )
+    system_command(command, file_stdout)
     #
     # sample
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'sample', 'asymptotic', 'both', '20' ]
-    )
+    command = [
+        'dismod_at', fit_node_database, 'sample', 'asymptotic', 'both', '20'
+    ]
+    system_command(command, file_stdout)
     #
     # move avgint -> c_root_avgint
     move_table(connection, 'avgint', 'c_root_avgint')
@@ -323,15 +361,13 @@ def run_one_job(
     add_log_entry(connection, 'avgint_parent_grid')
     #
     # c_shift_predict_fit_var
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
-    )
+    command = [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
+    system_command(command, file_stdout)
     move_table(connection, 'predict', 'c_shift_predict_fit_var')
     #
     # c_shift_predict_sample
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
-    )
+    command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
+    system_command(command, file_stdout)
     move_table(connection, 'predict', 'c_shift_predict_sample')
     #
     # c_shift_avgint
@@ -385,16 +421,19 @@ def run_one_job(
     set_avgint_node_id(connection, fit_node_id)
     #
     # c_predict_fit_var
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
-    )
+    command = [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
+    system_command(command, file_stdout)
     move_table(connection, 'predict', 'c_predict_fit_var')
     #
     # c_predict_sample
-    dismod_at.system_command_prc(
-        [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
-    )
+    command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
+    system_command(command, file_stdout)
     move_table(connection, 'predict', 'c_predict_sample')
     #
     # connection
     connection.close()
+    #
+    if trace_fit :
+        now            = datetime.datetime.now()
+        current_time   = now.strftime("%H:%M:%S")
+        print( f'End:   {current_time}: {trace_file_name}' )
