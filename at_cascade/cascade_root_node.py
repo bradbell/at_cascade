@@ -158,7 +158,7 @@ def cascade_root_node(
     results_dir    = all_option_dict['results_dir']
     root_node_name = all_option_dict['root_node_name']
     max_number_cpu = 1
-    if 'max_number_cpu[' in all_option_dict :
+    if 'max_number_cpu' in all_option_dict :
         max_number_cpu = int( all_option_dict['max_number_cpu'] )
     #
     # check root_node_name
