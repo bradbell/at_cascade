@@ -79,6 +79,11 @@ from multiprocessing import shared_memory
 import numpy
 import at_cascade
 # ----------------------------------------------------------------------------
+job_status_wait  = 0
+job_status_ready = 1
+job_status_run   = 2
+job_status_done  = 3
+# ----------------------------------------------------------------------------
 def run_parallel_job(
     job_table,
     this_job_id,
@@ -111,40 +116,20 @@ def run_parallel_job(
         tmp.shape, dtype = tmp.dtype, buffer = shm_number_cpu_inuse.buf
     )
     # ----------------------------------------------------------------------
-    # shared_job_ready
-    tmp = numpy.empty( len(job_table), dtype = bool )
-    shm_job_ready = shared_memory.SharedMemory(
-        create = False, name = 'at_cascade_job_ready'
+    # shared_job_status
+    tmp = numpy.empty(len(job_table), dtype = int )
+    shm_job_status = shared_memory.SharedMemory(
+        create = False, name = 'at_cascade_job_status'
     )
-    shared_job_ready = numpy.ndarray(
-        tmp.shape, dtype = tmp.dtype, buffer = shm_job_ready.buf
-    )
-    # ----------------------------------------------------------------------
-    # shared_job_run
-    tmp = numpy.empty(len(job_table), dtype = bool )
-    shm_job_run = shared_memory.SharedMemory(
-        create = False, name = 'at_cascade_job_run'
-    )
-    shared_job_run = numpy.ndarray(
-        tmp.shape, dtype = tmp.dtype, buffer = shm_job_run.buf
-    )
-    # ----------------------------------------------------------------------
-    # shared_job_done
-    tmp = numpy.empty(len(job_table), dtype = bool )
-    shm_job_done = shared_memory.SharedMemory(
-        create = False, name = 'at_cascade_job_done'
-    )
-    shared_job_done = numpy.ndarray(
-        tmp.shape, dtype = tmp.dtype, buffer = shm_job_done.buf
+    shared_job_status = numpy.ndarray(
+        tmp.shape, dtype = tmp.dtype, buffer = shm_job_status.buf
     )
     # ----------------------------------------------------------------------
     #
     # shm_list
     shm_list = [
             shm_number_cpu_inuse,
-            shm_job_ready,
-            shm_job_run,
-            shm_job_done
+            shm_job_status,
     ]
     # job_id_array
     # job_id_array
@@ -168,36 +153,31 @@ def run_parallel_job(
     # must lock before access shared data
     lock.acquire()
     #
-    # shared_job_run, shared_job_done
+    # shared_job_status
     if not skip_this_job :
-        assert not shared_job_ready[this_job_id]
-        assert     shared_job_run[this_job_id]
-        assert not shared_job_done[this_job_id]
-        shared_job_run[this_job_id]  = False
-        shared_job_done[this_job_id] = True
+        assert shared_job_status[this_job_id] == job_status_run
+        shared_job_status[this_job_id] = job_status_done
     #
-    # shared_job_ready
+    # shared_job_status[child_job_id] = job_status_ready
     start_child_job_id    = job_table[this_job_id ]['start_child_job_id']
     end_child_job_id      = job_table[this_job_id ]['end_child_job_id']
     for child_job_id in range(start_child_job_id, end_child_job_id ) :
-        assert not shared_job_ready[child_job_id]
-        assert not shared_job_run[child_job_id]
-        assert not shared_job_done[child_job_id]
-        shared_job_ready[child_job_id] = True
+        assert shared_job_status[child_job_id] == job_status_wait
+        shared_job_status[child_job_id] = job_status_ready
     #
     while True :
         # lock
         # lock has alread been acquired at beginning of this loop
         #
         # event
-        # shared_job_ready or shared_job_run may have changed
+        # set of jobs that are ready or running may have changed
         event.set()
         #
         # job_id_ready
-        job_id_ready = job_id_array[ shared_job_ready ]
+        job_id_ready = job_id_array[ shared_job_status == job_status_ready ]
         #
         # job_id_run
-        job_id_run  = job_id_array[ shared_job_run ]
+        job_id_run  = job_id_array[ shared_job_status == job_status_run ]
         #
         # n_job_ready
         n_job_ready = job_id_ready.size
@@ -247,22 +227,17 @@ def run_parallel_job(
             # shared_numper_cpu_inuse
             shared_number_cpu_inuse[0] += n_cpu_spawn
             #
-            # shared_job_ready, shared_job_run
+            # chared_job_status
             for i in range( n_cpu_spawn + 1 ) :
                 job_id = job_id_ready[i]
                 #
-                assert shared_job_ready[ job_id ]
-                shared_job_ready[job_id] = False
-                #
-                assert not shared_job_run[ job_id ]
-                shared_job_run[job_id] = True
-                #
-                assert not shared_job_done[job_id]
+                assert shared_job_status[job_id] == job_status_ready
+                shared_job_status[job_id] = job_status_run
             # lock
             lock.release()
             #
             # event
-            # shared_job_ready or shared_job_run may have changed
+            # set of jobs that are ready or running may have changed
             event.set()
             #
             # skip_child_job
@@ -314,21 +289,17 @@ def run_parallel_job(
             # lock
             lock.acquire()
             #
-            # shared_job_run, shared_job_done
-            assert not shared_job_ready[job_id]
-            assert     shared_job_run[job_id]
-            assert not  shared_job_done[job_id]
-            shared_job_run[job_id]  = False
-            shared_job_done[job_id] = True
+            # shared_job_status
+            assert shared_job_status[job_id] == job_status_run
+            shared_job_status[job_id] = job_status_done
             #
-            # shared_job_ready
+            # shared_job_status[child_job_id] = job_status_ready
             start_child_job_id  = job_table[job_id ]['start_child_job_id']
             end_child_job_id    = job_table[job_id ]['end_child_job_id']
             for child_job_id in range(start_child_job_id, end_child_job_id ) :
-                assert not shared_job_ready[child_job_id]
-                assert not shared_job_run[child_job_id]
-                assert not shared_job_done[child_job_id]
-                shared_job_ready[child_job_id] = True
+                assert shared_job_status[child_job_id] == job_status_wait
+                shared_job_status[child_job_id] = job_status_ready
+
         #
         # lock
         # lock is acquired at end of this loop
@@ -347,8 +318,6 @@ def run_parallel(
 # )
 # END syntax
 ) :
-    global shared_job_ready_list
-    global shared_job_run_list
     #
     assert job_table         is not None
     assert start_job_id      is not None
@@ -368,55 +337,31 @@ def run_parallel(
         tmp.shape, dtype = tmp.dtype, buffer = shm_number_cpu_inuse.buf
     )
     # -------------------------------------------------------------------------
-    # shared_job_ready
-    tmp = numpy.empty( len(job_table), dtype = bool )
-    shm_job_ready = shared_memory.SharedMemory(
-        create = True, size = tmp.nbytes, name = 'at_cascade_job_ready'
+    # shared_job_status
+    tmp = numpy.empty(len(job_table), dtype = int )
+    shm_job_status = shared_memory.SharedMemory(
+        create = True, size = tmp.nbytes, name = 'at_cascade_job_status'
     )
-    shared_job_ready = numpy.ndarray(
-        tmp.shape, dtype = tmp.dtype, buffer = shm_job_ready.buf
-    )
-    # -------------------------------------------------------------------------
-    # shared_job_run
-    tmp = numpy.empty(len(job_table), dtype = bool )
-    shm_job_run = shared_memory.SharedMemory(
-        create = True, size = tmp.nbytes, name = 'at_cascade_job_run'
-    )
-    shared_job_run = numpy.ndarray(
-        tmp.shape, dtype = tmp.dtype, buffer = shm_job_run.buf
-    )
-    # -------------------------------------------------------------------------
-    # shared_job_done
-    tmp = numpy.empty(len(job_table), dtype = bool )
-    shm_job_done = shared_memory.SharedMemory(
-        create = True, size = tmp.nbytes, name = 'at_cascade_job_done'
-    )
-    shared_job_done = numpy.ndarray(
-        tmp.shape, dtype = tmp.dtype, buffer = shm_job_done.buf
+    shared_job_status = numpy.ndarray(
+        tmp.shape, dtype = tmp.dtype, buffer = shm_job_status.buf
     )
     # -------------------------------------------------------------------------
     #
     # shm_list
     shm_list = [
             shm_number_cpu_inuse,
-            shm_job_ready,
-            shm_job_run,
-            shm_job_done
+            shm_job_status,
     ]
     #
     # shared_number_cpu_inuse
     shared_number_cpu_inuse[0] = 1
     #
-    # shared_job_ready
-    shared_job_ready[:]           = False
-    #
-    # shared_job_run
-    shared_job_run[:]             = False
-    shared_job_run[start_job_id]  = not skip_start_job
-    #
-    # shared_job_done
-    shared_job_done[:]            = False
-    shared_job_done[start_job_id] = skip_start_job
+    # shared_job_status
+    shared_job_status[:]  = job_status_wait
+    if skip_start_job :
+        shared_job_status[start_job_id] = job_status_done
+    else :
+        shared_job_status[start_job_id] = job_status_run
     #
     # master_process
     master_process = True
@@ -444,7 +389,7 @@ def run_parallel(
     )
     #
     # check
-    assert all( shared_job_done )
+    assert all( shared_job_status == job_status_done )
     #
     # free shared memory objects
     for shm in shm_list :
