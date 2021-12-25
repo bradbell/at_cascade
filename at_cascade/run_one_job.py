@@ -53,10 +53,16 @@ fit_integrand
 is a ``set`` of integrand_id values that occur in the data table; see
 :ref:`get_fit_integrand`.
 
+
 trace_fit
 *********
-if ``True``, ( ``False`` ) the progress of the dismod at fit commands
-will be printed on standard output during the optimization.
+if ``True``, ( ``False`` ) the dismod_at commands,
+and the optimizer trace, for each fit node are written to the
+the corresponding file
+
+    *fit_node_dir*\ trace.out
+
+Otherwise, the dismod_at commands are written to standard output.
 
 fit_node_database
 *****************

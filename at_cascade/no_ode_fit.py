@@ -47,8 +47,12 @@ does not appear in *all_option_dict*.
 
 trace_fit
 *********
-if ``True``, ( ``False`` ) the progress of the dismod at fit command
-will be printed on standard output during the optimization.
+if ``True``, ( ``False`` ) the dismod_at commands,
+and the optimizer trace, are written to the file
+
+    *results_dir*\ /\ *root_node_name*\ /no_ode/trace.out
+
+otherwise, the dismod_at commands are written to standard output.
 
 no_ode_database
 ***************
