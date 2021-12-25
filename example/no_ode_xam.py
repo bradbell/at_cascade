@@ -822,28 +822,20 @@ def main() :
         shutil.rmtree( root_node_dir )
     os.makedirs(root_node_dir )
     #
-    # root_node_database
-    root_fit_database = at_cascade.no_ode_fit(
-        all_node_database = all_node_database,
-        root_node_database       = root_node_database,
-        all_option_dict   = all_option,
-        trace_fit         = False,
+    #
+    # cascade starting at root node
+    at_cascade.cascade_root_node(
+        all_node_database  = all_node_database ,
+        root_node_database = root_node_database,
+        fit_goal_set       = fit_goal_set,
+        no_ode_fit         = True,
     )
-    root_node_database =  root_node_dir + '/dismod.db'
-    assert root_fit_database == root_node_database
     #
     # check_no_ode_fit
     check_no_ode_fit(root_node_dir)
     #
     # display_no_ode_fit
     display_no_ode_fit(root_node_dir)
-    #
-    # cascade starting at root node
-    at_cascade.cascade_root_node(
-        all_node_database  = all_node_database ,
-        root_node_database = root_node_database ,
-        fit_goal_set       = fit_goal_set      ,
-    )
     #
     # check results
     for goal_dir in [ 'n0/n1', 'n0/n2' ] :

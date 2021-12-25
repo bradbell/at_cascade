@@ -35,18 +35,7 @@ This argument can't be ``None``.
 root_node_database
 ******************
 is a python string specifying the location of the dismod_at
-:ref:`glossary.root_node` database relative to the current working directory.
-It must
-
-    *results_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
-
-see :ref:`all_option_table.results_dir`
-and :ref:`all_option_table.root_node_name`.
-On input, this is an :ref:`glossary.input_node_database`.
-Upon return, it is a :ref:`glossary.fit_node_database` with the
-extra properties listed under
-:ref:`cascade_root_node.output_dismod_db` below.
-This argument can't be ``None``.
+:ref:`glossary.root_node_database`.
 
 fit_goal_set
 ************
@@ -55,10 +44,29 @@ specifying the node_id (node_name) for each element of the
 :ref:`glossary.fit_goal_set` .
 This argument can't be ``None``.
 
+no_ode_fit
+**********
+if ``True`` ( ``False`` ) the :ref:`no_ode_fit` routine
+will (will not) be used to modify the parent value priors.
+
 trace_fit
 *********
-if ``True``, ( ``False`` ) the progress of the dismod at fit commands
+if ``True`` ( ``False`` ) the progress of the dismod at fit commands
 will be printed on standard output during the optimization.
+
+root_fit_database
+*****************
+This directory is
+
+    *results_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
+
+see :ref:`all_option_table.results_dir`
+and :ref:`all_option_table.root_node_name`.
+If *no_ode_fit* is ``True`` ( ``False`` ) the priors in the
+*root_node_database* are modified (are not modified)
+before the root node is fit.
+Upon return, this is a :ref:`glossary.fit_node_database` with the
+extra properties listed below:
 
 Output dismod.db
 ****************
@@ -110,6 +118,7 @@ between it's input and output state.
 {xsrst_end cascade_root_node}
 '''
 # ----------------------------------------------------------------------------
+import shutil
 import time
 import os
 import multiprocessing
@@ -122,6 +131,7 @@ def cascade_root_node(
     all_node_database       = None,
     root_node_database      = None,
     fit_goal_set            = None,
+    no_ode_fit              = False,
     trace_fit               = False,
 # )
 # END syntax
@@ -129,13 +139,6 @@ def cascade_root_node(
     assert all_node_database   is not None
     assert root_node_database  is not None
     assert fit_goal_set        is not None
-    #
-    # node_table, covariate_table
-    new             = False
-    connection      = dismod_at.create_connection(root_node_database, new)
-    node_table      = dismod_at.get_table_dict(connection, 'node')
-    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
-    connection.close()
     #
     # split_reference_table, all_option_table
     new         = False
@@ -146,37 +149,46 @@ def cascade_root_node(
     all_option_table = dismod_at.get_table_dict(connection, 'all_option')
     connection.close()
     #
-    # root_node_name, max_number_cpu, results_dir
-    results_dir    = None
-    root_node_name = None
-    max_number_cpu = 1
+    # all_option_dict
+    all_option_dict = dict()
     for row in all_option_table :
-        if row['option_name'] == 'results_dir' :
-            results_dir = row['option_value']
-        if row['option_name'] == 'root_node_name' :
-            root_node_name = row['option_value']
-        if row['option_name'] == 'max_number_cpu' :
-            max_number_cpu = int( row['option_value'] )
-    assert results_dir is not None
-    assert root_node_name is not None
+        all_option_dict[ row['option_name'] ] = row['option_value']
+    #
+    # root_node_name, max_number_cpu, results_dir
+    results_dir    = all_option_dict['results_dir']
+    root_node_name = all_option_dict['root_node_name']
+    max_number_cpu = 1
+    if 'max_number_cpu[' in all_option_dict :
+        max_number_cpu = int( all_option_dict['max_number_cpu'] )
     #
     # check root_node_name
-    expect_node_name = at_cascade.get_parent_node(root_node_database)
-    if expect_node_name != root_node_name :
-        msg  = f'{fit_node_databse} parent_node_name = {expect_node_name}\n'
+    parent_node_name = at_cascade.get_parent_node(root_node_database)
+    if parent_node_name != root_node_name :
+        msg  = f'{root_node_databse} parent_node_name = {parent_node_name}\n'
         msg  = f'{all_node_database} root_node_name = {root_node_name}'
         assert False, smg
     #
-    # expect root_node_database
-    expect_database = f'{results_dir}/{root_node_name}/dismod.db'
-    if root_node_database != expect_database :
-        msg  = f'results_dir = {results_dir}\n'
-        msg  = f'root_node_database = {root_node_database}\n'
-        msg += f'expected {expect_database}\n'
-        assert False, msg
+    # root_fit_database
+    root_fit_database = f'{results_dir}/{root_node_name}/dismod.db'
+    if not no_ode_fit :
+        shutil.copyfile(root_node_database, root_fit_database)
+    else :
+        at_cascade.no_ode_fit(
+            all_node_database  = all_node_database,
+            root_node_database = root_node_database,
+            all_option_dict    = all_option_dict,
+            trace_fit          = trace_fit,
+        )
+    #
+    # node_table, covariate_table
+    new             = False
+    connection      = dismod_at.create_connection(root_fit_database, new)
+    node_table      = dismod_at.get_table_dict(connection, 'node')
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    connection.close()
     #
     # fit_integrand
-    fit_integrand = at_cascade.get_fit_integrand(root_node_database)
+    fit_integrand = at_cascade.get_fit_integrand(root_fit_database)
     #
     # root_node_id
     root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)

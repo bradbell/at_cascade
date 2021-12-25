@@ -111,22 +111,13 @@ def drill(root_node_name, fit_goal_set) :
     # root_node_database
     root_node_database = at_cascade.ihme.root_node_database
     #
-    # no_ode_fit
-    fit_node_database = at_cascade.no_ode_fit(
-        all_node_database  = all_node_database,
-        root_node_database = root_node_database,
-        all_option_dict    = all_option_dict,
-        trace_fit          = True,
-    )
-    results_dir = all_option_dict['results_dir']
-    assert fit_node_database == f'{results_dir}/{root_node_name}/dismod.db'
-    #
     # cascade_root_node
     at_cascade.cascade_root_node(
         all_node_database  = all_node_database,
-        root_node_database = fit_node_database,
+        root_node_database = root_node_database,
         fit_goal_set       = fit_goal_set,
-        trace_fit         = True,
+        no_ode_fit         = True,
+        trace_fit          = True,
     )
 # ----------------------------------------------------------------------------
 def main(

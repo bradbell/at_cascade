@@ -16,7 +16,6 @@ import copy
 import time
 import dismod_at
 import multiprocessing
-import shutil
 #
 if os.path.isfile( os.getcwd() + '/at_cascade/__init__.py' ) :
     sys.path.insert(0, os.getcwd())

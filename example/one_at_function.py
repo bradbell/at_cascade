@@ -571,24 +571,20 @@ def main() :
         all_option              = all_option,
     )
     #
-    # fit_node_dir
+    # root_node_dir
     for node_name in [ 'n0', 'n1' ] :
-        fit_node_dir = f'{results_dir}/{node_name}'
-        if os.path.exists(fit_node_dir) :
-            # rmtree is very dangerous so make sure fit_node_dir is as expected
-            assert fit_node_dir == f'build/example/{node_name}'
-            shutil.rmtree( fit_node_dir )
-    fit_node_dir = f'{results_dir}/n1'
-    os.makedirs(fit_node_dir )
-    #
-    # fit_node_database
-    fit_node_database =  fit_node_dir + '/dismod.db'
-    shutil.copyfile(root_node_database, fit_node_database)
+        root_node_dir = f'{results_dir}/{node_name}'
+        if os.path.exists(root_node_dir) :
+            # rmtree is very dangerous so make sure root_node_dir is as expected
+            assert root_node_dir == f'build/example/{node_name}'
+            shutil.rmtree( root_node_dir )
+    root_node_dir = f'{results_dir}/n1'
+    os.makedirs(root_node_dir )
     #
     # cascade starting at root node
     at_cascade.cascade_root_node(
         all_node_database  = all_node_database ,
-        root_node_database = fit_node_database ,
+        root_node_database = root_node_database,
         fit_goal_set       = fit_goal_set      ,
     )
     #

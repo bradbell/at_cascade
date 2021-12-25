@@ -547,22 +547,18 @@ def main() :
         mtall_data             = mtall_data,
     )
     #
-    # fit_node_dir
-    fit_node_dir = f'{results_dir}/n0'
-    if os.path.exists( fit_node_dir ) :
-        # rmtree is very dangerous so make sure fit_node_dir is as expected
-        assert fit_node_dir == 'build/example/n0'
-        shutil.rmtree( fit_node_dir )
-    os.makedirs( fit_node_dir )
-    #
-    # fit_node_database
-    fit_node_database =  fit_node_dir + '/dismod.db'
-    shutil.copyfile(root_node_database, fit_node_database)
+    # root_fit_dir
+    root_fit_dir = f'{results_dir}/n0'
+    if os.path.exists( root_fit_dir ) :
+        # rmtree is very dangerous so make sure root_fit_dir is as expected
+        assert root_fit_dir == 'build/example/n0'
+        shutil.rmtree( root_fit_dir )
+    os.makedirs( root_fit_dir )
     #
     # cascade starting at root node
     at_cascade.cascade_root_node(
         all_node_database  = all_node_database ,
-        root_node_database = fit_node_database ,
+        root_node_database = root_node_database ,
         fit_goal_set       = fit_goal_set      ,
     )
     #
