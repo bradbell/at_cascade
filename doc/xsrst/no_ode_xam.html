@@ -211,7 +211,7 @@ as a function of age <em>a</em> and node <em>n</em>.</p>
 <span id="no-ode-xam-covariate"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id7">Covariate</a><a class="headerlink" href="#covariate" title="Permalink to this headline"></a></h3>
 <p>There is one covariate for this example, income.
 The reference value for income is the average income corresponding
-to the <a class="reference internal" href="glossary.html#glossary-fit-node"><span class="std std-ref">fit_node</span></a>.</p>
+to the <a class="reference internal" href="glossary.html#glossary-root-node"><span class="std std-ref">root_node</span></a>.</p>
 <div class="section" id="i-n">
 <span id="no-ode-xam-covariate-i-n"></span><span id="index-5"></span><h4><a class="toc-backref" href="#id8">I_n</a><a class="headerlink" href="#i-n" title="Permalink to this headline"></a></h4>
 <p>We use <em>I_n</em> for the reference value of income at node <em>n</em>.
@@ -359,7 +359,7 @@ and in the root_node:</p>
 </div>
 <div class="section" id="iota-and-chi">
 <span id="no-ode-xam-parent-rate-smoothing-iota-and-chi"></span><span id="index-18"></span><h4><a class="toc-backref" href="#id21">iota and chi</a><a class="headerlink" href="#iota-and-chi" title="Permalink to this headline"></a></h4>
-<p>This is the smoothing used in the fit_node model for the rates.
+<p>This is the smoothing used in the root_node model for the rates.
 Note that the value part of this smoothing is only used for the <em>root_node</em>.
 This smoothing uses the <em>age_gird</em> and one time point.
 There are no <a class="reference internal" href="glossary.html#glossary-dtime"><span class="std std-ref">dtime</span></a> priors because there is only one time point.
@@ -396,7 +396,7 @@ routine replaces them for other nodes.</p>
 </div>
 <div class="section" id="dage-prior">
 <span id="no-ode-xam-parent-rate-smoothing-dage-prior"></span><span id="index-20"></span><h4><a class="toc-backref" href="#id23">dage Prior</a><a class="headerlink" href="#dage-prior" title="Permalink to this headline"></a></h4>
-<p>The following is the dage prior used for the fit_node:</p>
+<p>The following is the dage prior used for the root_node:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span>        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;parent_dage_prior&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;log_gaussian&#39;</span><span class="p">,</span>
             <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
@@ -410,12 +410,12 @@ routine replaces them for other nodes.</p>
 <div class="section" id="child-rate-smoothing">
 <span id="no-ode-xam-child-rate-smoothing"></span><span id="index-21"></span><h3><a class="toc-backref" href="#id24">Child Rate Smoothing</a><a class="headerlink" href="#child-rate-smoothing" title="Permalink to this headline"></a></h3>
 <p>This is the smoothing used for the
-random effect for each child of the fit_node.
+random effect for each child of the root_node.
 There are no <a class="reference internal" href="glossary.html#glossary-dage"><span class="std std-ref">dage</span></a> or dtime
 priors because there is only one age and one time point in this smoothing.</p>
 <div class="section" id="no-ode-xam-child-rate-smoothing-value-prior">
 <span id="index-22"></span><span id="id2"></span><h4><a class="toc-backref" href="#id25">Value Prior</a><a class="headerlink" href="#no-ode-xam-child-rate-smoothing-value-prior" title="Permalink to this headline"></a></h4>
-<p>The following is the value prior used for the children of the fit_node:</p>
+<p>The following is the value prior used for the children of the root_node:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span>        <span class="p">{</span>   <span class="s1">&#39;name&#39;</span><span class="p">:</span>    <span class="s1">&#39;child_value_prior&#39;</span><span class="p">,</span>
             <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
             <span class="s1">&#39;mean&#39;</span><span class="p">:</span>    <span class="mf">0.0</span><span class="p">,</span>
@@ -451,7 +451,7 @@ routine replaces them for other nodes.</p>
 <p>The results of the fit are in the
 <a class="reference internal" href="cascade_root_node.html#cascade-root-node-output-dismod-db-c-predict-sample"><span class="std std-ref">c_predict_sample</span></a> and
 <a class="reference internal" href="cascade_root_node.html#cascade-root-node-output-dismod-db-c-predict-fit-var"><span class="std std-ref">c_predict_fit_var</span></a>
-tables of the fit_node_database corresponding to each node.
+tables of the root_node_database corresponding to each node.
 The <a class="reference internal" href="check_cascade_fit.html#id1"><span class="std std-ref">check_cascade_fit</span></a>
 routine uses these tables to check that fit against the truth.</p>
 <table class="colwidths-given docutils align-default">

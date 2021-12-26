@@ -83,19 +83,19 @@ Splitting Covariate
 This cascade is set up to split by the sex covariate at level zero:
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 232-237
+    :lines: 232-238
     :language: py
 
 The :ref:`split_reference_table` for this example is:
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 242-249
+    :lines: 243-250
     :language: py
 
 The :ref:`node_split_table` for this example is
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 252-252
+    :lines: 253-253
     :language: py
 
 Note that we have used node_name (instead of node_id) here and let
@@ -111,7 +111,7 @@ The cascade computation tree is::
 The sex reference value for the root node (n0) corresponds to both sexes:
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 256-259
+    :lines: 257-260
     :language: py
 
 .. meta::
@@ -128,7 +128,7 @@ The reference value for income depends on both the node and sex;
 see :ref:`create_all_node_db.all_cov_reference`:
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 263-268
+    :lines: 264-269
     :language: py
 
 .. meta::
@@ -147,7 +147,7 @@ This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 272-272
+    :lines: 273-273
     :language: py
 
 .. meta::
@@ -200,7 +200,7 @@ The covariate values are a list in the same order as the covariate table.
 The values *a* and *t* are not used by this function for this example.
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 278-307
+    :lines: 279-308
     :language: py
 
 .. meta::
@@ -261,7 +261,7 @@ Value Prior
 The following is the value prior used for the root_node
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 323-330
+    :lines: 324-331
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -293,7 +293,7 @@ Value Prior
 The following is the value prior used for this smoothing:
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 335-341
+    :lines: 336-342
     :language: py
 
 The mean and standard deviation are only used for the root_node.

@@ -90,7 +90,7 @@ Covariate
 *********
 There is one covariate for this example, income.
 The reference value for income is the average income corresponding
-to the :ref:`glossary.fit_node`.
+to the :ref:`glossary.root_node`.
 
 .. meta::
    :keywords: i_n
@@ -312,7 +312,7 @@ and in the root_node:
 
 iota and chi
 ============
-This is the smoothing used in the fit_node model for the rates.
+This is the smoothing used in the root_node model for the rates.
 Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
 There are no :ref:`glossary.dtime` priors because there is only one time point.
@@ -353,7 +353,7 @@ routine replaces them for other nodes.
 
 dage Prior
 ==========
-The following is the dage prior used for the fit_node:
+The following is the dage prior used for the root_node:
 
 .. literalinclude:: ../../example/no_ode_xam.py
     :lines: 417-422
@@ -369,7 +369,7 @@ The following is the dage prior used for the fit_node:
 Child Rate Smoothing
 ********************
 This is the smoothing used for the
-random effect for each child of the fit_node.
+random effect for each child of the root_node.
 There are no :ref:`glossary.dage` or dtime
 priors because there is only one age and one time point in this smoothing.
 
@@ -382,7 +382,7 @@ priors because there is only one age and one time point in this smoothing.
 
 Value Prior
 ===========
-The following is the value prior used for the children of the fit_node:
+The following is the value prior used for the children of the root_node:
 
 .. literalinclude:: ../../example/no_ode_xam.py
     :lines: 427-431
@@ -432,7 +432,7 @@ Checking The Fit
 The results of the fit are in the
 :ref:`cascade_root_node.output_dismod_db.c_predict_sample` and
 :ref:`cascade_root_node.output_dismod_db.c_predict_fit_var`
-tables of the fit_node_database corresponding to each node.
+tables of the root_node_database corresponding to each node.
 The :ref:`check_cascade_fit<check_cascade_fit>`
 routine uses these tables to check that fit against the truth.
 

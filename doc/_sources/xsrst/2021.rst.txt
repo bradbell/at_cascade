@@ -17,6 +17,39 @@ Release Notes for 2021
    :local:
 
 .. meta::
+   :keywords: 12-26
+
+.. index:: 12-26
+
+.. _2021.12-26:
+
+12-26
+*****
+Add exception handling to running in parallel so that
+program does not hang when a job fails.
+
+.. meta::
+   :keywords: 12-24
+
+.. index:: 12-24
+
+.. _2021.12-24:
+
+12-24
+*****
+1.  The base_directory was changed to the :ref:`all_option_table.results_dir`
+    and now a required option the all_option table.
+
+2.  Change required precision in example/mulcov_freeze.py to reduce probability
+    of random test failure.
+
+3.  Replace :ref:`no_ode_fit` max_fit and max_abs_effect arguments by
+    :ref:`no_ode_fit.all_option_dict`.
+
+4.  In no_ode_fit, change in_database to :ref:`no_ode_fit.root_node_database`,
+    and change out_database to :ref:`no_ode_fit.root_fit_database`.
+
+.. meta::
    :keywords: 12-21
 
 .. index:: 12-21
@@ -25,9 +58,8 @@ Release Notes for 2021
 
 12-21
 *****
-1.  The output files are now relative to the
-    :ref:`glossary.base_directory` (they used to be relative to the
-    current working directory).
+1.  The output files are now relative to the base_directory
+    (they used to be relative to the current working directory).
 
 2.  Starting from a :ref:`glossary.root_node` that was not at the top
     of the node tree did not work. The :ref:`one_at_function` was

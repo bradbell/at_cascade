@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/no_ode_fit.py
-    :lines: 169-175
+    :lines: 184-189
     :language: py
 
 .. meta::
@@ -43,69 +43,34 @@ is a python string containing the name of the :ref:`all_node_db`.
 This argument can't be ``None``.
 
 .. meta::
-   :keywords: in_database
+   :keywords: root_node_database
 
-.. index:: in_database
+.. index:: root_node_database
 
-.. _no_ode_fit.in_database:
+.. _no_ode_fit.root_node_database:
 
-in_database
-***********
-is a python string specifying the location of a
-:ref:`glossary.input_node_database`
-relative to the current working directory.
+root_node_database
+******************
+is a python string specifying the location of the
+:ref:`glossary.root_node_database`.
 This argument can't be ``None``.
 
 .. meta::
-   :keywords: in_dir
+   :keywords: all_option_dict
 
-.. index:: in_dir
+.. index:: all_option_dict
 
-.. _no_ode_fit.in_database.in_dir:
+.. _no_ode_fit.all_option_dict:
 
-in_dir
-======
-is the directory where the *in_database* is located.
-
-.. meta::
-   :keywords: fit_node
-
-.. index:: fit_node
-
-.. _no_ode_fit.in_database.fit_node:
-
-fit_node
-========
-This is the name of the
-:ref:`glossary.fit_node` for the *in_database* and *out_database*.
-
-.. meta::
-   :keywords: max_fit
-
-.. index:: max_fit
-
-.. _no_ode_fit.max_fit:
-
-max_fit
-*******
-is an ``int`` containing the value of :ref:`all_option_table.max_fit` in the
-all option table.
-If max_fit does not appear in the all option table,
-*max_fit* should be None.
-
-.. meta::
-   :keywords: max_abs_effect
-
-.. index:: max_abs_effect
-
-.. _no_ode_fit.max_abs_effect:
-
-max_abs_effect
-**************
-is a ``float`` containing the value of :ref:`all_option_table.max_abs_effect`
-in the all option table.
-If max_abs_effect does not appear in the all option table,
-*max_abs_effect* should be None.
+all_option_dict
+***************
+is a ``dict`` containing the values in the all_option table.
+This dictionary has a key for each
+:ref:`all_option_table.table_format.option_name`
+and the corresponding value is
+:ref:`all_option_table.table_format.option_value`.
+If an option does not appear in the table, the corresponding key
+does not appear in *all_option_dict*.
 
 .. meta::
    :keywords: trace_fit
@@ -116,8 +81,12 @@ If max_abs_effect does not appear in the all option table,
 
 trace_fit
 *********
-if ``True``, ( ``False`` ) the progress of the dismod at fit command
-will be printed on standard output during the optimization.
+if ``True``, ( ``False`` ) the dismod_at commands,
+and the optimizer trace, are written to the file
+
+    *results_dir*\ /\ *root_node_name*\ /no_ode/trace.out
+
+otherwise, the dismod_at commands are written to standard output.
 
 .. meta::
    :keywords: no_ode_database
@@ -130,30 +99,32 @@ no_ode_database
 ***************
 An intermediate database is stored in the file
 
-    *in_dir*\ /\ *fit_node*\ /no_ode/dismod.db
+    *results_dir*\ /\ *root_node_name*\ /no_ode/dismod.db
 
+see :ref:`all_option_table.results_dir`
+and :ref:`all_option_table.root_node_name`.
 This contains the results of fitting without the ODE integrands
 so they can be plotted and converted to csv files.
 It has the :ref:`omega_constraint` so that the residuals for
 the ODE integrands make sense.
 The ODE integrands are not included (are included) for a fit using
-the *no_ode_database* (*out_database*).
+the *no_ode_database* (*root_fit_database*).
 
 .. meta::
-   :keywords: out_database
+   :keywords: root_fit_database
 
-.. index:: out_database
+.. index:: root_fit_database
 
-.. _no_ode_fit.out_database:
+.. _no_ode_fit.root_fit_database:
 
-out_database
-************
-The return value *out_database* is equal to
+root_fit_database
+*****************
+The return value *root_fit_database* is equal to
 
-    *in_dir*\ /\ *fit_node*\ /dismod.db
+    *results_dir*\ /\ *root_node_name*\ /dismod.db
 
-which can't be the same file name as *in_database*.
-This is an input_node_database similar to *in_database*.
+which can't be the same file name as *root_node_database*.
+This is an input_node_database similar to *root_node_database*.
 The difference is that the mean value in the priors for the fixed effects
 have been replace by the optimal estimate for fitting with out the integrands
 that use the ODE.

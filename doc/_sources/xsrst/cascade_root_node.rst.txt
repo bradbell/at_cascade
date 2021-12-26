@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/cascade_root_node.py
-    :lines: 119-124
+    :lines: 130-136
     :language: py
 
 .. meta::
@@ -54,17 +54,7 @@ This argument can't be ``None``.
 root_node_database
 ******************
 is a python string specifying the location of the dismod_at
-:ref:`glossary.root_node` database relative to the current working directory.
-It must
-
-    *base_directory*\ ``/``\ *root_node_name*\ ``/dismod.db``
-
-see :ref:`glossary.base_directory` and :ref:`all_option_table.root_node_name`.
-On input, this is an :ref:`glossary.input_node_database`.
-Upon return, it is a :ref:`glossary.fit_node_database` with the
-extra properties listed under
-:ref:`cascade_root_node.output_dismod_db` below.
-This argument can't be ``None``.
+:ref:`glossary.root_node_database`.
 
 .. meta::
    :keywords: fit_goal_set
@@ -81,6 +71,18 @@ specifying the node_id (node_name) for each element of the
 This argument can't be ``None``.
 
 .. meta::
+   :keywords: no_ode_fit
+
+.. index:: no_ode_fit
+
+.. _cascade_root_node.no_ode_fit:
+
+no_ode_fit
+**********
+if ``True`` ( ``False`` ) the :ref:`no_ode_fit` routine
+will (will not) be used to modify the parent value priors.
+
+.. meta::
    :keywords: trace_fit
 
 .. index:: trace_fit
@@ -89,8 +91,29 @@ This argument can't be ``None``.
 
 trace_fit
 *********
-if ``True``, ( ``False`` ) the progress of the dismod at fit commands
+if ``True`` ( ``False`` ) the progress of the dismod at fit commands
 will be printed on standard output during the optimization.
+
+.. meta::
+   :keywords: root_fit_database
+
+.. index:: root_fit_database
+
+.. _cascade_root_node.root_fit_database:
+
+root_fit_database
+*****************
+This directory is
+
+    *results_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
+
+see :ref:`all_option_table.results_dir`
+and :ref:`all_option_table.root_node_name`.
+If *no_ode_fit* is ``True`` ( ``False`` ) the priors in the
+*root_node_database* are modified (are not modified)
+before the root node is fit.
+Upon return, this is a :ref:`glossary.fit_node_database` with the
+extra properties listed below:
 
 .. meta::
    :keywords: output, dismod.db

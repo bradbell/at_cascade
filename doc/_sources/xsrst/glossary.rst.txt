@@ -17,21 +17,6 @@ Glossary
    :local:
 
 .. meta::
-   :keywords: base_directory
-
-.. index:: base_directory
-
-.. _glossary.base_directory:
-
-base_directory
-**************
-All of the input and output files are locate below the
-base directory which is defined as the directory where
-:ref:`all node database<all_node_db>` is located.
-For example, if the ``build/example/all_node.db`` is the
-all node database, ``build/example`` is the *base_directory*.
-
-.. meta::
    :keywords: chi
 
 .. index:: chi

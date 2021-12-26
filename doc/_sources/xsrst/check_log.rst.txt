@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/check_log.py
-    :lines: 80-85
+    :lines: 74-79
     :language: py
 
 .. meta::
@@ -77,14 +77,7 @@ This argument can't be ``None``.
 root_node_database
 ******************
 is a python string specifying the location of the dismod_at
-:ref:`glossary.root_node` database relative to the current working directory.
-It must *root_node_name*\ ``/dismod.db``; see
-:ref:`all_option_table.root_node_name`.
-On input, this is an :ref:`glossary.input_node_database`.
-Upon return, it is a :ref:`glossary.fit_node_database` with the
-extra properties listed under
-:ref:`cascade_root_node.output_dismod_db` below.
-This argument can't be ``None``.
+:ref:`glossary.root_node_database`.
 
 .. meta::
    :keywords: fit_goal_set
@@ -117,6 +110,7 @@ The keys in *message_dict* at ``str`` of the following form
 or each node, split reference value that has messages of the specified type.
 The value *message_dict{key]* is a ``list`` of ``str``
 containing the messages.
+If this list is empty, there are no messages.
 
 ----
 

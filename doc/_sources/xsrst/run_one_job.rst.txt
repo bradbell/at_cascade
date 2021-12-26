@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/run_one_job.py
-    :lines: 179-186
+    :lines: 208-215
     :language: py
 
 .. meta::
@@ -110,8 +110,13 @@ is a ``set`` of integrand_id values that occur in the data table; see
 
 trace_fit
 *********
-if ``True``, ( ``False`` ) the progress of the dismod at fit commands
-will be printed on standard output during the optimization.
+if ``True``, ( ``False`` ) the dismod_at commands,
+and the optimizer trace, for each fit node are written to the
+the corresponding file
+
+    *fit_node_dir*\ trace.out
+
+Otherwise, the dismod_at commands are written to standard output.
 
 .. meta::
    :keywords: fit_node_database

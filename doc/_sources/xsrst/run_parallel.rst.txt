@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/run_parallel.py
-    :lines: 338-347
+    :lines: 371-380
     :language: py
 
 .. meta::

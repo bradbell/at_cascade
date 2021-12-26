@@ -152,14 +152,7 @@ This argument can’t be <code class="docutils literal notranslate"><span class=
 <div class="section" id="root-node-database">
 <span id="check-log-root-node-database"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id6">root_node_database</a><a class="headerlink" href="#root-node-database" title="Permalink to this headline"></a></h3>
 <p>is a python string specifying the location of the dismod_at
-<a class="reference internal" href="glossary.html#glossary-root-node"><span class="std std-ref">root_node</span></a> database relative to the current working directory.
-It must <em>root_node_name</em><code class="docutils literal notranslate"><span class="pre">/dismod.db</span></code>; see
-<a class="reference internal" href="all_option_table.html#all-option-table-root-node-name"><span class="std std-ref">root_node_name</span></a>.
-On input, this is an <a class="reference internal" href="glossary.html#glossary-input-node-database"><span class="std std-ref">input_node_database</span></a>.
-Upon return, it is a <a class="reference internal" href="glossary.html#glossary-fit-node-database"><span class="std std-ref">fit_node_database</span></a> with the
-extra properties listed under
-<a class="reference internal" href="cascade_root_node.html#cascade-root-node-output-dismod-db"><span class="std std-ref">Output dismod.db</span></a> below.
-This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<a class="reference internal" href="glossary.html#glossary-root-node-database"><span class="std std-ref">root_node_database</span></a>.</p>
 </div>
 <div class="section" id="fit-goal-set">
 <span id="check-log-fit-goal-set"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id7">fit_goal_set</a><a class="headerlink" href="#fit-goal-set" title="Permalink to this headline"></a></h3>
@@ -177,7 +170,8 @@ The keys in <em>message_dict</em> at <code class="docutils literal notranslate">
 </div></blockquote>
 <p>or each node, split reference value that has messages of the specified type.
 The value <em>message_dict{key]</em> is a <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">str</span></code>
-containing the messages.</p>
+containing the messages.
+If this list is empty, there are no messages.</p>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/check_log.py</span></code></p>
 </div>

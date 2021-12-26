@@ -80,7 +80,7 @@ The results for nodes n5 and n6 are computed in parallel
 during the call to :ref:`continue_cascade<continue_cascade>`.
 
 .. literalinclude:: ../../example/continue_cascade.py
-    :lines: 181-184
+    :lines: 181-185
     :language: py
 
 see :ref:`create_all_node_db.all_option`.
@@ -133,7 +133,7 @@ in node *n* at age *a*, time *t*, and covariate values *c*.
 The values *a*, *t*. *c*, are not used by this function for this example.
 
 .. literalinclude:: ../../example/continue_cascade.py
-    :lines: 190-202
+    :lines: 191-203
     :language: py
 
 .. meta::
@@ -191,7 +191,7 @@ Value Prior
 The following is the value prior used for the root_node
 
 .. literalinclude:: ../../example/continue_cascade.py
-    :lines: 215-222
+    :lines: 216-223
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -224,7 +224,7 @@ Value Prior
 The following is the value prior used for the children of the fit_node:
 
 .. literalinclude:: ../../example/continue_cascade.py
-    :lines: 227-231
+    :lines: 228-232
     :language: py
 
 .. meta::
