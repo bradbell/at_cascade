@@ -79,10 +79,73 @@ from multiprocessing import shared_memory
 import numpy
 import at_cascade
 # ----------------------------------------------------------------------------
-job_status_wait  = 0
-job_status_ready = 1
-job_status_run   = 2
-job_status_done  = 3
+job_status_wait  = 0 # job is waiting for it's parent job to finish
+job_status_ready = 1 # job is readiy to run
+job_status_run   = 2 # job is running
+job_status_done  = 3 # job finished running
+job_status_error = 4 # job had an exception
+job_status_abort = 5 # job is a descendant of a job that had an exception
+# ----------------------------------------------------------------------------
+def try_parallel_job(
+    job_table,
+    this_job_id,
+    all_node_database,
+    node_table,
+    fit_integrand,
+    trace_fit,
+    skip_this_job,
+    max_number_cpu,
+    master_process,
+    lock,
+    event,
+) :
+    try :
+        run_parallel_job(
+            job_table,
+            this_job_id,
+            all_node_database,
+            node_table,
+            fit_integrand,
+            trace_fit,
+            skip_this_job,
+            max_number_cpu,
+            master_process,
+            lock,
+            event,
+        )
+    except :
+        # descendant_set
+        descendant_set = set( this_job_id )
+        for job_id in range(this_job_id + 1, n_job) :
+            parent_job_id = job_table[job_id]['parent_job_id']
+            if parent_job_id in descdndant_set :
+                descendant_set.add( job_id )
+        descendant_set.remove( this_job_id )
+        #
+        # lock
+        lock.aquire()
+        #
+        # shared_job_status[this_job_id]
+        assert shared_job_status[this_job_id] == job_status_run
+        shared_job_status[this_job_id] = job_status_error
+        #
+        # shared_job_status[descendant_set]
+        for job_id in descendant_set :
+            assert shared_job_status[this_job_id] == job_status_wait
+            shared_job_status[this_job_id] = job_status_abort
+        #
+        # lock
+        lock.release()
+        #
+        # event
+        # sharred_job_status has changed
+        event.set()
+        #
+        # raise
+        # This printes stack trace when we are not running in parallel
+        if max_number_cpu == 1 :
+            raise
+    return
 # ----------------------------------------------------------------------------
 def run_parallel_job(
     job_table,
@@ -170,7 +233,7 @@ def run_parallel_job(
         # lock has alread been acquired at beginning of this loop
         #
         # event
-        # set of jobs that are ready or running may have changed
+        # shared_job_status has changed
         event.set()
         #
         # job_id_ready
@@ -187,10 +250,9 @@ def run_parallel_job(
                 #
                 # no jobs running or ready
                 if master_process :
-                    # we are done, return to run_parallel
+                    # We are done, return to run_parallel which wuill use
+                    # the shared memory for error checking and then free it
                     lock.release()
-                    for shm in shm_list :
-                        shm.close()
                     #
                     return
                 else :
@@ -205,7 +267,7 @@ def run_parallel_job(
                 # jobs are running but none are ready
                 if master_process :
                     #
-                    # wait for an event on another process,
+                    # wait for another process to change shared_job_status,
                     # then go back to the while True point above
                     event.clear()
                     lock.release()
@@ -227,7 +289,7 @@ def run_parallel_job(
             # shared_numper_cpu_inuse
             shared_number_cpu_inuse[0] += n_cpu_spawn
             #
-            # chared_job_status
+            # shared_job_status
             for i in range( n_cpu_spawn + 1 ) :
                 job_id = job_id_ready[i]
                 #
@@ -237,7 +299,7 @@ def run_parallel_job(
             lock.release()
             #
             # event
-            # set of jobs that are ready or running may have changed
+            # shared_job_status has changed
             event.set()
             #
             # skip_child_job
@@ -266,7 +328,7 @@ def run_parallel_job(
                     lock,
                     event,
                 )
-                target = run_parallel_job
+                target = try_parallel_job
                 p = multiprocessing.Process(target = target, args = args)
                 #
                 p.deamon = False
@@ -373,7 +435,7 @@ def run_parallel(
     event = multiprocessing.Event()
     event.set()
     #
-    # run_parallel_job
+    # try_parallel_job
     run_parallel_job(
         job_table,
         start_job_id,
@@ -388,8 +450,16 @@ def run_parallel(
         event,
     )
     #
-    # check
-    assert all( shared_job_status == job_status_done )
+    # shared_number_cpu_inuse
+    assert shared_number_cpu_inuse == 1
+    #
+    # shared_job_status
+    for job_id in range(0, len(job_table) ):
+        status = shared_job_status[job_id]
+        if status == job_status_error :
+            print( 'Error in following job: ', job_table[job_id] )
+        else :
+            assert status in [ job_status_done, job_status_abort ]
     #
     # free shared memory objects
     for shm in shm_list :

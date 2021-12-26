@@ -23,6 +23,11 @@ Release Notes for at_cascade
 Release Notes for 2021
 ######################
 
+12-26
+*****
+Add exception handling to running in parallel so that
+program does not hang when a job fails.
+
 12-24
 *****
 1.  The base_directory was changed to the :ref:`all_option_table.results_dir`
