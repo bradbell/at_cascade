@@ -24,12 +24,13 @@ import at_cascade.ihme
 # ----------------------------------------------------------------------------
 # Begin settings that can be changed without understand this program
 # ----------------------------------------------------------------------------
-# covariate_csv_file_list
-covariate_name_list = [ 'ldi', 'obesity_prevalence' ]
-covariate_csv_file_list = [
-    'ihme_db/DisMod_AT/covariates/gbd2019_ldi_covariate_.csv',
-    'ihme_db/DisMod_AT/covariates/gbd2019_obesity_prevalence_covariate_.csv',
-]
+# covariate_csv_file_dict
+covariate_csv_file_dict = {
+'ldi' :
+    'ihme_db/DisMod_AT/covariates/gbd2019_ldi_covariate.csv',
+'obesity' :
+    'ihme_db/DisMod_AT/covariates/gbd2019_obesity_prevalence_covariate.csv',
+}
 #
 # input files
 data_dir        = 'ihme_db/DisMod_AT/testing/diabetes/data'
@@ -41,8 +42,8 @@ results_dir = 'ihme_db/DisMod_AT/results'
 #
 # root_node_name
 # name of the node where the cascade will start
-# root_node_name      = '1_Global'
-root_node_name      = '64_High-income'
+# root_node_name      = '64_High-income'
+root_node_name      = '1_Global'
 #
 # gamma_factor
 # The gamma for each integrand is this factor times the median
@@ -80,19 +81,6 @@ max_abs_effect      = 2.0
 # Maximum number of data points to plot per integrand.
 max_plot            = 2000
 #
-# fit_goal_set
-# Name of the nodes that we are drilling to (must be below root_node).
-# You can change this setting and then run
-#   bin/ihme/diabetes.py continue database
-# fit_goal_set = { '1_Global' }
-# fit_goal_set = { '64_High-income' }
-fit_goal_set = {
-    '527_California',
-    '547_Mississippi',
-    '81_Germany',
-    '84_Ireland'
-}
-#
 # node_split_name_set
 # Name of the nodes where we are splitting from Both to Female, Male
 node_split_name_set = {'102_United_States_of_America', '73_Western_Europe'}
@@ -113,6 +101,65 @@ node_split_name_set = {'102_United_States_of_America', '73_Western_Europe'}
 #         },
 # ]
 mulcov_freeze_list = list()
+#
+# fit_goal_set
+# Name of the nodes that we are drilling to (must be below root_node).
+# You can change this setting and then run
+#   bin/ihme/diabetes.py continue database
+# fit_goal_set = { '1_Global' }
+# fit_goal_set = { '64_High-income' }
+# fit_goal_set = {
+#     '527_California',
+#     '547_Mississippi',
+#     '81_Germany',
+#     '84_Ireland'
+# }
+fit_goal_set = {
+    '8_Taiwan_(Province_of_China)',
+    '514_Shanghai',
+    '18_Thailand',
+    '16_Philippines',
+    '22_Fiji',
+    '26_Papua_New_Guinea',
+    '41_Uzbekistan',
+    '38_Mongolia',
+    '505_Inner_Mongolia',
+    '61_Republic_of_Moldova',
+    '44850_New_Zealand_Maori_population',
+    '44851_New_Zealand_non-Maori_population',
+    '35469_Kagoshima',
+    '68_Republic_of_Korea',
+    '7_Democratic_People_s_Republic_of_Korea',
+    '349_Greenland',
+    '527_California',
+    '4644_Baja_California',
+    '4645_Baja_California_Sur',
+    '547_Mississippi',
+    '97_Argentina',
+    '99_Uruguay',
+    '81_Germany',
+    '84_Ireland',
+    '433_Northern_Ireland',
+    '44758_Tower_Hamlets',
+    '123_Peru',
+    '121_Bolivia_(Plurinational_State_of)',
+    '107_Barbados',
+    '116_Saint_Lucia',
+    '129_Honduras',
+    '4670_Tamaulipas',
+    '136_Paraguay',
+    '150_Oman',
+    '44872_Golestan',
+    '161_Bangladesh',
+    '171_Democratic_Republic_of_the_Congo',
+    '168_Angola',
+    '185_Rwanda',
+    '179_Ethiopia',
+    '194_Lesotho',
+    '482_Eastern_Cape',
+    '218_Togo',
+    '25329_Edo',
+}
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understand this program
 # ----------------------------------------------------------------------------
@@ -512,7 +559,7 @@ def setup_function() :
         results_dir             = results_dir,
         data_inp_file           = data_inp_file,
         csmr_inp_file           = csmr_inp_file,
-        covariate_csv_file_list = covariate_csv_file_list,
+        covariate_csv_file_dict = covariate_csv_file_dict,
     )
     #
     # write_mtall_tables

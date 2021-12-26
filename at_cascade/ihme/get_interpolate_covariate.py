@@ -13,7 +13,7 @@ from scipy.interpolate import  UnivariateSpline
 from scipy.interpolate import  RectBivariateSpline
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
-def check_rectangular_grid(covariate_csv_file, covariate_table) :
+def check_rectangular_grid(covariate_file_path, covariate_table) :
     #
     # grid
     grid = dict()
@@ -29,7 +29,7 @@ def check_rectangular_grid(covariate_csv_file, covariate_table) :
         if year_id not in grid[location_id][sex_name] :
             grid[location_id][sex_name][year_id] = set()
         if age_group_id in grid[location_id][sex_name][year_id] :
-            msg  = f'Error in {covariate_csv_file}\n'
+            msg  = f'Error in {covariate_file_path}\n'
             msg += f'For location_id = {location_id}, sex = {sex_name}, '
             msg += f'year_id = {year_id}.\n'
             msg += f'The age_group_id = {age_group_id} appears more than once'
@@ -45,7 +45,7 @@ def check_rectangular_grid(covariate_csv_file, covariate_table) :
                     previous_age_group_id_set  = age_group_id_set
                     previous_year_id           = year_id
                 elif previous_age_group_id_set != age_group_id_set :
-                    msg  = f'Error in {covariate_csv_file}\n'
+                    msg  = f'Error in {covariate_file_path}\n'
                     msg += f'For location_id = {location_id}, '
                     msg += f'sex = {sex_name}.\n'
                     #
@@ -64,8 +64,8 @@ def check_rectangular_grid(covariate_csv_file, covariate_table) :
 # (one_age_group, interpolate_covariate)  = get_interpolate_covariate(
 #   covaraite_csv_file, age_group_id_dict
 # )
-def get_interpolate_covariate(covariate_csv_file, age_group_id_dict) :
-    file_ptr   = open(covariate_csv_file)
+def get_interpolate_covariate(covariate_file_path, age_group_id_dict) :
+    file_ptr   = open(covariate_file_path)
     reader     = csv.DictReader(file_ptr)
     #
     # covariate_table
@@ -204,7 +204,7 @@ def get_interpolate_covariate(covariate_csv_file, age_group_id_dict) :
                     if age  != age_grid[age_index] \
                     or time != time_grid[time_index ] :
                         check_rectangular_grid(
-                            covariate_csv_file,
+                            covariate_file_path,
                             covariate_table
                         )
                         assert False

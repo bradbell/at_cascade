@@ -140,18 +140,18 @@ def get_csmr_table(csmr_inp_file, age_group_id_dict) :
 # -----------------------------------------------------------------------------
 #
 # write_data_table(
-#   data_inp_file, csmr_inp_file, covariate_csv_file_list, data_table_file
+#   data_inp_file, csmr_inp_file, covariate_csv_file_dict, data_table_file
 # )
 def write_data_table(
     results_dir             = None,
     data_inp_file           = None,
     csmr_inp_file           = None,
-    covariate_csv_file_list = None,
+    covariate_csv_file_dict = None,
     ) :
     assert type(results_dir) is str
     assert type(data_inp_file) is str
     assert type(csmr_inp_file) is str
-    assert type(covariate_csv_file_list) is list
+    assert type(covariate_csv_file_dict) is dict
     #
     # data_table_file
     data_table_file = at_cascade.ihme.csv_file['data']
@@ -204,22 +204,16 @@ def write_data_table(
         row['node_id'] = location_id2node_id[ row['location_id'] ]
     #
     # data_table
-    for covariate_csv_file in covariate_csv_file_list :
+    for covariate_name in covariate_csv_file_dict :
         #
-        # covariate_name
-        path_list   = covariate_csv_file.split('/')
-        file_name   = path_list[-1]
-        gbd_version = at_cascade.ihme.gbd_version
-        assert file_name.startswith( gbd_version )
-        assert file_name.endswith( '_covariate.csv')
-        covariate_name = file_name[ len(gbd_version) : ]
-        covariate_name = covariate_name [ : - len('_covariate.csv') ]
-        covariate_name = at_cascade.ihme.covariate_short_name[covariate_name]
+        # covariate_file_path
+        covariate_file_path = covariate_csv_file_dict[covariate_name]
+        assert covariate_file_path.endswith( '_covariate.csv')
         #
         # interpolate_covariate
         (one_age_group, interpolate_covariate) = \
             at_cascade.ihme.get_interpolate_covariate(
-                covariate_csv_file, age_group_id_dict
+                covariate_file_path, age_group_id_dict
         )
         #
         # row

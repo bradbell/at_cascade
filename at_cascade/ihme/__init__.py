@@ -70,28 +70,6 @@ integrand_name2measure_id = {
     'relrisk'    : 11,
 }
 #
-# covaraite_short_name
-covariate_short_name = {
-'composite_fortification_standard_and_folic_acid_inclusion' :
-    'fortification',
-'elevation_over_1500m' :
-    'at_elevation',
-'folic_acid' :
-    'folic_acid',
-'haqi' :
-    'haqi',
-'ldi' :
-    'ldi',
-'mean_war_mortality' :
-    'war' ,
-'negative_experience_index_log_tranform' :
-    'experience' ,
-'obesity_prevalence' :
-    'obesity',
-'SEV_scalar_COPD_age_std_log_transform' :
-   'sev_scalar',
-}
-#
 # ----------------------------------------------------------------------------
 # BEGIN_SORT_THIS_LINE_PLUS_1
 from .get_age_group_id_table      import get_age_group_id_table

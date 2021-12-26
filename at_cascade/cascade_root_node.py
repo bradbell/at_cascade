@@ -164,9 +164,9 @@ def cascade_root_node(
     # check root_node_name
     parent_node_name = at_cascade.get_parent_node(root_node_database)
     if parent_node_name != root_node_name :
-        msg  = f'{root_node_databse} parent_node_name = {parent_node_name}\n'
-        msg  = f'{all_node_database} root_node_name = {root_node_name}'
-        assert False, smg
+        msg  = f'{root_node_database} parent_node_name = {parent_node_name}\n'
+        msg += f'{all_node_database} root_node_name = {root_node_name}'
+        assert False, msg
     #
     # root_fit_database
     root_fit_database = f'{results_dir}/{root_node_name}/dismod.db'
