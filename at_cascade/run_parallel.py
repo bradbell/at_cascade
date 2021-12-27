@@ -78,6 +78,7 @@ import multiprocessing
 from multiprocessing import shared_memory
 import numpy
 import at_cascade
+import dismod_at
 # ----------------------------------------------------------------------------
 job_status_wait  = 0 # job is waiting for it's parent job to finish
 job_status_ready = 1 # job is readiy to run
@@ -85,6 +86,57 @@ job_status_run   = 2 # job is running
 job_status_done  = 3 # job finished running
 job_status_error = 4 # job had an exception
 job_status_abort = 5 # job is a descendant of a job that had an exception
+# ----------------------------------------------------------------------------
+def get_database_dir(
+    all_node_database, node_table, fit_node_id, fit_split_reference_id
+) :
+    #
+    # all_option, node_split_table, split_reference_table
+    new              = False
+    connection       = dismod_at.create_connection(all_node_database, new)
+    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+    node_split_table = dismod_at.get_table_dict(connection, 'node_split')
+    split_reference_table = \
+        dismod_at.get_table_dict(connection, 'split_reference')
+    connection.close()
+    #
+    # results_dir, root_node_name
+    results_dir             = None
+    root_node_id            = None
+    root_split_reference_id = None
+    for row in all_option_table :
+        if row['option_name'] == 'results_dir' :
+            results_dir = row['option_value']
+        if row['option_name'] == 'root_node_name' :
+            root_node_name = row['option_value']
+            root_node_id   = \
+                at_cascade.table_name2id(node_table, 'node', root_node_name)
+        if row['option_name'] == 'root_split_reference_name' :
+            root_split_reference_name = row['option_value']
+            root_split_reference_id = at_cascade.table_name2id(
+                split_reference_table,
+                'split_reference',
+                root_split_reference_name
+            )
+    assert results_dir is not None
+    assert root_node_id is not None
+    #
+    # node_split_set
+    node_split_set = set()
+    for row in node_split_table :
+        node_split_set.add( row['node_id'] )
+    #
+    database_dir = at_cascade.get_database_dir(
+        node_table              = node_table,
+        split_reference_table   = split_reference_table,
+        node_split_set          = node_split_set,
+        root_node_id            = root_node_id,
+        root_split_reference_id = root_split_reference_id,
+        fit_node_id             = fit_node_id,
+        fit_split_reference_id  = fit_split_reference_id,
+    )
+    return f'{results_dir}/{database_dir}'
+# )
 # ----------------------------------------------------------------------------
 # ok = try_one_job(
 def try_one_job(
@@ -489,7 +541,16 @@ def run_parallel(
     for job_id in range(0, len(job_table) ):
         status = shared_job_status[job_id]
         if status == job_status_error :
-            print( 'Error in following job: ', job_table[job_id] )
+            row = job_table[job_id]
+            fit_node_id            = row['fit_node_id']
+            fit_split_reference_id = row['split_reference_id']
+            database_dir = get_database_dir(
+                all_node_database,
+                node_table,
+                fit_node_id,
+                fit_split_reference_id
+            )
+            print( 'Error: ', database_dir )
         else :
             assert status in [ job_status_done, job_status_abort ]
     #
