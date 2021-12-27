@@ -70,10 +70,12 @@ that the fit corresponds to.
 
 database_dir
 ************
-The return value is a ``str`` containg the name of the directory
-where the database corresponding to he fit is located relative to
-the :ref:`glossary.base_directory`.
-It begins with *root_node_name*\ ``/`` .
+The return value is a ``str`` containg the directory,
+relative to the :ref:`all_option_table.results_dir`,
+where the database corresponding to the fit is (or will be) located.
+In other words, the fit database has the following path:
+
+    *results_dir*\ ``/`` *database_dir*\ ``/dismod.db``
 
 
 {xsrst_end get_database_dir}
