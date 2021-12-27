@@ -12,6 +12,7 @@
 {xsrst_spell
     dir
     var
+    obj
 }
 
 Run One Job
@@ -26,7 +27,7 @@ Syntax
 
 Default Value
 *************
-None of the arguments to this routine can be ``None``.
+The only argument that can be None is *trace_file_obj*.
 
 job_table
 *********
@@ -54,15 +55,11 @@ is a ``set`` of integrand_id values that occur in the data table; see
 :ref:`get_fit_integrand`.
 
 
-trace_fit
-*********
-if ``True``, ( ``False`` ) the dismod_at commands,
-and the optimizer trace, for each fit node are written to the
-the corresponding file
-
-    *fit_node_dir*\ trace.out
-
-Otherwise, the dismod_at commands are written to standard output.
+trace_file_obj
+**************
+If this argument is not None, it is a ``io.TextIOBase`` object
+corresponding to a file that is opened for writing the tracing output
+for this job.
 
 fit_node_database
 *****************
@@ -116,7 +113,7 @@ between it's input and output state.
 {xsrst_end run_one_job}
 '''
 # ----------------------------------------------------------------------------
-import datetime
+import io
 import os
 import time
 import dismod_at
@@ -211,7 +208,7 @@ def run_one_job(
     all_node_database = None,
     node_table        = None,
     fit_integrand     = None,
-    trace_fit         = None,
+    trace_file_obj    = None,
 # )
 # END syntax
 ) :
@@ -219,7 +216,11 @@ def run_one_job(
     assert run_job_id        is not None
     assert all_node_database is not None
     assert node_table        is not None
-    assert trace_fit         is not None
+    #
+    # file_stdout
+    if trace_file_obj is not None :
+        assert isinstance(trace_file_obj, io.TextIOBase)
+    file_stdout = trace_file_obj
     #
     # fit_node_id
     fit_node_id = job_table[run_job_id]['fit_node_id']
@@ -289,16 +290,6 @@ def run_one_job(
         fit_split_reference_id  = fit_split_reference_id,
     )
     fit_node_database = f'{results_dir}/{database_dir}/dismod.db'
-    #
-    # trace_file_name, file_stdout
-    trace_file_name = None
-    file_stdout     = None
-    if trace_fit :
-        trace_file_name = f'{results_dir}/{database_dir}/trace.out'
-        file_stdout    = open(trace_file_name, 'w')
-        now            = datetime.datetime.now()
-        current_time   = now.strftime("%H:%M:%S")
-        print( f'Begin: {current_time}: {trace_file_name}' )
     #
     # check fit_node_database
     parent_node_name = at_cascade.get_parent_node(fit_node_database)
@@ -438,8 +429,3 @@ def run_one_job(
     #
     # connection
     connection.close()
-    #
-    if trace_fit :
-        now            = datetime.datetime.now()
-        current_time   = now.strftime("%H:%M:%S")
-        print( f'End:   {current_time}: {trace_file_name}' )

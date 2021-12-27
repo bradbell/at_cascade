@@ -25,8 +25,12 @@ Release Notes for 2021
 
 12-26
 *****
-Add exception handling to running in parallel so that
-program does not hang when a job fails.
+1.  Add exception handling to running in parallel so that
+    program does not hang when a job fails.
+
+2.  Change the run_one_job trace_fit argument to
+    :ref:`run_one_job.trace_file_obj` so that opening and closing the file
+    is managed by the calling program.
 
 12-24
 *****

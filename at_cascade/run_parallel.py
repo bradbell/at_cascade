@@ -52,7 +52,10 @@ fit_integrand
 
 trace_fit
 *********
-:ref:`run_one_job.trace_fit`
+if `False`` the dismod_at commands and other output for this job
+is written to standard output.
+Otherwise, the output is written to a file named ``trace.out``
+in the same directory as the database for the corresponding job.
 
 fit_node_database
 *****************
@@ -74,6 +77,7 @@ If it is one, the jobs are run sequentially; i.e., not in parallel.
 {xsrst_end run_parallel}
 '''
 # ----------------------------------------------------------------------------
+import datetime
 import multiprocessing
 from multiprocessing import shared_memory
 import numpy
@@ -87,7 +91,7 @@ job_status_done  = 3 # job finished running
 job_status_error = 4 # job had an exception
 job_status_abort = 5 # job is a descendant of a job that had an exception
 # ----------------------------------------------------------------------------
-def get_database_dir(
+def get_results_database_dir(
     all_node_database, node_table, fit_node_id, fit_split_reference_id
 ) :
     #
@@ -151,7 +155,26 @@ def try_one_job(
     master_process,
     lock,
     event,
-) :
+)  :
+    #
+    # database_dir
+    row = job_table[this_job_id]
+    fit_node_id            = row['fit_node_id']
+    fit_split_reference_id = row['split_reference_id']
+    results_database_dir = get_results_database_dir(
+        all_node_database,
+        node_table,
+        fit_node_id,
+        fit_split_reference_id
+    )
+    #
+    # trace_file_obj
+    trace_file_name = f'{results_database_dir}/trace.out'
+    trace_file_obj  = open(trace_file_name, 'w')
+    now             = datetime.datetime.now()
+    current_time    = now.strftime("%H:%M:%S")
+    print( f'Begin: {current_time}: {trace_file_name}' )
+    #
     try :
         # run_one_job
         # the lock should not be aquired during this operation
@@ -161,9 +184,10 @@ def try_one_job(
             all_node_database = all_node_database,
             node_table        = node_table,
             fit_integrand     = fit_integrand,
-            trace_fit         = trace_fit,
+            trace_file_obj    = trace_file_obj,
         )
         ok = True
+        print( f'End:   {current_time}: {trace_file_name}' )
     except :
         # shared_job_status
         tmp = numpy.empty(len(job_table), dtype = int )
@@ -209,6 +233,8 @@ def try_one_job(
         #
         # ok
         ok = False
+        print( f'Error: {current_time}: {results_database_dir}' )
+    trace_file_obj.close()
     return ok
 # ----------------------------------------------------------------------------
 def run_parallel_job(
@@ -540,19 +566,7 @@ def run_parallel(
     # shared_job_status
     for job_id in range(0, len(job_table) ):
         status = shared_job_status[job_id]
-        if status == job_status_error :
-            row = job_table[job_id]
-            fit_node_id            = row['fit_node_id']
-            fit_split_reference_id = row['split_reference_id']
-            database_dir = get_database_dir(
-                all_node_database,
-                node_table,
-                fit_node_id,
-                fit_split_reference_id
-            )
-            print( 'Error: ', database_dir )
-        else :
-            assert status in [ job_status_done, job_status_abort ]
+        assert status in [ job_status_done, job_status_error, job_status_abort ]
     #
     # free shared memory objects
     for shm in shm_list :
