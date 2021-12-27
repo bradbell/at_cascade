@@ -108,6 +108,7 @@ mulcov_freeze_list = list()
 #   bin/ihme/diabetes.py continue database
 # fit_goal_set = { '1_Global' }
 # fit_goal_set = { '64_High-income' }
+# fit_goal_set = { '142_Iran_(Islamic_Republic_of)' }
 # fit_goal_set = {
 #     '527_California',
 #     '547_Mississippi',

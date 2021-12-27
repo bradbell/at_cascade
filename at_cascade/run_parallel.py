@@ -86,7 +86,8 @@ job_status_done  = 3 # job finished running
 job_status_error = 4 # job had an exception
 job_status_abort = 5 # job is a descendant of a job that had an exception
 # ----------------------------------------------------------------------------
-def try_parallel_job(
+# ok = try_one_job(
+def try_one_job(
     job_table,
     this_job_id,
     all_node_database,
@@ -100,30 +101,38 @@ def try_parallel_job(
     event,
 ) :
     try :
-        run_parallel_job(
-            job_table,
-            this_job_id,
-            all_node_database,
-            node_table,
-            fit_integrand,
-            trace_fit,
-            skip_this_job,
-            max_number_cpu,
-            master_process,
-            lock,
-            event,
+        # run_one_job
+        # the lock should not be aquired during this operation
+        at_cascade.run_one_job(
+            job_table         = job_table,
+            run_job_id        = this_job_id ,
+            all_node_database = all_node_database,
+            node_table        = node_table,
+            fit_integrand     = fit_integrand,
+            trace_fit         = trace_fit,
         )
+        ok = True
     except :
+        # shared_job_status
+        tmp = numpy.empty(len(job_table), dtype = int )
+        shm_job_status = shared_memory.SharedMemory(
+            create = False, size = tmp.nbytes, name = 'at_cascade_job_status'
+        )
+        shared_job_status = numpy.ndarray(
+            tmp.shape, dtype = tmp.dtype, buffer = shm_job_status.buf
+        )
+        #
         # descendant_set
-        descendant_set = set( this_job_id )
+        descendant_set = { this_job_id }
+        n_job          = len(job_table)
         for job_id in range(this_job_id + 1, n_job) :
             parent_job_id = job_table[job_id]['parent_job_id']
-            if parent_job_id in descdndant_set :
+            if parent_job_id in descendant_set :
                 descendant_set.add( job_id )
         descendant_set.remove( this_job_id )
         #
         # lock
-        lock.aquire()
+        lock.acquire()
         #
         # shared_job_status[this_job_id]
         assert shared_job_status[this_job_id] == job_status_run
@@ -142,10 +151,13 @@ def try_parallel_job(
         event.set()
         #
         # raise
-        # This printes stack trace when we are not running in parallel
+        # This prints stack trace when we are not running in parallel
         if max_number_cpu == 1 :
             raise
-    return
+        #
+        # ok
+        ok = False
+    return ok
 # ----------------------------------------------------------------------------
 def run_parallel_job(
     job_table,
@@ -199,34 +211,45 @@ def run_parallel_job(
     job_id_array = numpy.array( range(len(job_table)), dtype = int )
     #
     #
+    this_job_ok = True
     if not skip_this_job :
         #
-        # run_one_job
+        # try_one_job
         # do not want the lock to be aquired during this operation
-        at_cascade.run_one_job(
-            job_table         = job_table,
-            run_job_id        = this_job_id ,
-            all_node_database = all_node_database,
-            node_table        = node_table,
-            fit_integrand     = fit_integrand,
-            trace_fit         = trace_fit,
+        this_job_ok = try_one_job(
+            job_table,
+            this_job_id,
+            all_node_database,
+            node_table,
+            fit_integrand,
+            trace_fit,
+            skip_this_job,
+            max_number_cpu,
+            master_process,
+            lock,
+            event,
         )
     #
     # lock
     # must lock before access shared data
     lock.acquire()
     #
-    # shared_job_status
-    if not skip_this_job :
-        assert shared_job_status[this_job_id] == job_status_run
-        shared_job_status[this_job_id] = job_status_done
-    #
-    # shared_job_status[child_job_id] = job_status_ready
-    start_child_job_id    = job_table[this_job_id ]['start_child_job_id']
-    end_child_job_id      = job_table[this_job_id ]['end_child_job_id']
-    for child_job_id in range(start_child_job_id, end_child_job_id ) :
-        assert shared_job_status[child_job_id] == job_status_wait
-        shared_job_status[child_job_id] = job_status_ready
+    if not this_job_ok :
+        assert shared_job_status[this_job_id] == job_status_error
+    else :
+        #
+        # shared_job_status
+        if not skip_this_job :
+            assert shared_job_status[this_job_id] == job_status_run
+            shared_job_status[this_job_id] = job_status_done
+        #
+        # shared_job_status[child_job_id] = job_status_ready
+        start_child_job_id    = job_table[this_job_id ]['start_child_job_id']
+        end_child_job_id      = job_table[this_job_id ]['end_child_job_id']
+        child_range = range(start_child_job_id, end_child_job_id)
+        for child_job_id in child_range :
+            assert shared_job_status[child_job_id] == job_status_wait
+            shared_job_status[child_job_id] = job_status_ready
     #
     while True :
         # lock
@@ -328,7 +351,7 @@ def run_parallel_job(
                     lock,
                     event,
                 )
-                target = try_parallel_job
+                target = run_parallel_job
                 p = multiprocessing.Process(target = target, args = args)
                 #
                 p.deamon = False
@@ -339,29 +362,38 @@ def run_parallel_job(
             #
             # run_one_job
             # do not want the lock to be aquired during this operation
-            at_cascade.run_one_job(
-                job_table         = job_table,
-                run_job_id        = job_id,
-                all_node_database = all_node_database,
-                node_table        = node_table,
-                fit_integrand     = fit_integrand,
-                trace_fit         = trace_fit,
+            job_ok = try_one_job(
+                job_table,
+                job_id,
+                all_node_database,
+                node_table,
+                fit_integrand,
+                trace_fit,
+                skip_this_job,
+                max_number_cpu,
+                master_process,
+                lock,
+                event,
             )
             #
             # lock
             lock.acquire()
             #
-            # shared_job_status
-            assert shared_job_status[job_id] == job_status_run
-            shared_job_status[job_id] = job_status_done
-            #
-            # shared_job_status[child_job_id] = job_status_ready
-            start_child_job_id  = job_table[job_id ]['start_child_job_id']
-            end_child_job_id    = job_table[job_id ]['end_child_job_id']
-            for child_job_id in range(start_child_job_id, end_child_job_id ) :
-                assert shared_job_status[child_job_id] == job_status_wait
-                shared_job_status[child_job_id] = job_status_ready
-
+            if not job_ok :
+                assert shared_job_status[job_id] == job_status_error
+            else :
+                #
+                # shared_job_status
+                assert shared_job_status[job_id] == job_status_run
+                shared_job_status[job_id] = job_status_done
+                #
+                # shared_job_status[child_job_id] = job_status_ready
+                start_child_job_id  = job_table[job_id ]['start_child_job_id']
+                end_child_job_id    = job_table[job_id ]['end_child_job_id']
+                child_range = range(start_child_job_id, end_child_job_id)
+                for child_job_id in child_range :
+                   assert shared_job_status[child_job_id] == job_status_wait
+                   shared_job_status[child_job_id] = job_status_ready
         #
         # lock
         # lock is acquired at end of this loop
@@ -435,7 +467,7 @@ def run_parallel(
     event = multiprocessing.Event()
     event.set()
     #
-    # try_parallel_job
+    # run_parallel_job
     run_parallel_job(
         job_table,
         start_job_id,
