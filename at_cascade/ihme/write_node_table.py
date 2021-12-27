@@ -7,6 +7,7 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
+import re
 import os
 import csv
 import at_cascade.ihme
@@ -39,6 +40,9 @@ def write_node_table(results_dir) :
         location_name = row_in['location_name']
         location_name = location_name.replace(' ',  '_')
         location_name = location_name.replace('\'', '_')
+        pattern       = r'_[(][^)]*[)]'
+        replace       = ''
+        location_name = re.sub(pattern, replace, location_name)
         #
         parent_id     = int( row_in['parent_id'] )
         #

@@ -115,7 +115,7 @@ mulcov_freeze_list = list()
 #     '84_Ireland'
 # }
 fit_goal_set = {
-    '8_Taiwan_(Province_of_China)',
+    '8_Taiwan',
     '514_Shanghai',
     '18_Thailand',
     '16_Philippines',
@@ -142,7 +142,7 @@ fit_goal_set = {
     '433_Northern_Ireland',
     '44758_Tower_Hamlets',
     '123_Peru',
-    '121_Bolivia_(Plurinational_State_of)',
+    '121_Bolivia',
     '107_Barbados',
     '116_Saint_Lucia',
     '129_Honduras',
@@ -160,7 +160,6 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
-fit_goal_set = { '142_Iran_(Islamic_Republic_of)' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understand this program
 # ----------------------------------------------------------------------------
