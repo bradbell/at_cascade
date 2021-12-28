@@ -146,7 +146,7 @@ def main(
         'continue',
         'error',
         'warning',
-        'ihme_cvs',
+        'ihme_csv',
      }
     command     = None
     if len(sys.argv) == 2 :
@@ -237,7 +237,7 @@ def main(
                 trace_fit         = True,
             )
     elif command == 'ihme_csv' :
-        at_cascade.ihme.ihme_csv(covariate_csv_file_dict)
+        at_cascade.ihme.ihme_csv(covariate_csv_file_dict, fit_goal_set)
     #
     else :
         assert False

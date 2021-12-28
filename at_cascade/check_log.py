@@ -22,7 +22,7 @@ Syntax
 
 Purpose
 *******
-Read all the logs for a cascade and prints any warning or error messages.
+Read all the logs for a cascade and return any warning or error messages.
 
 message_type
 ************
@@ -58,7 +58,7 @@ The keys in *message_dict* at ``str`` of the following form
 or each node, split reference value that has messages of the specified type.
 The value *message_dict{key]* is a ``list`` of ``str``
 containing the messages.
-If this list is empty, there are no messages.
+If a *key* is in *message_dict*, the corresponding list is non-empty.
 
 {xsrst_end check_log}
 '''

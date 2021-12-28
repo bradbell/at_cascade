@@ -47,6 +47,7 @@ def get_parent_node(
     new              = False
     connection       = dismod_at.create_connection(database, new)
     option_table     = dismod_at.get_table_dict(connection, 'option')
+    connection.close()
     #
     # parent_node_name
     parent_node_name = None

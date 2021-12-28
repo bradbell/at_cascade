@@ -17,17 +17,13 @@ def ihme_csv_one_job(
     interpolate_all_covariate  = None ,
 ) :
     assert type(fit_node_database) is str
-    assert type(age_group_dict) is dict
+    assert type(age_group_id_dict) is dict
     assert type(one_age_group_dict) is dict
     assert type(interpolate_all_covariate) is dict
     assert one_age_group_dict.keys() == interpolate_all_covariate.keys()
     #
     # all_node_database
-    all_node_database = cascade.ihme.all_node_database
-    #
-    # node_table
-    file_name = at_cascade.ihme.csv_file['node']
-    node_table = at_cascae.ihme.get_table_csv(file_name)
+    all_node_database = at_cascade.ihme.all_node_database
     #
     # integrand_table, age_table, time_table
     new        = False
@@ -45,6 +41,19 @@ def ihme_csv_one_job(
     split_reference_table = \
         dismod_at.get_table_dict(connection, 'split_reference')
     connection.close()
+    #
+    # results_dir
+    results_dir = None
+    for row in all_option_table :
+        if row['option_name'] == 'results_dir' :
+            results_dir = row['option_value']
+    assert results_dir is not None
+    #
+    # node_table
+    # Note that this node table has map to location_id
+    file_name  = at_cascade.ihme.csv_file['node']
+    file_path  = f'{results_dir}/{file_name}'
+    node_table = at_cascade.ihme.get_table_csv(file_path)
     #
     # covariate_list
     covariate_list = interpolate_all_covariate.keys()
@@ -73,7 +82,7 @@ def ihme_csv_one_job(
     year_grid = [ 1990.5, 1995.5, 2000.5, 2005.5, 2010.5, 2015.5, 2020.5 ]
     #
     # age_group_id_list
-    age_group_id_list = age_group_dict.keys()
+    age_group_id_list = age_group_id_dict.keys()
     #
     # fit_node_name
     fit_node_name   = at_cascade.get_parent_node(fit_node_database)
@@ -109,8 +118,8 @@ def ihme_csv_one_job(
         age_group_id = age_group_id_list[age_index]
         #
         # age_lower, age_upper, age
-        age_lower = age_group_dict[age_group_id]['age_lower']
-        age_upper = age_group_dict[age_group_id]['age_upper']
+        age_lower = age_group_id_dict[age_group_id]['age_lower']
+        age_upper = age_group_id_dict[age_group_id]['age_upper']
         age       = (age_lower + age_upper) / 2.0
         #
         # x
@@ -271,8 +280,8 @@ def ihme_csv_one_job(
         # row
         mean      = numpy.mean( avg_integrand_list )
         std       = numpy.std( avg_integrand_list, ddof = 1 )
-        age_lower = age_group_dict[age_group_id]['age_lower']
-        age_upper = age_group_dict[age_group_id]['age_upper']
+        age_lower = age_group_id_dict[age_group_id]['age_lower']
+        age_upper = age_group_id_dict[age_group_id]['age_upper']
         age       = (age_lower + age_upper) / 2.0
         time      = avgint_row['time_lower']
         row = {
@@ -337,13 +346,13 @@ def ihme_csv_one_job(
         plot_data  = plot_data       ,
     )
 # -----------------------------------------------------------------------------
-def ihme_csv(covariate_csv_file_dict) :
+def ihme_csv(covariate_csv_file_dict, fit_goal_set) :
     #
     # root_node_database
-    root_node_database = at_cascade.imhe.root_node_database
+    root_node_database = at_cascade.ihme.root_node_database
     #
     # all_node_database
-    all_node_database = at_cascade.imhe.all_node_database
+    all_node_database = at_cascade.ihme.all_node_database
     #
     #
     # node_table, covariate_table
@@ -361,6 +370,13 @@ def ihme_csv(covariate_csv_file_dict) :
     split_reference_table = \
         dismod_at.get_table_dict(connection, 'split_reference')
     connection.close()
+    #
+    # results_dir
+    results_dir = None
+    for row in all_option_table :
+        if row['option_name'] == 'results_dir' :
+            results_dir = row['option_value']
+    assert results_dir is not None
     #
     # node_split_set
     node_split_set = set()
@@ -413,12 +429,27 @@ def ihme_csv(covariate_csv_file_dict) :
         one_age_group_dict[covariate_name] = one_age_group
         interpolate_all_covariate[covariate_name] = interpolate_covariate
     #
+    # error_message_dict
+    error_message_dict = at_cascade.check_log(
+        message_type = 'error',
+        all_node_database = all_node_database,
+        root_node_database = root_node_database,
+        fit_goal_set       = fit_goal_set,
+    )
+    #
     # job_row
     for job_row in job_table :
         #
-        # fit_database
+        # fit_node_id, fit_split_reference_id
         fit_node_id            = job_row['fit_node_id']
         fit_split_reference_id = job_row['split_reference_id']
+        #
+        # node_name, split_reference_name
+        node_name = node_table[fit_node_id]['node_name']
+        split_reference_name = \
+        split_reference_table[fit_split_reference_id]['split_reference_name']
+        #
+        # database_dir
         database_dir           = at_cascade.get_database_dir(
             node_table              = node_table               ,
             split_reference_table   = split_reference_table    ,
@@ -428,12 +459,24 @@ def ihme_csv(covariate_csv_file_dict) :
             fit_node_id             = fit_node_id              ,
             fit_split_reference_id  = fit_split_reference_id   ,
         )
-        fit_node_database = f'{database_dir}/dismod.db'
         #
-        # predict_one_job
-        predict_one_job(
-            fit_node_database        = fit_node_database         ,
-            age_group_id_dict        = age_group_id_dict         ,
-            one_age_group_dict       = one_age_group_dict        ,
-            interpolate_all_covarate = interpolate_all_covariate ,
-        )
+        # file_name
+        file_name = f'{results_dir}/{database_dir}/ihme.csv'
+        #
+        # check for an error message in corresponding database
+        key  = f'{node_name}.{split_reference_name}'
+        if key in error_message_dict :
+            if os.path.exists( file_name ) :
+                os.path.remove( file_name )
+            print( f'Skipping {file_name}' )
+        else :
+            print( f'Creating {file_name}' )
+            #
+            # ihme_csv_one_job
+            fit_node_database = f'{results_dir}/{database_dir}/dismod.db'
+            ihme_csv_one_job(
+                fit_node_database         = fit_node_database         ,
+                age_group_id_dict         = age_group_id_dict         ,
+                one_age_group_dict        = one_age_group_dict        ,
+                interpolate_all_covariate = interpolate_all_covariate ,
+            )
