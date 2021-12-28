@@ -15,4 +15,5 @@ def get_table_csv(file_name) :
     table      = list()
     for row in reader :
         table.append(row)
+    file_ptr.close()
     return table

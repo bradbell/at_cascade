@@ -171,6 +171,8 @@ def try_one_job(
     # trace_file_obj
     trace_file_name = f'{results_database_dir}/trace.out'
     trace_file_obj  = open(trace_file_name, 'w')
+    #
+    # print message at start
     now             = datetime.datetime.now()
     current_time    = now.strftime("%H:%M:%S")
     print( f'Begin: {current_time}: {trace_file_name}' )
@@ -187,7 +189,6 @@ def try_one_job(
             trace_file_obj    = trace_file_obj,
         )
         ok = True
-        print( f'End:   {current_time}: {trace_file_name}' )
     except :
         # shared_job_status
         tmp = numpy.empty(len(job_table), dtype = int )
@@ -233,7 +234,15 @@ def try_one_job(
         #
         # ok
         ok = False
+    #
+    # print message at end
+    now          = datetime.datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    if ok :
+        print( f'End:   {current_time}: {results_database_dir}' )
+    else :
         print( f'Error: {current_time}: {results_database_dir}' )
+    #
     trace_file_obj.close()
     return ok
 # ----------------------------------------------------------------------------
