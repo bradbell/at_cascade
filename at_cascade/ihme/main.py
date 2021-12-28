@@ -115,7 +115,6 @@ def drill(root_node_name, fit_goal_set, root_node_database) :
         root_node_database = root_node_database,
         fit_goal_set       = fit_goal_set,
         no_ode_fit         = True,
-        trace_fit          = True,
     )
 # ----------------------------------------------------------------------------
 def main(
@@ -228,7 +227,6 @@ def main(
                 all_node_database = at_cascade.ihme.all_node_database,
                 fit_node_database = database,
                 fit_goal_set      = fit_goal_set,
-                trace_fit         = True,
             )
     elif command == 'ihme_csv' :
         at_cascade.ihme.ihme_csv(

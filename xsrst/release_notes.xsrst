@@ -25,7 +25,9 @@ Release Notes for 2021
 
 12-28
 *****
-Change results_dir to result_dir.
+1.  Change results_dir to result_dir.
+
+2.  Remove the *trace_fit* parameter.
 
 12-26
 *****

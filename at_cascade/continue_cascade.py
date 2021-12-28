@@ -50,11 +50,6 @@ specifying the node_id (node_name) for each element of the
 :ref:`glossary.fit_goal_set` .
 This argument can't be ``None``.
 
-trace_fit
-*********
-if ``True``, ( ``False`` ) the progress of the dismod at fit commands
-will be printed on standard output during the optimization.
-
 {xsrst_end   continue_cascade}
 '''
 import time
@@ -108,7 +103,6 @@ def continue_cascade(
     all_node_database = None,
     fit_node_database = None,
     fit_goal_set      = None,
-    trace_fit         = False,
 # )
 # END syntax
 ) :
@@ -267,7 +261,6 @@ def continue_cascade(
         all_node_database = all_node_database,
         node_table        = node_table,
         fit_integrand     = fit_integrand,
-        trace_fit         = trace_fit,
         skip_start_job    = skip_start_job,
         max_number_cpu    = max_number_cpu,
     )

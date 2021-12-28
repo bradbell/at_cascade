@@ -50,13 +50,6 @@ fit_integrand
 *************
 :ref:`run_one_job.fit_integrand`
 
-trace_fit
-*********
-if `False`` the dismod_at commands and other output for this job
-is written to standard output.
-Otherwise, the output is written to a file named ``trace.out``
-in the same directory as the database for the corresponding job.
-
 fit_node_database
 *****************
 :ref:`run_one_job.fit_node_database`
@@ -149,7 +142,6 @@ def try_one_job(
     all_node_database,
     node_table,
     fit_integrand,
-    trace_fit,
     skip_this_job,
     max_number_cpu,
     master_process,
@@ -169,13 +161,15 @@ def try_one_job(
     )
     #
     # trace_file_obj
-    trace_file_name = f'{results_database_dir}/trace.out'
-    trace_file_obj  = open(trace_file_name, 'w')
-    #
-    # print message at start
-    now             = datetime.datetime.now()
-    current_time    = now.strftime("%H:%M:%S")
-    print( f'Begin: {current_time}: {trace_file_name}' )
+    trace_file_obj = None
+    if max_number_cpu > 1 :
+        trace_file_name = f'{results_database_dir}/trace.out'
+        trace_file_obj  = open(trace_file_name, 'w')
+        #
+        # print message at start
+        now             = datetime.datetime.now()
+        current_time    = now.strftime("%H:%M:%S")
+        print( f'Begin: {current_time}: {trace_file_name}' )
     #
     try :
         # run_one_job
@@ -235,15 +229,17 @@ def try_one_job(
         # ok
         ok = False
     #
-    # print message at end
-    now          = datetime.datetime.now()
-    current_time = now.strftime("%H:%M:%S")
-    if ok :
-        print( f'End:   {current_time}: {results_database_dir}/dismod.db' )
-    else :
-        print( f'Error: {current_time}: {results_database_dir}/dismod.db' )
-    #
-    trace_file_obj.close()
+    if max_number_cpu > 1 :
+        #
+        # print message at end
+        now          = datetime.datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        if ok :
+            print( f'End:   {current_time}: {results_database_dir}/dismod.db' )
+        else :
+            print( f'Error: {current_time}: {results_database_dir}/dismod.db' )
+        #
+        trace_file_obj.close()
     return ok
 # ----------------------------------------------------------------------------
 def run_parallel_job(
@@ -252,7 +248,6 @@ def run_parallel_job(
     all_node_database,
     node_table,
     fit_integrand,
-    trace_fit,
     skip_this_job,
     max_number_cpu,
     master_process,
@@ -264,7 +259,6 @@ def run_parallel_job(
     assert type(all_node_database) is str
     assert type(node_table) is list
     assert type(fit_integrand) is set
-    assert type(trace_fit) is bool
     assert type(skip_this_job) is bool
     assert type(max_number_cpu) is int
     assert type(master_process) is bool
@@ -309,7 +303,6 @@ def run_parallel_job(
             all_node_database,
             node_table,
             fit_integrand,
-            trace_fit,
             skip_this_job,
             max_number_cpu,
             master_process,
@@ -431,7 +424,6 @@ def run_parallel_job(
                     all_node_database,
                     node_table,
                     fit_integrand,
-                    trace_fit,
                     skip_child_job,
                     max_number_cpu,
                     is_child_master_process,
@@ -455,7 +447,6 @@ def run_parallel_job(
                 all_node_database,
                 node_table,
                 fit_integrand,
-                trace_fit,
                 skip_this_job,
                 max_number_cpu,
                 master_process,
@@ -493,7 +484,6 @@ def run_parallel(
     all_node_database = None,
     node_table        = None,
     fit_integrand     = None,
-    trace_fit         = None,
     skip_start_job    = None,
     max_number_cpu    = None,
 # )
@@ -505,7 +495,6 @@ def run_parallel(
     assert all_node_database is not None
     assert node_table        is not None
     assert fit_integrand     is not None
-    assert trace_fit         is not None
     assert skip_start_job    is not None
     assert max_number_cpu    is not None
     # -------------------------------------------------------------------------
@@ -561,7 +550,6 @@ def run_parallel(
         all_node_database,
         node_table,
         fit_integrand,
-        trace_fit,
         skip_start_job,
         max_number_cpu,
         master_process,

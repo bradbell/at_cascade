@@ -45,15 +45,6 @@ and the corresponding value is
 If an option does not appear in the table, the corresponding key
 does not appear in *all_option_dict*.
 
-trace_fit
-*********
-if ``True``, ( ``False`` ) the dismod_at commands,
-and the optimizer trace, are written to the file
-
-    *result_dir*\ /\ *root_node_name*\ /no_ode/trace.out
-
-otherwise, the dismod_at commands are written to standard output.
-
 no_ode_database
 ***************
 An intermediate database is stored in the file
@@ -185,25 +176,26 @@ def no_ode_fit(
     all_node_database   = None,
     root_node_database  = None,
     all_option_dict     = None,
-    trace_fit           = False,
 # )
 # END syntax
 ) :
     assert type(all_node_database) == str
     assert type(root_node_database) == str
     assert type(all_option_dict) == dict
-    assert type(trace_fit) == bool
     #
-    # result_dir, max_fit, max_abs_effect
+    # result_dir, max_fit, max_abs_effect, max_number_cpu
     result_dir     = None
     max_fit        = None
     max_abs_effect = None
+    max_number_cpu = 1
     if 'result_dir' in all_option_dict :
         result_dir =  all_option_dict['result_dir']
     if 'max_fit' in all_option_dict :
         max_fit = int( all_option_dict['max_fit'] )
     if 'max_abs_effect' in all_option_dict :
         max_abs_effect = float( all_option_dict['max_abs_effect'] )
+    if 'max_number_cpu' in all_option_dict :
+        max_number_cpu = float( all_option_dict['max_number_cpu'] )
     assert result_dir is not None
     #
     # name_rate2integrand
@@ -271,7 +263,7 @@ def no_ode_fit(
     # trace_file_name, file_stdout
     trace_file_name = None
     file_stdout     = None
-    if trace_fit :
+    if max_number_cpu > 1 :
         trace_file_name = f'{result_dir}/{root_node_name}/no_ode/trace.out'
         file_stdout    = open(trace_file_name, 'w')
         now            = datetime.datetime.now()
@@ -390,7 +382,7 @@ def no_ode_fit(
     ]
     system_command(command, file_stdout)
     #
-    if trace_fit :
+    if max_number_cpu > 1 :
         now            = datetime.datetime.now()
         current_time   = now.strftime("%H:%M:%S")
         print( f'End:   {current_time}: {trace_file_name}/dismod.db' )

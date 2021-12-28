@@ -49,11 +49,6 @@ no_ode_fit
 if ``True`` ( ``False`` ) the :ref:`no_ode_fit` routine
 will (will not) be used to modify the parent value priors.
 
-trace_fit
-*********
-if ``True`` ( ``False`` ) the progress of the dismod at fit commands
-will be printed on standard output during the optimization.
-
 root_fit_database
 *****************
 This directory is
@@ -132,7 +127,6 @@ def cascade_root_node(
     root_node_database      = None,
     fit_goal_set            = None,
     no_ode_fit              = False,
-    trace_fit               = False,
 # )
 # END syntax
 ) :
@@ -177,7 +171,6 @@ def cascade_root_node(
             all_node_database  = all_node_database,
             root_node_database = root_node_database,
             all_option_dict    = all_option_dict,
-            trace_fit          = trace_fit,
         )
     #
     # node_table, covariate_table
@@ -224,7 +217,6 @@ def cascade_root_node(
         all_node_database = all_node_database,
         node_table        = node_table,
         fit_integrand     = fit_integrand,
-        trace_fit         = trace_fit,
         skip_start_job    = skip_start_job,
         max_number_cpu    = max_number_cpu,
     )
