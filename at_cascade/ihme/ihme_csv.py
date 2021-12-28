@@ -13,11 +13,13 @@ import at_cascade.ihme
 def ihme_csv_one_job(
     fit_node_database          = None ,
     age_group_id_dict          = None ,
+    age_group_id_list          = None ,
     one_age_group_dict         = None ,
     interpolate_all_covariate  = None ,
 ) :
     assert type(fit_node_database) is str
     assert type(age_group_id_dict) is dict
+    assert type(age_group_id_list) is list
     assert type(one_age_group_dict) is dict
     assert type(interpolate_all_covariate) is dict
     assert one_age_group_dict.keys() == interpolate_all_covariate.keys()
@@ -79,19 +81,18 @@ def ihme_csv_one_job(
     #
     # year_grid
     # year_id in output file is in demographer notation
-    year_grid = [ 1990.5, 1995.5, 2000.5, 2005.5, 2010.5, 2015.5, 2020.5 ]
-    #
-    # age_group_id_list
-    age_group_id_list = age_group_id_dict.keys()
+    year_grid = [ 1990.5, 1995.5, 2000.5, 2005.5, 2010.5, 2015.5, 2019.5 ]
     #
     # fit_node_name
     fit_node_name   = at_cascade.get_parent_node(fit_node_database)
     #
-    # location_id
+    # fit_node_id, location_id
+    fit_node_id = None
     location_id = None
     for row in node_table :
         if row['node_name'] == fit_node_name :
             location_id = int( row['location_id'] )
+            fit_node_id = int( row['node_id'] )
     index = fit_node_name.find('_')
     assert location_id == int( fit_node_name[0:index] )
     #
@@ -99,7 +100,7 @@ def ihme_csv_one_job(
     avgint_table = list()
     #
     # sex, sex_name, sex_id
-    row      = split_reference_table[split_reference_id]
+    row      = split_reference_table[fit_split_reference_id]
     sex      = row['split_reference_value']
     sex_name = row['split_reference_name']
     sex_id   = at_cascade.ihme.sex_info_dict[sex_name]['sex_id']
@@ -122,19 +123,46 @@ def ihme_csv_one_job(
         age_upper = age_group_id_dict[age_group_id]['age_upper']
         age       = (age_lower + age_upper) / 2.0
         #
-        # x
-        x = [ sex, 1.0 ]
-        for covariate_name in covariate_list :
-            fun = interpolate_all_covariate \
-                [covariate_name][location_id][sex_name]
-            if one_age_group_dict[covariate_name] :
-                val = fun(time)
-            else :
-                val = fun(age, time, grid = False)
-            x.append(val)
-        #
         # time
         for time in year_grid :
+            #
+            # x
+            x = [ sex, 1.0 ]
+            for covariate_name in covariate_list :
+                #
+                # covariate_dict
+                covariate_by_sex = \
+                    interpolate_all_covariate[covariate_name][location_id]
+                #
+                # value
+                if sex_name in covariate_by_sex  :
+                    fun = covariate_by_sex[sex_name]
+                    if one_age_group_dict[covariate_name] :
+                        value = fun(time)
+                    else :
+                        value = fun(age, time, grid = False)
+                else :
+                    assert sex_name == 'Both'
+                    #
+                    # val_male
+                    fun = covariate_by_sex['Male']
+                    if one_age_group_dict[covariate_name] :
+                        val_male = fun(time)
+                    else :
+                        val_male = fun(age, time, grid = False)
+                    #
+                    # val_female
+                    fun = covariate_by_sex['Female']
+                    if one_age_group_dict[covariate_name] :
+                        val_female = fun(time)
+                    else :
+                        val_female = fun(age, time, grid = False)
+                    #
+                    # value
+                    value = (val_male + val_female) / 2.0
+                #
+                # x
+                x.append(value)
             #
             for integrand_id in integrand_id_list :
                 #
@@ -164,22 +192,16 @@ def ihme_csv_one_job(
     #
     # predict sample
     print( 'sample' )
-    trace_file.write( 'sample\n' )
-    trace_file.flush()
     command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     dismod_at.system_command_prc(command, print_command = False )
     #
     # db2csv
     print( 'db2csv' )
-    trace_file.write( 'db2csv\n'  )
-    trace_file.flush()
     dismod_at.db2csv_command(fit_node_database)
     #
     # rate.pdf
     pdf_file = f'{fit_node_dir}/rate.pdf'
     print( 'rate.pdf' )
-    trace_file.write( 'rate.pdf\n' )
-    trace_file.flush()
     plot_title = f'{fit_node_name}.{sex_name}'
     rate_set   = { 'iota', 'chi', 'omega' }
     dismod_at.plot_rate_fit(
@@ -189,8 +211,6 @@ def ihme_csv_one_job(
     # data.pdf
     pdf_file = f'{fit_node_dir}/data.pdf'
     print( 'data.pdf' )
-    trace_file.write( 'data.pdf\n' )
-    trace_file.flush()
     plot_title = f'{fit_node_name}.{sex_name}'
     dismod_at.plot_data_fit(
         database   = fit_node_database,
@@ -239,6 +259,7 @@ def ihme_csv_one_job(
         age_group_id  = avgint_row['c_age_group_id']
         #
         # year_id
+        # convert from real to demographer notaiton by dropping .5
         assert avgint_row['time_lower'] == avgint_row['time_upper']
         year_id = int( avgint_row['time_lower'] )
         #
@@ -317,8 +338,6 @@ def ihme_csv_one_job(
     # ihme.cs
     output_csv = f'{fit_node_dir}/ihme.csv'
     print('ihme.csv')
-    trace_file.write('ihme.csv\n')
-    trace_file.flush()
     write_csv(output_csv, output_table)
     #
     # plot_limit
@@ -336,8 +355,6 @@ def ihme_csv_one_job(
     # ihme.pdf
     pdf_file = f'{fit_node_dir}/ihme.pdf'
     print( 'ihme.pdf' )
-    trace_file.write( 'ihme.pdf\n' )
-    trace_file.flush()
     plot_title = f'{fit_node_name}.{sex_name}'
     dismod_at.plot_curve(
         pdf_file   = pdf_file      ,
@@ -409,12 +426,14 @@ def ihme_csv(covariate_csv_file_dict, fit_goal_set) :
         fit_goal_set               = fit_goal_set            ,
     )
     #
-    # age_group_id_dict
+    # age_group_id_dict, age_group_id_list
     age_group_id_table = at_cascade.ihme.get_age_group_id_table()
     age_group_id_dict   = dict()
+    age_group_id_list   = list()
     for row in age_group_id_table :
         age_group_id = row['age_group_id']
         age_group_id_dict[age_group_id] = row
+        age_group_id_list.append( age_group_id )
     #
     # one_age_group_dict, interpolate_all_covariate
     one_age_group_dict        = dict()
@@ -477,6 +496,7 @@ def ihme_csv(covariate_csv_file_dict, fit_goal_set) :
             ihme_csv_one_job(
                 fit_node_database         = fit_node_database         ,
                 age_group_id_dict         = age_group_id_dict         ,
+                age_group_id_list         = age_group_id_list         ,
                 one_age_group_dict        = one_age_group_dict        ,
                 interpolate_all_covariate = interpolate_all_covariate ,
             )

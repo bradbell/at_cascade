@@ -219,9 +219,9 @@ def write_root_node_database() :
     #
     # age_min, age_max, time_min, time_max
     age_min =   math.inf
-    age_max = - math.inf
+    age_max =   (95.0 + 125.0) / 2.0 # midpoint of oldest age group
     time_min =  math.inf
-    time_max = - math.inf
+    time_max =  2021                 # year after last year_id in ihme_csv
     for row in table_in['data'] :
         age_min  = min(age_min,  float( row['age_lower'] ) )
         time_min = min(time_min, float( row['time_lower'] ) )
