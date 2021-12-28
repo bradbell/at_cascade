@@ -179,7 +179,7 @@ second_fit_goal_set = { 'n5', 'n6' }
 # END fit_goal_set
 # BEGIN all_option
 all_option  = {
-    'results_dir':    'build/example',
+    'result_dir':     'build/example',
     'root_node_name': 'n0',
     'max_number_cpu':  '2',
 }
@@ -361,17 +361,17 @@ def root_node_db(file_name) :
         option_table
     )
 # ----------------------------------------------------------------------------
-def two_fit_goal_set_example(results_dir) :
+def two_fit_goal_set_example(result_dir) :
     # -------------------------------------------------------------------------
     #
     # root_node_database
-    root_node_database  = f'{results_dir}/root_node.db'
+    root_node_database  = f'{result_dir}/root_node.db'
     #
     # all_node_database
-    all_node_database = f'{results_dir}/all_node.db'
+    all_node_database = f'{result_dir}/all_node.db'
     #
     # root_fit_dir
-    root_fit_dir = f'{results_dir}/n0'
+    root_fit_dir = f'{result_dir}/n0'
     if os.path.exists(root_fit_dir) :
         # rmtree is very dangerous so make sure root_fit_dir is as expected
         assert root_fit_dir == 'build/example/n0'
@@ -396,7 +396,7 @@ def two_fit_goal_set_example(results_dir) :
     # check leaf node results
     leaf_dir_list = [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2/n5', 'n0/n2/n6' ]
     for leaf_dir in leaf_dir_list :
-        leaf_database = f'{results_dir}/{leaf_dir}/dismod.db'
+        leaf_database = f'{result_dir}/{leaf_dir}/dismod.db'
         at_cascade.check_cascade_fit(
             rate_true          = rate_true,
             all_node_database  = all_node_database,
@@ -404,16 +404,16 @@ def two_fit_goal_set_example(results_dir) :
             relative_tolerance = 1e-7,
         )
 # ----------------------------------------------------------------------------
-def one_fit_goal_set_example(results_dir ) :
+def one_fit_goal_set_example(result_dir ) :
     #
     # root_node_database
-    root_node_database  = f'{results_dir}/root_node.db'
+    root_node_database  = f'{result_dir}/root_node.db'
     #
     # all_node_database
-    all_node_database = f'{results_dir}/all_node.db'
+    all_node_database = f'{result_dir}/all_node.db'
     #
     # root_fit_dir
-    root_fit_dir = f'{results_dir}/n0'
+    root_fit_dir = f'{result_dir}/n0'
     if os.path.exists(root_fit_dir) :
         # rmtree is very dangerous so make sure root_fit_dir is as expected
         assert root_fit_dir == 'build/example/n0'
@@ -431,7 +431,7 @@ def one_fit_goal_set_example(results_dir ) :
     # check leaf node results
     leaf_dir_list = [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2/n5', 'n0/n2/n6' ]
     for leaf_dir in leaf_dir_list :
-        leaf_database = f'{results_dir}/{leaf_dir}/dismod.db'
+        leaf_database = f'{result_dir}/{leaf_dir}/dismod.db'
         at_cascade.check_cascade_fit(
             rate_true          = rate_true,
             all_node_database  = all_node_database,
@@ -444,12 +444,12 @@ def one_fit_goal_set_example(results_dir ) :
 # ----------------------------------------------------------------------------
 def main() :
     # -------------------------------------------------------------------------
-    # results_dir
-    results_dir = all_option['results_dir']
-    distutils.dir_util.mkpath(results_dir)
+    # result_dir
+    result_dir = all_option['result_dir']
+    distutils.dir_util.mkpath(result_dir)
     #
     # root_node_database
-    root_node_database  = f'{results_dir}/root_node.db'
+    root_node_database  = f'{result_dir}/root_node.db'
     root_node_db(root_node_database)
     #
     # all_cov_reference
@@ -458,7 +458,7 @@ def main() :
         all_cov_reference[node_name] = dict()
     #
     # all_node_database
-    all_node_database = f'{results_dir}/all_node.db'
+    all_node_database = f'{result_dir}/all_node.db'
     at_cascade.create_all_node_db(
         all_node_database       = all_node_database,
         root_node_database      = root_node_database,
@@ -467,10 +467,10 @@ def main() :
     )
     #
     # example using continue_cascade
-    # two_fit_goal_set_example(results_dir)
+    # two_fit_goal_set_example(result_dir)
     #
     # same calculation without continue_cascade
-    one_fit_goal_set_example(results_dir)
+    one_fit_goal_set_example(result_dir)
 #
 main()
 print('max_fit_option: OK')

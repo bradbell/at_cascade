@@ -243,7 +243,7 @@ def create_all_node_db(
         assert type(mtall_data) is dict
     #
     assert 'root_node_name' in all_option
-    assert 'results_dir' in all_option
+    assert 'result_dir' in all_option
     #
     # n_split
     n_split = 1

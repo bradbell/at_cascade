@@ -23,6 +23,10 @@ Release Notes for at_cascade
 Release Notes for 2021
 ######################
 
+12-28
+*****
+Change results_dir to result_dir.
+
 12-26
 *****
 1.  Add exception handling to running in parallel so that
@@ -34,7 +38,7 @@ Release Notes for 2021
 
 12-24
 *****
-1.  The base_directory was changed to the :ref:`all_option_table.results_dir`
+1.  The base_directory was changed to the :ref:`all_option_table.result_dir`
     and now a required option the all_option table.
 
 2.  Change required precision in example/mulcov_freeze.py to reduce probability

@@ -104,13 +104,13 @@ def get_results_database_dir(
         dismod_at.get_table_dict(connection, 'split_reference')
     connection.close()
     #
-    # results_dir, root_node_name
-    results_dir             = None
+    # result_dir, root_node_name
+    result_dir              = None
     root_node_id            = None
     root_split_reference_id = None
     for row in all_option_table :
-        if row['option_name'] == 'results_dir' :
-            results_dir = row['option_value']
+        if row['option_name'] == 'result_dir' :
+            result_dir = row['option_value']
         if row['option_name'] == 'root_node_name' :
             root_node_name = row['option_value']
             root_node_id   = \
@@ -122,7 +122,7 @@ def get_results_database_dir(
                 'split_reference',
                 root_split_reference_name
             )
-    assert results_dir is not None
+    assert result_dir is not None
     assert root_node_id is not None
     #
     # node_split_set
@@ -139,7 +139,7 @@ def get_results_database_dir(
         fit_node_id             = fit_node_id,
         fit_split_reference_id  = fit_split_reference_id,
     )
-    return f'{results_dir}/{database_dir}'
+    return f'{result_dir}/{database_dir}'
 # )
 # ----------------------------------------------------------------------------
 # ok = try_one_job(

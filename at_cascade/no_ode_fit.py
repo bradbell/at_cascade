@@ -50,7 +50,7 @@ trace_fit
 if ``True``, ( ``False`` ) the dismod_at commands,
 and the optimizer trace, are written to the file
 
-    *results_dir*\ /\ *root_node_name*\ /no_ode/trace.out
+    *result_dir*\ /\ *root_node_name*\ /no_ode/trace.out
 
 otherwise, the dismod_at commands are written to standard output.
 
@@ -58,9 +58,9 @@ no_ode_database
 ***************
 An intermediate database is stored in the file
 
-    *results_dir*\ /\ *root_node_name*\ /no_ode/dismod.db
+    *result_dir*\ /\ *root_node_name*\ /no_ode/dismod.db
 
-see :ref:`all_option_table.results_dir`
+see :ref:`all_option_table.result_dir`
 and :ref:`all_option_table.root_node_name`.
 This contains the results of fitting without the ODE integrands
 so they can be plotted and converted to csv files.
@@ -73,7 +73,7 @@ root_fit_database
 *****************
 The return value *root_fit_database* is equal to
 
-    *results_dir*\ /\ *root_node_name*\ /dismod.db
+    *result_dir*\ /\ *root_node_name*\ /dismod.db
 
 which can't be the same file name as *root_node_database*.
 This is an input_node_database similar to *root_node_database*.
@@ -194,17 +194,17 @@ def no_ode_fit(
     assert type(all_option_dict) == dict
     assert type(trace_fit) == bool
     #
-    # results_dir, max_fit, max_abs_effect
-    results_dir    = None
+    # result_dir, max_fit, max_abs_effect
+    result_dir     = None
     max_fit        = None
     max_abs_effect = None
-    if 'results_dir' in all_option_dict :
-        results_dir =  all_option_dict['results_dir']
+    if 'result_dir' in all_option_dict :
+        result_dir =  all_option_dict['result_dir']
     if 'max_fit' in all_option_dict :
         max_fit = int( all_option_dict['max_fit'] )
     if 'max_abs_effect' in all_option_dict :
         max_abs_effect = float( all_option_dict['max_abs_effect'] )
-    assert results_dir is not None
+    assert result_dir is not None
     #
     # name_rate2integrand
     name_rate2integrand = {
@@ -261,9 +261,9 @@ def no_ode_fit(
         root_split_reference_id = cov_info['split_reference_id']
     #
     # no_ode_daabase, root_fit_database
-    root_fit_database    = f'{results_dir}/{root_node_name}/dismod.db'
-    no_ode_database      = f'{results_dir}/{root_node_name}/no_ode/dismod.db'
-    os.makedirs(f'{results_dir}/{root_node_name}/no_ode')
+    root_fit_database    = f'{result_dir}/{root_node_name}/dismod.db'
+    no_ode_database      = f'{result_dir}/{root_node_name}/no_ode/dismod.db'
+    os.makedirs(f'{result_dir}/{root_node_name}/no_ode')
     if root_node_database == root_fit_database :
         msg   = f'root_node_database and root_fit_database are equal'
         assert False, msg
@@ -272,7 +272,7 @@ def no_ode_fit(
     trace_file_name = None
     file_stdout     = None
     if trace_fit :
-        trace_file_name = f'{results_dir}/{root_node_name}/no_ode/trace.out'
+        trace_file_name = f'{result_dir}/{root_node_name}/no_ode/trace.out'
         file_stdout    = open(trace_file_name, 'w')
         now            = datetime.datetime.now()
         current_time   = now.strftime("%H:%M:%S")

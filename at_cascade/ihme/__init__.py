@@ -14,7 +14,7 @@ age_group_inp_file = 'ihme_db/DisMod_AT/metadata/gbd2019_age_metadata.csv'
 mtall_inp_file     = 'ihme_db/DisMod_AT/mtall/gbd2019_all_cause_mortality.csv'
 #
 # Intermediate result files that are used for all diseases.
-# This names are relative to the results_dir in the all_option table.
+# This names are relative to the result_dir in the all_option table.
 # BEGIN_SORT_THIS_LINE_PLUS_2
 csv_file = {
     'all_mtall'     : 'all_mtall_table.csv',

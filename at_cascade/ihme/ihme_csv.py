@@ -44,17 +44,17 @@ def ihme_csv_one_job(
         dismod_at.get_table_dict(connection, 'split_reference')
     connection.close()
     #
-    # results_dir
-    results_dir = None
+    # result_dir
+    result_dir = None
     for row in all_option_table :
-        if row['option_name'] == 'results_dir' :
-            results_dir = row['option_value']
-    assert results_dir is not None
+        if row['option_name'] == 'result_dir' :
+            result_dir = row['option_value']
+    assert result_dir is not None
     #
     # node_table
     # Note that this node table has map to location_id
     file_name  = at_cascade.ihme.csv_file['node']
-    file_path  = f'{results_dir}/{file_name}'
+    file_path  = f'{result_dir}/{file_name}'
     node_table = at_cascade.ihme.get_table_csv(file_path)
     #
     # covariate_list
@@ -388,12 +388,12 @@ def ihme_csv(covariate_csv_file_dict, fit_goal_set) :
         dismod_at.get_table_dict(connection, 'split_reference')
     connection.close()
     #
-    # results_dir
-    results_dir = None
+    # result_dir
+    result_dir = None
     for row in all_option_table :
-        if row['option_name'] == 'results_dir' :
-            results_dir = row['option_value']
-    assert results_dir is not None
+        if row['option_name'] == 'result_dir' :
+            result_dir = row['option_value']
+    assert result_dir is not None
     #
     # node_split_set
     node_split_set = set()
@@ -480,7 +480,7 @@ def ihme_csv(covariate_csv_file_dict, fit_goal_set) :
         )
         #
         # file_name
-        file_name = f'{results_dir}/{database_dir}/ihme.csv'
+        file_name = f'{result_dir}/{database_dir}/ihme.csv'
         #
         # check for an error message in corresponding database
         key  = f'{node_name}.{split_reference_name}'
@@ -492,7 +492,7 @@ def ihme_csv(covariate_csv_file_dict, fit_goal_set) :
             print( f'Creating {file_name}' )
             #
             # ihme_csv_one_job
-            fit_node_database = f'{results_dir}/{database_dir}/dismod.db'
+            fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
             ihme_csv_one_job(
                 fit_node_database         = fit_node_database         ,
                 age_group_id_dict         = age_group_id_dict         ,

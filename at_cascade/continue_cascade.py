@@ -132,18 +132,18 @@ def continue_cascade(
         dismod_at.get_table_dict(connection, 'split_reference')
     connection.close()
     #
-    # results_dir, root_node_name, max_number_cpu
-    results_dir    = None
+    # result_dir, root_node_name, max_number_cpu
+    result_dir     = None
     root_node_name = None
     max_number_cpu = 1
     for row in all_option_table :
-        if row['option_name'] == 'results_dir' :
-            results_dir = row['option_value']
+        if row['option_name'] == 'result_dir' :
+            result_dir = row['option_value']
         if row['option_name'] == 'root_node_name' :
             root_node_name = row['option_value']
         if row['option_name'] == 'max_number_cpu' :
             max_number_cpu = int( row['option_value'] )
-    assert results_dir is not None
+    assert result_dir is not None
     assert root_node_name is not None
     #
     # root_node_id
@@ -225,7 +225,7 @@ def continue_cascade(
             fit_node_id             = shift_node_id ,
             fit_split_reference_id  = shift_split_reference_id,
         )
-        shift_database_dir = f'{results_dir}/{database_dir}'
+        shift_database_dir = f'{result_dir}/{database_dir}'
         if not os.path.exists(shift_database_dir) :
             os.makedirs(shift_database_dir)
         #

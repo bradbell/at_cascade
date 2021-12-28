@@ -184,7 +184,7 @@ def main() :
     # Create all_node.db
     all_node_database = 'all_node.db'
     all_option        = {
-        'results_dir':     '.',
+        'result_dir':      '.',
         'root_node_name': 'n0',
     }
     at_cascade.create_all_node_db(

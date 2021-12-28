@@ -104,14 +104,14 @@ def check_log(
     connection.close()
     #
     # root_node_name
-    results_dir    = None
+    result_dir     = None
     root_node_name = None
     for row in all_option_table :
-        if row['option_name'] == 'results_dir' :
-            results_dir = row['option_value']
+        if row['option_name'] == 'result_dir' :
+            result_dir = row['option_value']
         if row['option_name'] == 'root_node_name' :
             root_node_name = row['option_value']
-    assert results_dir is not None
+    assert result_dir is not None
     assert root_node_name is not None
     #
     # check root_node_name
@@ -169,7 +169,7 @@ def check_log(
             fit_node_id             = fit_node_id ,
             fit_split_reference_id  = fit_split_reference_id,
         )
-        fit_node_database = f'{results_dir}/{database_dir}/dismod.db'
+        fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
         #
         # node_name
         node_name = node_table[fit_node_id]['node_name']

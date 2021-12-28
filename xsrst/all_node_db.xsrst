@@ -356,7 +356,7 @@ This avoids bad scaling when the prior mean is very close to the solution.
 If this option does not appear, or if it is zero,
 the scaling point is equal to the prior mean for all variables.
 
-results_dir
+result_dir
 ***********
 This option must appear and
 all of the at_cascade output files are placed in this directory.

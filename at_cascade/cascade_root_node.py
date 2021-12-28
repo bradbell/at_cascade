@@ -58,9 +58,9 @@ root_fit_database
 *****************
 This directory is
 
-    *results_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
+    *result_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
 
-see :ref:`all_option_table.results_dir`
+see :ref:`all_option_table.result_dir`
 and :ref:`all_option_table.root_node_name`.
 If *no_ode_fit* is ``True`` ( ``False`` ) the priors in the
 *root_node_database* are modified (are not modified)
@@ -154,8 +154,8 @@ def cascade_root_node(
     for row in all_option_table :
         all_option_dict[ row['option_name'] ] = row['option_value']
     #
-    # root_node_name, max_number_cpu, results_dir
-    results_dir    = all_option_dict['results_dir']
+    # root_node_name, max_number_cpu, result_dir
+    result_dir     = all_option_dict['result_dir']
     root_node_name = all_option_dict['root_node_name']
     max_number_cpu = 1
     if 'max_number_cpu' in all_option_dict :
@@ -169,7 +169,7 @@ def cascade_root_node(
         assert False, msg
     #
     # root_fit_database
-    root_fit_database = f'{results_dir}/{root_node_name}/dismod.db'
+    root_fit_database = f'{result_dir}/{root_node_name}/dismod.db'
     if not no_ode_fit :
         shutil.copyfile(root_node_database, root_fit_database)
     else :

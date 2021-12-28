@@ -71,11 +71,11 @@ that the fit corresponds to.
 database_dir
 ************
 The return value is a ``str`` containg the directory,
-relative to the :ref:`all_option_table.results_dir`,
+relative to the :ref:`all_option_table.result_dir`,
 where the database corresponding to the fit is (or will be) located.
 In other words, the fit database has the following path:
 
-    *results_dir*\ ``/`` *database_dir*\ ``/dismod.db``
+    *result_dir*\ ``/`` *database_dir*\ ``/dismod.db``
 
 
 {xsrst_end get_database_dir}

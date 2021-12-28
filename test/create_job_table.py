@@ -74,7 +74,7 @@ fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 #
 # BEGIN all_option_table
 all_option            = {
-    'results_dir':                 '.',
+    'result_dir':                  '.',
     'root_node_name':              'n0',
     'root_split_reference_name':   'both',
     'split_covariate_name':        'sex',

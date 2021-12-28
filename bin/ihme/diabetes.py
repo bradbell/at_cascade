@@ -37,8 +37,8 @@ data_dir        = 'ihme_db/DisMod_AT/testing/diabetes/data'
 data_inp_file   = f'{data_dir}/gbd2019_diabetes_crosswalk_12437.csv'
 csmr_inp_file   = f'{data_dir}/gbd2019_diabetes_csmr.csv'
 #
-# results_dir
-results_dir = 'ihme_db/DisMod_AT/results'
+# result_dir
+result_dir = 'ihme_db/DisMod_AT/results'
 #
 # root_node_name
 # name of the node where the cascade will start
@@ -173,7 +173,7 @@ print('random_seed = ', random_seed)
 def get_file_path(csv_file_key) :
     csv_file  = at_cascade.ihme.csv_file
     file_name = csv_file[csv_file_key]
-    file_name = f'{results_dir}/{file_name}'
+    file_name = f'{result_dir}/{file_name}'
     return file_name
 # ----------------------------------------------------------------------------
 # write_root_node_database
@@ -552,26 +552,26 @@ def write_root_node_database() :
 def setup_function() :
     #
     # write_node_table
-    at_cascade.ihme.write_node_table(results_dir)
+    at_cascade.ihme.write_node_table(result_dir)
     #
     # write_data_table
     at_cascade.ihme.write_data_table(
-        results_dir             = results_dir,
+        result_dir              = result_dir,
         data_inp_file           = data_inp_file,
         csmr_inp_file           = csmr_inp_file,
         covariate_csv_file_dict = covariate_csv_file_dict,
     )
     #
     # write_mtall_tables
-    at_cascade.ihme.write_mtall_tables(results_dir)
+    at_cascade.ihme.write_mtall_tables(result_dir)
     #
     # write_root_node_database
-    # This routine is in this file so not necessary to pass results_dir
+    # This routine is in this file so not necessary to pass result_dir
     write_root_node_database()
     #
     # write_all_option_table
     at_cascade.ihme.write_all_option_table(
-        results_dir                  = results_dir,
+        result_dir                   = result_dir,
         root_node_name               = root_node_name ,
         shift_prior_std_factor       = shift_prior_std_factor,
         perturb_optimization_scaling = perturb_optimization_scaling,
@@ -581,13 +581,13 @@ def setup_function() :
     )
     #
     # write_mulcov_freeze_table
-    at_cascade.ihme.write_mulcov_freeze_table(results_dir, mulcov_freeze_list)
+    at_cascade.ihme.write_mulcov_freeze_table(result_dir, mulcov_freeze_list)
     #
     # write_node_split_table
-    at_cascade.ihme.write_node_split_table(results_dir, node_split_name_set)
+    at_cascade.ihme.write_node_split_table(result_dir, node_split_name_set)
     #
     # write_all_node_database
-    at_cascade.ihme.write_all_node_database(results_dir)
+    at_cascade.ihme.write_all_node_database(result_dir)
 # ----------------------------------------------------------------------------
 at_cascade.ihme.main(
     root_node_name          = root_node_name,

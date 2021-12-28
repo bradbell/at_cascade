@@ -30,13 +30,7 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-/at_cascade.cascade_root_node(/! b end
-N
-N
-N
-N
-s|all_node_database =|all_node_database  =|
-s|fit_node_database =|root_node_database =|
-s|fit_goal_set      =|fit_goal_set       =|
-#
-: end
+s|results_dir',  |result_dir',   |
+s|results_dir':  |result_dir':   |
+s|results_dir  \( *\)=|result_dir   \1=|
+s|results_dir|result_dir|g

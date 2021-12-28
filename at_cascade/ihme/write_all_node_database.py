@@ -12,10 +12,10 @@ import csv
 import dismod_at
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
-def get_file_path(results_dir, csv_file_key) :
+def get_file_path(result_dir, csv_file_key) :
     csv_file  = at_cascade.ihme.csv_file
     file_name = csv_file[csv_file_key]
-    file_name = f'{results_dir}/{file_name}'
+    file_name = f'{result_dir}/{file_name}'
     return file_name
 # -----------------------------------------------------------------------------
 def write_table(connection, table, tbl_name, col_list) :
@@ -35,9 +35,9 @@ def write_table(connection, table, tbl_name, col_list) :
         connection, tbl_name, col_name_list, col_type_list, row_list
     )
 # -----------------------------------------------------------------------------
-# write_all_node_database(results_dir)
+# write_all_node_database(result_dir)
 # all_option_table, root_node_database
-def write_all_node_database(results_dir) :
+def write_all_node_database(result_dir) :
     #
     # all_node_database
     all_node_database = at_cascade.ihme.all_node_database
@@ -49,13 +49,13 @@ def write_all_node_database(results_dir) :
     #
     # intermediate files
     # BEGIN_SORT_THIS_LINE_PLUS_1
-    all_mtall_table_file     = get_file_path(results_dir, 'all_mtall')
-    all_option_table_file    = get_file_path(results_dir, 'all_option')
-    mtall_index_table_file   = get_file_path(results_dir, 'mtall_index')
-    mulcov_freeze_table_file = get_file_path(results_dir, 'mulcov_freeze')
-    node_split_table_file    = get_file_path(results_dir, 'node_split')
-    omega_age_table_file     = get_file_path(results_dir, 'omega_age')
-    omega_time_table_file    = get_file_path(results_dir, 'omega_time')
+    all_mtall_table_file     = get_file_path(result_dir, 'all_mtall')
+    all_option_table_file    = get_file_path(result_dir, 'all_option')
+    mtall_index_table_file   = get_file_path(result_dir, 'mtall_index')
+    mulcov_freeze_table_file = get_file_path(result_dir, 'mulcov_freeze')
+    node_split_table_file    = get_file_path(result_dir, 'node_split')
+    omega_age_table_file     = get_file_path(result_dir, 'omega_age')
+    omega_time_table_file    = get_file_path(result_dir, 'omega_time')
     # END_SORT_THIS_LINE_MINUS_1
     #
     # root_node_database

@@ -542,12 +542,12 @@ def root_node_db(file_name) :
 # ----------------------------------------------------------------------------
 def main() :
     # -------------------------------------------------------------------------
-    # results_dir
-    results_dir = 'build/example'
-    distutils.dir_util.mkpath(results_dir)
+    # result_dir
+    result_dir = 'build/example'
+    distutils.dir_util.mkpath(result_dir)
     #
     # Create root_node.db
-    root_node_database  = f'{results_dir}/root_node.db'
+    root_node_database  = f'{result_dir}/root_node.db'
     root_node_db(root_node_database)
     #
     # all_cov_reference
@@ -559,9 +559,9 @@ def main() :
         }
     #
     # Create all_node.db
-    all_node_database = f'{results_dir}/all_node.db'
+    all_node_database = f'{result_dir}/all_node.db'
     all_option        = {
-        'results_dir':    results_dir,
+        'result_dir':     result_dir,
         'root_node_name': 'n1',
     }
     at_cascade.create_all_node_db(
@@ -573,12 +573,12 @@ def main() :
     #
     # root_node_dir
     for node_name in [ 'n0', 'n1' ] :
-        root_node_dir = f'{results_dir}/{node_name}'
+        root_node_dir = f'{result_dir}/{node_name}'
         if os.path.exists(root_node_dir) :
             # rmtree is very dangerous so make sure root_node_dir is as expected
             assert root_node_dir == f'build/example/{node_name}'
             shutil.rmtree( root_node_dir )
-    root_node_dir = f'{results_dir}/n1'
+    root_node_dir = f'{result_dir}/n1'
     os.makedirs(root_node_dir )
     #
     # cascade starting at root node
@@ -590,7 +590,7 @@ def main() :
     #
     # check results
     for goal_dir in [ 'n1/n3', 'n1/n4' ] :
-        goal_database = f'{results_dir}/{goal_dir}/dismod.db'
+        goal_database = f'{result_dir}/{goal_dir}/dismod.db'
         at_cascade.check_cascade_fit(
             rate_true = rate_true,
             all_node_database  = all_node_database,
@@ -599,7 +599,7 @@ def main() :
         )
     #
     # check that fits were not run for n5 and n6
-    for not_fit_dir in [ f'{results_dir}/n0', '{results_dir}/n2' ] :
+    for not_fit_dir in [ f'{result_dir}/n0', '{result_dir}/n2' ] :
         assert not os.path.exists( not_fit_dir )
 #
 main()

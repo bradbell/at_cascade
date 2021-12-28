@@ -247,8 +247,8 @@ def run_one_job(
     for row in all_table['all_option'] :
         all_option_dict[ row['option_name']  ] = row['option_value']
     #
-    # results_dir
-    results_dir = all_option_dict['results_dir']
+    # result_dir
+    result_dir = all_option_dict['result_dir']
     #
     # root_node_id
     name         = all_option_dict['root_node_name']
@@ -289,7 +289,7 @@ def run_one_job(
         fit_node_id             = fit_node_id ,
         fit_split_reference_id  = fit_split_reference_id,
     )
-    fit_node_database = f'{results_dir}/{database_dir}/dismod.db'
+    fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
     #
     # check fit_node_database
     parent_node_name = at_cascade.get_parent_node(fit_node_database)
@@ -391,7 +391,7 @@ def run_one_job(
             fit_node_id             = shift_node_id ,
             fit_split_reference_id  = shift_split_reference_id,
         )
-        shift_database_dir = f'{results_dir}/{database_dir}'
+        shift_database_dir = f'{result_dir}/{database_dir}'
         if not os.path.exists(shift_database_dir) :
             os.makedirs(shift_database_dir)
         #

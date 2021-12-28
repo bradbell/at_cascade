@@ -47,11 +47,11 @@ def write_message_type_file(message_type, fit_goal_set) :
         fit_goal_set       = fit_goal_set,
     )
     #
-    # results_dir
-    results_dir = all_option_dict['results_dir']
+    # result_dir
+    result_dir = all_option_dict['result_dir']
     #
     # file_name
-    file_name = f'{results_dir}/{message_type}'
+    file_name = f'{result_dir}/{message_type}'
     #
     # file_ptr
     file_ptr = open(file_name, 'w')
@@ -178,11 +178,11 @@ def main(
     # all_option_dict
     set_all_option_dict()
     #
-    # results_dir
-    results_dir = all_option_dict['results_dir']
+    # result_dir
+    result_dir = all_option_dict['result_dir']
     #
     # root_node_dir
-    root_node_dir = f'{results_dir}/{root_node_name}'
+    root_node_dir = f'{result_dir}/{root_node_name}'
     #
     # cleanup
     if command == 'cleanup' :
@@ -190,9 +190,9 @@ def main(
             msg  = f'cleanup: Cannot find {root_node_dir}'
             assert False, msg
         #
-        # rmtree if dangerous so make sure results_dir is as expected
+        # rmtree if dangerous so make sure result_dir is as expected
         if root_node_dir != f'ihme_db/DisMod_AT/results/{root_node_name}' :
-            msg  = 'cleanup: results_dir in has changed in '
+            msg  = 'cleanup: result_dir in has changed in '
             msg += 'at_cascade/ihme/__init__.py\n'
             msg += 'You must also change this check in '
             msg += 'at_cascade/ihme/main.py'

@@ -390,12 +390,12 @@ def root_node_db(file_name) :
 # ----------------------------------------------------------------------------
 def main() :
     # -------------------------------------------------------------------------
-    # results_dir
-    results_dir = 'build/example'
-    distutils.dir_util.mkpath(results_dir)
+    # result_dir
+    result_dir = 'build/example'
+    distutils.dir_util.mkpath(result_dir)
     #
     # Create root_node.db
-    root_node_database  = f'{results_dir}/root_node.db'
+    root_node_database  = f'{result_dir}/root_node.db'
     root_node_db(root_node_database)
     #
     # all_cov_reference
@@ -404,9 +404,9 @@ def main() :
         all_cov_reference[node_name] = dict()
     #
     # Create all_node.db
-    all_node_database = f'{results_dir}/all_node.db'
+    all_node_database = f'{result_dir}/all_node.db'
     all_option        = {
-        'results_dir'                  : results_dir,
+        'result_dir'                  : result_dir,
         'root_node_name'               : 'n0',
         'max_fit'                      : max_fit_option,
         'perturb_optimization_scaling' : perturb_optimization_scaling,
@@ -419,7 +419,7 @@ def main() :
     )
     #
     # root_node_dir
-    root_node_dir = f'{results_dir}/n0'
+    root_node_dir = f'{result_dir}/n0'
     if os.path.exists(root_node_dir) :
         # rmtree is very dangerous so make sure root_node_dir is as expected
         assert root_node_dir == 'build/example/n0'
@@ -436,7 +436,7 @@ def main() :
     # check leaf node results
     leaf_dir_list = [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2/n5', 'n0/n2/n6' ]
     for leaf_dir in leaf_dir_list :
-        leaf_database = f'{results_dir}/{leaf_dir}/dismod.db'
+        leaf_database = f'{result_dir}/{leaf_dir}/dismod.db'
         at_cascade.check_cascade_fit(
             rate_true          = rate_true,
             all_node_database  = all_node_database,
@@ -448,7 +448,7 @@ def main() :
     for fit_dir in leaf_dir_list + [ 'n0', 'n0/n1', 'n0/n2' ] :
         #
         # data_subset
-        fit_database = f'{results_dir}/{fit_dir}/dismod.db'
+        fit_database = f'{result_dir}/{fit_dir}/dismod.db'
         new          = False
         connection   = dismod_at.create_connection(fit_database, new)
         data_subset  = dismod_at.get_table_dict(connection, 'data_subset')

@@ -14,7 +14,7 @@ import at_cascade.ihme
 #
 # write_all_option_table
 def write_all_option_table(
-    results_dir                  = None,
+    result_dir                   = None,
     root_node_name               = None,
     shift_prior_std_factor       = None,
     perturb_optimization_scaling = None,
@@ -22,7 +22,7 @@ def write_all_option_table(
     max_fit                      = None,
     max_number_cpu               = None,
 ) :
-    assert type(results_dir)                  == str
+    assert type(result_dir)                  == str
     assert type(root_node_name)               == str
     assert type(max_abs_effect)               == float
     assert type(shift_prior_std_factor)       == float
@@ -32,7 +32,7 @@ def write_all_option_table(
     #
     # all_option_table_file
     all_option_table_file = at_cascade.ihme.csv_file['all_option']
-    all_option_table_file = f'{results_dir}/{all_option_table_file}'
+    all_option_table_file = f'{result_dir}/{all_option_table_file}'
     if os.path.exists(all_option_table_file) :
         print( f'Using existing {all_option_table_file}' )
         return
@@ -44,7 +44,7 @@ def write_all_option_table(
         'absolute_covariates'          : 'one',
         'split_covariate_name'         : 'sex',
         'root_split_reference_name'    : 'Both',
-        'results_dir'                  : results_dir,
+        'result_dir'                  : result_dir,
         'root_node_name'               : root_node_name,
         'max_abs_effect'               : max_abs_effect,
         'max_fit'                      : max_fit,

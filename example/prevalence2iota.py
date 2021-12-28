@@ -617,12 +617,12 @@ def root_node_db(file_name) :
 # ----------------------------------------------------------------------------
 def main() :
     # -------------------------------------------------------------------------
-    # results_dir
-    results_dir = 'build/example'
-    distutils.dir_util.mkpath(results_dir)
+    # result_dir
+    result_dir = 'build/example'
+    distutils.dir_util.mkpath(result_dir)
     #
     # Create root_node.db
-    root_node_database  = f'{results_dir}/root_node.db'
+    root_node_database  = f'{result_dir}/root_node.db'
     root_node_db(root_node_database)
     #
     # all_cov_reference
@@ -653,9 +653,9 @@ def main() :
     #
     # Create all_node.db
     # We could get all_cov_reference from here, but we do not need to
-    all_node_database = f'{results_dir}/all_node.db'
+    all_node_database = f'{result_dir}/all_node.db'
     all_option        = {
-        'results_dir':    results_dir,
+        'result_dir':     result_dir,
         'root_node_name': 'n0',
     }
     at_cascade.create_all_node_db(
@@ -668,7 +668,7 @@ def main() :
     )
     #
     # root_node_dir
-    root_node_dir = f'{results_dir}/n0'
+    root_node_dir = f'{result_dir}/n0'
     if os.path.exists(root_node_dir) :
         # rmtree is very dangerous so make sure root_node_dir is as expected
         assert root_node_dir == 'build/example/n0'
@@ -684,7 +684,7 @@ def main() :
     #
     # check results
     for goal_dir in [ 'n0/n1', 'n0/n2/n5', 'n0/n2/n6' ] :
-        goal_database = f'{results_dir}/{goal_dir}/dismod.db'
+        goal_database = f'{result_dir}/{goal_dir}/dismod.db'
         at_cascade.check_cascade_fit(
             rate_true = rate_true,
             all_node_database = all_node_database,
