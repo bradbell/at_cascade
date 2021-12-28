@@ -232,7 +232,7 @@ def main(
             )
     elif command == 'ihme_csv' :
         at_cascade.ihme.ihme_csv(
-            covariate_csv_file_dict, fit_goal_set, root_node_database
+            covariate_csv_file_dict, fit_goal_set, root_node_database, max_plot
         )
     #
     else :

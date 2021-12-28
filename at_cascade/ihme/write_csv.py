@@ -11,6 +11,7 @@ import csv
 # -----------------------------------------------------------------------------
 #
 # write_csv(file_name, table)
+# write_csv(file_name, table, fieldnames)
 def write_csv(
     file_name  = None,
     table      = None,

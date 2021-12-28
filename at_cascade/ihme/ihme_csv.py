@@ -7,6 +7,7 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # ------------------------------------------------------------------------------
+import numpy
 import dismod_at
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
@@ -16,16 +17,21 @@ def ihme_csv_one_job(
     age_group_id_list          = None ,
     one_age_group_dict         = None ,
     interpolate_all_covariate  = None ,
+    max_plot                   = None ,
 ) :
-    assert type(fit_node_database) is str
-    assert type(age_group_id_dict) is dict
-    assert type(age_group_id_list) is list
-    assert type(one_age_group_dict) is dict
-    assert type(interpolate_all_covariate) is dict
+    assert type(fit_node_database) == str
+    assert type(age_group_id_dict) == dict
+    assert type(age_group_id_list) == list
+    assert type(one_age_group_dict) == dict
+    assert type(interpolate_all_covariate) == dict
+    assert type(max_plot) == int
     assert one_age_group_dict.keys() == interpolate_all_covariate.keys()
     #
     # all_node_database
     all_node_database = at_cascade.ihme.all_node_database
+    #
+    # integrand_name2measure_id
+    integrand_name2measure_id = at_cascade.ihme.integrand_name2measure_id
     #
     # integrand_table, age_table, time_table
     new        = False
@@ -73,7 +79,7 @@ def ihme_csv_one_job(
     #
     # integrand_id_list
     integrand_id_list = list()
-    for integrand_name in at_cascade.ihme.integrand_name2measure_id :
+    for integrand_name in integrand_name2measure_id :
         integrand_id = at_cascade.table_name2id(
             integrand_table, 'integrand', integrand_name
         )
@@ -205,7 +211,7 @@ def ihme_csv_one_job(
     plot_title = f'{fit_node_name}.{sex_name}'
     rate_set   = { 'iota', 'chi', 'omega' }
     dismod_at.plot_rate_fit(
-        fit_node_database, rate_set, pdf_file, plot_title
+        fit_node_database, pdf_file, plot_title, rate_set
     )
     #
     # data.pdf
@@ -338,7 +344,7 @@ def ihme_csv_one_job(
     # ihme.cs
     output_csv = f'{fit_node_dir}/ihme.csv'
     print('ihme.csv')
-    write_csv(output_csv, output_table)
+    at_cascade.ihme.write_csv(output_csv, output_table)
     #
     # plot_limit
     age_min = min(  [ row['age']  for row in age_table  ] )
@@ -363,7 +369,9 @@ def ihme_csv_one_job(
         plot_data  = plot_data       ,
     )
 # -----------------------------------------------------------------------------
-def ihme_csv(covariate_csv_file_dict, fit_goal_set, root_node_database) :
+def ihme_csv(
+    covariate_csv_file_dict, fit_goal_set, root_node_database, max_plot
+) :
     #
     # all_node_database
     all_node_database = at_cascade.ihme.all_node_database
@@ -496,4 +504,5 @@ def ihme_csv(covariate_csv_file_dict, fit_goal_set, root_node_database) :
                 age_group_id_list         = age_group_id_list         ,
                 one_age_group_dict        = one_age_group_dict        ,
                 interpolate_all_covariate = interpolate_all_covariate ,
+                max_plot                  = max_plot                  ,
             )
