@@ -590,10 +590,11 @@ def setup_function() :
     at_cascade.ihme.write_all_node_database(results_dir)
 # ----------------------------------------------------------------------------
 at_cascade.ihme.main(
-    root_node_name  = root_node_name,
-    fit_goal_set    = fit_goal_set,
-    setup_function  = setup_function,
-    max_plot        = max_plot,
+    root_node_name          = root_node_name,
+    fit_goal_set            = fit_goal_set,
+    setup_function          = setup_function,
+    max_plot                = max_plot,
+    covariate_csv_file_dict = covariate_csv_file_dict,
 )
 print('diabetes.py: OK')
 sys.exit(0)

@@ -126,10 +126,11 @@ def drill(root_node_name, fit_goal_set) :
     )
 # ----------------------------------------------------------------------------
 def main(
-    root_node_name   = None,
-    fit_goal_set     = None,
-    setup_function   = None,
-    max_plot         = None,
+    root_node_name          = None,
+    fit_goal_set            = None,
+    setup_function          = None,
+    max_plot                = None,
+    covariate_csv_file_dict = None,
 ) :
     assert type(root_node_name) == str
     assert type(fit_goal_set) == set
@@ -138,7 +139,14 @@ def main(
     #
     # command
     command_set = {
-        'setup', 'cleanup', 'drill', 'display', 'continue', 'error', 'warning',
+        'setup',
+        'cleanup',
+        'drill',
+        'display',
+        'continue',
+        'error',
+        'warning',
+        'ihme_cvs',
      }
     command     = None
     if len(sys.argv) == 2 :
@@ -159,6 +167,7 @@ def main(
         msg +=  'drill:    run cascade from root node to goal nodes\n'
         msg +=  'display:  display results that are in database\n'
         msg +=  'continue: continue cascade starting at database\n'
+        msg +=  'ihme_csv: create the ihme.csv files for each databse\n'
         sys.exit(msg)
     #
     # setup
@@ -227,6 +236,8 @@ def main(
                 fit_goal_set      = fit_goal_set,
                 trace_fit         = True,
             )
+    elif command == 'ihme_csv' :
+        at_cascade.ihme.ihme_csv(covariate_csv_file_dict)
     #
     else :
         assert False

@@ -15,20 +15,19 @@ mtall_inp_file     = 'ihme_db/DisMod_AT/mtall/gbd2019_all_cause_mortality.csv'
 #
 # Intermediate result files that are used for all diseases.
 # This names are relative to the results_dir in the all_option table.
-# BEGIN_SORT_THIS_LINE_PLUS_1
+# BEGIN_SORT_THIS_LINE_PLUS_2
 csv_file = {
     'all_mtall'     : 'all_mtall_table.csv',
     'all_option'    : 'all_option_table.csv',
     'data'          : 'data_table.csv',
     'mtall_index'   : 'mtall_index_table.csv',
     'mulcov_freeze' : 'mulcov_freeze_table.csv',
-    'node_split'    : 'node_split_table.csv',
     'node'          : 'node_table.csv',
+    'node_split'    : 'node_split_table.csv',
     'omega_age'     : 'omega_age_table.csv',
     'omega_time'    : 'omega_time_table.csv',
 }
-#
-# END_SORT_THIS_LINE_MINUS_1
+# END_SORT_THIS_LINE_MINUS_2
 #
 # root_node_database
 root_node_database = 'ihme_db/DisMod_AT/results/root_node.db'
@@ -75,6 +74,7 @@ integrand_name2measure_id = {
 from .get_age_group_id_table      import get_age_group_id_table
 from .get_interpolate_covariate   import get_interpolate_covariate
 from .get_table_csv               import get_table_csv
+from .ihme_csv                    import ihme_csv
 from .main                        import main
 from .write_all_node_database     import write_all_node_database
 from .write_all_option_table      import write_all_option_table

@@ -393,6 +393,6 @@ def no_ode_fit(
     if trace_fit :
         now            = datetime.datetime.now()
         current_time   = now.strftime("%H:%M:%S")
-        print( f'End:   {current_time}: {trace_file_name}' )
+        print( f'End:   {current_time}: {trace_file_name}/dismod.db' )
     #
     return root_fit_database

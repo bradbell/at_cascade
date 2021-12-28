@@ -239,9 +239,9 @@ def try_one_job(
     now          = datetime.datetime.now()
     current_time = now.strftime("%H:%M:%S")
     if ok :
-        print( f'End:   {current_time}: {results_database_dir}' )
+        print( f'End:   {current_time}: {results_database_dir}/dismod.db' )
     else :
-        print( f'Error: {current_time}: {results_database_dir}' )
+        print( f'Error: {current_time}: {results_database_dir}/dismod.db' )
     #
     trace_file_obj.close()
     return ok

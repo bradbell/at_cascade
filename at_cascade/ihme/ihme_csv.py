@@ -1,4 +1,4 @@
-# --------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
 #           Copyright (C) 2021-21 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
@@ -6,20 +6,24 @@
 # This program is distributed under the terms of the
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
-# ---------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 import dismod_at
 import at_cascade.ihme
-# --------------------------------------------------------------------------
-def predict_one_job(
-    all_node_database      = None ,
-    fit_node_database      = None ,
-    age_group_id_dict      = None ,
-    interpolate_covariate  = None ,
+# -----------------------------------------------------------------------------
+def ihme_csv_one_job(
+    fit_node_database          = None ,
+    age_group_id_dict          = None ,
+    one_age_group_dict         = None ,
+    interpolate_all_covariate  = None ,
 ) :
-    assert type(all_node_database) is str
     assert type(fit_node_database) is str
     assert type(age_group_dict) is dict
-    assert type(interpolate_covariate) is dict
+    assert type(one_age_group_dict) is dict
+    assert type(interpolate_all_covariate) is dict
+    assert one_age_group_dict.keys() == interpolate_all_covariate.keys()
+    #
+    # all_node_database
+    all_node_database = cascade.ihme.all_node_database
     #
     # node_table
     file_name = at_cascade.ihme.csv_file['node']
@@ -43,7 +47,7 @@ def predict_one_job(
     connection.close()
     #
     # covariate_list
-    covariate_list = interpolate_covariate.keys()
+    covariate_list = interpolate_all_covariate.keys()
     #
     # fit_node_dir
     assert fit_node_database.endswith('/dismod.db')
@@ -93,7 +97,7 @@ def predict_one_job(
     #
     # list_str_x
     list_str_x = list()
-    for j in range( len(covariate_list) + 2 )
+    for j in range( len(covariate_list) + 2 ) :
         str_x = f'x_{j}'
         list_str_x.append( str_x )
     #
@@ -112,8 +116,12 @@ def predict_one_job(
         # x
         x = [ sex, 1.0 ]
         for covariate_name in covariate_list :
-            fun = interpolate_covariate[covariate_name][location_id][sex_name]
-            val = fun(age, time, grid = False)
+            fun = interpolate_all_covariate \
+                [covariate_name][location_id][sex_name]
+            if one_age_group_dict[covariate_name] :
+                val = fun(time)
+            else :
+                val = fun(age, time, grid = False)
             x.append(val)
         #
         # time
@@ -328,3 +336,104 @@ def predict_one_job(
         plot_title = plot_title      ,
         plot_data  = plot_data       ,
     )
+# -----------------------------------------------------------------------------
+def ihme_csv(covariate_csv_file_dict) :
+    #
+    # root_node_database
+    root_node_database = at_cascade.imhe.root_node_database
+    #
+    # all_node_database
+    all_node_database = at_cascade.imhe.all_node_database
+    #
+    #
+    # node_table, covariate_table
+    new        = False
+    connection      = dismod_at.create_connection(root_node_database, new)
+    node_table      = dismod_at.get_table_dict(connection, 'node')
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    connection.close()
+    #
+    # all_option_table, split_reference_table, node_split
+    new              = False
+    connection       = dismod_at.create_connection(all_node_database, new)
+    all_option_table =  dismod_at.get_table_dict(connection, 'all_option')
+    node_split_table =  dismod_at.get_table_dict(connection, 'node_split')
+    split_reference_table = \
+        dismod_at.get_table_dict(connection, 'split_reference')
+    connection.close()
+    #
+    # node_split_set
+    node_split_set = set()
+    for row in node_split_table :
+        node_split_set.add( row['node_id'] )
+    #
+    # root_node_id
+    root_node_name = at_cascade.get_parent_node(root_node_database)
+    root_node_id   = at_cascade.table_name2id(
+            node_table, 'node', root_node_name
+    )
+    #
+    # root_split_reference_id
+    if len(split_reference_table) == 0 :
+        root_split_refernence_id = None
+    else :
+        cov_info = at_cascade.get_cov_info(
+            all_option_table      = all_option_table ,
+            covariate_table       = covariate_table ,
+            split_reference_table = split_reference_table,
+        )
+        root_split_reference_id = cov_info['split_reference_id']
+    #
+    # job_table
+    job_table = at_cascade.create_job_table(
+        all_node_database          = all_node_database       ,
+        node_table                 = node_table              ,
+        start_node_id              = root_node_id            ,
+        start_split_reference_id   = root_split_reference_id ,
+        fit_goal_set               = fit_goal_set            ,
+    )
+    #
+    # age_group_id_dict
+    age_group_id_table = at_cascade.ihme.get_age_group_id_table()
+    age_group_id_dict   = dict()
+    for row in age_group_id_table :
+        age_group_id = row['age_group_id']
+        age_group_id_dict[age_group_id] = row
+    #
+    # one_age_group_dict, interpolate_all_covariate
+    one_age_group_dict        = dict()
+    interpolate_all_covariate = dict()
+    covariate_list             = covariate_csv_file_dict.keys()
+    for covariate_name in covariate_list :
+        covariate_file_path = covariate_csv_file_dict[covariate_name]
+        (one_age_group, interpolate_covariate) = \
+            at_cascade.ihme.get_interpolate_covariate(
+                covariate_file_path, age_group_id_dict
+        )
+        one_age_group_dict[covariate_name] = one_age_group
+        interpolate_all_covariate[covariate_name] = interpolate_covariate
+    #
+    # job_row
+    for job_row in job_table :
+        #
+        # fit_database
+        fit_node_id            = job_row['fit_node_id']
+        fit_split_reference_id = job_row['split_reference_id']
+        database_dir           = at_cascade.get_database_dir(
+            node_table              = node_table               ,
+            split_reference_table   = split_reference_table    ,
+            node_split_set          = node_split_set           ,
+            root_node_id            = root_node_id             ,
+            root_split_reference_id = root_split_reference_id  ,
+            fit_node_id             = fit_node_id              ,
+            fit_split_reference_id  = fit_split_reference_id   ,
+        )
+        fit_node_database = f'{database_dir}/dismod.db'
+        #
+        # predict_one_job
+        predict_one_job(
+            fit_node_database        = fit_node_database         ,
+            age_group_id_dict        = age_group_id_dict         ,
+            one_age_group_dict       = one_age_group_dict        ,
+            interpolate_all_covarate = interpolate_all_covariate ,
+        )
