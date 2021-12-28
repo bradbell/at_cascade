@@ -363,10 +363,7 @@ def ihme_csv_one_job(
         plot_data  = plot_data       ,
     )
 # -----------------------------------------------------------------------------
-def ihme_csv(covariate_csv_file_dict, fit_goal_set) :
-    #
-    # root_node_database
-    root_node_database = at_cascade.ihme.root_node_database
+def ihme_csv(covariate_csv_file_dict, fit_goal_set, root_node_database) :
     #
     # all_node_database
     all_node_database = at_cascade.ihme.all_node_database

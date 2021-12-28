@@ -35,9 +35,8 @@ def write_table(connection, table, tbl_name, col_list) :
         connection, tbl_name, col_name_list, col_type_list, row_list
     )
 # -----------------------------------------------------------------------------
-# write_all_node_database(result_dir)
-# all_option_table, root_node_database
-def write_all_node_database(result_dir) :
+# write_all_node_database
+def write_all_node_database(result_dir, root_node_database) :
     #
     # all_node_database
     all_node_database = at_cascade.ihme.all_node_database
@@ -57,9 +56,6 @@ def write_all_node_database(result_dir) :
     omega_age_table_file     = get_file_path(result_dir, 'omega_age')
     omega_time_table_file    = get_file_path(result_dir, 'omega_time')
     # END_SORT_THIS_LINE_MINUS_1
-    #
-    # root_node_database
-    root_node_database = at_cascade.ihme.root_node_database
     #
     # root_table
     root_table = dict()
@@ -234,7 +230,7 @@ def write_all_node_database(result_dir) :
     #
     # data4cov_reference
     at_cascade.data4cov_reference(
-        root_node_database = at_cascade.ihme.root_node_database,
+        root_node_database = root_node_database,
         all_node_database  = at_cascade.ihme.all_node_database,
         trace_interval     = 100,
     )

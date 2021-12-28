@@ -29,9 +29,6 @@ csv_file = {
 }
 # END_SORT_THIS_LINE_MINUS_2
 #
-# root_node_database
-root_node_database = 'ihme_db/DisMod_AT/results/root_node.db'
-#
 # all_node_database
 all_node_database = 'ihme_db/DisMod_AT/results/all_node.db'
 #

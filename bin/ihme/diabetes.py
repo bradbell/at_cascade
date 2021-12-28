@@ -37,6 +37,9 @@ data_dir        = 'ihme_db/DisMod_AT/testing/diabetes/data'
 data_inp_file   = f'{data_dir}/gbd2019_diabetes_crosswalk_12437.csv'
 csmr_inp_file   = f'{data_dir}/gbd2019_diabetes_csmr.csv'
 #
+# root_node_database
+root_node_database = 'ihme_db/DisMod_AT/results/root_node.db'
+#
 # result_dir
 result_dir = 'ihme_db/DisMod_AT/results'
 #
@@ -179,8 +182,7 @@ def get_file_path(csv_file_key) :
 # write_root_node_database
 # data_table_file, node_tble_file, omega_age_table_file, omega_time_table_file
 def write_root_node_database() :
-    # root_node_database
-    root_node_database = at_cascade.ihme.root_node_database
+    #
     print( 'Creating ' + root_node_database )
     #
     data_table_file       = get_file_path('data')
@@ -526,7 +528,7 @@ def write_root_node_database() :
     # { 'name':'hold_out_integrand',   'value':'mtexcess'},
     #
     # create_database
-    file_name      = at_cascade.ihme.root_node_database
+    file_name      = root_node_database
     nslist_table   = list()
     avgint_table   = list()
     weight_table   = list()
@@ -581,13 +583,17 @@ def setup_function() :
     )
     #
     # write_mulcov_freeze_table
-    at_cascade.ihme.write_mulcov_freeze_table(result_dir, mulcov_freeze_list)
+    at_cascade.ihme.write_mulcov_freeze_table(
+        result_dir, mulcov_freeze_list, root_node_database
+    )
     #
     # write_node_split_table
-    at_cascade.ihme.write_node_split_table(result_dir, node_split_name_set)
+    at_cascade.ihme.write_node_split_table(
+        result_dir, node_split_name_set, root_node_database
+    )
     #
     # write_all_node_database
-    at_cascade.ihme.write_all_node_database(result_dir)
+    at_cascade.ihme.write_all_node_database(result_dir, root_node_database)
 # ----------------------------------------------------------------------------
 at_cascade.ihme.main(
     root_node_name          = root_node_name,
@@ -595,6 +601,7 @@ at_cascade.ihme.main(
     setup_function          = setup_function,
     max_plot                = max_plot,
     covariate_csv_file_dict = covariate_csv_file_dict,
+    root_node_database      = root_node_database,
 )
 print('diabetes.py: OK')
 sys.exit(0)

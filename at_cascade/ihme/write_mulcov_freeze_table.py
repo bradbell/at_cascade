@@ -13,7 +13,9 @@ import dismod_at
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
 #
-def write_mulcov_freeze_table(result_dir, mulcov_freeze_list) :
+def write_mulcov_freeze_table(
+    result_dir, mulcov_freeze_list, root_node_database
+) :
     #
     # mulcov_freeze_table_file
     mulcov_freeze_table_file = at_cascade.ihme.csv_file['mulcov_freeze']
@@ -23,9 +25,6 @@ def write_mulcov_freeze_table(result_dir, mulcov_freeze_list) :
         return
     else :
         print( f'Creating {mulcov_freeze_table_file}' )
-    #
-    # root_node_database
-    root_node_database = at_cascade.ihme.root_node_database
     #
     # root_table
     new        = False

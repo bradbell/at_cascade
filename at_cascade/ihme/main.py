@@ -30,14 +30,10 @@ def set_all_option_dict() :
     for row in all_option_table :
         all_option_dict[ row['option_name'] ] = row['option_value']
 # ----------------------------------------------------------------------------
-def write_message_type_file(message_type, fit_goal_set) :
+def write_message_type_file(message_type, fit_goal_set, root_node_database) :
     #
     # all_node_database
     all_node_database = at_cascade.ihme.all_node_database
-    #
-    # root_node_database
-    root_node_database = at_cascade.ihme.root_node_database
-    #
     #
     # message_dict
     message_dict = at_cascade.check_log(
@@ -108,13 +104,10 @@ def display(database, max_plot) :
     # db2csv
     dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
 # ----------------------------------------------------------------------------
-def drill(root_node_name, fit_goal_set) :
+def drill(root_node_name, fit_goal_set, root_node_database) :
     #
     # all_node_database
     all_node_database = at_cascade.ihme.all_node_database
-    #
-    # root_node_database
-    root_node_database = at_cascade.ihme.root_node_database
     #
     # cascade_root_node
     at_cascade.cascade_root_node(
@@ -131,6 +124,7 @@ def main(
     setup_function          = None,
     max_plot                = None,
     covariate_csv_file_dict = None,
+    root_node_database      = None,
 ) :
     assert type(root_node_name) == str
     assert type(fit_goal_set) == set
@@ -210,13 +204,13 @@ def main(
             assert False, msg
         print( f'creating {root_node_dir}' )
         os.makedirs( root_node_dir )
-        drill(root_node_name, fit_goal_set)
+        drill(root_node_name, fit_goal_set, root_node_database)
     #
     # error or warning
     elif command in [ 'error', 'warning' ] :
         #
         message_type = command
-        write_message_type_file(message_type, fit_goal_set)
+        write_message_type_file(message_type, fit_goal_set, root_node_database)
     #
     # display or continue
     elif command in [ 'display', 'continue'] :
@@ -237,7 +231,9 @@ def main(
                 trace_fit         = True,
             )
     elif command == 'ihme_csv' :
-        at_cascade.ihme.ihme_csv(covariate_csv_file_dict, fit_goal_set)
+        at_cascade.ihme.ihme_csv(
+            covariate_csv_file_dict, fit_goal_set, root_node_database
+        )
     #
     else :
         assert False

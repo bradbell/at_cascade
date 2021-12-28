@@ -13,7 +13,9 @@ import dismod_at
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
 #
-def write_node_split_table(results_dur, node_split_name_set) :
+def write_node_split_table(
+    results_dur, node_split_name_set, root_node_database
+) :
     #
     # node_split_table_file
     node_split_table_file = at_cascade.ihme.csv_file['node_split']
@@ -23,9 +25,6 @@ def write_node_split_table(results_dur, node_split_name_set) :
         return
     else :
         print( f'Creating {node_split_table_file}' )
-    #
-    # root_node_database
-    root_node_database = at_cascade.ihme.root_node_database
     #
     # root_table
     new        = False
