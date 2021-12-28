@@ -26,8 +26,8 @@ import at_cascade.ihme
 # ----------------------------------------------------------------------------
 # covariate_csv_file_dict
 covariate_csv_file_dict = {
-'ldi' :
-    'ihme_db/DisMod_AT/covariates/gbd2019_ldi_covariate.csv',
+'log_ldi' :
+    'ihme_db/DisMod_AT/covariates/gbd2019_ldi_log_transformed_covariate.csv',
 'obesity' :
     'ihme_db/DisMod_AT/covariates/gbd2019_obesity_prevalence_covariate.csv',
 }
@@ -160,6 +160,7 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
+fit_goal_set = { '1_Global' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understand this program
 # ----------------------------------------------------------------------------
@@ -357,11 +358,10 @@ def write_root_node_database() :
             obesity = None
         else :
             obesity = float( row_in['obesity'] )
-        if row_in['ldi'] == '' :
+        if row_in['log_ldi'] == '' :
             log_ldi = None
         else :
-            ldi = float( row_in['ldi'] )
-            log_ldi = math.log10( ldi )
+            log_ldi = float( row_in['log_ldi'] )
         #
         row_out  = {
             'integrand'       : row_in['integrand_name'],
