@@ -23,6 +23,11 @@ Release Notes for at_cascade
 Release Notes for 2021
 ######################
 
+12-29
+*****
+Fix error recovery and add more job status reporting to
+:ref:`run_parallel`.
+
 12-28
 *****
 1.  Change results_dir to result_dir.

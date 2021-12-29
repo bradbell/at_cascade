@@ -83,6 +83,7 @@ job_status_run   = 2 # job is running
 job_status_done  = 3 # job finished running
 job_status_error = 4 # job had an exception
 job_status_abort = 5 # job is a descendant of a job that had an exception
+job_status_name  = [ 'wait', 'ready', 'run', 'done', 'error', 'abort' ]
 # ----------------------------------------------------------------------------
 def get_results_database_dir(
     all_node_database, node_table, fit_node_id, fit_split_reference_id
@@ -147,6 +148,7 @@ def try_one_job(
     master_process,
     lock,
     event,
+    shared_job_status,
 )  :
     #
     # database_dir
@@ -166,6 +168,15 @@ def try_one_job(
         trace_file_name = f'{results_database_dir}/trace.out'
         trace_file_obj  = open(trace_file_name, 'w')
         #
+        # status_count
+        lock.acquire()
+        n_status      = len( job_status_name )
+        status_count  = dict()
+        for i_status in range(n_status) :
+            name               = job_status_name[i_status]
+            status_count[name] =  sum( shared_job_status == i_status )
+        lock.release()
+        #
         # print message at start
         now             = datetime.datetime.now()
         current_time    = now.strftime("%H:%M:%S")
@@ -184,14 +195,6 @@ def try_one_job(
         )
         ok = True
     except :
-        # shared_job_status
-        tmp = numpy.empty(len(job_table), dtype = int )
-        shm_job_status = shared_memory.SharedMemory(
-            create = False, size = tmp.nbytes, name = 'at_cascade_job_status'
-        )
-        shared_job_status = numpy.ndarray(
-            tmp.shape, dtype = tmp.dtype, buffer = shm_job_status.buf
-        )
         #
         # descendant_set
         descendant_set = { this_job_id }
@@ -206,13 +209,19 @@ def try_one_job(
         lock.acquire()
         #
         # shared_job_status[this_job_id]
-        assert shared_job_status[this_job_id] == job_status_run
+        if shared_job_status[this_job_id] != job_status_run :
+            msg  = 'try_one_job: except: shared_job_status[this_job_id] = '
+            msg += job_status_name[ shared_job_status[this_job_id] ]
+            print(msg)
         shared_job_status[this_job_id] = job_status_error
         #
         # shared_job_status[descendant_set]
         for job_id in descendant_set :
-            assert shared_job_status[this_job_id] == job_status_wait
-            shared_job_status[this_job_id] = job_status_abort
+            if shared_job_status[job_id] != job_status_wait :
+                msg  = 'try_one_job: except: shared_job_status[job_id] = '
+                msg += job_status_name[ shared_job_status[job_id] ]
+                print(msg)
+            shared_job_status[job_id] = job_status_abort
         #
         # lock
         lock.release()
@@ -238,6 +247,17 @@ def try_one_job(
             print( f'End:   {current_time}: {results_database_dir}/dismod.db' )
         else :
             print( f'Error: {current_time}: {results_database_dir}/dismod.db' )
+        #
+        # status_count
+        lock.acquire()
+        n_status      = len( job_status_name )
+        status_count  = dict()
+        for job_status_i in range(n_status) :
+            name               = job_status_name[job_status_i]
+            status_count[name] =  sum( shared_job_status == job_status_i )
+        lock.release()
+        #
+        print( f'       {status_count}' )
         #
         trace_file_obj.close()
     return ok
@@ -308,6 +328,7 @@ def run_parallel_job(
             master_process,
             lock,
             event,
+            shared_job_status,
         )
     #
     # lock
@@ -452,6 +473,7 @@ def run_parallel_job(
                 master_process,
                 lock,
                 event,
+                shared_job_status,
             )
             #
             # lock
