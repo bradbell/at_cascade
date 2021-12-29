@@ -147,8 +147,16 @@ def ihme_csv_one_job(
                         value = fun(time)
                     else :
                         value = fun(age, time, grid = False)
+                elif 'Both' in covariate_by_sex :
+                    fun = covariate_by_sex['Both']
+                    if one_age_group_dict[covariate_name] :
+                        value = fun(time)
+                    else :
+                        value = fun(age, time, grid = False)
                 else :
                     assert sex_name == 'Both'
+                    assert 'Male' in covariate_by_sex
+                    assert 'Female' in covariate_by_sex
                     #
                     # val_male
                     fun = covariate_by_sex['Male']

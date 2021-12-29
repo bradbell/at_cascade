@@ -85,7 +85,7 @@ job_status_error = 4 # job had an exception
 job_status_abort = 5 # job is a descendant of a job that had an exception
 job_status_name  = [ 'wait', 'ready', 'run', 'done', 'error', 'abort' ]
 # ----------------------------------------------------------------------------
-def get_results_database_dir(
+def get_result_database_dir(
     all_node_database, node_table, fit_node_id, fit_split_reference_id
 ) :
     #
@@ -155,7 +155,7 @@ def try_one_job(
     row = job_table[this_job_id]
     fit_node_id            = row['fit_node_id']
     fit_split_reference_id = row['split_reference_id']
-    results_database_dir = get_results_database_dir(
+    result_database_dir = get_result_database_dir(
         all_node_database,
         node_table,
         fit_node_id,
@@ -165,7 +165,7 @@ def try_one_job(
     # trace_file_obj
     trace_file_obj = None
     if max_number_cpu > 1 :
-        trace_file_name = f'{results_database_dir}/trace.out'
+        trace_file_name = f'{result_database_dir}/trace.out'
         trace_file_obj  = open(trace_file_name, 'w')
         #
         # status_count
@@ -178,9 +178,10 @@ def try_one_job(
         lock.release()
         #
         # print message at start
+        job_name        = job_table[this_job_id]['job_name']
         now             = datetime.datetime.now()
         current_time    = now.strftime("%H:%M:%S")
-        print( f'Begin: {current_time}: {trace_file_name}' )
+        print( f'Begin: {current_time}: {job_name}' )
     #
     try :
         # run_one_job
@@ -241,12 +242,13 @@ def try_one_job(
     if max_number_cpu > 1 :
         #
         # print message at end
+        job_name     = job_table[this_job_id]['job_name']
         now          = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
         if ok :
-            print( f'End:   {current_time}: {results_database_dir}/dismod.db' )
+            print( f'End:   {current_time}: {job_name}' )
         else :
-            print( f'Error: {current_time}: {results_database_dir}/dismod.db' )
+            print( f'Error: {current_time}: {ob_name}' )
         #
         # status_count
         lock.acquire()

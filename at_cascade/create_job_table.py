@@ -66,6 +66,13 @@ job_id
 We use *this_job_id* to denote the index of a row in the job_table list.
 The value *job_table[job_id]* is a ``dict`` with the following keys:
 
+job_name
+========
+This is a ``str`` containing *node_name*\ ``.``\ *split_refrerence_name*
+where *node_name* is the node name correspnding to *node_id* and
+*split_reference_name* is the split reference name corresponding to
+*split_reference_id*.
+
 fit_node_id
 ===========
 This is an ``int`` containing the node_id for the
@@ -115,6 +122,7 @@ def get_child_job_table(
     split_reference_table      ,
     node_split_set             ,
     fit_children               ,
+    node_table                 ,
 ) :
     #
     # already_split
@@ -137,7 +145,16 @@ def get_child_job_table(
     child_job_table = list()
     for shift_split_reference_id in shift_reference_set :
         for shift_node_id in shift_node_set :
+            #
+            # job_name
+            node_name = node_table[shift_node_id]['node_name']
+            row       = split_reference_table[shift_split_reference_id]
+            split_reference_name = row['split_reference_name']
+            job_name             = f'{node_name}.{split_reference_name}'
+            #
+            # child_job_table
             row = {
+                'job_name'           : job_name,
                 'fit_node_id'        : shift_node_id,
                 'split_reference_id' : shift_split_reference_id,
                 'parent_job_id'      : job_id,
@@ -201,8 +218,15 @@ def create_job_table(
             root_split_reference_name
         )
     #
+    # job_name
+    node_name = node_table[start_node_id]['node_name']
+    row       = all_table['split_reference'][start_split_reference_id]
+    split_reference_name = row['split_reference_name']
+    job_name             = f'{node_name}.{split_reference_name}'
+    #
     # job_table
     job_table = [ {
+        'job_name'           : job_name,
         'fit_node_id'        : start_node_id,
         'split_reference_id' : start_split_reference_id,
         'parent_job_id'      : None,
@@ -227,6 +251,7 @@ def create_job_table(
             all_table['split_reference'],
             node_split_set,
             fit_children,
+            node_table,
         )
         #
         # table[job_id]['start_child_job_id']
