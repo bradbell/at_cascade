@@ -248,7 +248,7 @@ def try_one_job(
         if ok :
             print( f'End:   {current_time}: {job_name}' )
         else :
-            print( f'Error: {current_time}: {ob_name}' )
+            print( f'Error: {current_time}: {job_name}' )
         #
         # status_count
         lock.acquire()

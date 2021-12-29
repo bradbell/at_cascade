@@ -7,6 +7,7 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # ------------------------------------------------------------------------------
+import multiprocessing
 import numpy
 import dismod_at
 import at_cascade.ihme
@@ -63,9 +64,6 @@ def ihme_csv_one_job(
     file_path  = f'{result_dir}/{file_name}'
     node_table = at_cascade.ihme.get_table_csv(file_path)
     #
-    # covariate_list
-    covariate_list = interpolate_all_covariate.keys()
-    #
     # fit_node_dir
     assert fit_node_database.endswith('/dismod.db')
     index        = fit_node_database.rfind('/')
@@ -113,7 +111,7 @@ def ihme_csv_one_job(
     #
     # list_str_x
     list_str_x = list()
-    for j in range( len(covariate_list) + 2 ) :
+    for j in range( len(covariate_table) ) :
         str_x = f'x_{j}'
         list_str_x.append( str_x )
     #
@@ -133,48 +131,58 @@ def ihme_csv_one_job(
         for time in year_grid :
             #
             # x
-            x = [ sex, 1.0 ]
-            for covariate_name in covariate_list :
+            x = list()
+            for j in range( len(covariate_table) ) :
                 #
-                # covariate_dict
-                covariate_by_sex = \
-                    interpolate_all_covariate[covariate_name][location_id]
+                # covariate_name
+                covariate_name = covariate_table[j]['covariate_name']
                 #
                 # value
-                if sex_name in covariate_by_sex  :
-                    fun = covariate_by_sex[sex_name]
-                    if one_age_group_dict[covariate_name] :
-                        value = fun(time)
-                    else :
-                        value = fun(age, time, grid = False)
-                elif 'Both' in covariate_by_sex :
-                    fun = covariate_by_sex['Both']
-                    if one_age_group_dict[covariate_name] :
-                        value = fun(time)
-                    else :
-                        value = fun(age, time, grid = False)
+                if covariate_name == 'one' :
+                    value = 1.0
+                elif covariate_name == 'sex' :
+                    value = sex
                 else :
-                    assert sex_name == 'Both'
-                    assert 'Male' in covariate_by_sex
-                    assert 'Female' in covariate_by_sex
+                    # this is a relative covariate so interpolate its value
                     #
-                    # val_male
-                    fun = covariate_by_sex['Male']
-                    if one_age_group_dict[covariate_name] :
-                        val_male = fun(time)
+                    # covariate_by_sex
+                    covariate_by_sex = \
+                        interpolate_all_covariate[covariate_name][location_id]
+                    #
+                    if sex_name in covariate_by_sex  :
+                        fun = covariate_by_sex[sex_name]
+                        if one_age_group_dict[covariate_name] :
+                            value = fun(time)
+                        else :
+                            value = fun(age, time, grid = False)
+                    elif 'Both' in covariate_by_sex :
+                        fun = covariate_by_sex['Both']
+                        if one_age_group_dict[covariate_name] :
+                            value = fun(time)
+                        else :
+                            value = fun(age, time, grid = False)
                     else :
-                        val_male = fun(age, time, grid = False)
-                    #
-                    # val_female
-                    fun = covariate_by_sex['Female']
-                    if one_age_group_dict[covariate_name] :
-                        val_female = fun(time)
-                    else :
-                        val_female = fun(age, time, grid = False)
-                    #
-                    # value
-                    value = (val_male + val_female) / 2.0
-                #
+                        # average Male and Female values to get value for Both
+                        assert sex_name == 'Both'
+                        assert 'Male' in covariate_by_sex
+                        assert 'Female' in covariate_by_sex
+                        #
+                        # val_male
+                        fun = covariate_by_sex['Male']
+                        if one_age_group_dict[covariate_name] :
+                            val_male = fun(time)
+                        else :
+                            val_male = fun(age, time, grid = False)
+                        #
+                        # val_female
+                        fun = covariate_by_sex['Female']
+                        if one_age_group_dict[covariate_name] :
+                            val_female = fun(time)
+                        else :
+                            val_female = fun(age, time, grid = False)
+                        #
+                        # value
+                        value = (val_male + val_female) / 2.0
                 # x
                 x.append(value)
             #
@@ -262,7 +270,7 @@ def ihme_csv_one_job(
         #
         # x
         x = list()
-        for j in range( len(list_str_x) ) :
+        for j in range( len(covariate_table) ) :
             x.append( avgint_row[ list_str_x[j] ] )
         #
         # plot_data[integrand_name]
@@ -303,8 +311,9 @@ def ihme_csv_one_job(
             'year_id'        : year_id,
             'measure_id'     : measure_id,
         }
-        for (j, covariate_name) in enumerate(covariate_list) :
-            row[ covariate_name ] = x[2+j]
+        for j in range( len(covariate_table) ) :
+            covariate_name        = covariate_table[j]['covariate_name']
+            row[ covariate_name ] = x[j]
         for sample_index in range( n_sample ) :
             key = f'draw_{sample_index}'
             row[key] = avg_integrand_list[sample_index]

@@ -25,6 +25,8 @@ import at_cascade.ihme
 # Begin settings that can be changed without understand this program
 # ----------------------------------------------------------------------------
 # covariate_csv_file_dict
+# The keys in this dictionary are the relative covariate names and must
+# appear in the covariate table.
 covariate_csv_file_dict = {
 'log_ldi' :
     'ihme_db/DisMod_AT/covariates/gbd2019_ldi_log_transformed_covariate.csv',
@@ -163,7 +165,6 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
-fit_goal_set = { '102_United_States_of_America' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understand this program
 # ----------------------------------------------------------------------------
@@ -331,6 +332,8 @@ def write_root_node_database() :
     # covarite_table
     # Becasue we are using data4cov_reference, the reference for the relative
     # covariates obesity and log_ldi will get replaced.
+    # The names in this table must be 'sex', 'one', and the keys in the
+    # covariate_csv_file_dict.
     covariate_table = [
         { 'name':'sex',     'reference':0.0, 'max_difference':0.6},
         { 'name':'one',     'reference':0.0 },
