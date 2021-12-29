@@ -67,6 +67,12 @@ This is the maximum number of cpus (processes) to use.
 This must be greater than zero.
 If it is one, the jobs are run sequentially; i.e., not in parallel.
 
+trace.out
+*********
+If the *max_number_cpu* is one, standard output is not redirected.
+Otherwise, standard output for each job is written to a file called
+``trace.out`` in the same directory as the database for the job.
+
 {xsrst_end run_parallel}
 '''
 # ----------------------------------------------------------------------------

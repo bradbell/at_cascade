@@ -7,18 +7,19 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # ------------------------------------------------------------------------------
+import os
 import multiprocessing
 import numpy
 import dismod_at
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
 def ihme_csv_one_job(
-    fit_node_database          = None ,
-    age_group_id_dict          = None ,
-    age_group_id_list          = None ,
-    one_age_group_dict         = None ,
-    interpolate_all_covariate  = None ,
-    max_plot                   = None ,
+    fit_node_database ,
+    age_group_id_dict ,
+    age_group_id_list ,
+    one_age_group_dict ,
+    interpolate_all_covariate ,
+    max_plot ,
 ) :
     assert type(fit_node_database) == str
     assert type(age_group_id_dict) == dict
@@ -481,7 +482,8 @@ def ihme_csv(
     # job_row
     for job_row in job_table :
         #
-        # fit_node_id, fit_split_reference_id
+        # job_name, fit_node_id, fit_split_reference_id
+        job_name               = job_row['job_name']
         fit_node_id            = job_row['fit_node_id']
         fit_split_reference_id = job_row['split_reference_id']
         #
@@ -501,25 +503,43 @@ def ihme_csv(
             fit_split_reference_id  = fit_split_reference_id   ,
         )
         #
-        # file_name
-        file_name = f'{result_dir}/{database_dir}/ihme.csv'
+        # file_in
+        file_in = f'{result_dir}/{database_dir}/dismod.db'
+        #
+        # file_out
+        file_out = f'{result_dir}/{database_dir}/ihme.csv'
         #
         # check for an error message in corresponding database
         key  = f'{node_name}.{split_reference_name}'
         if key in error_message_dict :
-            if os.path.exists( file_name ) :
-                os.path.remove( file_name )
-            print( f'Skipping {file_name}' )
+            if os.path.exists( file_out ) :
+                os.path.remove( file_out )
+            print( f'Skipping, due to error, {job_name}' )
+        elif not os.path.exists( file_in ) :
+            print( f'Skipping, missing dismod.db file, {job_name}' )
         else :
-            print( f'Creating {file_name}' )
+            print( f'Creating files for {job_name}' )
             #
-            # ihme_csv_one_job
+            # fit_node_database
             fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
-            ihme_csv_one_job(
-                fit_node_database         = fit_node_database         ,
-                age_group_id_dict         = age_group_id_dict         ,
-                age_group_id_list         = age_group_id_list         ,
-                one_age_group_dict        = one_age_group_dict        ,
-                interpolate_all_covariate = interpolate_all_covariate ,
-                max_plot                  = max_plot                  ,
+            #
+            # args
+            args = (
+                fit_node_database         ,
+                age_group_id_dict         ,
+                age_group_id_list         ,
+                one_age_group_dict        ,
+                interpolate_all_covariate ,
+                max_plot                  ,
             )
+            #
+            # target
+            target = ihme_csv_one_job
+            #
+            # p
+            p = multiprocessing.Process(target = target, args = args)
+            #
+            # Matplotlib leaks memrory, so use a separate proccess that to
+            # call ihme_csv_one_job so it will be freed when the plots are done
+            p.start()
+            p.join()

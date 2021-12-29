@@ -68,9 +68,13 @@ The value *job_table[job_id]* is a ``dict`` with the following keys:
 
 job_name
 ========
-This is a ``str`` containing *node_name*\ ``.``\ *split_refrerence_name*
-where *node_name* is the node name correspnding to *node_id* and
-*split_reference_name* is the split reference name corresponding to
+This is a ``str`` containing the job name.
+If the :ref:`split_reference_table` is empty,
+*jon_name* is equal to *node_name*
+where *node_name* is the node name corresponding to *node_id*.
+Otherwise, *job_name* is equal to
+*node_name*\ ``.``\ *split_reference_name*
+where *split_reference_name* is the split reference name corresponding to
 *split_reference_id*.
 
 fit_node_id
@@ -147,10 +151,11 @@ def get_child_job_table(
         for shift_node_id in shift_node_set :
             #
             # job_name
-            node_name = node_table[shift_node_id]['node_name']
-            row       = split_reference_table[shift_split_reference_id]
-            split_reference_name = row['split_reference_name']
-            job_name             = f'{node_name}.{split_reference_name}'
+            job_name = node_table[shift_node_id]['node_name']
+            if shift_split_reference_id is not None :
+                row       = split_reference_table[shift_split_reference_id]
+                split_reference_name = row['split_reference_name']
+                job_name             = f'{job_name}.{split_reference_name}'
             #
             # child_job_table
             row = {
@@ -219,10 +224,11 @@ def create_job_table(
         )
     #
     # job_name
-    node_name = node_table[start_node_id]['node_name']
-    row       = all_table['split_reference'][start_split_reference_id]
-    split_reference_name = row['split_reference_name']
-    job_name             = f'{node_name}.{split_reference_name}'
+    job_name = node_table[start_node_id]['node_name']
+    if start_split_reference_id is not None :
+        row       = all_table['split_reference'][start_split_reference_id]
+        split_reference_name = row['split_reference_name']
+        job_name             = f'{job_name}.{split_reference_name}'
     #
     # job_table
     job_table = [ {

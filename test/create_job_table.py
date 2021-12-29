@@ -355,12 +355,25 @@ def main() :
     root_node_database  = 'root_node.db'
     root_node_db(root_node_database)
     #
-    # omega_grid
+    # node_table, age_table, time_table
     new          = False
     connection   = dismod_at.create_connection(root_node_database, new)
     node_table   = dismod_at.get_table_dict(connection, 'node')
     age_table    = dismod_at.get_table_dict(connection, 'age')
     time_table   = dismod_at.get_table_dict(connection, 'time')
+    connection.close()
+    #
+    # check_job_table
+    for (job_id, row) in enumerate(check_job_table) :
+        fit_node_id          = row['fit_node_id']
+        node_name            = node_table[fit_node_id]['node_name']
+        split_reference_id   = row['split_reference_id']
+        split_reference_name = \
+            split_reference_table[split_reference_id]['split_reference_name']
+        job_name = f'{node_name}.{split_reference_name}'
+        check_job_table[job_id]['job_name'] = job_name
+    #
+    # omega_grid
     age_id_list  = list( range( len(age_table) ) )
     time_id_list = list( range( len(age_table) ) )
     omega_grid   = { 'age': age_id_list, 'time' : time_id_list }
