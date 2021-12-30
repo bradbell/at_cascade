@@ -230,11 +230,11 @@ def try_one_job(
                 print(msg)
             shared_job_status[job_id] = job_status_abort
         #
-        # lock
+        # release
         lock.release()
         #
         # event
-        # sharred_job_status has changed
+        # shared memory has changed
         event.set()
         #
         # raise
@@ -324,7 +324,7 @@ def run_parallel_job(
     if not skip_this_job :
         #
         # try_one_job
-        # do not want the lock to be aquired during this operation
+        # assumes lock not aquired during this operation
         this_job_ok = try_one_job(
             job_table,
             this_job_id,
@@ -340,7 +340,6 @@ def run_parallel_job(
         )
     #
     # lock
-    # must lock before access shared data
     lock.acquire()
     #
     if not this_job_ok :
@@ -362,11 +361,7 @@ def run_parallel_job(
     #
     while True :
         # lock
-        # lock has alread been acquired at beginning of this loop
-        #
-        # event
-        # shared_job_status has changed
-        event.set()
+        # lock has already been acquired at beginning of this loop
         #
         # job_id_ready
         job_id_ready = job_id_array[ shared_job_status == job_status_ready ]
@@ -381,16 +376,26 @@ def run_parallel_job(
             if job_id_run.size == 0 :
                 #
                 # no jobs running or ready
-                if master_process :
+                if master_process and shared_number_cpu_inuse[0] == 1:
                     # We are done, return to run_parallel which wuill use
-                    # the shared memory for error checking and then free it
+                    # the shared memory for error checking and then free it.
+                    #
+                    # should not need this release
                     lock.release()
                     #
                     return
                 else :
                     # return this processor
                     shared_number_cpu_inuse[0] -= 1
+                    #
+                    # release
                     lock.release()
+                    #
+                    # event
+                    # shared memory has changed
+                    event.set()
+                    #
+                    # this process is done with its shared memory
                     for shm in shm_list :
                         shm.close()
                     return
@@ -399,7 +404,7 @@ def run_parallel_job(
                 # jobs are running but none are ready
                 if master_process :
                     #
-                    # wait for another process to change shared_job_status,
+                    # wait for another process to shared memory,
                     # then go back to the while True point above
                     event.clear()
                     lock.release()
@@ -408,7 +413,11 @@ def run_parallel_job(
                 else :
                     # return this processor
                     shared_number_cpu_inuse[0] -= 1
+                    #
+                    # release
                     lock.release()
+                    #
+                    # this process is done with its shared memory
                     for shm in shm_list :
                         shm.close()
                     return
@@ -427,11 +436,12 @@ def run_parallel_job(
                 #
                 assert shared_job_status[job_id] == job_status_ready
                 shared_job_status[job_id] = job_status_run
-            # lock
+            #
+            # release
             lock.release()
             #
             # event
-            # shared_job_status has changed
+            # shared memory has changed
             event.set()
             #
             # skip_child_job
@@ -469,7 +479,7 @@ def run_parallel_job(
             job_id = int( job_id_ready[n_cpu_spawn] )
             #
             # run_one_job
-            # do not want the lock to be aquired during this operation
+            # assumes lock is not acquired during this operation
             job_ok = try_one_job(
                 job_table,
                 job_id,
@@ -503,7 +513,6 @@ def run_parallel_job(
                    assert shared_job_status[child_job_id] == job_status_wait
                    shared_job_status[child_job_id] = job_status_ready
         #
-        # lock
         # lock is acquired at end of this loop
 # ----------------------------------------------------------------------------
 def run_parallel(
