@@ -142,7 +142,6 @@ def get_result_database_dir(
     return f'{result_dir}/{database_dir}'
 # )
 # ----------------------------------------------------------------------------
-# ok = try_one_job(
 def try_one_job(
     job_table,
     this_job_id,
@@ -200,7 +199,32 @@ def try_one_job(
             fit_integrand     = fit_integrand,
             trace_file_obj    = trace_file_obj,
         )
+        #
+        # ok
         ok = True
+        #
+        # lock
+        lock.acquire()
+        #
+        # shared_job_status
+        assert shared_job_status[this_job_id] == job_status_run
+        shared_job_status[this_job_id] = job_status_done
+        #
+        # shared_job_status[child_job_id] = job_status_ready
+        start_child_job_id    = job_table[this_job_id ]['start_child_job_id']
+        end_child_job_id      = job_table[this_job_id ]['end_child_job_id']
+        child_range = range(start_child_job_id, end_child_job_id)
+        for child_job_id in child_range :
+            assert shared_job_status[child_job_id] == job_status_wait
+            shared_job_status[child_job_id] = job_status_ready
+        #
+        # release
+        lock.release()
+        #
+        # event
+        # shared memory has changed
+        event.set()
+        #
     except :
         #
         # descendant_set
@@ -268,7 +292,7 @@ def try_one_job(
         print( f'       {status_count}' )
         #
         trace_file_obj.close()
-    return ok
+    return
 # ----------------------------------------------------------------------------
 def run_parallel_job(
     job_table,
@@ -320,12 +344,11 @@ def run_parallel_job(
     job_id_array = numpy.array( range(len(job_table)), dtype = int )
     #
     #
-    this_job_ok = True
     if not skip_this_job :
         #
         # try_one_job
         # assumes lock not aquired during this operation
-        this_job_ok = try_one_job(
+        try_one_job(
             job_table,
             this_job_id,
             all_node_database,
@@ -339,29 +362,9 @@ def run_parallel_job(
             shared_job_status,
         )
     #
-    # lock
-    lock.acquire()
-    #
-    if not this_job_ok :
-        assert shared_job_status[this_job_id] == job_status_error
-    else :
-        #
-        # shared_job_status
-        if not skip_this_job :
-            assert shared_job_status[this_job_id] == job_status_run
-            shared_job_status[this_job_id] = job_status_done
-        #
-        # shared_job_status[child_job_id] = job_status_ready
-        start_child_job_id    = job_table[this_job_id ]['start_child_job_id']
-        end_child_job_id      = job_table[this_job_id ]['end_child_job_id']
-        child_range = range(start_child_job_id, end_child_job_id)
-        for child_job_id in child_range :
-            assert shared_job_status[child_job_id] == job_status_wait
-            shared_job_status[child_job_id] = job_status_ready
-    #
     while True :
         # lock
-        # lock has already been acquired at beginning of this loop
+        lock.acquire()
         #
         # job_id_ready
         job_id_ready = job_id_array[ shared_job_status == job_status_ready ]
@@ -493,27 +496,6 @@ def run_parallel_job(
                 event,
                 shared_job_status,
             )
-            #
-            # lock
-            lock.acquire()
-            #
-            if not job_ok :
-                assert shared_job_status[job_id] == job_status_error
-            else :
-                #
-                # shared_job_status
-                assert shared_job_status[job_id] == job_status_run
-                shared_job_status[job_id] = job_status_done
-                #
-                # shared_job_status[child_job_id] = job_status_ready
-                start_child_job_id  = job_table[job_id ]['start_child_job_id']
-                end_child_job_id    = job_table[job_id ]['end_child_job_id']
-                child_range = range(start_child_job_id, end_child_job_id)
-                for child_job_id in child_range :
-                   assert shared_job_status[child_job_id] == job_status_wait
-                   shared_job_status[child_job_id] = job_status_ready
-        #
-        # lock is acquired at end of this loop
 # ----------------------------------------------------------------------------
 def run_parallel(
 # BEGIN syntax

@@ -268,7 +268,7 @@ def no_ode_fit(
         file_stdout    = open(trace_file_name, 'w')
         now            = datetime.datetime.now()
         current_time   = now.strftime("%H:%M:%S")
-        print( f'Begin: {current_time}: {trace_file_name}' )
+        print( f'Begin: {current_time}: no_ode' )
     # ------------------------------------------------------------------------
     # no_ode_database
     # ------------------------------------------------------------------------
@@ -385,6 +385,6 @@ def no_ode_fit(
     if max_number_cpu > 1 :
         now            = datetime.datetime.now()
         current_time   = now.strftime("%H:%M:%S")
-        print( f'End:   {current_time}: {trace_file_name}/dismod.db' )
+        print( f'End:   {current_time}: no_ode' )
     #
     return root_fit_database
