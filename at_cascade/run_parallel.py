@@ -142,13 +142,13 @@ def get_result_database_dir(
     return f'{result_dir}/{database_dir}'
 # )
 # ----------------------------------------------------------------------------
+# asssume lock is released at beginning of this function
 def try_one_job(
     job_table,
     this_job_id,
     all_node_database,
     node_table,
     fit_integrand,
-    skip_this_job,
     max_number_cpu,
     master_process,
     lock,
@@ -300,7 +300,6 @@ def run_parallel_job(
     all_node_database,
     node_table,
     fit_integrand,
-    skip_this_job,
     max_number_cpu,
     master_process,
     lock,
@@ -311,7 +310,6 @@ def run_parallel_job(
     assert type(all_node_database) is str
     assert type(node_table) is list
     assert type(fit_integrand) is set
-    assert type(skip_this_job) is bool
     assert type(max_number_cpu) is int
     assert type(master_process) is bool
     # ----------------------------------------------------------------------
@@ -343,24 +341,6 @@ def run_parallel_job(
     # job_id_array
     job_id_array = numpy.array( range(len(job_table)), dtype = int )
     #
-    #
-    if not skip_this_job :
-        #
-        # try_one_job
-        # assumes lock not aquired during this operation
-        try_one_job(
-            job_table,
-            this_job_id,
-            all_node_database,
-            node_table,
-            fit_integrand,
-            skip_this_job,
-            max_number_cpu,
-            master_process,
-            lock,
-            event,
-            shared_job_status,
-        )
     #
     while True :
         # lock
@@ -412,7 +392,6 @@ def run_parallel_job(
                     event.clear()
                     lock.release()
                     event.wait()
-                    lock.acquire()
                 else :
                     # return this processor
                     shared_number_cpu_inuse[0] -= 1
@@ -482,14 +461,13 @@ def run_parallel_job(
             job_id = int( job_id_ready[n_cpu_spawn] )
             #
             # run_one_job
-            # assumes lock is not acquired during this operation
+            # assumes lock is not released during this operation
             job_ok = try_one_job(
                 job_table,
                 job_id,
                 all_node_database,
                 node_table,
                 fit_integrand,
-                skip_this_job,
                 max_number_cpu,
                 master_process,
                 lock,
@@ -549,10 +527,19 @@ def run_parallel(
     #
     # shared_job_status
     shared_job_status[:]  = job_status_wait
+    #
+    # shared_job_status[start_job]
     if skip_start_job :
         shared_job_status[start_job_id] = job_status_done
+        #
+        # shared_job_status[child_job_id] = job_status_ready
+        start_child_job_id    = job_table[start_job_id ]['start_child_job_id']
+        end_child_job_id      = job_table[start_job_id ]['end_child_job_id']
+        child_range = range(start_child_job_id, end_child_job_id)
+        for child_job_id in child_range :
+            shared_job_status[child_job_id] = job_status_ready
     else :
-        shared_job_status[start_job_id] = job_status_run
+        shared_job_status[start_job_id] = job_status_ready
     #
     # master_process
     master_process = True
@@ -571,7 +558,6 @@ def run_parallel(
         all_node_database,
         node_table,
         fit_integrand,
-        skip_start_job,
         max_number_cpu,
         master_process,
         lock,

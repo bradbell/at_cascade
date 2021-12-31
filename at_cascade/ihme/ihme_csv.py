@@ -214,17 +214,17 @@ def ihme_csv_one_job(
     connection.close()
     #
     # predict sample
-    print( 'sample' )
+    # print( 'sample' )
     command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     dismod_at.system_command_prc(command, print_command = False )
     #
     # db2csv
-    print( 'db2csv' )
+    # print( 'db2csv' )
     dismod_at.db2csv_command(fit_node_database)
     #
     # rate.pdf
+    # print( 'rate.pdf' )
     pdf_file = f'{fit_node_dir}/rate.pdf'
-    print( 'rate.pdf' )
     plot_title = f'{fit_node_name}.{sex_name}'
     rate_set   = { 'iota', 'chi', 'omega' }
     dismod_at.plot_rate_fit(
@@ -232,8 +232,8 @@ def ihme_csv_one_job(
     )
     #
     # data.pdf
+    # print( 'data.pdf' )
     pdf_file = f'{fit_node_dir}/data.pdf'
-    print( 'data.pdf' )
     plot_title = f'{fit_node_name}.{sex_name}'
     dismod_at.plot_data_fit(
         database   = fit_node_database,
@@ -359,9 +359,9 @@ def ihme_csv_one_job(
             for row in plot_data[z_name] :
                 del row['std']
     #
-    # ihme.cs
+    # ihme.csv
+    # print('ihme.csv')
     output_csv = f'{fit_node_dir}/ihme.csv'
-    print('ihme.csv')
     at_cascade.ihme.write_csv(output_csv, output_table)
     #
     # plot_limit
@@ -377,8 +377,8 @@ def ihme_csv_one_job(
     }
     #
     # ihme.pdf
+    # print( 'ihme.pdf' )
     pdf_file = f'{fit_node_dir}/ihme.pdf'
-    print( 'ihme.pdf' )
     plot_title = f'{fit_node_name}.{sex_name}'
     dismod_at.plot_curve(
         pdf_file   = pdf_file      ,
@@ -479,8 +479,11 @@ def ihme_csv(
         fit_goal_set       = fit_goal_set,
     )
     #
+    # n_job
+    n_job = len( job_table )
+    #
     # job_row
-    for job_row in job_table :
+    for (job_id, job_row) in enumerate(job_table) :
         #
         # job_name, fit_node_id, fit_split_reference_id
         job_name               = job_row['job_name']
@@ -514,11 +517,11 @@ def ihme_csv(
         if key in error_message_dict :
             if os.path.exists( file_out ) :
                 os.path.remove( file_out )
-            print( f'Skipping, due to error, {job_name}' )
+            print( f'{job_id+1}/{n_job} Error in {job_name}' )
         elif not os.path.exists( file_in ) :
-            print( f'Skipping, missing dismod.db file, {job_name}' )
+            print( f'{job_id+1}/{n_job} Missing dismod.db for {job_name}' )
         else :
-            print( f'Creating files for {job_name}' )
+            print( f'{job_id+1}/{n_job} Creating files for {job_name}' )
             #
             # fit_node_database
             fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
