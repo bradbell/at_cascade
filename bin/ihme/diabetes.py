@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -165,6 +165,7 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
+fit_goal_set = { '44758_Tower_Hamlets', '527_California' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understand this program
 # ----------------------------------------------------------------------------
@@ -222,9 +223,9 @@ def write_root_node_database() :
     #
     # age_min, age_max, time_min, time_max
     age_min =   math.inf
-    age_max =   (95.0 + 125.0) / 2.0 # midpoint of oldest age group
+    age_max =   125.0        # maximum age in get_age_group_id_table
     time_min =  math.inf
-    time_max =  2021                 # year after last year_id in ihme_csv
+    time_max =  2021         # year after last year_id in ihme_csv
     for row in table_in['data'] :
         age_min  = min(age_min,  float( row['age_lower'] ) )
         time_min = min(time_min, float( row['time_lower'] ) )

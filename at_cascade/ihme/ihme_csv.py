@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -526,23 +526,35 @@ def ihme_csv(
             # fit_node_database
             fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
             #
-            # args
-            args = (
-                fit_node_database         ,
-                age_group_id_dict         ,
-                age_group_id_list         ,
-                one_age_group_dict        ,
-                interpolate_all_covariate ,
-                max_plot                  ,
-            )
-            #
-            # target
-            target = ihme_csv_one_job
-            #
-            # p
-            p = multiprocessing.Process(target = target, args = args)
-            #
-            # Matplotlib leaks memrory, so use a separate proccess that to
-            # call ihme_csv_one_job so it will be freed when the plots are done
-            p.start()
-            p.join()
+            if True :
+                ihme_csv_one_job (
+                    fit_node_database         ,
+                    age_group_id_dict         ,
+                    age_group_id_list         ,
+                    one_age_group_dict        ,
+                    interpolate_all_covariate ,
+                    max_plot                  ,
+                )
+            else :
+                # Matplotlib leaks memrory, so use a separate proccess
+                # for this call to ihme_csv_one_job so the memory will be
+                # freed when it is no longer needed
+                #
+                # args
+                args = (
+                    fit_node_database         ,
+                    age_group_id_dict         ,
+                    age_group_id_list         ,
+                    one_age_group_dict        ,
+                    interpolate_all_covariate ,
+                    max_plot                  ,
+                )
+                #
+                # target
+                target = ihme_csv_one_job
+                #
+                # p
+                p = multiprocessing.Process(target = target, args = args)
+                #
+                p.start()
+                p.join()

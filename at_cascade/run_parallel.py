@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -142,13 +142,13 @@ def get_result_database_dir(
     return f'{result_dir}/{database_dir}'
 # )
 # ----------------------------------------------------------------------------
-# asssume lock is released at beginning of this function
 def try_one_job(
     job_table,
     this_job_id,
     all_node_database,
     node_table,
     fit_integrand,
+    skip_this_job,
     max_number_cpu,
     master_process,
     lock,
@@ -219,11 +219,9 @@ def try_one_job(
             shared_job_status[child_job_id] = job_status_ready
         #
         # release
-        lock.release()
-        #
-        # event
         # shared memory has changed
         event.set()
+        lock.release()
         #
     except :
         #
@@ -255,11 +253,9 @@ def try_one_job(
             shared_job_status[job_id] = job_status_abort
         #
         # release
-        lock.release()
-        #
-        # event
         # shared memory has changed
         event.set()
+        lock.release()
         #
         # raise
         # This prints stack trace when we are not running in parallel
@@ -300,6 +296,7 @@ def run_parallel_job(
     all_node_database,
     node_table,
     fit_integrand,
+    skip_this_job,
     max_number_cpu,
     master_process,
     lock,
@@ -310,6 +307,7 @@ def run_parallel_job(
     assert type(all_node_database) is str
     assert type(node_table) is list
     assert type(fit_integrand) is set
+    assert type(skip_this_job) is bool
     assert type(max_number_cpu) is int
     assert type(master_process) is bool
     # ----------------------------------------------------------------------
@@ -342,6 +340,24 @@ def run_parallel_job(
     job_id_array = numpy.array( range(len(job_table)), dtype = int )
     #
     #
+    if not skip_this_job :
+        #
+        # try_one_job
+        # assumes lock not aquired during this operation
+        try_one_job(
+            job_table,
+            this_job_id,
+            all_node_database,
+            node_table,
+            fit_integrand,
+            skip_this_job,
+            max_number_cpu,
+            master_process,
+            lock,
+            event,
+            shared_job_status,
+        )
+    #
     while True :
         # lock
         lock.acquire()
@@ -372,11 +388,9 @@ def run_parallel_job(
                     shared_number_cpu_inuse[0] -= 1
                     #
                     # release
-                    lock.release()
-                    #
-                    # event
                     # shared memory has changed
                     event.set()
+                    lock.release()
                     #
                     # this process is done with its shared memory
                     for shm in shm_list :
@@ -392,6 +406,7 @@ def run_parallel_job(
                     event.clear()
                     lock.release()
                     event.wait()
+                    lock.acquire()
                 else :
                     # return this processor
                     shared_number_cpu_inuse[0] -= 1
@@ -420,11 +435,9 @@ def run_parallel_job(
                 shared_job_status[job_id] = job_status_run
             #
             # release
-            lock.release()
-            #
-            # event
             # shared memory has changed
             event.set()
+            lock.release()
             #
             # skip_child_job
             skip_child_job = False
@@ -461,13 +474,14 @@ def run_parallel_job(
             job_id = int( job_id_ready[n_cpu_spawn] )
             #
             # run_one_job
-            # assumes lock is not released during this operation
+            # assumes lock is not acquired during this operation
             job_ok = try_one_job(
                 job_table,
                 job_id,
                 all_node_database,
                 node_table,
                 fit_integrand,
+                skip_this_job,
                 max_number_cpu,
                 master_process,
                 lock,
@@ -527,8 +541,6 @@ def run_parallel(
     #
     # shared_job_status
     shared_job_status[:]  = job_status_wait
-    #
-    # shared_job_status[start_job]
     if skip_start_job :
         shared_job_status[start_job_id] = job_status_done
         #
@@ -539,7 +551,7 @@ def run_parallel(
         for child_job_id in child_range :
             shared_job_status[child_job_id] = job_status_ready
     else :
-        shared_job_status[start_job_id] = job_status_ready
+        shared_job_status[start_job_id] = job_status_run
     #
     # master_process
     master_process = True
@@ -548,6 +560,7 @@ def run_parallel(
     lock = multiprocessing.Lock()
     #
     # event
+    # shared memory has changed
     event = multiprocessing.Event()
     event.set()
     #
@@ -558,6 +571,7 @@ def run_parallel(
         all_node_database,
         node_table,
         fit_integrand,
+        skip_start_job,
         max_number_cpu,
         master_process,
         lock,
