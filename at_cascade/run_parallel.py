@@ -406,7 +406,6 @@ def run_parallel_job(
                     event.clear()
                     lock.release()
                     event.wait()
-                    lock.acquire()
                 else :
                     # return this processor
                     shared_number_cpu_inuse[0] -= 1

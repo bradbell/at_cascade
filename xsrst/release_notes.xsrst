@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-          Copyright (C) 2021-21 University of Washington
+          Copyright (C) 2021-22 University of Washington
              (Bradley M. Bell bradbell@uw.edu)
 
 This program is distributed under the terms of the
@@ -13,6 +13,19 @@ Release Notes for at_cascade
 ############################
 
 {xsrst_end release_notes}
+-----------------------------------------------------------------------------
+{xsrst_begin 2020}
+
+Release Notes for 2022
+######################
+
+01-02
+*****
+The cascade would hang at the end, instead of detecting completion,
+when :ref:`all_option_table.max_number_cpu` was greater the one.
+This has been fixed.
+
+{xsrst_end 2020}
 -----------------------------------------------------------------------------
 {xsrst_begin 2021}
 {xsrst_spell

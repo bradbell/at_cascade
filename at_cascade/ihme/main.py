@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -190,8 +190,12 @@ def main(
             msg += 'You must also change this check in '
             msg += 'at_cascade/ihme/main.py'
             assert False, msg
+        #
         print( f'removing {root_node_dir}' )
-        shutil.rmtree( root_node_dir )
+        if os.path.islink(root_node_dir) :
+            os.remove(root_node_dir)
+        else :
+            shutil.rmtree( root_node_dir )
     #
     # drill
     elif command == 'drill' :
