@@ -113,11 +113,9 @@ mulcov_freeze_list = list()
 #   bin/ihme/diabetes.py continue database
 # fit_goal_set = { '1_Global' }
 # fit_goal_set = { '64_High-income' }
+# fit_goal_set = { '44758_Tower_Hamlets', '527_California' }
 # fit_goal_set = {
-#     '527_California',
-#     '547_Mississippi',
-#     '81_Germany',
-#     '84_Ireland'
+#     '527_California', '547_Mississippi', '81_Germany', '84_Ireland'
 # }
 fit_goal_set = {
     '8_Taiwan',
@@ -249,7 +247,7 @@ def write_root_node_database() :
         age_list.append( age_max)
     #
     # time_list, time_grid_id_list
-    time_list   = [ 1960, 1975, 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
+    time_list   = [ 1960, 1980, 1990, 2000, 2010, 2020 ]
     time_grid_id_list = list( range(0, len(time_list) ) )
     for row in table_in['omega_time'] :
         time = float( row['time'] )
