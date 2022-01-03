@@ -7,6 +7,7 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # ------------------------------------------------------------------------------
+import csv
 import os
 import multiprocessing
 import numpy
@@ -482,6 +483,9 @@ def ihme_csv(
     # n_job
     n_job = len( job_table )
     #
+    # imhe_csv_file_list
+    ihme_csv_file_list = list()
+    #
     # job_row
     for (job_id, job_row) in enumerate(job_table) :
         #
@@ -522,6 +526,9 @@ def ihme_csv(
         else :
             print( f'{job_id+1}/{n_job} Creating files for {job_name}' )
             #
+            # ihme_csv_file_list
+            ihme_csv_file_list.append( file_out )
+            #
             # fit_node_database
             fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
             #
@@ -557,3 +564,19 @@ def ihme_csv(
                 #
                 p.start()
                 p.join()
+    #
+    # ihme.csv
+    file_out_name = f'{result_dir}/ihme.csv'
+    file_obj_out  = open(file_out_name, "w")
+    writer        = None
+    for file_in_name in ihme_csv_file_list :
+        file_obj_in   = open(file_in_name, 'r')
+        reader     = csv.DictReader(file_obj_in)
+        for row in reader :
+            if writer is None :
+                keys   = row.keys()
+                writer = csv.DictWriter(file_obj_out, fieldnames=keys)
+                writer.writeheader()
+            writer.writerow(row)
+        file_obj_in.close()
+    file_obj_out.close()
