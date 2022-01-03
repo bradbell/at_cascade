@@ -135,7 +135,7 @@
 </div>
 <div class="section" id="purpose">
 <span id="check-log-purpose"></span><span id="index-2"></span><h3><a class="toc-backref" href="#id3">Purpose</a><a class="headerlink" href="#purpose" title="Permalink to this headline"></a></h3>
-<p>Read all the logs for a cascade and prints any warning or error messages.</p>
+<p>Read all the logs for a cascade and return any warning or error messages.</p>
 </div>
 <div class="section" id="message-type">
 <span id="check-log-message-type"></span><span id="index-3"></span><h3><a class="toc-backref" href="#id4">message_type</a><a class="headerlink" href="#message-type" title="Permalink to this headline"></a></h3>
@@ -164,14 +164,12 @@ This argument can’t be <code class="docutils literal notranslate"><span class=
 <div class="section" id="message-dict">
 <span id="check-log-message-dict"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id8">message_dict</a><a class="headerlink" href="#message-dict" title="Permalink to this headline"></a></h3>
 <p>the return value is a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.
-The keys in <em>message_dict</em> at <code class="docutils literal notranslate"><span class="pre">str</span></code> of the following form</p>
-<blockquote>
-<div><p><em>node_name</em><code class="docutils literal notranslate"><span class="pre">.</span></code><em>split_reference_name</em></p>
-</div></blockquote>
-<p>or each node, split reference value that has messages of the specified type.
-The value <em>message_dict{key]</em> is a <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">str</span></code>
-containing the messages.
-If this list is empty, there are no messages.</p>
+For each <a class="reference internal" href="create_job_table.html#create-job-table-job-table-job-name"><span class="std std-ref">job_name</span></a> that is a key in
+<em>message_dict</em> the corresponding value
+<em>message_dict[job_name]</em> is a non-empty <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">str</span></code>
+containing the messages for that job.
+If an <em>job_name</em> is not a <em>key</em> is in <em>message_dict</em>,
+there were not messages of the specified type for that job.</p>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/check_log.py</span></code></p>
 </div>

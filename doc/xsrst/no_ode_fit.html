@@ -6,7 +6,6 @@
 <meta content="all_node_database" name="keywords" />
 <meta content="root_node_database" name="keywords" />
 <meta content="all_option_dict" name="keywords" />
-<meta content="trace_fit" name="keywords" />
 <meta content="no_ode_database" name="keywords" />
 <meta content="root_fit_database" name="keywords" />
 
@@ -117,9 +116,8 @@
 <li><p><a class="reference internal" href="#all-node-database" id="id3">all_node_database</a></p></li>
 <li><p><a class="reference internal" href="#root-node-database" id="id4">root_node_database</a></p></li>
 <li><p><a class="reference internal" href="#all-option-dict" id="id5">all_option_dict</a></p></li>
-<li><p><a class="reference internal" href="#trace-fit" id="id6">trace_fit</a></p></li>
-<li><p><a class="reference internal" href="#no-ode-database" id="id7">no_ode_database</a></p></li>
-<li><p><a class="reference internal" href="#root-fit-database" id="id8">root_fit_database</a></p></li>
+<li><p><a class="reference internal" href="#no-ode-database" id="id6">no_ode_database</a></p></li>
+<li><p><a class="reference internal" href="#root-fit-database" id="id7">root_fit_database</a></p></li>
 </ul>
 </div>
 <div class="section" id="syntax">
@@ -128,7 +126,6 @@
     <span class="n">all_node_database</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">root_node_database</span>  <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">all_option_dict</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">trace_fit</span>           <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="c1"># )</span>
 </pre></div>
 </div>
@@ -154,22 +151,13 @@ and the corresponding value is
 If an option does not appear in the table, the corresponding key
 does not appear in <em>all_option_dict</em>.</p>
 </div>
-<div class="section" id="trace-fit">
-<span id="no-ode-fit-trace-fit"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id6">trace_fit</a><a class="headerlink" href="#trace-fit" title="Permalink to this headline"></a></h3>
-<p>if <code class="docutils literal notranslate"><span class="pre">True</span></code>, ( <code class="docutils literal notranslate"><span class="pre">False</span></code> ) the dismod_at commands,
-and the optimizer trace, are written to the file</p>
-<blockquote>
-<div><p><em>results_dir</em>/<em>root_node_name</em>/no_ode/trace.out</p>
-</div></blockquote>
-<p>otherwise, the dismod_at commands are written to standard output.</p>
-</div>
 <div class="section" id="no-ode-database">
-<span id="no-ode-fit-no-ode-database"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id7">no_ode_database</a><a class="headerlink" href="#no-ode-database" title="Permalink to this headline"></a></h3>
+<span id="no-ode-fit-no-ode-database"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id6">no_ode_database</a><a class="headerlink" href="#no-ode-database" title="Permalink to this headline"></a></h3>
 <p>An intermediate database is stored in the file</p>
 <blockquote>
-<div><p><em>results_dir</em>/<em>root_node_name</em>/no_ode/dismod.db</p>
+<div><p><em>result_dir</em>/<em>root_node_name</em>/no_ode/dismod.db</p>
 </div></blockquote>
-<p>see <a class="reference internal" href="all_option_table.html#all-option-table-results-dir"><span class="std std-ref">results_dir</span></a>
+<p>see <a class="reference internal" href="all_option_table.html#all-option-table-result-dir"><span class="std std-ref">result_dir</span></a>
 and <a class="reference internal" href="all_option_table.html#all-option-table-root-node-name"><span class="std std-ref">root_node_name</span></a>.
 This contains the results of fitting without the ODE integrands
 so they can be plotted and converted to csv files.
@@ -179,10 +167,10 @@ The ODE integrands are not included (are included) for a fit using
 the <em>no_ode_database</em> (<em>root_fit_database</em>).</p>
 </div>
 <div class="section" id="root-fit-database">
-<span id="no-ode-fit-root-fit-database"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id8">root_fit_database</a><a class="headerlink" href="#root-fit-database" title="Permalink to this headline"></a></h3>
+<span id="no-ode-fit-root-fit-database"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id7">root_fit_database</a><a class="headerlink" href="#root-fit-database" title="Permalink to this headline"></a></h3>
 <p>The return value <em>root_fit_database</em> is equal to</p>
 <blockquote>
-<div><p><em>results_dir</em>/<em>root_node_name</em>/dismod.db</p>
+<div><p><em>result_dir</em>/<em>root_node_name</em>/dismod.db</p>
 </div></blockquote>
 <p>which can’t be the same file name as <em>root_node_database</em>.
 This is an input_node_database similar to <em>root_node_database</em>.

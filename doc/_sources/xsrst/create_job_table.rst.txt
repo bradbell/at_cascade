@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_job_table.py
-    :lines: 151-157
+    :lines: 173-179
     :language: py
 
 .. meta::
@@ -131,6 +131,24 @@ job_id
 ======
 We use *this_job_id* to denote the index of a row in the job_table list.
 The value *job_table[job_id]* is a ``dict`` with the following keys:
+
+.. meta::
+   :keywords: job_name
+
+.. index:: job_name
+
+.. _create_job_table.job_table.job_name:
+
+job_name
+========
+This is a ``str`` containing the job name.
+If the :ref:`split_reference_table` is empty,
+*jon_name* is equal to *node_name*
+where *node_name* is the node name corresponding to *node_id*.
+Otherwise, *job_name* is equal to
+*node_name*\ ``.``\ *split_reference_name*
+where *split_reference_name* is the split reference name corresponding to
+*split_reference_id*.
 
 .. meta::
    :keywords: fit_node_id

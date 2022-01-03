@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/cascade_root_node.py
-    :lines: 130-136
+    :lines: 125-130
     :language: py
 
 .. meta::
@@ -83,18 +83,6 @@ if ``True`` ( ``False`` ) the :ref:`no_ode_fit` routine
 will (will not) be used to modify the parent value priors.
 
 .. meta::
-   :keywords: trace_fit
-
-.. index:: trace_fit
-
-.. _cascade_root_node.trace_fit:
-
-trace_fit
-*********
-if ``True`` ( ``False`` ) the progress of the dismod at fit commands
-will be printed on standard output during the optimization.
-
-.. meta::
    :keywords: root_fit_database
 
 .. index:: root_fit_database
@@ -105,9 +93,9 @@ root_fit_database
 *****************
 This directory is
 
-    *results_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
+    *result_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
 
-see :ref:`all_option_table.results_dir`
+see :ref:`all_option_table.result_dir`
 and :ref:`all_option_table.root_node_name`.
 If *no_ode_fit* is ``True`` ( ``False`` ) the priors in the
 *root_node_database* are modified (are not modified)

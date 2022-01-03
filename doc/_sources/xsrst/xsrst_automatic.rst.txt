@@ -63,7 +63,9 @@ Table of Contents
 |
 | :ref:`5<wish_list>` Wish List for at_cascade
 | :ref:`6<release_notes>` Release Notes for at_cascade
-|  |space| :ref:`6.1<2021>` Release Notes for 2021
+|
+|  |space| :ref:`6.1<2020>` Release Notes for 2022
+|  |space| :ref:`6.2<2021>` Release Notes for 2021
 |
 
 Link to Index

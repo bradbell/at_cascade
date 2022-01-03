@@ -8,6 +8,7 @@ release_notes
    :maxdepth: 1
    :hidden:
 
+   2020
    2021
 
 .. meta::
@@ -26,6 +27,7 @@ Release Notes for at_cascade
     :header: "Child", "Title"
     :widths: 20, 80
 
+    "2020", :ref:`2020`
     "2021", :ref:`2021`
 
 ----

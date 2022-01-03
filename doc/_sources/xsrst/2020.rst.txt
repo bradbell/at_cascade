@@ -1,0 +1,37 @@
+.. include:: ../preamble.rst
+
+!!!!
+2020
+!!!!
+
+.. meta::
+   :keywords: 2020, release, notes, for, 2022
+
+.. index:: 2020, release, notes, for, 2022
+
+.. _2020:
+
+Release Notes for 2022
+######################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: 01-02
+
+.. index:: 01-02
+
+.. _2020.01-02:
+
+01-02
+*****
+1.  The cascade would hang at the end, instead of detecting completion,
+    when :ref:`all_option_table.max_number_cpu` was greater the one.
+    This has been fixed.
+
+2.  Use :ref:`create_job_table.job_table.job_name`
+    as the key for each job in the :ref:`check_log.message_dict` return value.
+
+----
+
+xsrst input file: ``xsrst/release_notes.xsrst``

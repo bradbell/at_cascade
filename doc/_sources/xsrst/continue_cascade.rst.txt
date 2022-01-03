@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/continue_cascade.py
-    :lines: 107-112
+    :lines: 102-106
     :language: py
 
 .. meta::
@@ -87,18 +87,6 @@ This is a ``set`` with elements of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
 :ref:`glossary.fit_goal_set` .
 This argument can't be ``None``.
-
-.. meta::
-   :keywords: trace_fit
-
-.. index:: trace_fit
-
-.. _continue_cascade.trace_fit:
-
-trace_fit
-*********
-if ``True``, ( ``False`` ) the progress of the dismod at fit commands
-will be printed on standard output during the optimization.
 
 ----
 

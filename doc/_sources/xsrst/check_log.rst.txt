@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/check_log.py
-    :lines: 74-79
+    :lines: 72-77
     :language: py
 
 .. meta::
@@ -39,7 +39,7 @@ Syntax
 
 Purpose
 *******
-Read all the logs for a cascade and prints any warning or error messages.
+Read all the logs for a cascade and return any warning or error messages.
 
 .. meta::
    :keywords: message_type
@@ -103,14 +103,12 @@ This argument can't be ``None``.
 message_dict
 ************
 the return value is a ``dict``.
-The keys in *message_dict* at ``str`` of the following form
-
-    *node_name*\ ``.``\ *split_reference_name*
-
-or each node, split reference value that has messages of the specified type.
-The value *message_dict{key]* is a ``list`` of ``str``
-containing the messages.
-If this list is empty, there are no messages.
+For each :ref:`create_job_table.job_table.job_name` that is a key in
+*message_dict* the corresponding value
+*message_dict[job_name]* is a non-empty ``list`` of ``str``
+containing the messages for that job.
+If an *job_name* is not a *key* is in *message_dict*,
+there were not messages of the specified type for that job.
 
 ----
 

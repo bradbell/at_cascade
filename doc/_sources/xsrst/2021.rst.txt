@@ -17,6 +17,33 @@ Release Notes for 2021
    :local:
 
 .. meta::
+   :keywords: 12-29
+
+.. index:: 12-29
+
+.. _2021.12-29:
+
+12-29
+*****
+1.  Fix error recovery and add more job status reporting to
+    :ref:`run_parallel`.
+
+2.  Document the :ref:`run_parallel.trace_out` file.
+
+.. meta::
+   :keywords: 12-28
+
+.. index:: 12-28
+
+.. _2021.12-28:
+
+12-28
+*****
+1.  Change results_dir to result_dir.
+
+2.  Remove the *trace_fit* parameter.
+
+.. meta::
    :keywords: 12-26
 
 .. index:: 12-26
@@ -25,8 +52,12 @@ Release Notes for 2021
 
 12-26
 *****
-Add exception handling to running in parallel so that
-program does not hang when a job fails.
+1.  Add exception handling to running in parallel so that
+    program does not hang when a job fails.
+
+2.  Change the run_one_job trace_fit argument to
+    :ref:`run_one_job.trace_file_obj` so that opening and closing the file
+    is managed by the calling program.
 
 .. meta::
    :keywords: 12-24
@@ -37,7 +68,7 @@ program does not hang when a job fails.
 
 12-24
 *****
-1.  The base_directory was changed to the :ref:`all_option_table.results_dir`
+1.  The base_directory was changed to the :ref:`all_option_table.result_dir`
     and now a required option the all_option table.
 
 2.  Change required precision in example/mulcov_freeze.py to reduce probability

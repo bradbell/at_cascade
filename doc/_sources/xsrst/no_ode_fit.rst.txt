@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/no_ode_fit.py
-    :lines: 184-189
+    :lines: 175-179
     :language: py
 
 .. meta::
@@ -73,22 +73,6 @@ If an option does not appear in the table, the corresponding key
 does not appear in *all_option_dict*.
 
 .. meta::
-   :keywords: trace_fit
-
-.. index:: trace_fit
-
-.. _no_ode_fit.trace_fit:
-
-trace_fit
-*********
-if ``True``, ( ``False`` ) the dismod_at commands,
-and the optimizer trace, are written to the file
-
-    *results_dir*\ /\ *root_node_name*\ /no_ode/trace.out
-
-otherwise, the dismod_at commands are written to standard output.
-
-.. meta::
    :keywords: no_ode_database
 
 .. index:: no_ode_database
@@ -99,9 +83,9 @@ no_ode_database
 ***************
 An intermediate database is stored in the file
 
-    *results_dir*\ /\ *root_node_name*\ /no_ode/dismod.db
+    *result_dir*\ /\ *root_node_name*\ /no_ode/dismod.db
 
-see :ref:`all_option_table.results_dir`
+see :ref:`all_option_table.result_dir`
 and :ref:`all_option_table.root_node_name`.
 This contains the results of fitting without the ODE integrands
 so they can be plotted and converted to csv files.
@@ -121,7 +105,7 @@ root_fit_database
 *****************
 The return value *root_fit_database* is equal to
 
-    *results_dir*\ /\ *root_node_name*\ /dismod.db
+    *result_dir*\ /\ *root_node_name*\ /dismod.db
 
 which can't be the same file name as *root_node_database*.
 This is an input_node_database similar to *root_node_database*.

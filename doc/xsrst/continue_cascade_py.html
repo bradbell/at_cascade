@@ -124,7 +124,7 @@
 <span class="c1"># END fit_goal_set</span>
 <span class="c1"># BEGIN all_option</span>
 <span class="n">all_option</span>  <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;results_dir&#39;</span><span class="p">:</span>    <span class="s1">&#39;build/example&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;result_dir&#39;</span><span class="p">:</span>     <span class="s1">&#39;build/example&#39;</span><span class="p">,</span>
     <span class="s1">&#39;root_node_name&#39;</span><span class="p">:</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span>
     <span class="s1">&#39;max_number_cpu&#39;</span><span class="p">:</span>  <span class="s1">&#39;2&#39;</span><span class="p">,</span>
 <span class="p">}</span>
@@ -306,17 +306,17 @@
         <span class="n">option_table</span>
     <span class="p">)</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
-<span class="k">def</span> <span class="nf">two_fit_goal_set_example</span><span class="p">(</span><span class="n">results_dir</span><span class="p">)</span> <span class="p">:</span>
+<span class="k">def</span> <span class="nf">two_fit_goal_set_example</span><span class="p">(</span><span class="n">result_dir</span><span class="p">)</span> <span class="p">:</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
     <span class="c1">#</span>
     <span class="c1"># root_node_database</span>
-    <span class="n">root_node_database</span>  <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s1">/root_node.db&#39;</span>
+    <span class="n">root_node_database</span>  <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/root_node.db&#39;</span>
     <span class="c1">#</span>
     <span class="c1"># all_node_database</span>
-    <span class="n">all_node_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s1">/all_node.db&#39;</span>
+    <span class="n">all_node_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/all_node.db&#39;</span>
     <span class="c1">#</span>
     <span class="c1"># root_fit_dir</span>
-    <span class="n">root_fit_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s1">/n0&#39;</span>
+    <span class="n">root_fit_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/n0&#39;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">root_fit_dir</span><span class="p">)</span> <span class="p">:</span>
         <span class="c1"># rmtree is very dangerous so make sure root_fit_dir is as expected</span>
         <span class="k">assert</span> <span class="n">root_fit_dir</span> <span class="o">==</span> <span class="s1">&#39;build/example/n0&#39;</span>
@@ -341,7 +341,7 @@
     <span class="c1"># check leaf node results</span>
     <span class="n">leaf_dir_list</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;n0/n1/n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n1/n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n2/n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n2/n6&#39;</span> <span class="p">]</span>
     <span class="k">for</span> <span class="n">leaf_dir</span> <span class="ow">in</span> <span class="n">leaf_dir_list</span> <span class="p">:</span>
-        <span class="n">leaf_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">leaf_dir</span><span class="si">}</span><span class="s1">/dismod.db&#39;</span>
+        <span class="n">leaf_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">leaf_dir</span><span class="si">}</span><span class="s1">/dismod.db&#39;</span>
         <span class="n">at_cascade</span><span class="o">.</span><span class="n">check_cascade_fit</span><span class="p">(</span>
             <span class="n">rate_true</span>          <span class="o">=</span> <span class="n">rate_true</span><span class="p">,</span>
             <span class="n">all_node_database</span>  <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
@@ -349,16 +349,16 @@
             <span class="n">relative_tolerance</span> <span class="o">=</span> <span class="mf">1e-7</span><span class="p">,</span>
         <span class="p">)</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
-<span class="k">def</span> <span class="nf">one_fit_goal_set_example</span><span class="p">(</span><span class="n">results_dir</span> <span class="p">)</span> <span class="p">:</span>
+<span class="k">def</span> <span class="nf">one_fit_goal_set_example</span><span class="p">(</span><span class="n">result_dir</span> <span class="p">)</span> <span class="p">:</span>
     <span class="c1">#</span>
     <span class="c1"># root_node_database</span>
-    <span class="n">root_node_database</span>  <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s1">/root_node.db&#39;</span>
+    <span class="n">root_node_database</span>  <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/root_node.db&#39;</span>
     <span class="c1">#</span>
     <span class="c1"># all_node_database</span>
-    <span class="n">all_node_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s1">/all_node.db&#39;</span>
+    <span class="n">all_node_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/all_node.db&#39;</span>
     <span class="c1">#</span>
     <span class="c1"># root_fit_dir</span>
-    <span class="n">root_fit_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s1">/n0&#39;</span>
+    <span class="n">root_fit_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/n0&#39;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">root_fit_dir</span><span class="p">)</span> <span class="p">:</span>
         <span class="c1"># rmtree is very dangerous so make sure root_fit_dir is as expected</span>
         <span class="k">assert</span> <span class="n">root_fit_dir</span> <span class="o">==</span> <span class="s1">&#39;build/example/n0&#39;</span>
@@ -376,7 +376,7 @@
     <span class="c1"># check leaf node results</span>
     <span class="n">leaf_dir_list</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;n0/n1/n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n1/n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n2/n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n2/n6&#39;</span> <span class="p">]</span>
     <span class="k">for</span> <span class="n">leaf_dir</span> <span class="ow">in</span> <span class="n">leaf_dir_list</span> <span class="p">:</span>
-        <span class="n">leaf_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">leaf_dir</span><span class="si">}</span><span class="s1">/dismod.db&#39;</span>
+        <span class="n">leaf_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">leaf_dir</span><span class="si">}</span><span class="s1">/dismod.db&#39;</span>
         <span class="n">at_cascade</span><span class="o">.</span><span class="n">check_cascade_fit</span><span class="p">(</span>
             <span class="n">rate_true</span>          <span class="o">=</span> <span class="n">rate_true</span><span class="p">,</span>
             <span class="n">all_node_database</span>  <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
@@ -389,12 +389,12 @@
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="p">:</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="c1"># results_dir</span>
-    <span class="n">results_dir</span> <span class="o">=</span> <span class="n">all_option</span><span class="p">[</span><span class="s1">&#39;results_dir&#39;</span><span class="p">]</span>
-    <span class="n">distutils</span><span class="o">.</span><span class="n">dir_util</span><span class="o">.</span><span class="n">mkpath</span><span class="p">(</span><span class="n">results_dir</span><span class="p">)</span>
+    <span class="c1"># result_dir</span>
+    <span class="n">result_dir</span> <span class="o">=</span> <span class="n">all_option</span><span class="p">[</span><span class="s1">&#39;result_dir&#39;</span><span class="p">]</span>
+    <span class="n">distutils</span><span class="o">.</span><span class="n">dir_util</span><span class="o">.</span><span class="n">mkpath</span><span class="p">(</span><span class="n">result_dir</span><span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># root_node_database</span>
-    <span class="n">root_node_database</span>  <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s1">/root_node.db&#39;</span>
+    <span class="n">root_node_database</span>  <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/root_node.db&#39;</span>
     <span class="n">root_node_db</span><span class="p">(</span><span class="n">root_node_database</span><span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># all_cov_reference</span>
@@ -403,7 +403,7 @@
         <span class="n">all_cov_reference</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="c1">#</span>
     <span class="c1"># all_node_database</span>
-    <span class="n">all_node_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s1">/all_node.db&#39;</span>
+    <span class="n">all_node_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/all_node.db&#39;</span>
     <span class="n">at_cascade</span><span class="o">.</span><span class="n">create_all_node_db</span><span class="p">(</span>
         <span class="n">all_node_database</span>       <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
         <span class="n">root_node_database</span>      <span class="o">=</span> <span class="n">root_node_database</span><span class="p">,</span>
@@ -412,10 +412,10 @@
     <span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># example using continue_cascade</span>
-    <span class="c1"># two_fit_goal_set_example(results_dir)</span>
+    <span class="c1"># two_fit_goal_set_example(result_dir)</span>
     <span class="c1">#</span>
     <span class="c1"># same calculation without continue_cascade</span>
-    <span class="n">one_fit_goal_set_example</span><span class="p">(</span><span class="n">results_dir</span><span class="p">)</span>
+    <span class="n">one_fit_goal_set_example</span><span class="p">(</span><span class="n">result_dir</span><span class="p">)</span>
 <span class="c1">#</span>
 <span class="n">main</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;max_fit_option: OK&#39;</span><span class="p">)</span>

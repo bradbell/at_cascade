@@ -152,13 +152,13 @@ If this option does not appear, or if it is zero,
 the scaling point is equal to the prior mean for all variables.
 
 .. meta::
-   :keywords: results_dir
+   :keywords: result_dir
 
-.. index:: results_dir
+.. index:: result_dir
 
-.. _all_option_table.results_dir:
+.. _all_option_table.result_dir:
 
-results_dir
+result_dir
 ***********
 This option must appear and
 all of the at_cascade output files are placed in this directory.

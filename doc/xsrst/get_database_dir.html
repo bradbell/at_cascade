@@ -187,10 +187,13 @@ that the fit corresponds to.</p>
 </div>
 <div class="section" id="database-dir">
 <span id="get-database-dir-database-dir"></span><span id="index-9"></span><h3><a class="toc-backref" href="#id10">database_dir</a><a class="headerlink" href="#database-dir" title="Permalink to this headline"></a></h3>
-<p>The return value is a <code class="docutils literal notranslate"><span class="pre">str</span></code> containg the name of the directory
-where the database corresponding to he fit is located relative to
-the <span class="xref std std-ref">glossary.base_directory</span>.
-It begins with <em>root_node_name</em><code class="docutils literal notranslate"><span class="pre">/</span></code> .</p>
+<p>The return value is a <code class="docutils literal notranslate"><span class="pre">str</span></code> containg the directory,
+relative to the <a class="reference internal" href="all_option_table.html#all-option-table-result-dir"><span class="std std-ref">result_dir</span></a>,
+where the database corresponding to the fit is (or will be) located.
+In other words, the fit database has the following path:</p>
+<blockquote>
+<div><p><em>result_dir</em><code class="docutils literal notranslate"><span class="pre">/</span></code> <em>database_dir</em><code class="docutils literal notranslate"><span class="pre">/dismod.db</span></code></p>
+</div></blockquote>
 <hr class="docutils" />
 <p>xsrst input file: <code class="docutils literal notranslate"><span class="pre">at_cascade/get_database_dir.py</span></code></p>
 </div>
