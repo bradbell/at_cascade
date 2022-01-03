@@ -513,8 +513,7 @@ def ihme_csv(
         file_out = f'{result_dir}/{database_dir}/ihme.csv'
         #
         # check for an error message in corresponding database
-        key  = f'{node_name}.{split_reference_name}'
-        if key in error_message_dict :
+        if job_name in error_message_dict :
             if os.path.exists( file_out ) :
                 os.path.remove( file_out )
             print( f'{job_id+1}/{n_job} Error in {job_name}' )
@@ -526,7 +525,7 @@ def ihme_csv(
             # fit_node_database
             fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
             #
-            if True :
+            if False :
                 ihme_csv_one_job (
                     fit_node_database         ,
                     age_group_id_dict         ,

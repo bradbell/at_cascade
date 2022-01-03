@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -51,14 +51,12 @@ This argument can't be ``None``.
 message_dict
 ************
 the return value is a ``dict``.
-The keys in *message_dict* at ``str`` of the following form
-
-    *node_name*\ ``.``\ *split_reference_name*
-
-or each node, split reference value that has messages of the specified type.
-The value *message_dict{key]* is a ``list`` of ``str``
-containing the messages.
-If a *key* is in *message_dict*, the corresponding list is non-empty.
+For each :ref:`create_job_table.job_table.job_name` that is a key in
+*message_dict* the corresponding value
+*message_dict[job_name]* is a non-empty ``list`` of ``str``
+containing the messages for that job.
+If an *job_name* is not a *key* is in *message_dict*,
+there were not messages of the specified type for that job.
 
 {xsrst_end check_log}
 '''
@@ -153,6 +151,9 @@ def check_log(
     # job_id
     for job_id in range( len(job_table) ) :
         #
+        # job_name
+        job_name = job_table[job_id]['job_name']
+        #
         # fit_node_id
         fit_node_id = job_table[job_id]['fit_node_id']
         #
@@ -171,20 +172,10 @@ def check_log(
         )
         fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
         #
-        # node_name
-        node_name = node_table[fit_node_id]['node_name']
-        #
-        # split_reference_name
-        row                  = split_reference_table[fit_split_reference_id]
-        split_reference_name = row['split_reference_name']
-        #
-        # key
-        key = f'\n{node_name}.{split_reference_name}'
-        #
         # log_table
         if not os.path.exists(fit_node_database) :
             message = f'Missing fit_node_database {fit_node_database}'
-            message_dict[key] = [ message ]
+            message_dict[job_name] = [ message ]
         else :
             new        = False
             connection = dismod_at.create_connection(fit_node_database, new)
@@ -197,8 +188,8 @@ def check_log(
                 if row['message_type'] == message_type :
                     #
                     # message_dict
-                    if key not in message_dict :
-                        message_dict[key] = list()
-                    message_dict[key].append( row['message'] )
+                    if job_name not in message_dict :
+                        message_dict[job_name] = list()
+                    message_dict[job_name].append( row['message'] )
     #
     return message_dict

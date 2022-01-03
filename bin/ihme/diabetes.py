@@ -163,7 +163,6 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
-fit_goal_set = { '44758_Tower_Hamlets', '527_California' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understand this program
 # ----------------------------------------------------------------------------
@@ -247,7 +246,7 @@ def write_root_node_database() :
         age_list.append( age_max)
     #
     # time_list, time_grid_id_list
-    time_list   = [ 1960, 1980, 1990, 2000, 2010, 2020 ]
+    time_list   = [ 1960, 1975, 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
     time_grid_id_list = list( range(0, len(time_list) ) )
     for row in table_in['omega_time'] :
         time = float( row['time'] )
@@ -406,12 +405,20 @@ def write_root_node_database() :
             'mean'    :    1e-5,
             'std'     :    1.0,
         },{
-            'name'    :    'parent_rate_delta',
+            'name'    :    'parent_rate_dage',
             'density' :    'log_gaussian',
             'lower'   :    None,
             'upper'   :    None,
             'mean'    :    0.0,
             'std'     :    1.0,
+            'eta'     :    1e-7,
+        },{
+            'name'    :    'parent_rate_dtime',
+            'density' :    'log_gaussian',
+            'lower'   :    None,
+            'upper'   :    None,
+            'mean'    :    0.0,
+            'std'     :    0.3,
             'eta'     :    1e-7,
         },{
             'name'    :   'child_rate_value',
@@ -446,7 +453,7 @@ def write_root_node_database() :
     #
     # parrent_smooth
     fun = lambda a, t :  \
-        ('parent_rate_value', 'parent_rate_delta', 'parent_rate_delta')
+        ('parent_rate_value', 'parent_rate_dage', 'parent_rate_dtime')
     smooth_table.append({
         'name':     'parent_rate',
         'age_id':   age_grid_id_list,

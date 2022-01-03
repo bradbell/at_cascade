@@ -21,9 +21,12 @@ Release Notes for 2022
 
 01-02
 *****
-The cascade would hang at the end, instead of detecting completion,
-when :ref:`all_option_table.max_number_cpu` was greater the one.
-This has been fixed.
+1.  The cascade would hang at the end, instead of detecting completion,
+    when :ref:`all_option_table.max_number_cpu` was greater the one.
+    This has been fixed.
+
+2.  Use :ref:`create_job_table.job_table.job_name`
+    as the key for each job in the :ref:`check_log.message_dict` return value.
 
 {xsrst_end 2020}
 -----------------------------------------------------------------------------
