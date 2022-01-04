@@ -214,8 +214,16 @@ def ihme_csv_one_job(
     dismod_at.replace_table(connection, 'avgint', avgint_table)
     connection.close()
     #
+    # predict_fit_table
+    command = [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
+    dismod_at.system_command_prc(command, print_command = False )
+    new                  = False
+    connection           = dismod_at.create_connection(fit_node_database, new)
+    predict_fit_table    = dismod_at.get_table_dict(connection, 'predict')
+    assert len(predict_fit_table) == len(avgint_table)
+    connection.close()
+    #
     # predict sample
-    # print( 'sample' )
     command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     dismod_at.system_command_prc(command, print_command = False )
     #
@@ -224,7 +232,6 @@ def ihme_csv_one_job(
     dismod_at.db2csv_command(fit_node_database)
     #
     # rate.pdf
-    # print( 'rate.pdf' )
     pdf_file = f'{fit_node_dir}/rate.pdf'
     plot_title = f'{fit_node_name}.{sex_name}'
     rate_set   = { 'iota', 'chi', 'omega' }
@@ -233,7 +240,6 @@ def ihme_csv_one_job(
     )
     #
     # data.pdf
-    # print( 'data.pdf' )
     pdf_file = f'{fit_node_dir}/data.pdf'
     plot_title = f'{fit_node_name}.{sex_name}'
     dismod_at.plot_data_fit(
@@ -243,15 +249,15 @@ def ihme_csv_one_job(
         max_plot   = max_plot,
     )
     #
-    # predict_table
-    new           = False
-    connection    = dismod_at.create_connection(fit_node_database, new)
-    predict_table = dismod_at.get_table_dict(connection, 'predict')
+    # predict_sample_table
+    new                  = False
+    connection           = dismod_at.create_connection(fit_node_database, new)
+    predict_sample_table = dismod_at.get_table_dict(connection, 'predict')
     connection.close()
     #
     # n_sample
-    assert len(predict_table) % len(avgint_table) == 0
-    n_sample = int( len(predict_table) / len(avgint_table) )
+    assert len(predict_sample_table) % len(avgint_table) == 0
+    n_sample = int( len(predict_sample_table) / len(avgint_table) )
     #
     # n_avgint
     n_avgint = len( avgint_table )
@@ -295,7 +301,7 @@ def ihme_csv_one_job(
             #
             # predict_row
             predict_id = sample_index * n_avgint + avgint_id
-            predict_row = predict_table[predict_id]
+            predict_row = predict_sample_table[predict_id]
             #
             # some checks
             assert sample_index  == predict_row['sample_index']
@@ -304,6 +310,9 @@ def ihme_csv_one_job(
             # avg_integrand
             avg_integrand = predict_row['avg_integrand']
             avg_integrand_list.append( avg_integrand )
+        #
+        # fit_value
+        fit_value = predict_fit_table[avgint_id]['avg_integrand']
         #
         # row
         row = {
@@ -316,6 +325,7 @@ def ihme_csv_one_job(
         for j in range( len(covariate_table) ) :
             covariate_name        = covariate_table[j]['covariate_name']
             row[ covariate_name ] = x[j]
+        row['fit_value'] = fit_value
         for sample_index in range( n_sample ) :
             key = f'draw_{sample_index}'
             row[key] = avg_integrand_list[sample_index]
@@ -361,7 +371,6 @@ def ihme_csv_one_job(
                 del row['std']
     #
     # ihme.csv
-    # print('ihme.csv')
     output_csv = f'{fit_node_dir}/ihme.csv'
     at_cascade.ihme.write_csv(output_csv, output_table)
     #
@@ -378,7 +387,6 @@ def ihme_csv_one_job(
     }
     #
     # ihme.pdf
-    # print( 'ihme.pdf' )
     pdf_file = f'{fit_node_dir}/ihme.pdf'
     plot_title = f'{fit_node_name}.{sex_name}'
     dismod_at.plot_curve(
@@ -519,7 +527,7 @@ def ihme_csv(
         # check for an error message in corresponding database
         if job_name in error_message_dict :
             if os.path.exists( file_out ) :
-                os.path.remove( file_out )
+                os.remove( file_out )
             print( f'{job_id+1}/{n_job} Error in {job_name}' )
         elif not os.path.exists( file_in ) :
             print( f'{job_id+1}/{n_job} Missing dismod.db for {job_name}' )
