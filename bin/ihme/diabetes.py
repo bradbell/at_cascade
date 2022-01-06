@@ -345,14 +345,7 @@ def write_root_node_database() :
         location_id = int( row_in['location_id'] )
         is_outlier  = int( row_in['is_outlier'] )
         sex_name    = row_in['sex_name']
-        #
-        # Kludge where input file has the wrong value.
-        # Rmove this code when is_outlier is fixed.
-        if row_in['integrand_name'] == 'mtexcess' :
-            assert is_outlier == 1
-            hold_out = 0
-        else :
-            hold_out = is_outlier
+        hold_out    = is_outlier
         #
         node_id     = location_id2node_id[location_id]
         node_name = node_table[node_id]['name']
@@ -405,7 +398,7 @@ def write_root_node_database() :
             'mean'    :    1e-5,
             'std'     :    1.0,
         },{
-            'name'    :    'parent_rate_dage',
+            'name'    :    'parent_chi_delta',
             'density' :    'log_gaussian',
             'lower'   :    None,
             'upper'   :    None,
@@ -413,7 +406,7 @@ def write_root_node_database() :
             'std'     :    1.0,
             'eta'     :    1e-7,
         },{
-            'name'    :    'parent_rate_dtime',
+            'name'    :    'parent_iota_delta',
             'density' :    'log_gaussian',
             'lower'   :    None,
             'upper'   :    None,
@@ -451,15 +444,27 @@ def write_root_node_database() :
     # smooth_table
     smooth_table = list()
     #
-    # parrent_smooth
+    # parrent_chi
     fun = lambda a, t :  \
-        ('parent_rate_value', 'parent_rate_dage', 'parent_rate_dtime')
+        ('parent_rate_value', 'parent_chi_delta', 'parent_chi_delta')
     smooth_table.append({
-        'name':     'parent_rate',
+        'name':     'parent_chi',
         'age_id':   age_grid_id_list,
         'time_id':  time_grid_id_list,
         'fun':      fun
     })
+    #
+    # parrent_iota
+    fun = lambda a, t :  \
+        ('parent_rate_value', 'parent_iota_delta', 'parent_iota_delta')
+    smooth_table.append({
+        'name':     'parent_iota',
+        'age_id':   age_grid_id_list,
+        'time_id':  time_grid_id_list,
+        'fun':      fun
+    })
+    #
+    # parent_pini
     fun = lambda a, t :  \
         ('parent_pini_value', None, None)
     smooth_table.append({
@@ -506,11 +511,11 @@ def write_root_node_database() :
             'child_smooth':  None,
         },{
             'name':           'iota',
-            'parent_smooth': 'parent_rate',
+            'parent_smooth': 'parent_iota',
             'child_smooth':  'child_smooth',
         },{
             'name':           'chi',
-            'parent_smooth': 'parent_rate',
+            'parent_smooth': 'parent_chi',
             'child_smooth':  'child_smooth',
         }
     ]
