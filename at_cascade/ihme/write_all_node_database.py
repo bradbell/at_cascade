@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -39,7 +39,7 @@ def write_table(connection, table, tbl_name, col_list) :
 def write_all_node_database(result_dir, root_node_database) :
     #
     # all_node_database
-    all_node_database = at_cascade.ihme.all_node_database
+    all_node_database = f'{result_dir}/all_node.db'
     if os.path.exists( all_node_database ) :
         print( f'Using existing {all_node_database}' )
         return
@@ -231,7 +231,7 @@ def write_all_node_database(result_dir, root_node_database) :
     # data4cov_reference
     at_cascade.data4cov_reference(
         root_node_database = root_node_database,
-        all_node_database  = at_cascade.ihme.all_node_database,
+        all_node_database  = all_node_database,
         trace_interval     = 100,
     )
     print( f'End: creating {all_node_database}' )

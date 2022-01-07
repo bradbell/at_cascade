@@ -21,6 +21,7 @@ def predict_csv_one_job(
     one_age_group_dict ,
     interpolate_all_covariate ,
     max_plot ,
+    all_node_database,
 ) :
     assert type(fit_node_database) == str
     assert type(age_group_id_dict) == dict
@@ -29,9 +30,6 @@ def predict_csv_one_job(
     assert type(interpolate_all_covariate) == dict
     assert type(max_plot) == int
     assert one_age_group_dict.keys() == interpolate_all_covariate.keys()
-    #
-    # all_node_database
-    all_node_database = at_cascade.ihme.all_node_database
     #
     # integrand_name2measure_id
     integrand_name2measure_id = at_cascade.ihme.integrand_name2measure_id
@@ -397,11 +395,20 @@ def predict_csv_one_job(
     )
 # -----------------------------------------------------------------------------
 def predict_csv(
-    covariate_csv_file_dict, fit_goal_set, root_node_database, max_plot
+    result_dir              = None,
+    covariate_csv_file_dict = None,
+    fit_goal_set            = None,
+    root_node_database      = None,
+    max_plot                = None,
 ) :
+    assert type(result_dir) == str
+    assert type(covariate_csv_file_dict) == dict
+    assert type(fit_goal_set) == set
+    assert type(root_node_database) == str
+    assert type(max_plot) == int
     #
     # all_node_database
-    all_node_database = at_cascade.ihme.all_node_database
+    all_node_database = f'{result_dir}/all_node.db'
     #
     #
     # node_table, covariate_table
@@ -542,6 +549,7 @@ def predict_csv(
                     one_age_group_dict        ,
                     interpolate_all_covariate ,
                     max_plot                  ,
+                    all_node_database         ,
                 )
             else :
                 # Matplotlib leaks memrory, so use a separate proccess

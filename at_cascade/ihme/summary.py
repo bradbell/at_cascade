@@ -17,7 +17,7 @@ def write_message_type_file(
 ) :
     #
     # all_node_database
-    all_node_database = at_cascade.ihme.all_node_database
+    all_node_database = f'{result_dir}/all_node.db'
     #
     # message_dict
     message_dict = at_cascade.check_log(
@@ -52,7 +52,7 @@ def get_path_table_to_file_name(
 ) :
     #
     # all_node_database
-    all_node_database = at_cascade.ihme.all_node_database
+    all_node_database = f'{result_dir}/all_node.db'
     #
     #
     # node_table, covariate_table

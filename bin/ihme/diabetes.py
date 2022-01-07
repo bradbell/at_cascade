@@ -39,11 +39,11 @@ data_dir        = 'ihme_db/DisMod_AT/testing/diabetes/data'
 data_inp_file   = f'{data_dir}/gbd2019_diabetes_crosswalk_12437.csv'
 csmr_inp_file   = f'{data_dir}/gbd2019_diabetes_csmr.csv'
 #
-# root_node_database
-root_node_database = 'ihme_db/DisMod_AT/results/root_node.db'
-#
 # result_dir
-result_dir = 'ihme_db/DisMod_AT/results'
+result_dir = 'ihme_db/DisMod_AT/results/diabetes'
+#
+# root_node_database
+root_node_database = f'{result_dir}/root_node.db'
 #
 # root_node_name
 # name of the node where the cascade will start
@@ -163,6 +163,7 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
+fit_goal_set = { '1_Global' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understand this program
 # ----------------------------------------------------------------------------
@@ -610,6 +611,7 @@ def setup_function() :
     at_cascade.ihme.write_all_node_database(result_dir, root_node_database)
 # ----------------------------------------------------------------------------
 at_cascade.ihme.main(
+    result_dir              = result_dir,
     root_node_name          = root_node_name,
     fit_goal_set            = fit_goal_set,
     setup_function          = setup_function,

@@ -13,23 +13,6 @@ import shutil
 import dismod_at
 import at_cascade.ihme
 # ----------------------------------------------------------------------------
-all_option_dict = None
-def set_all_option_dict() :
-    global all_option_dict
-    #
-    # all_node_database
-    all_node_database = at_cascade.ihme.all_node_database
-    #
-    # all_node_table
-    new              = False
-    connection       = dismod_at.create_connection(all_node_database, new)
-    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
-    #
-    # all_option_dict
-    all_option_dict = dict()
-    for row in all_option_table :
-        all_option_dict[ row['option_name'] ] = row['option_value']
-# ---------------------------------------------------------------------------
 def display(database, max_plot) :
     #
     # pdf_file
@@ -68,10 +51,10 @@ def display(database, max_plot) :
     # db2csv
     dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
 # ----------------------------------------------------------------------------
-def drill(root_node_name, fit_goal_set, root_node_database) :
+def drill(result_dir, root_node_name, fit_goal_set, root_node_database) :
     #
     # all_node_database
-    all_node_database = at_cascade.ihme.all_node_database
+    all_node_database = f'{result_dir}/all_node.db'
     #
     # cascade_root_node
     at_cascade.cascade_root_node(
@@ -82,6 +65,7 @@ def drill(root_node_name, fit_goal_set, root_node_database) :
     )
 # ----------------------------------------------------------------------------
 def main(
+    result_dir              = None,
     root_node_name          = None,
     fit_goal_set            = None,
     setup_function          = None,
@@ -89,6 +73,7 @@ def main(
     covariate_csv_file_dict = None,
     root_node_database      = None,
 ) :
+    assert type(result_dir) == str
     assert type(root_node_name) == str
     assert type(fit_goal_set) == set
     assert setup_function is not None
@@ -133,12 +118,6 @@ def main(
         setup_function()
         return
     #
-    # all_option_dict
-    set_all_option_dict()
-    #
-    # result_dir
-    result_dir = all_option_dict['result_dir']
-    #
     # root_node_dir
     root_node_dir = f'{result_dir}/{root_node_name}'
     #
@@ -172,7 +151,7 @@ def main(
             assert False, msg
         print( f'creating {root_node_dir}' )
         os.makedirs( root_node_dir )
-        drill(root_node_name, fit_goal_set, root_node_database)
+        drill( result_dir, root_node_name, fit_goal_set, root_node_database )
     #
     # display or continue
     elif command in [ 'display', 'continue'] :
@@ -186,14 +165,19 @@ def main(
         if command == 'display' :
             display(database, max_plot)
         else :
+            all_ndoe_database = f'{result_dir}/all_node.db'
             at_cascade.continue_cascade(
-                all_node_database = at_cascade.ihme.all_node_database,
+                all_node_database = all_node_database,
                 fit_node_database = database,
                 fit_goal_set      = fit_goal_set,
             )
     elif command == 'predict' :
         at_cascade.ihme.predict_csv(
-            covariate_csv_file_dict, fit_goal_set, root_node_database, max_plot
+            result_dir              = result_dir,
+            covariate_csv_file_dict = covariate_csv_file_dict,
+            fit_goal_set            = fit_goal_set,
+            root_node_database      = root_node_database,
+            max_plot                = max_plot,
         )
     elif command == 'summary' :
         at_cascade.ihme.summary(
