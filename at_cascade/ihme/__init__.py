@@ -73,6 +73,7 @@ from .get_interpolate_covariate   import get_interpolate_covariate
 from .get_table_csv               import get_table_csv
 from .main                        import main
 from .predict_csv                 import predict_csv
+from .summary                     import summary
 from .write_all_node_database     import write_all_node_database
 from .write_all_option_table      import write_all_option_table
 from .write_csv                   import write_csv

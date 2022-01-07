@@ -29,42 +29,6 @@ def set_all_option_dict() :
     all_option_dict = dict()
     for row in all_option_table :
         all_option_dict[ row['option_name'] ] = row['option_value']
-# ----------------------------------------------------------------------------
-def write_message_type_file(message_type, fit_goal_set, root_node_database) :
-    #
-    # all_node_database
-    all_node_database = at_cascade.ihme.all_node_database
-    #
-    # message_dict
-    message_dict = at_cascade.check_log(
-        message_type       = message_type,
-        all_node_database  = all_node_database,
-        root_node_database = root_node_database,
-        fit_goal_set       = fit_goal_set,
-    )
-    #
-    # result_dir
-    result_dir = all_option_dict['result_dir']
-    #
-    # file_name
-    file_name = f'{result_dir}/{message_type}'
-    #
-    # file_ptr
-    file_ptr = open(file_name, 'w')
-    #
-    first_key = True
-    for key in message_dict :
-        #
-        # first_key
-        if not first_key :
-            file_ptr.write('\n')
-        first_key = False
-        #
-        file_ptr.write( f'{key}\n' )
-        for message in message_dict[key] :
-            file_ptr.write( f'{message}\n' )
-    #
-    file_ptr.close()
 # ---------------------------------------------------------------------------
 def display(database, max_plot) :
     #
@@ -137,9 +101,8 @@ def main(
         'drill',
         'display',
         'continue',
-        'error',
-        'warning',
-        'predict_csv',
+        'predict',
+        'summary',
      }
     command     = None
     if len(sys.argv) == 2 :
@@ -160,7 +123,9 @@ def main(
         msg +=  'drill:    run cascade from root node to goal nodes\n'
         msg +=  'display:  display results that are in database\n'
         msg +=  'continue: continue cascade starting at database\n'
-        msg +=  'predict_csv: create the predict.csv files for each databse\n'
+        msg +=  'predict:  create the predict.csv files for each databse\n'
+        msg +=  'summary:  create following files in results directory\n'
+        msg +=  '          error, warning, predict.csv'
         sys.exit(msg)
     #
     # setup
@@ -209,12 +174,6 @@ def main(
         os.makedirs( root_node_dir )
         drill(root_node_name, fit_goal_set, root_node_database)
     #
-    # error or warning
-    elif command in [ 'error', 'warning' ] :
-        #
-        message_type = command
-        write_message_type_file(message_type, fit_goal_set, root_node_database)
-    #
     # display or continue
     elif command in [ 'display', 'continue'] :
         if not database.startswith( root_node_dir ) :
@@ -232,9 +191,15 @@ def main(
                 fit_node_database = database,
                 fit_goal_set      = fit_goal_set,
             )
-    elif command == 'predict_csv' :
+    elif command == 'predict' :
         at_cascade.ihme.predict_csv(
             covariate_csv_file_dict, fit_goal_set, root_node_database, max_plot
+        )
+    elif command == 'summary' :
+        at_cascade.ihme.summary(
+            result_dir         = result_dir,
+            fit_goal_set       = fit_goal_set,
+            root_node_database = root_node_database
         )
     #
     else :

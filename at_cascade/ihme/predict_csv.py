@@ -411,7 +411,7 @@ def predict_csv(
     covariate_table = dismod_at.get_table_dict(connection, 'covariate')
     connection.close()
     #
-    # all_option_table, split_reference_table, node_split
+    # all_option_table, split_reference_table, node_split_table
     new              = False
     connection       = dismod_at.create_connection(all_node_database, new)
     all_option_table =  dismod_at.get_table_dict(connection, 'all_option')
@@ -491,10 +491,7 @@ def predict_csv(
     # n_job
     n_job = len( job_table )
     #
-    # imhe_csv_file_list
-    predict_csv_file_list = list()
-    #
-    # job_row
+    # job_id, job_row
     for (job_id, job_row) in enumerate(job_table) :
         #
         # job_name, fit_node_id, fit_split_reference_id
@@ -534,9 +531,6 @@ def predict_csv(
         else :
             print( f'{job_id+1}/{n_job} Creating files for {job_name}' )
             #
-            # predict_csv_file_list
-            predict_csv_file_list.append( file_out )
-            #
             # fit_node_database
             fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
             #
@@ -572,19 +566,3 @@ def predict_csv(
                 #
                 p.start()
                 p.join()
-    #
-    # predict.csv
-    file_out_name = f'{result_dir}/predict.csv'
-    file_obj_out  = open(file_out_name, "w")
-    writer        = None
-    for file_in_name in predict_csv_file_list :
-        file_obj_in   = open(file_in_name, 'r')
-        reader     = csv.DictReader(file_obj_in)
-        for row in reader :
-            if writer is None :
-                keys   = row.keys()
-                writer = csv.DictWriter(file_obj_out, fieldnames=keys)
-                writer.writeheader()
-            writer.writerow(row)
-        file_obj_in.close()
-    file_obj_out.close()
