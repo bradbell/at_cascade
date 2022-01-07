@@ -113,13 +113,15 @@ def main(
         msg +=  '          error, warning, predict.csv'
         sys.exit(msg)
     #
+    # root_node_dir
+    root_node_dir = f'{result_dir}/{root_node_name}'
+    if not os.path.exists(root_node_dir ) :
+        os.makedirs( root_node_dir )
+    #
     # setup
     if command == 'setup' :
         setup_function()
         return
-    #
-    # root_node_dir
-    root_node_dir = f'{result_dir}/{root_node_name}'
     #
     # cleanup
     if command == 'cleanup' :
@@ -150,7 +152,6 @@ def main(
             msg += f'{program} cleanup'
             assert False, msg
         print( f'creating {root_node_dir}' )
-        os.makedirs( root_node_dir )
         drill( result_dir, root_node_name, fit_goal_set, root_node_database )
     #
     # display or continue

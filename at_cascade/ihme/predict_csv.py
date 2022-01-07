@@ -564,6 +564,7 @@ def predict_csv(
                     one_age_group_dict        ,
                     interpolate_all_covariate ,
                     max_plot                  ,
+                    all_node_database         ,
                 )
                 #
                 # target
