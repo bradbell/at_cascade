@@ -47,8 +47,8 @@ def write_message_type_file(
     #
     file_ptr.close()
 # ------------------------------------------------------------------------------
-def combine_predict_files(
-    result_dir, fit_goal_set, root_node_database
+def get_path_table_to_file_name(
+    file_name, result_dir, fit_goal_set, root_node_database
 ) :
     #
     # all_node_database
@@ -102,8 +102,8 @@ def combine_predict_files(
         fit_goal_set               = fit_goal_set            ,
     )
     #
-    # predict_csv_file_list
-    predict_csv_file_list = list()
+    # path_table
+    path_table = list()
     #
     # job_id, job_row
     for (job_id, job_row) in enumerate(job_table) :
@@ -124,18 +124,31 @@ def combine_predict_files(
             fit_split_reference_id  = fit_split_reference_id   ,
         )
         #
-        # file_in
-        file_in = f'{result_dir}/{database_dir}/predict.csv'
+        # file_path
+        file_path = f'{result_dir}/{database_dir}/{file_name}'
         #
         # predict_csv_file_list
-        if os.path.exists(file_in) :
-            predict_csv_file_list.append(file_in)
+        if os.path.exists(file_path) :
+            row = { 'path' : file_path, 'node_id' : fit_node_id }
+            path_table.append(row)
+    return path_table
+# ------------------------------------------------------------------------------
+def combine_predict_files(
+    result_dir, fit_goal_set, root_node_database
+) :
     #
-    # predict.csv
+    # path_table
+    file_name = 'predict.csv'
+    path_table = get_path_table_to_file_name(
+        file_name, result_dir, fit_goal_set, root_node_database
+    )
+    #
+    # summary/predict.csv
     file_out_name = f'{result_dir}/summary/predict.csv'
     file_obj_out  = open(file_out_name, "w")
     writer        = None
-    for file_in_name in predict_csv_file_list :
+    for row in path_table :
+        file_in_name  = row['path']
         file_obj_in   = open(file_in_name, 'r')
         reader     = csv.DictReader(file_obj_in)
         for row in reader :
