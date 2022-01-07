@@ -129,7 +129,11 @@ def get_path_table_to_file_name(
         #
         # predict_csv_file_list
         if os.path.exists(file_path) :
-            row = { 'path' : file_path, 'node_id' : fit_node_id }
+            row = {
+                'path' :               file_path,
+                'node_id' :            fit_node_id,
+                'split_reference_id' : fit_split_reference_id
+            }
             path_table.append(row)
     return path_table
 # ------------------------------------------------------------------------------
@@ -156,6 +160,53 @@ def combine_predict_files(
                 keys   = row.keys()
                 writer = csv.DictWriter(file_obj_out, fieldnames=keys)
                 writer.writeheader()
+            writer.writerow(row)
+        file_obj_in.close()
+    file_obj_out.close()
+# ------------------------------------------------------------------------------
+def combine_variable_files(
+    result_dir, fit_goal_set, root_node_database
+) :
+    #
+    # node_table
+    file_path = f'{result_dir}/node_table.csv'
+    node_table = at_cascade.ihme.get_table_csv(file_path)
+    #
+    # path_table
+    file_name = 'variable.csv'
+    path_table = get_path_table_to_file_name(
+        file_name, result_dir, fit_goal_set, root_node_database
+    )
+    #
+    # summary/variable.csv
+    file_out_name = f'{result_dir}/summary/variable.csv'
+    file_obj_out  = open(file_out_name, "w")
+    writer        = None
+    for row in path_table :
+        file_in_name       = row['path']
+        node_id            = row['node_id']
+        split_reference_id = row['split_reference_id']
+        #
+        sex_id = None
+        for sex_name in at_cascade.ihme.sex_info_dict :
+            sex_row = at_cascade.ihme.sex_info_dict[sex_name]
+            if sex_row['split_reference_id'] == split_reference_id :
+                    sex_id = sex_row['sex_id']
+        assert sex_id is not None
+        #
+        location_id   = int( node_table[node_id]['location_id'] )
+        file_obj_in   = open(file_in_name, 'r')
+        reader     = csv.DictReader(file_obj_in)
+        for row in reader :
+            if writer is None :
+                fieldnames = list( row.keys() )
+                assert 'location_id' not in fieldnames
+                assert 'sex_id' not in fieldnames
+                fieldnames = [ 'location_id', 'sex_id' ] + fieldnames
+                writer = csv.DictWriter(file_obj_out, fieldnames=fieldnames)
+                writer.writeheader()
+            row['location_id'] = location_id
+            row['sex_id']      = sex_id
             writer.writerow(row)
         file_obj_in.close()
     file_obj_out.close()
@@ -188,5 +239,10 @@ def summary(
     #
     # predict.csv
     combine_predict_files(
+        result_dir, fit_goal_set, root_node_database
+    )
+    #
+    # variable.csv
+    combine_variable_files(
         result_dir, fit_goal_set, root_node_database
     )
