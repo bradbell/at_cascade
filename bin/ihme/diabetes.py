@@ -222,7 +222,7 @@ def write_root_node_database() :
     age_min =   math.inf
     age_max =   125.0        # maximum age in get_age_group_id_table
     time_min =  math.inf
-    time_max =  2021         # year after last year_id in ihme_csv
+    time_max =  2021         # year after last year_id in predict_csv
     for row in table_in['data'] :
         age_min  = min(age_min,  float( row['age_lower'] ) )
         time_min = min(time_min, float( row['time_lower'] ) )

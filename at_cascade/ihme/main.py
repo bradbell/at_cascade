@@ -139,7 +139,7 @@ def main(
         'continue',
         'error',
         'warning',
-        'ihme_csv',
+        'predict_csv',
      }
     command     = None
     if len(sys.argv) == 2 :
@@ -160,7 +160,7 @@ def main(
         msg +=  'drill:    run cascade from root node to goal nodes\n'
         msg +=  'display:  display results that are in database\n'
         msg +=  'continue: continue cascade starting at database\n'
-        msg +=  'ihme_csv: create the ihme.csv files for each databse\n'
+        msg +=  'predict_csv: create the predict.csv files for each databse\n'
         sys.exit(msg)
     #
     # setup
@@ -232,8 +232,8 @@ def main(
                 fit_node_database = database,
                 fit_goal_set      = fit_goal_set,
             )
-    elif command == 'ihme_csv' :
-        at_cascade.ihme.ihme_csv(
+    elif command == 'predict_csv' :
+        at_cascade.ihme.predict_csv(
             covariate_csv_file_dict, fit_goal_set, root_node_database, max_plot
         )
     #

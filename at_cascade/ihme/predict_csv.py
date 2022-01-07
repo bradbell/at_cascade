@@ -14,7 +14,7 @@ import numpy
 import dismod_at
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
-def ihme_csv_one_job(
+def predict_csv_one_job(
     fit_node_database ,
     age_group_id_dict ,
     age_group_id_list ,
@@ -370,8 +370,8 @@ def ihme_csv_one_job(
             for row in plot_data[z_name] :
                 del row['std']
     #
-    # ihme.csv
-    output_csv = f'{fit_node_dir}/ihme.csv'
+    # predict.csv
+    output_csv = f'{fit_node_dir}/predict.csv'
     at_cascade.ihme.write_csv(output_csv, output_table)
     #
     # plot_limit
@@ -396,7 +396,7 @@ def ihme_csv_one_job(
         plot_data  = plot_data       ,
     )
 # -----------------------------------------------------------------------------
-def ihme_csv(
+def predict_csv(
     covariate_csv_file_dict, fit_goal_set, root_node_database, max_plot
 ) :
     #
@@ -492,7 +492,7 @@ def ihme_csv(
     n_job = len( job_table )
     #
     # imhe_csv_file_list
-    ihme_csv_file_list = list()
+    predict_csv_file_list = list()
     #
     # job_row
     for (job_id, job_row) in enumerate(job_table) :
@@ -522,7 +522,7 @@ def ihme_csv(
         file_in = f'{result_dir}/{database_dir}/dismod.db'
         #
         # file_out
-        file_out = f'{result_dir}/{database_dir}/ihme.csv'
+        file_out = f'{result_dir}/{database_dir}/predict.csv'
         #
         # check for an error message in corresponding database
         if job_name in error_message_dict :
@@ -534,14 +534,14 @@ def ihme_csv(
         else :
             print( f'{job_id+1}/{n_job} Creating files for {job_name}' )
             #
-            # ihme_csv_file_list
-            ihme_csv_file_list.append( file_out )
+            # predict_csv_file_list
+            predict_csv_file_list.append( file_out )
             #
             # fit_node_database
             fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
             #
             if False :
-                ihme_csv_one_job (
+                predict_csv_one_job (
                     fit_node_database         ,
                     age_group_id_dict         ,
                     age_group_id_list         ,
@@ -551,7 +551,7 @@ def ihme_csv(
                 )
             else :
                 # Matplotlib leaks memrory, so use a separate proccess
-                # for this call to ihme_csv_one_job so the memory will be
+                # for this call to predict_csv_one_job so the memory will be
                 # freed when it is no longer needed
                 #
                 # args
@@ -565,7 +565,7 @@ def ihme_csv(
                 )
                 #
                 # target
-                target = ihme_csv_one_job
+                target = predict_csv_one_job
                 #
                 # p
                 p = multiprocessing.Process(target = target, args = args)
@@ -573,11 +573,11 @@ def ihme_csv(
                 p.start()
                 p.join()
     #
-    # ihme.csv
-    file_out_name = f'{result_dir}/ihme.csv'
+    # predict.csv
+    file_out_name = f'{result_dir}/predict.csv'
     file_obj_out  = open(file_out_name, "w")
     writer        = None
-    for file_in_name in ihme_csv_file_list :
+    for file_in_name in predict_csv_file_list :
         file_obj_in   = open(file_in_name, 'r')
         reader     = csv.DictReader(file_obj_in)
         for row in reader :
