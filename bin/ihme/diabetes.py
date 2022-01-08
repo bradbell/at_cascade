@@ -113,6 +113,7 @@ mulcov_freeze_list = list()
 #   bin/ihme/diabetes.py continue database
 # fit_goal_set = { '1_Global' }
 # fit_goal_set = { '64_High-income' }
+# fit_goal_set = { '81_Germany' }
 # fit_goal_set = { '44758_Tower_Hamlets', '527_California' }
 # fit_goal_set = {
 #     '527_California', '547_Mississippi', '81_Germany', '84_Ireland'
@@ -163,7 +164,6 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
-fit_goal_set = { '1_Global' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understand this program
 # ----------------------------------------------------------------------------
@@ -407,7 +407,15 @@ def write_root_node_database() :
             'std'     :    1.0,
             'eta'     :    1e-7,
         },{
-            'name'    :    'parent_iota_delta',
+            'name'    :    'parent_iota_dage',
+            'density' :    'log_gaussian',
+            'lower'   :    None,
+            'upper'   :    None,
+            'mean'    :    0.0,
+            'std'     :    1.0,
+            'eta'     :    1e-7,
+        },{
+            'name'    :    'parent_iota_dtime',
             'density' :    'log_gaussian',
             'lower'   :    None,
             'upper'   :    None,
@@ -457,7 +465,7 @@ def write_root_node_database() :
     #
     # parrent_iota
     fun = lambda a, t :  \
-        ('parent_rate_value', 'parent_iota_delta', 'parent_iota_delta')
+        ('parent_rate_value', 'parent_iota_dage', 'parent_iota_dtime')
     smooth_table.append({
         'name':     'parent_iota',
         'age_id':   age_grid_id_list,

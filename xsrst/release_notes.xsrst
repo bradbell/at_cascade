@@ -19,6 +19,13 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+01-08
+*****
+Fix a bug in :ref:`create_shift_db<create_shift_db>`.
+To be specific, the mean int a value prior child variable in the shifted
+database (child database) might not satisfy the prior limits.
+This violated the dismod_at assumptions about the value prior means.
+
 01-02
 *****
 1.  The cascade would hang at the end, instead of detecting completion,

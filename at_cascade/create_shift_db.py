@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -195,8 +195,7 @@ def add_shift_grid_row(
         time_id   = fit_grid_row['time_id']
         key       = (integrand_id, shift_node_id, age_id, time_id)
         #
-        # shift_const_value
-        # shift_value_prior_id
+        # lower, upper
         if freeze :
             lower = fit_fit_var[key]
             upper = fit_fit_var[key]
@@ -207,6 +206,8 @@ def add_shift_grid_row(
             lower = - math.inf
         if upper is None :
             upper = + math.inf
+        #
+        # shift_const_value, shift_value_prior_id, shif_table['prior']
         if lower == upper :
             shift_const_value  = lower
             assert shift_value_prior_id is None
@@ -219,6 +220,8 @@ def add_shift_grid_row(
             #
             # shift_prior_row['mean']
             mean                     = fit_fit_var[key]
+            mean                     = min(mean, upper)
+            mean                     = max(mean, lower)
             shift_prior_row['mean']  = mean
             #
             # if predict_sample
@@ -484,8 +487,8 @@ def create_shift_db(
             # use fact that None == None is true
             if row['node_id'] == shift_node_id \
             and row['split_reference_id'] == shift_split_reference_id :
-                covariate_id  = row['covariate_id']
-                shift_row     = shift_table['covariate'][covariate_id]
+                covariate_id           = row['covariate_id']
+                shift_row              = shift_table['covariate'][covariate_id]
                 shift_row['reference'] = row['reference']
         #
         # shift_table['covariate']
