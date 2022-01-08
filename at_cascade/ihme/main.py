@@ -113,10 +113,12 @@ def main(
         msg +=  '          error, warning, predict.csv'
         sys.exit(msg)
     #
+    # result_dir
+    if not os.path.exists(result_dir ) :
+        os.makedirs( result_dir )
+    #
     # root_node_dir
     root_node_dir = f'{result_dir}/{root_node_name}'
-    if not os.path.exists(root_node_dir ) :
-        os.makedirs( root_node_dir )
     #
     # setup
     if command == 'setup' :
@@ -130,7 +132,7 @@ def main(
             assert False, msg
         #
         # rmtree if dangerous so make sure result_dir is as expected
-        if root_node_dir != f'ihme_db/DisMod_AT/results/{root_node_name}' :
+        if not root_node_dir.startswith('ihme_db/DisMod_AT/results/') :
             msg  = 'cleanup: result_dir in has changed in '
             msg += 'at_cascade/ihme/__init__.py\n'
             msg += 'You must also change this check in '
@@ -166,7 +168,7 @@ def main(
         if command == 'display' :
             display(database, max_plot)
         else :
-            all_ndoe_database = f'{result_dir}/all_node.db'
+            all_node_database = f'{result_dir}/all_node.db'
             at_cascade.continue_cascade(
                 all_node_database = all_node_database,
                 fit_node_database = database,
