@@ -11,6 +11,8 @@
 {xsrst_begin create_shift_db}
 {xsrst_spell
     var
+    dage
+    dtime
 }
 
 Create Database With Shifted Covariate References
@@ -108,12 +110,19 @@ If the upper and lower limits are equal,
 the value priors in fit_database and the shift_databases
 are effectively the same.
 Otherwise the mean in the value priors
-are replaced using the predict tables in the *fit_node_database*.
+are replaced using the corresponding values in the
+predict tables in the *fit_node_database*.
 If *predict_sample* is true,
 the standard deviations in the value priors are also replaced.
 Note that if the value prior is uniform,
 the standard deviation is not used and the mean is only used to
 initialize the optimization.
+
+dage and dtime Priors
+=====================
+The mean of the dage and dtime priors
+are replaced using the corresponding difference in the
+predict tables in the *fit_node_database*.
 
 avgint Table
 ============
@@ -159,6 +168,70 @@ def add_index_to_name(table, name_col) :
     if name[-1] == '_' :
         name = name[: -1]
     row[name_col] = name + '_' + str( len(table) )
+# ---------------------------------------------------------------------------
+def get_age_id_next_list(smooth_table, smooth_grid_table, age_table ) :
+    #
+    # age_id_set
+    age_id_set  = dict()
+    for row in smooth_grid_table :
+        smooth_id = row['smooth_id']
+        age_id    = row['age_id']
+        time_id   = row['time_id']
+        if smooth_id not in age_id_set :
+            age_id_set[smooth_id]  = set()
+        age_id_set[smooth_id].add(age_id)
+    #
+    # age_id_key, time_id_key
+    age_id_key  = lambda age_id :  age_table[age_id]['age']
+    #
+    # age_id_next_list
+    age_id_next_list  = list()
+    for smooth_id in range( len(smooth_table) ) :
+        n_age        = smooth_table[smooth_id]['n_age']
+        age_id_list  = sorted(age_id_set[smooth_id], key = age_id_key )
+        assert n_age == len(age_id_list)
+        age_id_dict  = dict()
+        for i in range(n_age) :
+            age_id  = age_id_list[i]
+            if i + 1 < n_age :
+                next_age_id = age_id_list[i+1]
+            else :
+                next_age_id = None
+            age_id_dict[age_id] = next_age_id
+        age_id_next_list.append( age_id_dict )
+    return age_id_next_list
+# ---------------------------------------------------------------------------
+def get_time_id_next_list(smooth_table, smooth_grid_table, time_table ) :
+    #
+    # time_id_set
+    time_id_set  = dict()
+    for row in smooth_grid_table :
+        smooth_id = row['smooth_id']
+        time_id    = row['time_id']
+        time_id   = row['time_id']
+        if smooth_id not in time_id_set :
+            time_id_set[smooth_id]  = set()
+        time_id_set[smooth_id].add(time_id)
+    #
+    # time_id_key, time_id_key
+    time_id_key  = lambda time_id :  time_table[time_id]['time']
+    #
+    # time_id_next_list
+    time_id_next_list  = list()
+    for smooth_id in range( len(smooth_table) ) :
+        n_time        = smooth_table[smooth_id]['n_time']
+        time_id_list  = sorted(time_id_set[smooth_id], key = time_id_key )
+        assert n_time == len(time_id_list)
+        time_id_dict  = dict()
+        for i in range(n_time) :
+            time_id  = time_id_list[i]
+            if i + 1 < n_time :
+                next_time_id = time_id_list[i+1]
+            else :
+                next_time_id = None
+            time_id_dict[time_id] = next_time_id
+        time_id_next_list.append( time_id_dict )
+    return time_id_next_list
 # ----------------------------------------------------------------------------
 # The smoothing for the new shift_table['smooth_grid'] row is the most
 # recent smoothing added to shift_table['smooth']; i.e., its smoothing_id
@@ -173,6 +246,8 @@ def add_shift_grid_row(
     shift_node_id,
     shift_prior_std_factor,
     freeze,
+    age_id_next,
+    time_id_next,
 ) :
     # -----------------------------------------------------------------------
     # value_prior
@@ -185,6 +260,8 @@ def add_shift_grid_row(
     # shift_value_prior_id
     shift_const_value     = fit_grid_row['const_value']
     shift_value_prior_id  = None
+    dage_fit_var          = None
+    dtime_fit_var         = None
     if shift_const_value is None :
         #
         # fit_prior_row
@@ -218,8 +295,19 @@ def add_shift_grid_row(
             # shift_prior_row
             shift_prior_row = copy.copy( fit_prior_row )
             #
+            # fit_var, dage_fit_var, dtime_fit_var
+            fit_var = fit_fit_var[key]
+            if age_id_next[age_id] != None :
+                next_age_id = age_id_next[age_id]
+                key  = (integrand_id, shift_node_id, next_age_id, time_id)
+                dage_fit_var = fit_fit_var[key] - fit_var
+            if time_id_next[time_id] != None :
+                next_time_id = time_id_next[time_id]
+                key  = (integrand_id, shift_node_id, age_id, next_time_id)
+                dtime_fit_var = fit_fit_var[key] - fit_var
+            #
             # shift_prior_row['mean']
-            mean                     = fit_fit_var[key]
+            mean                     = fit_var
             mean                     = min(mean, upper)
             mean                     = max(mean, lower)
             shift_prior_row['mean']  = mean
@@ -261,7 +349,9 @@ def add_shift_grid_row(
         shift_dage_prior_id= None
     else :
         fit_prior_row      = fit_table['prior'][fit_prior_id]
-        shift_prior_row      = copy.copy( fit_prior_row )
+        shift_prior_row    = copy.copy( fit_prior_row )
+        if dage_fit_var is not None :
+            shift_prior_row['mean'] = dage_fit_var
         shift_dage_prior_id  = len( shift_table['prior'] )
         shift_table['prior'].append( shift_prior_row )
         add_index_to_name( shift_table['prior'], 'prior_name' )
@@ -275,6 +365,8 @@ def add_shift_grid_row(
         fit_prior_row       = fit_table['prior'][fit_prior_id]
         shift_prior_row       = copy.copy( fit_prior_row )
         shift_dtime_prior_id  = len( shift_table['prior'] )
+        if dtime_fit_var is not None :
+            shift_prior_row['mean'] = dtime_fit_var
         shift_table['prior'].append( shift_prior_row )
         add_index_to_name( shift_table['prior'], 'prior_name' )
     # -----------------------------------------------------------------------
@@ -325,6 +417,7 @@ def create_shift_db(
     connection    = dismod_at.create_connection(fit_node_database, new)
     fit_table  = dict()
     for name in [
+        'age',
         'c_shift_avgint',
         'c_root_avgint',
         'c_shift_predict_fit_var',
@@ -339,6 +432,7 @@ def create_shift_db(
         'rate',
         'smooth',
         'smooth_grid',
+        'time',
         'var',
     ] :
         fit_table[name] = dismod_at.get_table_dict(connection, name)
@@ -346,6 +440,16 @@ def create_shift_db(
         for name in [ 'c_shift_predict_sample', 'sample' ] :
             fit_table[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
+    #
+    # age_id_next_list
+    age_id_next_list = get_age_id_next_list(
+        fit_table['smooth'], fit_table['smooth_grid'], fit_table['age']
+    )
+    #
+    # time_id_next_list
+    time_id_next_list = get_time_id_next_list(
+        fit_table['smooth'], fit_table['smooth_grid'], fit_table['time']
+    )
     #
     # name_rate2integrand
     name_rate2integrand = {
@@ -549,6 +653,8 @@ def create_shift_db(
                             node_id,
                             shift_prior_std_factor,
                             freeze,
+                            age_id_next_list[fit_smooth_id],
+                            time_id_next_list[fit_smooth_id],
                         )
 
         # --------------------------------------------------------------------
@@ -612,6 +718,8 @@ def create_shift_db(
                             shift_node_id,
                             shift_prior_std_factor,
                             freeze,
+                            age_id_next_list[fit_smooth_id],
+                            time_id_next_list[fit_smooth_id],
                         )
             # ----------------------------------------------------------------
             # fit_smooth_id

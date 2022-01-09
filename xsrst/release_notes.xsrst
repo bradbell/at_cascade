@@ -21,10 +21,13 @@ Release Notes for 2022
 
 01-08
 *****
-Fix a bug in :ref:`create_shift_db<create_shift_db>`.
-To be specific, the mean int a value prior child variable in the shifted
-database (child database) might not satisfy the prior limits.
-This violated the dismod_at assumptions about the value prior means.
+1.  Fix a bug in :ref:`create_shift_db<create_shift_db>`.
+    To be specific, the mean int a value prior child variable in the shifted
+    database (child database) might not satisfy the prior limits.
+    This violated the dismod_at assumptions about the value prior means.
+
+2.  Change :ref:`create_shift_db.shift_databases.dage_and_dtime_priors`
+    to be difference predicted by parent fit.
 
 01-02
 *****

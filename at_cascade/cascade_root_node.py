@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -47,7 +47,8 @@ This argument can't be ``None``.
 no_ode_fit
 **********
 if ``True`` ( ``False`` ) the :ref:`no_ode_fit` routine
-will (will not) be used to modify the parent value priors.
+will (will not) be used to modify the mean of the parent value
+and difference priors.
 
 root_fit_database
 *****************
