@@ -127,31 +127,18 @@ def main(
     #
     # cleanup
     if command == 'cleanup' :
-        if not os.path.exists( root_node_dir ) :
-            msg  = f'cleanup: Cannot find {root_node_dir}'
-            assert False, msg
-        #
-        # rmtree if dangerous so make sure result_dir is as expected
-        if not root_node_dir.startswith('ihme_db/DisMod_AT/results/') :
-            msg  = 'cleanup: result_dir in has changed in '
-            msg += 'at_cascade/ihme/__init__.py\n'
-            msg += 'You must also change this check in '
-            msg += 'at_cascade/ihme/main.py'
-            assert False, msg
-        #
-        print( f'removing {root_node_dir}' )
-        if os.path.islink(root_node_dir) :
-            os.remove(root_node_dir)
-        else :
-            shutil.rmtree( root_node_dir )
+        for name in os.listdir(result_dir) :
+            file_name = f'{result_dir}/{name}'
+            if os.path.isfile(file_name) or os.path.islink(file_name) :
+                print( f'remove {file_name}' )
+                os.remove(file_name)
     #
     # drill
     elif command == 'drill' :
         if os.path.exists( root_node_dir ) :
             program = sys.argv[0]
             msg  = f'drill: {root_node_dir} exists. '
-            msg += 'Use following to remove it\n'
-            msg += f'{program} cleanup'
+            msg += 'You must first move or remove it'
             assert False, msg
         print( f'creating {root_node_dir}' )
         drill( result_dir, root_node_name, fit_goal_set, root_node_database )
