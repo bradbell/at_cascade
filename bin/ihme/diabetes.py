@@ -22,7 +22,7 @@ if os.path.isfile( os.getcwd() + '/at_cascade/__init__.py' ) :
 #
 import at_cascade.ihme
 # ----------------------------------------------------------------------------
-# Begin settings that can be changed without understand this program
+# Begin settings that can be changed without understanding this program
 # ----------------------------------------------------------------------------
 # covariate_csv_file_dict
 # The keys in this dictionary are the relative covariate names and must
@@ -174,7 +174,7 @@ fit_goal_set = {
     '25329_Edo',
 }
 # ----------------------------------------------------------------------------
-# End settings that can be changed without understand this program
+# End settings that can be changed without understanding this program
 # ----------------------------------------------------------------------------
 #
 # random.seed
