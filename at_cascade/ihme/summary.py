@@ -6,14 +6,15 @@
 # This program is distributed under the terms of the
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+import datetime
 import csv
 import os
 import dismod_at
 import at_cascade.ihme
 # ------------------------------------------------------------------------------
 def write_message_type_file(
-    result_dir, message_type, fit_goal_set, root_node_database
+    summary_dir, result_dir, message_type, fit_goal_set, root_node_database
 ) :
     #
     # all_node_database
@@ -27,8 +28,8 @@ def write_message_type_file(
         fit_goal_set       = fit_goal_set,
     )
     #
-    # file_name
-    file_name = f'{result_dir}/summary/{message_type}'
+    # message_type file
+    file_name = f'{summary_dir}/{message_type}'
     #
     # file_ptr
     file_ptr = open(file_name, 'w')
@@ -138,7 +139,7 @@ def get_path_table_to_file_name(
     return path_table
 # ------------------------------------------------------------------------------
 def combine_predict_files(
-    result_dir, fit_goal_set, root_node_database
+    summary_dir, result_dir, fit_goal_set, root_node_database
 ) :
     #
     # path_table
@@ -147,8 +148,8 @@ def combine_predict_files(
         file_name, result_dir, fit_goal_set, root_node_database
     )
     #
-    # summary/predict.csv
-    file_out_name = f'{result_dir}/summary/predict.csv'
+    # precict file
+    file_out_name = f'{summary_dir}/predict.csv'
     file_obj_out  = open(file_out_name, "w")
     writer        = None
     for row in path_table :
@@ -165,7 +166,7 @@ def combine_predict_files(
     file_obj_out.close()
 # ------------------------------------------------------------------------------
 def combine_variable_files(
-    result_dir, fit_goal_set, root_node_database
+    summary_dir, result_dir, fit_goal_set, root_node_database
 ) :
     #
     # node_table
@@ -178,8 +179,8 @@ def combine_variable_files(
         file_name, result_dir, fit_goal_set, root_node_database
     )
     #
-    # summary/variable.csv
-    file_out_name = f'{result_dir}/summary/variable.csv'
+    # variable file
+    file_out_name = f'{summary_dir}/variable.csv'
     file_obj_out  = open(file_out_name, "w")
     writer        = None
     for row in path_table :
@@ -221,28 +222,34 @@ def summary(
     assert type(fit_goal_set) == set
     #
     # summary_dir
-    summary_dir = f'{result_dir}/summary'
-    if not os.path.exists(summary_dir) :
+    now        = datetime.datetime.now()
+    month_day  = now.strftime("%m.%d")
+
+    summary_dir = f'{result_dir}/summary/{month_day}'
+    if os.path.exists(summary_dir) :
+        msg  = 'The directory {summary_dir} already exists'
+        msg += 'You must remove it to run another summary command today'
+        assert msg, False
+    else :
         os.mkdir(summary_dir)
-    #
     # error
     message_type = 'error'
     write_message_type_file(
-        result_dir, message_type, fit_goal_set, root_node_database
+        summary_dir, result_dir, message_type, fit_goal_set, root_node_database
     )
     #
     # warning
     message_type = 'warning'
     write_message_type_file(
-        result_dir, message_type, fit_goal_set, root_node_database
+        summary_dir, result_dir, message_type, fit_goal_set, root_node_database
     )
     #
     # predict.csv
     combine_predict_files(
-        result_dir, fit_goal_set, root_node_database
+        summary_dir, result_dir, fit_goal_set, root_node_database
     )
     #
     # variable.csv
     combine_variable_files(
-        result_dir, fit_goal_set, root_node_database
+        summary_dir, result_dir, fit_goal_set, root_node_database
     )

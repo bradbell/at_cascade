@@ -106,11 +106,11 @@ def main(
         msg +=  'setup:    create at_cascade input databases from csv files\n'
         msg += f'cleanup:  remove root_node_dir\n'
         msg +=  'drill:    run cascade from root node to goal nodes\n'
-        msg +=  'display:  display results that are in database\n'
         msg +=  'continue: continue cascade starting at database\n'
-        msg +=  'predict:  create the predict.csv files for each databse\n'
+        msg +=  'display:  results for each database at referece covariates\n'
+        msg +=  'predict:  results for each database at actual covariates\n'
         msg +=  'summary:  create following files in results directory\n'
-        msg +=  '          error, warning, predict.csv'
+        msg +=  '          error, warning, predict.csv, variable.csv'
         sys.exit(msg)
     #
     # result_dir
