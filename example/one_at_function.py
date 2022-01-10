@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -575,7 +575,7 @@ def main() :
     for node_name in [ 'n0', 'n1' ] :
         root_node_dir = f'{result_dir}/{node_name}'
         if os.path.exists(root_node_dir) :
-            # rmtree is very dangerous so make sure root_node_dir is as expected
+            # rmtree is dangerous so make sure root_node_dir is as expected
             assert root_node_dir == f'build/example/{node_name}'
             shutil.rmtree( root_node_dir )
     root_node_dir = f'{result_dir}/n1'

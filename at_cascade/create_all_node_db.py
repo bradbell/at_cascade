@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -99,6 +99,8 @@ The value *mulcov_freeze_table*\ ``["fit_node_id"]`` is an
 ``int`` representation of the fit_node_id for this job or
 *mulcov_freeze_table*\ ``["fit_node_name"]`` is a
 ``str`` representation of the corresponding node name.
+This value is ``None`` if and only if the
+:ref:`split_reference_table<split_reference_table>` is empty.
 
 split_reference_id
 ==================
@@ -529,7 +531,7 @@ def create_all_node_db(
         else :
             fit_node_name = row['fit_node_name']
             fit_node_id   = at_cascade.table_name2id(
-                node_table, 'fit_node', fit_node_name
+                node_table, 'node', fit_node_name
             )
         #
         # split_reference_id
@@ -537,8 +539,13 @@ def create_all_node_db(
             split_reference_id = row['split_reference_id']
         else :
             split_reference_name = row['split_reference_name']
-            split_reference_id   = at_cascade.table_name2id(
-                split_reference_table, 'split_reference', split_reference_name
+            if split_reference_name is None :
+                split_reference_id = None
+            else :
+                split_reference_id   = at_cascade.table_name2id(
+                    split_reference_table,
+                    'split_reference',
+                    split_reference_name
             )
         #
         # mulcov_id
