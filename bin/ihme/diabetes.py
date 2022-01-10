@@ -53,7 +53,7 @@ root_node_name      = '1_Global'
 # gamma_factor
 # The gamma for each integrand is this factor times the median
 # of the data for the integrand.
-gamma_factor        = 1e-2
+gamma_factor        = 1e-1
 #
 # random_seed
 # If this seed is zero, the clock is used for the random seed.
@@ -88,24 +88,33 @@ max_plot            = 2000
 #
 # node_split_name_set
 # Name of the nodes where we are splitting from Both to Female, Male
-node_split_name_set = {'102_United_States_of_America', '73_Western_Europe'}
+node_split_name_set = {'1_Global'}
 #
 # mulcov_freeze_list
 # Freeze the covariate multiplier on obesity that affects iota and do the
 # freeze at United_States_of_America and Western_Europe.
-# mulcov_freeze_list = [
-#         {   'node'      : '102_United_States_of_America',
-#             'sex'       : 'Both',
-#             'rate'      : 'iota',
-#             'covariate' : 'obesity',
-#         },{
-#             'node'      : '73_Western_Europe',
-#             'sex'       : 'Both',
-#             'rate'      : 'iota',
-#             'covariate' : 'obesity',
-#         },
-# ]
-mulcov_freeze_list = list()
+mulcov_freeze_list = [
+    {   'node'      : '1_Global',
+        'sex'       : 'Male',
+        'rate'      : 'iota',
+        'covariate' : 'obesity',
+    },
+    {   'node'      : '1_Global',
+        'sex'       : 'Female',
+        'rate'      : 'iota',
+        'covariate' : 'obesity',
+    },
+    {   'node'      : '1_Global',
+        'sex'       : 'Male',
+        'rate'      : 'chi',
+        'covariate' : 'log_ldi',
+    },
+    {   'node'      : '1_Global',
+        'sex'       : 'Female',
+        'rate'      : 'chi',
+        'covariate' : 'log_ldi',
+    },
+]
 #
 # fit_goal_set
 # Name of the nodes that we are drilling to (must be below root_node).
@@ -260,35 +269,34 @@ def write_root_node_database() :
     #
     # mulcov_table
     mulcov_table = [
-        {
-            # alpha_iota_obesity
+        {   # alpha_iota_obesity
             'covariate': 'obesity',
             'type':      'rate_value',
             'effected':  'iota',
             'group':     'world',
             'smooth':    'alpha_smooth',
-        },{
-            # alpha_iota_sex
-            'covariate': 'sex',
-            'type':      'rate_value',
-            'effected':  'iota',
-            'group':     'world',
-            'smooth':    'alpha_smooth',
-        },{
-            # alpha_chi_log_ldi
+        },
+        {   # alpha_chi_log_ldi
             'covariate': 'log_ldi',
             'type':      'rate_value',
             'effected':  'chi',
             'group':     'world',
             'smooth':    'alpha_smooth',
-        },{
-            # alpha_chi_sex
+        },
+        {   # alpha_iota_sex
+            'covariate': 'sex',
+            'type':      'rate_value',
+            'effected':  'iota',
+            'group':     'world',
+            'smooth':    'alpha_smooth',
+        },
+        {   # alpha_chi_sex
             'covariate': 'sex',
             'type':      'rate_value',
             'effected':  'chi',
             'group':     'world',
             'smooth':    'alpha_smooth',
-        }
+        },
     ]
     for integrand in integrand_median :
         mulcov_table.append(

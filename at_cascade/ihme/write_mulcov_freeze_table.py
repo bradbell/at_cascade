@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -80,7 +80,7 @@ def write_mulcov_freeze_table(
     #
     #
     # mulcov_freeze_table_file
-    fieldnames = [ 'fit_node_id', 'split_reference_id', 'mulcov' ]
+    fieldnames = [ 'fit_node_id', 'split_reference_id', 'mulcov_id' ]
     at_cascade.ihme.write_csv(
        file_name   = mulcov_freeze_table_file,
         table      = mulcov_freeze_table,
