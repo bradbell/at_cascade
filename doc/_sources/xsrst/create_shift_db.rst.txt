@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_shift_db.py
-    :lines: 291-296
+    :lines: 386-391
     :language: py
 
 .. meta::
@@ -213,12 +213,26 @@ If the upper and lower limits are equal,
 the value priors in fit_database and the shift_databases
 are effectively the same.
 Otherwise the mean in the value priors
-are replaced using the predict tables in the *fit_node_database*.
+are replaced using the corresponding values in the
+predict tables in the *fit_node_database*.
 If *predict_sample* is true,
 the standard deviations in the value priors are also replaced.
 Note that if the value prior is uniform,
 the standard deviation is not used and the mean is only used to
 initialize the optimization.
+
+.. meta::
+   :keywords: dage, dtime, priors
+
+.. index:: dage, dtime, priors
+
+.. _create_shift_db.shift_databases.dage_and_dtime_priors:
+
+dage and dtime Priors
+=====================
+The mean of the dage and dtime priors
+are replaced using the corresponding difference in the
+predict tables in the *fit_node_database*.
 
 .. meta::
    :keywords: avgint, table

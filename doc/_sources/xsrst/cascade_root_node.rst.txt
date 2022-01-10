@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/cascade_root_node.py
-    :lines: 125-130
+    :lines: 126-131
     :language: py
 
 .. meta::
@@ -80,7 +80,8 @@ This argument can't be ``None``.
 no_ode_fit
 **********
 if ``True`` ( ``False`` ) the :ref:`no_ode_fit` routine
-will (will not) be used to modify the parent value priors.
+will (will not) be used to modify the mean of the parent value
+and difference priors.
 
 .. meta::
    :keywords: root_fit_database

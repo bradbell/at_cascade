@@ -17,6 +17,23 @@ Release Notes for 2022
    :local:
 
 .. meta::
+   :keywords: 01-08
+
+.. index:: 01-08
+
+.. _2020.01-08:
+
+01-08
+*****
+1.  Fix a bug in :ref:`create_shift_db<create_shift_db>`.
+    To be specific, the mean int a value prior child variable in the shifted
+    database (child database) might not satisfy the prior limits.
+    This violated the dismod_at assumptions about the value prior means.
+
+2.  Change :ref:`create_shift_db.shift_databases.dage_and_dtime_priors`
+    to be difference predicted by parent fit.
+
+.. meta::
    :keywords: 01-02
 
 .. index:: 01-02
