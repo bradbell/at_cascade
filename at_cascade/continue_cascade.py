@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -49,6 +49,8 @@ This is a ``set`` with elements of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
 :ref:`glossary.fit_goal_set` .
 This argument can't be ``None``.
+It can be different from when the original cascade was run; e.g.,
+it could include new goal nodes.
 
 {xsrst_end   continue_cascade}
 '''

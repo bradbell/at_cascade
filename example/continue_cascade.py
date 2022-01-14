@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -472,7 +472,9 @@ def main() :
     # same calculation without continue_cascade
     one_fit_goal_set_example(result_dir)
 #
-main()
-print('max_fit_option: OK')
-sys.exit(0)
+# Without this, the mac will try to execute main on each processor.
+if __name__ == '__main__' :
+    main()
+    print('max_fit_option: OK')
+    sys.exit(0)
 # END source code

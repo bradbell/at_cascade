@@ -78,6 +78,8 @@ def main(
     assert type(fit_goal_set) == set
     assert setup_function is not None
     assert type(max_plot) == int
+    assert type(covariate_csv_file_dict) == dict
+    assert type(root_node_database) == str
     #
     # command
     command_set = {
@@ -145,20 +147,25 @@ def main(
     #
     # display or continue
     elif command in [ 'display', 'continue'] :
-        if not database.startswith( root_node_dir ) :
-            msg  = f'{command}: database does not begin with\n'
-            msg += root_node_dir
+        if not database.startswith( root_node_name ) :
+            msg  = f'{command}: database does not begin with '
+            msg += f'root_node_name = {root_node_name}'
             assert False, msg
         if not database.endswith( '/dismod.db' ) :
             msg  = f'{command}: database does not end with /dismod.db'
             assert False, msg
+        fit_node_database = f'{result_dir}/{database}'
+        if not os.path.exists(fit_node_database) :
+            msg  = f'{command}: result_dir/database = {fit_node_database}'
+            msg += f'file does not exist'
+            assert False, msg
         if command == 'display' :
-            display(database, max_plot)
+            display(fit_node_database, max_plot)
         else :
             all_node_database = f'{result_dir}/all_node.db'
             at_cascade.continue_cascade(
                 all_node_database = all_node_database,
-                fit_node_database = database,
+                fit_node_database = fit_node_database,
                 fit_goal_set      = fit_goal_set,
             )
     elif command == 'predict' :

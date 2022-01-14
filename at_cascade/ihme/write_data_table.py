@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -24,6 +24,12 @@ def get_data_table(data_inp_file) :
         location_id  = int( row_in['location_id'] )
         is_outlier   = int( row_in['is_outlier'] )
         #
+        # nid
+        if row_in['nid'] == 'NA' :
+            nid = None
+        else :
+            nid          = int( row_in['nid'] )
+        #
         # age_lower, age_upper
         age_lower    = float( row_in['age_start'] )
         age_upper    = float( row_in['age_end'] )
@@ -32,7 +38,10 @@ def get_data_table(data_inp_file) :
                 age_upper = age_upper + 1.0
         #
         # c_seq
-        c_seq        = int( row_in['seq'] )
+        if row_in['seq'] == 'NA' :
+            c_sed = None
+        else :
+            c_seq = int( row_in['seq'] )
         #
         # sex_name
         sex_name     = row_in['sex']
@@ -68,6 +77,7 @@ def get_data_table(data_inp_file) :
             'sex_name' :       sex_name,
             'integrand_name' : integrand_name,
             'is_outlier' :     is_outlier,
+            'nid'        :     nid,
             'age_lower' :      age_lower,
             'age_upper' :      age_upper,
             'time_lower' :     time_lower,

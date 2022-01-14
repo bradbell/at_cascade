@@ -22,7 +22,7 @@ if os.path.isfile( os.getcwd() + '/at_cascade/__init__.py' ) :
 #
 import at_cascade.ihme
 # ----------------------------------------------------------------------------
-# Begin settings that can be changed without understand this program
+# Begin settings that can be changed without understanding this program
 # ----------------------------------------------------------------------------
 # covariate_csv_file_dict
 # The keys in this dictionary are the relative covariate names and must
@@ -92,7 +92,7 @@ max_plot            = 2000
 #
 # node_split_name_set
 # Name of the nodes where we are splitting from Both to Female, Male
-node_split_name_set = {'102_United_States_of_America', '73_Western_Europe'}
+node_split_name_set = {'1_Global'}
 #
 # mulcov_freeze_list
 # Freeze the covariate multiplier on obesity that affects iota and do the
@@ -169,7 +169,7 @@ fit_goal_set = {
 }
 fit_goal_set = { '1_Global' }
 # ----------------------------------------------------------------------------
-# End settings that can be changed without understand this program
+# End settings that can be changed without understanding this program
 # ----------------------------------------------------------------------------
 #
 # random.seed
@@ -552,14 +552,16 @@ def setup_function() :
     # write_all_node_database
     at_cascade.ihme.write_all_node_database(result_dir, root_node_database)
 # ----------------------------------------------------------------------------
-at_cascade.ihme.main(
-    result_dir              = result_dir,
-    root_node_name          = root_node_name,
-    fit_goal_set            = fit_goal_set,
-    setup_function          = setup_function,
-    max_plot                = max_plot,
-    covariate_csv_file_dict = covariate_csv_file_dict,
-    root_node_database      = root_node_database,
-)
-print('neural_tube.py: OK')
-sys.exit(0)
+# Without this, the mac will try to execute main on each processor.
+if __name__ == '__main__' :
+    at_cascade.ihme.main(
+        result_dir              = result_dir,
+        root_node_name          = root_node_name,
+        fit_goal_set            = fit_goal_set,
+        setup_function          = setup_function,
+        max_plot                = max_plot,
+        covariate_csv_file_dict = covariate_csv_file_dict,
+        root_node_database      = root_node_database,
+    )
+    print('neural_tube.py: OK')
+    sys.exit(0)

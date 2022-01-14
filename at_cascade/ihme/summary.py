@@ -231,7 +231,7 @@ def summary(
         msg += 'You must remove it to run another summary command today'
         assert msg, False
     else :
-        os.mkdir(summary_dir)
+        os.makedirs(summary_dir)
     # error
     message_type = 'error'
     write_message_type_file(

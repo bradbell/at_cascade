@@ -53,7 +53,7 @@ root_node_name      = '1_Global'
 # gamma_factor
 # The gamma for each integrand is this factor times the median
 # of the data for the integrand.
-gamma_factor        = 1e-1
+gamma_factor        = 1e-2
 #
 # random_seed
 # If this seed is zero, the clock is used for the random seed.
@@ -89,6 +89,11 @@ max_plot            = 2000
 # node_split_name_set
 # Name of the nodes where we are splitting from Both to Female, Male
 node_split_name_set = {'1_Global'}
+#
+# hold_out_nid_set
+# set of nid values in data file for studies that are suspect
+# 249201 is Schottker B, et.al., ... A1c and fasting ...,  2011; 26(10) 779-87
+hold_out_nid_set = { 249201 }
 #
 # mulcov_freeze_list
 # Freeze the covariate multiplier on obesity that affects iota and do the
@@ -353,12 +358,17 @@ def write_root_node_database() :
     for row_in in table_in['data'] :
         location_id = int( row_in['location_id'] )
         is_outlier  = int( row_in['is_outlier'] )
+        nid         = int( row_in['nid'] )
         sex_name    = row_in['sex_name']
+        #
         hold_out    = is_outlier
+        if nid in hold_out_nid_set :
+            hold_out = 1
         #
         node_id     = location_id2node_id[location_id]
-        node_name = node_table[node_id]['name']
-        sex       = sex_name2covariate_value[ row_in['sex_name'] ]
+        node_name   = node_table[node_id]['name']
+        sex         = sex_name2covariate_value[ row_in['sex_name'] ]
+        #
         if row_in['obesity'] == '' :
             obesity = None
         else :
@@ -626,14 +636,16 @@ def setup_function() :
     # write_all_node_database
     at_cascade.ihme.write_all_node_database(result_dir, root_node_database)
 # ----------------------------------------------------------------------------
-at_cascade.ihme.main(
-    result_dir              = result_dir,
-    root_node_name          = root_node_name,
-    fit_goal_set            = fit_goal_set,
-    setup_function          = setup_function,
-    max_plot                = max_plot,
-    covariate_csv_file_dict = covariate_csv_file_dict,
-    root_node_database      = root_node_database,
-)
+# Without this, the mac will try to execute main on each processor.
+if __name__ == '__main__' :
+    at_cascade.ihme.main(
+        result_dir              = result_dir,
+        root_node_name          = root_node_name,
+        fit_goal_set            = fit_goal_set,
+        setup_function          = setup_function,
+        max_plot                = max_plot,
+        covariate_csv_file_dict = covariate_csv_file_dict,
+        root_node_database      = root_node_database,
+    )
 print('diabetes.py: OK')
 sys.exit(0)
