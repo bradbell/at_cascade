@@ -161,13 +161,14 @@ def write_data_table(
     data_inp_file           = None,
     csmr_inp_file           = None,
     covariate_csv_file_dict = None,
-    map_location_id         = None,
     ) :
     assert type(result_dir) is str
     assert type(data_inp_file) is str
     assert type(csmr_inp_file) is str
     assert type(covariate_csv_file_dict) is dict
-    assert type(map_location_id) is dict
+    #
+    # map_location_id
+    map_location_id = at_cascade.ihme.map_location_id
     #
     # data_table_file
     data_table_file = at_cascade.ihme.csv_file['data']

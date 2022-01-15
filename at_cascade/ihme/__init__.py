@@ -35,6 +35,15 @@ all_node_database = 'ihme_db/DisMod_AT/results/all_node.db'
 # age group id's that are aggregates of other age groups
 aggregate_age_group_id_set = {22, 27}
 #
+# map_location_id
+# Map one location id to another,  where the names are the same and from node
+# is the parent of the to node; e.g., when a super-region and region are the
+# same, map the super-region id to the region# id
+map_location_id = {
+    158 : 159, # South Asia,
+    137 : 138, # North Africa and Middle East
+}
+#
 # sex_info_dict
 sex_info_dict = {
 'Female' : { 'sex_id' : 2, 'covariate_value' :-0.5, 'split_reference_id' : 0},

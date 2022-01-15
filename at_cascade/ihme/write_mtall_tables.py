@@ -22,9 +22,10 @@ def get_file_path(result_dir, csv_file_key) :
 # write_node_tables(result_dir)
 # all_mtall_table_file, mtall_index_table_file, omega_age_table_file,
 # omega_time_table_file.
-def write_mtall_tables(result_dir, map_location_id) :
+def write_mtall_tables(result_dir) :
     #
     # global constants
+    map_location_id         = at_cascade.ihme.map_location_id
     age_group_inp_file      = at_cascade.ihme.age_group_inp_file
     mtall_inp_file          = at_cascade.ihme.mtall_inp_file
     all_mtall_table_file    = get_file_path(result_dir, 'all_mtall')

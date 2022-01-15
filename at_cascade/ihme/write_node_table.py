@@ -15,7 +15,10 @@ import at_cascade.ihme
 #
 # write_node_table()
 # creates at_cascade.ihme.node_table_file
-def write_node_table(result_dir, map_location_id) :
+def write_node_table(result_dir) :
+    #
+    # map_locaiton_id
+    map_location_id = at_cascade.ihme.map_location_id
     #
     # node_table_file
     node_table_file = at_cascade.ihme.csv_file['node']
@@ -51,15 +54,30 @@ def write_node_table(result_dir, map_location_id) :
         row = {
             'location_name':  location_name,
             'parent_id':      parent_id,
+            'child_list':     list(),
         }
         #
         location_dict[location_id] = row
+        #
+        # location_dict
+        # assume parents come before children
+        if parent_id != location_id :
+            location_dict[parent_id]['child_list'].append(location_id)
         #
         # location_id_list
         assert location_id not in location_id_list
         if location_id not in map_location_id :
             location_id_list.append(location_id)
     file_ptr.close()
+    #
+    for location_id in location_id_list :
+        child_list = location_dict[location_id]['child_list']
+        if len(child_list) == 1 :
+            child_id = child_list[0]
+            msg  = f'{node_table_file}\n'
+            msg += f'location_id = {location_id} has one child = {child_id}\n'
+            msg += f'use map_location_id to map {location_id} t0 {child_id}'
+            assert False, msg
     #
     # location_dict
     for from_location_id in map_location_id :
