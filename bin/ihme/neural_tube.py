@@ -94,6 +94,19 @@ max_plot            = 2000
 # Name of the nodes where we are splitting from Both to Female, Male
 node_split_name_set = {'1_Global'}
 #
+# hold_out_nid_set
+# set of nid values in data file for studies that are suspect
+# hold_out_nid_set = { ?? }
+#
+# map_location_id
+# Map one location id to another,  where the names are the same and from node
+# is the parent of the to node; e.g., when a super-region and region are the
+# same, map the super-region id to the region# id
+map_location_id = {
+    158 : 159, # South Asia,
+    137 : 138, # North Africa and Middle East
+}
+#
 # mulcov_freeze_list
 # Freeze the covariate multiplier on obesity that affects iota and do the
 # freeze at United_States_of_America and Western_Europe.

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -22,7 +22,7 @@ def get_file_path(result_dir, csv_file_key) :
 # write_node_tables(result_dir)
 # all_mtall_table_file, mtall_index_table_file, omega_age_table_file,
 # omega_time_table_file.
-def write_mtall_tables(result_dir) :
+def write_mtall_tables(result_dir, map_location_id) :
     #
     # global constants
     age_group_inp_file      = at_cascade.ihme.age_group_inp_file
@@ -193,6 +193,10 @@ def write_mtall_tables(result_dir) :
         time = year_id + 0.5
         row = { 'time' : time }
         omega_time_table.append( row )
+    #
+    # mtall_dict
+    for from_location_id in map_location_id :
+        del mtall_dict[from_location_id]
     #
     # all_mtall_table
     # mtall_index_table

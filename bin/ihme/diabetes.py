@@ -95,6 +95,15 @@ node_split_name_set = {'1_Global'}
 # 249201 is Schottker B, et.al., ... A1c and fasting ...,  2011; 26(10) 779-87
 hold_out_nid_set = { 249201 }
 #
+# map_location_id
+# Map one location id to another,  where the names are the same and from node
+# is the parent of the to node; e.g., when a super-region and region are the
+# same, map the super-region id to the region# id
+map_location_id = {
+    158 : 159, # South Asia,
+    137 : 138, # North Africa and Middle East
+}
+#
 # mulcov_freeze_list
 # Freeze the covariate multiplier on obesity that affects iota and do the
 # freeze at United_States_of_America and Western_Europe.
@@ -128,6 +137,7 @@ mulcov_freeze_list = [
 # fit_goal_set = { '1_Global' }
 # fit_goal_set = { '64_High-income' }
 # fit_goal_set = { '81_Germany' }
+# fit_goal_set = { '161_Bangladesh' }
 # fit_goal_set = { '44758_Tower_Hamlets', '527_California' }
 # fit_goal_set = {
 #     '527_California', '547_Mississippi', '81_Germany', '84_Ireland'
@@ -595,7 +605,7 @@ def write_root_node_database() :
 def setup_function() :
     #
     # write_node_table
-    at_cascade.ihme.write_node_table(result_dir)
+    at_cascade.ihme.write_node_table(result_dir, map_location_id)
     #
     # write_data_table
     at_cascade.ihme.write_data_table(
@@ -603,10 +613,11 @@ def setup_function() :
         data_inp_file           = data_inp_file,
         csmr_inp_file           = csmr_inp_file,
         covariate_csv_file_dict = covariate_csv_file_dict,
+        map_location_id         = map_location_id,
     )
     #
     # write_mtall_tables
-    at_cascade.ihme.write_mtall_tables(result_dir)
+    at_cascade.ihme.write_mtall_tables(result_dir, map_location_id)
     #
     # write_root_node_database
     # This routine is in this file so not necessary to pass result_dir

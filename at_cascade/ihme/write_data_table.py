@@ -14,14 +14,18 @@ import at_cascade.ihme
 # -----------------------------------------------------------------------------
 #
 # data_table = get_data_table(data_inp_file)
-def get_data_table(data_inp_file) :
+def get_data_table(data_inp_file, map_location_id) :
     file_ptr   = open(data_inp_file)
     reader     = csv.DictReader(file_ptr)
     data_table = list()
     for row_in in reader :
         #
-        # location_id, is_outlier
+        # location_id
         location_id  = int( row_in['location_id'] )
+        if location_id in map_location_id :
+            location_id = map_location_id[location_id]
+        #
+        # is_outlier
         is_outlier   = int( row_in['is_outlier'] )
         #
         # nid
@@ -157,11 +161,13 @@ def write_data_table(
     data_inp_file           = None,
     csmr_inp_file           = None,
     covariate_csv_file_dict = None,
+    map_location_id         = None,
     ) :
     assert type(result_dir) is str
     assert type(data_inp_file) is str
     assert type(csmr_inp_file) is str
     assert type(covariate_csv_file_dict) is dict
+    assert type(map_location_id) is dict
     #
     # data_table_file
     data_table_file = at_cascade.ihme.csv_file['data']
@@ -185,7 +191,7 @@ def write_data_table(
         age_group_id_dict[age_group_id] = row
     #
     # data_table
-    data_table = get_data_table(data_inp_file)
+    data_table = get_data_table(data_inp_file, map_location_id)
     #
     # This data is not for fitting but rather to adjust the omega constraint
     # 2DO: remove get_csmr_table from this file.
