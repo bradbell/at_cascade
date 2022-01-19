@@ -57,6 +57,8 @@ split_reference_id
 ******************
 is the :ref:`create_job_table.job_table.split_reference_id` for the job
 that will freeze the multiplier.
+This value is null if and only if the
+:ref:`split_reference_table<split_reference_table>` is empty.
 
 .. meta::
    :keywords: mulcov_id

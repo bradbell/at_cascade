@@ -417,9 +417,11 @@
     <span class="c1"># same calculation without continue_cascade</span>
     <span class="n">one_fit_goal_set_example</span><span class="p">(</span><span class="n">result_dir</span><span class="p">)</span>
 <span class="c1">#</span>
-<span class="n">main</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;max_fit_option: OK&#39;</span><span class="p">)</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Without this, the mac will try to execute main on each processor.</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span> <span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;max_fit_option: OK&#39;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 <hr class="docutils" />

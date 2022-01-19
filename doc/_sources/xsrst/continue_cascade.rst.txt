@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/continue_cascade.py
-    :lines: 102-106
+    :lines: 104-108
     :language: py
 
 .. meta::
@@ -87,6 +87,8 @@ This is a ``set`` with elements of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
 :ref:`glossary.fit_goal_set` .
 This argument can't be ``None``.
+It can be different from when the original cascade was run; e.g.,
+it could include new goal nodes.
 
 ----
 
