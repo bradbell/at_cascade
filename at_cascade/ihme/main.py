@@ -51,7 +51,9 @@ def display(database, max_plot) :
     # db2csv
     dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
 # ----------------------------------------------------------------------------
-def drill(result_dir, root_node_name, fit_goal_set, root_node_database) :
+def drill(
+    result_dir, root_node_name, fit_goal_set, root_node_database, no_ode_fit
+) :
     #
     # all_node_database
     all_node_database = f'{result_dir}/all_node.db'
@@ -61,7 +63,7 @@ def drill(result_dir, root_node_name, fit_goal_set, root_node_database) :
         all_node_database  = all_node_database,
         root_node_database = root_node_database,
         fit_goal_set       = fit_goal_set,
-        no_ode_fit         = True,
+        no_ode_fit         = no_ode_fit,
     )
 # ----------------------------------------------------------------------------
 def main(
@@ -73,6 +75,7 @@ def main(
     covariate_csv_file_dict = None,
     log_scale_covariate_set = None,
     root_node_database      = None,
+    no_ode_fit              = None,
 ) :
     assert type(result_dir) == str
     assert type(root_node_name) == str
@@ -82,6 +85,7 @@ def main(
     assert type(covariate_csv_file_dict) == dict
     assert type(log_scale_covariate_set) == set
     assert type(root_node_database) == str
+    assert type(no_ode_fit) == bool
     #
     # command
     command_set = {
@@ -145,7 +149,14 @@ def main(
             msg += 'You must first move or remove it'
             assert False, msg
         print( f'creating {root_node_dir}' )
-        drill( result_dir, root_node_name, fit_goal_set, root_node_database )
+        os.mkdir( root_node_dir )
+        drill(
+            result_dir,
+            root_node_name,
+            fit_goal_set,
+            root_node_database,
+            no_ode_fit
+         )
     #
     # display or continue
     elif command in [ 'display', 'continue'] :

@@ -52,6 +52,10 @@ result_dir = 'ihme_db/DisMod_AT/results/neural_tube'
 # root_node_database
 root_node_database = f'{result_dir}/root_node.db'
 #
+# no_ode_fit
+# This bool controls whether a no_ode fit is used to initial root level
+no_ode_fit = False
+#
 # root_node_name
 # name of the node where the cascade will start
 # root_node_name      = '64_High-income'
@@ -111,21 +115,40 @@ map_location_id = {
 }
 #
 # mulcov_freeze_list
-# Freeze the covariate multiplier on obesity that affects iota and do the
-# freeze at United_States_of_America and Western_Europe.
-# mulcov_freeze_list = [
-#         {   'node'      : '102_United_States_of_America',
-#             'sex'       : 'Both',
-#             'rate'      : 'iota',
-#             'covariate' : 'obesity',
-#         },{
-#             'node'      : '73_Western_Europe',
-#             'sex'       : 'Both',
-#             'rate'      : 'iota',
-#             'covariate' : 'obesity',
-#         },
-# ]
-mulcov_freeze_list = list()
+# Freeze the covariate multiplier on that affects chi and pini and do the
+# freeze at the Global level after the split
+mulcov_freeze_list = [
+    {   'node'      : '1_Global',
+        'sex'       : 'Male',
+        'rate'      : 'pini',
+        'covariate' : 'log_folic_acid',
+    },
+    {   'node'      : '1_Global',
+        'sex'       : 'Female',
+        'rate'      : 'pini',
+        'covariate' : 'log_folic_acid',
+    },
+    {   'node'      : '1_Global',
+        'sex'       : 'Male',
+        'rate'      : 'pini',
+        'covariate' : 'folic_fortified',
+    },
+    {   'node'      : '1_Global',
+        'sex'       : 'Female',
+        'rate'      : 'pini',
+        'covariate' : 'folic_fortified',
+    },
+    {   'node'      : '1_Global',
+        'sex'       : 'Female',
+        'rate'      : 'chi',
+        'covariate' : 'haqi',
+    },
+    {   'node'      : '1_Global',
+        'sex'       : 'Male',
+        'rate'      : 'chi',
+        'covariate' : 'haqi',
+    },
+]
 #
 # fit_goal_set
 # Name of the nodes that we are drilling to (must be below root_node).
@@ -183,7 +206,6 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
-fit_goal_set = { '1_Global' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understanding this program
 # ----------------------------------------------------------------------------
@@ -416,7 +438,7 @@ def write_root_node_database() :
             'lower'   :    None,
             'upper'   :    None,
             'mean'    :    0.0,
-            'std'     :    0.2,
+            'std'     :    0.5,
             'eta'     :    1e-7,
         },{
             'name'    :    'child_value',
@@ -454,7 +476,7 @@ def write_root_node_database() :
         ('parent_chi_value', 'parent_rate_delta', 'parent_rate_delta')
     smooth_table.append({
         'name':     'parent_chi',
-        'age_id':   age_grid_id_list,
+        'age_id':   age_grid_id_list[1:],
         'time_id':  time_grid_id_list,
         'fun':      fun
     })
@@ -608,6 +630,7 @@ if __name__ == '__main__' :
         covariate_csv_file_dict = covariate_csv_file_dict,
         log_scale_covariate_set = log_scale_covariate_set,
         root_node_database      = root_node_database,
+        no_ode_fit              = no_ode_fit,
     )
     print('neural_tube.py: OK')
     sys.exit(0)

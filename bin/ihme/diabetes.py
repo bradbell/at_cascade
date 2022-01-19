@@ -49,6 +49,10 @@ result_dir = 'ihme_db/DisMod_AT/results/diabetes'
 # root_node_database
 root_node_database = f'{result_dir}/root_node.db'
 #
+# no_ode_fit
+# This bool controls whether a no_ode fit is used to initial root level
+no_ode_fit = True
+#
 # root_node_name
 # name of the node where the cascade will start
 # root_node_name      = '64_High-income'
@@ -101,7 +105,7 @@ hold_out_nid_set = { 249201 }
 #
 # mulcov_freeze_list
 # Freeze the covariate multiplier on obesity that affects iota and do the
-# freeze at United_States_of_America and Western_Europe.
+# freeze at the Global level after the split
 mulcov_freeze_list = [
     {   'node'      : '1_Global',
         'sex'       : 'Male',
@@ -653,6 +657,7 @@ if __name__ == '__main__' :
         covariate_csv_file_dict = covariate_csv_file_dict,
         log_scale_covariate_set = log_scale_covariate_set,
         root_node_database      = root_node_database,
+        no_ode_fit              = no_ode_fit,
     )
 print('diabetes.py: OK')
 sys.exit(0)
