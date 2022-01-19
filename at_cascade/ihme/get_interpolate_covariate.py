@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -62,9 +62,11 @@ def check_rectangular_grid(covariate_file_path, covariate_table) :
                 previous_year_id           = year_id
 # -----------------------------------------------------------------------------
 # (one_age_group, interpolate_covariate)  = get_interpolate_covariate(
-#   covaraite_csv_file, age_group_id_dict
+#   covaraite_csv_file, log_scale, age_group_id_dict
 # )
-def get_interpolate_covariate(covariate_file_path, age_group_id_dict) :
+def get_interpolate_covariate(
+        covariate_file_path, log_scale, age_group_id_dict
+) :
     file_ptr   = open(covariate_file_path)
     reader     = csv.DictReader(file_ptr)
     #
@@ -86,6 +88,8 @@ def get_interpolate_covariate(covariate_file_path, age_group_id_dict) :
         #
         # mean_value
         mean_value = float( row['mean_value'] )
+        if log_scale :
+            mean_value = numpy.log10( mean_value )
         #
         # covariate_table
         row = {

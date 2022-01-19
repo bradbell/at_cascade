@@ -28,13 +28,16 @@ import at_cascade.ihme
 # The keys in this dictionary are the relative covariate names and must
 # appear in the covariate table.
 covariate_csv_file_dict = {
-'folic_acid' :
+'log_folic_acid' :
     'ihme_db/DisMod_AT/covariates/gbd2019_folic_acid_covariate.csv',
 'folic_fortified' :
     'ihme_db/DisMod_AT/covariates/gbd2019_composite_fortification_standard_and_folic_acid_inclusion_covariate.csv',
 'haqi' :
     'ihme_db/DisMod_AT/covariates/gbd2019_haqi_covariate.csv',
 }
+#
+# log_scale_covaraite_set
+log_scale_covariate_set = { 'log_folic_acid' }
 #
 # input files
 data_dir        = 'ihme_db/DisMod_AT/testing/neural_tube_disorders/data'
@@ -279,14 +282,14 @@ def write_root_node_database() :
     # mulcov_table
     mulcov_table = [
         {
-            # alpha_pini_folic_acid
-            'covariate': 'folic_acid',
+            # alpha_pini_log_folic_acid
+            'covariate': 'log_folic_acid',
             'type':      'rate_value',
             'effected':  'pini',
             'group':     'world',
             'smooth':    'alpha_smooth',
         },{
-            # alpha_pini_folic_acid
+            # alpha_pini_folic_fortified
             'covariate': 'folic_fortified',
             'type':      'rate_value',
             'effected':  'pini',
@@ -341,14 +344,14 @@ def write_root_node_database() :
     #
     # covarite_table
     # Becasue we are using data4cov_reference, the reference for the relative
-    # covariates obesity and log_ldi will get replaced.
+    # covariates log_folic_acid, folic_fortified, haqi.
     # The names in this table must be 'sex', 'one', and the keys in the
     # covariate_csv_file_dict.
     covariate_table = [
         { 'name':'sex',              'reference':0.0, 'max_difference':0.6},
         { 'name':'one',              'reference':0.0 },
-        { 'name':'folic_acid',       'reference':0.0},
-        { 'name':'folic_fortified', 'reference':0.0},
+        { 'name':'log_folic_acid',   'reference':0.0},
+        { 'name':'folic_fortified',  'reference':0.0},
         { 'name':'haqi',             'reference':0.0},
     ]
     #
@@ -381,7 +384,7 @@ def write_root_node_database() :
             'meas_std'        : float( row_in['meas_std'] ),
             'c_seq'           : int( row_in['c_seq'] ),
         }
-        for cov_name in [ 'folic_acid', 'folic_fortified', 'haqi' ] :
+        for cov_name in covariate_csv_file_dict.keys() :
             if row_in[cov_name] == '' :
                 cov_value = None
             else :
@@ -560,6 +563,7 @@ def setup_function() :
         data_inp_file           = data_inp_file,
         csmr_inp_file           = csmr_inp_file,
         covariate_csv_file_dict = covariate_csv_file_dict,
+        log_scale_covariate_set = log_scale_covariate_set,
     )
     #
     # write_mtall_tables
@@ -602,6 +606,7 @@ if __name__ == '__main__' :
         setup_function          = setup_function,
         max_plot                = max_plot,
         covariate_csv_file_dict = covariate_csv_file_dict,
+        log_scale_covariate_set = log_scale_covariate_set,
         root_node_database      = root_node_database,
     )
     print('neural_tube.py: OK')

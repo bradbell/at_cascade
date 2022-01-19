@@ -161,11 +161,13 @@ def write_data_table(
     data_inp_file           = None,
     csmr_inp_file           = None,
     covariate_csv_file_dict = None,
+    log_scale_covariate_set = None,
     ) :
-    assert type(result_dir) is str
-    assert type(data_inp_file) is str
-    assert type(csmr_inp_file) is str
-    assert type(covariate_csv_file_dict) is dict
+    assert type(result_dir) == str
+    assert type(data_inp_file) == str
+    assert type(csmr_inp_file) == str
+    assert type(covariate_csv_file_dict) == dict
+    assert type(log_scale_covariate_set) == set
     #
     # map_location_id
     map_location_id = at_cascade.ihme.map_location_id
@@ -228,9 +230,10 @@ def write_data_table(
         assert covariate_file_path.endswith( '_covariate.csv')
         #
         # interpolate_covariate
+        log_scale = covariate_name in log_scale_covariate_set
         (one_age_group, interpolate_covariate) = \
             at_cascade.ihme.get_interpolate_covariate(
-                covariate_file_path, age_group_id_dict
+                covariate_file_path, log_scale, age_group_id_dict
         )
         #
         # row

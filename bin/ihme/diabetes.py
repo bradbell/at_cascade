@@ -34,6 +34,10 @@ covariate_csv_file_dict = {
     'ihme_db/DisMod_AT/covariates/gbd2019_obesity_prevalence_covariate.csv',
 }
 #
+# log_scale_covariate_set
+# log_ldi is already log scaled in gbd2019_ldi_log_transformed_covariate.csv
+log_covariate_set = set()
+#
 # input files
 data_dir        = 'ihme_db/DisMod_AT/testing/diabetes/data'
 data_inp_file   = f'{data_dir}/gbd2019_diabetes_crosswalk_12437.csv'
@@ -604,6 +608,7 @@ def setup_function() :
         data_inp_file           = data_inp_file,
         csmr_inp_file           = csmr_inp_file,
         covariate_csv_file_dict = covariate_csv_file_dict,
+        log_scale_covariate_set = log_scale_covariate_set,
     )
     #
     # write_mtall_tables
@@ -646,6 +651,7 @@ if __name__ == '__main__' :
         setup_function          = setup_function,
         max_plot                = max_plot,
         covariate_csv_file_dict = covariate_csv_file_dict,
+        log_scale_covariate_set = log_scale_covariate_set,
         root_node_database      = root_node_database,
     )
 print('diabetes.py: OK')
