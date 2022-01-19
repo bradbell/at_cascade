@@ -157,7 +157,7 @@ def main(
         fit_node_database = f'{result_dir}/{database}'
         if not os.path.exists(fit_node_database) :
             msg  = f'{command}: result_dir/database = {fit_node_database}'
-            msg += f'file does not exist'
+            msg += f'\nfile does not exist'
             assert False, msg
         if command == 'display' :
             display(fit_node_database, max_plot)

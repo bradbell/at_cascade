@@ -33,7 +33,7 @@ covariate_csv_file_dict = {
 'folic_fortified' :
     'ihme_db/DisMod_AT/covariates/gbd2019_composite_fortification_standard_and_folic_acid_inclusion_covariate.csv',
 'haqi' :
-    'gbd2019_haqi_covariate.csv',
+    'ihme_db/DisMod_AT/covariates/gbd2019_haqi_covariate.csv',
 }
 #
 # input files
@@ -57,7 +57,7 @@ root_node_name      = '1_Global'
 # gamma_factor
 # The gamma for each integrand is this factor times the median
 # of the data for the integrand.
-gamma_factor        = 1e-2
+gamma_factor        = 1e-1
 #
 # random_seed
 # If this seed is zero, the clock is used for the random seed.
@@ -249,8 +249,9 @@ def write_root_node_database() :
     #
     # age_list, age_grid_id_list
     age_list    = [
-        0.0, 5.0, 10.0, 15.0, 20.0,
-        30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0
+        0.0,  0.02,  0.1,
+        5.0, 10.0, 15.0, 20.0, 25.0, 30.0,
+        40.0, 60.0, 80.0, 100.0
     ]
     age_grid_id_list = list( range(0, len(age_list) ) )
     for row in table_in['omega_age'] :
@@ -264,7 +265,7 @@ def write_root_node_database() :
         age_list.append( age_max)
     #
     # time_list, time_grid_id_list
-    time_list   = [ 1960, 1975, 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
+    time_list   = [ 1990, 2000, 2010, 2020 ]
     time_grid_id_list = list( range(0, len(time_list) ) )
     for row in table_in['omega_time'] :
         time = float( row['time'] )
@@ -280,6 +281,13 @@ def write_root_node_database() :
         {
             # alpha_pini_folic_acid
             'covariate': 'folic_acid',
+            'type':      'rate_value',
+            'effected':  'pini',
+            'group':     'world',
+            'smooth':    'alpha_smooth',
+        },{
+            # alpha_pini_folic_acid
+            'covariate': 'folic_fortified',
             'type':      'rate_value',
             'effected':  'pini',
             'group':     'world',
@@ -337,10 +345,11 @@ def write_root_node_database() :
     # The names in this table must be 'sex', 'one', and the keys in the
     # covariate_csv_file_dict.
     covariate_table = [
-        { 'name':'sex',        'reference':0.0, 'max_difference':0.6},
-        { 'name':'one',        'reference':0.0 },
-        { 'name':'folic_acid', 'reference':0.0},
-        { 'name':'haqi',       'reference':0.0},
+        { 'name':'sex',              'reference':0.0, 'max_difference':0.6},
+        { 'name':'one',              'reference':0.0 },
+        { 'name':'folic_acid',       'reference':0.0},
+        { 'name':'folic_fortified', 'reference':0.0},
+        { 'name':'haqi',             'reference':0.0},
     ]
     #
     # data_table
@@ -354,14 +363,6 @@ def write_root_node_database() :
         node_id     = location_id2node_id[location_id]
         node_name = node_table[node_id]['name']
         sex       = sex_name2covariate_value[ row_in['sex_name'] ]
-        if row_in['folic_acid'] == '' :
-            folic_acid = None
-        else :
-            folic_acid = float( row_in['folic_acid'] )
-        if row_in['haqi'] == '' :
-            haqi = None
-        else :
-            haqi = float( row_in['haqi'] )
         #
         row_out  = {
             'integrand'       : row_in['integrand_name'],
@@ -374,14 +375,18 @@ def write_root_node_database() :
             'time_upper'      : float( row_in['time_upper'] ),
             'sex'             : sex,
             'one'             : 1.0,
-            'folic_acid'      : folic_acid,
-            'haqi'            : haqi,
             'hold_out'        : hold_out,
             'density'         : 'gaussian',
             'meas_value'      : float( row_in['meas_value'] ),
             'meas_std'        : float( row_in['meas_std'] ),
             'c_seq'           : int( row_in['c_seq'] ),
         }
+        for cov_name in [ 'folic_acid', 'folic_fortified', 'haqi' ] :
+            if row_in[cov_name] == '' :
+                cov_value = None
+            else :
+                cov_value = float( row_in[cov_name] )
+            row_out[cov_name] = cov_value
         data_table.append( row_out )
     #
     # prior_table
@@ -391,19 +396,27 @@ def write_root_node_database() :
             'density' :    'log_gaussian',
             'lower'   :    1e-7,
             'upper'   :    1.0,
-            'mean'    :    1e-2,
+            'mean'    :    1e-3,
             'std'     :    3.0,
             'eta'     :    1e-7,
         },{
-            'name'    :    'parent_pini_dtime',
+            'name'    :    'parent_chi_value',
+            'density' :    'log_gaussian',
+            'lower'   :    1e-7,
+            'upper'   :    10.0,
+            'mean'    :    1e-1,
+            'std'     :    1.0,
+            'eta'     :    1e-7,
+        },{
+            'name'    :    'parent_rate_delta',
             'density' :    'log_gaussian',
             'lower'   :    None,
             'upper'   :    None,
             'mean'    :    0.0,
-            'std'     :    1.0,
+            'std'     :    0.2,
             'eta'     :    1e-7,
         },{
-            'name'    :    'child_pini_value',
+            'name'    :    'child_value',
             'density' :    'gaussian',
             'lower'   :    None,
             'upper'   :    None,
@@ -433,20 +446,30 @@ def write_root_node_database() :
     # smooth_table
     smooth_table = list()
     #
-    # parent_pini
+    # parrent_chi
     fun = lambda a, t :  \
-        ('parent_pini_value', None, 'parent_pini_dtime')
+        ('parent_chi_value', 'parent_rate_delta', 'parent_rate_delta')
     smooth_table.append({
-        'name':     'parent_pini',
-        'age_id':   [0],
-        'time_id':  [0],
+        'name':     'parent_chi',
+        'age_id':   age_grid_id_list,
+        'time_id':  time_grid_id_list,
         'fun':      fun
     })
     #
-    # child_pini
-    fun = lambda a, t : ('child_pini_value', None, None)
+    # parent_pini
+    fun = lambda a, t :  \
+        ('parent_pini_value', None, 'parent_rate_delta')
     smooth_table.append({
-         'name':    'child_pini',
+        'name':     'parent_pini',
+        'age_id':   [0],
+        'time_id':  time_grid_id_list,
+        'fun':      fun
+    })
+    #
+    # child_value
+    fun = lambda a, t : ('child_value', None, None)
+    smooth_table.append({
+         'name':    'child_smooth',
         'age_id':    [0],
         'time_id':   [0],
         'fun':       fun
@@ -477,19 +500,24 @@ def write_root_node_database() :
         {
             'name':          'pini',
             'parent_smooth': 'parent_pini',
-            'child_smooth':  'child_pini',
+            'child_smooth':  'child_smooth',
+        },{
+            'name':          'chi',
+            'parent_smooth': 'parent_chi',
+            'child_smooth':  'child_smooth',
         }
     ]
     #
     # option_table
     option_table = [
         { 'name':'parent_node_name',     'value':root_node_name},
-        { 'name':'zero_sum_child_rate',  'value':'pini'},
+        { 'name':'zero_sum_child_rate',  'value':'pini chi'},
         { 'name':'random_seed',          'value':str(random_seed)},
         { 'name':'trace_init_fit_model', 'value':'true'},
         { 'name':'data_extra_columns',   'value':'c_seq'},
         { 'name':'meas_noise_effect',    'value':'add_std_scale_none'},
         { 'name':'age_avg_split',        'value':'0.1 1.0'},
+        { 'name':'rate_case',            'value':'iota_zero_rho_zero'},
         #
         { 'name':'quasi_fixed',                  'value':'false' },
         { 'name':'tolerance_fixed',              'value':'1e-8'},
