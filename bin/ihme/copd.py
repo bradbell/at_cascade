@@ -28,23 +28,25 @@ import at_cascade.ihme
 # The keys in this dictionary are the relative covariate names and must
 # appear in the covariate table.
 covariate_csv_file_dict = {
-'log_ldi' :
-    'ihme_db/DisMod_AT/covariates/gbd2019_ldi_log_transformed_covariate.csv',
-'obesity' :
-    'ihme_db/DisMod_AT/covariates/gbd2019_obesity_prevalence_covariate.csv',
+'log_sev_copd' :
+    'ihme_db/DisMod_AT/covariates/gbd2019_SEV_scalar_COPD_age_std_log_transform_covariate.csv',
+'elevation' :
+    'ihme_db/DisMod_AT/covariates/gbd2019_elevation_over_1500m_covariate.csv',
+'haqi' :
+    'ihme_db/DisMod_AT/covariates/gbd2019_haqi_covariate.csv',
 }
 #
 # log_scale_covariate_set
-# log_ldi is already log scaled in gbd2019_ldi_log_transformed_covariate.csv
+# log_sev_copd is already log scaled in
 log_scale_covariate_set = set()
 #
 # input files
-data_dir        = 'ihme_db/DisMod_AT/testing/diabetes/data'
-data_inp_file   = f'{data_dir}/gbd2019_diabetes_crosswalk_12437.csv'
-csmr_inp_file   = f'{data_dir}/gbd2019_diabetes_csmr.csv'
+data_dir        = 'ihme_db/DisMod_AT/testing/copd/data'
+data_inp_file   = f'{data_dir}/gbd2019_copd_crosswalk_5528.csv'
+csmr_inp_file   = f'{data_dir}/gbd2019_copd_csmr.csv'
 #
 # result_dir
-result_dir = 'ihme_db/DisMod_AT/results/diabetes'
+result_dir = 'ihme_db/DisMod_AT/results/copd'
 #
 # root_node_database
 root_node_database = f'{result_dir}/root_node.db'
@@ -99,32 +101,41 @@ max_plot            = 2000
 node_split_name_set = {'1_Global'}
 #
 # hold_out_nid_set
-# set of nid values in data file for studies that are suspect
-# 249201 is Schottker B, et.al., ... A1c and fasting ...,  2011; 26(10) 779-87
-hold_out_nid_set = { 249201 }
+# set of nid values in data file for studies that are suspect (empty)
+hold_out_nid_set = set()
 #
 # mulcov_freeze_list
-# Freeze the covariate multipliers at the Global level after the sex split
+# Freeze the covariate multipliers  at the Global level after the sex split
 mulcov_freeze_list = [
     {   'node'      : '1_Global',
         'sex'       : 'Male',
         'rate'      : 'iota',
-        'covariate' : 'obesity',
+        'covariate' : 'log_sev_copd',
     },
     {   'node'      : '1_Global',
         'sex'       : 'Female',
         'rate'      : 'iota',
-        'covariate' : 'obesity',
+        'covariate' : 'log_sev_copd',
     },
     {   'node'      : '1_Global',
         'sex'       : 'Male',
         'rate'      : 'chi',
-        'covariate' : 'log_ldi',
+        'covariate' : 'elevation',
     },
     {   'node'      : '1_Global',
         'sex'       : 'Female',
         'rate'      : 'chi',
-        'covariate' : 'log_ldi',
+        'covariate' : 'elevation',
+    },
+    {   'node'      : '1_Global',
+        'sex'       : 'Male',
+        'rate'      : 'chi',
+        'covariate' : 'haqi',
+    },
+    {   'node'      : '1_Global',
+        'sex'       : 'Female',
+        'rate'      : 'chi',
+        'covariate' : 'haqi',
     },
 ]
 #
@@ -186,6 +197,7 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
+fit_goal_set = { '1_Global' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understanding this program
 # ----------------------------------------------------------------------------
@@ -254,7 +266,7 @@ def write_root_node_database() :
     #
     # age_list, age_grid_id_list
     age_list    = [
-        0.0, 5.0, 10.0, 15.0, 20.0,
+        0.0, 10.0, 20.0,
         30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0
     ]
     age_grid_id_list = list( range(0, len(age_list) ) )
@@ -269,7 +281,7 @@ def write_root_node_database() :
         age_list.append( age_max)
     #
     # time_list, time_grid_id_list
-    time_list   = [ 1960, 1975, 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
+    time_list   = [ 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
     time_grid_id_list = list( range(0, len(time_list) ) )
     for row in table_in['omega_time'] :
         time = float( row['time'] )
@@ -282,15 +294,22 @@ def write_root_node_database() :
     #
     # mulcov_table
     mulcov_table = [
-        {   # alpha_iota_obesity
-            'covariate': 'obesity',
+        {   # alpha_iota_log_sev_copd
+            'covariate': 'log_sev_copd',
             'type':      'rate_value',
             'effected':  'iota',
             'group':     'world',
             'smooth':    'alpha_smooth',
         },
-        {   # alpha_chi_log_ldi
-            'covariate': 'log_ldi',
+        {   # alpha_chi_elevation
+            'covariate': 'elevation',
+            'type':      'rate_value',
+            'effected':  'chi',
+            'group':     'world',
+            'smooth':    'alpha_smooth',
+        },
+        {   # alpha_chi_haqi
+            'covariate': 'haqi',
             'type':      'rate_value',
             'effected':  'chi',
             'group':     'world',
@@ -351,14 +370,15 @@ def write_root_node_database() :
     #
     # covarite_table
     # Becasue we are using data4cov_reference, the reference for the relative
-    # covariates obesity and log_ldi will get replaced.
+    # covariates log_sev_copd, elevation, haqiwill get replaced.
     # The names in this table must be 'sex', 'one', and the keys in the
     # covariate_csv_file_dict.
     covariate_table = [
-        { 'name':'sex',     'reference':0.0, 'max_difference':0.6},
-        { 'name':'one',     'reference':0.0 },
-        { 'name':'obesity', 'reference':0.0},
-        { 'name':'log_ldi', 'reference':0.0},
+        { 'name':'sex',          'reference':0.0, 'max_difference':0.6},
+        { 'name':'one',          'reference':0.0 },
+        { 'name':'log_sev_copd', 'reference':0.0},
+        { 'name':'elevation',     'reference':0.0},
+        { 'name':'haqi',          'reference':0.0},
     ]
     #
     # data_table
@@ -400,6 +420,7 @@ def write_root_node_database() :
             else :
                 cov_value = float( row_in[cov_name] )
             row_out[cov_name] = cov_value
+        #
         data_table.append( row_out )
     #
     # prior_table
@@ -412,13 +433,6 @@ def write_root_node_database() :
             'mean'    :    1e-2,
             'std'     :    3.0,
             'eta'     :    1e-7,
-        },{
-            'name'    :    'parent_pini_value',
-            'density' :    'gaussian',
-            'lower'   :    0.0,
-            'upper'   :    1e-4,
-            'mean'    :    1e-5,
-            'std'     :    1.0,
         },{
             'name'    :    'parent_chi_delta',
             'density' :    'log_gaussian',
@@ -449,7 +463,7 @@ def write_root_node_database() :
             'lower'   :   None,
             'upper'   :   None,
             'mean'    :   0.0,
-            'std'     :   .1,
+            'std'     :   0.3,
         },{
             'name'    :   'alpha_value',
             'density' :   'gaussian',
@@ -494,16 +508,6 @@ def write_root_node_database() :
         'fun':      fun
     })
     #
-    # parent_pini
-    fun = lambda a, t :  \
-        ('parent_pini_value', None, None)
-    smooth_table.append({
-        'name':     'parent_pini',
-        'age_id':   [0],
-        'time_id':  [0],
-        'fun':      fun
-    })
-    #
     # child_smooth
     fun = lambda a, t : ('child_rate_value', None, None)
     smooth_table.append({
@@ -536,10 +540,6 @@ def write_root_node_database() :
     # rate_table
     rate_table = [
         {
-            'name':          'pini',
-            'parent_smooth': 'parent_pini',
-            'child_smooth':  None,
-        },{
             'name':           'iota',
             'parent_smooth': 'parent_iota',
             'child_smooth':  'child_smooth',
