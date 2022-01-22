@@ -180,7 +180,7 @@ def write_data_table(
     ) :
     assert type(result_dir) == str
     assert type(data_inp_file) == str
-    assert type(csmr_inp_file) == str or cmsr_int_file is None
+    assert type(csmr_inp_file) == str or csmr_inp_file is None
     assert type(covariate_csv_file_dict) == dict
     assert type(log_scale_covariate_set) == set
     #

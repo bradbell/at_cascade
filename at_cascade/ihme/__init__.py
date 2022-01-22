@@ -91,4 +91,5 @@ from .write_mtall_tables          import write_mtall_tables
 from .write_mulcov_freeze_table   import write_mulcov_freeze_table
 from .write_node_split_table      import write_node_split_table
 from .write_node_table            import write_node_table
+from .write_root_node_database    import write_root_node_database
 # END_SORT_THIS_LINE_MINUS_1
