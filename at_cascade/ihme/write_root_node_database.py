@@ -32,6 +32,7 @@ def write_root_node_database(
     prior_table             = None,
     smooth_list_dict        = None,
     rate_table              = None,
+    mulcov_list_dict        = None,
 ) :
     assert type(result_dir) == str
     assert type(root_node_database) == str
@@ -43,6 +44,7 @@ def write_root_node_database(
     assert type(model_rate_time_grid) == list
     assert type(prior_table) == list
     assert type(rate_table) == list
+    assert type(mulcov_list_dict) == list
     #
     print( 'Creating ' + root_node_database )
     #
@@ -121,36 +123,10 @@ def write_root_node_database(
         time_list.append( time_max)
     #
     # mulcov_table
-    mulcov_table = [
-        {   # alpha_iota_obesity
-            'covariate': 'obesity',
-            'type':      'rate_value',
-            'effected':  'iota',
-            'group':     'world',
-            'smooth':    'alpha_smooth',
-        },
-        {   # alpha_chi_log_ldi
-            'covariate': 'log_ldi',
-            'type':      'rate_value',
-            'effected':  'chi',
-            'group':     'world',
-            'smooth':    'alpha_smooth',
-        },
-        {   # alpha_iota_sex
-            'covariate': 'sex',
-            'type':      'rate_value',
-            'effected':  'iota',
-            'group':     'world',
-            'smooth':    'alpha_smooth',
-        },
-        {   # alpha_chi_sex
-            'covariate': 'sex',
-            'type':      'rate_value',
-            'effected':  'chi',
-            'group':     'world',
-            'smooth':    'alpha_smooth',
-        },
-    ]
+    mulcov_table = copy.copy( mulcov_list_dict )
+    for row in mulcov_table :
+        row['group'] = 'world'
+        row['type']  = 'rate_value'
     for integrand in integrand_median :
         mulcov_table.append(
             {   # gamma_integrand

@@ -201,6 +201,31 @@ rate_table = [
     },
 ]
 #
+# mulcov_list_dict
+# define the covariate multipliers that affect rate values
+mulcov_list_dict = [
+    {   # alpha_iota_obesity
+        'covariate': 'obesity',
+        'effected':  'iota',
+        'smooth':    'alpha_smooth',
+    },
+    {   # alpha_chi_log_ldi
+        'covariate': 'log_ldi',
+        'effected':  'chi',
+        'smooth':    'alpha_smooth',
+    },
+    {   # alpha_iota_sex
+        'covariate': 'sex',
+        'effected':  'iota',
+        'smooth':    'alpha_smooth',
+    },
+    {   # alpha_chi_sex
+        'covariate': 'sex',
+        'effected':  'chi',
+        'smooth':    'alpha_smooth',
+    },
+]
+#
 # mulcov_freeze_list
 # Freeze the covariate multipliers at the Global level after the sex split
 mulcov_freeze_list = [
@@ -733,6 +758,7 @@ def setup_function() :
         prior_table             = prior_table,
         smooth_list_dict        = smooth_list_dict,
         rate_table              = rate_table,
+        mulcov_list_dict        = mulcov_list_dict,
     )
     #
     # write_all_option_table
