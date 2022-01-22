@@ -31,6 +31,7 @@ def write_root_node_database(
     model_rate_time_grid    = None,
     prior_table             = None,
     smooth_list_dict        = None,
+    rate_table              = None,
 ) :
     assert type(result_dir) == str
     assert type(root_node_database) == str
@@ -41,6 +42,7 @@ def write_root_node_database(
     assert type(model_rate_age_grid) == list
     assert type(model_rate_time_grid) == list
     assert type(prior_table) == list
+    assert type(rate_table) == list
     #
     print( 'Creating ' + root_node_database )
     #
@@ -314,23 +316,6 @@ def write_root_node_database(
             'time_id':  [0],
             'fun':      copy.copy(fun)
         })
-    #
-    # rate_table
-    rate_table = [
-        {
-            'name':          'pini',
-            'parent_smooth': 'parent_pini',
-            'child_smooth':  None,
-        },{
-            'name':           'iota',
-            'parent_smooth': 'parent_iota',
-            'child_smooth':  'child_smooth',
-        },{
-            'name':           'chi',
-            'parent_smooth': 'parent_chi',
-            'child_smooth':  'child_smooth',
-        }
-    ]
     #
     # option_table
     option_table = [

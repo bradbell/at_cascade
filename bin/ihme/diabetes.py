@@ -115,10 +115,7 @@ model_rate_time_grid = [
 ]
 #
 # prior_table
-# This defines the dismod_at prior table; see
-# https://bradbell.github.io/dismod_at/doc/prior_table.htm
-# The fields name, density and mean must appear.
-# The default value for the other fields is null.
+# https://bradbell.github.io/dismod_at/doc/create_database.htm#prior_table
 prior_table = [
     {   'name'    :    'parent_rate_value',
         'density' :    'log_gaussian',
@@ -185,6 +182,22 @@ smooth_list_dict = [
     },
     {   'name'        : 'alpha_smooth',
         'value_prior' : 'alpha_value',
+    },
+]
+#
+# rate_table
+# https://bradbell.github.io/dismod_at/doc/create_database.htm#rate_table
+rate_table = [
+    {   'name':          'pini',
+        'parent_smooth': 'parent_pini',
+    },
+    {   'name':           'iota',
+        'parent_smooth': 'parent_iota',
+        'child_smooth':  'child_smooth',
+    },
+    {   'name':           'chi',
+        'parent_smooth': 'parent_chi',
+        'child_smooth':  'child_smooth',
     },
 ]
 #
@@ -719,6 +732,7 @@ def setup_function() :
         model_rate_time_grid    = model_rate_time_grid,
         prior_table             = prior_table,
         smooth_list_dict        = smooth_list_dict,
+        rate_table              = rate_table,
     )
     #
     # write_all_option_table
