@@ -30,6 +30,7 @@ def write_root_node_database(
     model_rate_age_grid     = None,
     model_rate_time_grid    = None,
     prior_table             = None,
+    smooth_list_dict        = None,
 ) :
     assert type(result_dir) == str
     assert type(root_node_database) == str
@@ -262,56 +263,47 @@ def write_root_node_database(
         )
     # ------------------------------------------------------------------------
     # smooth_table
+    # entries that come from smooth_list_dict
     smooth_table = list()
+    for smooth in smooth_list_dict :
+        # name
+        name        = smooth['name']
+        #
+        # value_prior
+        value_prior = smooth['value_prior']
+        value_prior = f'\'{value_prior}\''
+        #
+        # dage_prior, age_grid
+        if 'dage_prior' in smooth :
+            dage_prior = smooth['dage_prior']
+            dage_prior = f'\'{dage_prior}\''
+            age_grid   = age_grid_id_list
+        else :
+            dage_prior = None
+            age_grid   = [ 0 ]
+        #
+        # dtime_prior, time_grid
+        if 'dtime_prior' in smooth :
+            dtime_prior = smooth['dtime_prior']
+            dtime_prior = f'\'{dtime_prior}\''
+            time_grid   = time_grid_id_list
+        else :
+            dtime_prior = None
+            time_grid   = [ 0 ]
+        #
+        # fun
+        fun = eval(
+            f'lambda a, t : ( {value_prior}, {dage_prior}, {dtime_prior} )'
+        )
+        #
+        smooth_table.append({
+            'name':     name,
+            'age_id':   age_grid,
+            'time_id':  time_grid,
+            'fun':      copy.copy(fun),
+        })
     #
-    # parrent_chi
-    fun = lambda a, t :  \
-        ('parent_rate_value', 'parent_chi_delta', 'parent_chi_delta')
-    smooth_table.append({
-        'name':     'parent_chi',
-        'age_id':   age_grid_id_list,
-        'time_id':  time_grid_id_list,
-        'fun':      fun
-    })
-    #
-    # parrent_iota
-    fun = lambda a, t :  \
-        ('parent_rate_value', 'parent_iota_dage', 'parent_iota_dtime')
-    smooth_table.append({
-        'name':     'parent_iota',
-        'age_id':   age_grid_id_list,
-        'time_id':  time_grid_id_list,
-        'fun':      fun
-    })
-    #
-    # parent_pini
-    fun = lambda a, t :  \
-        ('parent_pini_value', None, None)
-    smooth_table.append({
-        'name':     'parent_pini',
-        'age_id':   [0],
-        'time_id':  [0],
-        'fun':      fun
-    })
-    #
-    # child_smooth
-    fun = lambda a, t : ('child_rate_value', None, None)
-    smooth_table.append({
-         'name':    'child_smooth',
-        'age_id':    [0],
-        'time_id':   [0],
-        'fun':       fun
-    })
-    #
-    # alpha_smooth
-    fun = lambda a, t : ('alpha_value', None, None)
-    smooth_table.append({
-        'name':    'alpha_smooth',
-        'age_id':    [0],
-        'time_id':   [0],
-        'fun':       fun
-    })
-    #
+    # smooth_table
     # gamma_integrand
     for integrand in integrand_median :
         # fun = lambda a, t : ('gamma_{integrand}', None, None) )

@@ -165,6 +165,29 @@ prior_table = [
     }
 ]
 #
+# smooth_list_dict
+smooth_list_dict = [
+    {   'name'        : 'parent_chi',
+        'value_prior' : 'parent_rate_value',
+        'dage_prior'  : 'parent_chi_delta',
+        'dtime_prior' : 'parent_chi_delta',
+    },
+    {   'name'        : 'parent_iota',
+        'value_prior' : 'parent_rate_value',
+        'dage_prior'  : 'parent_iota_dage',
+        'dtime_prior' : 'parent_iota_dtime',
+    },
+    {   'name'        : 'parent_pini',
+        'value_prior' : 'parent_pini_value',
+    },
+    {   'name'        : 'child_smooth',
+        'value_prior' : 'child_rate_value',
+    },
+    {   'name'        : 'alpha_smooth',
+        'value_prior' : 'alpha_value',
+    },
+]
+#
 # mulcov_freeze_list
 # Freeze the covariate multipliers at the Global level after the sex split
 mulcov_freeze_list = [
@@ -695,6 +718,7 @@ def setup_function() :
         model_rate_age_grid     = model_rate_age_grid,
         model_rate_time_grid    = model_rate_time_grid,
         prior_table             = prior_table,
+        smooth_list_dict        = smooth_list_dict,
     )
     #
     # write_all_option_table
