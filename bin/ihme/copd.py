@@ -41,6 +41,7 @@ covariate_csv_file_dict = {
 log_scale_covariate_set = set()
 #
 # input files
+# Use None for csmr_inp_file if you do not want to include it in fit
 data_dir        = 'ihme_db/DisMod_AT/testing/copd/data'
 data_inp_file   = f'{data_dir}/gbd2019_copd_crosswalk_5528.csv'
 csmr_inp_file   = f'{data_dir}/gbd2019_copd_csmr.csv'
@@ -281,7 +282,7 @@ def write_root_node_database() :
         age_list.append( age_max)
     #
     # time_list, time_grid_id_list
-    time_list   = [ 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
+    time_list   = [ 1990, 2000, 2005, 2010, 2015, 2020 ]
     time_grid_id_list = list( range(0, len(time_list) ) )
     for row in table_in['omega_time'] :
         time = float( row['time'] )
@@ -386,8 +387,17 @@ def write_root_node_database() :
     for row_in in table_in['data'] :
         location_id = int( row_in['location_id'] )
         is_outlier  = int( row_in['is_outlier'] )
-        nid         = int( row_in['nid'] )
         sex_name    = row_in['sex_name']
+        #
+        if row_in['nid'] == '' :
+            nid = None
+        else :
+            nid = int( row_in['nid'] )
+        #
+        if row_in['c_seq'] == '' :
+            c_seq = None
+        else :
+            c_seq = int( row_in['c_seq'] )
         #
         hold_out    = is_outlier
         if nid in hold_out_nid_set :
@@ -412,7 +422,7 @@ def write_root_node_database() :
             'density'         : 'gaussian',
             'meas_value'      : float( row_in['meas_value'] ),
             'meas_std'        : float( row_in['meas_std'] ),
-            'c_seq'           : int( row_in['c_seq'] ),
+            'c_seq'           : c_seq
         }
         for cov_name in covariate_csv_file_dict.keys() :
             if row_in[cov_name] == '' :

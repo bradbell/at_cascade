@@ -14,7 +14,12 @@ import at_cascade.ihme
 # -----------------------------------------------------------------------------
 #
 # data_table = get_data_table(data_inp_file)
-def get_data_table(data_inp_file, map_location_id) :
+def get_data_table(data_inp_file) :
+    #
+    # map_location_id
+    map_location_id = at_cascade.ihme.map_location_id
+    #
+    # data_table
     file_ptr   = open(data_inp_file)
     reader     = csv.DictReader(file_ptr)
     data_table = list()
@@ -97,13 +102,22 @@ def get_data_table(data_inp_file, map_location_id) :
 #
 # csmr_table = get_csmr_table(csmr_inp_file, age_group_id_dict)
 def get_csmr_table(csmr_inp_file, age_group_id_dict) :
+    #
+    # map_location_id
+    map_location_id = at_cascade.ihme.map_location_id
+    #
+    # csmr_table
     file_ptr   = open(csmr_inp_file)
     reader     = csv.DictReader(file_ptr)
     csmr_table = list()
     for row_in in reader :
         #
-        # location_id, age_group_id
+        # location_id
         location_id  = int( row_in['location_id'] )
+        if location_id in map_location_id :
+            location_id = map_location_id[location_id]
+        #
+        # age_group_id
         age_group_id = int( row_in['age_group_id'] )
         #
         # is_outlier, c_seq
@@ -139,6 +153,7 @@ def get_csmr_table(csmr_inp_file, age_group_id_dict) :
             'sex_name' :       sex_name,
             'integrand_name' : integrand_name,
             'is_outlier' :     is_outlier,
+            'nid'        :     None,
             'age_lower' :      age_lower,
             'age_upper' :      age_upper,
             'time_lower' :     time_lower,
@@ -165,12 +180,9 @@ def write_data_table(
     ) :
     assert type(result_dir) == str
     assert type(data_inp_file) == str
-    assert type(csmr_inp_file) == str
+    assert type(csmr_inp_file) == str or cmsr_int_file is None
     assert type(covariate_csv_file_dict) == dict
     assert type(log_scale_covariate_set) == set
-    #
-    # map_location_id
-    map_location_id = at_cascade.ihme.map_location_id
     #
     # data_table_file
     data_table_file = at_cascade.ihme.csv_file['data']
@@ -194,11 +206,11 @@ def write_data_table(
         age_group_id_dict[age_group_id] = row
     #
     # data_table
-    data_table = get_data_table(data_inp_file, map_location_id)
+    data_table = get_data_table(data_inp_file)
     #
     # This data is not for fitting but rather to adjust the omega constraint
     # 2DO: remove get_csmr_table from this file.
-    if False :
+    if csmr_inp_file is not None :
         # csmr_table
         csmr_table = get_csmr_table(csmr_inp_file, age_group_id_dict)
         #

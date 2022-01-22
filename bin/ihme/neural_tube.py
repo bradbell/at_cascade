@@ -40,6 +40,7 @@ covariate_csv_file_dict = {
 log_scale_covariate_set = { 'log_folic_acid' }
 #
 # input files
+# Use None for csmr_inp_file if you do not want to include it in fit
 data_dir        = 'ihme_db/DisMod_AT/testing/neural_tube_disorders/data'
 data_inp_file   = \
     f'{data_dir}/gbd2019_neural_tube_disorders_crosswalk_10061.csv'
@@ -103,7 +104,7 @@ node_split_name_set = {'1_Global'}
 #
 # hold_out_nid_set
 # set of nid values in data file for studies that are suspect
-# hold_out_nid_set = { ?? }
+hold_out_nid_set = set()
 #
 # map_location_id
 # Map one location id to another,  where the names are the same and from node
@@ -383,7 +384,20 @@ def write_root_node_database() :
         location_id = int( row_in['location_id'] )
         is_outlier  = int( row_in['is_outlier'] )
         sex_name    = row_in['sex_name']
+        #
+        if row_in['nid'] == '' :
+            nid = None
+        else :
+            nid = int( row_in['nid'] )
+        #
+        if row_in['c_seq'] == '' :
+            c_seq = None
+        else :
+            c_seq = int( row_in['c_seq'] )
+        #
         hold_out    = is_outlier
+        if nid in hold_out_nid_set :
+            hold_out = 1
         #
         node_id     = location_id2node_id[location_id]
         node_name = node_table[node_id]['name']
@@ -404,7 +418,7 @@ def write_root_node_database() :
             'density'         : 'gaussian',
             'meas_value'      : float( row_in['meas_value'] ),
             'meas_std'        : float( row_in['meas_std'] ),
-            'c_seq'           : int( row_in['c_seq'] ),
+            'c_seq'           : c_seq,
         }
         for cov_name in covariate_csv_file_dict.keys() :
             if row_in[cov_name] == '' :

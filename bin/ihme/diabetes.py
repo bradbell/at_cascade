@@ -39,9 +39,10 @@ covariate_csv_file_dict = {
 log_scale_covariate_set = set()
 #
 # input files
+# Use None for csmr_inp_file if you do not want to include it in fit
 data_dir        = 'ihme_db/DisMod_AT/testing/diabetes/data'
 data_inp_file   = f'{data_dir}/gbd2019_diabetes_crosswalk_12437.csv'
-csmr_inp_file   = f'{data_dir}/gbd2019_diabetes_csmr.csv'
+csmr_inp_file   = None
 #
 # result_dir
 result_dir = 'ihme_db/DisMod_AT/results/diabetes'
@@ -366,8 +367,17 @@ def write_root_node_database() :
     for row_in in table_in['data'] :
         location_id = int( row_in['location_id'] )
         is_outlier  = int( row_in['is_outlier'] )
-        nid         = int( row_in['nid'] )
         sex_name    = row_in['sex_name']
+        #
+        if row_in['nid'] == '' :
+            nid = None
+        else :
+            nid = int( row_in['nid'] )
+        #
+        if row_in['c_seq'] == '' :
+            c_seq = None
+        else :
+            c_seq = int( row_in['c_seq'] )
         #
         hold_out    = is_outlier
         if nid in hold_out_nid_set :
@@ -392,7 +402,7 @@ def write_root_node_database() :
             'density'         : 'gaussian',
             'meas_value'      : float( row_in['meas_value'] ),
             'meas_std'        : float( row_in['meas_std'] ),
-            'c_seq'           : int( row_in['c_seq'] ),
+            'c_seq'           : c_seq,
         }
         for cov_name in covariate_csv_file_dict.keys() :
             if row_in[cov_name] == '' :
