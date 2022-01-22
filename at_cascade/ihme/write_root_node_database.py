@@ -29,6 +29,7 @@ def write_root_node_database(
     random_seed             = None,
     model_rate_age_grid     = None,
     model_rate_time_grid    = None,
+    prior_table             = None,
 ) :
     assert type(result_dir) == str
     assert type(root_node_database) == str
@@ -38,6 +39,7 @@ def write_root_node_database(
     assert type(random_seed) == int
     assert type(model_rate_age_grid) == list
     assert type(model_rate_time_grid) == list
+    assert type(prior_table) == list
     #
     print( 'Creating ' + root_node_database )
     #
@@ -246,66 +248,10 @@ def write_root_node_database(
             row_out[cov_name] = cov_value
         data_table.append( row_out )
     #
-    # prior_table
-    prior_table = [
-        {
-            'name'    :    'parent_rate_value',
-            'density' :    'log_gaussian',
-            'lower'   :    1e-7,
-            'upper'   :    1.0,
-            'mean'    :    1e-2,
-            'std'     :    3.0,
-            'eta'     :    1e-7,
-        },{
-            'name'    :    'parent_pini_value',
-            'density' :    'gaussian',
-            'lower'   :    0.0,
-            'upper'   :    1e-4,
-            'mean'    :    1e-5,
-            'std'     :    1.0,
-        },{
-            'name'    :    'parent_chi_delta',
-            'density' :    'log_gaussian',
-            'lower'   :    None,
-            'upper'   :    None,
-            'mean'    :    0.0,
-            'std'     :    1.0,
-            'eta'     :    1e-7,
-        },{
-            'name'    :    'parent_iota_dage',
-            'density' :    'log_gaussian',
-            'lower'   :    None,
-            'upper'   :    None,
-            'mean'    :    0.0,
-            'std'     :    1.0,
-            'eta'     :    1e-7,
-        },{
-            'name'    :    'parent_iota_dtime',
-            'density' :    'log_gaussian',
-            'lower'   :    None,
-            'upper'   :    None,
-            'mean'    :    0.0,
-            'std'     :    0.3,
-            'eta'     :    1e-7,
-        },{
-            'name'    :   'child_rate_value',
-            'density' :   'gaussian',
-            'lower'   :   None,
-            'upper'   :   None,
-            'mean'    :   0.0,
-            'std'     :   .1,
-        },{
-            'name'    :   'alpha_value',
-            'density' :   'gaussian',
-            'lower'   :   None,
-            'upper'   :   None,
-            'mean'    :   0.0,
-            'std'     :   1.0,
-        }
-    ]
+    prior_table_copy = copy.copy(prior_table)
     for integrand in integrand_median :
         gamma = gamma_factor * integrand_median[integrand]
-        prior_table.append(
+        prior_table_copy.append(
             {
                 'name'    :   f'gamma_{integrand}',
                 'density' :   'uniform',
@@ -431,7 +377,7 @@ def write_root_node_database(
          covariate_table,
          avgint_table,
          data_table,
-         prior_table,
+         prior_table_copy,
          smooth_table,
          nslist_table,
          rate_table,

@@ -114,6 +114,57 @@ model_rate_time_grid = [
     1960, 1975, 1990, 1995, 2000, 2005, 2010, 2015, 2020
 ]
 #
+# prior_table
+# This defines the dismod_at prior table; see
+# https://bradbell.github.io/dismod_at/doc/prior_table.htm
+# The fields name, density and mean must appear.
+# The default value for the other fields is null.
+prior_table = [
+    {   'name'    :    'parent_rate_value',
+        'density' :    'log_gaussian',
+        'lower'   :    1e-7,
+        'upper'   :    1.0,
+        'mean'    :    1e-2,
+        'std'     :    3.0,
+        'eta'     :    1e-7,
+    },
+    {   'name'    :    'parent_pini_value',
+        'density' :    'gaussian',
+        'lower'   :    0.0,
+        'upper'   :    1e-4,
+        'mean'    :    1e-5,
+        'std'     :    1.0,
+    },
+    {   'name'    :    'parent_chi_delta',
+        'density' :    'log_gaussian',
+        'mean'    :    0.0,
+        'std'     :    1.0,
+        'eta'     :    1e-7,
+    },
+    {   'name'    :    'parent_iota_dage',
+        'density' :    'log_gaussian',
+        'mean'    :    0.0,
+        'std'     :    1.0,
+        'eta'     :    1e-7,
+    },
+    {   'name'    :    'parent_iota_dtime',
+        'density' :    'log_gaussian',
+        'mean'    :    0.0,
+        'std'     :    0.3,
+        'eta'     :    1e-7,
+    },
+    {   'name'    :   'child_rate_value',
+        'density' :   'gaussian',
+        'mean'    :   0.0,
+        'std'     :   .1,
+    },
+    {   'name'    :   'alpha_value',
+        'density' :   'gaussian',
+        'mean'    :   0.0,
+        'std'     :   1.0,
+    }
+]
+#
 # mulcov_freeze_list
 # Freeze the covariate multipliers at the Global level after the sex split
 mulcov_freeze_list = [
@@ -643,6 +694,7 @@ def setup_function() :
         random_seed             = random_seed,
         model_rate_age_grid     = model_rate_age_grid,
         model_rate_time_grid    = model_rate_time_grid,
+        prior_table             = prior_table,
     )
     #
     # write_all_option_table
