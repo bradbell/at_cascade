@@ -112,58 +112,62 @@ def get_csmr_table(csmr_inp_file, age_group_id_dict) :
     csmr_table = list()
     for row_in in reader :
         #
-        # location_id
-        location_id  = int( row_in['location_id'] )
-        if location_id in map_location_id :
-            location_id = map_location_id[location_id]
-        #
-        # age_group_id
-        age_group_id = int( row_in['age_group_id'] )
-        #
-        # is_outlier, c_seq
-        is_outlier   = 0
-        c_seq        = None
-        #
-        # age_lower, age_upper
-        age_lower    = age_group_id_dict[age_group_id]['age_lower']
-        age_upper    = age_group_id_dict[age_group_id]['age_upper']
-        #
-        # sex_name
-        sex_name     = row_in['sex']
-        #
-        # time_lower, time_upper
-        time_lower   = float( row_in['year_id'] )
-        time_upper   = float( row_in['year_id'] )  + 1.0
-        #
-        # meas_value
-        meas_value   = float( row_in['val'] )
-        #
-        # meas_std
-        lower    = float( row_in['lower'] )
-        upper    = float( row_in['upper'] )
-        meas_std = (upper - lower) / 2.0
-        #
-        # integrand_name
-        integrand_name = 'mtspecific'
-        #
-        # row_out
-        row_out = {
-            'c_seq' :          c_seq,
-            'location_id' :    location_id,
-            'sex_name' :       sex_name,
-            'integrand_name' : integrand_name,
-            'is_outlier' :     is_outlier,
-            'nid'        :     None,
-            'age_lower' :      age_lower,
-            'age_upper' :      age_upper,
-            'time_lower' :     time_lower,
-            'time_upper' :     time_upper,
-            'meas_value' :     meas_value,
-            'meas_std' :       meas_std,
-        }
-        if sex_name != 'Both' :
-            assert sex_name in { 'Male', 'Female' }
-            csmr_table.append( row_out )
+        # ok
+        ok = row_in['val'] != 'NA'
+        if ok :
+            #
+            # location_id
+            location_id  = int( row_in['location_id'] )
+            if location_id in map_location_id :
+                location_id = map_location_id[location_id]
+            #
+            # age_group_id
+            age_group_id = int( row_in['age_group_id'] )
+            #
+            # is_outlier, c_seq
+            is_outlier   = 0
+            c_seq        = None
+            #
+            # age_lower, age_upper
+            age_lower    = age_group_id_dict[age_group_id]['age_lower']
+            age_upper    = age_group_id_dict[age_group_id]['age_upper']
+            #
+            # sex_name
+            sex_name     = row_in['sex']
+            #
+            # time_lower, time_upper
+            time_lower   = float( row_in['year_id'] )
+            time_upper   = float( row_in['year_id'] )  + 1.0
+            #
+            # meas_value
+            meas_value   = float( row_in['val'] )
+            #
+            # meas_std
+            lower    = float( row_in['lower'] )
+            upper    = float( row_in['upper'] )
+            meas_std = (upper - lower) / 2.0
+            #
+            # integrand_name
+            integrand_name = 'mtspecific'
+            #
+            # row_out
+            row_out = {
+                'c_seq' :          c_seq,
+                'location_id' :    location_id,
+                'sex_name' :       sex_name,
+                'integrand_name' : integrand_name,
+                'is_outlier' :     is_outlier,
+                'nid'        :     None,
+                'age_lower' :      age_lower,
+                'age_upper' :      age_upper,
+                'time_lower' :     time_lower,
+                'time_upper' :     time_upper,
+                'meas_value' :     meas_value,
+                'meas_std' :       meas_std,
+            }
+            if sex_name != 'Both' :
+                assert sex_name in { 'Male', 'Female' }
+                csmr_table.append( row_out )
     file_ptr.close()
     return csmr_table
 # -----------------------------------------------------------------------------

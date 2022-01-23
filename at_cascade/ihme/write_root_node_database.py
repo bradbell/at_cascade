@@ -33,6 +33,7 @@ def write_root_node_database(
     smooth_list_dict        = None,
     rate_table              = None,
     mulcov_list_dict        = None,
+    rate_case               = None,
 ) :
     assert type(result_dir) == str
     assert type(root_node_database) == str
@@ -45,6 +46,7 @@ def write_root_node_database(
     assert type(prior_table) == list
     assert type(rate_table) == list
     assert type(mulcov_list_dict) == list
+    assert type(rate_case) == str
     #
     print( 'Creating ' + root_node_database )
     #
@@ -166,16 +168,19 @@ def write_root_node_database(
         node_id += 1
     #
     # covarite_table
-    # Becasue we are using data4cov_reference, the reference for the relative
-    # covariates obesity and log_ldi will get replaced.
-    # The names in this table must be 'sex', 'one', and the keys in the
-    # covariate_csv_file_dict.
+    # splitting covariate (sex) and absolute covariate (one)
     covariate_table = [
         { 'name':'sex',     'reference':0.0, 'max_difference':0.6},
         { 'name':'one',     'reference':0.0 },
-        { 'name':'obesity', 'reference':0.0},
-        { 'name':'log_ldi', 'reference':0.0},
     ]
+    #
+    # covariate_table
+    # Becasue we are using data4cov_reference, the reference for the
+    # relative covariates will get replaced.
+    for covariate_name in covariate_csv_file_dict.keys() :
+        covariate_table.append(
+            { 'name' : covariate_name,  'reference':0.0}
+        )
     #
     # data_table
     data_table = list()
@@ -293,11 +298,22 @@ def write_root_node_database(
             'fun':      copy.copy(fun)
         })
     #
+    # zero_sum_child_rate
+    zero_sum_child_rate=''
+    for row in rate_table :
+        rate_name = row['name']
+        if 'child_smooth' in row :
+            if zero_sum_child_rate == '' :
+                zero_sum_child_rate = rate_name
+            else :
+                zero_sum_child_rate += ' ' + rate_name
+    #
     # option_table
     option_table = [
         { 'name':'parent_node_name',     'value':root_node_name},
-        { 'name':'zero_sum_child_rate',  'value':'iota chi'},
+        { 'name':'rate_case',            'value':rate_case},
         { 'name':'random_seed',          'value':str(random_seed)},
+        { 'name':'zero_sum_child_rate',  'value':zero_sum_child_rate},
         { 'name':'trace_init_fit_model', 'value':'true'},
         { 'name':'data_extra_columns',   'value':'c_seq'},
         { 'name':'meas_noise_effect',    'value':'add_std_scale_none'},
