@@ -145,8 +145,9 @@ def main(
     elif command == 'drill' :
         if os.path.exists( root_node_dir ) :
             program = sys.argv[0]
-            msg  = f'drill: {root_node_dir} exists. '
-            msg += 'You must first move or remove it'
+            msg  = f'drill: {root_node_dir} exists.\n'
+            msg += 'You could remove it using the following command:\n'
+            msg += f'rm -r {root_node_dir}'
             assert False, msg
         print( f'creating {root_node_dir}' )
         os.mkdir( root_node_dir )

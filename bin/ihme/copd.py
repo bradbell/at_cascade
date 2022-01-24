@@ -63,7 +63,7 @@ root_node_name      = '1_Global'
 # gamma_factor
 # The gamma for each integrand is this factor times the median
 # of the data for the integrand.
-gamma_factor        = 1e-2
+gamma_factor        = 1e-1
 #
 # random_seed
 # If this seed is zero, the clock is used for the random seed.
@@ -129,13 +129,13 @@ prior_table = [
     {   'name'    :    'parent_chi_delta',
         'density' :    'log_gaussian',
         'mean'    :    0.0,
-        'std'     :    1.0,
+        'std'     :    0.3,
         'eta'     :    1e-7,
     },
     {   'name'    :    'parent_iota_dage',
         'density' :    'log_gaussian',
         'mean'    :    0.0,
-        'std'     :    1.0,
+        'std'     :    0.3,
         'eta'     :    1e-7,
     },
     {   'name'    :    'parent_iota_dtime',
@@ -147,12 +147,12 @@ prior_table = [
     {   'name'    :   'child_rate_value',
         'density' :   'gaussian',
         'mean'    :   0.0,
-        'std'     :   0.3,
+        'std'     :   0.1,
     },
     {   'name'    :   'alpha_value',
         'density' :   'gaussian',
         'mean'    :   0.0,
-        'std'     :   1.0,
+        'std'     :   0.1,
     },
 ]
 #

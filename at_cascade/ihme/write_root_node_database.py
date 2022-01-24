@@ -70,16 +70,22 @@ def write_root_node_database(
             sex_info_dict[sex_name]['covariate_value']
     #
     # integrand_median
+    # do not include zero values in computation of the median
     integrand_list = dict()
     for row in table_in['data'] :
         integrand = row['integrand_name']
         if integrand not in integrand_list :
             integrand_list[integrand] = list()
-        integrand_list[integrand].append( float(row['meas_value']) )
+        meas_value = float( row['meas_value'] )
+        if meas_value != 0.0 :
+            integrand_list[integrand].append( meas_value )
     integrand_median = dict()
     for integrand in integrand_list :
-        integrand_median[integrand] = \
-            statistics.median( integrand_list[integrand] )
+        if len( integrand_list[integrand] ) == 0 :
+            integrand_median[integrand] = 0.0
+        else :
+            integrand_median[integrand] = \
+                statistics.median( integrand_list[integrand] )
     #
     # subgroup_table
     subgroup_table = [ {'subgroup': 'world', 'group':'world'} ]
