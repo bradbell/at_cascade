@@ -40,26 +40,27 @@ Table of Contents
 |
 | :ref:`4<module>` The at_cascade Python Module
 |
-|  |space| :ref:`4.1<avgint_parent_grid>` Predicts Rates and Covariate Multipliers on Parent Grid
-|  |space| :ref:`4.2<cascade_root_node>` Cascade Fits Starting at Root Node
-|  |space| :ref:`4.3<check_cascade_fit>` Check the Cascade Results for a Node
-|  |space| :ref:`4.4<check_log>` Checks Logs For Warnings and Errors
-|  |space| :ref:`4.5<continue_cascade>` Continue Cascade From a Fit Node
-|  |space| :ref:`4.6<create_all_node_db>` Create an All Node Database
-|  |space| :ref:`4.7<create_job_table>` Table of Jobs That Can Run in Parallel
-|  |space| :ref:`4.8<create_shift_db>` Create Database With Shifted Covariate References
-|  |space| :ref:`4.9<data4cov_reference>` Use Data Table Average Covariates for Reference
-|  |space| :ref:`4.10<get_cov_info>` Get Covariate Information
-|  |space| :ref:`4.11<get_database_dir>` Get Database Directory Corresponding To a Fit
-|  |space| :ref:`4.12<get_fit_children>` Determine the Set of Nodes to Fit
-|  |space| :ref:`4.13<get_fit_integrand>` Determine the Set of Integrands in Data Table
-|  |space| :ref:`4.14<get_parent_node>` Get Parent Node Name From Option Table
-|  |space| :ref:`4.15<get_var_id>` Map Var Table Values to its Primary Key
-|  |space| :ref:`4.16<no_ode_fit>` Do A No Ode Fit For One Node
-|  |space| :ref:`4.17<omega_constraint>` Set Omega Constraints in a Fit Node Database
-|  |space| :ref:`4.18<run_one_job>` Run One Job
-|  |space| :ref:`4.19<run_parallel>` Run With Specified Maximum Number of Processes
-|  |space| :ref:`4.20<table_name2id>` Map a Table Row Name to The Row Index
+|  |space| :ref:`4.1<clear_shared>` Clear at_cascade Shared Memory
+|  |space| :ref:`4.2<avgint_parent_grid>` Predicts Rates and Covariate Multipliers on Parent Grid
+|  |space| :ref:`4.3<cascade_root_node>` Cascade Fits Starting at Root Node
+|  |space| :ref:`4.4<check_cascade_fit>` Check the Cascade Results for a Node
+|  |space| :ref:`4.5<check_log>` Checks Logs For Warnings and Errors
+|  |space| :ref:`4.6<continue_cascade>` Continue Cascade From a Fit Node
+|  |space| :ref:`4.7<create_all_node_db>` Create an All Node Database
+|  |space| :ref:`4.8<create_job_table>` Table of Jobs That Can Run in Parallel
+|  |space| :ref:`4.9<create_shift_db>` Create Database With Shifted Covariate References
+|  |space| :ref:`4.10<data4cov_reference>` Use Data Table Average Covariates for Reference
+|  |space| :ref:`4.11<get_cov_info>` Get Covariate Information
+|  |space| :ref:`4.12<get_database_dir>` Get Database Directory Corresponding To a Fit
+|  |space| :ref:`4.13<get_fit_children>` Determine the Set of Nodes to Fit
+|  |space| :ref:`4.14<get_fit_integrand>` Determine the Set of Integrands in Data Table
+|  |space| :ref:`4.15<get_parent_node>` Get Parent Node Name From Option Table
+|  |space| :ref:`4.16<get_var_id>` Map Var Table Values to its Primary Key
+|  |space| :ref:`4.17<no_ode_fit>` Do A No Ode Fit For One Node
+|  |space| :ref:`4.18<omega_constraint>` Set Omega Constraints in a Fit Node Database
+|  |space| :ref:`4.19<run_one_job>` Run One Job
+|  |space| :ref:`4.20<run_parallel>` Run With Specified Maximum Number of Processes
+|  |space| :ref:`4.21<table_name2id>` Map a Table Row Name to The Row Index
 |
 | :ref:`5<wish_list>` Wish List for at_cascade
 | :ref:`6<release_notes>` Release Notes for at_cascade

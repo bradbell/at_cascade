@@ -1,0 +1,50 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!
+clear_shared
+!!!!!!!!!!!!
+
+.. meta::
+   :keywords: clear_shared, clear, at_cascade, shared, memory
+
+.. index:: clear_shared, clear, at_cascade, shared, memory
+
+.. _clear_shared:
+
+Clear at_cascade Shared Memory
+##############################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _clear_shared.syntax:
+
+Syntax
+******
+clear_shared()
+
+.. meta::
+   :keywords: purpose
+
+.. index:: purpose
+
+.. _clear_shared.purpose:
+
+Purpose
+*******
+This routine clears the at_cascade memory pointers that are in use.
+For example, you may get the following error message when trying
+to run the cascade:
+
+    FileExistsError: [Errno 17] File exists: '/at_cascade_number_cpu_inuse'
+
+This may happen if the previous :ref:`run_parallel`
+did not terminate cleanly; e.g., if the system crashed.
+
+----
+
+xsrst input file: ``at_cascade/clear_shared.py``
