@@ -110,6 +110,21 @@ hold_out_nid_set = set()
 # https://bradbell.github.io/dismod_at/doc/option_table.htm#rate_case
 rate_case = 'iota_zero_rho_zero'
 #
+# zero_sum_child_rate
+# space separate list of rates. The child random effects for each of these
+# rates will be constrained to sum to zero. Use empty string for none.
+zero_sum_child_rate = 'iota chi'
+#
+# ode_step_size
+# step size to use (in age and time) when approximationg intergals and
+# solutions of the ODE.
+ode_step_size = 10.0
+#
+# age_avg_split_list
+# An extra list of ages at which to split the interal and ODE approximation.
+# It is usually used to get better resolution around age zero.
+age_avg_split_list = [ 0.1, 1.0 ]
+#
 # model_rate_age_grid, model_rate_time_grid
 # age and time grid points for the smoothing for non-zero rates except omega
 model_rate_age_grid = [
@@ -341,6 +356,9 @@ def setup_function() :
         rate_table              = rate_table,
         mulcov_list_dict        = mulcov_list_dict,
         rate_case               = rate_case,
+        zero_sum_child_rate     = zero_sum_child_rate,
+        ode_step_size           = ode_step_size,
+        age_avg_split_list      = age_avg_split_list,
     )
     #
     # write_all_option_table

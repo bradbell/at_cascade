@@ -34,6 +34,9 @@ def write_root_node_database(
     rate_table              = None,
     mulcov_list_dict        = None,
     rate_case               = None,
+    zero_sum_child_rate     = None,
+    ode_step_size           = None,
+    age_avg_split_list      = None,
 ) :
     assert type(result_dir) == str
     assert type(root_node_database) == str
@@ -47,6 +50,9 @@ def write_root_node_database(
     assert type(rate_table) == list
     assert type(mulcov_list_dict) == list
     assert type(rate_case) == str
+    assert type(zero_sum_child_rate) == str
+    assert type(ode_step_size) == float
+    assert type(age_avg_split_list) == list
     #
     print( 'Creating ' + root_node_database )
     #
@@ -304,15 +310,17 @@ def write_root_node_database(
             'fun':      copy.copy(fun)
         })
     #
+    # age_avg_split
+    age_avg_split = None
+    for age in age_avg_split_list :
+        if age_avg_split == None :
+            age_avg_split = str(age)
+        else :
+            age_avg_split += str(age)
+    #
     # zero_sum_child_rate
-    zero_sum_child_rate=''
-    for row in rate_table :
-        rate_name = row['name']
-        if 'child_smooth' in row :
-            if zero_sum_child_rate == '' :
-                zero_sum_child_rate = rate_name
-            else :
-                zero_sum_child_rate += ' ' + rate_name
+    if len( zero_sum_child_rate.split() ) == 0 :
+        zero_sum_child_rate = None
     #
     # option_table
     option_table = [
@@ -320,10 +328,12 @@ def write_root_node_database(
         { 'name':'rate_case',            'value':rate_case},
         { 'name':'random_seed',          'value':str(random_seed)},
         { 'name':'zero_sum_child_rate',  'value':zero_sum_child_rate},
+        { 'name':'ode_step_size',        'value':str(ode_step_size)},
+        { 'name':'age_avg_split',        'value':age_avg_split},
+        #
         { 'name':'trace_init_fit_model', 'value':'true'},
         { 'name':'data_extra_columns',   'value':'c_seq'},
         { 'name':'meas_noise_effect',    'value':'add_std_scale_none'},
-        { 'name':'age_avg_split',        'value':'0.1 1.0'},
         #
         { 'name':'quasi_fixed',                  'value':'false' },
         { 'name':'tolerance_fixed',              'value':'1e-8'},
