@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -15,6 +15,7 @@ The at_cascade Python Module
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
 {xsrst_child_table
+    at_cascade/clear_shared.py
     at_cascade/avgint_parent_grid.py
     at_cascade/cascade_root_node.py
     at_cascade/check_cascade_fit.py
@@ -42,6 +43,7 @@ The at_cascade Python Module
 '''
 
 # BEGIN_SORT_THIS_LINE_PLUS_1
+from .clear_shared          import clear_shared
 from .avgint_parent_grid    import avgint_parent_grid
 from .cascade_root_node     import cascade_root_node
 from .check_cascade_fit     import check_cascade_fit

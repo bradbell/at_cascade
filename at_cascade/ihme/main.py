@@ -91,6 +91,7 @@ def main(
     command_set = {
         'setup',
         'cleanup',
+        'shared',
         'drill',
         'display',
         'continue',
@@ -112,7 +113,8 @@ def main(
         msg += f'       bin/ihme/{program} continue database\n'
         msg +=  'where command is one of the following:\n'
         msg +=  'setup:    create at_cascade input databases from csv files\n'
-        msg += f'cleanup:  remove root_node_dir\n'
+        msg +=  'shared:   clear shared memory pointers'
+        msg += f'cleanup:  remove files in {result_dir}\n'
         msg +=  'drill:    run cascade from root node to goal nodes\n'
         msg +=  'continue: continue cascade starting at database\n'
         msg +=  'display:  results for each database at referece covariates\n'
@@ -140,6 +142,10 @@ def main(
             if os.path.isfile(file_name) or os.path.islink(file_name) :
                 print( f'remove {file_name}' )
                 os.remove(file_name)
+    #
+    # shared
+    elif command == 'shared' :
+        at_cascade.clear_shared()
     #
     # drill
     elif command == 'drill' :
