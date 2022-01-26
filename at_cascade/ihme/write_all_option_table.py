@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -17,7 +17,8 @@ def write_all_option_table(
     result_dir                   = None,
     root_node_name               = None,
     shift_prior_std_factor       = None,
-    perturb_optimization_scaling = None,
+    perturb_optimization_scale   = None,
+    perturb_optimization_start   = None,
     max_abs_effect               = None,
     max_fit                      = None,
     max_number_cpu               = None,
@@ -26,7 +27,8 @@ def write_all_option_table(
     assert type(root_node_name)               == str
     assert type(max_abs_effect)               == float
     assert type(shift_prior_std_factor)       == float
-    assert type(perturb_optimization_scaling) == float
+    assert type(perturb_optimization_scale)   == float
+    assert type(perturb_optimization_start)   == float
     assert type(max_fit)                      == int
     assert type(max_number_cpu)               == int
     #
@@ -50,7 +52,8 @@ def write_all_option_table(
         'max_fit'                      : max_fit,
         'max_number_cpu'               : max_number_cpu,
         'shift_prior_std_factor'       : shift_prior_std_factor,
-        'perturb_optimization_scaling' : perturb_optimization_scaling,
+        'perturb_optimization_scale'   : perturb_optimization_scale,
+        'perturb_optimization_start'   : perturb_optimization_start,
     }
     #
     # all_option_table

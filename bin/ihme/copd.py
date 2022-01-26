@@ -70,10 +70,11 @@ gamma_factor        = 1e-1
 # Otherwise this value is used. In either case the actual seed is reported.
 random_seed = 0
 #
-# perturb_optimization_scaling
-# amount to randomly move the optimization scaling point (in log space of
-# a multiplier).
-perturb_optimization_scaling = 0.2
+# perturb_optimization_scale, perturb_optimization_start
+# Amount to randomly move, in log space, the optimization scaling point
+# starting points.
+perturb_optimization_scale = 0.2
+perturb_optimization_start = 0.2
 #
 # shift_prior_std_factor
 # Factor that multipliers standard deviation that is passed down the cascade.
@@ -379,7 +380,8 @@ def setup_function() :
         result_dir                   = result_dir,
         root_node_name               = root_node_name ,
         shift_prior_std_factor       = shift_prior_std_factor,
-        perturb_optimization_scaling = perturb_optimization_scaling,
+        perturb_optimization_scale   = perturb_optimization_scale,
+        perturb_optimization_start   = perturb_optimization_start,
         max_abs_effect               = max_abs_effect,
         max_fit                      = max_fit,
         max_number_cpu               = max_number_cpu,

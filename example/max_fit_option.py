@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -99,13 +99,15 @@ a randomly chosen subset of their data.
     # END max_fit_option
 }
 
-perturb_optimization_scaling
+perturb_optimization_scale
 ****************************
-This is the value of the :ref:`all_option_table.perturb_optimization_scaling` option.
-It is only included as an example of using this option and is not necessary.
+This is the value of the
+:ref:`all_option_table.perturb_optimization_scale` option.
+It is only included as an example of using this option and is not
+necessary.
 {xsrst_file
-    # BEGIN perturb_optimization_scaling
-    # END perturb_optimization_scaling
+    # BEGIN perturb_optimization_scale
+    # END perturb_optimization_scale
 }
 
 Parent Rate Smoothing
@@ -203,9 +205,9 @@ print('max_fit_option: random_seed = ', random_seed)
 max_fit_option = 10
 # END max_fit_option
 #
-# BEGIN perturb_optimization_scaling
-perturb_optimization_scaling = 0.2
-# END perturb_optimization_scaling
+# BEGIN perturb_optimization_scale
+perturb_optimization_scale = 0.2
+# END perturb_optimization_scale
 #
 # ----------------------------------------------------------------------------
 # functions
@@ -406,10 +408,10 @@ def main() :
     # Create all_node.db
     all_node_database = f'{result_dir}/all_node.db'
     all_option        = {
-        'result_dir'                  : result_dir,
+        'result_dir'                   : result_dir,
         'root_node_name'               : 'n0',
         'max_fit'                      : max_fit_option,
-        'perturb_optimization_scaling' : perturb_optimization_scaling,
+        'perturb_optimization_scale'   : perturb_optimization_scale,
     }
     at_cascade.create_all_node_db(
         all_node_database     = all_node_database,

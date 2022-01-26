@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -263,16 +263,19 @@ def run_one_job(
             all_table['split_reference'], 'split_reference', name
         )
     #
-    # perturb_optimization_scaling
-    key = 'perturb_optimization_scaling'
-    if key in all_option_dict :
-        perturb_optimization_scaling = all_option_dict[key]
-        if float(perturb_optimization_scaling) < 0.0 :
-            msg = 'run_one_job: perturb_optimization_scaling = '
-            msg += perturb_optimization_scaling
-            assert False, msg
-    else :
-        perturb_optimization_scaling = '0'
+    # perturb_optimization
+    perturb_optimization = dict()
+    for key in [ 'start', 'scale' ] :
+        long_key = f'pertrub_optimizaiton_{key}'
+        if long_key in all_option_dict :
+            sigma = all_option_dict[long_key]
+            if float(sigma) < 0.0 :
+                msg = f'run_one_job: perturb_optimization_{key} = '
+                msg += sigma
+                msg += ' is less than zero'
+                assert False, msg
+            if float(sigma) > 0.0 :
+                perturb_optimization[key] = sigma
     #
     # node_split_set
     node_split_set = set()
@@ -332,11 +335,12 @@ def run_one_job(
         ]
         system_command(command, file_stdout)
     #
-    # perturb_optimization_scaling
-    if 0 < float( perturb_optimization_scaling ) :
-        sigma = perturb_optimization_scaling
+    # perturb_optimization
+    for key in perturb_optimization :
+        sigma = perturb_optimization[key]
+        table = f'{key}_var'
         command = [
-            'dismodat.py', fit_node_database, 'perturb', 'scale_var', sigma
+            'dismodat.py', fit_node_database, 'perturb', table, sigma
         ]
         system_command(command, file_stdout)
     #

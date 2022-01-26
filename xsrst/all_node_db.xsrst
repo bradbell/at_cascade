@@ -346,15 +346,22 @@ If this is one (more than one) the jobs in the
 will be run in sequentially (in parallel).
 If this option does not appear, the value one is used.
 
-perturb_optimization_scaling
-****************************
+perturb_optimization_scale
+**************************
 This is the standard deviation of the log of a random multiplier.
 The multiplier is used to randomly shift the
 optimization scaling point from the prior mean.
-This avoids bad scaling when the prior mean is very close to the solution.
-(The scaling point is projected back to the feasible region.)
+The scaling point is then projected back to the feasible region.
+This avoids bad scaling when the prior mean
+is very close to the solution.
 If this option does not appear, or if it is zero,
 the scaling point is equal to the prior mean for all variables.
+
+perturb_optimization_start
+**************************
+This is similar to perturb_optimization_scale except that the
+starting point (instead of the scaling point) is shifted.
+
 
 result_dir
 ***********

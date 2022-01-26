@@ -19,6 +19,12 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+01-26
+*****
+Change perturb_optimization_scaling to
+:ref:`all_option_table.perturb_optimization_scale` and add the
+:ref:`all_option_table.perturb_optimization_start` option.
+
 01-25
 *****
 The :ref:`clear_shared<clear_shared>` routine was added to the
@@ -101,8 +107,9 @@ Release Notes for 2021
 
 12-08
 *****
-Remove the convergence problem :ref:`wish_list` entry becasue it was completed
-when the :ref:`all_option_table.perturb_optimization_scaling` option
+Remove the convergence problem :ref:`wish_list`
+entry becasue it was completed
+when the :ref:`all_option_table.perturb_optimization_scale` option
 was added.
 
 12-06
@@ -115,7 +122,7 @@ below a certain point.
 *****
 1.  Add the :ref:`check_log` routine.
 
-2.  Add the :ref:`all_option_table.perturb_optimization_scaling` option
+2.  Add the :ref:`all_option_table.perturb_optimization_scale` option
     and list options in alphabetical order.
 
 12-03
