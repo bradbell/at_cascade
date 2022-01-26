@@ -316,7 +316,7 @@ def write_root_node_database(
         if age_avg_split == None :
             age_avg_split = str(age)
         else :
-            age_avg_split += str(age)
+            age_avg_split += f' {age}'
     #
     # zero_sum_child_rate
     if len( zero_sum_child_rate.split() ) == 0 :
