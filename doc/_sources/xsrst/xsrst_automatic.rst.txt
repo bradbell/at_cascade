@@ -40,11 +40,11 @@ Table of Contents
 |
 | :ref:`4<module>` The at_cascade Python Module
 |
-|  |space| :ref:`4.1<clear_shared>` Clear at_cascade Shared Memory
-|  |space| :ref:`4.2<avgint_parent_grid>` Predicts Rates and Covariate Multipliers on Parent Grid
-|  |space| :ref:`4.3<cascade_root_node>` Cascade Fits Starting at Root Node
-|  |space| :ref:`4.4<check_cascade_fit>` Check the Cascade Results for a Node
-|  |space| :ref:`4.5<check_log>` Checks Logs For Warnings and Errors
+|  |space| :ref:`4.1<avgint_parent_grid>` Predicts Rates and Covariate Multipliers on Parent Grid
+|  |space| :ref:`4.2<cascade_root_node>` Cascade Fits Starting at Root Node
+|  |space| :ref:`4.3<check_cascade_fit>` Check the Cascade Results for a Node
+|  |space| :ref:`4.4<check_log>` Checks Logs For Warnings and Errors
+|  |space| :ref:`4.5<clear_shared>` Clear at_cascade Shared Memory
 |  |space| :ref:`4.6<continue_cascade>` Continue Cascade From a Fit Node
 |  |space| :ref:`4.7<create_all_node_db>` Create an All Node Database
 |  |space| :ref:`4.8<create_job_table>` Table of Jobs That Can Run in Parallel

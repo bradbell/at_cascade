@@ -55,7 +55,7 @@ fit_goal_set
 ============
 
 .. literalinclude:: ../../example/max_fit_option.py
-    :lines: 191-191
+    :lines: 193-193
     :language: py
 
 .. meta::
@@ -105,7 +105,7 @@ If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
 
 .. literalinclude:: ../../example/max_fit_option.py
-    :lines: 195-199
+    :lines: 197-201
     :language: py
 
 .. meta::
@@ -123,7 +123,7 @@ in node *n* at age *a*, time *t*, and covariate values *c*.
 The values *a*, *t*. *c*, are not used by this function for this example.
 
 .. literalinclude:: ../../example/max_fit_option.py
-    :lines: 214-226
+    :lines: 216-228
     :language: py
 
 .. meta::
@@ -171,23 +171,25 @@ Thus the leaf nodes fit all their data while the other nodes only fit
 a randomly chosen subset of their data.
 
 .. literalinclude:: ../../example/max_fit_option.py
-    :lines: 203-203
+    :lines: 205-205
     :language: py
 
 .. meta::
-   :keywords: perturb_optimization_scaling
+   :keywords: perturb_optimization_scale
 
-.. index:: perturb_optimization_scaling
+.. index:: perturb_optimization_scale
 
-.. _max_fit_option.perturb_optimization_scaling:
+.. _max_fit_option.perturb_optimization_scale:
 
-perturb_optimization_scaling
+perturb_optimization_scale
 ****************************
-This is the value of the :ref:`all_option_table.perturb_optimization_scaling` option.
-It is only included as an example of using this option and is not necessary.
+This is the value of the
+:ref:`all_option_table.perturb_optimization_scale` option.
+It is only included as an example of using this option and is not
+necessary.
 
 .. literalinclude:: ../../example/max_fit_option.py
-    :lines: 207-207
+    :lines: 209-209
     :language: py
 
 .. meta::
@@ -215,7 +217,7 @@ Value Prior
 The following is the value prior used for the root_node
 
 .. literalinclude:: ../../example/max_fit_option.py
-    :lines: 239-246
+    :lines: 241-248
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -248,7 +250,7 @@ Value Prior
 The following is the value prior used for the children of the fit_node:
 
 .. literalinclude:: ../../example/max_fit_option.py
-    :lines: 251-255
+    :lines: 253-257
     :language: py
 
 .. meta::

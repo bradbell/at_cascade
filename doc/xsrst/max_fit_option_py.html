@@ -135,9 +135,9 @@
 <span class="n">max_fit_option</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="c1"># END max_fit_option</span>
 <span class="c1">#</span>
-<span class="c1"># BEGIN perturb_optimization_scaling</span>
-<span class="n">perturb_optimization_scaling</span> <span class="o">=</span> <span class="mf">0.2</span>
-<span class="c1"># END perturb_optimization_scaling</span>
+<span class="c1"># BEGIN perturb_optimization_scale</span>
+<span class="n">perturb_optimization_scale</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="c1"># END perturb_optimization_scale</span>
 <span class="c1">#</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># functions</span>
@@ -338,10 +338,10 @@
     <span class="c1"># Create all_node.db</span>
     <span class="n">all_node_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/all_node.db&#39;</span>
     <span class="n">all_option</span>        <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;result_dir&#39;</span>                  <span class="p">:</span> <span class="n">result_dir</span><span class="p">,</span>
+        <span class="s1">&#39;result_dir&#39;</span>                   <span class="p">:</span> <span class="n">result_dir</span><span class="p">,</span>
         <span class="s1">&#39;root_node_name&#39;</span>               <span class="p">:</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span>
         <span class="s1">&#39;max_fit&#39;</span>                      <span class="p">:</span> <span class="n">max_fit_option</span><span class="p">,</span>
-        <span class="s1">&#39;perturb_optimization_scaling&#39;</span> <span class="p">:</span> <span class="n">perturb_optimization_scaling</span><span class="p">,</span>
+        <span class="s1">&#39;perturb_optimization_scale&#39;</span>   <span class="p">:</span> <span class="n">perturb_optimization_scale</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">at_cascade</span><span class="o">.</span><span class="n">create_all_node_db</span><span class="p">(</span>
         <span class="n">all_node_database</span>     <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>

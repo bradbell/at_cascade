@@ -17,6 +17,19 @@ Release Notes for 2022
    :local:
 
 .. meta::
+   :keywords: 01-26
+
+.. index:: 01-26
+
+.. _2020.01-26:
+
+01-26
+*****
+Change perturb_optimization_scaling to
+:ref:`all_option_table.perturb_optimization_scale` and add the
+:ref:`all_option_table.perturb_optimization_start` option.
+
+.. meta::
    :keywords: 01-25
 
 .. index:: 01-25

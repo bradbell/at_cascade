@@ -105,8 +105,9 @@ Release Notes for 2021
 
 12-08
 *****
-Remove the convergence problem :ref:`wish_list` entry becasue it was completed
-when the :ref:`all_option_table.perturb_optimization_scaling` option
+Remove the convergence problem :ref:`wish_list`
+entry becasue it was completed
+when the :ref:`all_option_table.perturb_optimization_scale` option
 was added.
 
 .. meta::
@@ -133,7 +134,7 @@ below a certain point.
 *****
 1.  Add the :ref:`check_log` routine.
 
-2.  Add the :ref:`all_option_table.perturb_optimization_scaling` option
+2.  Add the :ref:`all_option_table.perturb_optimization_scale` option
     and list options in alphabetical order.
 
 .. meta::
