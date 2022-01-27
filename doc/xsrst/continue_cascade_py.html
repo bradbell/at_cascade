@@ -277,6 +277,8 @@
     <span class="n">nslist_table</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="c1">#</span>
     <span class="c1"># option_table</span>
+    <span class="c1"># print_level_fixed is 5 and max_number_cpu &gt; 1 so optimizer trace</span>
+    <span class="c1"># is printed to a file in same directory as corresponding database.</span>
     <span class="n">option_table</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;parent_node_name&#39;</span><span class="p">,</span>      <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;n0&#39;</span><span class="p">},</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;rate_case&#39;</span><span class="p">,</span>             <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;iota_pos_rho_zero&#39;</span><span class="p">},</span>
@@ -284,6 +286,7 @@
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;quasi_fixed&#39;</span><span class="p">,</span>           <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;false&#39;</span><span class="p">},</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;max_num_iter_fixed&#39;</span><span class="p">,</span>    <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;50&#39;</span><span class="p">},</span>
         <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;tolerance_fixed&#39;</span><span class="p">,</span>       <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;1e-8&#39;</span><span class="p">},</span>
+        <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;print_level_fixed&#39;</span><span class="p">,</span>     <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;5&#39;</span><span class="p">},</span>
     <span class="p">]</span>
     <span class="c1"># ----------------------------------------------------------------------</span>
     <span class="c1"># create database</span>

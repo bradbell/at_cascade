@@ -17,6 +17,22 @@ Release Notes for 2022
    :local:
 
 .. meta::
+   :keywords: 01-27
+
+.. index:: 01-27
+
+.. _2020.01-27:
+
+01-27
+*****
+1.  The max_fit value is now doubled when doing
+    :ref:`all_option_table.max_fit.mulcov_freeze` fit.
+
+2.  If :ref:`all_option_table.max_number_cpu` was one,
+    the optimizer trace was not printed to the screen.
+    This has been fixed.
+
+.. meta::
    :keywords: 01-26
 
 .. index:: 01-26

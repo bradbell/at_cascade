@@ -119,6 +119,21 @@ If this option does not appear, all of the data for each integrand is included
 (unless held out in the root_node data table or option table).
 
 .. meta::
+   :keywords: mulcov_freeze
+
+.. index:: mulcov_freeze
+
+.. _all_option_table.max_fit.mulcov_freeze:
+
+mulcov_freeze
+=============
+If this the node_id and split_reference_id for this fit appears in the
+:ref:`mulcov_freeze_table`, the maximum number of values to fit is doubled.
+This results in a better representation of the covariate multipliers
+before freezing them for the jobs that will use the value determined
+by this fit.
+
+.. meta::
    :keywords: max_number_cpu
 
 .. index:: max_number_cpu
@@ -133,6 +148,9 @@ If this is one (more than one) the jobs in the
 :ref:`create_job_table.job_table`
 will be run in sequentially (in parallel).
 If this option does not appear, the value one is used.
+If running sequentially, the command output is printed to the screen.
+Otherwise, it is printed to a file called $code trace.out$ in the
+output directory corresponding to the job being run.
 
 .. meta::
    :keywords: perturb_optimization_scale

@@ -18,7 +18,7 @@ prevalence2iota: Python Source Code
 
 
 .. literalinclude:: ../../example/prevalence2iota.py
-    :lines: 269-702
+    :lines: 269-701
     :language: py
 
 ----
