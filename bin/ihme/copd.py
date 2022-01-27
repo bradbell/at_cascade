@@ -240,33 +240,9 @@ mulcov_list_dict = [
 mulcov_freeze_list = [
     {   'node'      : '1_Global',
         'sex'       : 'Male',
-        'rate'      : 'iota',
-        'covariate' : 'log_sev_copd',
     },
     {   'node'      : '1_Global',
         'sex'       : 'Female',
-        'rate'      : 'iota',
-        'covariate' : 'log_sev_copd',
-    },
-    {   'node'      : '1_Global',
-        'sex'       : 'Male',
-        'rate'      : 'chi',
-        'covariate' : 'elevation',
-    },
-    {   'node'      : '1_Global',
-        'sex'       : 'Female',
-        'rate'      : 'chi',
-        'covariate' : 'elevation',
-    },
-    {   'node'      : '1_Global',
-        'sex'       : 'Male',
-        'rate'      : 'chi',
-        'covariate' : 'haqi',
-    },
-    {   'node'      : '1_Global',
-        'sex'       : 'Female',
-        'rate'      : 'chi',
-        'covariate' : 'haqi',
     },
 ]
 #
@@ -389,7 +365,7 @@ def setup_function() :
     #
     # write_mulcov_freeze_table
     at_cascade.ihme.write_mulcov_freeze_table(
-        result_dir, mulcov_freeze_list, root_node_database
+        result_dir, root_node_database, mulcov_list_dict, mulcov_freeze_list
     )
     #
     # write_node_split_table

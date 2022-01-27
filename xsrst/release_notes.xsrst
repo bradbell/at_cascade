@@ -19,6 +19,11 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+01-27
+*****
+The max_fit value is now doubled when doing
+:ref:`all_option_table.max_fit.mulcov_freeze` fit.
+
 01-26
 *****
 Change perturb_optimization_scaling to

@@ -224,38 +224,13 @@ mulcov_list_dict = [
 ]
 #
 # mulcov_freeze_list
-# Freeze the covariate multiplier on that affects chi and pini and do the
-# freeze at the Global level after the split
+# Freeze the covariate multipliers at the Global level after the sex split
 mulcov_freeze_list = [
     {   'node'      : '1_Global',
         'sex'       : 'Male',
-        'rate'      : 'pini',
-        'covariate' : 'log_folic_acid',
     },
     {   'node'      : '1_Global',
         'sex'       : 'Female',
-        'rate'      : 'pini',
-        'covariate' : 'log_folic_acid',
-    },
-    {   'node'      : '1_Global',
-        'sex'       : 'Male',
-        'rate'      : 'pini',
-        'covariate' : 'folic_fortified',
-    },
-    {   'node'      : '1_Global',
-        'sex'       : 'Female',
-        'rate'      : 'pini',
-        'covariate' : 'folic_fortified',
-    },
-    {   'node'      : '1_Global',
-        'sex'       : 'Female',
-        'rate'      : 'chi',
-        'covariate' : 'haqi',
-    },
-    {   'node'      : '1_Global',
-        'sex'       : 'Male',
-        'rate'      : 'chi',
-        'covariate' : 'haqi',
     },
 ]
 #
@@ -315,7 +290,6 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
-fit_goal_set = { '100_High-income_North_America' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understanding this program
 # ----------------------------------------------------------------------------
@@ -377,7 +351,7 @@ def setup_function() :
     #
     # write_mulcov_freeze_table
     at_cascade.ihme.write_mulcov_freeze_table(
-        result_dir, mulcov_freeze_list, root_node_database
+        result_dir, root_node_database, mulcov_list_dict, mulcov_freeze_list
     )
     #
     # write_node_split_table

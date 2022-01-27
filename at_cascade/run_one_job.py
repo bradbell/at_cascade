@@ -238,9 +238,21 @@ def run_one_job(
     new         = False
     connection  = dismod_at.create_connection(all_node_database, new)
     all_table = dict()
-    for tbl_name in [ 'all_option', 'split_reference', 'node_split' ] :
+    for tbl_name in [
+        'all_option',
+        'split_reference',
+        'node_split',
+        'mulcov_freeze',
+    ] :
         all_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
     connection.close()
+    #
+    # double_max_fit
+    double_max_fit = False
+    for row in all_table['mulcov_freeze'] :
+        if fit_node_id == row['fit_node_id'] :
+            if fit_split_reference_id == row['split_reference_id'] :
+                double_max_fit = True
     #
     # all_option_dict
     all_option_dict = dict()
@@ -319,6 +331,8 @@ def run_one_job(
     # max_fit
     if 'max_fit' in all_option_dict :
         max_fit = all_option_dict['max_fit']
+        if double_max_fit :
+            max_fit = str( 2 * int(max_fit) )
         for integrand_id in fit_integrand :
             integrand_name = integrand_table[integrand_id]['integrand_name']
             command = [
