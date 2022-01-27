@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -587,7 +587,6 @@ def root_node_db(file_name) :
         { 'name':'rate_case',             'value':'iota_pos_rho_zero'},
         { 'name': 'zero_sum_child_rate',  'value':'iota'},
         { 'name':'quasi_fixed',           'value':'false'},
-        { 'name':'print_level_fixed',     'value':'5'},
         { 'name':'max_num_iter_fixed',    'value':'50'},
         { 'name':'tolerance_fixed',       'value':'1e-10'},
         { 'name':'random_seed',           'value':str(random_seed)},

@@ -21,8 +21,12 @@ Release Notes for 2022
 
 01-27
 *****
-The max_fit value is now doubled when doing
-:ref:`all_option_table.max_fit.mulcov_freeze` fit.
+1.  The max_fit value is now doubled when doing
+    :ref:`all_option_table.max_fit.mulcov_freeze` fit.
+
+2.  If :ref:`all_option_table.max_number_cpu` was one,
+    the optimizer trace was not printed to the screen.
+    This has been fixed.
 
 01-26
 *****

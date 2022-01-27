@@ -124,7 +124,7 @@ def system_command(command, file_stdout) :
         dismod_at.system_command_prc(
             command,
             print_command = True,
-            return_stdout = True,
+            return_stdout = False,
             return_stderr = False,
             file_stdout   = None,
             file_stderr   = None,

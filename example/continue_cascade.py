@@ -332,6 +332,8 @@ def root_node_db(file_name) :
     nslist_table = dict()
     #
     # option_table
+    # print_level_fixed is 5 and max_number_cpu > 1 so optimizer trace
+    # is printed to a file in same directory as corresponding database.
     option_table = [
         { 'name':'parent_node_name',      'value':'n0'},
         { 'name':'rate_case',             'value':'iota_pos_rho_zero'},
@@ -339,6 +341,7 @@ def root_node_db(file_name) :
         { 'name':'quasi_fixed',           'value':'false'},
         { 'name':'max_num_iter_fixed',    'value':'50'},
         { 'name':'tolerance_fixed',       'value':'1e-8'},
+        { 'name':'print_level_fixed',     'value':'5'},
     ]
     # ----------------------------------------------------------------------
     # create database

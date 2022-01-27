@@ -55,7 +55,7 @@ root_node_database = f'{result_dir}/root_node.db'
 #
 # no_ode_fit
 # This bool controls whether a no_ode fit is used to initial root level
-no_ode_fit = False
+no_ode_fit = True
 #
 # root_node_name
 # name of the node where the cascade will start
@@ -163,11 +163,26 @@ prior_table = [
         'mean'    :    0.0,
         'std'     :    1.0,
     },
-    {   'name'    :   'alpha_value',
+    {   'name'    :   'alpha_folic_acid_value',
         'density' :   'gaussian',
         'mean'    :   0.0,
-        'std'     :   1.0,
-    }
+        'std'     :   0.7,
+
+    },
+    {   'name'    :   'alpha_folic_fortified_value',
+        'density' :   'gaussian',
+        'mean'    :   0.0,
+        'std'     :   2.0,
+        'lower'   : 0.0,
+        'upper'   : 0.0,
+
+    },
+    {   'name'    :   'alpha_haqi_value',
+        'density' :   'gaussian',
+        'mean'    :   0.0,
+        'std'     :   0.02,
+
+    },
 ]
 #
 # smooth_list_dict
@@ -184,8 +199,14 @@ smooth_list_dict = [
     {   'name'         : 'child_smooth',
         'value_prior'  : 'child_value',
     },
-    {   'name'         : 'alpha_smooth',
-        'value_prior'  : 'alpha_value',
+    {   'name'         : 'alpha_folic_acid_smooth',
+        'value_prior'  : 'alpha_folic_acid_value',
+    },
+    {   'name'         : 'alpha_folic_fortified_smooth',
+        'value_prior'  : 'alpha_folic_fortified_value',
+    },
+    {   'name'         : 'alpha_haqi_smooth',
+        'value_prior'  : 'alpha_haqi_value',
     },
 ]
 #
@@ -209,17 +230,17 @@ mulcov_list_dict = [
         # alpha_pini_log_folic_acid
         'covariate': 'log_folic_acid',
         'effected':  'pini',
-        'smooth':    'alpha_smooth',
+        'smooth':    'alpha_folic_acid_smooth',
     },{
         # alpha_pini_folic_fortified
         'covariate': 'folic_fortified',
         'effected':  'pini',
-        'smooth':    'alpha_smooth',
+        'smooth':    'alpha_folic_fortified_smooth',
     },{
         # alpha_chi_haqi
         'covariate': 'haqi',
         'effected':  'chi',
-        'smooth':    'alpha_smooth',
+        'smooth':    'alpha_haqi_smooth',
     }
 ]
 #

@@ -195,7 +195,6 @@ def root_node_db(file_name) :
         { 'name':'quasi_fixed',           'value':'false'},
         { 'name':'max_num_iter_fixed',    'value':'50'},
         { 'name':'tolerance_fixed',       'value':'1e-8'},
-        { 'name':'print_level_fixed',     'value':'5'},
     ]
     # ----------------------------------------------------------------------
     # create database
