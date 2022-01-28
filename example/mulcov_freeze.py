@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -230,7 +230,7 @@ The results of the fit are in the
 :ref:`cascade_root_node.output_dismod_db.c_predict_sample` and
 :ref:`cascade_root_node.output_dismod_db.c_predict_fit_var`
 tables of the fit_node_database corresponding to each node.
-The :ref:`check_cascade_fit<check_cascade_fit>`
+The :ref:`check_cascade_node<check_cascade_node>`
 routine uses these tables to check that fit against the truth.
 
 {xsrst_end mulcov_freeze}
@@ -591,6 +591,20 @@ def main() :
         shutil.rmtree( root_node_dir )
     os.makedirs(root_node_dir )
     #
+    # avgint_table
+    # also erase avgint table in root node database
+    new             = False
+    connection      = dismod_at.create_connection(root_node_database, new)
+    avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    n_covariate     = len(covariate_table)
+    empty_table     = list()
+    message         = 'erase avgint table'
+    at_cascade.replace_avgint(
+        connection, n_covariate, empty_table, message
+    )
+    connection.close()
+    #
     # cascade starting at root node
     at_cascade.cascade_root_node(
         all_node_database   = all_node_database ,
@@ -601,10 +615,11 @@ def main() :
     # check results
     for goal_dir in [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2/n5', 'n0/n2/n6' ] :
         goal_database = f'{result_dir}/{goal_dir}/dismod.db'
-        at_cascade.check_cascade_fit(
+        at_cascade.check_cascade_node(
             rate_true = rate_true,
             all_node_database  = all_node_database,
             fit_node_database  = goal_database,
+            avgint_table       = avgint_table,
             relative_tolerance = 2e-3,
         )
     #
