@@ -191,7 +191,7 @@ def try_one_job(
         # print message at start
         now             = datetime.datetime.now()
         current_time    = now.strftime("%H:%M:%S")
-        print( f'Begin: {current_time}: {job_name} fit {fit_type}' )
+        print( f'Begin: fit {fit_type:<5} {current_time}: {job_name}' )
     #
     try :
         # run_one_job
@@ -209,10 +209,9 @@ def try_one_job(
         # job_ok
         job_ok = True
     except Exception as e:
-        print( str(e) )
-        print( f'{job_name}: ' + str(e) )
-
         job_ok = False
+        #
+        print( f'fit {fit_type:<5} {job_name} message:\n' + str(e) )
     #
     if not job_ok :
         #
@@ -223,7 +222,7 @@ def try_one_job(
             # print message at start
             now             = datetime.datetime.now()
             current_time    = now.strftime("%H:%M:%S")
-            print( f'Begin: {current_time}: {job_name} fit {fit_type}' )
+            print( f'Begin: fit {fit_type:<5} {current_time}: {job_name}' )
         #
         try :
             #
@@ -242,8 +241,8 @@ def try_one_job(
             # job_ok
             job_ok = True
         except Exception as e:
-            print( f'{job_name}: ' + str(e) )
             job_ok = False
+            print( f'fit {fit_type:<5} {job_name} message:\n' + str(e) )
     #
     if job_ok :
         #
@@ -317,9 +316,9 @@ def try_one_job(
         now          = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
         if job_ok :
-            print( f'End:   {current_time}: {job_name}' )
+            print( f'End:   fit {fit_type:<5} {current_time}: {job_name}' )
         else :
-            print( f'Error: {current_time}: {job_name}' )
+            print( f'Error: fit {fit_type:<5} {current_time}: {job_name}' )
         #
         # status_count
         lock.acquire()
@@ -517,7 +516,7 @@ def run_parallel_job(
             # job_id
             job_id = int( job_id_ready[n_cpu_spawn] )
             #
-            # run_one_job
+            # try_one_job
             # assumes lock is not acquired during this operation
             try_one_job(
                 job_table,

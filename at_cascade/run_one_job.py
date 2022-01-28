@@ -59,6 +59,13 @@ fit_type
 is a ``str`` equal to 'both' or 'fixed' and specifies the type
 of fit that dismod_at will do.
 
+both
+====
+If *fit_type* is 'both', this is assumed to be an
+:ref:`glossary.input_node_database`.
+If *ift_type* is 'fixed', it is assumed that this
+routine has previously been called with *fit_type* equal to 'both'
+
 trace_file_obj
 **************
 If this argument is not None, it is a ``io.TextIOBase`` object
@@ -90,9 +97,9 @@ distribution for the model variables for the fit_node.
 
 log
 ===
+If *fit_type* is 'both', the previous contents of the log are removed.
 Upon return,
-the log table contains a summary of the operations preformed on dismod.db
-between it's input and output state.
+a summary of the operations preformed on dismod.db is added to the log table.
 
 {xsrst_end run_one_job}
 '''
@@ -124,21 +131,6 @@ def system_command(command, file_stdout) :
             file_stderr   = None,
             write_command = True,
         )
-# ----------------------------------------------------------------------------
-def create_empty_log_table(connection) :
-    #
-    cmd  = 'create table if not exists log('
-    cmd += ' log_id        integer primary key,'
-    cmd += ' message_type  text               ,'
-    cmd += ' table_name    text               ,'
-    cmd += ' row_id        integer            ,'
-    cmd += ' unix_time     integer            ,'
-    cmd += ' message       text               )'
-    dismod_at.sql_command(connection, cmd)
-    #
-    # log table
-    empty_list = list()
-    dismod_at.replace_table(connection, 'log', empty_list)
 # ----------------------------------------------------------------------------
 def run_one_job(
 # BEGIN syntax
@@ -221,7 +213,7 @@ def run_one_job(
     # perturb_optimization
     perturb_optimization = dict()
     for key in [ 'start', 'scale' ] :
-        long_key = f'pertrub_optimizaiton_{key}'
+        long_key = f'perturb_optimization_{key}'
         if long_key in all_option_dict :
             sigma = all_option_dict[long_key]
             if float(sigma) < 0.0 :
@@ -261,11 +253,13 @@ def run_one_job(
     integrand_table = dismod_at.get_table_dict(connection, 'integrand')
     #
     # log table
-    create_empty_log_table(connection)
-    #
-    # omega_constraint
-    at_cascade.omega_constraint(all_node_database, fit_node_database)
-    at_cascade.add_log_entry(connection, 'omega_constraint')
+    if fit_type == 'both'  :
+        cmd = 'drop table if exists log'
+        dismod_at.sql_command(connection, cmd)
+        #
+        # omega_constraint
+        at_cascade.omega_constraint(all_node_database, fit_node_database)
+        at_cascade.add_log_entry(connection, 'omega_constraint')
     #
     # init
     command = [ 'dismod_at', fit_node_database, 'init' ]
