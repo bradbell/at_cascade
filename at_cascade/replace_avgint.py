@@ -30,8 +30,8 @@ is the number of covariates in the avgint table.
 
 avgint_table
 ************
-is a ``list`` of ``dict`` containt the new values for the
-avgint table. Only the columsn resuired by dismod_at are included.
+is a ``list`` of ``dict`` containing the new values for the
+avgint table. Only the columns required by dismod_at are included.
 This list can be empty.
 
 message
