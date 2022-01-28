@@ -69,13 +69,6 @@ predict fit_var command using the c_shift_avgint table.
 Note that the predict_id column name was changed to c_shift_predict_fit_var_id
 (which is not the same as var_id).
 
-c_root_avgint Table
-===================
-The c_root_avgint table contains the original version of the
-:ref:`glossary.root_node_database` avgint table
-that predicts for the parent node.
-Only the node_id column has been modified from the root_node_database version.
-
 shift_databases
 ***************
 This argument can't be ``None`` and is a python dictionary.
@@ -124,13 +117,6 @@ The mean of the dage and dtime priors
 are replaced using the corresponding difference in the
 predict tables in the *fit_node_database*.
 
-avgint Table
-============
-The avgint table, in the shift_databases,
-is a copy of the c_root_avgint table in the
-*fit_node_database* with the node_id replaced by the node corresponding
-to he shift_database.
-
 predict_sample
 **************
 If this argument is ``True`` the sample table and the c_shift_predict_sample
@@ -149,6 +135,46 @@ import shutil
 import statistics
 import dismod_at
 import at_cascade
+# ----------------------------------------------------------------------------
+def empty_avgint_table(connection, n_covariate) :
+    # col_name
+    col_name = [
+        'integrand_id',
+        'node_id',
+        'subgroup_id',
+        'weight_id',
+        'age_lower',
+        'age_upper',
+        'time_lower',
+        'time_upper',
+    ]
+    for covariate_id in range(n_covariate) :
+        col_name.append(f'x_{covariate_id}')
+    #
+    # col_type
+    col_type = [
+        'integer',
+        'integer',
+        'integer',
+        'integer',
+        'real',
+        'real',
+        'real',
+        'real',
+    ]
+    for covariate_id in range(n_covariate) :
+        col_type.append('real')
+    #
+    # create_table
+    row_list = list()
+    tbl_name = 'avgint'
+    dismod_at.create_table(
+        connection, tbl_name, col_name, col_type, row_list
+    )
+    #
+    # add_log_entry
+    message = 'create empty avgint table'
+    at_cascade.add_log_entry(connection, message)
  # ----------------------------------------------------------------------------
 def move_table(connection, src_name, dst_name) :
     command     = 'DROP TABLE IF EXISTS ' + dst_name
@@ -419,7 +445,6 @@ def create_shift_db(
     for name in [
         'age',
         'c_shift_avgint',
-        'c_root_avgint',
         'c_shift_predict_fit_var',
         'covariate',
         'density',
@@ -524,7 +549,6 @@ def create_shift_db(
         # shift_table
         shift_table = dict()
         for name in [
-            'c_root_avgint',
             'covariate',
             'mulcov',
             'option',
@@ -771,10 +795,6 @@ def create_shift_db(
                         shift_grid_row['smooth_id']      = shift_smooth_id
                         shift_table['smooth_grid'].append( shift_grid_row )
         #
-        # shift_table['c_root_avgint']
-        for row in shift_table['c_root_avgint'] :
-            row['node_id'] = shift_node_id
-        #
         # shift_connection
         new        = False
         shift_connection = dismod_at.create_connection(shift_database, new)
@@ -784,8 +804,10 @@ def create_shift_db(
             dismod_at.replace_table(
                 shift_connection, name, shift_table[name]
             )
-        # move c_root_avgint -> avgint
-        move_table(shift_connection, 'c_root_avgint', 'avgint')
+        #
+        # empty_avgint_table
+        n_covariate = len( fit_table['covariate'] )
+        empty_avgint_table(shift_connection, n_covariate)
         #
         # drop the following tables:
         # c_shift_avgint, c_shift_predict_sample, c_shift_predict_fit_var

@@ -84,26 +84,6 @@ Upon return,
 the sample table contains the corresponding samples from the posterior
 distribution for the model variables for the fit_node.
 
-c_predict_fit_var
-=================
-Upon return,
-the c_predict_fit_var table contains the predict table corresponding to the
-predict fit_var command using the avgint table in the
-root_node_database except that values in the node_id column
-has been replaced by the node_id for this fit_node.
-Note that the predict_id column name was changed to c_predict_fit_var_id
-(which is not the same as var_id).
-
-c_predict_sample
-================
-Upon return,
-the c_predict_sample table contains the predict table corresponding to the
-predict sample command using the avgint table in the
-root_node_database except that values in the node_id column
-has been replaced by the node_id for this fit_node.
-Note that the predict_id column name was changed to c_predict_sample_id
-(which is not the same as sample_id).
-
 log
 ===
 Upon return,
@@ -140,6 +120,46 @@ def system_command(command, file_stdout) :
             file_stderr   = None,
             write_command = True,
         )
+# ----------------------------------------------------------------------------
+def empty_avgint_table(connection, n_covariate) :
+    # col_name
+    col_name = [
+        'integrand_id',
+        'node_id',
+        'subgroup_id',
+        'weight_id',
+        'age_lower',
+        'age_upper',
+        'time_lower',
+        'time_upper',
+    ]
+    for covariate_id in range(n_covariate) :
+        col_name.append(f'x_{covariate_id}')
+    #
+    # col_type
+    col_type = [
+        'integer',
+        'integer',
+        'integer',
+        'integer',
+        'real',
+        'real',
+        'real',
+        'real',
+    ]
+    for covariate_id in range(n_covariate) :
+        col_type.append('real')
+    #
+    # create_table
+    row_list = list()
+    tbl_name = 'avgint'
+    dismod_at.create_table(
+        connection, tbl_name, col_name, col_type, row_list
+    )
+    #
+    # add_log_entry
+    message = 'create empty avgint table'
+    at_cascade.add_log_entry(connection, message)
 # ----------------------------------------------------------------------------
 def set_avgint_node_id(connection, fit_node_id) :
     avgint_table = dismod_at.get_table_dict(connection, 'avgint')
@@ -330,9 +350,6 @@ def run_one_job(
     ]
     system_command(command, file_stdout)
     #
-    # move avgint -> c_root_avgint
-    at_cascade.move_table(connection, 'avgint', 'c_root_avgint')
-    #
     # avgint_parent_grid
     at_cascade.avgint_parent_grid(all_node_database, fit_node_database)
     at_cascade.add_log_entry(connection, 'avgint_parent_grid')
@@ -391,21 +408,10 @@ def run_one_job(
         shift_databases,
     )
     #
-    # move c_root_avgint -> avgint
-    at_cascade.move_table(connection, 'c_root_avgint', 'avgint')
-    #
-    # node_id for predictions for fit_node
-    set_avgint_node_id(connection, fit_node_id)
-    #
-    # c_predict_fit_var
-    command = [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
-    system_command(command, file_stdout)
-    at_cascade.move_table(connection, 'predict', 'c_predict_fit_var')
-    #
-    # c_predict_sample
-    command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
-    system_command(command, file_stdout)
-    at_cascade.move_table(connection, 'predict', 'c_predict_sample')
+    # empty_avgint_table
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    n_covariate     = len(covariate_table)
+    empty_avgint_table(connection, n_covariate)
     #
     # connection
     connection.close()
