@@ -36,7 +36,6 @@ The at_cascade Python Module
     at_cascade/move_table.py
     at_cascade/no_ode_fit.py
     at_cascade/omega_constraint.py
-    at_cascade/replace_avgint.py
     at_cascade/run_one_job.py
     at_cascade/run_parallel.py
     at_cascade/table_name2id.py
@@ -68,7 +67,6 @@ from .get_var_id            import get_var_id
 from .move_table            import move_table
 from .no_ode_fit            import no_ode_fit
 from .omega_constraint      import omega_constraint
-from .replace_avgint        import replace_avgint
 from .run_one_job           import run_one_job
 from .run_parallel          import run_parallel
 from .table_name2id         import table_name2id

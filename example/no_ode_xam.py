@@ -826,15 +826,12 @@ def main() :
     new             = False
     connection      = dismod_at.create_connection(root_node_database, new)
     avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
-    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
-    n_covariate     = len(covariate_table)
     empty_table     = list()
     message         = 'erase avgint table'
-    at_cascade.replace_avgint(
-        connection, n_covariate, empty_table, message
-    )
+    tbl_name        = 'avgint'
+    dismod_at.replace_table(connection, tbl_name, empty_table)
+    at_cascade.add_log_entry(connection, message)
     connection.close()
-    #
     #
     # cascade starting at root node
     at_cascade.cascade_root_node(

@@ -136,15 +136,13 @@ def check_cascade_node(
     # avgint table
     new        = False
     connection = dismod_at.create_connection(fit_node_database, new)
-    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
-    n_covariate     = len(covariate_table)
     message         = 'check_cascade_node: replace avgint table'
+    tbl_name        = 'avgint'
     avgint_copy     = copy.copy( avgint_table )
     for row in avgint_copy :
         row['node_id'] = fit_node_id
-    at_cascade.replace_avgint(
-        connection, n_covariate, avgint_copy, message
-    )
+    dismod_at.replace_table(connection, tbl_name, avgint_copy)
+    at_cascade.add_log_entry(connection, message)
     connection.close()
     #
     # predict_fit_var_table
