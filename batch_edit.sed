@@ -30,7 +30,5 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|results_dir',  |result_dir',   |
-s|results_dir':  |result_dir':   |
-s|results_dir  \( *\)=|result_dir   \1=|
-s|results_dir|result_dir|g
+s|checed|checked|
+s|repaced|replaced|

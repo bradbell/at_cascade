@@ -144,11 +144,11 @@ The following is the value prior used for the children of the fit_node:
 
 Checking The Fit
 ****************
-The results of the fit are in the
-:ref:`cascade_root_node.output_dismod_db.c_predict_sample` and
-:ref:`cascade_root_node.output_dismod_db.c_predict_fit_var`
-tables of the fit_node_database corresponding to each node.
-The :ref:`check_cascade_node<check_cascade_node>`
+The results of the fit are checked for check_cascade_node
+using the :ref:`check_cascade_node.avgint_table`
+that was created by the rood_node_db routine.
+The node_id for each row is replaced by the node_id for the
+fit being checked.
 routine uses these tables to check that fit against the truth.
 
 {xsrst_end max_fit_option}
