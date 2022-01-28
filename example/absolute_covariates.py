@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -506,9 +506,24 @@ def main() :
     root_node_database  = f'{result_dir}/root_node.db'
     root_node_db(root_node_database)
     #
-    # omega_grid
+    # connection
     new          = False
     connection   = dismod_at.create_connection(root_node_database, new)
+    #
+    # avgint_table
+    avgint_table = dismod_at.get_table_dict(connection, 'avgint')
+    #
+    # avgint table
+    # erase table in root node database
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    n_covariate     = len(covariate_table)
+    empty_table     = list()
+    message         = 'erase agint table'
+    at_cascade.replace_avgint(
+        connection, n_covariate, empty_table, message
+    )
+    #
+    # omega_grid
     age_table    = dismod_at.get_table_dict(connection, 'age')
     time_table   = dismod_at.get_table_dict(connection, 'time')
     age_id_list  = list( range( len(age_table) ) )
@@ -565,10 +580,11 @@ def main() :
     # check results
     for goal_dir in [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2' ] :
         goal_database = f'{result_dir}/{goal_dir}/dismod.db'
-        at_cascade.check_cascade_fit(
+        at_cascade.check_cascade_node(
             rate_true          = rate_true,
             all_node_database  = all_node_database,
             fit_node_database  = goal_database,
+            avgint_table       = avgint_table,
             relative_tolerance = 1e-2
         )
     #

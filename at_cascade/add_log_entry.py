@@ -54,6 +54,16 @@ import dismod_at
 def add_log_entry(connection, message) :
 # END syntax
     #
+    # cmd
+    cmd  = 'create table if not exists log('
+    cmd += 'log_id       integer primary key,'
+    cmd += 'message_type text,'
+    cmd += 'table_name   text,'
+    cmd += 'row_id       integer,'
+    cmd += 'unix_time    integer,'
+    cmd += 'message      text)'
+    dismod_at.sql_command(connection, cmd)
+    #
     # log_table
     log_table = dismod_at.get_table_dict(connection, 'log')
     #

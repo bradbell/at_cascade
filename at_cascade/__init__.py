@@ -19,6 +19,7 @@ The at_cascade Python Module
     at_cascade/avgint_parent_grid.py
     at_cascade/cascade_root_node.py
     at_cascade/check_cascade_fit.py
+    at_cascade/check_cascade_node.py
     at_cascade/check_log.py
     at_cascade/clear_shared.py
     at_cascade/continue_cascade.py
@@ -35,6 +36,7 @@ The at_cascade Python Module
     at_cascade/move_table.py
     at_cascade/no_ode_fit.py
     at_cascade/omega_constraint.py
+    at_cascade/replace_avgint.py
     at_cascade/run_one_job.py
     at_cascade/run_parallel.py
     at_cascade/table_name2id.py
@@ -49,6 +51,7 @@ from .add_log_entry         import add_log_entry
 from .avgint_parent_grid    import avgint_parent_grid
 from .cascade_root_node     import cascade_root_node
 from .check_cascade_fit     import check_cascade_fit
+from .check_cascade_node    import check_cascade_node
 from .check_log             import check_log
 from .clear_shared          import clear_shared
 from .continue_cascade      import continue_cascade
@@ -65,6 +68,7 @@ from .get_var_id            import get_var_id
 from .move_table            import move_table
 from .no_ode_fit            import no_ode_fit
 from .omega_constraint      import omega_constraint
+from .replace_avgint        import replace_avgint
 from .run_one_job           import run_one_job
 from .run_parallel          import run_parallel
 from .table_name2id         import table_name2id
