@@ -133,7 +133,7 @@ The results of the fit are in the
 :ref:`cascade_root_node.output_dismod_db.c_predict_sample` and
 :ref:`cascade_root_node.output_dismod_db.c_predict_fit_var`
 tables of the fit_node_database corresponding to each node.
-The :ref:`check_cascade_fit<check_cascade_fit>`
+The :ref:`check_cascade_node<check_cascade_node>`
 routine uses these tables to check that fit against the truth.
 
 {xsrst_end continue_cascade_xam}
