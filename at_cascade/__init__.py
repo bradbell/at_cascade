@@ -18,7 +18,6 @@ The at_cascade Python Module
     at_cascade/add_log_entry.py
     at_cascade/avgint_parent_grid.py
     at_cascade/cascade_root_node.py
-    at_cascade/check_cascade_fit.py
     at_cascade/check_cascade_node.py
     at_cascade/check_log.py
     at_cascade/clear_shared.py
@@ -49,7 +48,6 @@ The at_cascade Python Module
 from .add_log_entry         import add_log_entry
 from .avgint_parent_grid    import avgint_parent_grid
 from .cascade_root_node     import cascade_root_node
-from .check_cascade_fit     import check_cascade_fit
 from .check_cascade_node    import check_cascade_node
 from .check_log             import check_log
 from .clear_shared          import clear_shared

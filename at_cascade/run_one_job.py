@@ -54,7 +54,6 @@ fit_integrand
 is a ``set`` of integrand_id values that occur in the data table; see
 :ref:`get_fit_integrand`.
 
-
 trace_file_obj
 **************
 If this argument is not None, it is a ``io.TextIOBase`` object
