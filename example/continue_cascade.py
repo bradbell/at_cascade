@@ -381,6 +381,20 @@ def two_fit_goal_set_example(result_dir) :
         shutil.rmtree( root_fit_dir )
     os.makedirs(root_fit_dir )
     #
+    # avgint_table
+    # also erase avgint table in root node database
+    new             = False
+    connection      = dismod_at.create_connection(root_node_database, new)
+    avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    n_covariate     = len(covariate_table)
+    empty_table     = list()
+    message         = 'erase avgint table'
+    at_cascade.replace_avgint(
+        connection, n_covariate, empty_table, message
+    )
+    connection.close()
+    #
     # cascade starting at n0
     at_cascade.cascade_root_node(
         all_node_database  = all_node_database  ,
@@ -400,10 +414,11 @@ def two_fit_goal_set_example(result_dir) :
     leaf_dir_list = [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2/n5', 'n0/n2/n6' ]
     for leaf_dir in leaf_dir_list :
         leaf_database = f'{result_dir}/{leaf_dir}/dismod.db'
-        at_cascade.check_cascade_fit(
+        at_cascade.check_cascade_node(
             rate_true          = rate_true,
             all_node_database  = all_node_database,
             fit_node_database  = leaf_database,
+            avgint_table       = avgint_table,
             relative_tolerance = 1e-7,
         )
 # ----------------------------------------------------------------------------
@@ -423,6 +438,20 @@ def one_fit_goal_set_example(result_dir ) :
         shutil.rmtree( root_fit_dir )
     os.makedirs(root_fit_dir )
     #
+    # avgint_table
+    # also erase avgint table in root node database
+    new             = False
+    connection      = dismod_at.create_connection(root_node_database, new)
+    avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    n_covariate     = len(covariate_table)
+    empty_table     = list()
+    message         = 'erase avgint table'
+    at_cascade.replace_avgint(
+        connection, n_covariate, empty_table, message
+    )
+    connection.close()
+    #
     # cascade starting at n0
     fit_goal_set = first_fit_goal_set | second_fit_goal_set
     at_cascade.cascade_root_node(
@@ -435,10 +464,11 @@ def one_fit_goal_set_example(result_dir ) :
     leaf_dir_list = [ 'n0/n1/n3', 'n0/n1/n4', 'n0/n2/n5', 'n0/n2/n6' ]
     for leaf_dir in leaf_dir_list :
         leaf_database = f'{result_dir}/{leaf_dir}/dismod.db'
-        at_cascade.check_cascade_fit(
+        at_cascade.check_cascade_node(
             rate_true          = rate_true,
             all_node_database  = all_node_database,
             fit_node_database  = leaf_database,
+            avgint_table       = avgint_table,
             relative_tolerance = 1e-7,
         )
 
@@ -466,7 +496,7 @@ def main() :
         all_node_database       = all_node_database,
         root_node_database      = root_node_database,
         all_cov_reference       = all_cov_reference,
-        all_option             = all_option,
+        all_option              = all_option,
     )
     #
     # example using continue_cascade

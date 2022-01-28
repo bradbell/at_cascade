@@ -511,14 +511,12 @@ def main() :
     connection   = dismod_at.create_connection(root_node_database, new)
     #
     # avgint_table
+    # alos erase table in root node database
     avgint_table = dismod_at.get_table_dict(connection, 'avgint')
-    #
-    # avgint table
-    # erase table in root node database
     covariate_table = dismod_at.get_table_dict(connection, 'covariate')
     n_covariate     = len(covariate_table)
     empty_table     = list()
-    message         = 'erase agint table'
+    message         = 'erase avgint table'
     at_cascade.replace_avgint(
         connection, n_covariate, empty_table, message
     )
