@@ -19,6 +19,11 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+01-28
+*****
+Add the :ref:`add_log_entry` and :ref:`move_table`
+routines to the at_cascade module.
+
 01-27
 *****
 1.  The max_fit value is now doubled when doing

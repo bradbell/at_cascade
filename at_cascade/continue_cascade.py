@@ -61,44 +61,6 @@ import dismod_at
 import at_cascade
 import distutils.dir_util
 # ----------------------------------------------------------------------------
-def add_log_entry(connection, message) :
-    #
-    # log_table
-    log_table = dismod_at.get_table_dict(connection, 'log')
-    #
-    # seconds
-    seconds   = int( time.time() )
-    #
-    # message_type
-    message_type = 'at_cascade'
-    #
-    # cmd
-    cmd = 'insert into log'
-    cmd += ' (log_id,message_type,table_name,row_id,unix_time,message) values('
-    cmd += str( len(log_table) ) + ','     # log_id
-    cmd += f'"{message_type}",'            # message_type
-    cmd += 'null,'                         # table_name
-    cmd += 'null,'                         # row_id
-    cmd += str(seconds) + ','              # unix_time
-    cmd += f'"{message}")'                 # message
-    dismod_at.sql_command(connection, cmd)
-# ----------------------------------------------------------------------------
-def move_table(connection, src_name, dst_name) :
-    #
-    command     = 'DROP TABLE IF EXISTS ' + dst_name
-    dismod_at.sql_command(connection, command)
-    #
-    command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
-    command    += src_name + '_id TO ' + dst_name + '_id'
-    dismod_at.sql_command(connection, command)
-    #
-    command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
-    dismod_at.sql_command(connection, command)
-    #
-    # log table
-    message      = f'move table {src_name} to {dst_name}'
-    add_log_entry(connection, message)
-# ----------------------------------------------------------------------------
 def continue_cascade(
 # BEGIN syntax
 # at_cascade.continue_cascade(
@@ -194,7 +156,7 @@ def continue_cascade(
     connection = dismod_at.create_connection(fit_node_database, new)
     #
     # move avgint -> c_root_avgint
-    move_table(connection, 'avgint', 'c_root_avgint')
+    at_cascade.move_table(connection, 'avgint', 'c_root_avgint')
     #
     # node_split_set
     node_split_set = set()
@@ -242,7 +204,7 @@ def continue_cascade(
     )
     #
     # move c_root_avgint -> avgint
-    move_table(connection, 'c_root_avgint', 'avgint')
+    at_cascade.move_table(connection, 'c_root_avgint', 'avgint')
     #
     # connection
     connection.close()

@@ -162,44 +162,6 @@ def create_empty_log_table(connection) :
     empty_list = list()
     dismod_at.replace_table(connection, 'log', empty_list)
 # ----------------------------------------------------------------------------
-def add_log_entry(connection, message) :
-    #
-    # log_table
-    log_table = dismod_at.get_table_dict(connection, 'log')
-    #
-    # seconds
-    seconds   = int( time.time() )
-    #
-    # message_type
-    message_type = 'at_cascade'
-    #
-    # cmd
-    cmd = 'insert into log'
-    cmd += ' (log_id,message_type,table_name,row_id,unix_time,message) values('
-    cmd += str( len(log_table) ) + ','     # log_id
-    cmd += f'"{message_type}",'            # message_type
-    cmd += 'null,'                         # table_name
-    cmd += 'null,'                         # row_id
-    cmd += str(seconds) + ','              # unix_time
-    cmd += f'"{message}")'                 # message
-    dismod_at.sql_command(connection, cmd)
-# ----------------------------------------------------------------------------
-def move_table(connection, src_name, dst_name) :
-    #
-    command     = 'DROP TABLE IF EXISTS ' + dst_name
-    dismod_at.sql_command(connection, command)
-    #
-    command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
-    command    += src_name + '_id TO ' + dst_name + '_id'
-    dismod_at.sql_command(connection, command)
-    #
-    command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
-    dismod_at.sql_command(connection, command)
-    #
-    # log table
-    message      = f'move table {src_name} to {dst_name}'
-    add_log_entry(connection, message)
-# ----------------------------------------------------------------------------
 def run_one_job(
 # BEGIN syntax
 # run_one_job(
@@ -322,7 +284,7 @@ def run_one_job(
     #
     # omega_constraint
     at_cascade.omega_constraint(all_node_database, fit_node_database)
-    add_log_entry(connection, 'omega_constraint')
+    at_cascade.add_log_entry(connection, 'omega_constraint')
     #
     # init
     command = [ 'dismod_at', fit_node_database, 'init' ]
@@ -369,25 +331,25 @@ def run_one_job(
     system_command(command, file_stdout)
     #
     # move avgint -> c_root_avgint
-    move_table(connection, 'avgint', 'c_root_avgint')
+    at_cascade.move_table(connection, 'avgint', 'c_root_avgint')
     #
     # avgint_parent_grid
     at_cascade.avgint_parent_grid(all_node_database, fit_node_database)
-    add_log_entry(connection, 'avgint_parent_grid')
+    at_cascade.add_log_entry(connection, 'avgint_parent_grid')
     #
     # c_shift_predict_fit_var
     command = [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
     system_command(command, file_stdout)
-    move_table(connection, 'predict', 'c_shift_predict_fit_var')
+    at_cascade.move_table(connection, 'predict', 'c_shift_predict_fit_var')
     #
     # c_shift_predict_sample
     command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     system_command(command, file_stdout)
-    move_table(connection, 'predict', 'c_shift_predict_sample')
+    at_cascade.move_table(connection, 'predict', 'c_shift_predict_sample')
     #
     # c_shift_avgint
     # is the table created by avgint_parent_grid
-    move_table(connection, 'avgint', 'c_shift_avgint')
+    at_cascade.move_table(connection, 'avgint', 'c_shift_avgint')
     #
     # shift_databases
     shift_databases = dict()
@@ -430,7 +392,7 @@ def run_one_job(
     )
     #
     # move c_root_avgint -> avgint
-    move_table(connection, 'c_root_avgint', 'avgint')
+    at_cascade.move_table(connection, 'c_root_avgint', 'avgint')
     #
     # node_id for predictions for fit_node
     set_avgint_node_id(connection, fit_node_id)
@@ -438,12 +400,12 @@ def run_one_job(
     # c_predict_fit_var
     command = [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
     system_command(command, file_stdout)
-    move_table(connection, 'predict', 'c_predict_fit_var')
+    at_cascade.move_table(connection, 'predict', 'c_predict_fit_var')
     #
     # c_predict_sample
     command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
     system_command(command, file_stdout)
-    move_table(connection, 'predict', 'c_predict_sample')
+    at_cascade.move_table(connection, 'predict', 'c_predict_sample')
     #
     # connection
     connection.close()

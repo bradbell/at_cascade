@@ -15,6 +15,7 @@ The at_cascade Python Module
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
 {xsrst_child_table
+    at_cascade/add_log_entry.py
     at_cascade/avgint_parent_grid.py
     at_cascade/cascade_root_node.py
     at_cascade/check_cascade_fit.py
@@ -31,6 +32,7 @@ The at_cascade Python Module
     at_cascade/get_fit_integrand.py
     at_cascade/get_parent_node.py
     at_cascade/get_var_id.py
+    at_cascade/move_table.py
     at_cascade/no_ode_fit.py
     at_cascade/omega_constraint.py
     at_cascade/run_one_job.py
@@ -43,6 +45,7 @@ The at_cascade Python Module
 '''
 
 # BEGIN_SORT_THIS_LINE_PLUS_1
+from .add_log_entry         import add_log_entry
 from .avgint_parent_grid    import avgint_parent_grid
 from .cascade_root_node     import cascade_root_node
 from .check_cascade_fit     import check_cascade_fit
@@ -59,6 +62,7 @@ from .get_fit_children      import get_fit_children
 from .get_fit_integrand     import get_fit_integrand
 from .get_parent_node       import get_parent_node
 from .get_var_id            import get_var_id
+from .move_table            import move_table
 from .no_ode_fit            import no_ode_fit
 from .omega_constraint      import omega_constraint
 from .run_one_job           import run_one_job

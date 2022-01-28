@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -121,44 +121,6 @@ def create_empty_log_table(connection) :
     # log table
     empty_list = list()
     dismod_at.replace_table(connection, 'log', empty_list)
-# ----------------------------------------------------------------------------
-def add_log_entry(connection, message) :
-    #
-    # log_table
-    log_table = dismod_at.get_table_dict(connection, 'log')
-    #
-    # seconds
-    seconds   = int( time.time() )
-    #
-    # message_type
-    message_type = 'at_cascade'
-    #
-    # cmd
-    cmd = 'insert into log'
-    cmd += ' (log_id,message_type,table_name,row_id,unix_time,message) values('
-    cmd += str( len(log_table) ) + ','     # log_id
-    cmd += f'"{message_type}",'            # message_type
-    cmd += 'null,'                         # table_name
-    cmd += 'null,'                         # row_id
-    cmd += str(seconds) + ','              # unix_time
-    cmd += f'"{message}")'                 # message
-    dismod_at.sql_command(connection, cmd)
-# ----------------------------------------------------------------------------
-def move_table(connection, src_name, dst_name) :
-    #
-    command     = 'DROP TABLE IF EXISTS ' + dst_name
-    dismod_at.sql_command(connection, command)
-    #
-    command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
-    command    += src_name + '_id TO ' + dst_name + '_id'
-    dismod_at.sql_command(connection, command)
-    #
-    command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
-    dismod_at.sql_command(connection, command)
-    #
-    # log table
-    message      = f'move table {src_name} to {dst_name}'
-    add_log_entry(connection, message)
 # ----------------------------------------------------------------------------
 def add_index_to_name(table, name_col) :
     row   = table[-1]
@@ -283,14 +245,14 @@ def no_ode_fit(
     #
     # omega_constraint
     at_cascade.omega_constraint(all_node_database, no_ode_database)
-    add_log_entry(connection, 'omega_constraint')
+    at_cascade.add_log_entry(connection, 'omega_constraint')
     #
     # move avgint -> c_root_avgint
-    move_table(connection, 'avgint', 'c_root_avgint')
+    at_cascade.move_table(connection, 'avgint', 'c_root_avgint')
     #
     # avgint_parent_grid
     at_cascade.avgint_parent_grid(all_node_database, no_ode_database)
-    add_log_entry(connection, 'avgint_parent_grid')
+    at_cascade.add_log_entry(connection, 'avgint_parent_grid')
     #
     # hold_out_integrand
     hold_out_integrand = list()
@@ -353,10 +315,10 @@ def no_ode_fit(
     # c_shift_predict_fit_var
     command = [ 'dismod_at', no_ode_database, 'predict', 'fit_var' ]
     system_command(command, file_stdout)
-    move_table(connection, 'predict', 'c_shift_predict_fit_var')
+    at_cascade.move_table(connection, 'predict', 'c_shift_predict_fit_var')
     #
     # c_shift_avgint
-    move_table(connection, 'avgint', 'c_shift_avgint')
+    at_cascade.move_table(connection, 'avgint', 'c_shift_avgint')
     #
     # root_fit_database
     shift_databases = { root_node_name : root_fit_database }
@@ -368,7 +330,7 @@ def no_ode_fit(
     )
     #
     # move c_root_avgint -> avgint
-    move_table(connection, 'c_root_avgint', 'avgint')
+    at_cascade.move_table(connection, 'c_root_avgint', 'avgint')
     #
     # restore hold_out_integrand
     hold_out_integrand = ''
