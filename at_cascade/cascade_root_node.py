@@ -52,7 +52,7 @@ and difference priors.
 
 root_fit_database
 *****************
-This directory is
+This database is located at
 
     *result_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
 
@@ -179,7 +179,11 @@ def cascade_root_node(
     connection      = dismod_at.create_connection(root_fit_database, new)
     node_table      = dismod_at.get_table_dict(connection, 'node')
     covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
     connection.close()
+    if len(avgint_table) != 0 :
+        msg = 'cascade_root_node: avgint table is not empty'
+        assert False, msg
     #
     # fit_integrand
     fit_integrand = at_cascade.get_fit_integrand(root_fit_database)
