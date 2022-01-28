@@ -21,7 +21,7 @@ Release Notes for 2022
 
 01-28
 *****
-Add the :ref:`add_log_entry` and :ref:`move_table`
+Add the :ref:`add_log_entry`, :ref:`move_table`, and :ref:`empty_avgint_table`
 routines to the at_cascade module.
 
 01-27

@@ -136,55 +136,6 @@ import statistics
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
-def empty_avgint_table(connection, n_covariate) :
-    # col_name
-    col_name = [
-        'integrand_id',
-        'node_id',
-        'subgroup_id',
-        'weight_id',
-        'age_lower',
-        'age_upper',
-        'time_lower',
-        'time_upper',
-    ]
-    for covariate_id in range(n_covariate) :
-        col_name.append(f'x_{covariate_id}')
-    #
-    # col_type
-    col_type = [
-        'integer',
-        'integer',
-        'integer',
-        'integer',
-        'real',
-        'real',
-        'real',
-        'real',
-    ]
-    for covariate_id in range(n_covariate) :
-        col_type.append('real')
-    #
-    # create_table
-    row_list = list()
-    tbl_name = 'avgint'
-    dismod_at.create_table(
-        connection, tbl_name, col_name, col_type, row_list
-    )
-    #
-    # add_log_entry
-    message = 'create empty avgint table'
-    at_cascade.add_log_entry(connection, message)
- # ----------------------------------------------------------------------------
-def move_table(connection, src_name, dst_name) :
-    command     = 'DROP TABLE IF EXISTS ' + dst_name
-    dismod_at.sql_command(connection, command)
-    command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
-    command    += src_name + '_id TO ' + dst_name + '_id'
-    dismod_at.sql_command(connection, command)
-    command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
-    dismod_at.sql_command(connection, command)
-# ----------------------------------------------------------------------------
 def add_index_to_name(table, name_col) :
     row   = table[-1]
     name  = row[name_col]
@@ -806,8 +757,7 @@ def create_shift_db(
             )
         #
         # empty_avgint_table
-        n_covariate = len( fit_table['covariate'] )
-        empty_avgint_table(shift_connection, n_covariate)
+        at_cascade.empty_avgint_table(shift_connection)
         #
         # drop the following tables:
         # c_shift_avgint, c_shift_predict_sample, c_shift_predict_fit_var

@@ -167,6 +167,12 @@ def try_one_job(
         fit_split_reference_id
     )
     #
+    # fit_type
+    fit_type = 'both'
+    #
+    # job_name
+    job_name = job_table[this_job_id]['job_name']
+    #
     # trace_file_obj
     trace_file_obj = None
     if max_number_cpu > 1 :
@@ -183,10 +189,9 @@ def try_one_job(
         lock.release()
         #
         # print message at start
-        job_name        = job_table[this_job_id]['job_name']
         now             = datetime.datetime.now()
         current_time    = now.strftime("%H:%M:%S")
-        print( f'Begin: {current_time}: {job_name}' )
+        print( f'Begin: {current_time}: {job_name} fit {fit_type}' )
     #
     try :
         # run_one_job
@@ -197,11 +202,50 @@ def try_one_job(
             all_node_database = all_node_database,
             node_table        = node_table,
             fit_integrand     = fit_integrand,
+            fit_type          = fit_type,
             trace_file_obj    = trace_file_obj,
         )
         #
-        # ok
-        ok = True
+        # job_ok
+        job_ok = True
+    except Exception as e:
+        print( str(e) )
+        print( f'{job_name}: ' + str(e) )
+
+        job_ok = False
+    #
+    if not job_ok :
+        #
+        # fit_type
+        fit_type = 'fixed'
+        #
+        if max_number_cpu > 1 :
+            # print message at start
+            now             = datetime.datetime.now()
+            current_time    = now.strftime("%H:%M:%S")
+            print( f'Begin: {current_time}: {job_name} fit {fit_type}' )
+        #
+        try :
+            #
+            # run_one_job
+            # the lock should not be aquired during this operation
+            at_cascade.run_one_job(
+                job_table         = job_table,
+                run_job_id        = this_job_id ,
+                all_node_database = all_node_database,
+                node_table        = node_table,
+                fit_integrand     = fit_integrand,
+                fit_type          = fit_type,
+                trace_file_obj    = trace_file_obj,
+            )
+            #
+            # job_ok
+            job_ok = True
+        except Exception as e:
+            print( f'{job_name}: ' + str(e) )
+            job_ok = False
+    #
+    if job_ok :
         #
         # lock
         lock.acquire()
@@ -223,7 +267,8 @@ def try_one_job(
         event.set()
         lock.release()
         #
-    except :
+    else :
+        # if job not ok
         #
         # descendant_set
         descendant_set = { this_job_id }
@@ -263,7 +308,7 @@ def try_one_job(
             raise
         #
         # ok
-        ok = False
+        job_ok = False
     #
     if max_number_cpu > 1 :
         #
@@ -271,7 +316,7 @@ def try_one_job(
         job_name     = job_table[this_job_id]['job_name']
         now          = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
-        if ok :
+        if job_ok :
             print( f'End:   {current_time}: {job_name}' )
         else :
             print( f'Error: {current_time}: {job_name}' )
@@ -474,7 +519,7 @@ def run_parallel_job(
             #
             # run_one_job
             # assumes lock is not acquired during this operation
-            job_ok = try_one_job(
+            try_one_job(
                 job_table,
                 job_id,
                 all_node_database,

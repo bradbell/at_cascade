@@ -54,6 +54,11 @@ fit_integrand
 is a ``set`` of integrand_id values that occur in the data table; see
 :ref:`get_fit_integrand`.
 
+fit_type
+********
+is a ``str`` equal to 'both' or 'fixed' and specifies the type
+of fit that dismod_at will do.
+
 trace_file_obj
 **************
 If this argument is not None, it is a ``io.TextIOBase`` object
@@ -120,52 +125,6 @@ def system_command(command, file_stdout) :
             write_command = True,
         )
 # ----------------------------------------------------------------------------
-def empty_avgint_table(connection, n_covariate) :
-    # col_name
-    col_name = [
-        'integrand_id',
-        'node_id',
-        'subgroup_id',
-        'weight_id',
-        'age_lower',
-        'age_upper',
-        'time_lower',
-        'time_upper',
-    ]
-    for covariate_id in range(n_covariate) :
-        col_name.append(f'x_{covariate_id}')
-    #
-    # col_type
-    col_type = [
-        'integer',
-        'integer',
-        'integer',
-        'integer',
-        'real',
-        'real',
-        'real',
-        'real',
-    ]
-    for covariate_id in range(n_covariate) :
-        col_type.append('real')
-    #
-    # create_table
-    row_list = list()
-    tbl_name = 'avgint'
-    dismod_at.create_table(
-        connection, tbl_name, col_name, col_type, row_list
-    )
-    #
-    # add_log_entry
-    message = 'create empty avgint table'
-    at_cascade.add_log_entry(connection, message)
-# ----------------------------------------------------------------------------
-def set_avgint_node_id(connection, fit_node_id) :
-    avgint_table = dismod_at.get_table_dict(connection, 'avgint')
-    for row in avgint_table :
-        row['node_id'] = fit_node_id
-    dismod_at.replace_table(connection, 'avgint', avgint_table)
-# ----------------------------------------------------------------------------
 def create_empty_log_table(connection) :
     #
     cmd  = 'create table if not exists log('
@@ -189,14 +148,17 @@ def run_one_job(
     all_node_database = None,
     node_table        = None,
     fit_integrand     = None,
+    fit_type          = None,
     trace_file_obj    = None,
 # )
 # END syntax
 ) :
-    assert job_table         is not None
-    assert run_job_id        is not None
-    assert all_node_database is not None
-    assert node_table        is not None
+    assert type(job_table) == list
+    assert type(run_job_id) == int
+    assert type(all_node_database) == str
+    assert type(node_table) == list
+    assert type(fit_integrand) == set
+    assert fit_type in [ 'both', 'fixed' ]
     #
     # file_stdout
     if trace_file_obj is not None :
@@ -340,12 +302,12 @@ def run_one_job(
         system_command(command, file_stdout)
     #
     # fit
-    command = [ 'dismod_at', fit_node_database, 'fit', 'both' ]
+    command = [ 'dismod_at', fit_node_database, 'fit', fit_type ]
     system_command(command, file_stdout)
     #
     # sample
     command = [
-        'dismod_at', fit_node_database, 'sample', 'asymptotic', 'both', '20'
+        'dismod_at', fit_node_database, 'sample', 'asymptotic', fit_type, '20'
     ]
     system_command(command, file_stdout)
     #
@@ -408,9 +370,7 @@ def run_one_job(
     )
     #
     # empty_avgint_table
-    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
-    n_covariate     = len(covariate_table)
-    empty_avgint_table(connection, n_covariate)
+    at_cascade.empty_avgint_table(connection)
     #
     # connection
     connection.close()
