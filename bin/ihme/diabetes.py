@@ -89,7 +89,7 @@ max_fit             = 250
 #
 # max_abs_effect
 # Maximum absolute effect for any covriate multiplier.
-max_abs_effect      = 2.0
+max_abs_effect      = 3.0
 #
 # max_plot
 # Maximum number of data points to plot per integrand.
