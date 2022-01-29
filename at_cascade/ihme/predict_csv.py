@@ -531,8 +531,11 @@ def predict_csv(
         # file_out
         file_out = f'{result_dir}/{database_dir}/predict.csv'
         #
-        # check for an error message in corresponding database
+        # check for an error during fit both and fit fixed
+        two_errors = False
         if job_name in error_message_dict :
+                two_errors = len( error_message_dict[job_name] ) > 1
+        if two_errors :
             if os.path.exists( file_out ) :
                 os.remove( file_out )
             print( f'{job_id+1}/{n_job} Error in {job_name}' )
