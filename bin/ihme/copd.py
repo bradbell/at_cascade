@@ -35,9 +35,10 @@ covariate_csv_file_dict = {
     'ihme_db/DisMod_AT/covariates/gbd2019_haqi_covariate.csv',
 }
 #
-# log_scale_covariate_set
-# log_sev_copd is already log scaled in
-log_scale_covariate_set = set()
+# scale_covaraite_dict
+# The keys in this dictionary are relative covariate names,
+# the corresponding fuctions will be used to transform the covariates.
+scale_covariate_dict = dict()
 #
 # input files
 # Use None for csmr_inp_file if you do not want to include it in fit
@@ -324,7 +325,7 @@ def setup_function() :
         data_inp_file           = data_inp_file,
         csmr_inp_file           = csmr_inp_file,
         covariate_csv_file_dict = covariate_csv_file_dict,
-        log_scale_covariate_set = log_scale_covariate_set,
+        scale_covariate_dict    = scale_covariate_dict,
     )
     #
     # write_mtall_tables
@@ -385,7 +386,7 @@ if __name__ == '__main__' :
         setup_function          = setup_function,
         max_plot                = max_plot,
         covariate_csv_file_dict = covariate_csv_file_dict,
-        log_scale_covariate_set = log_scale_covariate_set,
+        scale_covariate_dict    = scale_covariate_dict,
         root_node_database      = root_node_database,
         no_ode_fit              = no_ode_fit,
     )

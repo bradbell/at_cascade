@@ -397,14 +397,14 @@ def predict_csv_one_job(
 def predict_csv(
     result_dir              = None,
     covariate_csv_file_dict = None,
-    log_scale_covariate_set = None,
+    scale_covariate_dict    = None,
     fit_goal_set            = None,
     root_node_database      = None,
     max_plot                = None,
 ) :
     assert type(result_dir) == str
     assert type(covariate_csv_file_dict) == dict
-    assert type(log_scale_covariate_set) == set
+    assert type(scale_covariate_dict) == dict
     assert type(fit_goal_set) == set
     assert type(root_node_database) == str
     assert type(max_plot) == int
@@ -482,10 +482,13 @@ def predict_csv(
     covariate_list             = covariate_csv_file_dict.keys()
     for covariate_name in covariate_list :
         covariate_file_path = covariate_csv_file_dict[covariate_name]
-        log_scale           = covariate_name in log_scale_covariate_set
+        if covariate_name in scale_covariate_dict :
+            scale = scale_covariate_dict[covariate_name]
+        else :
+            scale = None
         (one_age_group, interpolate_covariate) = \
             at_cascade.ihme.get_interpolate_covariate(
-                covariate_file_path, log_scale, age_group_id_dict
+                covariate_file_path, scale, age_group_id_dict
         )
         one_age_group_dict[covariate_name] = one_age_group
         interpolate_all_covariate[covariate_name] = interpolate_covariate

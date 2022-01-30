@@ -73,7 +73,7 @@ def main(
     setup_function          = None,
     max_plot                = None,
     covariate_csv_file_dict = None,
-    log_scale_covariate_set = None,
+    scale_covariate_dict    = None,
     root_node_database      = None,
     no_ode_fit              = None,
 ) :
@@ -83,7 +83,7 @@ def main(
     assert setup_function is not None
     assert type(max_plot) == int
     assert type(covariate_csv_file_dict) == dict
-    assert type(log_scale_covariate_set) == set
+    assert type(scale_covariate_dict) == dict
     assert type(root_node_database) == str
     assert type(no_ode_fit) == bool
     #
@@ -192,7 +192,7 @@ def main(
         at_cascade.ihme.predict_csv(
             result_dir              = result_dir,
             covariate_csv_file_dict = covariate_csv_file_dict,
-            log_scale_covariate_set = log_scale_covariate_set,
+            scale_covariate_dict    = scale_covariate_dict,
             fit_goal_set            = fit_goal_set,
             root_node_database      = root_node_database,
             max_plot                = max_plot,

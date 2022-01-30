@@ -15,6 +15,7 @@ import math
 import copy
 import time
 import dismod_at
+import numpy
 import multiprocessing
 #
 if os.path.isfile( os.getcwd() + '/at_cascade/__init__.py' ) :
@@ -36,8 +37,10 @@ covariate_csv_file_dict = {
     'ihme_db/DisMod_AT/covariates/gbd2019_haqi_covariate.csv',
 }
 #
-# log_scale_covaraite_set
-log_scale_covariate_set = { 'log_folic_acid' }
+# scale_covaraite_dict
+# The keys in this dictionary are relative covariate names,
+# the corresponding fuctions will be used to transform the covariates.
+scale_covariate_dict = { 'log_folic_acid' : numpy.log10 }
 #
 # input files
 # Use None for csmr_inp_file if you do not want to include it in fit
@@ -311,6 +314,7 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
+fit_goal_set = { '1_Global' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understanding this program
 # ----------------------------------------------------------------------------
@@ -331,7 +335,7 @@ def setup_function() :
         data_inp_file           = data_inp_file,
         csmr_inp_file           = csmr_inp_file,
         covariate_csv_file_dict = covariate_csv_file_dict,
-        log_scale_covariate_set = log_scale_covariate_set,
+        scale_covariate_dict    = scale_covariate_dict,
     )
     #
     # write_mtall_tables
@@ -392,7 +396,7 @@ if __name__ == '__main__' :
         setup_function          = setup_function,
         max_plot                = max_plot,
         covariate_csv_file_dict = covariate_csv_file_dict,
-        log_scale_covariate_set = log_scale_covariate_set,
+        scale_covariate_dict    = scale_covariate_dict,
         root_node_database      = root_node_database,
         no_ode_fit              = no_ode_fit,
     )

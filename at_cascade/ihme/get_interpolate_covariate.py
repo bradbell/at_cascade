@@ -62,11 +62,15 @@ def check_rectangular_grid(covariate_file_path, covariate_table) :
                 previous_year_id           = year_id
 # -----------------------------------------------------------------------------
 # (one_age_group, interpolate_covariate)  = get_interpolate_covariate(
-#   covaraite_csv_file, log_scale, age_group_id_dict
+#   covaraite_csv_file, scale, age_group_id_dict
 # )
 def get_interpolate_covariate(
-        covariate_file_path, log_scale, age_group_id_dict
+        covariate_file_path, scale, age_group_id_dict
 ) :
+    assert type(covariate_file_path) == str
+    assert scale is None or callable(scale)
+    assert type(age_group_id_dict) == dict
+    #
     file_ptr   = open(covariate_file_path)
     reader     = csv.DictReader(file_ptr)
     #
@@ -88,8 +92,8 @@ def get_interpolate_covariate(
         #
         # mean_value
         mean_value = float( row['mean_value'] )
-        if log_scale :
-            mean_value = numpy.log10( mean_value )
+        if scale is not None :
+            mean_value = scale( mean_value )
         #
         # covariate_table
         row = {
