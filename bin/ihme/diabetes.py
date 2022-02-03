@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/env python3
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
 #           Copyright (C) 2021-22 University of Washington
@@ -56,8 +56,8 @@ no_ode_fit = True
 #
 # root_node_name
 # name of the node where the cascade will start
-# root_node_name      = '64_High-income'
-root_node_name      = '1_Global'
+# root_node_name      = '1_Global'
+root_node_name      = '64_High-income'
 #
 # gamma_factor
 # The gamma for each integrand is this factor times the median
@@ -98,7 +98,7 @@ max_plot            = 2000
 #
 # node_split_name_set
 # Name of the nodes where we are splitting from Both to Female, Male
-node_split_name_set = {'1_Global'}
+node_split_name_set = { root_node_name }
 #
 # hold_out_nid_set
 # set of nid values in data file for studies that are suspect
@@ -249,10 +249,10 @@ mulcov_list_dict = [
 # mulcov_freeze_list
 # Freeze the covariate multipliers at the Global level after the sex split
 mulcov_freeze_list = [
-    {   'node'      : '1_Global',
+    {   'node'      : root_node_name,
         'sex'       : 'Male',
     },
-    {   'node'      : '1_Global',
+    {   'node'      : root_node_name,
         'sex'       : 'Female',
     },
 ]
@@ -314,6 +314,9 @@ fit_goal_set = {
     '482_Eastern_Cape',
     '218_Togo',
     '25329_Edo',
+}
+fit_goal_set = {
+    '527_California', '547_Mississippi', '81_Germany', '84_Ireland'
 }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understanding this program
