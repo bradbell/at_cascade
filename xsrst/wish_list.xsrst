@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-          Copyright (C) 2021-21 University of Washington
+          Copyright (C) 2021-22 University of Washington
              (Bradley M. Bell bradbell@uw.edu)
 
 This program is distributed under the terms of the
@@ -9,8 +9,8 @@ see http://www.gnu.org/licenses/agpl.txt
 -----------------------------------------------------------------------------
 {xsrst_begin wish_list}
 {xsrst_spell
-    stdout
     podman
+    cmake
 }
 
 Wish List for at_cascade
@@ -18,23 +18,14 @@ Wish List for at_cascade
 
 Parallel Processing
 *******************
-1.  Put standard output for each job in a file called stdout
-    in the directory corresponding to the job.
-    Currently standard output has the output for all the running jobs
-    mixed together on a line by line basis.
-
-2.  Report what jobs are running and what jobs have been completed
-    on standard output and in a file.
-
-3.  Add detection and graceful handling of the case where a job hangs; e.g.,
-    report which jobs completed and which hung.
-    For example, a ``try`` ``except`` block could be added for the call to
-    ``run_one_job``, and the corresponding child jobs could be aborted when
-    an exception occurs.
-
-4.  The shared memory pointers currently use fixed names. This should be
+1.  The shared memory pointers currently use fixed names. This should be
     changed to use names generated bo the shared memory routine to
     allow for multiple cascades to run on the same system.
+
+2.  There is no need for the :ref:`all_cov_reference_table`.
+    The average value of the covariate for all the data corresponding to
+    a node_id and split_reference_id can be used to set the covariate
+    reference for a fit.
 
 Disk Space
 **********
@@ -47,9 +38,12 @@ data table from a different database.
 
 Packaging
 *********
-Create a pip package for at_cascade; see
-`python packaging <https://packaging.python.org>`_.
-In addition, create a docker / podman image that include dismod_at
-and can run the cascade.
+1.  Create a pip package for at_cascade; see
+    `python packaging <https://packaging.python.org>`_.
+    In addition, create a docker / podman image that include dismod_at
+    and can run the cascade.
+
+2.  Remove the need for LD_LIBRARY_PATH using the following cmake feature:
+    `Always full RPATH <https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling#always-full-rpath>`_ .
 
 {xsrst_end wish_list}

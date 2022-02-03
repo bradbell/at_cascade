@@ -19,6 +19,10 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+02-3
+****
+Add new :ref:`wish_list` entries and remove old ones the have been completed.
+
 01-28
 *****
 Add the :ref:`add_log_entry`, :ref:`move_table`, and :ref:`empty_avgint_table`
