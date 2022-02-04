@@ -69,8 +69,11 @@ using this routine.
 2.  Remove :ref:`create_all_node_db.all_cov_reference` from
     create_all_node_db argument list.
 
-2.  Change glossary entry fit_node_database
+3.  Change glossary entry fit_node_database
     :ref:`glossary.fit_node_database.covariate_table`.
+
+4.  Add assumption that covariate reference values have been replaced using
+    this routine in :ref:`check_cascade_node<check_cascade_node>`.
 
 {xsrst_end set_cov_reference}}
 '''

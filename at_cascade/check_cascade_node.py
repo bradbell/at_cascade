@@ -57,6 +57,11 @@ extra properties listed under
 in the cascade_root_node documentation.
 This argument can't be ``None``.
 
+avgint Table
+============
+The avgint table in this database is replaced using the
+*avgint* argument to this routine.
+
 avgint_table
 ************
 This an avgint table specifying the predictions to check.
@@ -96,22 +101,6 @@ def check_cascade_node(
     assert type(fit_node_database) == str
     assert type(avgint_table) == list
     assert relative_tolerance is None or type(relative_tolerance) == float
-    #
-    # connection
-    new        = False
-    connection = dismod_at.create_connection(all_node_database, new)
-    #
-    # all_cov_reference_table, all_option_table, split_reference_table
-    all_cov_reference_table = dismod_at.get_table_dict(
-        connection, 'all_cov_reference'
-    )
-    all_option_table      = dismod_at.get_table_dict(connection, 'all_option')
-    split_reference_table = dismod_at.get_table_dict(
-        connection, 'split_reference'
-    )
-    #
-    # connection
-    connection.close()
     #
     # tables
     new        = False
@@ -170,40 +159,12 @@ def check_cascade_node(
     assert n_avgint == len( predict_fit_var_table )
     assert n_predict % n_avgint == 0
     #
-    # cov_info
-    cov_info = at_cascade.get_cov_info(
-        all_option_table, tables['covariate'], split_reference_table
-    )
-    #
     # cov_reference_list
-    # values that are in the all_cov_reference table
-    cov_reference_list = n_covariate * [ None ]
-    for row in all_cov_reference_table :
-        if row['node_id'] == fit_node_id :
-            covariate_id = row['covariate_id']
-            if len( split_reference_table ) == 0 :
-                cov_reference_list[covariate_id] = row['reference']
-            elif row['split_reference_id']==cov_info['split_reference_id'] :
-                cov_reference_list[covariate_id] = row['reference']
-    #
-    # cov_reference_list
-    # include splitting covariate value
-    if len( split_reference_table ) > 0 :
-        split_covariate_id   = cov_info['split_covariate_id']
-        split_reference_list = cov_info['split_reference_list']
-        split_reference_id   = cov_info['split_reference_id']
-        reference            = split_reference_list[split_reference_id]
-        cov_reference_list[split_covariate_id] = reference
-    #
-    # cov_reference_list
-    # include absolute covariate values
-    for covariate_id in cov_info['abs_covariate_id_set'] :
-        reference = tables['covariate'][covariate_id]['reference']
-        cov_reference_list[covariate_id] = reference
-
-    #
-    for reference in cov_reference_list :
-        assert not reference is None
+    cov_reference_list = list()
+    for (covariate_id, row) in enumerate( tables['covariate'] ) :
+        reference = row['reference']
+        assert reference is not None
+        cov_reference_list.append( reference )
     #
     # rate_fun
     rate_fun = dict()
