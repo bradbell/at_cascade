@@ -179,9 +179,9 @@ routine replaces them for other nodes.
 
 Checking The Fit
 ****************
-The results of the fit are checked for check_cascade_node
+The results of the fit are checked by check_cascade_node
 using the :ref:`check_cascade_node.avgint_table`
-that was created by the rood_node_db routine.
+that was created by the root_node_db routine.
 The node_id for each row is replaced by the node_id for the
 fit being checked.
 routine uses these tables to check that fit against the truth.

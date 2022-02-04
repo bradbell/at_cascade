@@ -19,6 +19,13 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+02-04
+*****
+In the examples, fix the following typos:
+Change 'are checked for check_cascade_node'
+to 'are checked by check_cascade_node'.
+Change 'rood_node_db routine' to 'root_node_db routine'.
+
 02-03
 *****
 Add new :ref:`wish_list` entries and remove old ones the have been completed.
