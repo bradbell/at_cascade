@@ -28,6 +28,7 @@ The at_cascade Python Module
     at_cascade/data4cov_reference.py
     at_cascade/empty_avgint_table.py
     at_cascade/get_cov_info.py
+    at_cascade/get_cov_reference.py
     at_cascade/get_database_dir.py
     at_cascade/get_fit_children.py
     at_cascade/get_fit_integrand.py
@@ -38,7 +39,6 @@ The at_cascade Python Module
     at_cascade/omega_constraint.py
     at_cascade/run_one_job.py
     at_cascade/run_parallel.py
-    at_cascade/set_cov_reference.py
     at_cascade/table_name2id.py
 }
 .. END_SORT_THIS_LINE_MINUS_2
@@ -60,6 +60,7 @@ from .create_shift_db       import create_shift_db
 from .data4cov_reference    import data4cov_reference
 from .empty_avgint_table    import empty_avgint_table
 from .get_cov_info          import get_cov_info
+from .get_cov_reference     import get_cov_reference
 from .get_database_dir      import get_database_dir
 from .get_fit_children      import get_fit_children
 from .get_fit_integrand     import get_fit_integrand
@@ -70,6 +71,5 @@ from .no_ode_fit            import no_ode_fit
 from .omega_constraint      import omega_constraint
 from .run_one_job           import run_one_job
 from .run_parallel          import run_parallel
-from .set_cov_reference     import set_cov_reference
 from .table_name2id         import table_name2id
 # END_SORT_THIS_LINE_MINUS_1
