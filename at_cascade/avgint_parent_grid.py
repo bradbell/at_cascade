@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -94,13 +94,10 @@ def avgint_parent_grid(
 # )
 # END syntax
 ) :
-    # all_cov_reference_table, all_option_table
+    # all_option_table
     new        = False
     connection = dismod_at.create_connection(all_node_database, new)
     all_option_table        = dismod_at.get_table_dict(connection, 'all_option')
-    all_cov_reference_table = dismod_at.get_table_dict(
-        connection, 'all_cov_reference'
-    )
     split_reference_table   = dismod_at.get_table_dict(
         connection, 'split_reference'
     )
@@ -161,22 +158,22 @@ def avgint_parent_grid(
     #
     # cov_reference_dict
     cov_reference_dict = dict()
-    for (node_id, row) in enumerate(fit_tables['node']) :
-        if node_id == parent_node_id or row['parent'] == parent_node_id :
-            # use None as value for absolute covariate
-            reference_list = n_covariate * [None]
+    for (node_id, node_row) in enumerate(fit_tables['node']) :
+        if node_id == parent_node_id or node_row['parent'] == parent_node_id :
             #
-            # fill in value for releative covariates
-            for row in all_cov_reference_table :
-                if row['node_id'] == node_id and \
-                    row['split_reference_id'] == fit_split_reference_id :
-                    covariate_id = row['covariate_id']
-                    # use all_cov_reference table for relative covariates
-                    reference_list[covariate_id] = row['reference']
-            #
-            # fill in value for splitting covariate
-            if split_covariate_id is not None :
-                reference_list[split_covariate_id] = fit_split_reference
+            # reference_list
+            reference_list = at_cascade.get_cov_reference(
+                all_node_database  = all_node_database,
+                root_node_database = fit_node_database,
+                parent_node_id     = node_id,
+                split_reference_id = fit_split_reference_id,
+            )
+            # reference_list
+            for covariate_id in range( len( fit_tables['covariate'] ) ) :
+                if reference_list[covariate_id] is None :
+                    covariate_row = fit_tables['covariate'][covariate_id]
+                    reference     = covariate_row['reference']
+                    reference_list[covariate_id] = reference
             #
             # cov_reference[ (node_id, fit_split_reference_id) ]
             key = (node_id, fit_split_reference_id)
@@ -185,8 +182,12 @@ def avgint_parent_grid(
             if split_covariate_id is not None and node_id == parent_node_id :
                 for split_reference_id in range( len(split_reference_list) ) :
                     if split_reference_id != fit_split_reference_id :
-                        reference = split_reference_list[split_reference_id]
-                        reference_list[split_covariate_id] = reference
+                        reference_list = at_cascade.get_cov_reference(
+                            all_node_database  = all_node_database,
+                            root_node_database = fit_node_database,
+                            parent_node_id     = node_id,
+                            split_reference_id = fit_split_reference_id,
+                        )
                         key = (node_id, split_reference_id)
                         cov_reference_dict[key] = copy.copy( reference_list )
     #

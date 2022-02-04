@@ -28,15 +28,14 @@ import at_cascade
 # -----------------------------------------------------------------------------
 #
 # avg_income
-avg_income       = { 'n1':1.0, 'n2':2.0 }
-avg_income['n0'] = ( avg_income['n1'] + avg_income['n2'] ) / 2.0
-#
-# alpha_true
-# 2.0 = exp( alpha_true * (agv_income['n2'] - avg_income['n0']) )
-alpha_true = math.log(2.0) / ( avg_income['n2'] - avg_income['n0'] )
+avg_income       = 1.5
 #
 # income_grid
-income_grid = [ avg_income['n1'], avg_income['n0'], avg_income['n2'] ]
+income_grid      = [ 0.5 * avg_income, avg_income, 1.5 * avg_income ]
+#
+# alpha_true
+# 2.0 = exp( alpha_true * (income_grid[2] - income_grid[0])
+alpha_true = math.log(2.0) / ( income_grid[2] - income_grid[0] )
 #
 # age_grid
 age_grid = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
@@ -47,8 +46,8 @@ fit_goal_set = { 'n1', 'n2' }
 #
 # ----------------------------------------------------------------------------
 # iota_true
-def iota_true(a, I = avg_income['n0'] ) :
-    r_0 = avg_income['n0']
+def iota_true(a, I = avg_income) :
+    r_0 = avg_income
     return (1 + a / 100) * 1e-2 * math.exp( alpha_true * ( I - r_0 ) )
 # ----------------------------------------------------------------------------
 def root_node_db(file_name) :
@@ -132,7 +131,7 @@ def root_node_db(file_name) :
     } ]
     #
     # covariate_table
-    covariate_table = [ { 'name':'income',   'reference':avg_income['n0'] } ]
+    covariate_table = [ { 'name':'income',   'reference':avg_income } ]
     #
     # mulcov_table
     mulcov_table = [ {
@@ -244,7 +243,7 @@ def check_fit(result_dir, fit_node_name) :
         elif node_id == fit_node_id :
             age_id         = row['age_id']
             age            = age_table[age_id]['age']
-            income         = avg_income[fit_node_name]
+            income         = avg_income
             true_var_value = iota_true(age, income)
         else :
             true_var_value = 0.0
@@ -319,7 +318,7 @@ def main() :
     covariate_name      = 'income'
     for node_name in [ 'n0', 'n1', 'n2' ] :
         all_cov_reference[node_name] = {
-            covariate_name : [ avg_income[node_name] ]
+            covariate_name : [ avg_income ]
         }
     #
     # mulcov_freeze_table

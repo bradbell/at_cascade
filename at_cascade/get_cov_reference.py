@@ -78,6 +78,7 @@ the average of the covariates int the data table.
 Only rows of the data table that get included in the fit for
 this *parent_node_id* and *split_reference_id* are included in the average.
 In addition, null values for a covariate are not included in the average.
+If there are no values to average, None is returned as the reference.
 
 
 2DO
@@ -117,7 +118,6 @@ def get_cov_reference(
     assert type(all_node_database) == str
     assert type(root_node_database) == str
     assert type(parent_node_id) == int
-    assert type(split_reference_id) == int
     #
     # all_table
     new              = False
@@ -126,6 +126,12 @@ def get_cov_reference(
     for tbl_name in [ 'all_option', 'split_reference' ] :
         all_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
     connection.close()
+    #
+    # chekc split_reference_id
+    if len( all_table['split_reference'] ) == 0 :
+        assert split_reference_id == None
+    else :
+        assert type(split_reference_id) == int
     #
     # root_table
     new        = False
@@ -139,11 +145,16 @@ def get_cov_reference(
     cov_info = at_cascade.get_cov_info(
         all_table['all_option'],
         root_table['covariate'],
-        all_table['split_referene']
+        all_table['split_reference']
     )
     #
     # rel_covariate_id_set
     rel_covariate_id_set = cov_info['rel_covariate_id_set']
+    #
+    # split_covariate_id
+    split_covariate_id = None
+    if len( all_table['split_reference'] ) > 0 :
+        split_covariate_id = cov_info['split_covariate_id']
     #
     # check max_difference
     for covariate_id in rel_covariate_id_set :
@@ -215,7 +226,7 @@ def get_cov_reference(
             #
             # reference
             row       = all_table['split_reference'][split_reference_id]
-            reference = row['reference']
+            reference = row['split_reference_value']
         if covariate_id in rel_covariate_id_set :
             #
             # covariate_list
@@ -229,11 +240,11 @@ def get_cov_reference(
             #
             # reference
             if len( covariate_list ) == 0 :
-                reference = 0.0
+                reference = None
             else :
                 reference = sum(covariate_list) / len(covariate_list)
         #
         # cov_reference
-        cov_reference.append(avg)
+        cov_reference.append(reference)
     # -------------------------------------------------------------------------
     return cov_reference
