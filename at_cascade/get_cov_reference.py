@@ -20,10 +20,10 @@ Syntax
     # END syntax
 }
 
-root_node_database
-******************
+fit_node_database
+*****************
 This argument can't be ``None`` and
-is the :ref:`glossary.root_node_database`.
+is an :ref:`glossary.input_node_database`.
 Only the following tables in this database are used:
 option, data, node, and covariate.
 Note of the tables are modified.
@@ -64,8 +64,8 @@ split_reference_id
 This is the :ref:`split_reference_table.split_reference_id` that the
 covariate reference values correspond to.
 
-cov_reference
-*************
+cov_reference_list
+******************
 This return value is a ``list`` with length equal to the
 length of the covariate table.
 The :ref:`all_option_table.absolute_covariates` have the same reference value
@@ -107,16 +107,16 @@ import math
 # get_cov_reference(
 def get_cov_reference(
 # BEGIN syntax
-# cov_reference = at_cascade.get_cov_reference
+# cov_reference_list = at_cascade.get_cov_reference
     all_node_database  = None,
-    root_node_database = None,
+    fit_node_database  = None,
     parent_node_id     = None,
     split_reference_id = None,
 # )
 # END syntax
 ) :
     assert type(all_node_database) == str
-    assert type(root_node_database) == str
+    assert type(fit_node_database) == str
     assert type(parent_node_id) == int
     #
     # all_table
@@ -135,7 +135,7 @@ def get_cov_reference(
     #
     # root_table
     new        = False
-    connection = dismod_at.create_connection(root_node_database, new)
+    connection = dismod_at.create_connection(fit_node_database, new)
     root_table = dict()
     for tbl_name in [ 'option', 'data', 'node', 'covariate', ] :
         root_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
@@ -216,8 +216,8 @@ def get_cov_reference(
             if in_bnd :
                 data_subset_list.append( data_id )
     #
-    # cov_reference
-    cov_reference = list()
+    # cov_reference_list
+    cov_reference_list = list()
     for covariate_id in range( n_covariate) :
         #
         # reference
@@ -244,7 +244,7 @@ def get_cov_reference(
             else :
                 reference = sum(covariate_list) / len(covariate_list)
         #
-        # cov_reference
-        cov_reference.append(reference)
+        # cov_reference_list
+        cov_reference_list.append(reference)
     # -------------------------------------------------------------------------
-    return cov_reference
+    return cov_reference_list

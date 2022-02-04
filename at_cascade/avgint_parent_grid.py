@@ -161,35 +161,41 @@ def avgint_parent_grid(
     for (node_id, node_row) in enumerate(fit_tables['node']) :
         if node_id == parent_node_id or node_row['parent'] == parent_node_id :
             #
-            # reference_list
-            reference_list = at_cascade.get_cov_reference(
+            # cov_reference_list
+            cov_reference_list = at_cascade.get_cov_reference(
                 all_node_database  = all_node_database,
-                root_node_database = fit_node_database,
+                fit_node_database  = fit_node_database,
                 parent_node_id     = node_id,
                 split_reference_id = fit_split_reference_id,
             )
-            # reference_list
-            for covariate_id in range( len( fit_tables['covariate'] ) ) :
-                if reference_list[covariate_id] is None :
-                    covariate_row = fit_tables['covariate'][covariate_id]
-                    reference     = covariate_row['reference']
-                    reference_list[covariate_id] = reference
+            # cov_reference_list
+            for covariate_id in range( n_covariate ) :
+                if cov_reference_list[covariate_id] is None :
+                    row        = fit_tables['covariate'][covariate_id]
+                    reference  = row['reference']
+                    cov_reference_list[covariate_id] = reference
             #
             # cov_reference[ (node_id, fit_split_reference_id) ]
             key = (node_id, fit_split_reference_id)
-            cov_reference_dict[key] = copy.copy( reference_list )
+            cov_reference_dict[key] = cov_reference_list
             #
             if split_covariate_id is not None and node_id == parent_node_id :
                 for split_reference_id in range( len(split_reference_list) ) :
                     if split_reference_id != fit_split_reference_id :
-                        reference_list = at_cascade.get_cov_reference(
+                        cov_reference_list = at_cascade.get_cov_reference(
                             all_node_database  = all_node_database,
-                            root_node_database = fit_node_database,
+                            fit_node_database  = fit_node_database,
                             parent_node_id     = node_id,
                             split_reference_id = fit_split_reference_id,
                         )
+                        # cov_reference_list
+                        for covariate_id in range( n_covariate ) :
+                            if cov_reference_list[covariate_id] is None :
+                                row = fit_tables['covariate'][covariate_id]
+                                reference  = row['reference']
+                                cov_reference_list[covariate_id] = reference
                         key = (node_id, split_reference_id)
-                        cov_reference_dict[key] = copy.copy( reference_list )
+                        cov_reference_dict[key] = cov_reference_list
     #
     # tbl_name
     tbl_name = 'avgint'
