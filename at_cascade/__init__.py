@@ -38,6 +38,7 @@ The at_cascade Python Module
     at_cascade/omega_constraint.py
     at_cascade/run_one_job.py
     at_cascade/run_parallel.py
+    at_cascade/set_cov_reference.py
     at_cascade/table_name2id.py
 }
 .. END_SORT_THIS_LINE_MINUS_2
@@ -69,5 +70,6 @@ from .no_ode_fit            import no_ode_fit
 from .omega_constraint      import omega_constraint
 from .run_one_job           import run_one_job
 from .run_parallel          import run_parallel
+from .set_cov_reference     import set_cov_reference
 from .table_name2id         import table_name2id
 # END_SORT_THIS_LINE_MINUS_1
