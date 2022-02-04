@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/no_ode_fit.py
-    :lines: 175-179
+    :lines: 137-141
     :language: py
 
 .. meta::

@@ -1,0 +1,81 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!!!
+empty_avgint_table
+!!!!!!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: empty_avgint_table, create, an, empty, avgint, table
+
+.. index:: empty_avgint_table, create, an, empty, avgint, table
+
+.. _empty_avgint_table:
+
+Create An Empty avgint Table
+############################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _empty_avgint_table.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/empty_avgint_table.py
+    :lines: 48-48
+    :language: py
+
+.. meta::
+   :keywords: connection
+
+.. index:: connection
+
+.. _empty_avgint_table.connection:
+
+connection
+**********
+is a dismod_at open connection to the database.
+
+.. meta::
+   :keywords: covariate, table
+
+.. index:: covariate, table
+
+.. _empty_avgint_table.covariate_table:
+
+covariate Table
+***************
+There must be a covariate table in the database so
+this procedure can determine the number of covariates.
+
+.. meta::
+   :keywords: avgint, table
+
+.. index:: avgint, table
+
+.. _empty_avgint_table.avgint_table:
+
+avgint Table
+************
+Any previous avgint table is lost.
+
+.. meta::
+   :keywords: log, table
+
+.. index:: log, table
+
+.. _empty_avgint_table.log_table:
+
+log Table
+*********
+The message ``empty_avgint_table`` is added at the end of the log table
+with message type ``at_cascade``.
+
+----
+
+xsrst input file: ``at_cascade/empty_avgint_table.py``

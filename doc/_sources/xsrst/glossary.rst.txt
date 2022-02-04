@@ -254,6 +254,17 @@ nslist Table
 The nslist and nslist_pair tables must be empty.
 
 .. meta::
+   :keywords: avgint, table
+
+.. index:: avgint, table
+
+.. _glossary.input_node_database.avgint_table:
+
+avgint Table
+============
+The avgint table must be empty.
+
+.. meta::
    :keywords: rate, table
 
 .. index:: rate, table
@@ -498,7 +509,8 @@ root_node_database
 ******************
 This is a dismod_at database where the *root_node* is the
 parent node in the dismod_at option table.
-This must satisfy all the conditions for a :ref:`glossary.input_node_database`.
+This must satisfy all the conditions for an
+:ref:`glossary.input_node_database`.
 
 .. meta::
    :keywords: sincidence

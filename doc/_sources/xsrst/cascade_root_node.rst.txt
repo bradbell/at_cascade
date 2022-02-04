@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/cascade_root_node.py
-    :lines: 126-131
+    :lines: 108-113
     :language: py
 
 .. meta::
@@ -92,7 +92,7 @@ and difference priors.
 
 root_fit_database
 *****************
-This directory is
+This database is located at
 
     *result_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
 
@@ -148,38 +148,6 @@ sample
 ======
 The sample table contains the corresponding samples from the posterior
 distribution for the model variables for this job.
-
-.. meta::
-   :keywords: c_predict_fit_var
-
-.. index:: c_predict_fit_var
-
-.. _cascade_root_node.output_dismod_db.c_predict_fit_var:
-
-c_predict_fit_var
-=================
-The c_predict_fit_var table contains the predict table corresponding to the
-predict fit_var command using the avgint table in the
-root_node_database except that values in the node_id column
-has been replaced by this fit_node_id.
-Note that the predict_id column name was changed to c_predict_fit_var_id
-(which is not the same as var_id).
-
-.. meta::
-   :keywords: c_predict_sample
-
-.. index:: c_predict_sample
-
-.. _cascade_root_node.output_dismod_db.c_predict_sample:
-
-c_predict_sample
-================
-The c_predict_sample table contains the predict table corresponding to the
-predict sample command using the avgint table in the
-root_node_database except that values in the node_id column
-has been replaced by this fit_node_id.
-Note that the predict_id column name was changed to c_predict_sample_id
-(which is not the same as sample_id).
 
 .. meta::
    :keywords: log

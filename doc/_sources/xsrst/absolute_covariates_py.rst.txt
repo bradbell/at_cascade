@@ -18,7 +18,7 @@ absolute_covariates: Python Source Code
 
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 192-581
+    :lines: 191-592
     :language: py
 
 ----

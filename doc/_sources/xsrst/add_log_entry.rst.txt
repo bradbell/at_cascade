@@ -1,0 +1,88 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!
+add_log_entry
+!!!!!!!!!!!!!
+
+.. meta::
+   :keywords: add_log_entry, add, log, table, entry
+
+.. index:: add_log_entry, add, log, table, entry
+
+.. _add_log_entry:
+
+Add Log Table Entry
+###################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _add_log_entry.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/add_log_entry.py
+    :lines: 54-54
+    :language: py
+
+.. meta::
+   :keywords: purpose
+
+.. index:: purpose
+
+.. _add_log_entry.purpose:
+
+Purpose
+*******
+Change the name of a table in the database.
+
+.. meta::
+   :keywords: connection
+
+.. index:: connection
+
+.. _add_log_entry.connection:
+
+connection
+**********
+is a dismod_at open connection to the database.
+
+.. meta::
+   :keywords: message
+
+.. index:: message
+
+.. _add_log_entry.message:
+
+message
+*******
+is a ``str`` containing the message that is added at
+the end of the log table
+
+.. meta::
+   :keywords: log, table
+
+.. index:: log, table
+
+.. _add_log_entry.log_table:
+
+Log Table
+*********
+As row is added at the end of the log table with the
+following columns values:
+
+1.  *log_id* : is the integer length of the log table before the message
+2.  *message_type* : is the text ``at_cascade``
+3.  *table_name* : is null
+4.  *row_id* : is null
+5.  *unix_time* : is the integer unit time
+6.  *message* : is the text message
+
+----
+
+xsrst input file: ``at_cascade/add_log_entry.py``

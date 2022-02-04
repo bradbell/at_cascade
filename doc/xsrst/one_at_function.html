@@ -412,11 +412,11 @@ routine replaces them for other nodes.</p>
 </div>
 <div class="section" id="checking-the-fit">
 <span id="one-at-function-checking-the-fit"></span><span id="index-23"></span><h3><a class="toc-backref" href="#id26">Checking The Fit</a><a class="headerlink" href="#checking-the-fit" title="Permalink to this headline"></a></h3>
-<p>The results of the fit are in the
-<a class="reference internal" href="cascade_root_node.html#cascade-root-node-output-dismod-db-c-predict-sample"><span class="std std-ref">c_predict_sample</span></a> and
-<a class="reference internal" href="cascade_root_node.html#cascade-root-node-output-dismod-db-c-predict-fit-var"><span class="std std-ref">c_predict_fit_var</span></a>
-tables of the fit_node_database corresponding to each node.
-The <a class="reference internal" href="check_cascade_fit.html#id1"><span class="std std-ref">check_cascade_fit</span></a>
+<p>The results of the fit are checked by check_cascade_node
+using the <a class="reference internal" href="check_cascade_node.html#check-cascade-node-avgint-table"><span class="std std-ref">avgint_table</span></a>
+that was created by the root_node_db routine.
+The node_id for each row is replaced by the node_id for the
+fit being checked.
 routine uses these tables to check that fit against the truth.</p>
 <table class="colwidths-given docutils align-default">
 <colgroup>

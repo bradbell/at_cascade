@@ -1,15 +1,15 @@
 .. include:: ../preamble.rst
 
 !!!!
-2020
+2022
 !!!!
 
 .. meta::
-   :keywords: 2020, release, notes, for, 2022
+   :keywords: 2022, release, notes, for, 2022
 
-.. index:: 2020, release, notes, for, 2022
+.. index:: 2022, release, notes, for, 2022
 
-.. _2020:
+.. _2022:
 
 Release Notes for 2022
 ######################
@@ -17,11 +17,48 @@ Release Notes for 2022
    :local:
 
 .. meta::
+   :keywords: 02-04
+
+.. index:: 02-04
+
+.. _2022.02-04:
+
+02-04
+*****
+In the examples, fix the following typos:
+Change 'are checked for check_cascade_node'
+to 'are checked by check_cascade_node'.
+Change 'rood_node_db routine' to 'root_node_db routine'.
+
+.. meta::
+   :keywords: 02-03
+
+.. index:: 02-03
+
+.. _2022.02-03:
+
+02-03
+*****
+Add new :ref:`wish_list` entries and remove old ones the have been completed.
+
+.. meta::
+   :keywords: 01-28
+
+.. index:: 01-28
+
+.. _2022.01-28:
+
+01-28
+*****
+Add the :ref:`add_log_entry`, :ref:`move_table`, and :ref:`empty_avgint_table`
+routines to the at_cascade module.
+
+.. meta::
    :keywords: 01-27
 
 .. index:: 01-27
 
-.. _2020.01-27:
+.. _2022.01-27:
 
 01-27
 *****
@@ -37,7 +74,7 @@ Release Notes for 2022
 
 .. index:: 01-26
 
-.. _2020.01-26:
+.. _2022.01-26:
 
 01-26
 *****
@@ -50,7 +87,7 @@ Change perturb_optimization_scaling to
 
 .. index:: 01-25
 
-.. _2020.01-25:
+.. _2022.01-25:
 
 01-25
 *****
@@ -62,7 +99,7 @@ at_cascade module.
 
 .. index:: 01-08
 
-.. _2020.01-08:
+.. _2022.01-08:
 
 01-08
 *****
@@ -79,7 +116,7 @@ at_cascade module.
 
 .. index:: 01-02
 
-.. _2020.01-02:
+.. _2022.01-02:
 
 01-02
 *****

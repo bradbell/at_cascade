@@ -1,15 +1,15 @@
 .. include:: ../preamble.rst
 
-!!!!!!!!!!!!!!!!!
-check_cascade_fit
-!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!
+check_cascade_node
+!!!!!!!!!!!!!!!!!!
 
 .. meta::
-   :keywords: check_cascade_fit, check, the, cascade, results, for, node
+   :keywords: check_cascade_node, check, the, cascade, results, for, node
 
-.. index:: check_cascade_fit, check, the, cascade, results, for, node
+.. index:: check_cascade_node, check, the, cascade, results, for, node
 
-.. _check_cascade_fit:
+.. _check_cascade_node:
 
 Check the Cascade Results for a Node
 ####################################
@@ -21,13 +21,13 @@ Check the Cascade Results for a Node
 
 .. index:: syntax
 
-.. _check_cascade_fit.syntax:
+.. _check_cascade_node.syntax:
 
 Syntax
 ******
 
-.. literalinclude:: ../../at_cascade/check_cascade_fit.py
-    :lines: 78-83
+.. literalinclude:: ../../at_cascade/check_cascade_node.py
+    :lines: 85-91
     :language: py
 
 .. meta::
@@ -35,7 +35,7 @@ Syntax
 
 .. index:: rate_true
 
-.. _check_cascade_fit.rate_true:
+.. _check_cascade_node.rate_true:
 
 rate_true
 *********
@@ -62,7 +62,7 @@ The result *rate* is the corresponding value for the rate.
 
 .. index:: all_node_database
 
-.. _check_cascade_fit.all_node_database:
+.. _check_cascade_node.all_node_database:
 
 all_node_database
 *****************
@@ -76,7 +76,7 @@ This argument can't be ``None``.
 
 .. index:: fit_node_database
 
-.. _check_cascade_fit.fit_node_database:
+.. _check_cascade_node.fit_node_database:
 
 fit_node_database
 *****************
@@ -89,11 +89,24 @@ in the cascade_root_node documentation.
 This argument can't be ``None``.
 
 .. meta::
+   :keywords: avgint_table
+
+.. index:: avgint_table
+
+.. _check_cascade_node.avgint_table:
+
+avgint_table
+************
+This an avgint table specifying the predictions to check.
+The node_id in this table does not matter because the parent node
+in the fit_node_database is used in its place.
+
+.. meta::
    :keywords: relative_tolerance
 
 .. index:: relative_tolerance
 
-.. _check_cascade_fit.relative_tolerance:
+.. _check_cascade_node.relative_tolerance:
 
 relative_tolerance
 ******************
@@ -106,4 +119,4 @@ This is intended as an aid in setting the relative tolerance.
 
 ----
 
-xsrst input file: ``at_cascade/check_cascade_fit.py``
+xsrst input file: ``at_cascade/check_cascade_node.py``

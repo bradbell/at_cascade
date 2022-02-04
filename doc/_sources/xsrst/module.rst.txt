@@ -8,9 +8,10 @@ module
    :maxdepth: 1
    :hidden:
 
+   add_log_entry
    avgint_parent_grid
    cascade_root_node
-   check_cascade_fit
+   check_cascade_node
    check_log
    clear_shared
    continue_cascade
@@ -18,12 +19,14 @@ module
    create_job_table
    create_shift_db
    data4cov_reference
+   empty_avgint_table
    get_cov_info
    get_database_dir
    get_fit_children
    get_fit_integrand
    get_parent_node
    get_var_id
+   move_table
    no_ode_fit
    omega_constraint
    run_one_job
@@ -47,9 +50,10 @@ The at_cascade Python Module
     :header:  "Child", "Title"
     :widths: 20, 80
 
+    "add_log_entry", :ref:`add_log_entry`
     "avgint_parent_grid", :ref:`avgint_parent_grid`
     "cascade_root_node", :ref:`cascade_root_node`
-    "check_cascade_fit", :ref:`check_cascade_fit`
+    "check_cascade_node", :ref:`check_cascade_node`
     "check_log", :ref:`check_log`
     "clear_shared", :ref:`clear_shared`
     "continue_cascade", :ref:`continue_cascade`
@@ -57,12 +61,14 @@ The at_cascade Python Module
     "create_job_table", :ref:`create_job_table`
     "create_shift_db", :ref:`create_shift_db`
     "data4cov_reference", :ref:`data4cov_reference`
+    "empty_avgint_table", :ref:`empty_avgint_table`
     "get_cov_info", :ref:`get_cov_info`
     "get_database_dir", :ref:`get_database_dir`
     "get_fit_children", :ref:`get_fit_children`
     "get_fit_integrand", :ref:`get_fit_integrand`
     "get_parent_node", :ref:`get_parent_node`
     "get_var_id", :ref:`get_var_id`
+    "move_table", :ref:`move_table`
     "no_ode_fit", :ref:`no_ode_fit`
     "omega_constraint", :ref:`omega_constraint`
     "run_one_job", :ref:`run_one_job`

@@ -358,6 +358,18 @@
         <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span> <span class="n">root_node_dir</span> <span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">root_node_dir</span> <span class="p">)</span>
     <span class="c1">#</span>
+    <span class="c1"># avgint_table</span>
+    <span class="c1"># also erase avgint table in root node database</span>
+    <span class="n">new</span>             <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">connection</span>      <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">create_connection</span><span class="p">(</span><span class="n">root_node_database</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span>
+    <span class="n">avgint_table</span>    <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">get_table_dict</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s1">&#39;avgint&#39;</span><span class="p">)</span>
+    <span class="n">empty_table</span>     <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">message</span>         <span class="o">=</span> <span class="s1">&#39;erase avgint table&#39;</span>
+    <span class="n">tbl_name</span>        <span class="o">=</span> <span class="s1">&#39;avgint&#39;</span>
+    <span class="n">dismod_at</span><span class="o">.</span><span class="n">replace_table</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">tbl_name</span><span class="p">,</span> <span class="n">empty_table</span><span class="p">)</span>
+    <span class="n">at_cascade</span><span class="o">.</span><span class="n">add_log_entry</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="c1">#</span>
     <span class="c1"># cascade starting at root node</span>
     <span class="n">at_cascade</span><span class="o">.</span><span class="n">cascade_root_node</span><span class="p">(</span>
         <span class="n">all_node_database</span>  <span class="o">=</span> <span class="n">all_node_database</span> <span class="p">,</span>
@@ -369,10 +381,11 @@
     <span class="n">leaf_dir_list</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;n0/n1/n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n1/n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n2/n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n0/n2/n6&#39;</span> <span class="p">]</span>
     <span class="k">for</span> <span class="n">leaf_dir</span> <span class="ow">in</span> <span class="n">leaf_dir_list</span> <span class="p">:</span>
         <span class="n">leaf_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">leaf_dir</span><span class="si">}</span><span class="s1">/dismod.db&#39;</span>
-        <span class="n">at_cascade</span><span class="o">.</span><span class="n">check_cascade_fit</span><span class="p">(</span>
+        <span class="n">at_cascade</span><span class="o">.</span><span class="n">check_cascade_node</span><span class="p">(</span>
             <span class="n">rate_true</span>          <span class="o">=</span> <span class="n">rate_true</span><span class="p">,</span>
             <span class="n">all_node_database</span>  <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
             <span class="n">fit_node_database</span>  <span class="o">=</span> <span class="n">leaf_database</span><span class="p">,</span>
+            <span class="n">avgint_table</span>       <span class="o">=</span> <span class="n">avgint_table</span><span class="p">,</span>
             <span class="n">relative_tolerance</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="c1">#</span>

@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_shift_db.py
-    :lines: 386-391
+    :lines: 363-368
     :language: py
 
 .. meta::
@@ -122,20 +122,6 @@ This table contains the predict table corresponding to a
 predict fit_var command using the c_shift_avgint table.
 Note that the predict_id column name was changed to c_shift_predict_fit_var_id
 (which is not the same as var_id).
-
-.. meta::
-   :keywords: c_root_avgint, table
-
-.. index:: c_root_avgint, table
-
-.. _create_shift_db.fit_node_database.c_root_avgint_table:
-
-c_root_avgint Table
-===================
-The c_root_avgint table contains the original version of the
-:ref:`glossary.root_node_database` avgint table
-that predicts for the parent node.
-Only the node_id column has been modified from the root_node_database version.
 
 .. meta::
    :keywords: shift_databases
@@ -233,20 +219,6 @@ dage and dtime Priors
 The mean of the dage and dtime priors
 are replaced using the corresponding difference in the
 predict tables in the *fit_node_database*.
-
-.. meta::
-   :keywords: avgint, table
-
-.. index:: avgint, table
-
-.. _create_shift_db.shift_databases.avgint_table:
-
-avgint Table
-============
-The avgint table, in the shift_databases,
-is a copy of the c_root_avgint table in the
-*fit_node_database* with the node_id replaced by the node corresponding
-to he shift_database.
 
 .. meta::
    :keywords: predict_sample

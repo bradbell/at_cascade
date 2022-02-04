@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/run_one_job.py
-    :lines: 205-212
+    :lines: 137-145
     :language: py
 
 .. meta::
@@ -102,6 +102,32 @@ is a ``set`` of integrand_id values that occur in the data table; see
 :ref:`get_fit_integrand`.
 
 .. meta::
+   :keywords: fit_type
+
+.. index:: fit_type
+
+.. _run_one_job.fit_type:
+
+fit_type
+********
+is a ``str`` equal to 'both' or 'fixed' and specifies the type
+of fit that dismod_at will do.
+
+.. meta::
+   :keywords: both
+
+.. index:: both
+
+.. _run_one_job.fit_type.both:
+
+both
+====
+If *fit_type* is 'both', this is assumed to be an
+:ref:`glossary.input_node_database`.
+If *ift_type* is 'fixed', it is assumed that this
+routine has previously been called with *fit_type* equal to 'both'
+
+.. meta::
    :keywords: trace_file_obj
 
 .. index:: trace_file_obj
@@ -166,40 +192,6 @@ the sample table contains the corresponding samples from the posterior
 distribution for the model variables for the fit_node.
 
 .. meta::
-   :keywords: c_predict_fit_var
-
-.. index:: c_predict_fit_var
-
-.. _run_one_job.fit_node_database.c_predict_fit_var:
-
-c_predict_fit_var
-=================
-Upon return,
-the c_predict_fit_var table contains the predict table corresponding to the
-predict fit_var command using the avgint table in the
-root_node_database except that values in the node_id column
-has been replaced by the node_id for this fit_node.
-Note that the predict_id column name was changed to c_predict_fit_var_id
-(which is not the same as var_id).
-
-.. meta::
-   :keywords: c_predict_sample
-
-.. index:: c_predict_sample
-
-.. _run_one_job.fit_node_database.c_predict_sample:
-
-c_predict_sample
-================
-Upon return,
-the c_predict_sample table contains the predict table corresponding to the
-predict sample command using the avgint table in the
-root_node_database except that values in the node_id column
-has been replaced by the node_id for this fit_node.
-Note that the predict_id column name was changed to c_predict_sample_id
-(which is not the same as sample_id).
-
-.. meta::
    :keywords: log
 
 .. index:: log
@@ -208,9 +200,9 @@ Note that the predict_id column name was changed to c_predict_sample_id
 
 log
 ===
+If *fit_type* is 'both', the previous contents of the log are removed.
 Upon return,
-the log table contains a summary of the operations preformed on dismod.db
-between it's input and output state.
+a summary of the operations preformed on dismod.db is added to the log table.
 
 ----
 

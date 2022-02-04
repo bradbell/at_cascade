@@ -55,7 +55,7 @@ fit_goal_set
 ============
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 216-216
+    :lines: 215-215
     :language: py
 
 .. meta::
@@ -83,7 +83,7 @@ This cascade is set up to split by sex reference value; see
 :ref:`split_reference_table`
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 220-230
+    :lines: 219-229
     :language: py
 
 .. meta::
@@ -100,12 +100,12 @@ The reference value for income depends on the value of sex;
 see :ref:`create_all_node_db.all_cov_reference`:
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 238-243
+    :lines: 237-242
     :language: py
 
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 251-253
+    :lines: 250-252
     :language: py
 
 .. meta::
@@ -121,7 +121,7 @@ The only absolute covariate in this example is vaccine
 (0 for no vaccine, 1 for yes vaccine).
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 257-257
+    :lines: 256-256
     :language: py
 
 .. meta::
@@ -140,7 +140,7 @@ that multiply the income and vaccine covariates.
 The true value for *alpha* (used which simulating the data) is
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 247-247
+    :lines: 246-246
     :language: py
 
 .. meta::
@@ -195,7 +195,7 @@ The values *a*, *t*, *n*, *sex*
 are not used by this function for this example.
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 263-274
+    :lines: 262-273
     :language: py
 
 .. meta::
@@ -254,7 +254,7 @@ Value Prior
 The following is the value prior used for the root_node
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 291-298
+    :lines: 290-297
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -286,7 +286,7 @@ Value Prior
 The following is the value prior used for this smoothing:
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 301-315
+    :lines: 300-314
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -302,12 +302,11 @@ routine replaces them for other nodes.
 
 Checking The Fit
 ****************
-The results of the fit are in the
-:ref:`cascade_root_node.output_dismod_db.c_predict_sample` and
-:ref:`cascade_root_node.output_dismod_db.c_predict_fit_var`
-tables of the fit_node_database corresponding to each node.
-The :ref:`check_cascade_fit<check_cascade_fit>`
-routine uses these tables to check that fit against the truth.
+The results of the fit are checked by check_cascade_node
+using the :ref:`check_cascade_node.avgint_table`
+that was created by the root_node_db routine.
+The node_id for each row is replaced by the node_id for the
+fit being checked.
 
 .. csv-table::
     :header: "Child", "Title"
