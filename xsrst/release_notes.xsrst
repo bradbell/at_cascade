@@ -14,13 +14,13 @@ Release Notes for at_cascade
 
 {xsrst_end release_notes}
 -----------------------------------------------------------------------------
-{xsrst_begin 2020}
+{xsrst_begin 2022}
 
 Release Notes for 2022
 ######################
 
-02-3
-****
+02-03
+*****
 Add new :ref:`wish_list` entries and remove old ones the have been completed.
 
 01-28
@@ -67,7 +67,7 @@ at_cascade module.
 2.  Use :ref:`create_job_table.job_table.job_name`
     as the key for each job in the :ref:`check_log.message_dict` return value.
 
-{xsrst_end 2020}
+{xsrst_end 2022}
 -----------------------------------------------------------------------------
 {xsrst_begin 2021}
 {xsrst_spell
