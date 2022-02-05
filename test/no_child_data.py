@@ -313,14 +313,6 @@ def main() :
     root_node_database  = f'{result_dir}/root_node.db'
     root_node_db(root_node_database)
     #
-    # all_cov_reference
-    all_cov_reference = dict()
-    covariate_name      = 'income'
-    for node_name in [ 'n0', 'n1', 'n2' ] :
-        all_cov_reference[node_name] = {
-            covariate_name : [ avg_income ]
-        }
-    #
     # mulcov_freeze_table
     mulcov_freeze_table = [{
         'fit_node_name' :      'n0',

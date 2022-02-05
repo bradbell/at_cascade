@@ -150,12 +150,6 @@ def main() :
     root_node_database  = 'root_node.db'
     root_node_db(root_node_database)
     #
-    # all_cov_reference
-    all_cov_reference = dict()
-    covariate_name      = 'income'
-    for node_name in [ 'n0', 'n1', 'n2' ] :
-        all_cov_reference[node_name] = dict()
-    #
     # n_omega_age
     n_omega_age = len(age_grid)
     #

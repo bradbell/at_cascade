@@ -230,16 +230,7 @@ def main() :
     root_node_database  = 'root_node.db'
     root_node_db(root_node_database)
     #
-    # all_cov_reference
-    all_cov_reference = dict()
-    covariate_name      = 'income'
-    for node_name in [ 'n0', 'n1', 'n2' ] :
-        all_cov_reference[node_name] = {
-            covariate_name : [ avg_income[node_name] ]
-        }
-    #
     # Create all_node.db
-    # We could get all_cov_reference from here, but we do not need to
     all_node_database = 'all_node.db'
     all_option        = {
         'result_dir':     '.',

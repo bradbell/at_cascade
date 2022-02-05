@@ -756,13 +756,6 @@ def main() :
     root_node_database  = f'{result_dir}/root_node.db'
     root_node_db(root_node_database)
     #
-    # all_cov_reference
-    all_cov_reference = dict()
-    for node_name in [ 'n0', 'n1', 'n2' ] :
-        all_cov_reference[node_name] = {
-            'income' : [ avg_income[node_name] ],
-        }
-    #
     # omega_grid
     omega_grid = dict()
     omega_grid['age']  = range( len(age_grid) )
@@ -796,7 +789,6 @@ def main() :
         mtspecific_data[node_name] = [ mtspecific_list ]
     #
     # Create all_node.db
-    # We could get all_cov_reference from here, but we do not need to
     all_node_database = f'{result_dir}/all_node.db'
     all_option        = {
         'result_dir'         : result_dir,
