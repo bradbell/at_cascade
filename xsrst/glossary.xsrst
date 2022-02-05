@@ -82,9 +82,12 @@ The value of *parent_node_id* does not appear in the option table.
 
 Covariate Table
 ===============
-For each covariate, the covariate table reference value must be the
-same as the :ref:`all_cov_reference_table.reference` for the
-fit_node in the all_cov_reference table.
+For each :ref:`glossary.relative_covariate`,
+the covariate table reference value is the average returned by
+:ref:`get_cov_reference` for this node and split_reference_id.
+The split covariate reference value is one of the
+:ref:`split_reference_table.split_reference_value`
+in the split_reference table.
 The other columns in the covariate table are the same
 as in the root_node_database.
 

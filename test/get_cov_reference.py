@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -51,7 +51,7 @@ def main() :
         [ 'result_dir',           '.'  ],
         [ 'root_node_name',       'n0' ],
         [ 'split_covariate_name', split_covariate_name ],
-        [ 'absolute_covariates', absolute_covariates ],
+        [ 'absolute_covariates',  absolute_covariates ],
     ]
     dismod_at.create_table(
         connection, tbl_name, col_name, col_type, row_list
@@ -137,24 +137,23 @@ def main() :
     )
     # ------------------------------------------------------------------------
     #
-    # data4cov_reference
-    at_cascade.data4cov_reference(
-        all_node_database  = all_node_database,
-        root_node_database = root_node_database
-    )
+    # bmi_covariate_id
+    # bmi is the only relative covariate
+    bmi_covariate_id = 2
     #
-    # all_cov_reference_table
-    new             = False
-    connection      = dismod_at.create_connection(all_node_database, new)
-    all_cov_reference_table = dismod_at.get_table_dict(
-        connection, 'all_cov_reference'
-    )
-    #
-    # check
-    check = list()
+    # node_id
     for node_id in range(4) :
-        covariate_id = 2
+        #
+        # split_reference_id
         for split_reference_id in range(3) :
+            #
+            # cov_reference_list
+            cov_reference_list = at_cascade.get_cov_reference(
+                all_node_database  = all_node_database,
+                fit_node_database  = root_node_database,
+                parent_node_id     = node_id,
+                split_reference_id = split_reference_id,
+            )
             sex      = split_reference_list[split_reference_id]
             bmi_list = list()
             for row in row_list :
@@ -168,16 +167,7 @@ def main() :
                     bmi_list.append( row_bmi )
             avg = sum( bmi_list ) / len(bmi_list)
             #
-            found  = False
-            for row in all_cov_reference_table :
-                match = row['split_reference_id'] == split_reference_id
-                match = match and row['node_id'] == node_id
-                match = match and row['covariate_id'] == covariate_id
-                if match :
-                    assert row['reference'] == avg
-                    assert found == False
-                    found = True
-            assert found
+            assert cov_reference_list[bmi_covariate_id] == avg
 main()
-print('data4cov_reference: OK')
+print('get_cov_rererence: OK')
 sys.exit(0)

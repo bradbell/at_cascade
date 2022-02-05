@@ -22,11 +22,6 @@ Parallel Processing
     changed to use names generated bo the shared memory routine to
     allow for multiple cascades to run on the same system.
 
-2.  There is no need for the :ref:`all_cov_reference_table`.
-    The average value of the covariate for all the data corresponding to
-    a node_id and split_reference_id can be used to set the covariate
-    reference for a fit.
-
 Disk Space
 **********
 Certain tables are the same in every dismod_at database; i.e.
