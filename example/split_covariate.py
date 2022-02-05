@@ -262,11 +262,28 @@ split_reference_table[root_split_reference_id]['split_reference_name']=='both'
 #
 # BEGIN all_cov_reference
 all_cov_reference = dict()
-for node_id in range(7) :
+leaf_node_set     = { 3, 4, 5, 6 }
+for node_id in leaf_node_set :
     node_name = 'n' + str(node_id)
     all_cov_reference[node_name] = {
         'income' : [ 1.0 - node_id / 10.0, 1.0, 1.0 + node_id / 10.0 ]
     }
+# child_list
+# children of node 0, 1, 2 in that order
+child_list = [ (1,2), (3,4), (5,6) ]
+for node_id in [2, 1, 0] :
+    avg_list = list()
+    for split_reference_id in range(3) :
+        avg = 0.0
+        for child_id in child_list[node_id] :
+            child_name = 'n' + str(child_id)
+            avg += all_cov_reference[child_name]['income'][split_reference_id]
+        avg = avg / len( child_list[node_id] )
+        avg_list.append( avg )
+    node_name = 'n' + str(node_id)
+    #
+    # all_cov_reference
+    all_cov_reference[node_name] = { 'income' : avg_list }
 # END all_cov_reference
 #
 # BEGIN alpha_true
@@ -445,7 +462,7 @@ def root_node_db(file_name) :
         for node in leaf_set :
             sex      = split_reference_list[split_reference_id]
             r_income = all_cov_reference[node]['income'][split_reference_id]
-            for factor in [ 0.5, 1.0, 2.0 ] :
+            for factor in [ 0.5, 1.0, 1.5 ] :
                 income = factor * r_income
                 c      = [sex, income]
                 meas_value = rate_true('iota', None, None, node, c)

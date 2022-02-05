@@ -127,7 +127,7 @@ def get_cov_reference(
         all_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
     connection.close()
     #
-    # chekc split_reference_id
+    # check split_reference_id
     if len( all_table['split_reference'] ) == 0 :
         assert split_reference_id == None
     else :
@@ -187,6 +187,11 @@ def get_cov_reference(
         if this_is_descendant :
             is_descendant.add( node_id )
     #
+    # split_reference_value
+    if len( all_table['split_reference'] ) > 0 :
+        row  = all_table['split_reference'][split_reference_id]
+        split_reference_value = row['split_reference_value']
+    #
     # data_subset_list
     data_subset_list = list()
     for (data_id, data_row) in enumerate(root_table['data']) :
@@ -200,6 +205,8 @@ def get_cov_reference(
             for covariate_id in range( n_covariate ) :
                 covariate_row   = root_table['covariate'][covariate_id]
                 reference       = covariate_row['reference']
+                if covariate_id == split_covariate_id :
+                    reference = split_reference_value
                 max_difference  = covariate_row['max_difference']
                 if max_difference is None :
                     max_difference = math.inf
@@ -223,10 +230,8 @@ def get_cov_reference(
         # reference
         reference = root_table['covariate'][covariate_id]['reference']
         if covariate_id == split_covariate_id :
-            #
-            # reference
-            row       = all_table['split_reference'][split_reference_id]
-            reference = row['split_reference_value']
+            reference = split_reference_value
+        #
         if covariate_id in rel_covariate_id_set :
             #
             # covariate_list

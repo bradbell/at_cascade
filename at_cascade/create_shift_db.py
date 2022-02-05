@@ -376,7 +376,6 @@ def create_shift_db(
     all_table  = dict()
     for name in [
         'all_option',
-        'all_cov_reference',
         'split_reference',
         'mulcov_freeze',
     ] :
@@ -560,15 +559,26 @@ def create_shift_db(
             if row['option_name'] == 'parent_node_name' :
                 row['option_value'] = shift_node_name
         #
+        # cov_reference_list
+        cov_reference_list = at_cascade.get_cov_reference(
+            all_node_database   = all_node_database,
+            fit_node_database   = fit_node_database,
+            parent_node_id      = shift_node_id,
+            split_reference_id  = shift_split_reference_id
+        )
+        # cov_reference_list
+        n_covariate = len( fit_table['covariate'] )
+        for covariate_id in range( n_covariate ) :
+            if cov_reference_list[covariate_id] is None :
+                row        = fit_table['covariate'][covariate_id]
+                reference  = row['reference']
+                cov_reference_list[covariate_id] = reference
+        #
         # shift_table['covariate']
         # set relative covariate values so correspond to shift node
-        for row in all_table['all_cov_reference'] :
-            # use fact that None == None is true
-            if row['node_id'] == shift_node_id \
-            and row['split_reference_id'] == shift_split_reference_id :
-                covariate_id           = row['covariate_id']
-                shift_row              = shift_table['covariate'][covariate_id]
-                shift_row['reference'] = row['reference']
+        for (covariate_id, shift_row) in enumerate(shift_table['covariate']) :
+                shift_row['reference'] =  cov_reference_list[covariate_id]
+
         #
         # shift_table['covariate']
         # set shift covaraite value

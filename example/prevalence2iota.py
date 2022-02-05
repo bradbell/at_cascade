@@ -654,8 +654,9 @@ def main() :
     # We could get all_cov_reference from here, but we do not need to
     all_node_database = f'{result_dir}/all_node.db'
     all_option        = {
-        'result_dir':     result_dir,
-        'root_node_name': 'n0',
+        'result_dir'          : result_dir,
+        'root_node_name'      : 'n0',
+        'absolute_covariates' : 'one',
     }
     at_cascade.create_all_node_db(
         all_node_database       = all_node_database,
