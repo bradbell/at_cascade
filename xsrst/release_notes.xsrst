@@ -19,6 +19,11 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+02-05
+*****
+Use :ref:`get_cov_reference` to compute references for relative covariates
+and remove the all_cov_reference table from the :ref:`all_node_db`.
+
 02-04
 *****
 In the examples, fix the following typos:
