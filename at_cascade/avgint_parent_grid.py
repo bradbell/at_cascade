@@ -168,12 +168,6 @@ def avgint_parent_grid(
                 shift_node_id      = node_id,
                 split_reference_id = fit_split_reference_id,
             )
-            # cov_reference_list
-            for covariate_id in range( n_covariate ) :
-                if cov_reference_list[covariate_id] is None :
-                    row        = fit_tables['covariate'][covariate_id]
-                    reference  = row['reference']
-                    cov_reference_list[covariate_id] = reference
             #
             # cov_reference[ (node_id, fit_split_reference_id) ]
             key = (node_id, fit_split_reference_id)
@@ -188,12 +182,6 @@ def avgint_parent_grid(
                             shift_node_id      = node_id,
                             split_reference_id = fit_split_reference_id,
                         )
-                        # cov_reference_list
-                        for covariate_id in range( n_covariate ) :
-                            if cov_reference_list[covariate_id] is None :
-                                row = fit_tables['covariate'][covariate_id]
-                                reference  = row['reference']
-                                cov_reference_list[covariate_id] = reference
                         key = (node_id, split_reference_id)
                         cov_reference_dict[key] = cov_reference_list
     #

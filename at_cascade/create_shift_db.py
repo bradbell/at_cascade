@@ -566,13 +566,6 @@ def create_shift_db(
             shift_node_id       = shift_node_id,
             split_reference_id  = shift_split_reference_id
         )
-        # cov_reference_list
-        n_covariate = len( fit_table['covariate'] )
-        for covariate_id in range( n_covariate ) :
-            if cov_reference_list[covariate_id] is None :
-                row        = fit_table['covariate'][covariate_id]
-                reference  = row['reference']
-                cov_reference_list[covariate_id] = reference
         #
         # shift_table['covariate']
         # set relative covariate values so correspond to shift node

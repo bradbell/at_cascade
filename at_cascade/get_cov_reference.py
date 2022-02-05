@@ -77,7 +77,8 @@ cov_reference_list
 6.  Only rows of the data that are within the max difference for the splitting
     covariate for this *split_reference_id* are included in the average.
 7.  null values for a covariate are not included in the average.
-8.  If there are no values to average, None is returned as the reference.
+8.  If there are no values to average for a relative covariate, the reference
+    in the *fit_node_database* covariate table is used for that covariate.
 
 
 
@@ -250,9 +251,7 @@ def get_cov_reference(
                     covariate_list.append(cov_value)
             #
             # reference
-            if len( covariate_list ) == 0 :
-                reference = None
-            else :
+            if len( covariate_list ) > 0 :
                 reference = sum(covariate_list) / len(covariate_list)
         #
         # cov_reference_list
