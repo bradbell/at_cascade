@@ -578,7 +578,6 @@ def main() :
     at_cascade.create_all_node_db(
         all_node_database       = all_node_database,
         root_node_database      = root_node_database,
-        all_cov_reference       = all_cov_reference,
         all_option              = all_option,
         mulcov_freeze_table     = mulcov_freeze_table,
     )

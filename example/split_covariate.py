@@ -81,7 +81,7 @@ Covariate
 *********
 There are two covariates for this example, sex and income.
 The reference value for income depends on both the node and sex;
-see :ref:`create_all_node_db.all_cov_reference`:
+see all_cov_reference:
 {xsrst_file
     # BEGIN all_cov_reference
     # END all_cov_reference
@@ -560,7 +560,6 @@ def main() :
     at_cascade.create_all_node_db(
         all_node_database      = all_node_database,
         root_node_database     = root_node_database,
-        all_cov_reference      = all_cov_reference,
         split_reference_table  = split_reference_table,
         node_split_table       = node_split_table,
         all_option             = all_option,

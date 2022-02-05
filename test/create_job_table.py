@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -402,7 +402,6 @@ def main() :
     at_cascade.create_all_node_db(
         all_node_database      = all_node_database,
         root_node_database     = root_node_database,
-        all_cov_reference      = all_cov_reference,
         split_reference_table  = split_reference_table,
         node_split_table       = node_split_table,
         all_option             = all_option,

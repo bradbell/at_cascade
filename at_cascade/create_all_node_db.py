@@ -32,20 +32,6 @@ is a python string containing the name of the name of the
 :ref:`glossary.root_node_database`.
 This argument can't be ``None``.
 
-all_cov_reference
-*****************
-This argument can't be ``None``.
-It is a python dictionary with a key equal to the node name for
-each node in the node table in root_node_database.
-If *node_name* is a node name,
-*all_cov_reference[node_name]* is a python dictionary with a key equal to the
-name for each :ref:`glossary.relative_covariate`.
-If *covariate_name* is an relative covariate name,
-
-| |tab| *all_cov_reference[node_name][covariate_name]*
-
-is a list of reference values for the specified node and covariate.
-
 List
 ====
 If *split_reference_table* is empty,
@@ -208,7 +194,6 @@ def create_all_node_db(
 # at_cascade.create_all_node_db(
     all_node_database         = None,
     root_node_database        = None,
-    all_cov_reference         = None,
     all_option                = None,
     split_reference_table     = None,
     node_split_table          = None,
@@ -234,7 +219,6 @@ def create_all_node_db(
     # some asserts
     assert type(all_node_database)      is str
     assert type(root_node_database)     is str
-    assert type(all_cov_reference)      is dict
     assert type(all_option)             is dict
     assert type(split_reference_table)  is list
     if omega_grid is None :
@@ -321,37 +305,6 @@ def create_all_node_db(
     # all_connection
     new             = True
     all_connection  = dismod_at.create_connection(all_node_database, new)
-    #
-    # all_cov_reference table
-    tbl_name = 'all_cov_reference'
-    col_name = [ 'node_id', 'covariate_id', 'split_reference_id', 'reference']
-    col_type = [ 'integer', 'integer',      'integer',            'real'     ]
-    row_list = list()
-    for node_id in range( len(node_table) ) :
-        for covariate_id in rel_covariate_id_set :
-            node_name      = node_table[node_id]['node_name']
-            covariate_name = covariate_table[covariate_id]['covariate_name']
-            reference_list = all_cov_reference[node_name][covariate_name]
-            #
-            if len(split_reference_table) == 0 :
-                assert len(reference_list) == 1
-                reference = reference_list[0]
-                row       = [ node_id, covariate_id, None, reference ]
-                row_list.append( row )
-            else :
-                assert len(reference_list) == n_split
-                for (i, reference) in enumerate(reference_list) :
-                    split_reference_id = i
-                    row  = [
-                        node_id,
-                        covariate_id,
-                        split_reference_id,
-                        reference,
-                    ]
-                    row_list.append( row )
-    dismod_at.create_table(
-        all_connection, tbl_name, col_name, col_type, row_list
-    )
     #
     # omega_age_grid table
     tbl_name    = 'omega_age_grid'

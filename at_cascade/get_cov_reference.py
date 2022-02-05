@@ -88,7 +88,7 @@ using this routine.
 
 1.  Change all the examples to use this routine for covariate reference values.
 
-2.  Remove :ref:`create_all_node_db.all_cov_reference` from
+2.  Remove all_cov_reference from
     create_all_node_db argument list.
 
 3.  Change glossary entry for fit_node_database

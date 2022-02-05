@@ -56,7 +56,7 @@ Covariate
 *********
 There are three covariates for this example, sex, vaccine, and income.
 The reference value for income depends on the value of sex;
-see :ref:`create_all_node_db.all_cov_reference`:
+see all_cov_reference:
 {xsrst_file
     # BEGIN all_cov_reference
     # END all_cov_reference
@@ -567,7 +567,6 @@ def main() :
     at_cascade.create_all_node_db(
         all_node_database      = all_node_database,
         root_node_database     = root_node_database,
-        all_cov_reference      = all_cov_reference,
         split_reference_table  = split_reference_table,
         all_option             = all_option,
         omega_grid             = omega_grid,

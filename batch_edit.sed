@@ -30,5 +30,5 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|rood_node_db|root_node_db|
-s|are checked for check_cascade_node|are checked by check_cascade_node|
+/all_cov_reference *= *all_cov_reference,/d
+s|:ref:`create_all_node_db.all_cov_reference`|all_cov_reference|
