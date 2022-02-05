@@ -563,7 +563,7 @@ def create_shift_db(
         cov_reference_list = at_cascade.get_cov_reference(
             all_node_database   = all_node_database,
             fit_node_database   = fit_node_database,
-            parent_node_id      = shift_node_id,
+            shift_node_id       = shift_node_id,
             split_reference_id  = shift_split_reference_id
         )
         # cov_reference_list
