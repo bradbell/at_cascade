@@ -5,7 +5,6 @@
 <meta content="syntax" name="keywords" />
 <meta content="all_node_database" name="keywords" />
 <meta content="root_node_database" name="keywords" />
-<meta content="all_cov_reference" name="keywords" />
 <meta content="list" name="keywords" />
 <meta content="all_option" name="keywords" />
 <meta content="split_reference_table" name="keywords" />
@@ -73,9 +72,9 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">create_all_node_db</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_job_table.html">create_job_table</a></li>
 <li class="toctree-l3"><a class="reference internal" href="create_shift_db.html">create_shift_db</a></li>
-<li class="toctree-l3"><a class="reference internal" href="data4cov_reference.html">data4cov_reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="empty_avgint_table.html">empty_avgint_table</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_cov_info.html">get_cov_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="get_cov_reference.html">get_cov_reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_database_dir.html">get_database_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_fit_children.html">get_fit_children</a></li>
 <li class="toctree-l3"><a class="reference internal" href="get_fit_integrand.html">get_fit_integrand</a></li>
@@ -131,36 +130,35 @@
 <ul class="simple">
 <li><p><a class="reference internal" href="#syntax" id="id3">Syntax</a></p></li>
 <li><p><a class="reference internal" href="#all-node-database" id="id4">all_node_database</a></p></li>
-<li><p><a class="reference internal" href="#root-node-database" id="id5">root_node_database</a></p></li>
-<li><p><a class="reference internal" href="#all-cov-reference" id="id6">all_cov_reference</a></p>
+<li><p><a class="reference internal" href="#root-node-database" id="id5">root_node_database</a></p>
 <ul>
-<li><p><a class="reference internal" href="#list" id="id7">List</a></p></li>
+<li><p><a class="reference internal" href="#list" id="id6">List</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#all-option" id="id8">all_option</a></p></li>
-<li><p><a class="reference internal" href="#split-reference-table" id="id9">split_reference_table</a></p></li>
-<li><p><a class="reference internal" href="#node-split-table" id="id10">node_split_table</a></p></li>
-<li><p><a class="reference internal" href="#mulcov-freeze-table" id="id11">mulcov_freeze_table</a></p>
+<li><p><a class="reference internal" href="#all-option" id="id7">all_option</a></p></li>
+<li><p><a class="reference internal" href="#split-reference-table" id="id8">split_reference_table</a></p></li>
+<li><p><a class="reference internal" href="#node-split-table" id="id9">node_split_table</a></p></li>
+<li><p><a class="reference internal" href="#mulcov-freeze-table" id="id10">mulcov_freeze_table</a></p>
 <ul>
-<li><p><a class="reference internal" href="#fit-node-id-fit-node-name" id="id12">fit_node_id, fit_node_name</a></p></li>
-<li><p><a class="reference internal" href="#split-reference-id" id="id13">split_reference_id</a></p></li>
-<li><p><a class="reference internal" href="#mulcov-id" id="id14">mulcov_id</a></p></li>
+<li><p><a class="reference internal" href="#fit-node-id-fit-node-name" id="id11">fit_node_id, fit_node_name</a></p></li>
+<li><p><a class="reference internal" href="#split-reference-id" id="id12">split_reference_id</a></p></li>
+<li><p><a class="reference internal" href="#mulcov-id" id="id13">mulcov_id</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#omega-grid" id="id15">omega_grid</a></p>
+<li><p><a class="reference internal" href="#omega-grid" id="id14">omega_grid</a></p>
 <ul>
-<li><p><a class="reference internal" href="#age" id="id16">age</a></p></li>
-<li><p><a class="reference internal" href="#time" id="id17">time</a></p></li>
+<li><p><a class="reference internal" href="#age" id="id15">age</a></p></li>
+<li><p><a class="reference internal" href="#time" id="id16">time</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#mtall-data" id="id18">mtall_data</a></p>
+<li><p><a class="reference internal" href="#mtall-data" id="id17">mtall_data</a></p>
 <ul>
-<li><p><a class="reference internal" href="#default" id="id19">default</a></p></li>
+<li><p><a class="reference internal" href="#default" id="id18">default</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#mtspecific-data" id="id20">mtspecific_data</a></p>
+<li><p><a class="reference internal" href="#mtspecific-data" id="id19">mtspecific_data</a></p>
 <ul>
-<li><p><a class="reference internal" href="#create-all-node-db-mtspecific-data-default" id="id21">default</a></p></li>
+<li><p><a class="reference internal" href="#create-all-node-db-mtspecific-data-default" id="id20">default</a></p></li>
 </ul>
 </li>
 </ul>
@@ -170,7 +168,6 @@
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># at_cascade.create_all_node_db(</span>
     <span class="n">all_node_database</span>         <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">root_node_database</span>        <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">all_cov_reference</span>         <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">all_option</span>                <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">split_reference_table</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">node_split_table</span>          <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -193,22 +190,8 @@ This argument can’t be <code class="docutils literal notranslate"><span class=
 <p>is a python string containing the name of the name of the
 <a class="reference internal" href="glossary.html#glossary-root-node-database"><span class="std std-ref">root_node_database</span></a>.
 This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
-</div>
-<div class="section" id="all-cov-reference">
-<span id="create-all-node-db-all-cov-reference"></span><span id="index-4"></span><h3><a class="toc-backref" href="#id6">all_cov_reference</a><a class="headerlink" href="#all-cov-reference" title="Permalink to this headline"></a></h3>
-<p>This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.
-It is a python dictionary with a key equal to the node name for
-each node in the node table in root_node_database.
-If <em>node_name</em> is a node name,
-<em>all_cov_reference[node_name]</em> is a python dictionary with a key equal to the
-name for each <a class="reference internal" href="glossary.html#glossary-relative-covariate"><span class="std std-ref">Relative Covariate</span></a>.
-If <em>covariate_name</em> is an relative covariate name,</p>
-<div class="line-block">
-<div class="line">        <em>all_cov_reference[node_name][covariate_name]</em></div>
-</div>
-<p>is a list of reference values for the specified node and covariate.</p>
 <div class="section" id="list">
-<span id="create-all-node-db-all-cov-reference-list"></span><span id="index-5"></span><h4><a class="toc-backref" href="#id7">List</a><a class="headerlink" href="#list" title="Permalink to this headline"></a></h4>
+<span id="create-all-node-db-root-node-database-list"></span><span id="index-4"></span><h4><a class="toc-backref" href="#id6">List</a><a class="headerlink" href="#list" title="Permalink to this headline"></a></h4>
 <p>If <em>split_reference_table</em> is empty,
 the length of the reference list is one and none of the
 covariates depend on a splitting covariate.
@@ -219,7 +202,7 @@ split covariance reference value.</p>
 </div>
 </div>
 <div class="section" id="all-option">
-<span id="create-all-node-db-all-option"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id8">all_option</a><a class="headerlink" href="#all-option" title="Permalink to this headline"></a></h3>
+<span id="create-all-node-db-all-option"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id7">all_option</a><a class="headerlink" href="#all-option" title="Permalink to this headline"></a></h3>
 <p>This argument can’t be <code class="docutils literal notranslate"><span class="pre">None</span></code>.
 It is a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with a key equal to each
 <a class="reference internal" href="all_option_table.html#all-option-table-table-format-option-name"><span class="std std-ref">option_name</span></a> that appears in the
@@ -231,14 +214,14 @@ Note that keys must have type <code class="docutils literal notranslate"><span c
 to <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p>
 </div>
 <div class="section" id="split-reference-table">
-<span id="create-all-node-db-split-reference-table"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id9">split_reference_table</a><a class="headerlink" href="#split-reference-table" title="Permalink to this headline"></a></h3>
+<span id="create-all-node-db-split-reference-table"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id8">split_reference_table</a><a class="headerlink" href="#split-reference-table" title="Permalink to this headline"></a></h3>
 <p>This specifies the possible reference values for the splitting covariate.
 It must be a <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">dict</span></code> representation of the
 <a class="reference internal" href="split_reference_table.html#id1"><span class="std std-ref">Split Reference Table</span></a>.
 If this argument is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the split_reference table is empty.</p>
 </div>
 <div class="section" id="node-split-table">
-<span id="create-all-node-db-node-split-table"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id10">node_split_table</a><a class="headerlink" href="#node-split-table" title="Permalink to this headline"></a></h3>
+<span id="create-all-node-db-node-split-table"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id9">node_split_table</a><a class="headerlink" href="#node-split-table" title="Permalink to this headline"></a></h3>
 <p>This specifies the node at which the cascade will split by the value
 of the splitting covariate.
 It must be a <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">dict</span></code> representation of the
@@ -248,14 +231,14 @@ the <code class="docutils literal notranslate"><span class="pre">int</span></cod
 If this argument is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the node_split table is empty.</p>
 </div>
 <div class="section" id="mulcov-freeze-table">
-<span id="create-all-node-db-mulcov-freeze-table"></span><span id="index-9"></span><h3><a class="toc-backref" href="#id11">mulcov_freeze_table</a><a class="headerlink" href="#mulcov-freeze-table" title="Permalink to this headline"></a></h3>
+<span id="create-all-node-db-mulcov-freeze-table"></span><span id="index-8"></span><h3><a class="toc-backref" href="#id10">mulcov_freeze_table</a><a class="headerlink" href="#mulcov-freeze-table" title="Permalink to this headline"></a></h3>
 <p>This specifies the jobs at which the cascade will freeze specific
 covariate multipliers.
 If this argument is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the node_split table is empty.
 Otherwise, it must be a <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">dict</span></code> representation of the
 <a class="reference internal" href="mulcov_freeze_table.html#id1"><span class="std std-ref">Mulcov Freeze Table</span></a> with the following keys for each <code class="docutils literal notranslate"><span class="pre">dict</span></code>:</p>
 <div class="section" id="fit-node-id-fit-node-name">
-<span id="create-all-node-db-mulcov-freeze-table-fit-node-id-fit-node-name"></span><span id="index-10"></span><h4><a class="toc-backref" href="#id12">fit_node_id, fit_node_name</a><a class="headerlink" href="#fit-node-id-fit-node-name" title="Permalink to this headline"></a></h4>
+<span id="create-all-node-db-mulcov-freeze-table-fit-node-id-fit-node-name"></span><span id="index-9"></span><h4><a class="toc-backref" href="#id11">fit_node_id, fit_node_name</a><a class="headerlink" href="#fit-node-id-fit-node-name" title="Permalink to this headline"></a></h4>
 <p>The value <em>mulcov_freeze_table</em><code class="docutils literal notranslate"><span class="pre">[&quot;fit_node_id&quot;]</span></code> is an
 <code class="docutils literal notranslate"><span class="pre">int</span></code> representation of the fit_node_id for this job or
 <em>mulcov_freeze_table</em><code class="docutils literal notranslate"><span class="pre">[&quot;fit_node_name&quot;]</span></code> is a
@@ -264,34 +247,34 @@ This value is <code class="docutils literal notranslate"><span class="pre">None<
 <a class="reference internal" href="split_reference_table.html#id1"><span class="std std-ref">split_reference_table</span></a> is empty.</p>
 </div>
 <div class="section" id="split-reference-id">
-<span id="create-all-node-db-mulcov-freeze-table-split-reference-id"></span><span id="index-11"></span><h4><a class="toc-backref" href="#id13">split_reference_id</a><a class="headerlink" href="#split-reference-id" title="Permalink to this headline"></a></h4>
+<span id="create-all-node-db-mulcov-freeze-table-split-reference-id"></span><span id="index-10"></span><h4><a class="toc-backref" href="#id12">split_reference_id</a><a class="headerlink" href="#split-reference-id" title="Permalink to this headline"></a></h4>
 <p>The value <em>mulcov_freeze_table</em><code class="docutils literal notranslate"><span class="pre">[&quot;split_reference_id&quot;]</span></code> is an
 <code class="docutils literal notranslate"><span class="pre">int</span></code> representation of the split_reference_id for this job or
 <em>mulcov_freeze_table</em><code class="docutils literal notranslate"><span class="pre">[&quot;split_reference_name&quot;]</span></code> is a
 <code class="docutils literal notranslate"><span class="pre">str</span></code> representation of the corresponding split reference name.</p>
 </div>
 <div class="section" id="mulcov-id">
-<span id="create-all-node-db-mulcov-freeze-table-mulcov-id"></span><span id="index-12"></span><h4><a class="toc-backref" href="#id14">mulcov_id</a><a class="headerlink" href="#mulcov-id" title="Permalink to this headline"></a></h4>
+<span id="create-all-node-db-mulcov-freeze-table-mulcov-id"></span><span id="index-11"></span><h4><a class="toc-backref" href="#id13">mulcov_id</a><a class="headerlink" href="#mulcov-id" title="Permalink to this headline"></a></h4>
 <p>The value <em>mulcov_freeze_table</em><code class="docutils literal notranslate"><span class="pre">[&quot;mulcov_id&quot;]</span></code> is an
 <code class="docutils literal notranslate"><span class="pre">int</span></code> representation of the mulcov_id for the covariate multiplier
 that is frozen.</p>
 </div>
 </div>
 <div class="section" id="omega-grid">
-<span id="create-all-node-db-omega-grid"></span><span id="index-13"></span><h3><a class="toc-backref" href="#id15">omega_grid</a><a class="headerlink" href="#omega-grid" title="Permalink to this headline"></a></h3>
+<span id="create-all-node-db-omega-grid"></span><span id="index-12"></span><h3><a class="toc-backref" href="#id14">omega_grid</a><a class="headerlink" href="#omega-grid" title="Permalink to this headline"></a></h3>
 <p>is a dictionary with two keys <code class="docutils literal notranslate"><span class="pre">age</span></code> and <code class="docutils literal notranslate"><span class="pre">time</span></code>.
 If this argument is <code class="docutils literal notranslate"><span class="pre">None</span></code>,
 the <a class="reference internal" href="omega_grid.html#omega-grid-omega-age-grid-table"><span class="std std-ref">omega_age_grid Table</span></a> and
 the <a class="reference internal" href="omega_grid.html#omega-grid-omega-time-grid-table"><span class="std std-ref">omega_time_grid Table</span></a> are empty.</p>
 <div class="section" id="age">
-<span id="create-all-node-db-omega-grid-age"></span><span id="index-14"></span><h4><a class="toc-backref" href="#id16">age</a><a class="headerlink" href="#age" title="Permalink to this headline"></a></h4>
+<span id="create-all-node-db-omega-grid-age"></span><span id="index-13"></span><h4><a class="toc-backref" href="#id15">age</a><a class="headerlink" href="#age" title="Permalink to this headline"></a></h4>
 <p>The value <em>omega</em>[<code class="docutils literal notranslate"><span class="pre">age</span></code>] is a list containing the
 age_id values for the omega_grid.
 These are indices in the root_node_database age table.
 We use the notation <em>n_omega_age</em> for the length of the age list.</p>
 </div>
 <div class="section" id="time">
-<span id="create-all-node-db-omega-grid-time"></span><span id="index-15"></span><h4><a class="toc-backref" href="#id17">time</a><a class="headerlink" href="#time" title="Permalink to this headline"></a></h4>
+<span id="create-all-node-db-omega-grid-time"></span><span id="index-14"></span><h4><a class="toc-backref" href="#id16">time</a><a class="headerlink" href="#time" title="Permalink to this headline"></a></h4>
 <p>The value <em>omega</em>[<code class="docutils literal notranslate"><span class="pre">time</span></code>] is a list containing the
 time_id values for the omega_grid.
 These are indices in the root_node_database time table.
@@ -299,7 +282,7 @@ We use the notation <em>n_omega_time</em> for the length of the time list.</p>
 </div>
 </div>
 <div class="section" id="mtall-data">
-<span id="create-all-node-db-mtall-data"></span><span id="index-16"></span><h3><a class="toc-backref" href="#id18">mtall_data</a><a class="headerlink" href="#mtall-data" title="Permalink to this headline"></a></h3>
+<span id="create-all-node-db-mtall-data"></span><span id="index-15"></span><h3><a class="toc-backref" href="#id17">mtall_data</a><a class="headerlink" href="#mtall-data" title="Permalink to this headline"></a></h3>
 <p>This is a python dictionary with a key for each node name
 for the <a class="reference internal" href="glossary.html#glossary-root-node"><span class="std std-ref">root_node</span></a> and its descendant.
 The value <em>mtall_data[node_name]</em> is a list.
@@ -317,7 +300,7 @@ Otherwise, let <em>n_split</em> be the length of the split_reference table.
 For <em>k</em> equal 0, … , <em>n_split</em>-1, it specifies the value of
 <a class="reference internal" href="split_reference_table.html#split-reference-table-split-reference-id"><span class="std std-ref">split_reference_id</span></a> for the covariate value.</p>
 <div class="section" id="default">
-<span id="create-all-node-db-mtall-data-default"></span><span id="index-17"></span><h4><a class="toc-backref" href="#id19">default</a><a class="headerlink" href="#default" title="Permalink to this headline"></a></h4>
+<span id="create-all-node-db-mtall-data-default"></span><span id="index-16"></span><h4><a class="toc-backref" href="#id18">default</a><a class="headerlink" href="#default" title="Permalink to this headline"></a></h4>
 <p>The <em>mtall_data</em> argument is <code class="docutils literal notranslate"><span class="pre">None</span></code> if and only if <em>omega_grid</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code>.
 If <em>mtall_data</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code> the
 <a class="reference internal" href="all_mtall.html#all-mtall-all-mtall-table"><span class="std std-ref">all_mtall Table</span></a> and
@@ -325,7 +308,7 @@ If <em>mtall_data</em> is <code class="docutils literal notranslate"><span class
 </div>
 </div>
 <div class="section" id="mtspecific-data">
-<span id="create-all-node-db-mtspecific-data"></span><span id="index-18"></span><h3><a class="toc-backref" href="#id20">mtspecific_data</a><a class="headerlink" href="#mtspecific-data" title="Permalink to this headline"></a></h3>
+<span id="create-all-node-db-mtspecific-data"></span><span id="index-17"></span><h3><a class="toc-backref" href="#id19">mtspecific_data</a><a class="headerlink" href="#mtspecific-data" title="Permalink to this headline"></a></h3>
 <p>This is a python dictionary with a key for each node name
 for the <a class="reference internal" href="glossary.html#glossary-root-node"><span class="std std-ref">root_node</span></a> and its descendant.
 The value <em>mtspecific_data[node_name]</em> is a list.
@@ -343,7 +326,7 @@ Otherwise, let <em>n_split</em> be the length of the split_reference table.
 For <em>k</em> equal 0, … , <em>n_split</em>-1, it specifies the value of
 <a class="reference internal" href="split_reference_table.html#split-reference-table-split-reference-id"><span class="std std-ref">split_reference_id</span></a> for the covariate value.</p>
 <div class="section" id="create-all-node-db-mtspecific-data-default">
-<span id="index-19"></span><span id="id2"></span><h4><a class="toc-backref" href="#id21">default</a><a class="headerlink" href="#create-all-node-db-mtspecific-data-default" title="Permalink to this headline"></a></h4>
+<span id="index-18"></span><span id="id2"></span><h4><a class="toc-backref" href="#id20">default</a><a class="headerlink" href="#create-all-node-db-mtspecific-data-default" title="Permalink to this headline"></a></h4>
 <p>If <em>omega_grid</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, <em>mtspecific_data</em> must also be <code class="docutils literal notranslate"><span class="pre">None</span></code>.
 If <em>mtspecific_data</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code> the
 <a class="reference internal" href="all_mtspecific.html#all-mtspecific-all-mtspecific-table"><span class="std std-ref">all_mtspecific Table</span></a> and

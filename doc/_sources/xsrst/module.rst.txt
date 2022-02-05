@@ -18,9 +18,9 @@ module
    create_all_node_db
    create_job_table
    create_shift_db
-   data4cov_reference
    empty_avgint_table
    get_cov_info
+   get_cov_reference
    get_database_dir
    get_fit_children
    get_fit_integrand
@@ -60,9 +60,9 @@ The at_cascade Python Module
     "create_all_node_db", :ref:`create_all_node_db`
     "create_job_table", :ref:`create_job_table`
     "create_shift_db", :ref:`create_shift_db`
-    "data4cov_reference", :ref:`data4cov_reference`
     "empty_avgint_table", :ref:`empty_avgint_table`
     "get_cov_info", :ref:`get_cov_info`
+    "get_cov_reference", :ref:`get_cov_reference`
     "get_database_dir", :ref:`get_database_dir`
     "get_fit_children", :ref:`get_fit_children`
     "get_fit_integrand", :ref:`get_fit_integrand`

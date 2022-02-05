@@ -55,7 +55,7 @@ fit_goal_set
 ============
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 215-215
+    :lines: 214-214
     :language: py
 
 .. meta::
@@ -83,7 +83,7 @@ This cascade is set up to split by sex reference value; see
 :ref:`split_reference_table`
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 219-229
+    :lines: 218-228
     :language: py
 
 .. meta::
@@ -96,16 +96,15 @@ This cascade is set up to split by sex reference value; see
 Covariate
 *********
 There are three covariates for this example, sex, vaccine, and income.
-The reference value for income depends on the value of sex;
-see :ref:`create_all_node_db.all_cov_reference`:
+Income is the only :ref:`glossary.relative_covariate`.
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 237-242
+    :lines: 236-255
     :language: py
 
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 250-252
+    :lines: 263-265
     :language: py
 
 .. meta::
@@ -121,7 +120,7 @@ The only absolute covariate in this example is vaccine
 (0 for no vaccine, 1 for yes vaccine).
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 256-256
+    :lines: 269-269
     :language: py
 
 .. meta::
@@ -140,7 +139,7 @@ that multiply the income and vaccine covariates.
 The true value for *alpha* (used which simulating the data) is
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 246-246
+    :lines: 259-259
     :language: py
 
 .. meta::
@@ -195,7 +194,7 @@ The values *a*, *t*, *n*, *sex*
 are not used by this function for this example.
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 262-273
+    :lines: 275-286
     :language: py
 
 .. meta::
@@ -254,7 +253,7 @@ Value Prior
 The following is the value prior used for the root_node
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 290-297
+    :lines: 303-310
     :language: py
 
 The mean and standard deviation are only used for the root_node.
@@ -286,7 +285,7 @@ Value Prior
 The following is the value prior used for this smoothing:
 
 .. literalinclude:: ../../example/absolute_covariates.py
-    :lines: 300-314
+    :lines: 313-327
     :language: py
 
 The mean and standard deviation are only used for the root_node.

@@ -18,7 +18,7 @@ mulcov_freeze: Python Source Code
 
 
 .. literalinclude:: ../../example/mulcov_freeze.py
-    :lines: 251-659
+    :lines: 251-650
     :language: py
 
 ----

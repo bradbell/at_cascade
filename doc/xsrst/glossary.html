@@ -234,9 +234,12 @@ The value of <em>parent_node_id</em> does not appear in the option table.</p>
 </div>
 <div class="section" id="covariate-table">
 <span id="glossary-fit-node-database-covariate-table"></span><span id="index-11"></span><h4><a class="toc-backref" href="#id14">Covariate Table</a><a class="headerlink" href="#covariate-table" title="Permalink to this headline"></a></h4>
-<p>For each covariate, the covariate table reference value must be the
-same as the <a class="reference internal" href="all_cov_reference_table.html#all-cov-reference-table-reference"><span class="std std-ref">reference</span></a> for the
-fit_node in the all_cov_reference table.
+<p>For each <a class="reference internal" href="#glossary-relative-covariate"><span class="std std-ref">Relative Covariate</span></a>,
+the covariate table reference value is the average returned by
+<a class="reference internal" href="get_cov_reference.html#id1"><span class="std std-ref">Get Covariate Reference Values</span></a> for this node and split_reference_id.
+The split covariate reference value is one of the
+<a class="reference internal" href="split_reference_table.html#split-reference-table-split-reference-value"><span class="std std-ref">split_reference_value</span></a>
+in the split_reference table.
 The other columns in the covariate table are the same
 as in the root_node_database.</p>
 </div>

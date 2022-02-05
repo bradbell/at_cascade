@@ -8,7 +8,6 @@ all_node_db
    :maxdepth: 1
    :hidden:
 
-   all_cov_reference_table
    omega_grid
    all_mtall
    all_mtspecific
@@ -50,7 +49,6 @@ initial value is zero, and it must increment by one for each row.
     :header: "Child", "Title"
     :widths: 20, 80
 
-    "all_cov_reference_table", :ref:`all_cov_reference_table`
     "omega_grid", :ref:`omega_grid`
     "all_mtall", :ref:`all_mtall`
     "all_mtspecific", :ref:`all_mtspecific`

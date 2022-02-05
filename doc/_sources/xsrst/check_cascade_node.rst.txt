@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/check_cascade_node.py
-    :lines: 85-91
+    :lines: 90-96
     :language: py
 
 .. meta::
@@ -87,6 +87,18 @@ extra properties listed under
 :ref:`cascade_root_node.output_dismod_db`
 in the cascade_root_node documentation.
 This argument can't be ``None``.
+
+.. meta::
+   :keywords: avgint, table
+
+.. index:: avgint, table
+
+.. _check_cascade_node.fit_node_database.avgint_table:
+
+avgint Table
+============
+The avgint table in this database is replaced using the
+*avgint* argument to this routine.
 
 .. meta::
    :keywords: avgint_table

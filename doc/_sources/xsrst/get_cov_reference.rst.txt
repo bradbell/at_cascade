@@ -1,0 +1,152 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!!!!!!
+get_cov_reference
+!!!!!!!!!!!!!!!!!
+
+}
+
+.. meta::
+   :keywords: get_cov_reference, get, covariate, reference, values
+
+.. index:: get_cov_reference, get, covariate, reference, values
+
+.. _get_cov_reference:
+
+Get Covariate Reference Values
+##############################
+.. contents::
+   :local:
+
+.. meta::
+   :keywords: syntax
+
+.. index:: syntax
+
+.. _get_cov_reference.syntax:
+
+Syntax
+******
+
+.. literalinclude:: ../../at_cascade/get_cov_reference.py
+    :lines: 94-99
+    :language: py
+
+.. meta::
+   :keywords: fit_node_database
+
+.. index:: fit_node_database
+
+.. _get_cov_reference.fit_node_database:
+
+fit_node_database
+*****************
+This argument can't be ``None`` and
+is an :ref:`glossary.input_node_database`.
+Only the following tables in this database are used:
+option, data, node, and covariate.
+None of the tables are modified.
+
+.. meta::
+   :keywords: option, table
+
+.. index:: option, table
+
+.. _get_cov_reference.fit_node_database.option_table:
+
+option Table
+============
+This table must have a row with option_value equal to parent_node_name.
+Only this row of the option table is used.
+The parent node must be the shift node, or the parent of the shift node.
+
+.. meta::
+   :keywords: data, table
+
+.. index:: data, table
+
+.. _get_cov_reference.fit_node_database.data_table:
+
+data Table
+==========
+Only the following columns of this table are used:
+data_id, node_id, x_0, ... x_n,
+where n is the number of covariates minus one.
+
+.. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _get_cov_reference.all_node_database:
+
+all_node_database
+*****************
+This argument can't be ``None`` and is the :ref:all_node_db`.
+Only the :ref:`all_option_table` and :ref:`split_reference_table` are used.
+
+.. meta::
+   :keywords: all_option, table
+
+.. index:: all_option, table
+
+.. _get_cov_reference.all_node_database.all_option_table:
+
+all_option Table
+================
+The :ref:`all_option_table.split_covariate_name` and
+:ref:`all_option_table.absolute_covariates` rows of this table
+(if they exist) are the only rows of this table that are used.
+
+.. meta::
+   :keywords: shift_node_id
+
+.. index:: shift_node_id
+
+.. _get_cov_reference.shift_node_id:
+
+shift_node_id
+*************
+This is the dismod_at parent node that the covariate reference values
+correspond to.
+
+.. meta::
+   :keywords: split_reference_id
+
+.. index:: split_reference_id
+
+.. _get_cov_reference.split_reference_id:
+
+split_reference_id
+******************
+This is the :ref:`split_reference_table.split_reference_id` that the
+covariate reference values correspond to.
+
+.. meta::
+   :keywords: cov_reference_list
+
+.. index:: cov_reference_list
+
+.. _get_cov_reference.cov_reference_list:
+
+cov_reference_list
+******************
+1.  The return value is a ``list`` with length equal to the
+    length of the covariate table.
+2.  The :ref:`all_option_table.absolute_covariates` have the same
+    reference value as in the *fit_node_database* covariate table.
+3.  The splitting covariate has reference value corresponding to
+    *split_reference_id* in the split_reference table.
+4.  The :ref:`glossary.relative_covariate` reference values are equal to
+    the average of the corresponding covariates in the data table.
+5.  Only rows of the data table that get included when *shift_node_id*
+    is the parent node are included in the average.
+6.  Only rows of the data that are within the max difference for the splitting
+    covariate for this *split_reference_id* are included in the average.
+7.  null values for a covariate are not included in the average.
+8.  If there are no values to average for a relative covariate, the reference
+    in the *fit_node_database* covariate table is used for that covariate.
+
+----
+
+xsrst input file: ``at_cascade/get_cov_reference.py``

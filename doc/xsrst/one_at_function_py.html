@@ -403,14 +403,6 @@
     <span class="n">root_node_database</span>  <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/root_node.db&#39;</span>
     <span class="n">root_node_db</span><span class="p">(</span><span class="n">root_node_database</span><span class="p">)</span>
     <span class="c1">#</span>
-    <span class="c1"># all_cov_reference</span>
-    <span class="n">all_cov_reference</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="n">covariate_name</span>      <span class="o">=</span> <span class="s1">&#39;income&#39;</span>
-    <span class="k">for</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;n0&#39;</span><span class="p">,</span> <span class="s1">&#39;n1&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span><span class="p">,</span> <span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s1">&#39;n4&#39;</span><span class="p">,</span> <span class="s1">&#39;n5&#39;</span><span class="p">,</span> <span class="s1">&#39;n6&#39;</span> <span class="p">]</span> <span class="p">:</span>
-        <span class="n">all_cov_reference</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">covariate_name</span> <span class="p">:</span> <span class="p">[</span> <span class="n">avg_income</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="p">]</span>
-        <span class="p">}</span>
-    <span class="c1">#</span>
     <span class="c1"># Create all_node.db</span>
     <span class="n">all_node_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/all_node.db&#39;</span>
     <span class="n">all_option</span>        <span class="o">=</span> <span class="p">{</span>
@@ -420,7 +412,6 @@
     <span class="n">at_cascade</span><span class="o">.</span><span class="n">create_all_node_db</span><span class="p">(</span>
         <span class="n">all_node_database</span>       <span class="o">=</span> <span class="n">all_node_database</span><span class="p">,</span>
         <span class="n">root_node_database</span>      <span class="o">=</span> <span class="n">root_node_database</span><span class="p">,</span>
-        <span class="n">all_cov_reference</span>       <span class="o">=</span> <span class="n">all_cov_reference</span><span class="p">,</span>
         <span class="n">all_option</span>              <span class="o">=</span> <span class="n">all_option</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="c1">#</span>

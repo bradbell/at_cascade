@@ -18,7 +18,7 @@ continue_cascade: Python Source Code
 
 
 .. literalinclude:: ../../example/continue_cascade.py
-    :lines: 154-508
+    :lines: 154-502
     :language: py
 
 ----

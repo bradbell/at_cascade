@@ -17,6 +17,18 @@ Release Notes for 2022
    :local:
 
 .. meta::
+   :keywords: 02-05
+
+.. index:: 02-05
+
+.. _2022.02-05:
+
+02-05
+*****
+Use :ref:`get_cov_reference` to compute references for relative covariates
+and remove the all_cov_reference table from the :ref:`all_node_db`.
+
+.. meta::
    :keywords: 02-04
 
 .. index:: 02-04

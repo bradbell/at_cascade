@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_all_node_db.py
-    :lines: 208-219
+    :lines: 194-204
     :language: py
 
 .. meta::
@@ -57,32 +57,11 @@ is a python string containing the name of the name of the
 This argument can't be ``None``.
 
 .. meta::
-   :keywords: all_cov_reference
-
-.. index:: all_cov_reference
-
-.. _create_all_node_db.all_cov_reference:
-
-all_cov_reference
-*****************
-This argument can't be ``None``.
-It is a python dictionary with a key equal to the node name for
-each node in the node table in root_node_database.
-If *node_name* is a node name,
-*all_cov_reference[node_name]* is a python dictionary with a key equal to the
-name for each :ref:`glossary.relative_covariate`.
-If *covariate_name* is an relative covariate name,
-
-| |tab| *all_cov_reference[node_name][covariate_name]*
-
-is a list of reference values for the specified node and covariate.
-
-.. meta::
    :keywords: list
 
 .. index:: list
 
-.. _create_all_node_db.all_cov_reference.list:
+.. _create_all_node_db.root_node_database.list:
 
 List
 ====

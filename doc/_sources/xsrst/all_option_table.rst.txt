@@ -73,8 +73,7 @@ It specifies a value that is attached to each option name.
 absolute_covariates
 *******************
 This is a space separate list of the names for the
-covariates that do not change their reference value and hence are not
-included in the :ref:`all_cov_reference_table`.
+covariates that do not change their reference value.
 If this option does not appear, there are no absolute covariates.
 
 .. meta::

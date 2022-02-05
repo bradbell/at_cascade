@@ -28,13 +28,13 @@ Cascading Dismod_at Analysis From Parent To Child Regions
    :local:
 
 .. meta::
-   :keywords: version, 2022.2.4
+   :keywords: version, 2022.2.5
 
-.. index:: version, 2022.2.4
+.. index:: version, 2022.2.5
 
-.. _at_cascade.version_2022_2_4:
+.. _at_cascade.version_2022_2_5:
 
-Version 2022.2.4
+Version 2022.2.5
 ******************
 
 .. meta::
