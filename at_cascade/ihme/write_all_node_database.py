@@ -106,41 +106,6 @@ def write_all_node_database(result_dir, root_node_database) :
         option_value = row['option_value']
         all_option[option_name] = option_value
     #
-    # not_relative_set
-    not_relative_set = set( all_option['absolute_covariates'].split() )
-    not_relative_set.add( all_option['split_covariate_name'] )
-    #
-    # covariate_set
-    covariate_set = set()
-    for row in root_table['covariate'] :
-        covariate_set.add( row['covariate_name'] )
-    #
-    # realtive_set
-    relative_set = covariate_set - not_relative_set
-    #
-    # all_cov_reference_table
-    # Note the value 0.0 does not matter becasue it will be replaced using
-    # data4cov_reference
-    all_cov_reference_table = list()
-    for node_id in range( len( root_table['node'] ) ) :
-        for covariate_id in range( len( root_table['covariate'] ) ) :
-            for split_reference_id in range( len(split_reference_table) ) :
-                row = {
-                    'node_id'            : node_id,
-                    'covariate_id'       : covariate_id,
-                    'split_reference_id' : split_reference_id,
-                    'reference'          : 0.0,
-                }
-                all_cov_reference_table.append( row )
-    tbl_name = 'all_cov_reference'
-    col_list = [
-        ('node_id', 'integer'),
-        ('covariate_id', 'integer'),
-        ('split_reference_id', 'integer'),
-        ('reference', 'real'),
-    ]
-    write_table(connection, all_cov_reference_table, tbl_name, col_list)
-    #
     # node_split_table
     node_split_table = at_cascade.ihme.get_table_csv( node_split_table_file )
     for row in node_split_table :
@@ -228,10 +193,4 @@ def write_all_node_database(result_dir, root_node_database) :
     # connection
     connection.close()
     #
-    # data4cov_reference
-    at_cascade.data4cov_reference(
-        root_node_database = root_node_database,
-        all_node_database  = all_node_database,
-        trace_interval     = 100,
-    )
     print( f'End: creating {all_node_database}' )

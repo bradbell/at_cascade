@@ -104,14 +104,12 @@ split_reference_table[root_split_reference_id]['split_reference_name']=='both'
 
 # END root_split_reference_id
 #
-# BEGIN all_cov_reference
-all_cov_reference = dict()
+# BEGIN avg_income
+avg_income = dict()
 for node_id in range(7) :
     node_name = 'n' + str(node_id)
-    all_cov_reference[node_name] = {
-        'income' : [ 1.0 - node_id / 10.0, 1.0, 1.0 + node_id / 10.0 ]
-    }
-# END all_cov_reference
+    avg_income[node_name] = [ 1.0 - node_id / 10.0, 1.0, 1.0 + node_id / 10.0 ]
+# END avg_income
 #
 # BEGIN alpha_true
 alpha_true = - 0.2
@@ -142,7 +140,7 @@ def rate_true(rate, a, t, n, c) :
         if row['split_reference_value'] == sex :
             split_reference_id = row_id
     #
-    r_income = all_cov_reference[n]['income'][split_reference_id]
+    r_income = avg_income[n][split_reference_id]
     effect   = alpha_true * ( income - r_income )
     #
     if rate == 'iota' :
@@ -156,7 +154,7 @@ def root_node_db(file_name) :
     #
     # iota_n0
     sex       = split_reference_list[root_split_reference_id]
-    income    = all_cov_reference['n0']['income'][root_split_reference_id]
+    income    = avg_income['n0'][root_split_reference_id]
     c         = [ sex, income ]
     iota_n0   = rate_true('iota', None, None, 'n0', c)
     # END iota_50
@@ -229,7 +227,7 @@ def root_node_db(file_name) :
     # covariate_table
     covariate_table = list()
     sex    = split_reference_list[root_split_reference_id]
-    income =  all_cov_reference['n0']['income'][root_split_reference_id]
+    income =  avg_income['n0'][root_split_reference_id]
     covariate_table.append(
         { 'name': 'sex',      'reference': sex, 'max_difference': 1.1 }
     )
@@ -288,7 +286,7 @@ def root_node_db(file_name) :
     for split_reference_id in [ 0, 2 ] :
         for node in leaf_set :
             sex      = split_reference_list[split_reference_id]
-            r_income = all_cov_reference[node]['income'][split_reference_id]
+            r_income = avg_income[node][split_reference_id]
             for factor in [ 0.5, 1.0, 2.0 ] :
                 income = factor * r_income
                 c      = [sex, income]
@@ -392,7 +390,7 @@ def main() :
                     age    = age_table[age_id]['age']
                     time   = time_table[time_id]['time']
                     sex    = split_reference_list[k]
-                    income = all_cov_reference[node_name]['income'][k]
+                    income = avg_income[node_name][k]
                     cov    = [ sex, income ]
                     omega  = rate_true('omega', None, None, node_name, cov)
                     mtall_data[node_name][k].append( omega )
