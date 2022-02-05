@@ -80,11 +80,10 @@ The sex reference value for the root node (n0) corresponds to both sexes:
 Covariate
 *********
 There are two covariates for this example, sex and income.
-The reference value for income depends on both the node and sex;
-see all_cov_reference:
+Income is the only :ref:`glossary.relative_covariate`:
 {xsrst_file
-    # BEGIN all_cov_reference
-    # END all_cov_reference
+    # BEGIN avg_income
+    # END avg_income
 }
 
 alpha
@@ -260,14 +259,12 @@ split_reference_table[root_split_reference_id]['split_reference_name']=='both'
 
 # END root_split_reference_id
 #
-# BEGIN all_cov_reference
-all_cov_reference = dict()
+# BEGIN avg_income
+avg_income = dict()
 leaf_node_set     = { 3, 4, 5, 6 }
 for node_id in leaf_node_set :
     node_name = 'n' + str(node_id)
-    all_cov_reference[node_name] = {
-        'income' : [ 1.0 - node_id / 10.0, 1.0, 1.0 + node_id / 10.0 ]
-    }
+    avg_income[node_name] = [ 1.0 - node_id / 10.0, 1.0, 1.0 + node_id / 10.0 ]
 # child_list
 # children of node 0, 1, 2 in that order
 child_list = [ (1,2), (3,4), (5,6) ]
@@ -277,14 +274,13 @@ for node_id in [2, 1, 0] :
         avg = 0.0
         for child_id in child_list[node_id] :
             child_name = 'n' + str(child_id)
-            avg += all_cov_reference[child_name]['income'][split_reference_id]
+            avg += avg_income[child_name][split_reference_id]
         avg = avg / len( child_list[node_id] )
         avg_list.append( avg )
     node_name = 'n' + str(node_id)
     #
-    # all_cov_reference
-    all_cov_reference[node_name] = { 'income' : avg_list }
-# END all_cov_reference
+    avg_income[node_name] = avg_list
+# END avg_income
 #
 # BEGIN alpha_true
 alpha_true = - 0.2
@@ -315,7 +311,7 @@ def rate_true(rate, a, t, n, c) :
         if row['split_reference_value'] == sex :
             split_reference_id = row_id
     #
-    r_income = all_cov_reference[n]['income'][split_reference_id]
+    r_income = avg_income[n][split_reference_id]
     effect   = alpha_true * ( income - r_income )
     #
     if rate == 'iota' :
@@ -329,7 +325,7 @@ def root_node_db(file_name) :
     #
     # iota_n0
     sex       = split_reference_list[root_split_reference_id]
-    income    = all_cov_reference['n0']['income'][root_split_reference_id]
+    income    = avg_income['n0'][root_split_reference_id]
     c         = [ sex, income ]
     iota_n0   = rate_true('iota', None, None, 'n0', c)
     # END iota_50
@@ -402,7 +398,7 @@ def root_node_db(file_name) :
     # covariate_table
     covariate_table = list()
     sex    = split_reference_list[root_split_reference_id]
-    income =  all_cov_reference['n0']['income'][root_split_reference_id]
+    income =  avg_income['n0'][root_split_reference_id]
     covariate_table.append(
         { 'name': 'sex',      'reference': sex, 'max_difference': 1.1 }
     )
@@ -461,7 +457,7 @@ def root_node_db(file_name) :
     for split_reference_id in [ 0, 2 ] :
         for node in leaf_set :
             sex      = split_reference_list[split_reference_id]
-            r_income = all_cov_reference[node]['income'][split_reference_id]
+            r_income = avg_income[node][split_reference_id]
             for factor in [ 0.5, 1.0, 1.5 ] :
                 income = factor * r_income
                 c      = [sex, income]
@@ -550,7 +546,7 @@ def main() :
                     age    = age_table[age_id]['age']
                     time   = time_table[time_id]['time']
                     sex    = split_reference_list[k]
-                    income = all_cov_reference[node_name]['income'][k]
+                    income = avg_income[node_name][k]
                     cov    = [ sex, income ]
                     omega  = rate_true('omega', None, None, node_name, cov)
                     mtall_data[node_name][k].append( omega )
