@@ -319,9 +319,9 @@ fit_goal_set = {
 # ----------------------------------------------------------------------------
 #
 # random.seed
-if random_seed == 0 :
-    random_seed = int( time.time() )
-print('random_seed = ', random_seed)
+if __name__ == '__main__' :
+    if random_seed == 0 :
+        random_seed = int( time.time() )
 # ----------------------------------------------------------------------------
 def setup_function() :
     #
@@ -399,5 +399,5 @@ if __name__ == '__main__' :
         root_node_database      = root_node_database,
         no_ode_fit              = no_ode_fit,
     )
+    print('random_seed = ', random_seed)
     print('neural_tube.py: OK')
-    sys.exit(0)
