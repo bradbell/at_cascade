@@ -435,12 +435,16 @@ def predict_csv(
         dismod_at.get_table_dict(connection, 'split_reference')
     connection.close()
     #
-    # result_dir
-    result_dir = None
+    # result_dir, max_number_cpu
+    result_dir     = None
+    max_number_cpu = None
     for row in all_option_table :
         if row['option_name'] == 'result_dir' :
             result_dir = row['option_value']
+        if row['option_name'] == 'max_number_cpu' :
+            max_number_cpu = int( row['option_value'] )
     assert result_dir is not None
+    assert max_number_cpu is not None
     #
     # node_split_set
     node_split_set = set()
@@ -510,6 +514,9 @@ def predict_csv(
     # n_job
     n_job = len( job_table )
     #
+    # process_list
+    process_list = list()
+    #
     # job_id, job_row
     for (job_id, job_row) in enumerate(job_table) :
         #
@@ -556,7 +563,7 @@ def predict_csv(
             # fit_node_database
             fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
             #
-            if False :
+            if max_number_cpu == 1 :
                 predict_csv_one_job (
                     fit_node_database         ,
                     age_group_id_dict         ,
@@ -585,8 +592,19 @@ def predict_csv(
                 # target
                 target = predict_csv_one_job
                 #
+                # process_list
+                assert len(process_list) < max_number_cpu
+                if len(process_list) + 1 == max_number_cpu :
+                    for p in process_list :
+                        p.join()
+                    process_list = list()
+                #
                 # p
                 p = multiprocessing.Process(target = target, args = args)
-                #
                 p.start()
-                p.join()
+                #
+                # process_list
+                process_list.append(p)
+    assert job_id == len(job_table) - 1
+    for p in process_list :
+        p.join()
