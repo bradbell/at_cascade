@@ -134,17 +134,17 @@ age_avg_split_list = [ 0.1, 0.5, 1.0, 3.0 ]
 model_rate_age_grid = [
     0.02,  0.1, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 60.0, 80.0, 100.0
 ]
-model_rate_time_grid = [ 1990, 2000, 2010, 2020 ]
+model_rate_time_grid = [ 1990, 1995, 2000, 2005, 2010, 2015, 2020 ]
 #
 # prior_table
 # https://bradbell.github.io/dismod_at/doc/create_database.htm#prior_table
 prior_table = [
     {   'name'    :    'parent_pini_value',
-        'density' :    'log_gaussian',
-        'lower'   :    1e-7,
+        'density' :    'gaussian',
+        'lower'   :    0.0,
         'upper'   :    1.0,
         'mean'    :    1e-3,
-        'std'     :    3.0,
+        'std'     :    1.0,
         'eta'     :    1e-7,
     },
     {   'name'    :    'parent_chi_value',
@@ -155,10 +155,16 @@ prior_table = [
         'std'     :    1.0,
         'eta'     :    1e-7,
     },
-    {   'name'    :    'parent_rate_delta',
+    {   'name'    :    'parent_chi_delta',
         'density' :    'log_gaussian',
         'mean'    :    0.0,
         'std'     :    0.5,
+        'eta'     :    1e-7,
+    },
+    {   'name'    :    'parent_pini_dtime',
+        'density' :    'log_gaussian',
+        'mean'    :    0.0,
+        'std'     :    0.3,
         'eta'     :    1e-7,
     },
     {   'name'    :    'child_value',
@@ -192,12 +198,12 @@ prior_table = [
 smooth_list_dict = [
     {   'name'         : 'parent_chi',
         'value_prior'  : 'parent_chi_value',
-        'dage_prior'   : 'parent_rate_delta',
-        'dtime_prior'  : 'parent_rate_delta',
+        'dage_prior'   : 'parent_chi_delta',
+        'dtime_prior'  : 'parent_chi_delta',
     },
     {   'name'         : 'parent_pini',
         'value_prior'  : 'parent_pini_value',
-        'dtime_prior'  : 'parent_rate_delta',
+        'dtime_prior'  : 'parent_pini_dtime',
     },
     {   'name'         : 'child_smooth',
         'value_prior'  : 'child_value',

@@ -7,6 +7,7 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
+import shutil
 import datetime
 import csv
 import os
@@ -243,6 +244,12 @@ def summary(
     write_message_type_file(
         summary_dir, result_dir, message_type, fit_goal_set, root_node_database
     )
+    #
+    # data.csv
+    root_node_name = at_cascade.get_parent_node(root_node_database)
+    src = f'{result_dir}/{root_node_name}/data.csv'
+    dst = f'{summary_dir}/data.csv'
+    shutil.copyfile(src, dst)
     #
     # predict.csv
     combine_predict_files(

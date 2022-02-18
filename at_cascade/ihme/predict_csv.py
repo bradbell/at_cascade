@@ -291,6 +291,11 @@ def predict_csv_one_job(
         assert avgint_row['time_lower'] == avgint_row['time_upper']
         year_id = int( avgint_row['time_lower'] )
         #
+        # cohort
+        time   = avgint_row['time_lower']
+        age    = (avgint_row['age_lower'] + avgint_row['age_upper']) / 2.0
+        cohort = round(time - age, 2)
+        #
         # avg_integrand_list
         avg_integrand_list = list()
         #
@@ -318,6 +323,7 @@ def predict_csv_one_job(
             'sex_id'         : sex_id,
             'age_group_id'   : age_group_id,
             'year_id'        : year_id,
+            'cohort'         : cohort,
             'measure_id'     : measure_id,
         }
         for j in range( len(covariate_table) ) :
