@@ -177,6 +177,7 @@ def no_ode_fit(
     connection = dismod_at.create_connection(root_node_database, new)
     root_table = dict()
     for name in [
+        'avgint',
         'covariate',
         'integrand',
         'mulcov',
@@ -189,6 +190,9 @@ def no_ode_fit(
     ] :
         root_table[name] = dismod_at.get_table_dict(connection, name)
     connection.close()
+    if len( root_table['avgint'] ) > 0 :
+        msg = 'no_ode_fit: root_node_database: avgint table is not empty'
+        assert False, msg
     #
     # root_node_name
     root_node_name = at_cascade.get_parent_node(root_node_database)
