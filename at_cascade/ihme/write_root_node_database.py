@@ -22,6 +22,7 @@ def get_file_path(csv_file_key, result_dir) :
 def write_root_node_database(
     result_dir              = None,
     root_node_database      = None,
+    hold_out_integrand_set  = None,
     hold_out_nid_set        = None,
     covariate_csv_file_dict = None,
     gamma_factor            = None,
@@ -40,6 +41,7 @@ def write_root_node_database(
 ) :
     assert type(result_dir) == str
     assert type(root_node_database) == str
+    assert type(hold_out_integrand_set) == set
     assert type(hold_out_nid_set) == set
     assert type(covariate_csv_file_dict) == dict
     assert type(root_node_name) == str
@@ -322,6 +324,9 @@ def write_root_node_database(
     if len( zero_sum_child_rate.split() ) == 0 :
         zero_sum_child_rate = None
     #
+    # hold_out_integrand
+    hold_out_integrand = ' '.join(hold_out_integrand_set)
+    #
     # option_table
     option_table = [
         { 'name':'parent_node_name',     'value':root_node_name},
@@ -330,6 +335,7 @@ def write_root_node_database(
         { 'name':'zero_sum_child_rate',  'value':zero_sum_child_rate},
         { 'name':'ode_step_size',        'value':str(ode_step_size)},
         { 'name':'age_avg_split',        'value':age_avg_split},
+        { 'name':'hold_out_integrand',   'value':hold_out_integrand},
         #
         { 'name':'trace_init_fit_model', 'value':'true'},
         { 'name':'data_extra_columns',   'value':'c_seq'},
@@ -341,10 +347,6 @@ def write_root_node_database(
         { 'name':'print_level_fixed',            'value':'5'},
         { 'name':'accept_after_max_steps_fixed', 'value':'10'},
     ]
-    # Diabetes does not have enough incidence data to estimate
-    # both iota and chi without mtexcess. Also see the minimum_cv setting
-    # for mtexcess in the integand table.
-    # { 'name':'hold_out_integrand',   'value':'mtexcess'},
     #
     # create_database
     file_name      = root_node_database
