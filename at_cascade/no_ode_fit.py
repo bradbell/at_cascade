@@ -53,12 +53,20 @@ An intermediate database is stored in the file
 
 see :ref:`all_option_table.result_dir`
 and :ref:`all_option_table.root_node_name`.
-This contains the results of fitting without the ODE integrands
-so they can be plotted and converted to csv files.
-It has the :ref:`omega_constraint` so that the residuals for
-the ODE integrands make sense.
-The ODE integrands are not included (are included) for a fit using
-the *no_ode_database* (*root_fit_database*).
+This contains the results of fitting with only the integrand that
+do not require solving the ODE; i.e.
+Sincidence, remission, and mtexcess which measure
+iota, rho, and chi respectively.
+It also include relrisk which measures
+
+    ( *omega* + *chi* ) / *omega*
+
+These integrands are included even if they are held out in the
+*root_fit_database* using the hold_out_integrand option.
+The integrand mtother is excluded because omega is constrained using
+:ref:`omega_constraint`.
+The results of fitting this data basse can be converted to
+csv files and plotted using the dismod_at db2csv and plotting routines.
 
 root_fit_database
 *****************
@@ -260,19 +268,12 @@ def no_ode_fit(
     #
     # hold_out_integrand
     hold_out_integrand = list()
-    use_ode = [
-        'susceptible',
-        'withC',
-        'prevalence',
-        'Tincidence',
-        'mtspecific',
-        'mtall',
-        'mtstandard',
-    ]
+    use_integrand = [ 'mtexcess', 'Sincidence', 'remission', 'relrisk' ]
     for row in root_table['integrand'] :
         integrand_name = row['integrand_name']
-        if integrand_name in use_ode :
-            hold_out_integrand.append( integrand_name )
+        if not integrand_name.startswith('mulcov_') :
+            if integrand_name not in use_integrand :
+                hold_out_integrand.append( integrand_name )
     name  = 'hold_out_integrand'
     value = ' '.join(hold_out_integrand)
     command = [
@@ -296,21 +297,15 @@ def no_ode_fit(
         for integrand_id in fit_integrand :
             row            = root_table['integrand'][integrand_id]
             integrand_name = row['integrand_name']
-            command = [
-                'dismod_at',
-                no_ode_database,
-                'hold_out',
-                integrand_name,
-                str(max_fit),
-            ]
-            system_command(command, file_stdout)
+            if integrand_name in use_integrand :
+                command  = [ 'dismod_at', no_ode_database ]
+                command += [ 'hold_out', integrand_name, str(max_fit) ]
+                system_command(command, file_stdout)
     #
     # max_num_iter_fixed
-    # Pass max_num_iter_fixed as an argument to no_ode and then restore
-    # value in database.
-    # command  = [ 'dismod_at', no_ode_database ]
-    # command += [ 'set', 'option', 'max_num_iter_fixed', '100' ]
-    # dismod_at.system_command_prc(command )
+    command  = [ 'dismod_at', no_ode_database ]
+    command += [ 'set', 'option', 'max_num_iter_fixed', '100' ]
+    system_command(command, file_stdout)
     #
     # fit both
     command = [ 'dismod_at', no_ode_database, 'fit', 'both' ]
@@ -336,16 +331,22 @@ def no_ode_fit(
     # move c_root_avgint -> avgint
     at_cascade.move_table(connection, 'c_root_avgint', 'avgint')
     #
-    # restore hold_out_integrand
+    # hold_out_integrand, max_num_iter_fixed
+    # restore to original values in option table
     hold_out_integrand = ''
+    max_num_iter_fixed = '100'
     for row in root_table['option'] :
         if row['option_name'] == 'hold_out_integrand' :
             hold_out_integrand = row['option_value']
-    name  = 'hold_out_integrand'
-    value = hold_out_integrand
-    command = [
-        'dismod_at', root_fit_database, 'set', 'option', name, value
-    ]
+        if row['option_name'] == 'max_num_iter_fixed' :
+            max_num_iter_fixed = row['option_value']
+    name     = 'hold_out_integrand'
+    command  = [ 'dismod_at', root_fit_database ]
+    command += [ 'set', 'option', name, hold_out_integrand ]
+    system_command(command, file_stdout)
+    name     = 'max_num_iter_fixed'
+    command  = [ 'dismod_at', root_fit_database ]
+    command += [ 'set', 'option', name, max_num_iter_fixed ]
     system_command(command, file_stdout)
     #
     if max_number_cpu > 1 :

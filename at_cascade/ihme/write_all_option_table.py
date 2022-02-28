@@ -46,7 +46,7 @@ def write_all_option_table(
         'absolute_covariates'          : 'one',
         'split_covariate_name'         : 'sex',
         'root_split_reference_name'    : 'Both',
-        'result_dir'                  : result_dir,
+        'result_dir'                   : result_dir,
         'root_node_name'               : root_node_name,
         'max_abs_effect'               : max_abs_effect,
         'max_fit'                      : max_fit,

@@ -27,10 +27,10 @@ import at_cascade.ihme
 # covariate_csv_file_dict
 # The keys in this dictionary are the relative covariate names
 covariate_csv_file_dict = {
-'log_ldi' :
-    'ihme_db/DisMod_AT/covariates/gbd2019_ldi_log_transformed_covariate.csv',
-'obesity' :
-    'ihme_db/DisMod_AT/covariates/gbd2019_obesity_prevalence_covariate.csv',
+'log_sev' :
+    'ihme_db/DisMod_AT/covariates/gbd2019_SEV_scalar_asthma_log_transform_covariate.csv',
+'haqi' :
+    'ihme_db/DisMod_AT/covariates/gbd2019_haqi_covariate.csv',
 }
 #
 # scale_covaraite_dict
@@ -40,12 +40,12 @@ scale_covariate_dict = dict()
 #
 # input files
 # Use None for csmr_inp_file if you do not want to include it in fit
-data_dir        = 'ihme_db/DisMod_AT/testing/diabetes/data'
-data_inp_file   = f'{data_dir}/gbd2019_diabetes_crosswalk_12437.csv'
-csmr_inp_file   = None
+data_dir        = 'ihme_db/DisMod_AT/testing/asthma/data'
+data_inp_file   = f'{data_dir}/gbd2019_asthma_crosswalk_12080.csv'
+csmr_inp_file   = f'{data_dir}/gbd2019_asthma_csmr.csv'
 #
 # result_dir
-result_dir = 'ihme_db/DisMod_AT/results/diabetes'
+result_dir = 'ihme_db/DisMod_AT/results/asthma'
 #
 # root_node_database
 root_node_database = f'{result_dir}/root_node.db'
@@ -56,7 +56,7 @@ no_ode_fit = True
 #
 # root_node_name
 # name of the node where the cascade will start
-# root_node_name    = '64_High-income'
+# root_node_name      = '64_High-income'
 root_node_name      = '1_Global'
 #
 # gamma_factor
@@ -86,7 +86,7 @@ max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
 #
 # max_fit
 # Maximum number of data rows per integrand to include in a f
-max_fit             = 250
+max_fit             = 150
 #
 # max_abs_effect
 # Maximum absolute effect for any covriate multiplier.
@@ -103,11 +103,11 @@ node_split_name_set = { root_node_name }
 # hold_out_nid_set
 # set of nid values in data file for studies that are suspect
 # 249201 is Schottker B, et.al., ... A1c and fasting ...,  2011; 26(10) 779-87
-hold_out_nid_set = { 249201 }
+hold_out_nid_set = set()
 #
 # rate_case
 # https://bradbell.github.io/dismod_at/doc/option_table.htm#rate_case
-rate_case = 'iota_pos_rho_zero'
+rate_case = 'iota_pos_rho_pos'
 #
 # zero_sum_child_rate
 # space separate list of rates. The child random effects for each of these
@@ -141,7 +141,7 @@ prior_table = [
         'lower'   :    1e-7,
         'upper'   :    1.0,
         'mean'    :    1e-2,
-        'std'     :    3.0,
+        'std'     :    1.0,
         'eta'     :    1e-7,
     },
     {   'name'    :    'parent_pini_value',
@@ -151,19 +151,13 @@ prior_table = [
         'mean'    :    1e-5,
         'std'     :    1.0,
     },
-    {   'name'    :    'parent_chi_delta',
+    {   'name'    :    'parent_rate_dage',
         'density' :    'log_gaussian',
         'mean'    :    0.0,
         'std'     :    1.0,
         'eta'     :    1e-7,
     },
-    {   'name'    :    'parent_iota_dage',
-        'density' :    'log_gaussian',
-        'mean'    :    0.0,
-        'std'     :    1.0,
-        'eta'     :    1e-7,
-    },
-    {   'name'    :    'parent_iota_dtime',
+    {   'name'    :    'parent_rate_dtime',
         'density' :    'log_gaussian',
         'mean'    :    0.0,
         'std'     :    0.3,
@@ -178,20 +172,21 @@ prior_table = [
         'density' :   'gaussian',
         'mean'    :   0.0,
         'std'     :   1.0,
-    }
+    },
+    {   'name'    :   'alpha_zero_value',
+        'density' :   'uniform',
+        'lower'   :   0.0,
+        'upper'   :   0.0,
+        'mean'    :   0.0,
+    },
 ]
 #
 # smooth_list_dict
 smooth_list_dict = [
-    {   'name'        : 'parent_chi',
+    {   'name'        : 'parent_rate',
         'value_prior' : 'parent_rate_value',
-        'dage_prior'  : 'parent_chi_delta',
-        'dtime_prior' : 'parent_chi_delta',
-    },
-    {   'name'        : 'parent_iota',
-        'value_prior' : 'parent_rate_value',
-        'dage_prior'  : 'parent_iota_dage',
-        'dtime_prior' : 'parent_iota_dtime',
+        'dage_prior'  : 'parent_rate_dage',
+        'dtime_prior' : 'parent_rate_dtime',
     },
     {   'name'        : 'parent_pini',
         'value_prior' : 'parent_pini_value',
@@ -202,6 +197,9 @@ smooth_list_dict = [
     {   'name'        : 'alpha_smooth',
         'value_prior' : 'alpha_value',
     },
+    {   'name'        : 'alpha_zero_smooth',
+        'value_prior' : 'alpha_zero_value',
+    },
 ]
 #
 # rate_table
@@ -211,11 +209,15 @@ rate_table = [
         'parent_smooth': 'parent_pini',
     },
     {   'name':           'iota',
-        'parent_smooth': 'parent_iota',
+        'parent_smooth': 'parent_rate',
+        'child_smooth':  'child_smooth',
+    },
+    {   'name':           'rho',
+        'parent_smooth': 'parent_rate',
         'child_smooth':  'child_smooth',
     },
     {   'name':           'chi',
-        'parent_smooth': 'parent_chi',
+        'parent_smooth': 'parent_rate',
         'child_smooth':  'child_smooth',
     },
 ]
@@ -223,25 +225,25 @@ rate_table = [
 # mulcov_list_dict
 # define the covariate multipliers that affect rate values
 mulcov_list_dict = [
-    {   # alpha_iota_obesity
-        'covariate': 'obesity',
+    {   # alpha_iota_log_sev
+        'covariate': 'log_sev',
         'effected':  'iota',
-        'smooth':    'alpha_smooth',
+        'smooth':    'alpha_zero_smooth',
     },
-    {   # alpha_chi_log_ldi
-        'covariate': 'log_ldi',
+    {   # alpha_chi_haqi
+        'covariate': 'haqi',
         'effected':  'chi',
-        'smooth':    'alpha_smooth',
+        'smooth':    'alpha_zero_smooth',
     },
     {   # alpha_iota_sex
         'covariate': 'sex',
         'effected':  'iota',
-        'smooth':    'alpha_smooth',
+        'smooth':    'alpha_zero_smooth',
     },
     {   # alpha_chi_sex
         'covariate': 'sex',
         'effected':  'chi',
-        'smooth':    'alpha_smooth',
+        'smooth':    'alpha_zero_smooth',
     },
 ]
 #
