@@ -267,15 +267,15 @@ def no_ode_fit(
     at_cascade.add_log_entry(connection, 'avgint_parent_grid')
     #
     # hold_out_integrand
-    hold_out_integrand = list()
+    hold_out_integrand = ''
     use_integrand = [ 'mtexcess', 'Sincidence', 'remission', 'relrisk' ]
     for row in root_table['integrand'] :
         integrand_name = row['integrand_name']
         if not integrand_name.startswith('mulcov_') :
             if integrand_name not in use_integrand :
-                hold_out_integrand.append( integrand_name )
+                hold_out_integrand = hold_out_integrand + ' ' + integrand_name
     name  = 'hold_out_integrand'
-    value = ' '.join(hold_out_integrand)
+    value = hold_out_integrand
     command = [
         'dismod_at', no_ode_database, 'set', 'option', name, value
     ]
@@ -337,7 +337,8 @@ def no_ode_fit(
     max_num_iter_fixed = '100'
     for row in root_table['option'] :
         if row['option_name'] == 'hold_out_integrand' :
-            hold_out_integrand = row['option_value']
+            if row['option_value'] is not None :
+                hold_out_integrand = row['option_value']
         if row['option_name'] == 'max_num_iter_fixed' :
             max_num_iter_fixed = row['option_value']
     name     = 'hold_out_integrand'

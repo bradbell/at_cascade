@@ -22,7 +22,7 @@ def get_file_path(csv_file_key, result_dir) :
 def write_root_node_database(
     result_dir              = None,
     root_node_database      = None,
-    hold_out_integrand_set  = None,
+    hold_out_integrand      = None,
     hold_out_nid_set        = None,
     covariate_csv_file_dict = None,
     gamma_factor            = None,
@@ -41,7 +41,7 @@ def write_root_node_database(
 ) :
     assert type(result_dir) == str
     assert type(root_node_database) == str
-    assert type(hold_out_integrand_set) == set
+    assert type(hold_out_integrand) == str
     assert type(hold_out_nid_set) == set
     assert type(covariate_csv_file_dict) == dict
     assert type(root_node_name) == str
@@ -325,7 +325,8 @@ def write_root_node_database(
         zero_sum_child_rate = None
     #
     # hold_out_integrand
-    hold_out_integrand = ' '.join(hold_out_integrand_set)
+    if len( hold_out_integrand ) == 0 :
+        hold_out_integrand = None
     #
     # option_table
     option_table = [

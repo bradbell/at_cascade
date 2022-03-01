@@ -102,9 +102,10 @@ max_plot            = 2000
 # Name of the nodes where we are splitting from Both to Female, Male
 node_split_name_set = { root_node_name }
 #
-# hold_out_integrand_set
-# set of integrands that are held out (except during the no_ode fit)
-hold_out_integrand_set = set()
+# hold_out_integrand
+# space separated list of integrands that are held out
+# (except during the no_ode fit)
+hold_out_integrand = ''
 #
 # hold_out_nid_set
 # set of nid values in data file for studies that are suspect (empty)
@@ -339,7 +340,7 @@ def setup_function() :
     at_cascade.ihme.write_root_node_database(
         result_dir              = result_dir,
         root_node_database      = root_node_database,
-        hold_out_integrand_set  = hold_out_integrand_set,
+        hold_out_integrand      = hold_out_integrand,
         hold_out_nid_set        = hold_out_nid_set,
         covariate_csv_file_dict = covariate_csv_file_dict,
         gamma_factor            = gamma_factor,
