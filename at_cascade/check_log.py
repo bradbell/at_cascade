@@ -117,7 +117,7 @@ def check_log(
     if parent_node_name != root_node_name :
         msg  = f'{root_node_database} parent_node_name = {parent_node_name}\n'
         msg  = f'{all_node_database} root_node_name = {root_node_name}'
-        assert False, smg
+        assert False, msg
     #
     # root_node_id
     root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)

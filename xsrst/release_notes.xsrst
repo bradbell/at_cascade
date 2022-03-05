@@ -19,6 +19,10 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+03-05
+*****
+Change :ref:`no_ode_fit<no_ode_fit>` to always use Gaussian data densities.
+
 02-05
 *****
 Use :ref:`get_cov_reference` to compute references for relative covariates

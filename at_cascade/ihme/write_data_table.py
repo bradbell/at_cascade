@@ -46,11 +46,11 @@ def get_data_table(data_inp_file) :
             if int( row_in['age_demographer'] ) != 0 :
                 age_upper = age_upper + 1.0
         #
-        # c_seq
+        # seq
         if row_in['seq'] == 'NA' :
             c_sed = None
         else :
-            c_seq = int( row_in['seq'] )
+            seq = int( row_in['seq'] )
         #
         # sex_name
         sex_name     = row_in['sex']
@@ -81,7 +81,7 @@ def get_data_table(data_inp_file) :
         #
         # row_out
         row_out = {
-            'c_seq' :          c_seq,
+            'seq' :            seq,
             'location_id' :    location_id,
             'sex_name' :       sex_name,
             'integrand_name' : integrand_name,
@@ -124,9 +124,9 @@ def get_csmr_table(csmr_inp_file, age_group_id_dict) :
             # age_group_id
             age_group_id = int( row_in['age_group_id'] )
             #
-            # is_outlier, c_seq
+            # is_outlier, seq
             is_outlier   = 0
-            c_seq        = None
+            seq          = None
             #
             # age_lower, age_upper
             age_lower    = age_group_id_dict[age_group_id]['age_lower']
@@ -152,7 +152,7 @@ def get_csmr_table(csmr_inp_file, age_group_id_dict) :
             #
             # row_out
             row_out = {
-                'c_seq' :          c_seq,
+                'seq' :            seq,
                 'location_id' :    location_id,
                 'sex_name' :       sex_name,
                 'integrand_name' : integrand_name,

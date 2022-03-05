@@ -62,7 +62,7 @@ root_node_name      = '1_Global'
 # gamma_factor
 # The gamma for each integrand is this factor times the median
 # of the data for the integrand.
-gamma_factor        = 1e-2
+gamma_factor        = 1e-1
 #
 # random_seed
 # If this seed is zero, the clock is used for the random seed.
@@ -103,11 +103,15 @@ node_split_name_set = { root_node_name }
 # hold_out_integrand
 # space separated list of integrands that are held out
 # (except during the no_ode fit)
-hold_out_integrand = 'mtstandard mtspecific mtwith'
+# hold_out_integrand = 'mtstandard mtspecific mtwith'
+hold_out_integrand = ''
 #
 # hold_out_nid_set
 # set of nid values in data file for studies that are suspect
-# 249201 is Schottker B, et.al., ... A1c and fasting ...,  2011; 26(10) 779-87
+# seq = 758295321, residual = -101.93, nid = 22189
+# seq = 758248331, residual = -76.209, nid = 409159
+# seq = 758295382, residual = -63.037, nid = 21684
+# hold_out_nid_set = { 22189, 22189, 22189 }
 hold_out_nid_set = set()
 #
 # rate_case

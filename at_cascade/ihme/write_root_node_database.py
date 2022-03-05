@@ -208,10 +208,15 @@ def write_root_node_database(
         else :
             nid = int( row_in['nid'] )
         #
-        if row_in['c_seq'] == '' :
+        if row_in['seq'] == '' :
             c_seq = None
         else :
-            c_seq = int( row_in['c_seq'] )
+            c_seq = int( row_in['seq'] )
+        #
+        if row_in['nid'] == '' :
+            c_nid = None
+        else :
+            c_nid = int( row_in['nid'] )
         #
         hold_out    = is_outlier
         if nid in hold_out_nid_set :
@@ -236,7 +241,9 @@ def write_root_node_database(
             'density'         : 'gaussian',
             'meas_value'      : float( row_in['meas_value'] ),
             'meas_std'        : float( row_in['meas_std'] ),
+            'nu'              : 5,
             'c_seq'           : c_seq,
+            'c_nid'           : c_nid,
         }
         for cov_name in covariate_csv_file_dict.keys() :
             if row_in[cov_name] == '' :
@@ -339,7 +346,7 @@ def write_root_node_database(
         { 'name':'hold_out_integrand',   'value':hold_out_integrand},
         #
         { 'name':'trace_init_fit_model', 'value':'true'},
-        { 'name':'data_extra_columns',   'value':'c_seq'},
+        { 'name':'data_extra_columns',   'value':'c_seq c_nid'},
         { 'name':'meas_noise_effect',    'value':'add_std_scale_none'},
         #
         { 'name':'quasi_fixed',                  'value':'false' },

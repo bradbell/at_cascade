@@ -61,12 +61,14 @@ It also include relrisk which measures
 
     ( *omega* + *chi* ) / *omega*
 
-These integrands are included even if they are held out in the
-*root_fit_database* using the hold_out_integrand option.
-The integrand mtother is excluded because omega is constrained using
-:ref:`omega_constraint`.
-The results of fitting this data basse can be converted to
-csv files and plotted using the dismod_at db2csv and plotting routines.
+1.	These integrands are included even if they are held out in the
+	*root_fit_database* using the hold_out_integrand option.
+2.	The integrand mtother is excluded because omega is constrained using
+	:ref:`omega_constraint`.
+3.	The data likelihoods are fit as Gaussian using the dismod_at data_density
+	command.
+4.	The results of fitting this data basse can be converted to
+	csv files and plotted using the dismod_at db2csv and plotting routines.
 
 root_fit_database
 *****************
@@ -293,11 +295,17 @@ def no_ode_fit(
         system_command(command, file_stdout)
     #
     # enforce max_fit
-    if not max_fit is None :
-        for integrand_id in fit_integrand :
-            row            = root_table['integrand'][integrand_id]
-            integrand_name = row['integrand_name']
-            if integrand_name in use_integrand :
+    for integrand_id in fit_integrand :
+        row            = root_table['integrand'][integrand_id]
+        integrand_name = row['integrand_name']
+        if integrand_name in use_integrand :
+            density_name = 'gaussian'
+            eta_factor   = '1e-2' # not used for gaussian
+            nu           = '5'    # not used for gaussian
+            command  = ['dismod_at', no_ode_database, 'data_density' ]
+            command += [integrand_name, density_name, eta_factor, nu]
+            system_command(command, file_stdout)
+            if not max_fit is None :
                 command  = [ 'dismod_at', no_ode_database ]
                 command += [ 'hold_out', integrand_name, str(max_fit) ]
                 system_command(command, file_stdout)
