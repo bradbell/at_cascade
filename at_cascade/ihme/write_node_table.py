@@ -23,11 +23,7 @@ def write_node_table(result_dir) :
     # node_table_file
     node_table_file = at_cascade.ihme.csv_file['node']
     node_table_file = f'{result_dir}/{node_table_file}'
-    if os.path.exists(node_table_file) :
-        print( f'Using existing {node_table_file}' )
-        return
-    else :
-        print( f'Creating {node_table_file}' )
+    print( f'Creating {node_table_file}' )
     #
     # location_table
     file_ptr         = open(at_cascade.ihme.location_inp_file)

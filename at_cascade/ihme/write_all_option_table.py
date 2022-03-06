@@ -35,11 +35,7 @@ def write_all_option_table(
     # all_option_table_file
     all_option_table_file = at_cascade.ihme.csv_file['all_option']
     all_option_table_file = f'{result_dir}/{all_option_table_file}'
-    if os.path.exists(all_option_table_file) :
-        print( f'Using existing {all_option_table_file}' )
-        return
-    else :
-        print( f'Creating {all_option_table_file}' )
+    print( f'Creating {all_option_table_file}' )
     #
     # all_option
     all_option = {

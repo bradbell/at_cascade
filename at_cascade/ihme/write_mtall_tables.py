@@ -44,18 +44,9 @@ def write_mtall_tables(result_dir) :
     ]
     #
     # done
-    done = True
+    print( f'Createing mtall_tables:')
     for file in output_file_list :
-        done = done and os.path.exists(file)
-    if done :
-        print( f'Using existing mtall_tables:')
-        for file in output_file_list :
-            print( '    ' + file )
-        return
-    else :
-        print( f'Createing mtall_tables:')
-        for file in output_file_list :
-            print( '    ' + file )
+        print( '    ' + file )
     #
     # age_group_id_set, age_group_id_dict
     age_group_id_table = at_cascade.ihme.get_age_group_id_table()

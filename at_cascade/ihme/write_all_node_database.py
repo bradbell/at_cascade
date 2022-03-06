@@ -40,11 +40,7 @@ def write_all_node_database(result_dir, root_node_database) :
     #
     # all_node_database
     all_node_database = f'{result_dir}/all_node.db'
-    if os.path.exists( all_node_database ) :
-        print( f'Using existing {all_node_database}' )
-        return
-    else :
-        print( f'Begin: creating {all_node_database}' )
+    print( f'Begin: creating {all_node_database}' )
     #
     # intermediate files
     # BEGIN_SORT_THIS_LINE_PLUS_1

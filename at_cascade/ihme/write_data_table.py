@@ -191,12 +191,7 @@ def write_data_table(
     # data_table_file
     data_table_file = at_cascade.ihme.csv_file['data']
     data_table_file = f'{result_dir}/{data_table_file}'
-    #
-    if os.path.exists(data_table_file) :
-        print( f'Using existing {data_table_file}' )
-        return
-    else :
-        print( f'Creating {data_table_file}' )
+    print( f'Creating {data_table_file}' )
     #
     # node_table_file
     node_table_file = at_cascade.ihme.csv_file['node']

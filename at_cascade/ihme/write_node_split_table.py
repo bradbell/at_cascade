@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -20,11 +20,7 @@ def write_node_split_table(
     # node_split_table_file
     node_split_table_file = at_cascade.ihme.csv_file['node_split']
     node_split_table_file = f'{results_dur}/{node_split_table_file}'
-    if os.path.exists(node_split_table_file) :
-        print( f'Using existing {node_split_table_file}' )
-        return
-    else :
-        print( f'Creating {node_split_table_file}' )
+    print( f'Creating {node_split_table_file}' )
     #
     # root_table
     new        = False

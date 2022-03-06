@@ -27,11 +27,7 @@ def write_mulcov_freeze_table(
     # mulcov_freeze_table_file
     mulcov_freeze_table_file = at_cascade.ihme.csv_file['mulcov_freeze']
     mulcov_freeze_table_file = f'{result_dir}/{mulcov_freeze_table_file}'
-    if os.path.exists(mulcov_freeze_table_file) :
-        print( f'Using existing {mulcov_freeze_table_file}' )
-        return
-    else :
-        print( f'Creating {mulcov_freeze_table_file}' )
+    print( f'Creating {mulcov_freeze_table_file}' )
     #
     # root_table
     new        = False

@@ -114,7 +114,7 @@ def main(
         msg +=  'where command is one of the following:\n'
         msg +=  'setup:    create at_cascade input databases from csv files\n'
         msg +=  'shared:   clear shared memory pointers'
-        msg += f'cleanup:  remove files in {result_dir}\n'
+        msg += f'cleanup:  remove files (not directories) in {result_dir}\n'
         msg +=  'drill:    run cascade from root node to goal nodes\n'
         msg +=  'continue: continue cascade starting at database\n'
         msg +=  'display:  results for each database at referece covariates\n'

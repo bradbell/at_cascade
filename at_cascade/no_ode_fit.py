@@ -61,14 +61,14 @@ It also include relrisk which measures
 
     ( *omega* + *chi* ) / *omega*
 
-1.	These integrands are included even if they are held out in the
-	*root_fit_database* using the hold_out_integrand option.
-2.	The integrand mtother is excluded because omega is constrained using
-	:ref:`omega_constraint`.
-3.	The data likelihoods are fit as Gaussian using the dismod_at data_density
-	command.
-4.	The results of fitting this data basse can be converted to
-	csv files and plotted using the dismod_at db2csv and plotting routines.
+1.  These integrands are included even if they are held out in the
+    *root_fit_database* using the hold_out_integrand option.
+2.  The integrand mtother is excluded because omega is constrained using
+    :ref:`omega_constraint`.
+3.  The data likelihoods are fit as Gaussian using the dismod_at data_density
+    command.
+4.  The results of fitting this data basse can be converted to
+    csv files and plotted using the dismod_at db2csv and plotting routines.
 
 root_fit_database
 *****************
