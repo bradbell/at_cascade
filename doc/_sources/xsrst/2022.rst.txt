@@ -17,6 +17,17 @@ Release Notes for 2022
    :local:
 
 .. meta::
+   :keywords: 03-05
+
+.. index:: 03-05
+
+.. _2022.03-05:
+
+03-05
+*****
+Change :ref:`no_ode_fit<no_ode_fit>` to always use Gaussian data densities.
+
+.. meta::
    :keywords: 02-05
 
 .. index:: 02-05

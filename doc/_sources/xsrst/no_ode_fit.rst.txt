@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/no_ode_fit.py
-    :lines: 137-141
+    :lines: 147-151
     :language: py
 
 .. meta::
@@ -87,12 +87,22 @@ An intermediate database is stored in the file
 
 see :ref:`all_option_table.result_dir`
 and :ref:`all_option_table.root_node_name`.
-This contains the results of fitting without the ODE integrands
-so they can be plotted and converted to csv files.
-It has the :ref:`omega_constraint` so that the residuals for
-the ODE integrands make sense.
-The ODE integrands are not included (are included) for a fit using
-the *no_ode_database* (*root_fit_database*).
+This contains the results of fitting with only the integrand that
+do not require solving the ODE; i.e.
+Sincidence, remission, and mtexcess which measure
+iota, rho, and chi respectively.
+It also include relrisk which measures
+
+    ( *omega* + *chi* ) / *omega*
+
+1.	These integrands are included even if they are held out in the
+	*root_fit_database* using the hold_out_integrand option.
+2.	The integrand mtother is excluded because omega is constrained using
+	:ref:`omega_constraint`.
+3.	The data likelihoods are fit as Gaussian using the dismod_at data_density
+	command.
+4.	The results of fitting this data basse can be converted to
+	csv files and plotted using the dismod_at db2csv and plotting routines.
 
 .. meta::
    :keywords: root_fit_database
