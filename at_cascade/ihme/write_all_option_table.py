@@ -22,8 +22,9 @@ def write_all_option_table(
     max_abs_effect               = None,
     max_fit                      = None,
     max_number_cpu               = None,
+    shared_memory_prefix         = None,
 ) :
-    assert type(result_dir)                  == str
+    assert type(result_dir)                   == str
     assert type(root_node_name)               == str
     assert type(max_abs_effect)               == float
     assert type(shift_prior_std_factor)       == float
@@ -31,6 +32,7 @@ def write_all_option_table(
     assert type(perturb_optimization_start)   == float
     assert type(max_fit)                      == int
     assert type(max_number_cpu)               == int
+    assert type(shared_memory_prefix)         == str
     #
     # all_option_table_file
     all_option_table_file = at_cascade.ihme.csv_file['all_option']
@@ -47,6 +49,7 @@ def write_all_option_table(
         'max_abs_effect'               : max_abs_effect,
         'max_fit'                      : max_fit,
         'max_number_cpu'               : max_number_cpu,
+        'shared_memory_prefix'         : shared_memory_prefix,
         'shift_prior_std_factor'       : shift_prior_std_factor,
         'perturb_optimization_scale'   : perturb_optimization_scale,
         'perturb_optimization_start'   : perturb_optimization_start,

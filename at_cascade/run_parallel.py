@@ -91,6 +91,16 @@ job_status_error = 4 # job had an exception
 job_status_abort = 5 # job is a descendant of a job that had an exception
 job_status_name  = [ 'wait', 'ready', 'run', 'done', 'error', 'abort' ]
 # ----------------------------------------------------------------------------
+def get_shared_memory_prefix(all_node_database) :
+    new                  = False
+    connection           = dismod_at.create_connection(all_node_database, new)
+    all_option_table     = dismod_at.get_table_dict(connection, 'all_option')
+    shared_memory_prefix = ""
+    for row in all_option_table :
+        if row['option_name'] == 'shared_memory_prefix' :
+            shared_memory_prefix = row['option_value']
+    return shared_memory_prefix
+# ----------------------------------------------------------------------------
 def get_result_database_dir(
     all_node_database, node_table, fit_node_id, fit_split_reference_id
 ) :
@@ -355,19 +365,24 @@ def run_parallel_job(
     assert type(max_number_cpu) is int
     assert type(master_process) is bool
     # ----------------------------------------------------------------------
+    # shared_memory_prefix
+    shared_memory_prefix = get_shared_memory_prefix(all_node_database)
+    # ----------------------------------------------------------------------
     # shared_number_cpu_inuse
-    tmp = numpy.empty(1, dtype = int )
+    tmp  = numpy.empty(1, dtype = int )
+    name = shared_memory_prefix + '_at_cascade_number_cpu_inuse'
     shm_number_cpu_inuse = shared_memory.SharedMemory(
-        create = False, name = 'at_cascade_number_cpu_inuse'
+        create = False, name = name
     )
     shared_number_cpu_inuse = numpy.ndarray(
         tmp.shape, dtype = tmp.dtype, buffer = shm_number_cpu_inuse.buf
     )
     # ----------------------------------------------------------------------
     # shared_job_status
-    tmp = numpy.empty(len(job_table), dtype = int )
+    tmp  = numpy.empty(len(job_table), dtype = int )
+    name = shared_memory_prefix + '_at_cascade_job_status'
     shm_job_status = shared_memory.SharedMemory(
-        create = False, name = 'at_cascade_job_status'
+        create = False, name = name
     )
     shared_job_status = numpy.ndarray(
         tmp.shape, dtype = tmp.dtype, buffer = shm_job_status.buf
@@ -553,20 +568,25 @@ def run_parallel(
     assert fit_integrand     is not None
     assert skip_start_job    is not None
     assert max_number_cpu    is not None
+    # ----------------------------------------------------------------------
+    # shared_memory_prefix
+    shared_memory_prefix = get_shared_memory_prefix(all_node_database)
     # -------------------------------------------------------------------------
     # shared_number_cpu_inuse
-    tmp = numpy.empty(1, dtype = int )
+    tmp  = numpy.empty(1, dtype = int )
+    name = shared_memory_prefix + '_at_cascade_number_cpu_inuse'
     shm_number_cpu_inuse = shared_memory.SharedMemory(
-        create = True, size = tmp.nbytes, name = 'at_cascade_number_cpu_inuse'
+        create = True, size = tmp.nbytes, name = name
     )
     shared_number_cpu_inuse = numpy.ndarray(
         tmp.shape, dtype = tmp.dtype, buffer = shm_number_cpu_inuse.buf
     )
     # -------------------------------------------------------------------------
     # shared_job_status
-    tmp = numpy.empty(len(job_table), dtype = int )
+    tmp  = numpy.empty(len(job_table), dtype = int )
+    name = shared_memory_prefix + '_at_cascade_job_status'
     shm_job_status = shared_memory.SharedMemory(
-        create = True, size = tmp.nbytes, name = 'at_cascade_job_status'
+        create = True, size = tmp.nbytes, name = name
     )
     shared_job_status = numpy.ndarray(
         tmp.shape, dtype = tmp.dtype, buffer = shm_job_status.buf

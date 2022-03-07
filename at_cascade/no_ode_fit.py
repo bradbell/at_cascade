@@ -178,10 +178,6 @@ def no_ode_fit(
         'chi'   : 'mtexcess',
     }
     #
-    # fit_integrand
-    if not max_fit is None :
-        fit_integrand = at_cascade.get_fit_integrand(root_node_database)
-    #
     # root_table
     new        = False
     connection = dismod_at.create_connection(root_node_database, new)
@@ -295,6 +291,9 @@ def no_ode_fit(
         system_command(command, file_stdout)
     #
     # enforce max_fit
+    fit_integrand = set()
+    if not max_fit is None :
+        fit_integrand = at_cascade.get_fit_integrand(root_node_database)
     for integrand_id in fit_integrand :
         row            = root_table['integrand'][integrand_id]
         integrand_name = row['integrand_name']

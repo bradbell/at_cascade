@@ -84,6 +84,10 @@ shift_prior_std_factor = 2.0
 # run at most max_number_cpu jobs at at time.
 max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
 #
+# shared_memory_prefix
+# No two cascades can run with the same shared memory prefix
+shared_memory_prefix = "diabetes"
+#
 # max_fit
 # Maximum number of data rows per integrand to include in a f
 max_fit             = 250
@@ -378,6 +382,7 @@ def setup_function() :
         max_abs_effect               = max_abs_effect,
         max_fit                      = max_fit,
         max_number_cpu               = max_number_cpu,
+        shared_memory_prefix         = shared_memory_prefix,
     )
     #
     # write_mulcov_freeze_table

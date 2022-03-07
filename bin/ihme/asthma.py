@@ -62,7 +62,7 @@ root_node_name      = '1_Global'
 # gamma_factor
 # The gamma for each integrand is this factor times the median
 # of the data for the integrand.
-gamma_factor        = 1e-1
+gamma_factor        = 1e-2
 #
 # random_seed
 # If this seed is zero, the clock is used for the random seed.
@@ -83,6 +83,10 @@ shift_prior_std_factor = 2.0
 # maximum number of processors, if one, run sequentally, otherwise
 # run at most max_number_cpu jobs at at time.
 max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
+#
+# shared_memory_prefix
+# No two cascades can run with the same shared memory prefix
+shared_memory_prefix = "asthma"
 #
 # max_fit
 # Maximum number of data rows per integrand to include in a f
@@ -108,10 +112,6 @@ hold_out_integrand = ''
 #
 # hold_out_nid_set
 # set of nid values in data file for studies that are suspect
-# seq = 758295321, residual = -101.93, nid = 22189
-# seq = 758248331, residual = -76.209, nid = 409159
-# seq = 758295382, residual = -63.037, nid = 21684
-# hold_out_nid_set = { 22189, 22189, 22189 }
 hold_out_nid_set = set()
 #
 # rate_case
@@ -384,6 +384,7 @@ def setup_function() :
         max_abs_effect               = max_abs_effect,
         max_fit                      = max_fit,
         max_number_cpu               = max_number_cpu,
+        shared_memory_prefix         = shared_memory_prefix,
     )
     #
     # write_mulcov_freeze_table

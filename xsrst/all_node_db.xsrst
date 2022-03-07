@@ -329,6 +329,12 @@ perturb_optimization_start
 This is similar to perturb_optimization_scale except that the
 starting point (instead of the scaling point) is shifted.
 
+shared_memory_prefix
+********************
+This is used at the start of name for shared memory for this cascade.
+No two cascades can run with the same shared_memory_prefix.
+If this option does not appear, the empty string is used
+for the shared_memory_prefix.
 
 result_dir
 ***********
