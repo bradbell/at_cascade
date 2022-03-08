@@ -107,8 +107,7 @@ node_split_name_set = { root_node_name }
 # hold_out_integrand
 # space separated list of integrands that are held out
 # (except during the no_ode fit)
-# hold_out_integrand = 'mtstandard mtspecific mtwith'
-hold_out_integrand = ''
+hold_out_integrand = 'mtstandard mtspecific mtwith'
 #
 # hold_out_nid_set
 # set of nid values in data file for studies that are suspect
