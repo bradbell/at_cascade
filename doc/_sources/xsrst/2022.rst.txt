@@ -17,6 +17,29 @@ Release Notes for 2022
    :local:
 
 .. meta::
+   :keywords: 03-08
+
+.. index:: 03-08
+
+.. _2022.03-08:
+
+03-08
+*****
+The :ref:`remission<remission>` example was added.
+
+.. meta::
+   :keywords: 03-07
+
+.. index:: 03-07
+
+.. _2022.03-07:
+
+03-07
+*****
+The :ref:`all_option_table.shared_memory_prefix` was added to the
+all_option table.
+
+.. meta::
    :keywords: 03-05
 
 .. index:: 03-05

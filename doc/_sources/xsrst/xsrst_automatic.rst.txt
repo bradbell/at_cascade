@@ -34,8 +34,10 @@ Table of Contents
 |  |space|  |space| :ref:`3.6.1<one_at_function_py>` one_at_function: Python Source Code
 |  |space| :ref:`3.7<prevalence2iota>` Example Estimation of iota From Prevalence Data
 |  |space|  |space| :ref:`3.7.1<prevalence2iota_py>` prevalence2iota: Python Source Code
-|  |space| :ref:`3.8<split_covariate>` Example Using split_reference Table
-|  |space|  |space| :ref:`3.8.1<split_covariate_py>` split_covariate: Python Source Code
+|  |space| :ref:`3.8<remission>` Example Estimation With Remission and No Incidence Data
+|  |space|  |space| :ref:`3.8.1<remission_py>` remission: Python Source Code
+|  |space| :ref:`3.9<split_covariate>` Example Using split_reference Table
+|  |space|  |space| :ref:`3.9.1<split_covariate_py>` split_covariate: Python Source Code
 |
 | :ref:`4<module>` The at_cascade Python Module
 |

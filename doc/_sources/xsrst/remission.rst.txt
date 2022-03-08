@@ -1,0 +1,313 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!
+remission
+!!!!!!!!!
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   remission_py
+
+.. meta::
+   :keywords: remission, example, estimation, with, remission, no, incidence, data
+
+.. index:: remission, example, estimation, with, remission, no, incidence, data
+
+.. _remission:
+
+Example Estimation With Remission and No Incidence Data
+#######################################################
+.. contents::
+   :local:
+
+For this example everything is constant in time so the
+functions below do not depend on time.
+
+.. meta::
+   :keywords: nodes
+
+.. index:: nodes
+
+.. _remission.nodes:
+
+Nodes
+*****
+The following is a diagram of the node tree for this example.
+The :ref:`glossary.root_node` is n0,
+the :ref:`glossary.fit_goal_set` is equal to the leaf set
+{n3, n4, n5, n6}::
+
+                n0
+          /-----/\-----\
+        n1              n2
+       /  \            /  \
+     n3    n4        n5    n6
+
+.. meta::
+   :keywords: fit_goal_set
+
+.. index:: fit_goal_set
+
+.. _remission.nodes.fit_goal_set:
+
+fit_goal_set
+============
+
+.. literalinclude:: ../../example/remission.py
+    :lines: 205-205
+    :language: py
+
+.. meta::
+   :keywords: rates
+
+.. index:: rates
+
+.. _remission.rates:
+
+Rates
+*****
+The non-zero dismod_at rates for this example are
+:ref:`glossary.iota`, :ref:`glossary.rho`, and :ref:`glossary.omega`.
+For *rate* equal to iota, rho, and omega,
+we use *rate(a, n)* to denote the value for *rate*
+as a function of age *a* and node *n*.
+
+.. meta::
+   :keywords: covariate
+
+.. index:: covariate
+
+.. _remission.covariate:
+
+Covariate
+*********
+There are not covariates for this example.
+
+.. meta::
+   :keywords: random, effects
+
+.. index:: random, effects
+
+.. _remission.random_effects:
+
+Random Effects
+**************
+For each node, there is a random effect on iota an rho that is constant
+in age and time. Note that the total effect for a leaf is the sum
+of its random effect plus its parents random effect.
+
+.. meta::
+   :keywords: s_n
+
+.. index:: s_n
+
+.. _remission.random_effects.s_n:
+
+s_n
+===
+We use *s_n* to denote the sum of the random effects for node *n*.
+The code below sets this sum using the name sum_random:
+
+.. literalinclude:: ../../example/remission.py
+    :lines: 218-224
+    :language: py
+
+.. meta::
+   :keywords: simulated, data
+
+.. index:: simulated, data
+
+.. _remission.simulated_data:
+
+Simulated Data
+**************
+
+.. meta::
+   :keywords: random, seed
+
+.. index:: random, seed
+
+.. _remission.simulated_data.random_seed:
+
+Random Seed
+===========
+The random seed can be used to reproduce results.
+If the original value of this setting is zero, the clock is used get
+a random seed. The actual value or *random_seed* is always printed.
+
+.. literalinclude:: ../../example/remission.py
+    :lines: 209-214
+    :language: py
+
+.. meta::
+   :keywords: rate_true(rate, , a, , t, , n, , c)
+
+.. index:: rate_true(rate, , a, , t, , n, , c)
+
+.. _remission.simulated_data.rate_true(rate,_a,_t,_n,_c):
+
+rate_true(rate, a, t, n, c)
+===========================
+For *rate* equal to iota, rho, omega,
+this is the true value for *rate*
+in node *n* at age *a*, time *t*, and covariate values *c*.
+The time and covariate list are not used.
+
+.. literalinclude:: ../../example/remission.py
+    :lines: 235-243
+    :language: py
+
+.. meta::
+   :keywords: y_i
+
+.. index:: y_i
+
+.. _remission.simulated_data.y_i:
+
+y_i
+===
+The simulated integrand for this example are
+:ref:`glossary.Sincidence`, and :ref:`glossary.prevalence`.
+The data is simulated without any noise
+but it is modeled as having noise.
+
+.. meta::
+   :keywords: n_i
+
+.. index:: n_i
+
+.. _remission.simulated_data.n_i:
+
+n_i
+===
+Data is only simulated for the leaf nodes; i.e.,
+each *n_i* is in the set { n3, n4, n5, n6 }.
+Since the data does not have any nose, the data residuals are a measure
+of how good the fit is for the nodes in the fit_goal_set.
+
+.. meta::
+   :keywords: a_i
+
+.. index:: a_i
+
+.. _remission.simulated_data.a_i:
+
+a_i
+===
+For each leaf node, data is generated on the following *age_grid*:
+
+.. literalinclude:: ../../example/remission.py
+    :lines: 228-228
+    :language: py
+
+.. meta::
+   :keywords: omega, constraints
+
+.. index:: omega, constraints
+
+.. _remission.omega_constraints:
+
+Omega Constraints
+*****************
+The :ref:`omega_constraint<omega_constraint>` routine is used
+to set the value of omega in the parent and child nodes.
+
+.. meta::
+   :keywords: parent, rate, smoothing
+
+.. index:: parent, rate, smoothing
+
+.. _remission.parent_rate_smoothing:
+
+Parent Rate Smoothing
+*********************
+
+.. meta::
+   :keywords: iota
+
+.. index:: iota
+
+.. _remission.parent_rate_smoothing.iota:
+
+iota
+====
+This is the smoothing used in the fit_node model for iota.
+Note that the value part of this smoothing is only used for the *root_node*.
+This smoothing uses the *age_gird* and one time point.
+There are no :ref:`glossary.dtime` priors because there is only one time point.
+
+.. meta::
+   :keywords: parent, rate, priors
+
+.. index:: parent, rate, priors
+
+.. _remission.parent_rate_smoothing.parent_rate_priors:
+
+Parent Rate Priors
+==================
+The following is the value and dage priors used for the root_node
+
+.. literalinclude:: ../../example/remission.py
+    :lines: 268-285
+    :language: py
+
+The mean and standard deviation are only used for the root_node.
+The :ref:`create_shift_db<create_shift_db>`
+routine replaces them for other nodes.
+
+.. meta::
+   :keywords: child, rate, smoothing
+
+.. index:: child, rate, smoothing
+
+.. _remission.child_rate_smoothing:
+
+Child Rate Smoothing
+********************
+This is the smoothing used for the
+random effect for each child of the fit_node.
+There are no :ref:`glossary.dage` or dtime
+priors because there is only one age and one time point in this smoothing.
+
+.. meta::
+   :keywords: value, prior
+
+.. index:: value, prior
+
+.. _remission.child_rate_smoothing.value_prior:
+
+Value Prior
+===========
+The following is the value prior used for the children of the fit_node:
+
+.. literalinclude:: ../../example/remission.py
+    :lines: 289-293
+    :language: py
+
+.. meta::
+   :keywords: checking, the, fit
+
+.. index:: checking, the, fit
+
+.. _remission.checking_the_fit:
+
+Checking The Fit
+****************
+The results of the fit are checked by check_cascade_node
+using the :ref:`check_cascade_node.avgint_table`
+that was created by the root_node_db routine.
+The node_id for each row is replaced by the node_id for the
+fit being checked.
+routine uses these tables to check that fit against the truth.
+
+.. csv-table::
+    :header: "Child", "Title"
+    :widths: 20, 80
+
+    "remission_py", :ref:`remission_py`
+
+----
+
+xsrst input file: ``example/remission.py``

@@ -1,0 +1,26 @@
+.. include:: ../preamble.rst
+
+!!!!!!!!!!!!
+remission_py
+!!!!!!!!!!!!
+
+.. meta::
+   :keywords: remission_py, remission:, python, source, code
+
+.. index:: remission_py, remission:, python, source, code
+
+.. _remission_py:
+
+remission: Python Source Code
+###################################
+.. contents::
+   :local:
+
+
+.. literalinclude:: ../../example/remission.py
+    :lines: 181-543
+    :language: py
+
+----
+
+xsrst input file: ``example/remission.py``
