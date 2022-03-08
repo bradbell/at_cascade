@@ -10,13 +10,12 @@
 '''
 {xsrst_begin_parent remission}
 {xsrst_spell
-    avg
     dtime
     dage
 }
 
-Example Estimation of iota From Prevalence Data
-###############################################
+Example Estimation With Remission and No Incidence Data
+#######################################################
 For this example everything is constant in time so the
 functions below do not depend on time.
 
@@ -24,7 +23,7 @@ Nodes
 *****
 The following is a diagram of the node tree for this example.
 The :ref:`glossary.root_node` is n0,
-the :ref:`glossary.fit_goal_set` is equal to the leaft set
+the :ref:`glossary.fit_goal_set` is equal to the leaf set
 {n3, n4, n5, n6}::
 
                 n0
@@ -42,12 +41,11 @@ fit_goal_set
 
 Rates
 *****
-The only non-zero dismod_at rates for this example are
-:ref:`glossary.iota` and :ref:`glossary.omega`.
-We use *iota(a, n, I)* to denote the value for iota
-as a function of age *a*, node number *n*, and income *I*.
-We use *omega(a, n)* to denote the value for omega
-as a function of age *a* and node number *n*.
+The non-zero dismod_at rates for this example are
+:ref:`glossary.iota`, :ref:`glossary.rho`, and :ref:`glossary.omega`.
+For *rate* equal to iota, rho, and omega,
+we use *rate(a, n)* to denote the value for *rate*
+as a function of age *a* and node *n*.
 
 
 Covariate
@@ -56,9 +54,9 @@ There are not covariates for this example.
 
 Random Effects
 **************
-For each node, there is a random effect on iota that is constant
-in age and time. Note that the leaf nodes have random effect for the node
-above them as well as their own random effect.
+For each node, there is a random effect on iota an rho that is constant
+in age and time. Note that the total effect for a leaf is the sum
+of its random effect plus its parents random effect.
 
 s_n
 ===
@@ -84,11 +82,10 @@ a random seed. The actual value or *random_seed* is always printed.
 
 rate_true(rate, a, t, n, c)
 ===========================
-For *rate* equal to iota and omega,
+For *rate* equal to iota, rho, omega,
 this is the true value for *rate*
 in node *n* at age *a*, time *t*, and covariate values *c*.
-The covariate list *c* must be empty.
-The values *t* is not used by this function for this example.
+The time and covariate list are not used.
 {xsrst_file
     # BEGIN rate_true
     # END rate_true
@@ -97,8 +94,8 @@ The values *t* is not used by this function for this example.
 y_i
 ===
 The simulated integrand for this example are
-:ref:`glossary.prevalence`, and :ref:`glossary.Sincidence`.
-This data is simulated without any noise
+:ref:`glossary.Sincidence`, and :ref:`glossary.prevalence`.
+The data is simulated without any noise
 but it is modeled as having noise.
 
 n_i
@@ -116,17 +113,6 @@ For each leaf node, data is generated on the following *age_grid*:
     # END age_grid
 }
 
-I_i
-===
-For each leaf node and each age in *age_grid*,
-data is generated for the following *income_grid*:
-{xsrst_file
-    # BEGIN income_grid
-    # END income_grid
-}
-Note that the check of the fit for the nodes in the fit_goal_set
-expects much more accuracy when the income grid is not chosen randomly.
-
 Omega Constraints
 *****************
 The :ref:`omega_constraint<omega_constraint>` routine is used
@@ -142,7 +128,7 @@ Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
 There are no :ref:`glossary.dtime` priors because there is only one time point.
 
-Parant Rate Priors
+Parent Rate Priors
 ==================
 The following is the value and dage priors used for the root_node
 {xsrst_file
@@ -228,13 +214,6 @@ random.seed(random_seed)
 print('remission: random_seed = ', random_seed)
 # END random_seed
 #
-# BEGIN avg_income
-avg_income       = { 'n3':1.0, 'n4':2.0, 'n5':3.0, 'n6':4.0 }
-avg_income['n2'] = ( avg_income['n5'] + avg_income['n6'] ) / 2.0
-avg_income['n1'] = ( avg_income['n3'] + avg_income['n4'] ) / 2.0
-avg_income['n0'] = ( avg_income['n1'] + avg_income['n2'] ) / 2.0
-# END avg_income
-#
 # BEGIN sum_random_effect
 size_level1      = 0.2
 size_level2      = 0.2
@@ -249,31 +228,12 @@ sum_random['n6'] = sum_random['n2'] - size_level2;
 age_grid = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
 # END age_grid
 #
-# BEGIN income_grid
-random_income = False
-income_grid   = dict()
-for node in [ 'n3', 'n4', 'n5', 'n6' ] :
-    max_income  = 2.0 * avg_income[node]
-    if random_income :
-        n_income_grid = 10
-        income_grid[node] = \
-            [ random.uniform(0.0, max_income) for j in range(n_income_grid) ]
-        income_grid[node] = sorted( income_grid[node] )
-    else :
-        n_income_grid = 3
-        d_income_grid = max_income / (n_income_grid - 1)
-        income_grid[node] = [ j * d_income_grid for j in range(n_income_grid) ]
-# END income_grid
 # ----------------------------------------------------------------------------
 # functions
 # ----------------------------------------------------------------------------
 # BEGIN rate_true
 def rate_true(rate, a, t, n, c) :
-    assert len(c) == 0
-    s_n    = sum_random[n]
-    r_0    = avg_income['n0']
-    r_n    = avg_income[n]
-    effect = s_n
+    effect = sum_random[n]
     if rate == 'iota' :
         return (1 + a / 100) * 1e-3 * math.exp(effect)
     if rate == 'rho' :
@@ -286,11 +246,13 @@ def rate_true(rate, a, t, n, c) :
 def average_integrand(integrand_name, age, node_name) :
     c = list()
     def iota(a, t) :
-        return rate_true('iota', a, t, node_name, c)
+        return rate_true('iota', a, None, node_name, None)
+    def rho(a, t) :
+        return rate_true('rho', a, None, node_name, None)
     def omega(a, t) :
-        return rate_true('omega', a, t, node_name, c)
-    rate           = { 'iota': iota,     'omega': omega }
-    grid           = { 'age' : [age],    'time': [2000.0] }
+        return rate_true('omega', a, None, node_name, None)
+    rate           = { 'iota': iota,  'rho': rho,   'omega': omega }
+    grid           = { 'age' : [age], 'time': [2000.0] }
     abs_tol        = 1e-6
     avg_integrand   = dismod_at.average_integrand(
         rate, integrand_name, grid,  abs_tol
@@ -304,7 +266,7 @@ def root_node_db(file_name) :
     prior_table = list()
     # BEGIN parent_prior
     for rate in [ 'iota', 'rho' ] :
-        rate_50  = rate_true(rate, 50.0, None, 'n0', list())
+        rate_50  = rate_true(rate, 50.0, None, 'n0', None)
         prior_table.append( {
             'name':    f'{rate}_value_prior',
             'density': 'gaussian',
@@ -412,7 +374,6 @@ def root_node_db(file_name) :
         'weight':       '',
         'time_lower':   2000.0,
         'time_upper':   2000.0,
-        'income':       None,
         'integrand':    'Sincidence',
     }
     for age in age_grid :
@@ -424,7 +385,7 @@ def root_node_db(file_name) :
     data_table = list()
     leaf_set   = { 'n3', 'n4', 'n5', 'n6' }
     for node in leaf_set :
-        for integrand_name in [ 'Sincidence', 'prevalence' ] :
+        for integrand_name in [ 'remission', 'prevalence' ] :
             row = {
                 'node':         node,
                 'subgroup':     'world',
@@ -517,7 +478,6 @@ def main() :
     mtall_data     = dict()
     for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
         mtall_list = list()
-        income                = avg_income[node_name]
         for age_id in omega_grid['age'] :
             age  = age_grid[age_id]
             time = 2000.0
@@ -574,7 +534,7 @@ def main() :
             all_node_database  = all_node_database,
             fit_node_database  = goal_database,
             avgint_table       = avgint_table,
-            relative_tolerance = None,
+            relative_tolerance = 0.05,
         )
     #
 #
