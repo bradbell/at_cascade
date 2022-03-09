@@ -113,9 +113,10 @@ def cascade_root_node(
 # )
 # END syntax
 ) :
-    assert all_node_database   is not None
-    assert root_node_database  is not None
-    assert fit_goal_set        is not None
+    assert type(all_node_database)  == str
+    assert type(root_node_database) == str
+    assert type(fit_goal_set)       == set
+    assert type(no_ode_fit)         == bool
     #
     # split_reference_table, all_option_table
     new         = False

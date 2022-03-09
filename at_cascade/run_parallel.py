@@ -561,13 +561,13 @@ def run_parallel(
 # END syntax
 ) :
     #
-    assert job_table         is not None
-    assert start_job_id      is not None
-    assert all_node_database is not None
-    assert node_table        is not None
-    assert fit_integrand     is not None
-    assert skip_start_job    is not None
-    assert max_number_cpu    is not None
+    assert type(job_table)         == list
+    assert type(start_job_id)      == int
+    assert type(all_node_database) == str
+    assert type(node_table)        == list
+    assert type(fit_integrand)     == set
+    assert type(skip_start_job)    == bool
+    assert type(max_number_cpu)    == int
     # ----------------------------------------------------------------------
     # shared_memory_prefix
     shared_memory_prefix = get_shared_memory_prefix(all_node_database)

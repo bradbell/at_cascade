@@ -70,9 +70,9 @@ def continue_cascade(
 # )
 # END syntax
 ) :
-    assert not all_node_database is None
-    assert not fit_node_database is None
-    assert not fit_goal_set is None
+    assert type(all_node_database) == str
+    assert type(fit_node_database) == str
+    assert type(fit_goal_set)      == set
     #
     # node_table, covariate_table
     new             = False
