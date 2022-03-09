@@ -216,14 +216,14 @@ def try_one_job(
             trace_file_obj    = trace_file_obj,
         )
         #
-        # job_ok
-        job_ok = True
+        # job_done
+        job_done = True
     except Exception as e:
-        job_ok = False
+        job_done = False
         #
         print( f'fit {fit_type:<5} {job_name} message:\n' + str(e) )
     #
-    if not job_ok :
+    if not job_done :
         #
         # fit_type
         fit_type = 'fixed'
@@ -248,13 +248,13 @@ def try_one_job(
                 trace_file_obj    = trace_file_obj,
             )
             #
-            # job_ok
-            job_ok = True
+            # job_done
+            job_done = True
         except Exception as e:
-            job_ok = False
+            job_done = False
             print( f'fit {fit_type:<5} {job_name} message:\n' + str(e) )
     #
-    if job_ok :
+    if job_done :
         #
         # lock
         lock.acquire()
@@ -317,7 +317,7 @@ def try_one_job(
             raise
         #
         # ok
-        job_ok = False
+        job_done = False
     #
     if max_number_cpu > 1 :
         #
@@ -325,7 +325,7 @@ def try_one_job(
         job_name     = job_table[this_job_id]['job_name']
         now          = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
-        if job_ok :
+        if job_done :
             print( f'End:   fit {fit_type:<5} {current_time}: {job_name}' )
         else :
             print( f'Error: fit {fit_type:<5} {current_time}: {job_name}' )
