@@ -161,10 +161,20 @@ def try_one_job(
     skip_this_job,
     max_number_cpu,
     master_process,
+    fit_type_list,
     lock,
     event,
     shared_job_status,
 )  :
+    assert type(job_table) == list
+    assert type(this_job_id) == int
+    assert type(all_node_database) == str
+    assert type(node_table) == list
+    assert type(fit_integrand) == set
+    assert type(skip_this_job) == bool
+    assert type(max_number_cpu) == int
+    assert type(master_process) == bool
+    assert type(fit_type_list) == list
     #
     # database_dir
     row = job_table[this_job_id]
@@ -176,9 +186,6 @@ def try_one_job(
         fit_node_id,
         fit_split_reference_id
     )
-    #
-    # fit_type_list
-    fit_type_list = [ 'both', 'fixed' ]
     #
     # job_name
     job_name = job_table[this_job_id]['job_name']
@@ -365,6 +372,9 @@ def run_parallel_job(
     # job_id_array
     job_id_array = numpy.array( range(len(job_table)), dtype = int )
     #
+    # fit_type_list
+    fit_type_list = [ 'both', 'fixed' ]
+    #
     #
     if not skip_this_job :
         #
@@ -379,6 +389,7 @@ def run_parallel_job(
             skip_this_job,
             max_number_cpu,
             master_process,
+            fit_type_list,
             lock,
             event,
             shared_job_status,
@@ -509,6 +520,7 @@ def run_parallel_job(
                 skip_this_job,
                 max_number_cpu,
                 master_process,
+                fit_type_list,
                 lock,
                 event,
                 shared_job_status,
