@@ -69,11 +69,11 @@ If it is one, the jobs are run sequentially; i.e., not in parallel.
 
 fit_type_list
 *************
-This is a non-empty list and its possible elements are ``both`` and ``fixed``.
+This is a list with one or two elements
+and its possible elements are ``both`` and ``fixed``.
 For each job, the first type of fit is attempted.
 If it fails, and there is a second type of fit, it is attemped.
 If it also fails, the corresponding job fails.
-
 
 trace.out
 *********
@@ -543,7 +543,7 @@ def run_parallel(
     fit_integrand     = None,
     skip_start_job    = None,
     max_number_cpu    = None,
-    fit_type_list     = [ 'both', 'fixed' ]
+    fit_type_list     = None,
 # )
 # END syntax
 ) :

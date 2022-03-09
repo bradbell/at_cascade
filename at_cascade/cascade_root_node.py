@@ -64,6 +64,14 @@ before the root node is fit.
 Upon return, this is a :ref:`glossary.fit_node_database` with the
 extra properties listed below:
 
+fit_type_list
+*************
+This is a list with one or two elements
+and its possible elements are ``both`` and ``fixed``.
+For each job, the first type of fit is attempted.
+If it fails, and there is a second type of fit, it is attemped.
+If it also fails, the corresponding job fails.
+
 Output dismod.db
 ****************
 There is a ``dismod.db`` output file for every row in the
@@ -110,6 +118,7 @@ def cascade_root_node(
     root_node_database      = None,
     fit_goal_set            = None,
     no_ode_fit              = False,
+    fit_type_list           = [ 'both', 'fixed' ]
 # )
 # END syntax
 ) :
@@ -117,6 +126,7 @@ def cascade_root_node(
     assert type(root_node_database) == str
     assert type(fit_goal_set)       == set
     assert type(no_ode_fit)         == bool
+    assert type(fit_type_list)      == list
     #
     # split_reference_table, all_option_table
     new         = False
@@ -207,4 +217,5 @@ def cascade_root_node(
         fit_integrand     = fit_integrand,
         skip_start_job    = skip_start_job,
         max_number_cpu    = max_number_cpu,
+        fit_type_list     = fit_type_list,
     )

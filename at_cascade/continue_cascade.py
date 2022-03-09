@@ -52,6 +52,14 @@ This argument can't be ``None``.
 It can be different from when the original cascade was run; e.g.,
 it could include new goal nodes.
 
+fit_type_list
+*************
+This is a list with one or two elements
+and its possible elements are ``both`` and ``fixed``.
+For each job, the first type of fit is attempted.
+If it fails, and there is a second type of fit, it is attemped.
+If it also fails, the corresponding job fails.
+
 {xsrst_end   continue_cascade}
 '''
 import time
@@ -67,12 +75,14 @@ def continue_cascade(
     all_node_database = None,
     fit_node_database = None,
     fit_goal_set      = None,
+    fit_type_list     = [ 'both', 'fixed' ]
 # )
 # END syntax
 ) :
     assert type(all_node_database) == str
     assert type(fit_node_database) == str
     assert type(fit_goal_set)      == set
+    assert type(fit_type_list)     == list
     #
     # node_table, covariate_table
     new             = False
@@ -227,4 +237,5 @@ def continue_cascade(
         fit_integrand     = fit_integrand,
         skip_start_job    = skip_start_job,
         max_number_cpu    = max_number_cpu,
+        fit_type_list     = fit_type_list,
     )
