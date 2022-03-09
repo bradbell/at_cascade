@@ -177,8 +177,8 @@ def try_one_job(
         fit_split_reference_id
     )
     #
-    # fit_type
-    fit_type = 'both'
+    # fit_type_list
+    fit_type_list = [ 'both', 'fixed' ]
     #
     # job_name
     job_name = job_table[this_job_id]['job_name']
@@ -188,45 +188,20 @@ def try_one_job(
     if max_number_cpu > 1 :
         trace_file_name = f'{result_database_dir}/trace.out'
         trace_file_obj  = open(trace_file_name, 'w')
+    #
+    # job_done, fit_type_index, fit_type
+    job_done       = False
+    fit_type_index = 0
+    while (not job_done) and ( fit_type_index < len(fit_type_list) ) :
+        fit_type        = fit_type_list[fit_type_index]
+        fit_type_index += 1
         #
-        # print message at start
+        # print message at start of this fit
         now             = datetime.datetime.now()
         current_time    = now.strftime("%H:%M:%S")
         print( f'Begin: fit {fit_type:<5} {current_time}: {job_name}' )
-    #
-    try :
-        # run_one_job
-        # the lock should not be aquired during this operation
-        at_cascade.run_one_job(
-            job_table         = job_table,
-            run_job_id        = this_job_id ,
-            all_node_database = all_node_database,
-            node_table        = node_table,
-            fit_integrand     = fit_integrand,
-            fit_type          = fit_type,
-            trace_file_obj    = trace_file_obj,
-        )
-        #
-        # job_done
-        job_done = True
-    except Exception as e:
-        job_done = False
-        #
-        print( f'fit {fit_type:<5} {job_name} message:\n' + str(e) )
-    #
-    if not job_done :
-        #
-        # fit_type
-        fit_type = 'fixed'
-        #
-        if max_number_cpu > 1 :
-            # print message at start
-            now             = datetime.datetime.now()
-            current_time    = now.strftime("%H:%M:%S")
-            print( f'Begin: fit {fit_type:<5} {current_time}: {job_name}' )
         #
         try :
-            #
             # run_one_job
             # the lock should not be aquired during this operation
             at_cascade.run_one_job(
@@ -243,6 +218,7 @@ def try_one_job(
             job_done = True
         except Exception as e:
             job_done = False
+            #
             print( f'fit {fit_type:<5} {job_name} message:\n' + str(e) )
     #
     if job_done :
