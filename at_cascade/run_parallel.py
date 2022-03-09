@@ -67,6 +67,14 @@ This is the maximum number of cpus (processes) to use.
 This must be greater than zero.
 If it is one, the jobs are run sequentially; i.e., not in parallel.
 
+fit_type_list
+*************
+This is a non-empty list and its possible elements are ``both`` and ``fixed``.
+For each job, the first type of fit is attempted.
+If it fails, and there is a second type of fit, it is attemped.
+If it also fails, the corresponding job fails.
+
+
 trace.out
 *********
 If the *max_number_cpu* is one, standard output is not redirected.
@@ -327,17 +335,19 @@ def run_parallel_job(
     skip_this_job,
     max_number_cpu,
     master_process,
+    fit_type_list,
     lock,
     event,
 ) :
-    assert type(job_table) is list
-    assert type(this_job_id) is int
-    assert type(all_node_database) is str
-    assert type(node_table) is list
-    assert type(fit_integrand) is set
-    assert type(skip_this_job) is bool
-    assert type(max_number_cpu) is int
-    assert type(master_process) is bool
+    assert type(job_table)         == list
+    assert type(this_job_id)       == int
+    assert type(all_node_database) == str
+    assert type(node_table)        == list
+    assert type(fit_integrand)     == set
+    assert type(skip_this_job)     == bool
+    assert type(max_number_cpu)    == int
+    assert type(master_process)    == bool
+    assert type(fit_type_list)     == list
     # ----------------------------------------------------------------------
     # shared_memory_prefix
     shared_memory_prefix = get_shared_memory_prefix(all_node_database)
@@ -371,10 +381,6 @@ def run_parallel_job(
     # job_id_array
     # job_id_array
     job_id_array = numpy.array( range(len(job_table)), dtype = int )
-    #
-    # fit_type_list
-    fit_type_list = [ 'both', 'fixed' ]
-    #
     #
     if not skip_this_job :
         #
@@ -497,6 +503,7 @@ def run_parallel_job(
                     skip_child_job,
                     max_number_cpu,
                     is_child_master_process,
+                    fit_type_list,
                     lock,
                     event,
                 )
@@ -536,6 +543,7 @@ def run_parallel(
     fit_integrand     = None,
     skip_start_job    = None,
     max_number_cpu    = None,
+    fit_type_list     = [ 'both', 'fixed' ]
 # )
 # END syntax
 ) :
@@ -547,6 +555,7 @@ def run_parallel(
     assert type(fit_integrand)     == set
     assert type(skip_start_job)    == bool
     assert type(max_number_cpu)    == int
+    assert type(fit_type_list)     == list
     # ----------------------------------------------------------------------
     # shared_memory_prefix
     shared_memory_prefix = get_shared_memory_prefix(all_node_database)
@@ -616,6 +625,7 @@ def run_parallel(
         skip_start_job,
         max_number_cpu,
         master_process,
+        fit_type_list,
         lock,
         event,
     )
