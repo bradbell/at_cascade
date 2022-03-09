@@ -189,15 +189,6 @@ def try_one_job(
         trace_file_name = f'{result_database_dir}/trace.out'
         trace_file_obj  = open(trace_file_name, 'w')
         #
-        # status_count
-        lock.acquire()
-        n_status      = len( job_status_name )
-        status_count  = dict()
-        for i_status in range(n_status) :
-            name               = job_status_name[i_status]
-            status_count[name] =  sum( shared_job_status == i_status )
-        lock.release()
-        #
         # print message at start
         now             = datetime.datetime.now()
         current_time    = now.strftime("%H:%M:%S")
