@@ -226,6 +226,7 @@ def try_one_job(
                 node_table        = node_table,
                 fit_integrand     = fit_integrand,
                 fit_type          = fit_type,
+                first_fit         = fit_type_index == 1,
                 trace_file_obj    = trace_file_obj,
             )
             #

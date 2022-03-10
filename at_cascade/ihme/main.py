@@ -52,7 +52,12 @@ def display(database, max_plot) :
     dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
 # ----------------------------------------------------------------------------
 def drill(
-    result_dir, root_node_name, fit_goal_set, root_node_database, no_ode_fit
+    result_dir,
+    root_node_name,
+    fit_goal_set,
+    root_node_database,
+    no_ode_fit,
+    fit_type_list,
 ) :
     #
     # all_node_database
@@ -64,6 +69,7 @@ def drill(
         root_node_database = root_node_database,
         fit_goal_set       = fit_goal_set,
         no_ode_fit         = no_ode_fit,
+        fit_type_list      = fit_type_list,
     )
 # ----------------------------------------------------------------------------
 def main(
@@ -76,6 +82,7 @@ def main(
     scale_covariate_dict    = None,
     root_node_database      = None,
     no_ode_fit              = None,
+    fit_type_list           = None,
 ) :
     assert type(result_dir) == str
     assert type(root_node_name) == str
@@ -86,6 +93,7 @@ def main(
     assert type(scale_covariate_dict) == dict
     assert type(root_node_database) == str
     assert type(no_ode_fit) == bool
+    assert type(fit_type_list) == list
     #
     # command
     command_set = {
@@ -162,7 +170,8 @@ def main(
             root_node_name,
             fit_goal_set,
             root_node_database,
-            no_ode_fit
+            no_ode_fit,
+            fit_type_list,
          )
     #
     # display or continue
@@ -187,6 +196,7 @@ def main(
                 all_node_database = all_node_database,
                 fit_node_database = fit_node_database,
                 fit_goal_set      = fit_goal_set,
+                fit_type_list     = fit_type_list,
             )
     elif command == 'predict' :
         at_cascade.ihme.predict_csv(

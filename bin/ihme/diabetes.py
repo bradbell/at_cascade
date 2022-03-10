@@ -100,6 +100,12 @@ max_abs_effect      = 3.0
 # Maximum number of data points to plot per integrand.
 max_plot            = 2000
 #
+# fit_type_list
+# A list with one or two elemnts that specifies which type of fits
+# to try and in what order. The possible types of fit are 'fixed',
+# and 'both'.
+fit_type_list = [ 'both', 'fixed' ]
+#
 # node_split_name_set
 # Name of the nodes where we are splitting from Both to Female, Male
 node_split_name_set = { root_node_name }
@@ -410,6 +416,7 @@ if __name__ == '__main__' :
         scale_covariate_dict    = scale_covariate_dict,
         root_node_database      = root_node_database,
         no_ode_fit              = no_ode_fit,
+        fit_type_list           = fit_type_list,
     )
     print('random_seed = ', random_seed)
     print('diabetes.py: OK')

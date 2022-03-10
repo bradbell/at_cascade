@@ -59,12 +59,12 @@ fit_type
 is a ``str`` equal to 'both' or 'fixed' and specifies the type
 of fit that dismod_at will do.
 
-both
-====
-If *fit_type* is 'both', this is assumed to be an
+first_fit
+*********
+If *first_fit* is True, this is assumed to be an
 :ref:`glossary.input_node_database`.
-If *ift_type* is 'fixed', it is assumed that this
-routine has previously been called with *fit_type* equal to 'both'
+Otherwise, it is assumed that this
+routine has previously been called with *first_fit* equal to True.
 
 trace_file_obj
 **************
@@ -141,6 +141,7 @@ def run_one_job(
     node_table        = None,
     fit_integrand     = None,
     fit_type          = None,
+    first_fit         = None,
     trace_file_obj    = None,
 # )
 # END syntax
@@ -151,6 +152,7 @@ def run_one_job(
     assert type(node_table) == list
     assert type(fit_integrand) == set
     assert fit_type in [ 'both', 'fixed' ]
+    assert type(first_fit) == bool
     #
     # file_stdout
     if trace_file_obj is not None :
@@ -253,7 +255,7 @@ def run_one_job(
     integrand_table = dismod_at.get_table_dict(connection, 'integrand')
     #
     # log table
-    if fit_type == 'both'  :
+    if first_fit :
         cmd = 'drop table if exists log'
         dismod_at.sql_command(connection, cmd)
         #
