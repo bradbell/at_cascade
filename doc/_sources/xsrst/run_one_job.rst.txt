@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/run_one_job.py
-    :lines: 137-145
+    :lines: 137-146
     :language: py
 
 .. meta::
@@ -114,18 +114,18 @@ is a ``str`` equal to 'both' or 'fixed' and specifies the type
 of fit that dismod_at will do.
 
 .. meta::
-   :keywords: both
+   :keywords: first_fit
 
-.. index:: both
+.. index:: first_fit
 
-.. _run_one_job.fit_type.both:
+.. _run_one_job.first_fit:
 
-both
-====
-If *fit_type* is 'both', this is assumed to be an
+first_fit
+*********
+If *first_fit* is True, this is assumed to be an
 :ref:`glossary.input_node_database`.
-If *ift_type* is 'fixed', it is assumed that this
-routine has previously been called with *fit_type* equal to 'both'
+Otherwise, it is assumed that this
+routine has previously been called with *first_fit* equal to True.
 
 .. meta::
    :keywords: trace_file_obj

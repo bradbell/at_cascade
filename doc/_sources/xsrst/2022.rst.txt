@@ -17,6 +17,32 @@ Release Notes for 2022
    :local:
 
 .. meta::
+   :keywords: 03-12
+
+.. index:: 03-12
+
+.. _2022.03-12:
+
+03-12
+*****
+The shared memory names were shortened,
+to be specific _at_cascade was removed from theses names.
+In addition, the all node database was added as an argument
+to :ref:`clear_shared` so it would know the shared memory prefix.
+
+.. meta::
+   :keywords: 03-10
+
+.. index:: 03-10
+
+.. _2022.03-10:
+
+03-10
+*****
+Add the :ref:`cascade_root_node.fit_type_list` argument to
+cascade_root_node and continue_cascade.
+
+.. meta::
    :keywords: 03-08
 
 .. index:: 03-08

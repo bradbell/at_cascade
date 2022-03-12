@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/run_parallel.py
-    :lines: 552-560
+    :lines: 539-548
     :language: py
 
 .. meta::
@@ -136,6 +136,21 @@ max_number_cpu
 This is the maximum number of cpus (processes) to use.
 This must be greater than zero.
 If it is one, the jobs are run sequentially; i.e., not in parallel.
+
+.. meta::
+   :keywords: fit_type_list
+
+.. index:: fit_type_list
+
+.. _run_parallel.fit_type_list:
+
+fit_type_list
+*************
+This is a list with one or two elements
+and its possible elements are ``both`` and ``fixed``.
+For each job, the first type of fit is attempted.
+If it fails, and there is a second type of fit, it is attemped.
+If it also fails, the corresponding job fails.
 
 .. meta::
    :keywords: trace.out

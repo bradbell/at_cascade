@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/cascade_root_node.py
-    :lines: 108-113
+    :lines: 116-122
     :language: py
 
 .. meta::
@@ -103,6 +103,21 @@ If *no_ode_fit* is ``True`` ( ``False`` ) the priors in the
 before the root node is fit.
 Upon return, this is a :ref:`glossary.fit_node_database` with the
 extra properties listed below:
+
+.. meta::
+   :keywords: fit_type_list
+
+.. index:: fit_type_list
+
+.. _cascade_root_node.fit_type_list:
+
+fit_type_list
+*************
+This is a list with one or two elements
+and its possible elements are ``both`` and ``fixed``.
+For each job, the first type of fit is attempted.
+If it fails, and there is a second type of fit, it is attemped.
+If it also fails, the corresponding job fails.
 
 .. meta::
    :keywords: output, dismod.db

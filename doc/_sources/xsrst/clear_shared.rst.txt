@@ -25,7 +25,7 @@ Clear at_cascade Shared Memory
 
 Syntax
 ******
-clear_shared()
+clear_shared(all_node_database)
 
 .. meta::
    :keywords: purpose
@@ -36,14 +36,29 @@ clear_shared()
 
 Purpose
 *******
-This routine clears the at_cascade memory pointers that are in use.
+This routine clears the at_cascade shared memory that is in use
+and has a particular prefix.
 For example, you may get the following error message when trying
 to run the cascade:
 
-    FileExistsError: [Errno 17] File exists: '/at_cascade_number_cpu_inuse'
+    FileExistsError: [Errno 17] File exists: *name*
 
+where *name* ends with ``_number_cpu_inuse`` or ``_job_status``.
 This may happen if the previous :ref:`run_parallel`
 did not terminate cleanly; e.g., if the system crashed.
+
+.. meta::
+   :keywords: all_node_database
+
+.. index:: all_node_database
+
+.. _clear_shared.all_node_database:
+
+all_node_database
+*****************
+is a ``str`` containing a path to the :ref:`all_node_db`.
+This is used to determine the
+:ref:`all_option_table.shared_memory_prefix`.
 
 ----
 

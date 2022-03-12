@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/continue_cascade.py
-    :lines: 66-70
+    :lines: 74-79
     :language: py
 
 .. meta::
@@ -89,6 +89,21 @@ specifying the node_id (node_name) for each element of the
 This argument can't be ``None``.
 It can be different from when the original cascade was run; e.g.,
 it could include new goal nodes.
+
+.. meta::
+   :keywords: fit_type_list
+
+.. index:: fit_type_list
+
+.. _continue_cascade.fit_type_list:
+
+fit_type_list
+*************
+This is a list with one or two elements
+and its possible elements are ``both`` and ``fixed``.
+For each job, the first type of fit is attempted.
+If it fails, and there is a second type of fit, it is attemped.
+If it also fails, the corresponding job fails.
 
 ----
 
