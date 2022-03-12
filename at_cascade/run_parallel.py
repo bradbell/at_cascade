@@ -235,7 +235,7 @@ def try_one_job(
         except Exception as e:
             job_done = False
             #
-            print( f'fit {fit_type:<5} {job_name} message:\n' + str(e) )
+            print( f'\nfit {fit_type:<5} {job_name} message:\n' + str(e) )
     #
     if job_done :
         #
@@ -355,7 +355,7 @@ def run_parallel_job(
     # ----------------------------------------------------------------------
     # shared_number_cpu_inuse
     tmp  = numpy.empty(1, dtype = int )
-    name = shared_memory_prefix + '_at_cascade_number_cpu_inuse'
+    name = shared_memory_prefix + '_number_cpu_inuse'
     shm_number_cpu_inuse = shared_memory.SharedMemory(
         create = False, name = name
     )
@@ -365,7 +365,7 @@ def run_parallel_job(
     # ----------------------------------------------------------------------
     # shared_job_status
     tmp  = numpy.empty(len(job_table), dtype = int )
-    name = shared_memory_prefix + '_at_cascade_job_status'
+    name = shared_memory_prefix + '_job_status'
     shm_job_status = shared_memory.SharedMemory(
         create = False, name = name
     )
@@ -563,7 +563,7 @@ def run_parallel(
     # -------------------------------------------------------------------------
     # shared_number_cpu_inuse
     tmp  = numpy.empty(1, dtype = int )
-    name = shared_memory_prefix + '_at_cascade_number_cpu_inuse'
+    name = shared_memory_prefix + '_number_cpu_inuse'
     shm_number_cpu_inuse = shared_memory.SharedMemory(
         create = True, size = tmp.nbytes, name = name
     )
@@ -573,7 +573,7 @@ def run_parallel(
     # -------------------------------------------------------------------------
     # shared_job_status
     tmp  = numpy.empty(len(job_table), dtype = int )
-    name = shared_memory_prefix + '_at_cascade_job_status'
+    name = shared_memory_prefix + '_job_status'
     shm_job_status = shared_memory.SharedMemory(
         create = True, size = tmp.nbytes, name = name
     )
