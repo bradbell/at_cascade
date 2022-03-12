@@ -26,6 +26,11 @@ to be specific _at_cascade was removed from theses names.
 In addition, the all node database was added as an argument
 to :ref:`clear_shared` so it would know the shared memory prefix.
 
+03-10
+*****
+Add the :ref:`cascade_root_node.fit_type_list` argument to
+cascade_root_node and continue_cascade.
+
 03-08
 *****
 The :ref:`remission<remission>` example was added.
