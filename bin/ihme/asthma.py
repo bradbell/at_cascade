@@ -104,7 +104,7 @@ max_plot            = 2000
 # A list with one or two elemnts that specifies which type of fits
 # to try and in what order. The possible types of fit are 'fixed',
 # and 'both'.
-fit_type_list = [ 'both', 'fixed' ]
+fit_type_list = [ 'fixed', 'both' ]
 #
 # node_split_name_set
 # Name of the nodes where we are splitting from Both to Female, Male
@@ -113,7 +113,7 @@ node_split_name_set = { root_node_name }
 # hold_out_integrand
 # space separated list of integrands that are held out
 # (except during the no_ode fit)
-hold_out_integrand = 'mtstandard mtspecific mtwith'
+hold_out_integrand = 'mtstandard mtwith'
 #
 # hold_out_nid_set
 # set of nid values in data file for studies that are suspect
@@ -165,13 +165,13 @@ prior_table = [
         'mean'    :    1e-5,
         'std'     :    1.0,
     },
-    {   'name'    :    'parent_rate_dage',
+    {   'name'    :    'parent_chi_dage',
         'density' :    'log_gaussian',
         'mean'    :    0.0,
         'std'     :    1.0,
         'eta'     :    1e-7,
     },
-    {   'name'    :    'parent_rate_dtime',
+    {   'name'    :    'parent_rate_delta',
         'density' :    'log_gaussian',
         'mean'    :    0.0,
         'std'     :    0.3,
@@ -197,12 +197,17 @@ prior_table = [
 #
 # smooth_list_dict
 smooth_list_dict = [
-    {   'name'        : 'parent_rate',
+    {   'name'        : 'parent_rate_smooth',
         'value_prior' : 'parent_rate_value',
-        'dage_prior'  : 'parent_rate_dage',
-        'dtime_prior' : 'parent_rate_dtime',
+        'dage_prior'  : 'parent_rate_delta',
+        'dtime_prior' : 'parent_rate_delta',
     },
-    {   'name'        : 'parent_pini',
+    {   'name'        : 'parent_chi_smooth',
+        'value_prior' : 'parent_rate_value',
+        'dage_prior'  : 'parent_chi_dage',
+        'dtime_prior' : 'parent_rate_delta',
+    },
+    {   'name'        : 'parent_pini_smooth',
         'value_prior' : 'parent_pini_value',
     },
     {   'name'        : 'child_smooth',
@@ -220,18 +225,18 @@ smooth_list_dict = [
 # https://bradbell.github.io/dismod_at/doc/create_database.htm#rate_table
 rate_table = [
     {   'name':          'pini',
-        'parent_smooth': 'parent_pini',
+        'parent_smooth': 'parent_pini_smooth',
     },
     {   'name':           'iota',
-        'parent_smooth': 'parent_rate',
+        'parent_smooth': 'parent_rate_smooth',
         'child_smooth':  'child_smooth',
     },
     {   'name':           'rho',
-        'parent_smooth': 'parent_rate',
+        'parent_smooth': 'parent_rate_smooth',
         'child_smooth':  'child_smooth',
     },
     {   'name':           'chi',
-        'parent_smooth': 'parent_rate',
+        'parent_smooth': 'parent_chi_smooth',
         'child_smooth':  'child_smooth',
     },
 ]
