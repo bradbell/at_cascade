@@ -499,6 +499,54 @@
                 <span class="n">relative_tolerance</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
             <span class="p">)</span>
     <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="c1"># fit_iota, fit_alpha, fit_reference_income</span>
+    <span class="n">fit_node_database</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/n0/dismod.db&#39;</span>
+    <span class="n">new</span>               <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">connection</span>        <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">create_connection</span><span class="p">(</span><span class="n">fit_node_database</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span>
+    <span class="n">var_table</span>         <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">get_table_dict</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s1">&#39;var&#39;</span><span class="p">)</span>
+    <span class="n">fit_var_table</span>     <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">get_table_dict</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s1">&#39;fit_var&#39;</span><span class="p">)</span>
+    <span class="n">rate_table</span>        <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">get_table_dict</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s1">&#39;rate&#39;</span><span class="p">)</span>
+    <span class="n">prior_table</span>       <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">get_table_dict</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s1">&#39;prior&#39;</span><span class="p">)</span>
+    <span class="n">covariate_table</span>   <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">get_table_dict</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s1">&#39;covariate&#39;</span><span class="p">)</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">var_id</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">var_table</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">rate_id</span>   <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;rate_id&#39;</span><span class="p">]</span>
+        <span class="n">rate_name</span> <span class="o">=</span> <span class="n">rate_table</span><span class="p">[</span><span class="n">rate_id</span><span class="p">][</span><span class="s1">&#39;rate_name&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">rate_name</span> <span class="o">==</span> <span class="s1">&#39;iota&#39;</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;var_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;rate&#39;</span> <span class="p">:</span>
+                <span class="n">fit_iota</span> <span class="o">=</span> <span class="n">fit_var_table</span><span class="p">[</span><span class="n">var_id</span><span class="p">][</span><span class="s1">&#39;fit_var_value&#39;</span><span class="p">]</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">assert</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;var_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;mulcov_rate_value&#39;</span>
+                <span class="n">fit_alpha</span> <span class="o">=</span> <span class="n">fit_var_table</span><span class="p">[</span><span class="n">var_id</span><span class="p">][</span><span class="s1">&#39;fit_var_value&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">covariate_table</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;covariate_name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;income&#39;</span> <span class="p">:</span>
+            <span class="n">fit_reference_income</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;reference&#39;</span><span class="p">]</span>
+    <span class="c1">#</span>
+    <span class="c1"># shift_mean, shift_reference_income</span>
+    <span class="n">shift_database</span>    <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/n0/female/dismod.db&#39;</span>
+    <span class="n">new</span>               <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">connection</span>        <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">create_connection</span><span class="p">(</span><span class="n">shift_database</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span>
+    <span class="n">rate_table</span>        <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">get_table_dict</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s1">&#39;rate&#39;</span><span class="p">)</span>
+    <span class="n">smooth_grid_table</span> <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">get_table_dict</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s1">&#39;smooth_grid&#39;</span><span class="p">)</span>
+    <span class="n">prior_table</span>       <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">get_table_dict</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s1">&#39;prior&#39;</span><span class="p">)</span>
+    <span class="n">covariate_table</span>   <span class="o">=</span> <span class="n">dismod_at</span><span class="o">.</span><span class="n">get_table_dict</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s1">&#39;covariate&#39;</span><span class="p">)</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rate_table</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;rate_name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;iota&#39;</span> <span class="p">:</span>
+            <span class="n">smooth_id</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;parent_smooth_id&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">smooth_grid_table</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;smooth_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">smooth_id</span> <span class="p">:</span>
+            <span class="n">prior_id</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;value_prior_id&#39;</span><span class="p">]</span>
+    <span class="n">shift_mean</span> <span class="o">=</span> <span class="n">prior_table</span><span class="p">[</span><span class="n">prior_id</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">covariate_table</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;covariate_name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;income&#39;</span> <span class="p">:</span>
+            <span class="n">shift_reference_income</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;reference&#39;</span><span class="p">]</span>
+    <span class="c1">#</span>
+    <span class="c1"># check</span>
+    <span class="n">income_difference</span> <span class="o">=</span> <span class="n">shift_reference_income</span> <span class="o">-</span> <span class="n">fit_reference_income</span>
+    <span class="n">check</span> <span class="o">=</span> <span class="n">fit_iota</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span> <span class="n">fit_alpha</span> <span class="o">*</span> <span class="n">income_difference</span> <span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">shift_mean</span><span class="o">/</span><span class="n">check</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
 <span class="c1">#</span>
 <span class="n">main</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;split_covariate: OK&#39;</span><span class="p">)</span>

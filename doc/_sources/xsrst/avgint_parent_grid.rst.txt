@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/avgint_parent_grid.py
-    :lines: 91-94
+    :lines: 101-104
     :language: py
 
 .. meta::
@@ -95,7 +95,16 @@ dismod_at option table in the fit_node_database.
 avgint Table
 ************
 The new avgint table has all the standard dismod_at columns
-plus the following extra columns:
+plus the columns listed below.
+This avgint table enables the following predictions.
+
+1.  Predictions can be made for the covariate multipliers
+    mean value (with node_id and split_reference_id null).
+2.  For the fit node and each possible child node,
+    predictions can be made for each rate variable at spliting
+    covariate value equal to the reference for the fit.
+3.  For each splitting covariate value,
+    predictions can be make for each rate variable at the fit node.
 
 .. meta::
    :keywords: c_age_id

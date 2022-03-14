@@ -18,7 +18,7 @@ split_covariate: Python Source Code
 
 
 .. literalinclude:: ../../example/split_covariate.py
-    :lines: 203-608
+    :lines: 203-656
     :language: py
 
 ----

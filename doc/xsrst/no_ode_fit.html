@@ -6,6 +6,7 @@
 <meta content="all_node_database" name="keywords" />
 <meta content="root_node_database" name="keywords" />
 <meta content="all_option_dict" name="keywords" />
+<meta content="fit_type" name="keywords" />
 <meta content="no_ode_database" name="keywords" />
 <meta content="root_fit_database" name="keywords" />
 
@@ -120,8 +121,9 @@
 <li><p><a class="reference internal" href="#all-node-database" id="id3">all_node_database</a></p></li>
 <li><p><a class="reference internal" href="#root-node-database" id="id4">root_node_database</a></p></li>
 <li><p><a class="reference internal" href="#all-option-dict" id="id5">all_option_dict</a></p></li>
-<li><p><a class="reference internal" href="#no-ode-database" id="id6">no_ode_database</a></p></li>
-<li><p><a class="reference internal" href="#root-fit-database" id="id7">root_fit_database</a></p></li>
+<li><p><a class="reference internal" href="#fit-type" id="id6">fit_type</a></p></li>
+<li><p><a class="reference internal" href="#no-ode-database" id="id7">no_ode_database</a></p></li>
+<li><p><a class="reference internal" href="#root-fit-database" id="id8">root_fit_database</a></p></li>
 </ul>
 </div>
 <div class="section" id="syntax">
@@ -130,6 +132,7 @@
     <span class="n">all_node_database</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">root_node_database</span>  <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">all_option_dict</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fit_type</span>            <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="c1"># )</span>
 </pre></div>
 </div>
@@ -155,8 +158,13 @@ and the corresponding value is
 If an option does not appear in the table, the corresponding key
 does not appear in <em>all_option_dict</em>.</p>
 </div>
+<div class="section" id="fit-type">
+<span id="no-ode-fit-fit-type"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id6">fit_type</a><a class="headerlink" href="#fit-type" title="Permalink to this headline"></a></h3>
+<p>is a <code class="docutils literal notranslate"><span class="pre">str</span></code> equal to both or fixed
+(fit both fixed and random effect or just fixed effects).</p>
+</div>
 <div class="section" id="no-ode-database">
-<span id="no-ode-fit-no-ode-database"></span><span id="index-5"></span><h3><a class="toc-backref" href="#id6">no_ode_database</a><a class="headerlink" href="#no-ode-database" title="Permalink to this headline"></a></h3>
+<span id="no-ode-fit-no-ode-database"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id7">no_ode_database</a><a class="headerlink" href="#no-ode-database" title="Permalink to this headline"></a></h3>
 <p>An intermediate database is stored in the file</p>
 <blockquote>
 <div><p><em>result_dir</em>/<em>root_node_name</em>/no_ode/dismod.db</p>
@@ -183,7 +191,7 @@ csv files and plotted using the dismod_at db2csv and plotting routines.</p></li>
 </ol>
 </div>
 <div class="section" id="root-fit-database">
-<span id="no-ode-fit-root-fit-database"></span><span id="index-6"></span><h3><a class="toc-backref" href="#id7">root_fit_database</a><a class="headerlink" href="#root-fit-database" title="Permalink to this headline"></a></h3>
+<span id="no-ode-fit-root-fit-database"></span><span id="index-7"></span><h3><a class="toc-backref" href="#id8">root_fit_database</a><a class="headerlink" href="#root-fit-database" title="Permalink to this headline"></a></h3>
 <p>The return value <em>root_fit_database</em> is equal to</p>
 <blockquote>
 <div><p><em>result_dir</em>/<em>root_node_name</em>/dismod.db</p>

@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/create_shift_db.py
-    :lines: 363-368
+    :lines: 371-376
     :language: py
 
 .. meta::

@@ -27,7 +27,7 @@ Syntax
 ******
 
 .. literalinclude:: ../../at_cascade/no_ode_fit.py
-    :lines: 147-151
+    :lines: 152-157
     :language: py
 
 .. meta::
@@ -71,6 +71,18 @@ and the corresponding value is
 :ref:`all_option_table.table_format.option_value`.
 If an option does not appear in the table, the corresponding key
 does not appear in *all_option_dict*.
+
+.. meta::
+   :keywords: fit_type
+
+.. index:: fit_type
+
+.. _no_ode_fit.fit_type:
+
+fit_type
+********
+is a ``str`` equal to both or fixed
+(fit both fixed and random effect or just fixed effects).
 
 .. meta::
    :keywords: no_ode_database
