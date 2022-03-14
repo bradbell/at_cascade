@@ -165,6 +165,7 @@ def cascade_root_node(
             all_node_database  = all_node_database,
             root_node_database = root_node_database,
             all_option_dict    = all_option_dict,
+            fit_type           = fit_type_list[0],
         )
     #
     # node_table, covariate_table

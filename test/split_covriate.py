@@ -578,7 +578,7 @@ def main() :
                 assert row['var_type'] == 'mulcov_rate_value'
                 fit_alpha = fit_var_table[var_id]['fit_var_value']
     #
-    # shift mean
+    # shift_mean
     shift_database    = f'{result_dir}/n0/female/dismod.db'
     new               = False
     connection        = dismod_at.create_connection(shift_database, new)
@@ -602,6 +602,7 @@ def main() :
         if row['split_reference_name'] == 'female' :
             sex_difference += row['split_reference_value']
     #
+    # check
     check = fit_iota * exp( fit_alpha * sex_difference )
     assert abs(1.0 - shift_mean/check) < 1e-12
 #

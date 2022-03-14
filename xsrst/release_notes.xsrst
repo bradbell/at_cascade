@@ -28,6 +28,7 @@ Release Notes for 2022
     covariate effects were not being handled properly.
 2.  A check of the prior mean for iota was added at the end of
     the :ref:`split_covariate<split_covariate>` example
+3.  Add the :ref:`no_ode_fit.fit_type` argument to no_ode_fit.
 
 03-12
 *****

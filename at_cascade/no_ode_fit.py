@@ -45,6 +45,11 @@ and the corresponding value is
 If an option does not appear in the table, the corresponding key
 does not appear in *all_option_dict*.
 
+fit_type
+********
+is a ``str`` equal to both or fixed
+(fit both fixed and random effect or just fixed effects).
+
 no_ode_database
 ***************
 An intermediate database is stored in the file
@@ -148,12 +153,14 @@ def no_ode_fit(
     all_node_database   = None,
     root_node_database  = None,
     all_option_dict     = None,
+    fit_type            = None,
 # )
 # END syntax
 ) :
     assert type(all_node_database) == str
     assert type(root_node_database) == str
     assert type(all_option_dict) == dict
+    assert fit_type == 'fixed' or fit_type == 'both'
     #
     # result_dir, max_fit, max_abs_effect, max_number_cpu
     result_dir     = None
@@ -240,7 +247,7 @@ def no_ode_fit(
         file_stdout    = open(trace_file_name, 'w')
         now            = datetime.datetime.now()
         current_time   = now.strftime("%H:%M:%S")
-        print( f'Begin: {current_time}: no_ode' )
+        print( f'Begin: {current_time}: no_ode fit {fit_type}' )
     # ------------------------------------------------------------------------
     # no_ode_database
     # ------------------------------------------------------------------------
@@ -315,7 +322,7 @@ def no_ode_fit(
     system_command(command, file_stdout)
     #
     # fit both
-    command = [ 'dismod_at', no_ode_database, 'fit', 'both' ]
+    command = [ 'dismod_at', no_ode_database, 'fit', fit_type ]
     system_command(command, file_stdout)
     #
     # c_shift_predict_fit_var
