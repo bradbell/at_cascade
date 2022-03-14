@@ -21,11 +21,13 @@ Release Notes for 2022
 
 03-14
 *****
-Fix a bug in how
-:ref:`avgint_parent_grid<avgint_parent_grid>` and
-:ref:`create_shift_db<create_shift_db>` pass
-priors down the cascade. To be nore specific, the split reference
-covariate effects were not being handled properly.
+1.  Fix a bug in how
+    :ref:`avgint_parent_grid<avgint_parent_grid>` and
+    :ref:`create_shift_db<create_shift_db>` pass
+    priors down the cascade. To be nore specific, the split reference
+    covariate effects were not being handled properly.
+2.  A check of the prior mean for iota was added at the end of
+    the :ref:`split_covariate<split_covariate>` example
 
 03-12
 *****

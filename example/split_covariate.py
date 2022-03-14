@@ -602,6 +602,54 @@ def main() :
                 relative_tolerance = 1e-5,
             )
     #
+    #
+    # fit_iota, fit_alpha, fit_reference_income
+    fit_node_database = f'{result_dir}/n0/dismod.db'
+    new               = False
+    connection        = dismod_at.create_connection(fit_node_database, new)
+    var_table         = dismod_at.get_table_dict(connection, 'var')
+    fit_var_table     = dismod_at.get_table_dict(connection, 'fit_var')
+    rate_table        = dismod_at.get_table_dict(connection, 'rate')
+    prior_table       = dismod_at.get_table_dict(connection, 'prior')
+    covariate_table   = dismod_at.get_table_dict(connection, 'covariate')
+    connection.close()
+    for (var_id, row) in enumerate(var_table) :
+        rate_id   = row['rate_id']
+        rate_name = rate_table[rate_id]['rate_name']
+        if rate_name == 'iota' :
+            if row['var_type'] == 'rate' :
+                fit_iota = fit_var_table[var_id]['fit_var_value']
+            else :
+                assert row['var_type'] == 'mulcov_rate_value'
+                fit_alpha = fit_var_table[var_id]['fit_var_value']
+    for row in covariate_table :
+        if row['covariate_name'] == 'income' :
+            fit_reference_income = row['reference']
+    #
+    # shift_mean, shift_reference_income
+    shift_database    = f'{result_dir}/n0/female/dismod.db'
+    new               = False
+    connection        = dismod_at.create_connection(shift_database, new)
+    rate_table        = dismod_at.get_table_dict(connection, 'rate')
+    smooth_grid_table = dismod_at.get_table_dict(connection, 'smooth_grid')
+    prior_table       = dismod_at.get_table_dict(connection, 'prior')
+    covariate_table   = dismod_at.get_table_dict(connection, 'covariate')
+    connection.close()
+    for row in rate_table :
+        if row['rate_name'] == 'iota' :
+            smooth_id = row['parent_smooth_id']
+    for row in smooth_grid_table :
+        if row['smooth_id'] == smooth_id :
+            prior_id = row['value_prior_id']
+    shift_mean = prior_table[prior_id]['mean']
+    for row in covariate_table :
+        if row['covariate_name'] == 'income' :
+            shift_reference_income = row['reference']
+    #
+    # check
+    income_difference = shift_reference_income - fit_reference_income
+    check = fit_iota * exp( fit_alpha * income_difference )
+    assert abs(1.0 - shift_mean/check) < 1e-12
 #
 main()
 print('split_covariate: OK')
