@@ -19,6 +19,14 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+03-14
+*****
+Fix a bug in how
+:ref:`avgint_parent_grid<avgint_parent_grid>` and
+:ref:`create_shift_db<create_shift_db>` pass
+priors down the cascade. To be nore specific, the split reference
+covariate effects were not being handled properly.
+
 03-12
 *****
 The shared memory names were shortened,

@@ -52,7 +52,17 @@ dismod_at option table in the fit_node_database.
 avgint Table
 ************
 The new avgint table has all the standard dismod_at columns
-plus the following extra columns:
+plus the columns listed below.
+This avgint table enables the following predictions.
+
+1.  Predictions can be made for the covariate multipliers
+    mean value (with node_id and split_reference_id null).
+2.  For the fit node and each possible child node,
+    predictions can be made for each rate variable at spliting
+    covariate value equal to the reference for the fit.
+3.  For each splitting covariate value,
+    predictions can be make for each rate variable at the fit node.
+
 
 c_age_id
 ========
@@ -180,7 +190,7 @@ def avgint_parent_grid(
                             all_node_database  = all_node_database,
                             fit_node_database  = fit_node_database,
                             shift_node_id      = node_id,
-                            split_reference_id = fit_split_reference_id,
+                            split_reference_id = split_reference_id,
                         )
                         key = (node_id, split_reference_id)
                         cov_reference_dict[key] = cov_reference_list
@@ -263,9 +273,10 @@ def avgint_parent_grid(
                     time_upper = time_lower
                     #
                     # row
-                    node_id     = None
-                    subgroup_id = 0
-                    weight_id   = None
+                    node_id            = None
+                    subgroup_id        = 0
+                    weight_id          = None
+                    split_reference_id = None
                     row = [
                         integrand_id,
                         node_id,
@@ -277,7 +288,7 @@ def avgint_parent_grid(
                         time_upper,
                     ]
                     row += n_covariate * [ None ]
-                    row += [ age_id, time_id, fit_split_reference_id ]
+                    row += [ age_id, time_id, split_reference_id ]
                     #
                     # add to row_list
                     row_list.append( row )

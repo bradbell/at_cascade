@@ -221,6 +221,7 @@ def add_shift_grid_row(
     fit_grid_row,
     integrand_id,
     shift_node_id,
+    shift_split_reference_id,
     shift_prior_std_factor,
     freeze,
     age_id_next,
@@ -229,6 +230,9 @@ def add_shift_grid_row(
     # -----------------------------------------------------------------------
     # value_prior
     # -----------------------------------------------------------------------
+    #
+    # split_id
+    split_id = shift_split_reference_id
     #
     # fit_prior_id
     fit_prior_id    = fit_grid_row['value_prior_id']
@@ -247,7 +251,7 @@ def add_shift_grid_row(
         # key
         age_id    = fit_grid_row['age_id']
         time_id   = fit_grid_row['time_id']
-        key       = (integrand_id, shift_node_id, age_id, time_id)
+        key       = (integrand_id, shift_node_id, split_id, age_id, time_id)
         #
         # lower, upper
         if freeze :
@@ -276,11 +280,15 @@ def add_shift_grid_row(
             fit_var = fit_fit_var[key]
             if age_id_next[age_id] != None :
                 next_age_id = age_id_next[age_id]
-                key  = (integrand_id, shift_node_id, next_age_id, time_id)
+                key = (
+                    integrand_id, shift_node_id, split_id, next_age_id, time_id
+                )
                 dage_fit_var = fit_fit_var[key] - fit_var
             if time_id_next[time_id] != None :
                 next_time_id = time_id_next[time_id]
-                key  = (integrand_id, shift_node_id, age_id, next_time_id)
+                key = (
+                    integrand_id, shift_node_id, split_id, age_id, next_time_id
+                )
                 dtime_fit_var = fit_fit_var[key] - fit_var
             #
             # shift_prior_row['mean']
@@ -456,11 +464,10 @@ def create_shift_db(
         node_id            = avgint_row['node_id']
         age_id             = avgint_row['c_age_id']
         time_id            = avgint_row['c_time_id']
-        split_reference_id = avgint_row['c_split_reference_id']
-        if split_reference_id == fit_split_reference_id :
-            key  = (integrand_id, node_id, age_id, time_id)
-            assert not key in fit_fit_var
-            fit_fit_var[key] = predict_row['avg_integrand']
+        split_id           = avgint_row['c_split_reference_id']
+        key           = (integrand_id, node_id, split_id, age_id, time_id)
+        assert not key in fit_fit_var
+        fit_fit_var[key] = predict_row['avg_integrand']
     #
     # fit_sample
     fit_sample = dict()
@@ -472,12 +479,11 @@ def create_shift_db(
             node_id            = avgint_row['node_id']
             age_id             = avgint_row['c_age_id']
             time_id            = avgint_row['c_time_id']
-            split_reference_id = avgint_row['c_split_reference_id']
-            if split_reference_id == fit_split_reference_id :
-                key  = (integrand_id, node_id, age_id, time_id)
-                if not key in fit_sample :
-                    fit_sample[key] = list()
-                fit_sample[key].append( predict_row['avg_integrand'] )
+            split_id           = avgint_row['c_split_reference_id']
+            key           = (integrand_id, node_id, split_id, age_id, time_id)
+            if not key in fit_sample :
+                fit_sample[key] = list()
+            fit_sample[key].append( predict_row['avg_integrand'] )
     #
     # fit_node_name
     fit_node_name = None
@@ -618,7 +624,8 @@ def create_shift_db(
                 #
                 # shift_table['smooth_grid']
                 # add rows for this smoothing
-                node_id = None
+                node_id  = None
+                split_id = None
                 for fit_grid_row in fit_table['smooth_grid'] :
                     if fit_grid_row['smooth_id'] == fit_smooth_id :
                         add_shift_grid_row(
@@ -629,6 +636,7 @@ def create_shift_db(
                             fit_grid_row,
                             integrand_id,
                             node_id,
+                            split_id,
                             shift_prior_std_factor,
                             freeze,
                             age_id_next_list[fit_smooth_id],
@@ -694,6 +702,7 @@ def create_shift_db(
                             fit_grid_row,
                             integrand_id,
                             shift_node_id,
+                            shift_split_reference_id,
                             shift_prior_std_factor,
                             freeze,
                             age_id_next_list[fit_smooth_id],
