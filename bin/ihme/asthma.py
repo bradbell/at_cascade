@@ -90,7 +90,7 @@ shared_memory_prefix = "asthma"
 #
 # max_fit
 # Maximum number of data rows per integrand to include in a f
-max_fit             = 150
+max_fit             = 250
 #
 # max_abs_effect
 # Maximum absolute effect for any covriate multiplier.
@@ -262,7 +262,7 @@ mulcov_list_dict = [
     {   # alpha_chi_sex
         'covariate': 'sex',
         'effected':  'chi',
-        'smooth':    'alpha_zero_smooth',
+        'smooth':    'alpha_smooth',
     },
 ]
 #
@@ -335,7 +335,6 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
-fit_goal_set = { '1_Global' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understanding this program
 # ----------------------------------------------------------------------------
@@ -425,4 +424,4 @@ if __name__ == '__main__' :
         fit_type_list           = fit_type_list,
     )
     print('random_seed = ', random_seed)
-    print('diabetes.py: OK')
+    print('asthma.py: OK')
