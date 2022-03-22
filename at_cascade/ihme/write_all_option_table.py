@@ -39,6 +39,14 @@ def write_all_option_table(
     all_option_table_file = f'{result_dir}/{all_option_table_file}'
     print( f'Creating {all_option_table_file}' )
     #
+    # balance_fit
+    cov_name = 'sex'
+    value_1  = at_cascade.ihme.sex_info_dict['Female']['covariate_value']
+    value_2  = at_cascade.ihme.sex_info_dict['Male']['covariate_value']
+    if value_2 < value_1 :
+        Value_1, value_2 = value_2, value_1
+    balance_fit = f'{cov_name} {value_1} {value_2}'
+    #
     # all_option
     all_option = {
         'absolute_covariates'          : 'one',
@@ -48,6 +56,7 @@ def write_all_option_table(
         'root_node_name'               : root_node_name,
         'max_abs_effect'               : max_abs_effect,
         'max_fit'                      : max_fit,
+        'balance_fit'                  : balance_fit,
         'max_number_cpu'               : max_number_cpu,
         'shared_memory_prefix'         : shared_memory_prefix,
         'shift_prior_std_factor'       : shift_prior_std_factor,

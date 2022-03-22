@@ -212,6 +212,21 @@ def run_one_job(
             all_table['split_reference'], 'split_reference', name
         )
     #
+    # balance_fit
+    if 'balance_fit' not in all_option_dict :
+        balance_fit = None
+    else :
+        balance_fit = all_option_dict['balance_fit']
+        balance_fit = balance_fit.split()
+        if 'max_fit' not in all_option_dict :
+            msg  = 'balance_fit appears in all_option table '
+            msg += 'but max_fit does not.'
+            assert False, msg
+        if len(balance_fit) != 3 :
+            msg = 'all_option table: balance_fit is not a space separated '
+            msg += 'list with three elements'
+            assert False, msg
+    #
     # perturb_optimization
     perturb_optimization = dict()
     for key in [ 'start', 'scale' ] :
@@ -278,6 +293,8 @@ def run_one_job(
                 'dismod_at', fit_node_database,
                 'hold_out', integrand_name, max_fit
             ]
+            if balance_fit is not None :
+                command += balance_fit
             system_command(command, file_stdout)
     #
     # max_abs_effect

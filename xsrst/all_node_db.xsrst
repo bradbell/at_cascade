@@ -261,9 +261,22 @@ It specifies a value that is attached to each option name.
 
 absolute_covariates
 *******************
-This is a space separate list of the names for the
+This is a space separated list of the names for the
 covariates that do not change their reference value.
 If this option does not appear, there are no absolute covariates.
+
+balance_fit
+***********
+If this option appears, the :ref:`all_option_table.max_fit` option
+must also appear. This option specifies how dismod_at should balance
+the randomly selected samples.
+It is a space separated list with the following values
+in the following order:
+
+1. *cov_name* is the name of the covariate that we are balancing.
+2. *value_1*  is the lower covariate value that we are balancing.
+3. *value_2*   is the upper covariate values that we are balancing.
+
 
 max_abs_effect
 **************

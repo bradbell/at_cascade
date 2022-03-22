@@ -166,11 +166,14 @@ def no_ode_fit(
     result_dir     = None
     max_fit        = None
     max_abs_effect = None
+    balance_fit    = None
     max_number_cpu = 1
     if 'result_dir' in all_option_dict :
         result_dir =  all_option_dict['result_dir']
     if 'max_fit' in all_option_dict :
         max_fit = int( all_option_dict['max_fit'] )
+    if 'balance_fit' in all_option_dict :
+        balance_fit = all_option_dict['balance_fit'].split()
     if 'max_abs_effect' in all_option_dict :
         max_abs_effect = float( all_option_dict['max_abs_effect'] )
     if 'max_number_cpu' in all_option_dict :
@@ -314,6 +317,8 @@ def no_ode_fit(
             if not max_fit is None :
                 command  = [ 'dismod_at', no_ode_database ]
                 command += [ 'hold_out', integrand_name, str(max_fit) ]
+                if not balance_fit is None :
+                    command += balance_fit
                 system_command(command, file_stdout)
     #
     # max_num_iter_fixed
