@@ -104,7 +104,7 @@ max_plot            = 2000
 # A list with one or two elemnts that specifies which type of fits
 # to try and in what order. The possible types of fit are 'fixed',
 # and 'both'.
-fit_type_list = [ 'fixed', 'both' ]
+fit_type_list = [ 'both', 'fixed' ]
 #
 # node_split_name_set
 # Name of the nodes where we are splitting from Both to Female, Male
@@ -141,7 +141,8 @@ age_avg_split_list = [ 0.1, 1.0 ]
 # model_rate_age_grid, model_rate_time_grid
 # age and time grid points for the smoothing for non-zero rates except omega
 model_rate_age_grid = [
-    0.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0
+    0.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0,
+    85.0, 90.0, 95.0, 100.0
 ]
 model_rate_time_grid = [
     1960, 1975, 1990, 1995, 2000, 2005, 2010, 2015, 2020
@@ -180,7 +181,7 @@ prior_table = [
     {   'name'    :   'child_rate_value',
         'density' :   'gaussian',
         'mean'    :   0.0,
-        'std'     :   .1,
+        'std'     :   1.0
     },
     {   'name'    :   'alpha_value',
         'density' :   'gaussian',
@@ -335,6 +336,7 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
+fit_goal_set = { '1_Global' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understanding this program
 # ----------------------------------------------------------------------------
@@ -370,7 +372,6 @@ def setup_function() :
         covariate_csv_file_dict = covariate_csv_file_dict,
         gamma_factor            = gamma_factor,
         root_node_name          = root_node_name,
-        random_seed             = random_seed,
         model_rate_age_grid     = model_rate_age_grid,
         model_rate_time_grid    = model_rate_time_grid,
         prior_table             = prior_table,
@@ -422,6 +423,6 @@ if __name__ == '__main__' :
         root_node_database      = root_node_database,
         no_ode_fit              = no_ode_fit,
         fit_type_list           = fit_type_list,
+        random_seed             = random_seed,
     )
-    print('random_seed = ', random_seed)
     print('asthma.py: OK')

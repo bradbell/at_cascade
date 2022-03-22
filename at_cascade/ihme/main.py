@@ -83,6 +83,7 @@ def main(
     root_node_database      = None,
     no_ode_fit              = None,
     fit_type_list           = None,
+    random_seed             = None,
 ) :
     assert type(result_dir) == str
     assert type(root_node_name) == str
@@ -94,6 +95,7 @@ def main(
     assert type(root_node_database) == str
     assert type(no_ode_fit) == bool
     assert type(fit_type_list) == list
+    assert type(random_seed) == int
     #
     # command
     command_set = {
@@ -153,10 +155,15 @@ def main(
     #
     # shared
     elif command == 'shared' :
-        at_cascade.clear_shared()
+        all_node_database = f'{result_dir}/all_node.db'
+        at_cascade.clear_shared(all_node_database)
     #
     # drill
     elif command == 'drill' :
+        dismod_at.system_command_prc([
+            'dismod_at', root_node_database,
+            'set', 'option', 'random_seed', str(random_seed)
+        ])
         if os.path.exists( root_node_dir ) :
             program = sys.argv[0]
             msg  = f'drill: {root_node_dir} exists.\n'

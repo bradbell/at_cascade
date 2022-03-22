@@ -365,7 +365,6 @@ def setup_function() :
         covariate_csv_file_dict = covariate_csv_file_dict,
         gamma_factor            = gamma_factor,
         root_node_name          = root_node_name,
-        random_seed             = random_seed,
         model_rate_age_grid     = model_rate_age_grid,
         model_rate_time_grid    = model_rate_time_grid,
         prior_table             = prior_table,
@@ -417,6 +416,6 @@ if __name__ == '__main__' :
         root_node_database      = root_node_database,
         no_ode_fit              = no_ode_fit,
         fit_type_list           = fit_type_list,
+        random_seed             = random_seed,
     )
-    print('random_seed = ', random_seed)
     print('diabetes.py: OK')

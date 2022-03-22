@@ -27,7 +27,6 @@ def write_root_node_database(
     covariate_csv_file_dict = None,
     gamma_factor            = None,
     root_node_name          = None,
-    random_seed             = None,
     model_rate_age_grid     = None,
     model_rate_time_grid    = None,
     prior_table             = None,
@@ -45,7 +44,6 @@ def write_root_node_database(
     assert type(hold_out_nid_set) == set
     assert type(covariate_csv_file_dict) == dict
     assert type(root_node_name) == str
-    assert type(random_seed) == int
     assert type(model_rate_age_grid) == list
     assert type(model_rate_time_grid) == list
     assert type(prior_table) == list
@@ -339,7 +337,6 @@ def write_root_node_database(
     option_table = [
         { 'name':'parent_node_name',     'value':root_node_name},
         { 'name':'rate_case',            'value':rate_case},
-        { 'name':'random_seed',          'value':str(random_seed)},
         { 'name':'zero_sum_child_rate',  'value':zero_sum_child_rate},
         { 'name':'ode_step_size',        'value':str(ode_step_size)},
         { 'name':'age_avg_split',        'value':age_avg_split},
