@@ -135,6 +135,14 @@ zero_sum_child_rate = ''
 # solutions of the ODE.
 ode_step_size = 5.0
 #
+# compress_interval_list
+# A list with two elements containing the age and time interval sizes
+# that get compressed. If a data table age or time interval is less than
+# or equal ites compression interval, the midpoint value of the intrval
+# is used for its computation. This reduced the amount of computation
+# (and memory) for the corresponding data point.
+compress_interval_list = [ 10.0, 10.0 ]
+#
 # age_avg_split_list
 # An extra list of ages at which to split the interal and ODE approximation.
 # It is usually used to get better resolution around age zero.
@@ -365,6 +373,7 @@ def setup_function() :
         zero_sum_child_rate     = zero_sum_child_rate,
         ode_step_size           = ode_step_size,
         age_avg_split_list      = age_avg_split_list,
+        compress_interval_list  = compress_interval_list,
     )
     #
     # write_all_option_table

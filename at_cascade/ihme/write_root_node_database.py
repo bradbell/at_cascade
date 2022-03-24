@@ -37,6 +37,7 @@ def write_root_node_database(
     zero_sum_child_rate     = None,
     ode_step_size           = None,
     age_avg_split_list      = None,
+    compress_interval_list  = None,
 ) :
     assert type(result_dir) == str
     assert type(root_node_database) == str
@@ -53,6 +54,9 @@ def write_root_node_database(
     assert type(zero_sum_child_rate) == str
     assert type(ode_step_size) == float
     assert type(age_avg_split_list) == list
+    assert type(compress_interval_list) == list
+    #
+    assert len(compress_interval_list) == 2
     #
     print( 'Creating ' + root_node_database )
     #
@@ -325,6 +329,14 @@ def write_root_node_database(
         else :
             age_avg_split += f' {age}'
     #
+    # compress_interval
+    compress_interval = None
+    for size in compress_interval_list :
+        if compress_interval == None :
+            compress_interval = str(size)
+        else :
+            compress_interval += f' {size}'
+    #
     # zero_sum_child_rate
     if len( zero_sum_child_rate.split() ) == 0 :
         zero_sum_child_rate = None
@@ -340,6 +352,7 @@ def write_root_node_database(
         { 'name':'zero_sum_child_rate',  'value':zero_sum_child_rate},
         { 'name':'ode_step_size',        'value':str(ode_step_size)},
         { 'name':'age_avg_split',        'value':age_avg_split},
+        { 'name':'compress_interval',    'value':compress_interval},
         { 'name':'hold_out_integrand',   'value':hold_out_integrand},
         #
         { 'name':'trace_init_fit_model', 'value':'true'},
