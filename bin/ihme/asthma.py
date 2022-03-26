@@ -82,7 +82,8 @@ shift_prior_std_factor = 2.0
 # max_number_cpu
 # maximum number of processors, if one, run sequentally, otherwise
 # run at most max_number_cpu jobs at at time.
-max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
+# max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
+max_number_cpu = 1
 #
 # shared_memory_prefix
 # No two cascades can run with the same shared memory prefix
@@ -139,7 +140,7 @@ ode_step_size = 5.0
 # or equal ites compression interval, the midpoint value of the intrval
 # is used for its computation. This reduced the amount of computation
 # (and memory) for the corresponding data point.
-compress_interval_list = [ 10.0, 10.0 ]
+compress_interval_list = [ 20.0, 20.0 ]
 #
 # age_avg_split_list
 # An extra list of ages at which to split the interal and ODE approximation.
@@ -183,7 +184,7 @@ prior_table = [
     {   'name'    :    'parent_rate_delta',
         'density' :    'log_gaussian',
         'mean'    :    0.0,
-        'std'     :    0.3,
+        'std'     :    0.2,
         'eta'     :    1e-7,
     },
     {   'name'    :   'child_rate_value',
@@ -194,7 +195,7 @@ prior_table = [
     {   'name'    :   'alpha_value',
         'density' :   'gaussian',
         'mean'    :   0.0,
-        'std'     :   1.0,
+        'std'     :   0.2,
     },
     {   'name'    :   'alpha_zero_value',
         'density' :   'uniform',
@@ -266,7 +267,7 @@ mulcov_list_dict = [
     {   # alpha_iota_sex
         'covariate': 'sex',
         'effected':  'iota',
-        'smooth':    'alpha_zero_smooth',
+        'smooth':    'alpha_smooth',
     },
     {   # alpha_chi_sex
         'covariate': 'sex',
