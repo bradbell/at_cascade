@@ -10,17 +10,10 @@ see http://www.gnu.org/licenses/agpl.txt
 {xsrst_begin wish_list}
 {xsrst_spell
     podman
-    cmake
 }
 
 Wish List for at_cascade
 ########################
-
-Parallel Processing
-*******************
-1.  The shared memory pointers currently use fixed names. This should be
-    changed to use names generated bo the shared memory routine to
-    allow for multiple cascades to run on the same system.
 
 Disk Space
 **********
@@ -33,12 +26,9 @@ data table from a different database.
 
 Packaging
 *********
-1.  Create a pip package for at_cascade; see
-    `python packaging <https://packaging.python.org>`_.
-    In addition, create a docker / podman image that include dismod_at
-    and can run the cascade.
-
-2.  Remove the need for LD_LIBRARY_PATH using the following cmake feature:
-    `Always full RPATH <https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling#always-full-rpath>`_ .
+Create a pip package for at_cascade; see
+`python packaging <https://packaging.python.org>`_.
+In addition, create a docker / podman image that includes dismod_at
+and can run the cascade.
 
 {xsrst_end wish_list}
