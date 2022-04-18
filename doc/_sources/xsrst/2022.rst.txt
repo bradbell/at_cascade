@@ -17,6 +17,30 @@ Release Notes for 2022
    :local:
 
 .. meta::
+   :keywords: 04-18
+
+.. index:: 04-18
+
+.. _2022.04-18:
+
+04-18
+*****
+Remove shared memory and LD_LIBRARY_PATH items from the
+:ref:`wish_list<wish_list>`
+because they have been completed.
+
+.. meta::
+   :keywords: 03-22
+
+.. index:: 03-22
+
+.. _2022.03-22:
+
+03-22
+*****
+Add :ref:`all_option_table.balance_fit` to the all_option table.
+
+.. meta::
    :keywords: 03-14
 
 .. index:: 03-14
@@ -28,7 +52,7 @@ Release Notes for 2022
 1.  Fix a bug in how
     :ref:`avgint_parent_grid<avgint_parent_grid>` and
     :ref:`create_shift_db<create_shift_db>` pass
-    priors down the cascade. To be nore specific, the split reference
+    priors down the cascade. To be more specific, the split reference
     covariate effects were not being handled properly.
 2.  A check of the prior mean for iota was added at the end of
     the :ref:`split_covariate<split_covariate>` example

@@ -17,19 +17,6 @@ Wish List for at_cascade
    :local:
 
 .. meta::
-   :keywords: parallel, processing
-
-.. index:: parallel, processing
-
-.. _wish_list.parallel_processing:
-
-Parallel Processing
-*******************
-1.  The shared memory pointers currently use fixed names. This should be
-    changed to use names generated bo the shared memory routine to
-    allow for multiple cascades to run on the same system.
-
-.. meta::
    :keywords: disk, space
 
 .. index:: disk, space
@@ -54,13 +41,10 @@ data table from a different database.
 
 Packaging
 *********
-1.  Create a pip package for at_cascade; see
-    `python packaging <https://packaging.python.org>`_.
-    In addition, create a docker / podman image that include dismod_at
-    and can run the cascade.
-
-2.  Remove the need for LD_LIBRARY_PATH using the following cmake feature:
-    `Always full RPATH <https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling#always-full-rpath>`_ .
+Create a pip package for at_cascade; see
+`python packaging <https://packaging.python.org>`_.
+In addition, create a docker / podman image that includes dismod_at
+and can run the cascade.
 
 ----
 
