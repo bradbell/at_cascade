@@ -17,9 +17,6 @@
 /sphinx/_static/
 /sphinx/index.rst
 #
-# used to store and install external packages
-/external/
-#
 # used to store ihme databases
 /ihme_db/
 #
@@ -30,6 +27,10 @@
 # python compiled files
 /at_cascade/__pycache__
 /at_cascade/ihme/__pycache__
+#
+# used to build distribution
+/at_cascade.egg-info/
+/dist/
 # --------------------------------
 # file extensions in any directory
 # --------------------------------
