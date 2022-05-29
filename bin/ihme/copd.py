@@ -53,7 +53,7 @@ result_dir = 'ihme_db/DisMod_AT/results/copd'
 root_node_database = f'{result_dir}/root_node.db'
 #
 # no_ode_fit
-# This bool controls whether a no_ode fit is used to initial root level
+# This bool controls whether a no_ode fit is used to initialize root level
 no_ode_fit = True
 #
 # root_node_name
@@ -62,7 +62,7 @@ no_ode_fit = True
 root_node_name      = '1_Global'
 #
 # gamma_factor
-# The gamma for each integrand is this factor times the median
+# gamma for each integrand is this factor times the median
 # of the data for the integrand.
 gamma_factor        = 1e-1
 #
@@ -72,13 +72,13 @@ gamma_factor        = 1e-1
 random_seed = 0
 #
 # perturb_optimization_scale, perturb_optimization_start
-# Amount to randomly move, in log space, the optimization scaling point
+# Amount to randomly move, in log space, the optimization scaling and
 # starting points.
 perturb_optimization_scale = 0.2
 perturb_optimization_start = 0.2
 #
 # shift_prior_std_factor
-# Factor that multipliers standard deviation that is passed down the cascade.
+# Factor that multiplies standard deviation that is passed down the cascade.
 shift_prior_std_factor = 2.0
 #
 # max_number_cpu
@@ -91,7 +91,7 @@ max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
 shared_memory_prefix = "copd"
 #
 # max_fit
-# Maximum number of data rows per integrand to include in a f
+# Maximum number of data rows per integrand to include in a fit
 max_fit             = 250
 #
 # max_abs_effect
@@ -138,8 +138,8 @@ ode_step_size = 5.0
 # compress_interval_list
 # A list with two elements containing the age and time interval sizes
 # that get compressed. If a data table age or time interval is less than
-# or equal ites compression interval, the midpoint value of the intrval
-# is used for its computation. This reduced the amount of computation
+# or equal its compression interval, the midpoint value of the interval
+# is used for its computation. This reduces the amount of computation
 # (and memory) for the corresponding data point.
 compress_interval_list = [ 10.0, 10.0 ]
 #
@@ -196,7 +196,8 @@ prior_table = [
     },
 ]
 #
-# smooh_list_dict
+# smooth_list_dict
+# https://bradbell.github.io/dismod_at/doc/create_database.htm#smooth_table
 smooth_list_dict = [
     {   'name'        : 'parent_chi',
         'value_prior' : 'parent_rate_value',

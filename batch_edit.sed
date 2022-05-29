@@ -12,6 +12,7 @@
 # The files in bin/devel.sh ignore_files are automatically in this list
 # (see devel.sh for pattern matching convention).
 # ignore_files='
+#   xsrst/all_node_db.xsrst
 # '
 # list of files and or directories that are moved to new names
 # move_paths='
@@ -30,5 +31,14 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-/all_cov_reference *= *all_cov_reference,/d
-s|:ref:`create_all_node_db.all_cov_reference`|all_cov_reference|
+s|Factor that multipliers|Factor that multiplies|
+s|used to initial root|used to initialize root|
+s|The gamma for each|gamma for each|
+s|optimization scaling point|optimization scaling and|
+s|in a f$|in a fit|
+s|equal ites compression|equal its compression|
+s|value of the intrval|value of the interval|
+s|This reduced the|This reduces the|
+s|# smooh_list_dict|# smooth_list_dict|
+s|^# smooth_list_dict|&\
+# https://bradbell.github.io/dismod_at/doc/create_database.htm#smooth_table|
