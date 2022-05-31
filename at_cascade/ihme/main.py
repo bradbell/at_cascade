@@ -123,7 +123,7 @@ def main(
         msg += f'       bin/ihme/{program} continue database\n'
         msg +=  'where command is one of the following:\n'
         msg +=  'setup:    create at_cascade input databases from csv files\n'
-        msg +=  'shared:   clear shared memory pointers'
+        msg +=  'shared:   clear shared memory pointers\n'
         msg += f'cleanup:  remove files (not directories) in {result_dir}\n'
         msg +=  'drill:    run cascade from root node to goal nodes\n'
         msg +=  'continue: continue cascade starting at database\n'

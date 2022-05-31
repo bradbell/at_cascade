@@ -105,7 +105,7 @@ def system_command(command, file_stdout) :
         dismod_at.system_command_prc(
             command,
             print_command = True,
-            return_stdout = True,
+            return_stdout = False,
             return_stderr = False,
             file_stdout   = None,
             file_stderr   = None,
@@ -321,11 +321,6 @@ def no_ode_fit(
                     command += balance_fit
                 system_command(command, file_stdout)
     #
-    # max_num_iter_fixed
-    command  = [ 'dismod_at', no_ode_database ]
-    command += [ 'set', 'option', 'max_num_iter_fixed', '100' ]
-    system_command(command, file_stdout)
-    #
     # fit both
     command = [ 'dismod_at', no_ode_database, 'fit', fit_type ]
     system_command(command, file_stdout)
@@ -350,23 +345,16 @@ def no_ode_fit(
     # move c_root_avgint -> avgint
     at_cascade.move_table(connection, 'c_root_avgint', 'avgint')
     #
-    # hold_out_integrand, max_num_iter_fixed
+    # hold_out_integrand
     # restore to original values in option table
     hold_out_integrand = ''
-    max_num_iter_fixed = '100'
     for row in root_table['option'] :
         if row['option_name'] == 'hold_out_integrand' :
             if row['option_value'] is not None :
                 hold_out_integrand = row['option_value']
-        if row['option_name'] == 'max_num_iter_fixed' :
-            max_num_iter_fixed = row['option_value']
     name     = 'hold_out_integrand'
     command  = [ 'dismod_at', root_fit_database ]
     command += [ 'set', 'option', name, hold_out_integrand ]
-    system_command(command, file_stdout)
-    name     = 'max_num_iter_fixed'
-    command  = [ 'dismod_at', root_fit_database ]
-    command += [ 'set', 'option', name, max_num_iter_fixed ]
     system_command(command, file_stdout)
     #
     if max_number_cpu > 1 :

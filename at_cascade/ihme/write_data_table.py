@@ -10,9 +10,44 @@
 import os
 import csv
 import math
+import random
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
-#
+# data_table = set_max_per_integrand(data_table, max_per_integrand)
+def set_max_per_integrand(data_table, max_per_integrand):
+    # This can be used to test if dismod_at is using to much memory by storing
+    # the entire data table.
+    #
+    # integrand_set
+    integrand_set = set()
+    for row in data_table :
+        integrand_set.add( row['integrand_name'] )
+    #
+    # integrand_dict
+    integrand_dict = dict()
+    for integrand_name in integrand_set :
+        integrand_dict[integrand_name] = list()
+    #
+    # integrand_dict
+    for (row_id, row) in enumerate(data_table) :
+        integrand_name = row['integrand_name']
+        integrand_dict[integrand_name].append( row_id )
+    #
+    # integrand_dict
+    for integrand_name in integrand_set :
+        population = integrand_dict[integrand_name]
+        n_sample   = min(len(population),  max_per_integrand)
+        sample     = random.sample(population, n_sample)
+        integrand_dict[integrand_name] = sample
+    #
+    # result
+    result = list()
+    for integrand_name in integrand_set :
+        for row_id in integrand_dict[integrand_name] :
+            result.append( data_table[row_id] )
+    #
+    return result
+# -----------------------------------------------------------------------------
 # data_table = get_data_table(data_inp_file)
 def get_data_table(data_inp_file) :
     #
@@ -99,7 +134,6 @@ def get_data_table(data_inp_file) :
     file_ptr.close()
     return data_table
 # -----------------------------------------------------------------------------
-#
 # csmr_table = get_csmr_table(csmr_inp_file, age_group_id_dict)
 def get_csmr_table(csmr_inp_file, age_group_id_dict) :
     #
@@ -171,7 +205,6 @@ def get_csmr_table(csmr_inp_file, age_group_id_dict) :
     file_ptr.close()
     return csmr_table
 # -----------------------------------------------------------------------------
-#
 # write_data_table(
 #   data_inp_file, csmr_inp_file, covariate_csv_file_dict, data_table_file
 # )
@@ -216,6 +249,10 @@ def write_data_table(
         # data_table
         assert set( data_table[0].keys() ) == set( csmr_table[0].keys() )
         data_table += csmr_table
+    #
+    # This does not seem to help (see comments at top of set_max_per_integrand)
+    # max_per_integrand = 2000
+    # data_table = set_max_per_integrand(data_table, max_per_integrand)
     #
     # location_id2node_id
     file_ptr            = open(node_table_file)
