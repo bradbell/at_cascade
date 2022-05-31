@@ -38,6 +38,9 @@ def write_root_node_database(
     ode_step_size           = None,
     age_avg_split_list      = None,
     compress_interval_list  = None,
+    quasi_fixed             = None,
+    tolerance_fixed         = None,
+    max_num_iter_fixed      = None,
 ) :
     assert type(result_dir) == str
     assert type(root_node_database) == str
@@ -55,8 +58,10 @@ def write_root_node_database(
     assert type(ode_step_size) == float
     assert type(age_avg_split_list) == list
     assert type(compress_interval_list) == list
-    #
     assert len(compress_interval_list) == 2
+    assert type(quasi_fixed) == bool
+    assert type(tolerance_fixed) == float
+    assert type(max_num_iter_fixed) == int
     #
     print( 'Creating ' + root_node_database )
     #
@@ -346,6 +351,9 @@ def write_root_node_database(
         hold_out_integrand = None
     #
     # option_table
+    quasi_fixed        = str(quasi_fixed).lower()
+    tolerance_fixed    = str(tolerance_fixed)
+    max_num_iter_fixed = str(max_num_iter_fixed)
     option_table = [
         { 'name':'parent_node_name',     'value':root_node_name},
         { 'name':'rate_case',            'value':rate_case},
@@ -359,9 +367,9 @@ def write_root_node_database(
         { 'name':'data_extra_columns',   'value':'c_seq c_nid'},
         { 'name':'meas_noise_effect',    'value':'add_std_scale_none'},
         #
-        { 'name':'quasi_fixed',                  'value':'false' },
-        { 'name':'tolerance_fixed',              'value':'1e-10'},
-        { 'name':'max_num_iter_fixed',           'value':'40'},
+        { 'name':'quasi_fixed',                  'value':quasi_fixed},
+        { 'name':'tolerance_fixed',              'value':tolerance_fixed},
+        { 'name':'max_num_iter_fixed',           'value':max_num_iter_fixed},
         { 'name':'print_level_fixed',            'value':'5'},
         { 'name':'accept_after_max_steps_fixed', 'value':'10'},
     ]

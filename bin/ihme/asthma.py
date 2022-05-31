@@ -75,6 +75,25 @@ random_seed = 0
 perturb_optimization_scale = 0.2
 perturb_optimization_start = 0.2
 #
+# quasi_fixed
+# if quasi_fixed is True (False),
+# use a quasi-Newton (Newton) method for optimizing the fixed effects
+quasi_fixed = True
+#
+# tolerance_fixed
+# convergence criteria in the size of the derivative relative to the
+# original derivative at the perturbed scalling point. This should work
+# with much smaller values when quasi_fixed is False.
+tolerance_fixed = 1e-4
+#
+# max_num_iter_fixed
+# This is the maximum number of Ipopt iterations to try before giving
+# up on satisfying the convergence tolerance. For example, 100 (40) if
+# quasi_fixed is True (False). Note the each quasi-Newton iteration takes less
+# work than a Newton iteration.
+max_num_iter_fixed = 100
+#
+#
 # shift_prior_std_factor
 # Factor that multiplies standard deviation that is passed down the cascade.
 shift_prior_std_factor = 2.0
@@ -393,6 +412,9 @@ def setup_function() :
         ode_step_size           = ode_step_size,
         age_avg_split_list      = age_avg_split_list,
         compress_interval_list  = compress_interval_list,
+        quasi_fixed             = quasi_fixed,
+        tolerance_fixed         = tolerance_fixed,
+        max_num_iter_fixed      = max_num_iter_fixed,
     )
     #
     # write_all_option_table
