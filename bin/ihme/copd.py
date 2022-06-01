@@ -86,7 +86,7 @@ quasi_fixed = False
 # convergence criteria in the size of the derivative relative to the
 # original derivative at the perturbed scalling point. This should work
 # with much smaller values when quasi_fixed is False.
-tolerance_fixed = 1e-10
+tolerance_fixed = 1e-8
 #
 # max_num_iter_fixed
 # This is the maximum number of Ipopt iterations to try before giving
@@ -347,6 +347,7 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
+fit_goal_set = { '1_Global' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understanding this program
 # ----------------------------------------------------------------------------
