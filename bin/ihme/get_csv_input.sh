@@ -133,6 +133,13 @@ case $disease in
     '
     ;;
 
+    diabetes)
+    covariate_csv_file_list='
+    gbd2019_ldi_log_transformed_covariate.csv
+    gbd2019_obesity_prevalence_covariate.csv
+    '
+    ;;
+
     *)
     echo 'get_csv_input.sh: program error'
     exit 1
@@ -164,6 +171,12 @@ case $disease in
     data_csv_file_list='
     gbd2019_copd_crosswalk_5528.csv
     gbd2019_copd_csmr.csv
+    '
+    ;;
+
+    diabetes)
+    data_csv_file_list='
+    gbd2019_diabetes_crosswalk_12437.csv
     '
     ;;
 
