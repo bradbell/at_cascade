@@ -51,7 +51,7 @@ csmr_inp_file   = \
     f'{data_dir}/gbd2019_neural_tube_disorders_csmr.csv'
 #
 # result_dir
-result_dir = 'ihme_db/DisMod_AT/results/neural_tube'
+result_dir = 'ihme_db/DisMod_AT/results/neural_tube_disorders'
 #
 # root_node_database
 root_node_database = f'{result_dir}/root_node.db'
@@ -84,20 +84,20 @@ perturb_optimization_start = 0.2
 # quasi_fixed
 # if quasi_fixed is True (False),
 # use a quasi-Newton (Newton) method for optimizing the fixed effects
-quasi_fixed = False
+quasi_fixed = True
 #
 # tolerance_fixed
 # convergence criteria in the size of the derivative relative to the
 # original derivative at the perturbed scalling point. This should work
 # with much smaller values when quasi_fixed is False.
-tolerance_fixed = 1e-10
+tolerance_fixed = 1e-4
 #
 # max_num_iter_fixed
 # This is the maximum number of Ipopt iterations to try before giving
 # up on satisfying the convergence tolerance. For example, 100 (40) if
 # quasi_fixed is True (False). Note the each quasi-Newton iteration takes less
 # work than a Newton iteration.
-max_num_iter_fixed = 40
+max_num_iter_fixed = 100
 #
 # shift_prior_std_factor
 # Factor that multiplies standard deviation that is passed down the cascade.
@@ -110,7 +110,7 @@ max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
 #
 # shared_memory_prefix
 # No two cascades can run with the same shared memory prefix
-shared_memory_prefix = "neural_tube"
+shared_memory_prefix = "neural_tube_disorders"
 #
 # max_fit
 # Maximum number of data rows per integrand to include in a fit
@@ -309,7 +309,7 @@ mulcov_freeze_list = [
 # fit_goal_set
 # Name of the nodes that we are drilling to (must be below root_node).
 # You can change this setting and then run
-#   bin/ihme/neural_tube.py continue database
+#   bin/ihme/neural_tube_disorders.py continue database
 # fit_goal_set = { '1_Global' }
 # fit_goal_set = { '64_High-income' }
 # fit_goal_set = { '44758_Tower_Hamlets', '527_California' }
@@ -362,6 +362,7 @@ fit_goal_set = {
     '218_Togo',
     '25329_Edo',
 }
+fit_goal_set = { '1_Global' }
 # ----------------------------------------------------------------------------
 # End settings that can be changed without understanding this program
 # ----------------------------------------------------------------------------
@@ -455,4 +456,4 @@ if __name__ == '__main__' :
         fit_type_list           = fit_type_list,
         random_seed             = random_seed,
     )
-    print('neural_tube.py: OK')
+    print('neural_tube_disorders.py: OK')

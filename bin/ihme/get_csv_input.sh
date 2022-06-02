@@ -23,7 +23,7 @@ fi
 #
 # ok
 ok=no
-disease_list='asthma copd diabetes neural_tube'
+disease_list='asthma copd diabetes neural_tube_disorders'
 for disease in $disease_list
 do
     if [ "$1" == "$disease" ]
@@ -140,6 +140,14 @@ case $disease in
     '
     ;;
 
+    neural_tube_disorders)
+    covariate_csv_file_list='
+    gbd2019_folic_acid_covariate.csv
+    gbd2019_composite_fortification_standard_and_folic_acid_inclusion_covariate.csv
+    gbd2019_haqi_covariate.csv
+    '
+    ;;
+
     *)
     echo 'get_csv_input.sh: program error'
     exit 1
@@ -154,6 +162,7 @@ done
 # -----------------------------------------------------------------------------
 # disease specific data files
 #
+# local_dir, remote_dir
 local_dir="$local_at/testing/$disease/data"
 remote_dir="$remote_at/testing/$disease/data"
 #
@@ -177,6 +186,13 @@ case $disease in
     diabetes)
     data_csv_file_list='
     gbd2019_diabetes_crosswalk_12437.csv
+    '
+    ;;
+
+    neural_tube_disorders)
+    data_csv_file_list='
+    gbd2019_neural_tube_disorders_crosswalk_10061.csv
+    gbd2019_neural_tube_disorders_csmr.csv
     '
     ;;
 
