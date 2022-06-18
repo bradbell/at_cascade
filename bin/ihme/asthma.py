@@ -106,7 +106,8 @@ max_number_cpu = 1
 #
 # shared_memory_prefix
 # No two cascades can run with the same shared memory prefix
-shared_memory_prefix = "asthma"
+user                 = os.environ.get('USER').replace(' ', '_')
+shared_memory_prefix = user + "_asthma"
 #
 # max_fit
 # Maximum number of data rows per integrand to include in a fit

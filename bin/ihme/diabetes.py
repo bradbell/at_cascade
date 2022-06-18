@@ -104,7 +104,8 @@ max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
 #
 # shared_memory_prefix
 # No two cascades can run with the same shared memory prefix
-shared_memory_prefix = "diabetes"
+user                 = os.environ.get('USER').replace(' ', '_')
+shared_memory_prefix = user + "_diabetes"
 #
 # max_fit
 # Maximum number of data rows per integrand to include in a fit
