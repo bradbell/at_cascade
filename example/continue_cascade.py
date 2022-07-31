@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin_parent continue_cascade_xam}
-{xsrst_spell
+{xrst_begin_parent continue_cascade_xam}
+{xrst_spell
     dage
     dtime
 }
@@ -21,9 +21,9 @@ For this example everything is constant in age and time.
 Nodes
 *****
 The following is a diagram of the node tree for this example.
-The :ref:`glossary.root_node` is n0,
-the first :ref:`glossary.fit_goal_set` is {n3, n4, n2},
-the second :ref:`glossary.fit_goal_set` is {n5, n6},
+The :ref:`glossary@root_node` is n0,
+the first :ref:`glossary@fit_goal_set` is {n3, n4, n2},
+the second :ref:`glossary@fit_goal_set` is {n5, n6},
 and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
@@ -34,7 +34,7 @@ and the leaf nodes are {n3, n4, n5, n6}::
 
 fit_goal_set
 ============
-{xsrst_file
+{xrst_file
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -44,22 +44,22 @@ using the second fit_goal_set.
 
 Parallel Processing
 *******************
-This example sets :ref:`all_option_table.max_number_cpu`
+This example sets :ref:`all_option_table@max_number_cpu`
 as an example of parallel processing.
 The results for nodes n3 and n4 are computed in parallel
 during the call to :ref:`cascade_root_node<cascade_root_node>`.
 The results for nodes n5 and n6 are computed in parallel
 during the call to :ref:`continue_cascade<continue_cascade>`.
-{xsrst_file
+{xrst_file
     # BEGIN all_option
     # END all_option
 }
-see :ref:`create_all_node_db.all_option`.
+see :ref:`create_all_node_db@all_option`.
 
 Rates
 *****
 The only non-zero dismod_at rate for this example is
-:ref:`glossary.iota`.
+:ref:`glossary@iota`.
 
 Covariate
 *********
@@ -74,14 +74,14 @@ For *rate* equal to iota,
 this is the true value for *rate*
 in node *n* at age *a*, time *t*, and covariate values *c*.
 The values *a*, *t*. *c*, are not used by this function for this example.
-{xsrst_file
+{xrst_file
     # BEGIN rate_true
     # END rate_true
 }
 
 y_i
 ===
-The only simulated integrand for this example is :ref:`glossary.sincidence`
+The only simulated integrand for this example is :ref:`glossary@sincidence`
 which is a direct measurement of iota.
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
@@ -98,13 +98,13 @@ of how good the fit is for the nodes in the fit goal sets.
 Parent Rate Smoothing
 *********************
 This is the iota smoothing used for the fit_node.
-There are no :ref:`glossary.dage` or :ref:`glossary.dtime`
+There are no :ref:`glossary@dage` or :ref:`glossary@dtime`
 priors because there is only one age and one time point.
 
 Value Prior
 ===========
 The following is the value prior used for the root_node
-{xsrst_file
+{xrst_file
     # BEGIN parent_value_prior
     # END parent_value_prior
 }
@@ -122,7 +122,7 @@ priors because there is only one age and one time point in this smoothing.
 Value Prior
 ===========
 The following is the value prior used for the children of the fit_node:
-{xsrst_file
+{xrst_file
     # BEGIN child_value_prior
     # END child_value_prior
 }
@@ -130,25 +130,25 @@ The following is the value prior used for the children of the fit_node:
 Checking The Fit
 ****************
 The results of the fit are checked by check_cascade_node
-using the :ref:`check_cascade_node.avgint_table`
+using the :ref:`check_cascade_node@avgint_table`
 that was created by the root_node_db routine.
 The node_id for each row is replaced by the node_id for the
 fit being checked.
 routine uses these tables to check that fit against the truth.
 
-{xsrst_end continue_cascade_xam}
+{xrst_end continue_cascade_xam}
 ------------------------------------------------------------------------------
-{xsrst_begin continue_cascade_py}
+{xrst_begin continue_cascade_py}
 
 continue_cascade: Python Source Code
 ####################################
 
-{xsrst_file
+{xrst_file
     BEGIN source code
     END source code
 }
 
-{xsrst_end continue_cascade_py}
+{xrst_end continue_cascade_py}
 '''
 # BEGIN source code
 # ----------------------------------------------------------------------------

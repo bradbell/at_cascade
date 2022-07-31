@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin_parent prevalence2iota}
-{xsrst_spell
+{xrst_begin_parent prevalence2iota}
+{xrst_spell
     avg
     dtime
     dage
@@ -23,8 +23,8 @@ functions below do not depend on time.
 Nodes
 *****
 The following is a diagram of the node tree for this example.
-The :ref:`glossary.root_node` is n0,
-the :ref:`glossary.fit_goal_set` is {n1, n5, n6},
+The :ref:`glossary@root_node` is n0,
+the :ref:`glossary@fit_goal_set` is {n1, n5, n6},
 and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
@@ -35,7 +35,7 @@ and the leaf nodes are {n3, n4, n5, n6}::
 
 fit_goal_set
 ============
-{xsrst_file
+{xrst_file
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -43,7 +43,7 @@ fit_goal_set
 Rates
 *****
 The only non-zero dismod_at rates for this example are
-:ref:`glossary.iota` and :ref:`glossary.omega`.
+:ref:`glossary@iota` and :ref:`glossary@omega`.
 We use *iota(a, n, I)* to denote the value for iota
 as a function of age *a*, node number *n*, and income *I*.
 We use *omega(a, n)* to denote the value for omega
@@ -54,14 +54,14 @@ Covariate
 *********
 There are two covariates for this example is income and *one*.
 The reference value for income is the average income corresponding
-to the :ref:`glossary.fit_node`.
+to the :ref:`glossary@fit_node`.
 The *one* covariate is always equal to 1 and its reference is always zero.
 
 r_n
 ===
 We use *r_n* for the reference value of income at node *n*.
 The code below sets this reference using the name avg_income:
-{xsrst_file
+{xrst_file
     # BEGIN avg_income
     # END avg_income
 }
@@ -69,11 +69,11 @@ The code below sets this reference using the name avg_income:
 alpha
 =====
 We use *alpha*
-for the :ref:`glossary.rate_value` covariate multiplier
+for the :ref:`glossary@rate_value` covariate multiplier
 which multiplies income.
 This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
-{xsrst_file
+{xrst_file
     # BEGIN alpha_true
     # END alpha_true
 }
@@ -81,7 +81,7 @@ The true value for *alpha* (used which simulating the data) is
 gamma
 =====
 We use *gamma*
-for the :ref:`glossary.meas_noise` covariate multiplier
+for the :ref:`glossary@meas_noise` covariate multiplier
 which multiplies *one*.
 This multiplier adds to the nose level for prevalence in log space,
 because the density for the prevalence data is log Gaussian.
@@ -97,7 +97,7 @@ s_n
 ===
 We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
-{xsrst_file
+{xrst_file
     # BEGIN sum_random
     # END sum_random
 }
@@ -110,7 +110,7 @@ Random Seed
 The random seed can be used to reproduce results.
 If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
-{xsrst_file
+{xrst_file
     # BEGIN random_seed
     # END random_seed
 }
@@ -123,14 +123,14 @@ in node *n* at age *a*, time *t*, and covariate values *c*.
 The covariate values are a list in the
 same order as the covariate table.
 The values *t* and *c[1]* are not used by this function for this example.
-{xsrst_file
+{xrst_file
     # BEGIN rate_true
     # END rate_true
 }
 
 y_i
 ===
-The only simulated integrand for this example is :ref:`glossary.prevalence`.
+The only simulated integrand for this example is :ref:`glossary@prevalence`.
 This data is simulated without any noise
 but it is modeled as having noise.
 
@@ -144,7 +144,7 @@ of how good the fit is for the nodes in the fit_goal_set.
 a_i
 ===
 For each leaf node, data is generated on the following *age_grid*:
-{xsrst_file
+{xrst_file
     # BEGIN age_grid
     # END age_grid
 }
@@ -153,7 +153,7 @@ I_i
 ===
 For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
-{xsrst_file
+{xrst_file
     # BEGIN income_grid
     # END income_grid
 }
@@ -173,16 +173,16 @@ iota
 This is the smoothing used in the fit_node model for iota.
 Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
-There are no :ref:`glossary.dtime` priors because there is only one time point.
+There are no :ref:`glossary@dtime` priors because there is only one time point.
 
 Value Prior
 ===========
 The following is the value prior used for the root_node
-{xsrst_file
+{xrst_file
     # BEGIN iota_50
     # END iota_50
 }
-{xsrst_file
+{xrst_file
     # BEGIN parent_value_prior
     # END parent_value_prior
 }
@@ -193,7 +193,7 @@ routine replaces them for other nodes.
 dage Prior
 ==========
 The following is the dage prior used for the fit_node:
-{xsrst_file
+{xrst_file
     # BEGIN parent_dage_prior
     # END parent_dage_prior
 }
@@ -202,13 +202,13 @@ Child Rate Smoothing
 ********************
 This is the smoothing used for the
 random effect for each child of the fit_node.
-There are no :ref:`glossary.dage` or dtime
+There are no :ref:`glossary@dage` or dtime
 priors because there is only one age and one time point in this smoothing.
 
 Value Prior
 ===========
 The following is the value prior used for the children of the fit_node:
-{xsrst_file
+{xrst_file
     # BEGIN child_value_prior
     # END child_value_prior
 }
@@ -222,7 +222,7 @@ so it does not have dage or dtime priors.
 Value Prior
 ===========
 The following is the value prior used for this smoothing:
-{xsrst_file
+{xrst_file
     # BEGIN alpha_value_prior
     # END alpha_value_prior
 }
@@ -237,7 +237,7 @@ There is only one age and one time point in this smoothing
 so it does not have dage or dtime priors.
 In addition, the value prior has upper and lower limits equal
 to the constant returned by the lambda function in this smoothing:
-{xsrst_file
+{xrst_file
     # BEGIN gamma_smooth
     # END gamma_smooth
 }
@@ -245,25 +245,25 @@ to the constant returned by the lambda function in this smoothing:
 Checking The Fit
 ****************
 The results of the fit are checked by check_cascade_node
-using the :ref:`check_cascade_node.avgint_table`
+using the :ref:`check_cascade_node@avgint_table`
 that was created by the root_node_db routine.
 The node_id for each row is replaced by the node_id for the
 fit being checked.
 routine uses these tables to check that fit against the truth.
 
-{xsrst_end prevalence2iota}
+{xrst_end prevalence2iota}
 ------------------------------------------------------------------------------
-{xsrst_begin prevalence2iota_py}
+{xrst_begin prevalence2iota_py}
 
 prevalence2iota: Python Source Code
 ###################################
 
-{xsrst_file
+{xrst_file
     BEGIN prevalence2iota source code
     END prevalence2iota source code
 }
 
-{xsrst_end prevalence2iota_py}
+{xrst_end prevalence2iota_py}
 '''
 # BEGIN prevalence2iota source code
 # ----------------------------------------------------------------------------

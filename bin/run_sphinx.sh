@@ -1,7 +1,7 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -33,18 +33,18 @@ else
     fi
 fi
 # -----------------------------------------------------------------------------
-echo "xsrst.py html doc.xsrst sphinx spelling keyword $line_increment"
-if ! xsrst.py html doc.xsrst sphinx spelling keyword $line_increment >& run_sphinx.$$
+echo "xrst html doc.xrst sphinx $line_increment"
+if ! xrst html doc.xrst sphinx $line_increment >& run_sphinx.$$
 then
     cat run_sphinx.$$
-    echo 'bin/run_sphinx: aboring due to xsrst errors above'
+    echo 'bin/run_sphinx: aboring due to xrst errors above'
     rm run_sphinx.$$
     exit 1
 fi
 if grep '^warning:' run_sphinx.$$ > /dev/null
 then
     cat run_sphinx.$$
-    echo 'bin/run_sphinx: aboring due to xsrst warnings above'
+    echo 'bin/run_sphinx: aboring due to xrst warnings above'
     rm run_sphinx.$$
     exit 1
 fi

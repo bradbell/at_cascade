@@ -8,14 +8,14 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin get_cov_reference}}
+{xrst_begin get_cov_reference}}
 
 Get Covariate Reference Values
 ##############################
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -23,7 +23,7 @@ Syntax
 fit_node_database
 *****************
 This argument can't be ``None`` and
-is an :ref:`glossary.input_node_database`.
+is an :ref:`glossary@input_node_database`.
 Only the following tables in this database are used:
 option, data, node, and covariate.
 None of the tables are modified.
@@ -48,8 +48,8 @@ Only the :ref:`all_option_table` and :ref:`split_reference_table` are used.
 
 all_option Table
 ================
-The :ref:`all_option_table.split_covariate_name` and
-:ref:`all_option_table.absolute_covariates` rows of this table
+The :ref:`all_option_table@split_covariate_name` and
+:ref:`all_option_table@absolute_covariates` rows of this table
 (if they exist) are the only rows of this table that are used.
 
 shift_node_id
@@ -59,18 +59,18 @@ correspond to.
 
 split_reference_id
 ******************
-This is the :ref:`split_reference_table.split_reference_id` that the
+This is the :ref:`split_reference_table@split_reference_id` that the
 covariate reference values correspond to.
 
 cov_reference_list
 ******************
 1.  The return value is a ``list`` with length equal to the
     length of the covariate table.
-2.  The :ref:`all_option_table.absolute_covariates` have the same
+2.  The :ref:`all_option_table@absolute_covariates` have the same
     reference value as in the *fit_node_database* covariate table.
 3.  The splitting covariate has reference value corresponding to
     *split_reference_id* in the split_reference table.
-4.  The :ref:`glossary.relative_covariate` reference values are equal to
+4.  The :ref:`glossary@relative_covariate` reference values are equal to
     the average of the corresponding covariates in the data table.
 5.  Only rows of the data table that get included when *shift_node_id*
     is the parent node are included in the average.
@@ -82,7 +82,7 @@ cov_reference_list
 
 
 
-{xsrst_end get_cov_reference}}
+{xrst_end get_cov_reference}}
 '''
 import at_cascade
 import dismod_at

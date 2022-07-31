@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin_parent remission}
-{xsrst_spell
+{xrst_begin_parent remission}
+{xrst_spell
     dtime
     dage
 }
@@ -22,8 +22,8 @@ functions below do not depend on time.
 Nodes
 *****
 The following is a diagram of the node tree for this example.
-The :ref:`glossary.root_node` is n0,
-the :ref:`glossary.fit_goal_set` is equal to the leaf set
+The :ref:`glossary@root_node` is n0,
+the :ref:`glossary@fit_goal_set` is equal to the leaf set
 {n3, n4, n5, n6}::
 
                 n0
@@ -34,7 +34,7 @@ the :ref:`glossary.fit_goal_set` is equal to the leaf set
 
 fit_goal_set
 ============
-{xsrst_file
+{xrst_file
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -42,7 +42,7 @@ fit_goal_set
 Rates
 *****
 The non-zero dismod_at rates for this example are
-:ref:`glossary.iota`, :ref:`glossary.rho`, and :ref:`glossary.omega`.
+:ref:`glossary@iota`, :ref:`glossary@rho`, and :ref:`glossary@omega`.
 For *rate* equal to iota, rho, and omega,
 we use *rate(a, n)* to denote the value for *rate*
 as a function of age *a* and node *n*.
@@ -62,7 +62,7 @@ s_n
 ===
 We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
-{xsrst_file
+{xrst_file
     # BEGIN sum_random
     # END sum_random
 }
@@ -75,7 +75,7 @@ Random Seed
 The random seed can be used to reproduce results.
 If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
-{xsrst_file
+{xrst_file
     # BEGIN random_seed
     # END random_seed
 }
@@ -86,7 +86,7 @@ For *rate* equal to iota, rho, omega,
 this is the true value for *rate*
 in node *n* at age *a*, time *t*, and covariate values *c*.
 The time and covariate list are not used.
-{xsrst_file
+{xrst_file
     # BEGIN rate_true
     # END rate_true
 }
@@ -94,7 +94,7 @@ The time and covariate list are not used.
 y_i
 ===
 The simulated integrand for this example are
-:ref:`glossary.Sincidence`, and :ref:`glossary.prevalence`.
+:ref:`glossary@Sincidence`, and :ref:`glossary@prevalence`.
 The data is simulated without any noise
 but it is modeled as having noise.
 
@@ -108,7 +108,7 @@ of how good the fit is for the nodes in the fit_goal_set.
 a_i
 ===
 For each leaf node, data is generated on the following *age_grid*:
-{xsrst_file
+{xrst_file
     # BEGIN age_grid
     # END age_grid
 }
@@ -126,12 +126,12 @@ iota
 This is the smoothing used in the fit_node model for iota.
 Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
-There are no :ref:`glossary.dtime` priors because there is only one time point.
+There are no :ref:`glossary@dtime` priors because there is only one time point.
 
 Parent Rate Priors
 ==================
 The following is the value and dage priors used for the root_node
-{xsrst_file
+{xrst_file
     # BEGIN parent_prior
     # END parent_prior
 }
@@ -143,13 +143,13 @@ Child Rate Smoothing
 ********************
 This is the smoothing used for the
 random effect for each child of the fit_node.
-There are no :ref:`glossary.dage` or dtime
+There are no :ref:`glossary@dage` or dtime
 priors because there is only one age and one time point in this smoothing.
 
 Value Prior
 ===========
 The following is the value prior used for the children of the fit_node:
-{xsrst_file
+{xrst_file
     # BEGIN child_value_prior
     # END child_value_prior
 }
@@ -157,25 +157,25 @@ The following is the value prior used for the children of the fit_node:
 Checking The Fit
 ****************
 The results of the fit are checked by check_cascade_node
-using the :ref:`check_cascade_node.avgint_table`
+using the :ref:`check_cascade_node@avgint_table`
 that was created by the root_node_db routine.
 The node_id for each row is replaced by the node_id for the
 fit being checked.
 routine uses these tables to check that fit against the truth.
 
-{xsrst_end remission}
+{xrst_end remission}
 ------------------------------------------------------------------------------
-{xsrst_begin remission_py}
+{xrst_begin remission_py}
 
 remission: Python Source Code
 ###################################
 
-{xsrst_file
+{xrst_file
     BEGIN remission source code
     END remission source code
 }
 
-{xsrst_end remission_py}
+{xrst_end remission_py}
 '''
 # BEGIN remission source code
 # ----------------------------------------------------------------------------

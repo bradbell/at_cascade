@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -8,14 +8,14 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin get_fit_integrand}
+{xrst_begin get_fit_integrand}
 
 Determine the Set of Integrands in Data Table
 #############################################
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -24,7 +24,7 @@ Syntax
 fit_node_database
 *****************
 is a python string specifying the location of a
-:ref:`glossary.fit_node_database`
+:ref:`glossary@fit_node_database`
 relative to the current working directory.
 Note that only the data table in this database is used and
 it is the same data table as the data table in the root_node_database.
@@ -37,7 +37,7 @@ that appear in the data table in the *fit_node_database*.
 Furthermore there is a row in the data table
 where each such integrand_id is not held out.
 
-{xsrst_end get_fit_integrand}
+{xrst_end get_fit_integrand}
 '''
 # ----------------------------------------------------------------------------
 import sys

@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin run_one_job}
-{xsrst_spell
+{xrst_begin run_one_job}
+{xrst_spell
     dir
     var
     obj
@@ -20,7 +20,7 @@ Run One Job
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -31,12 +31,12 @@ The only argument that can be None is *trace_file_obj*.
 
 job_table
 *********
-This is a :ref:`create_job_table.job_table` containing the jobs
-necessary to fit the :ref:`glossary.fit_goal_set`.
+This is a :ref:`create_job_table@job_table` containing the jobs
+necessary to fit the :ref:`glossary@fit_goal_set`.
 
 run_job_id
 **********
-This is the :ref:`create_job_table.job_table.job_id`
+This is the :ref:`create_job_table@job_table@job_id`
 for the job that is run.
 
 all_node_database
@@ -62,7 +62,7 @@ of fit that dismod_at will do.
 first_fit
 *********
 If *first_fit* is True, this is assumed to be an
-:ref:`glossary.input_node_database`.
+:ref:`glossary@input_node_database`.
 Otherwise, it is assumed that this
 routine has previously been called with *first_fit* equal to True.
 
@@ -74,15 +74,15 @@ for this job.
 
 fit_node_database
 *****************
-The :ref:`glossary.fit_node_database` for this fit is
+The :ref:`glossary@fit_node_database` for this fit is
 *fit_node_dir*\ ``/dismod.db`` where *fit_node_dir*
-is the :ref:`get_database_dir.database_dir` returned by
+is the :ref:`get_database_dir@database_dir` returned by
 get_database_dir for the fit node and split_reference_id corresponding
 to *run_job_id*.
 
 Upon Input
 ==========
-On input, *fit_node_database* is an :ref:`glossary.input_node_database`.
+On input, *fit_node_database* is an :ref:`glossary@input_node_database`.
 
 fit_var
 =======
@@ -101,7 +101,7 @@ If *fit_type* is 'both', the previous contents of the log are removed.
 Upon return,
 a summary of the operations preformed on dismod.db is added to the log table.
 
-{xsrst_end run_one_job}
+{xrst_end run_one_job}
 '''
 # ----------------------------------------------------------------------------
 import io

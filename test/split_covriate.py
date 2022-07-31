@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin_parent split_covariate}
-{xsrst_spell
+{xrst_begin_parent split_covariate}
+{xrst_spell
     dage
     dtime
 }
@@ -22,8 +22,8 @@ To simplify the example everything is constant w.r.t. age and time.
 Nodes
 *****
 The following is a diagram of the node tree for this example.
-The :ref:`glossary.root_node` is n0,
-the :ref:`glossary.fit_goal_set`
+The :ref:`glossary@root_node` is n0,
+the :ref:`glossary@fit_goal_set`
 and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
@@ -34,7 +34,7 @@ and the leaf nodes are {n3, n4, n5, n6}::
 
 fit_goal_set
 ============
-{xsrst_file
+{xrst_file
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -42,22 +42,22 @@ fit_goal_set
 Rates
 *****
 The only non-zero dismod_at rates for this example are
-:ref:`glossary.iota`.and :ref:`glossary.omega`.
+:ref:`glossary@iota`.and :ref:`glossary@omega`.
 
 Splitting Covariate
 *******************
 This cascade is set up to split by the sex covariate at level zero:
-{xsrst_file
+{xrst_file
     # BEGIN all_option_table
     # END all_option_table
 }
 The :ref:`split_reference_table` for this example is:
-{xsrst_file
+{xrst_file
     # BEGIN split_reference_table
     # END split_reference_table
 }
 The :ref:`node_split_table` for this example is
-{xsrst_file
+{xrst_file
     # BEGIN node_split_table
     # END node_split_table
 }
@@ -72,7 +72,7 @@ The cascade computation tree is::
      n3    n4        n5    n6      n3    n4        n5    n6
 
 The sex reference value for the root node (n0) corresponds to both sexes:
-{xsrst_file
+{xrst_file
     # BEGIN root_split_reference_id
     # END root_split_reference_id
 }
@@ -84,11 +84,11 @@ There is only one covariate for this example, sex.
 alpha
 =====
 We use *alpha*
-for the :ref:`glossary.rate_value` covariate multiplier
+for the :ref:`glossary@rate_value` covariate multiplier
 that multiplies sex.
 This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
-{xsrst_file
+{xrst_file
     # BEGIN alpha_true
     # END alpha_true
 }
@@ -113,14 +113,14 @@ this is the true value for *rate*
 in node *n* at age *a*, time *t*, and covariate values *c=[sex]*.
 The covariate values are a list in the same order as the covariate table.
 The values *a* and *t* are not used by this function for this example.
-{xsrst_file
+{xrst_file
     # BEGIN rate_true
     # END rate_true
 }
 
 y_i
 ===
-The only simulated integrand for this example is :ref:`glossary.sincidence`
+The only simulated integrand for this example is :ref:`glossary@sincidence`
 which is a direct measurement of iota.
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
@@ -138,13 +138,13 @@ and male sexes.
 Parent Rate Smoothing
 *********************
 This is the iota smoothing used for the fit_node.
-There are no :ref:`glossary.dage` or :ref:`glossary.dtime`
+There are no :ref:`glossary@dage` or :ref:`glossary@dtime`
 priors because there is only one age and one time point in the smoothing grid.
 
 Value Prior
 ===========
 The following is the value prior used for the root_node
-{xsrst_file
+{xrst_file
     # BEGIN parent_value_prior
     # END parent_value_prior
 }
@@ -161,7 +161,7 @@ so it does not have dage or dtime priors.
 Value Prior
 ===========
 The following is the value prior used for this smoothing:
-{xsrst_file
+{xrst_file
     # BEGIN alpha_value_prior
     # END alpha_value_prior
 }
@@ -172,25 +172,25 @@ routine replaces them for other nodes.
 Checking The Fit
 ****************
 The results of the fit are checked by check_cascade_node
-using the :ref:`check_cascade_node.avgint_table`
+using the :ref:`check_cascade_node@avgint_table`
 that was created by the root_node_db routine.
 The node_id for each row is replaced by the node_id for the
 fit being checked.
 routine uses these tables to check that fit against the truth.
 
-{xsrst_end split_covariate}
+{xrst_end split_covariate}
 ------------------------------------------------------------------------------
-{xsrst_begin split_covariate_py}
+{xrst_begin split_covariate_py}
 
 split_covariate: Python Source Code
 ###################################
 
-{xsrst_file
+{xrst_file
     BEGIN split_covariate source code
     END split_covariate source code
 }
 
-{xsrst_end split_covariate_py}
+{xrst_end split_covariate_py}
 '''
 # BEGIN split_covariate source code
 # ----------------------------------------------------------------------------

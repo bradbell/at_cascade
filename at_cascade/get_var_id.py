@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin get_var_id}
-{xsrst_spell
+{xrst_begin get_var_id}
+{xrst_spell
     var
     mulstd
     dage
@@ -22,7 +22,7 @@ Map Var Table Values to its Primary Key
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -59,7 +59,7 @@ other arguments matter:
     mulcov_meas_noise,     "age_id, time_id, mulcov_id, group_id"
 
 
-{xsrst_end get_var_id}
+{xrst_end get_var_id}
 '''
 def get_var_id(
 # BEGIN syntax

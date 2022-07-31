@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -8,14 +8,14 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin get_parent_node}
+{xrst_begin get_parent_node}
 
 Get Parent Node Name From Option Table
 ######################################
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -32,7 +32,7 @@ An assert will be generated if no such *option_name* is found in the
 option table.
 
 
-{xsrst_end get_parent_node}
+{xrst_end get_parent_node}
 '''
 import dismod_at
 # ----------------------------------------------------------------------------

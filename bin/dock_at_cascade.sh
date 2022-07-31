@@ -35,7 +35,7 @@ ln -s /home/prefix/dismod_at.release /home/prefix/dismod_at
 WORKDIR /home
 RUN git clone https://github.com/bradbell/at_cascade.git at_cascade.git
 git checkout --quiet $at_cascade_hash && \
-grep "$at_cascade_version" doc.xsrst
+grep "$at_cascade_version" doc.xrst
 
 # 3. Run Tests
 RUN sed -i bin/check_all.sh -e '/run_sphinx.sh/d' && bin/check_all.sh

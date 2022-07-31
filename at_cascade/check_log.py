@@ -8,14 +8,14 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin check_log}
+{xrst_begin check_log}
 
 Checks Logs For Warnings and Errors
 ###################################
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -39,26 +39,26 @@ This argument can't be ``None``.
 root_node_database
 ******************
 is a python string specifying the location of the dismod_at
-:ref:`glossary.root_node_database`.
+:ref:`glossary@root_node_database`.
 
 fit_goal_set
 ************
 This is a ``set`` with elements of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
-:ref:`glossary.fit_goal_set` .
+:ref:`glossary@fit_goal_set` .
 This argument can't be ``None``.
 
 message_dict
 ************
 the return value is a ``dict``.
-For each :ref:`create_job_table.job_table.job_name` that is a key in
+For each :ref:`create_job_table@job_table@job_name` that is a key in
 *message_dict* the corresponding value
 *message_dict[job_name]* is a non-empty ``list`` of ``str``
 containing the messages for that job.
 If an *job_name* is not a *key* is in *message_dict*,
 there were not messages of the specified type for that job.
 
-{xsrst_end check_log}
+{xrst_end check_log}
 '''
 # ----------------------------------------------------------------------------
 import time

@@ -12,7 +12,7 @@
 # The files in bin/devel.sh ignore_files are automatically in this list
 # (see devel.sh for pattern matching convention).
 # ignore_files='
-#   xsrst/all_node_db.xsrst
+#   xrst/all_node_db.xrst
 # '
 # list of files and or directories that are moved to new names
 # move_paths='

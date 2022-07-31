@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -8,14 +8,14 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin get_fit_children}
+{xrst_begin get_fit_children}
 
 Determine the Set of Nodes to Fit
 #################################
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -23,13 +23,13 @@ Syntax
 root_node_id
 ************
 This is the node_id in the node_table for the
-:ref:`glossary.root_node`.
+:ref:`glossary@root_node`.
 
 fit_goal_set
 ************
 This is a ``set`` with elements of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
-:ref:`glossary.fit_goal_set` .
+:ref:`glossary@fit_goal_set` .
 
 node_table
 **********
@@ -42,11 +42,11 @@ The return value *fit_children* is a python list of python sets.
 For each *node_id* in the node table,
 *fit_children[node_id]* is a the set of child_node_id.
 A child_node_id is in this set if and only if
-it is a child of *node_id* and is in the :ref:`glossary.fit_node_set`.
+it is a child of *node_id* and is in the :ref:`glossary@fit_node_set`.
 These are the children of node_id that must be fit to obtain
-a fit for the :ref:`glossary.fit_goal_set`.
+a fit for the :ref:`glossary@fit_goal_set`.
 
-{xsrst_end get_fit_children}
+{xrst_end get_fit_children}
 '''
 # ----------------------------------------------------------------------------
 import sys

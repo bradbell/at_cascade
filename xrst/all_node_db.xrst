@@ -7,15 +7,15 @@ This program is distributed under the terms of the
     GNU Affero General Public License version 3.0 or later
 see http://www.gnu.org/licenses/agpl.txt
 -----------------------------------------------------------------------------
-{xsrst_begin_parent all_node_db}
-{xsrst_spell
+{xrst_begin_parent all_node_db}
+{xrst_spell
     tbl
 }
 
 The All Node DataBase
 #####################
 This data base contains information for all the nodes between the
-:ref:`glossary.root_node` and the :ref:`glossary.fit_goal_set`.
+:ref:`glossary@root_node` and the :ref:`glossary@fit_goal_set`.
 
 Primary Key
 ***********
@@ -24,13 +24,13 @@ the primary key column has name *tbl_name*\ ``_id`` .
 This must be the first column, have type ``integer`` ,
 initial value is zero, and it must increment by one for each row.
 
-{xsrst_end all_node_db}
+{xrst_end all_node_db}
 ------------------------------------------------------------------------------
-{xsrst_begin omega_grid}
+{xrst_begin omega_grid}
 
 Omega Grid
 ##########
-The :ref:`glossary.omega_grid` is specified by the
+The :ref:`glossary@omega_grid` is specified by the
 omega_age_grid and omega_time_grid tables.
 
 omega_age_grid Table
@@ -44,12 +44,12 @@ We use the notation n_omega_age for the number of values in this table.
 
 omega_age_grid_id
 =================
-is the :ref:`all_node_db.primary_key` for this table.
+is the :ref:`all_node_db@primary_key` for this table.
 
 age_id
 ======
 This column has type ``integer`` and specifies the age grid points
-by their index in the :ref:`glossary.root_node_database` age table.
+by their index in the :ref:`glossary@root_node_database` age table.
 
 omega_time_grid Table
 *********************
@@ -62,36 +62,36 @@ We use the notation n_omega_time for the number of values in this table.
 
 omega_time_grid_id
 ==================
-is the :ref:`all_node_db.primary_key` for this table.
+is the :ref:`all_node_db@primary_key` for this table.
 
 time_id
 =======
 This column has type ``integer`` and specifies the time grid points
 by their index in the root_node_database time table.
 
-{xsrst_end omega_grid}
+{xrst_end omega_grid}
 ------------------------------------------------------------------------------
-{xsrst_begin all_mtall}
+{xrst_begin all_mtall}
 
 All Node mtall Values
 #####################
 The combination of the all_mtall and mtall_index tables specify
-the value of :ref:`glossary.mtall` for all the nodes that have mtall data.
+the value of :ref:`glossary@mtall` for all the nodes that have mtall data.
 
 all_mtall Table
 ***************
-This table specifies the value of :ref:`glossary.mtall` for each
+This table specifies the value of :ref:`glossary@mtall` for each
 age, time point in the :ref:`omega_grid`, every node, and each reference
 in the :ref:`split_reference_table`.
 This data is used to compute the :ref:`omega_constraint` for each node.
 If mtall is not specified for a node, it will use the same *mtall*
 values as its nearest ancestor node.
 It is an error if there is no ancestor of a
-:ref:`goal node<glossary.fit_goal_set>` that has mtall data.
+:ref:`goal node<glossary@fit_goal_set>` that has mtall data.
 
 all_mtall_id
 ============
-is the :ref:`all_node_db.primary_key` for this table.
+is the :ref:`all_node_db@primary_key` for this table.
 
 all_mtall_value
 ===============
@@ -110,7 +110,7 @@ correspond to each all_mtall_id are included below.
 
 mtall_index_id
 ==============
-is the :ref:`all_node_db.primary_key` for this table.
+is the :ref:`all_node_db@primary_key` for this table.
 
 node_id
 =======
@@ -131,9 +131,9 @@ This column has type ``integer`` and specifies the index in the
 all_mtall table where the mtall values begin,
 for this node and split_reference value.
 For the age index *i* equal 0 through
-:ref:`n_omega_age-1<omega_grid.omega_age_grid_table.n_omega_age>`
+:ref:`n_omega_age-1<omega_grid@omega_age_grid_table@n_omega_age>`
 and time index *j* equal 0 through
-:ref:`n_omega_time-1<omega_grid.omega_time_grid_table.n_omega_time>` ::
+:ref:`n_omega_time-1<omega_grid@omega_time_grid_table@n_omega_time>` ::
 
     all_mtall_id + i * n_omega_time + j
 
@@ -148,24 +148,24 @@ should be a multiple of n_omega_age * n_omega_time
 (because there are that many mtall entries for each node and each
 split_reference value).
 
-{xsrst_end all_mtall}
+{xrst_end all_mtall}
 ------------------------------------------------------------------------------
-{xsrst_begin all_mtspecific}
+{xrst_begin all_mtspecific}
 
 All Node mtspecific Values
 ##########################
 The combination of the all_mtspecific and mtspecific_index tables specify
-the value of :ref:`glossary.mtspecific` for all the nodes that have
+the value of :ref:`glossary@mtspecific` for all the nodes that have
 mtspecific data.
 If mtspecific is not specified for a node, it will use the same *mtspecific*
 values as its nearest ancestor node.
 If there is no ancestor of a node that has mtspecific data,
-:ref:`glossary.omega` will be approximated as equal to
-:ref:`glossary.mtall` for that node.
+:ref:`glossary@omega` will be approximated as equal to
+:ref:`glossary@mtall` for that node.
 
 all_mtspecific Table
 ********************
-This table specifies the value of :ref:`glossary.mtspecific` for each
+This table specifies the value of :ref:`glossary@mtspecific` for each
 age, time point in the :ref:`omega_grid`,  every node, and each reference
 in the :ref:`split_reference_table`.
 If mtspecific is not specified for a node, it will use the same *mtspecific*
@@ -175,14 +175,14 @@ omega will be constrained to be equal to its mtall data for that node.
 
 all_mtspecific_id
 =================
-is the :ref:`all_node_db.primary_key` for this table.
+is the :ref:`all_node_db@primary_key` for this table.
 
 all_mtspecific_value
 ====================
 This column has type ``real`` and is the value of mtspecific
 for a specific node, age, and time; see mtspecific_index table below.
 Each value in this column is mtspecific at the same age and time
-as the corresponding :ref:`all_mtall.all_mtall_table.all_mtall_value`.
+as the corresponding :ref:`all_mtall@all_mtall_table@all_mtall_value`.
 
 mtspecific_index Table
 **********************
@@ -193,7 +193,7 @@ correspond to each all_mtspecific_id are included.
 
 mtspecific_index_id
 ===================
-is the :ref:`all_node_db.primary_key` for this table.
+is the :ref:`all_node_db@primary_key` for this table.
 
 node_id
 =======
@@ -214,9 +214,9 @@ This column has type ``integer`` and specifies the index in the
 all_mtspecific table where the mtspecific values,
 for this node and split_reference, begin.
 For *i* equal 0 through
-:ref:`n_omega_age-1<omega_grid.omega_age_grid_table.n_omega_age>`
+:ref:`n_omega_age-1<omega_grid@omega_age_grid_table@n_omega_age>`
 and *j* equal 0 through
-:ref:`n_omega_time-1<omega_grid.omega_time_grid_table.n_omega_time>`
+:ref:`n_omega_time-1<omega_grid@omega_time_grid_table@n_omega_time>`
 
     all_mtspecific_id + i * n_omega_time + j
 
@@ -228,10 +228,10 @@ n_omega_age * n_omega_time
 (because there are that many mtspecific entries for each node and each
 split_reference value).
 
-{xsrst_end all_mtspecific}
+{xrst_end all_mtspecific}
 ------------------------------------------------------------------------------
-{xsrst_begin all_option_table}
-{xsrst_spell
+{xrst_begin all_option_table}
+{xrst_spell
     bnd
     std
     cpus
@@ -247,7 +247,7 @@ Table Format
 
 all_option_id
 =============
-is the :ref:`all_node_db.primary_key` for this table.
+is the :ref:`all_node_db@primary_key` for this table.
 
 option_name
 ===========
@@ -267,7 +267,7 @@ If this option does not appear, there are no absolute covariates.
 
 balance_fit
 ***********
-If this option appears, the :ref:`all_option_table.max_fit` option
+If this option appears, the :ref:`all_option_table@max_fit` option
 must also appear. This option specifies how dismod_at should balance
 the randomly selected samples.
 It is a space separated list with the following values
@@ -299,7 +299,7 @@ max_fit
 This is a text representation of a non-negative integer specifying
 the maximum number of values to fit for each integrand.
 If more than this number of values are available,
-at a :ref:`glossary.fit_node` and for one integrand,
+at a :ref:`glossary@fit_node` and for one integrand,
 a randomly selected subset of the values
 are held out so that only this number are included in the fit.
 If this option does not appear, all of the data for each integrand is included
@@ -318,7 +318,7 @@ max_number_cpu
 This is the maximum number of cpus (processors) that
 :ref:`cascade_root_node` or :ref:`continue_cascade` can use.
 If this is one (more than one) the jobs in the
-:ref:`create_job_table.job_table`
+:ref:`create_job_table@job_table`
 will be run in sequentially (in parallel).
 If this option does not appear, the value one is used.
 If running sequentially, the command output is printed to the screen.
@@ -357,8 +357,8 @@ all of the at_cascade output files are placed in this directory.
 root_node_name
 **************
 This option_name must appear and the corresponding option_value
-is the name of the :ref:`glossary.root_node` in the node table of the
-:ref:`glossary.root_node_database` .
+is the name of the :ref:`glossary@root_node` in the node table of the
+:ref:`glossary@root_node_database` .
 (The node table is the same in all the dismod_at databases.)
 
 root_split_reference_name
@@ -371,7 +371,7 @@ this option must not (must) appear.
 shift_prior_std_factor
 **********************
 This factor multiplies the parent fit posterior standard deviation
-for the :ref:`create_shift_db.shift_databases.value_priors`
+for the :ref:`create_shift_db@shift_databases@value_priors`
 in the shifted databases.
 If it is greater (less) than one, the child priors are larger (smaller)
 than the posterior corresponding to the parent node fit.
@@ -385,20 +385,20 @@ covariate.
 If :ref:`split_reference_table` is empty (is not empty)
 this option must not (must) appear.
 
-{xsrst_end all_option_table}
+{xrst_end all_option_table}
 ------------------------------------------------------------------------------
-{xsrst_begin split_reference_table}
+{xrst_begin split_reference_table}
 
 Split Reference Table
 #####################
 This table specifies the possible reference values for the splitting covariate.
 If this table is empty (is not empty),
-the :ref:`all_option_table.split_covariate_name`
+the :ref:`all_option_table@split_covariate_name`
 must not appear (must appear).
 
 split_reference_id
 ******************
-is the :ref:`all_node_db.primary_key` for this table.
+is the :ref:`all_node_db@primary_key` for this table.
 
 split_reference_name
 ********************
@@ -410,22 +410,22 @@ split_reference_value
 This column has type ``real`` and contains the possible reference values for
 the splitting covariate.
 
-{xsrst_end split_reference_table}
+{xrst_end split_reference_table}
 ------------------------------------------------------------------------------
-{xsrst_begin node_split_table}
+{xrst_begin node_split_table}
 
 Node Split Table
 ################
 This table specifies the nodes at which the cascade will be split
 by the value of the splitting covariate.
 If this table is not empty,
-the :ref:`all_option_table.split_covariate_name`
+the :ref:`all_option_table@split_covariate_name`
 must appear and the
 :ref:`split_reference_table` must not be empty.
 
 node_split_id
 *************
-is the :ref:`all_node_db.primary_key` for this table.
+is the :ref:`all_node_db@primary_key` for this table.
 
 node_id
 *******
@@ -433,33 +433,33 @@ This column has type ``integer`` and contains a dismod_at node_id
 at which the analysis will be split by the splitting covariate; i.e.,
 this node will be fit both before and after the splitting.
 The set of values in this column determine the
-:ref:`glossary.node_split_set`.
+:ref:`glossary@node_split_set`.
 
-{xsrst_end node_split_table}
+{xrst_end node_split_table}
 ------------------------------------------------------------------------------
-{xsrst_begin mulcov_freeze_table}
+{xrst_begin mulcov_freeze_table}
 
 Mulcov Freeze Table
 ###################
-This table specifies the :ref:`jobs<glossary.job>`
+This table specifies the :ref:`jobs<glossary@job>`
 at which the cascade will freeze the value of covariate multipliers
 for its descendants (starting with its child jobs).
 To be specific, the lower and upper limit for the covariate
 multiplier in descendants of the job will be optimal value determined by job;
-see :ref:`create_job_table.job_table.parent_job_id` in the job table.
+see :ref:`create_job_table@job_table@parent_job_id` in the job table.
 
 mulcov_freeze_id
 ****************
-is the :ref:`all_node_db.primary_key` for this table.
+is the :ref:`all_node_db@primary_key` for this table.
 
 fit_node_id
 ***********
-is the :ref:`create_job_table.job_table.fit_node_id` for the job
+is the :ref:`create_job_table@job_table@fit_node_id` for the job
 that will freeze the multiplier.
 
 split_reference_id
 ******************
-is the :ref:`create_job_table.job_table.split_reference_id` for the job
+is the :ref:`create_job_table@job_table@split_reference_id` for the job
 that will freeze the multiplier.
 This value is null if and only if the
 :ref:`split_reference_table<split_reference_table>` is empty.
@@ -469,5 +469,5 @@ mulcov_id
 is the primary key in the dismod_at mulcov table for the multiplier
 that is frozen.
 
-{xsrst_end mulcov_freeze_table}
+{xrst_end mulcov_freeze_table}
 ------------------------------------------------------------------------------

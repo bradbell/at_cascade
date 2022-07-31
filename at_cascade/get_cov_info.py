@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin get_cov_info}
-{xsrst_spell
+{xrst_begin get_cov_info}
+{xrst_spell
     rel
 }
 
@@ -18,7 +18,7 @@ Get Covariate Information
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -49,7 +49,7 @@ abs_covariate_id_set
 ====================
 if *key* is abs_covariate_id_set, *cov_info[key]* is a ``set`` of ``int``.
 A covariate_id is in this set if and only if the corresponding
-covariate name is in :ref:`all_option_table.absolute_covariates`.
+covariate name is in :ref:`all_option_table@absolute_covariates`.
 If absolute_covariates does not appear in the all_option table,
 *cov_info[key]* is the empty set.
 The reference value for these absolute covariates is the same
@@ -59,21 +59,21 @@ rel_covariate_id_set
 ====================
 if *key* is rel_covariate_id_set, *cov_info[key]* is a set of ``int``.
 This is the set of covariate_id values corresponding to the
-:ref:`relative covariates<glossary.relative_covariate>`.
+:ref:`relative covariates<glossary@relative_covariate>`.
 
 split_covariate_id
 ==================
 If :ref:`split_reference_table` is empty, this key is not present.
 Otherwise, for *key* equal to split_covariate_id, *cov_info[key]* is an ``int``
 equal to the covariate_id corresponding to the
-:ref:`all_option_table.split_covariate_name`.
+:ref:`all_option_table@split_covariate_name`.
 
 split_reference_list
 ====================
 If :ref:`split_reference_table` is empty, this key is not present.
 Otherwise, for *key* equal to split_reference_list, *cov_info[key]* is a
 ``list`` of ``float`` representation of
-:ref:`split_reference_table.split_reference_value` in the
+:ref:`split_reference_table@split_reference_value` in the
 same order as they appear in the table.
 
 split_reference_id
@@ -81,11 +81,10 @@ split_reference_id
 If :ref:`split_reference_table` is empty, this key is not present.
 Otherwise, for *key* equal to split_reference_id, *cov_info[key]* is an ``int``
 containing an index in the split_reference_list.
-The corresponding value is split_reference_list is equal to
-to reference value for split_covariate_name in the covariate table.
+The corresponding value in split_reference_list is equal to
+the reference value for split_covariate_name in the covariate table.
 
-
-{xsrst_end get_cov_info}
+{xrst_end get_cov_info}
 '''
 import at_cascade
 #

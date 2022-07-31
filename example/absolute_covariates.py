@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin_parent absolute_covariates}
-{xsrst_spell
+{xrst_begin_parent absolute_covariates}
+{xrst_spell
     dage
     dtime
 }
@@ -21,8 +21,8 @@ For this example everything is constant w.r.t. age and time.
 Nodes
 *****
 The following is a diagram of the node tree for this example.
-The :ref:`glossary.root_node` is n0,
-the :ref:`glossary.fit_goal_set` is {n3, n4, n2},
+The :ref:`glossary@root_node` is n0,
+the :ref:`glossary@fit_goal_set` is {n3, n4, n2},
 and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
@@ -33,7 +33,7 @@ and the leaf nodes are {n3, n4, n5, n6}::
 
 fit_goal_set
 ============
-{xsrst_file
+{xrst_file
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -41,13 +41,13 @@ fit_goal_set
 Rates
 *****
 The only non-zero dismod_at rates for this example are
-:ref:`glossary.iota`.and :ref:`glossary.omega`.
+:ref:`glossary@iota`.and :ref:`glossary@omega`.
 
 Splitting Covariate
 ===================
 This cascade is set up to split by sex reference value; see
 :ref:`split_reference_table`
-{xsrst_file
+{xrst_file
     # BEGIN split_reference_table
     # END split_reference_table
 }
@@ -55,12 +55,12 @@ This cascade is set up to split by sex reference value; see
 Covariate
 *********
 There are three covariates for this example, sex, vaccine, and income.
-Income is the only :ref:`glossary.relative_covariate`.
-{xsrst_file
+Income is the only :ref:`glossary@relative_covariate`.
+{xrst_file
     # BEGIN avg_income
     # END avg_income
 }
-{xsrst_file
+{xrst_file
     # BEGIN split_reference_list
     # END split_reference_list
 }
@@ -69,7 +69,7 @@ absolute_covariates
 ===================
 The only absolute covariate in this example is vaccine
 (0 for no vaccine, 1 for yes vaccine).
-{xsrst_file
+{xrst_file
     # BEGIN_1 absolute_covariates
     # END_1 absolute_covariates
 }
@@ -78,10 +78,10 @@ alpha
 =====
 We use *alpha*\ ``[income]``
 and  *alpha*\ ``[vaccine]``
-for the :ref:`glossary.rate_value` covariate multipliers
+for the :ref:`glossary@rate_value` covariate multipliers
 that multiply the income and vaccine covariates.
 The true value for *alpha* (used which simulating the data) is
-{xsrst_file
+{xrst_file
     # BEGIN alpha_true
     # END alpha_true
 }
@@ -108,14 +108,14 @@ The covariate values are a list in the
 same order as the covariate table.
 The values *a*, *t*, *n*, *sex*
 are not used by this function for this example.
-{xsrst_file
+{xrst_file
     # BEGIN rate_true
     # END rate_true
 }
 
 y_i
 ===
-The only simulated integrand for this example is :ref:`glossary.sincidence`
+The only simulated integrand for this example is :ref:`glossary@sincidence`
 which is a direct measurement of iota.
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as
@@ -133,13 +133,13 @@ of how good the fit is for the nodes in the fit_goal_set.
 Parent Rate Smoothing
 *********************
 This is the iota smoothing used for the fit_node.
-There are no :ref:`glossary.dage` or :ref:`glossary.dtime`
+There are no :ref:`glossary@dage` or :ref:`glossary@dtime`
 priors because there is only one age and one time point in the smoothing grid.
 
 Value Prior
 ===========
 The following is the value prior used for the root_node
-{xsrst_file
+{xrst_file
     # BEGIN parent_value_prior
     # END parent_value_prior
 }
@@ -156,7 +156,7 @@ so it does not have dage or dtime priors.
 Value Prior
 ===========
 The following is the value prior used for this smoothing:
-{xsrst_file
+{xrst_file
     # BEGIN alpha_value_prior
     # END alpha_value_prior
 }
@@ -167,24 +167,24 @@ routine replaces them for other nodes.
 Checking The Fit
 ****************
 The results of the fit are checked by check_cascade_node
-using the :ref:`check_cascade_node.avgint_table`
+using the :ref:`check_cascade_node@avgint_table`
 that was created by the root_node_db routine.
 The node_id for each row is replaced by the node_id for the
 fit being checked.
 
-{xsrst_end absolute_covariates}
+{xrst_end absolute_covariates}
 ------------------------------------------------------------------------------
-{xsrst_begin absolute_covariates_py}
+{xrst_begin absolute_covariates_py}
 
 absolute_covariates: Python Source Code
 #######################################
 
-{xsrst_file
+{xrst_file
     BEGIN_2 absolute_covariates source code
     END_2 absolute_covariates source code
 }
 
-{xsrst_end absolute_covariates_py}
+{xrst_end absolute_covariates_py}
 '''
 # BEGIN_2 absolute_covariates source code
 # ----------------------------------------------------------------------------

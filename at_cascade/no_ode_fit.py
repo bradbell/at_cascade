@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin no_ode_fit}
-{xsrst_spell
+{xrst_begin no_ode_fit}
+{xrst_spell
     dir
     csv
 }
@@ -19,7 +19,7 @@ Do A No Ode Fit For One Node
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -32,16 +32,16 @@ This argument can't be ``None``.
 root_node_database
 ******************
 is a python string specifying the location of the
-:ref:`glossary.root_node_database`.
+:ref:`glossary@root_node_database`.
 This argument can't be ``None``.
 
 all_option_dict
 ***************
 is a ``dict`` containing the values in the all_option table.
 This dictionary has a key for each
-:ref:`all_option_table.table_format.option_name`
+:ref:`all_option_table@table_format@option_name`
 and the corresponding value is
-:ref:`all_option_table.table_format.option_value`.
+:ref:`all_option_table@table_format@option_value`.
 If an option does not appear in the table, the corresponding key
 does not appear in *all_option_dict*.
 
@@ -56,8 +56,8 @@ An intermediate database is stored in the file
 
     *result_dir*\ /\ *root_node_name*\ /no_ode/dismod.db
 
-see :ref:`all_option_table.result_dir`
-and :ref:`all_option_table.root_node_name`.
+see :ref:`all_option_table@result_dir`
+and :ref:`all_option_table@root_node_name`.
 This contains the results of fitting with only the integrand that
 do not require solving the ODE; i.e.
 Sincidence, remission, and mtexcess which measure
@@ -88,7 +88,7 @@ have been replace by the optimal estimate for fitting with out the integrands
 that use the ODE.
 The last operation on this table is a dismod_at init command.
 
-{xsrst_end no_ode_fit}
+{xrst_end no_ode_fit}
 '''
 import datetime
 import time

@@ -8,13 +8,13 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin module}
+{xrst_begin module}
 
 The at_cascade Python Module
 ****************************
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
-{xsrst_child_table
+{xrst_child_table
     at_cascade/add_log_entry.py
     at_cascade/avgint_parent_grid.py
     at_cascade/cascade_root_node.py
@@ -42,7 +42,7 @@ The at_cascade Python Module
 }
 .. END_SORT_THIS_LINE_MINUS_2
 
-{xsrst_end module}
+{xrst_end module}
 '''
 
 # BEGIN_SORT_THIS_LINE_PLUS_1

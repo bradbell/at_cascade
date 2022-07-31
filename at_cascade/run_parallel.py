@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin run_parallel}
-{xsrst_spell
+{xrst_begin run_parallel}
+{xrst_spell
     cpus
 }
 
@@ -18,7 +18,7 @@ Run With Specified Maximum Number of Processes
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -29,30 +29,30 @@ None of the arguments to this routine can be ``None``.
 
 job_table
 *********
-:ref:`run_one_job.job_table`
+:ref:`run_one_job@job_table`
 
 start_job_id
 ************
-This is the :ref:`create_job_table.job_table.job_id`
+This is the :ref:`create_job_table@job_table@job_id`
 for the starting job.
 The run_parallel routine will not return until this job,
 and all it descendants in the job table, have been run.
 
 all_node_database
 *****************
-:ref:`run_one_job.all_node_database`
+:ref:`run_one_job@all_node_database`
 
 node_table
 **********
-:ref:`run_one_job.node_table`
+:ref:`run_one_job@node_table`
 
 fit_integrand
 *************
-:ref:`run_one_job.fit_integrand`
+:ref:`run_one_job@fit_integrand`
 
 fit_node_database
 *****************
-:ref:`run_one_job.fit_node_database`
+:ref:`run_one_job@fit_node_database`
 
 skip_start_job
 **************
@@ -81,7 +81,7 @@ If the *max_number_cpu* is one, standard output is not redirected.
 Otherwise, standard output for each job is written to a file called
 ``trace.out`` in the same directory as the database for the job.
 
-{xsrst_end run_parallel}
+{xrst_end run_parallel}
 '''
 # ----------------------------------------------------------------------------
 import datetime

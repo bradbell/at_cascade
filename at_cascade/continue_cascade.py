@@ -8,14 +8,14 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin continue_cascade}
+{xrst_begin continue_cascade}
 
 Continue Cascade From a Fit Node
 ################################
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -24,7 +24,7 @@ Purpose
 *******
 Sometimes when running the cascade, the fit or statistics for a node fails.
 This may be becasue of something that happend on the system,
-or becasue of some of the settings in the :ref:`glossary.root_node_database`.
+or becasue of some of the settings in the :ref:`glossary@root_node_database`.
 This routine enables you to continue the cascade from such a node.
 
 all_node_database
@@ -38,7 +38,7 @@ fit_node_database
 *****************
 is a python string specifying the location of a dismod_at database
 relative to the current working directory.
-This is a :ref:`glossary.fit_node_database` with the
+This is a :ref:`glossary@fit_node_database` with the
 final state after running :ref:`cascade_root_node` on this database.
 The necessary state of *fit_node_database* is reached before
 cascade_root_node starts runs on any of its child nodes.
@@ -47,7 +47,7 @@ fit_goal_set
 ************
 This is a ``set`` with elements of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
-:ref:`glossary.fit_goal_set` .
+:ref:`glossary@fit_goal_set` .
 This argument can't be ``None``.
 It can be different from when the original cascade was run; e.g.,
 it could include new goal nodes.
@@ -60,7 +60,7 @@ For each job, the first type of fit is attempted.
 If it fails, and there is a second type of fit, it is attemped.
 If it also fails, the corresponding job fails.
 
-{xsrst_end   continue_cascade}
+{xrst_end   continue_cascade}
 '''
 import time
 import os

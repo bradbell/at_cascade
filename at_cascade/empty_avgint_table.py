@@ -8,14 +8,14 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin empty_avgint_table}
+{xrst_begin empty_avgint_table}
 
 Create An Empty avgint Table
 ############################
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -38,7 +38,7 @@ log Table
 The message ``empty_avgint_table`` is added at the end of the log table
 with message type ``at_cascade``.
 
-{xsrst_end   empty_avgint_table}
+{xrst_end   empty_avgint_table}
 '''
 import time
 import dismod_at

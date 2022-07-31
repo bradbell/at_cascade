@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin avgint_parent_grid}
-{xsrst_spell
+{xrst_begin avgint_parent_grid}
+{xrst_spell
 }
 
 Predicts Rates and Covariate Multipliers on Parent Grid
@@ -17,7 +17,7 @@ Predicts Rates and Covariate Multipliers on Parent Grid
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -27,7 +27,7 @@ Purpose
 Create an avgint table that can be used to predict the rates and covariate
 multipliers on the parent grid.
 For child nodes, the predictions are for the
-:ref:`split_reference_table.split_reference_value` for the parent node.
+:ref:`split_reference_table@split_reference_value` for the parent node.
 For the parent node, the predictions are for all the possible
 split reference values.
 
@@ -38,7 +38,7 @@ This argument can't be ``None``.
 
 fit_node_database
 *****************
-is a python string containing the name of the :ref:`glossary.fit_node_database`.
+is a python string containing the name of the :ref:`glossary@fit_node_database`.
 A new avgint table will be placed in this database,
 the previous avgint table in this database is lost,
 and there are no other changes to the database.
@@ -89,7 +89,7 @@ For the parent node, each child of the parent node, and
 each rate that has non-null parent smoothing, all of the
 age time pairs in the smoothing are represented in the new avgint table.
 
-{xsrst_end avgint_parent_grid}
+{xrst_end avgint_parent_grid}
 '''
 # ----------------------------------------------------------------------------
 import copy

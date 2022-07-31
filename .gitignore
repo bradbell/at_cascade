@@ -13,9 +13,11 @@
 # ------------------------
 # used to build documentation
 /build/
-/sphinx/xsrst/
+/sphinx/rst/
+/sphinx/latex/
 /sphinx/_static/
 /sphinx/index.rst
+/sphinx/conf.py
 #
 # used to store ihme databases
 /ihme_db/

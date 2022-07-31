@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin cascade_root_node}
-{xsrst_spell
+{xrst_begin cascade_root_node}
+{xrst_spell
     csv
     var
     dir
@@ -20,7 +20,7 @@ Cascade Fits Starting at Root Node
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -35,13 +35,13 @@ This argument can't be ``None``.
 root_node_database
 ******************
 is a python string specifying the location of the dismod_at
-:ref:`glossary.root_node_database`.
+:ref:`glossary@root_node_database`.
 
 fit_goal_set
 ************
 This is a ``set`` with elements of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
-:ref:`glossary.fit_goal_set` .
+:ref:`glossary@fit_goal_set` .
 This argument can't be ``None``.
 
 no_ode_fit
@@ -56,12 +56,12 @@ This database is located at
 
     *result_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
 
-see :ref:`all_option_table.result_dir`
-and :ref:`all_option_table.root_node_name`.
+see :ref:`all_option_table@result_dir`
+and :ref:`all_option_table@root_node_name`.
 If *no_ode_fit* is ``True`` ( ``False`` ) the priors in the
 *root_node_database* are modified (are not modified)
 before the root node is fit.
-Upon return, this is a :ref:`glossary.fit_node_database` with the
+Upon return, this is a :ref:`glossary@fit_node_database` with the
 extra properties listed below:
 
 fit_type_list
@@ -75,7 +75,7 @@ If it also fails, the corresponding job fails.
 Output dismod.db
 ****************
 There is a ``dismod.db`` output file for every row in the
-:ref:`create_job_table.job_table`.
+:ref:`create_job_table@job_table`.
 Upon return,
 the results for this fit are in ``dismod.db`` in the corresponding directory;
 see :ref:`get_database_dir`.
@@ -88,8 +88,8 @@ fit_var
 =======
 The fit_var table correspond to the posterior
 mean for the model variables for  this job; i.e., this
-:ref:`create_job_table.job_table.fit_node_id` and
-:ref:`create_job_table.job_table.split_reference_id`.
+:ref:`create_job_table@job_table@fit_node_id` and
+:ref:`create_job_table@job_table@split_reference_id`.
 
 sample
 ======
@@ -101,7 +101,7 @@ log
 The log table contains a summary of the operations preformed on dismod.db
 between it's input and output state.
 
-{xsrst_end cascade_root_node}
+{xrst_end cascade_root_node}
 '''
 # ----------------------------------------------------------------------------
 import shutil

@@ -8,14 +8,14 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin create_all_node_db}
+{xrst_begin create_all_node_db}
 
 Create an All Node Database
 ###########################
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -29,7 +29,7 @@ This argument can't be ``None``.
 root_node_database
 ******************
 is a python string containing the name of the name of the
-:ref:`glossary.root_node_database`.
+:ref:`glossary@root_node_database`.
 This argument can't be ``None``.
 
 List
@@ -46,10 +46,10 @@ all_option
 **********
 This argument can't be ``None``.
 It is a ``dict`` with a key equal to each
-:ref:`all_option_table.table_format.option_name` that appears in the
+:ref:`all_option_table@table_format@option_name` that appears in the
 all_option table.
 The value corresponding to the key is the
-:ref:`all_option_table.table_format.option_value`
+:ref:`all_option_table@table_format@option_value`
 in the same row of the all_option_table.
 Note that keys must have type ``str`` and all the values will be converted
 to ``str``.
@@ -105,8 +105,8 @@ omega_grid
 **********
 is a dictionary with two keys ``age`` and ``time``.
 If this argument is ``None``,
-the :ref:`omega_grid.omega_age_grid_table` and
-the :ref:`omega_grid.omega_time_grid_table` are empty.
+the :ref:`omega_grid@omega_age_grid_table` and
+the :ref:`omega_grid@omega_time_grid_table` are empty.
 
 age
 ===
@@ -125,7 +125,7 @@ We use the notation *n_omega_time* for the length of the time list.
 mtall_data
 **********
 This is a python dictionary with a key for each node name
-for the :ref:`glossary.root_node` and its descendant.
+for the :ref:`glossary@root_node` and its descendant.
 The value *mtall_data[node_name]* is a list.
 For each *k*, *mtall_data[node_name][k]* is a list.
 For *i* equal 0, ..., *n_omega_age*-1
@@ -139,19 +139,19 @@ and time corresponding to index *j* in *omega_grid*\ [``time``].
 If split_reference table is empty, *k* is zero.
 Otherwise, let *n_split* be the length of the split_reference table.
 For *k* equal 0, ... , *n_split*-1, it specifies the value of
-:ref:`split_reference_table.split_reference_id` for the covariate value.
+:ref:`split_reference_table@split_reference_id` for the covariate value.
 
 default
 =======
 The *mtall_data* argument is ``None`` if and only if *omega_grid* is ``None``.
 If *mtall_data* is ``None`` the
-:ref:`all_mtall.all_mtall_table` and
-:ref:`all_mtall.mtall_index_table` will be empty.
+:ref:`all_mtall@all_mtall_table` and
+:ref:`all_mtall@mtall_index_table` will be empty.
 
 mtspecific_data
 ***************
 This is a python dictionary with a key for each node name
-for the :ref:`glossary.root_node` and its descendant.
+for the :ref:`glossary@root_node` and its descendant.
 The value *mtspecific_data[node_name]* is a list.
 For each *k*, *mtspecific_data[node_name][k]* is a list.
 For *i* equal 0, ..., *n_omega_age*-1
@@ -165,16 +165,16 @@ and time corresponding to index *j* in *omega_grid*\ [``time``].
 If split_reference table is empty, *k* is zero.
 Otherwise, let *n_split* be the length of the split_reference table.
 For *k* equal 0, ... , *n_split*-1, it specifies the value of
-:ref:`split_reference_table.split_reference_id` for the covariate value.
+:ref:`split_reference_table@split_reference_id` for the covariate value.
 
 default
 =======
 If *omega_grid* is ``None``, *mtspecific_data* must also be ``None``.
 If *mtspecific_data* is ``None`` the
-:ref:`all_mtspecific.all_mtspecific_table` and
-:ref:`all_mtspecific.mtspecific_index_table` will be empty.
+:ref:`all_mtspecific@all_mtspecific_table` and
+:ref:`all_mtspecific@mtspecific_index_table` will be empty.
 
-{xsrst_end create_all_node_db}
+{xrst_end create_all_node_db}
 '''
 import dismod_at
 import at_cascade

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin omega_constraint}
-{xsrst_spell
+{xrst_begin omega_constraint}
+{xrst_spell
     smoothings
     nslist
 }
@@ -19,7 +19,7 @@ Set Omega Constraints in a Fit Node Database
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -32,7 +32,7 @@ This argument can't be ``None``.
 Use
 ===
 This routine builds the *omega* constraints using the
-:ref:`glossary.mtall` and :ref:`glossary.mtspecific` data in the
+:ref:`glossary@mtall` and :ref:`glossary@mtspecific` data in the
 *all_node_database* and the relation
 
     omega = mtall - mtspecific
@@ -46,14 +46,14 @@ zero is used for the *omega* constraint for that node.
 
 fit_node_database
 *****************
-is a python string containing the name of a :ref:`glossary.fit_node_database`.
+is a python string containing the name of a :ref:`glossary@fit_node_database`.
 This argument can't be ``None``.
 
 parent_node
 ===========
 We use *parent_node* to refer to the parent node in the
 dismod_at option table in the *fit_node_database*; i.e.,
-the :ref:`glossary.fit_node` .
+the :ref:`glossary@fit_node` .
 
 rate_table
 ==========
@@ -86,7 +86,7 @@ Other Tables
 ============
 None of the other tables in the database are modified.
 
-{xsrst_end omega_constraint}
+{xrst_end omega_constraint}
 '''
 # ----------------------------------------------------------------------------
 import copy

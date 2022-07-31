@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin table_name2id}
-{xsrst_spell
+{xrst_begin table_name2id}
+{xrst_spell
     tbl
 }
 
@@ -18,7 +18,7 @@ Map a Table Row Name to The Row Index
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -43,7 +43,7 @@ row_id
 This is the index of the row in the table where
 *row_name* occurs. An assert will occur if there is no such row.
 
-{xsrst_end table_name2id}
+{xrst_end table_name2id}
 '''
 # -----------------------------------------------------------------------------
 def table_name2id(

@@ -8,8 +8,8 @@ This program is distributed under the terms of the
 see http://www.gnu.org/licenses/agpl.txt
 -----------------------------------------------------------------------------
 
-{xsrst_begin glossary}
-{xsrst_spell
+{xrst_begin glossary}
+{xrst_spell
     meas
     nslist
     smoothings
@@ -56,7 +56,7 @@ the parent node in the dismod_at option table.
 fit_node_set
 ************
 This is the set of nodes that need to be fit in order to fit the
-:ref:`glossary.fit_goal_set`.
+:ref:`glossary@fit_goal_set`.
 This includes all the nodes between the root node and the goal nodes
 (including the root node and he goal nodes).
 
@@ -67,7 +67,7 @@ This is a dismod_at database with the following properties:
 Constant Tables
 ===============
 The following tables are the same as in the
-:ref:`glossary.root_node_database`:
+:ref:`glossary@root_node_database`:
 age, covariate, data, density, integrand, node, subgroup, time,
 weight, weight grid.
 The subgroup table must have one row; i.e., there is one subgroup,
@@ -82,11 +82,11 @@ The value of *parent_node_id* does not appear in the option table.
 
 Covariate Table
 ===============
-For each :ref:`glossary.relative_covariate`,
+For each :ref:`glossary@relative_covariate`,
 the covariate table reference value is the average returned by
 :ref:`get_cov_reference` for this node and split_reference_id.
 The split covariate reference value is one of the
-:ref:`split_reference_table.split_reference_value`
+:ref:`split_reference_table@split_reference_value`
 in the split_reference table.
 The other columns in the covariate table are the same
 as in the root_node_database.
@@ -151,10 +151,10 @@ This is also denoted by :math:`\iota(a, t)`.
 
 job
 ***
-A job corresponds to one row of the :ref:`create_job_table.job_table`; i.e.,
+A job corresponds to one row of the :ref:`create_job_table@job_table`; i.e.,
 one fit node and split_reference_id.
 The results for a job is its fit and the value priors for its child jobs;
-see :ref:`create_job_table.job_table.start_child_job_id` and
+see :ref:`create_job_table@job_table@start_child_job_id` and
 *end_child_job_id*\ .
 
 meas_noise
@@ -217,10 +217,10 @@ The abbreviation used for rate value covariate multiplier.
 Relative Covariate
 ******************
 A relative covariate is any covariate that is not an
-:ref:`absolute covariate<all_option_table.absolute_covariates>`
+:ref:`absolute covariate<all_option_table@absolute_covariates>`
 and is not the splitting covariate
 (which is specified by the
-:ref:`all_option_table.split_covariate_name`).
+:ref:`all_option_table@split_covariate_name`).
 The reference value for a relative covariate can depend on the node
 and the value of the splitting covariate.
 
@@ -237,22 +237,22 @@ This is also denoted by :math:`\rho(a, t)`.
 root_node
 *********
 The top level node for this cascade; see
-:ref:`all_option_table.root_node_name`.
+:ref:`all_option_table@root_node_name`.
 
 root_node_database
 ******************
 This is a dismod_at database where the *root_node* is the
 parent node in the dismod_at option table.
 This must satisfy all the conditions for an
-:ref:`glossary.input_node_database`.
+:ref:`glossary@input_node_database`.
 
 Sincidence
 **********
 The abbreviation used for the susceptible incidence integrand.
-This corresponds to a directly measurement of :ref:`glossary.iota`.
+This corresponds to a directly measurement of :ref:`glossary@iota`.
 
 top_directory
 *************
 Directory where the input data is located.
 
-{xsrst_end glossary}
+{xrst_end glossary}

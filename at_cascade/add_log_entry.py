@@ -8,14 +8,14 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin add_log_entry}
+{xrst_begin add_log_entry}
 
 Add Log Table Entry
 ###################
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -45,7 +45,7 @@ following columns values:
 5.  *unix_time* : is the integer unit time
 6.  *message* : is the text message
 
-{xsrst_end   add_log_entry}
+{xrst_end   add_log_entry}
 '''
 import time
 import dismod_at

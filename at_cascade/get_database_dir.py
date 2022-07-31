@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin get_database_dir}
-{xsrst_spell
+{xrst_begin get_database_dir}
+{xrst_spell
     dir
 }
 
@@ -18,7 +18,7 @@ Get Database Directory Corresponding To a Fit
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -40,24 +40,24 @@ node_split_set
 If :ref:`split_reference_table` is empty,
 this argument must be None.
 Otherwise it is a ``set`` of ``int`` containing the
-:ref:`node_split_table.node_id` values that appear in the
+:ref:`node_split_table@node_id` values that appear in the
 node_spit table.
 
 root_node_id
 ************
-is the node_id for the :ref:`glossary.root_node`.
+is the node_id for the :ref:`glossary@root_node`.
 
 root_split_reference_id
 ***********************
 If :ref:`split_reference_table` is empty,
 this argument must be None.
 Otherwise it is an ``int`` specifying the
-:ref:`split_reference_table.split_reference_id`
+:ref:`split_reference_table@split_reference_id`
 that the root node corresponds to.
 
 fit_node_id
 ***********
-This argument is an ``int`` is the node_id for the  :ref:`glossary.fit_node`.
+This argument is an ``int`` is the node_id for the  :ref:`glossary@fit_node`.
 It can't be ``None``.
 
 fit_split_reference_id
@@ -65,20 +65,20 @@ fit_split_reference_id
 If :ref:`split_reference_table` is empty,
 this argument must be None.
 Otherwise it is an ``int`` specifying the
-:ref:`split_reference_table.split_reference_id`
+:ref:`split_reference_table@split_reference_id`
 that the fit corresponds to.
 
 database_dir
 ************
 The return value is a ``str`` containg the directory,
-relative to the :ref:`all_option_table.result_dir`,
+relative to the :ref:`all_option_table@result_dir`,
 where the database corresponding to the fit is (or will be) located.
 In other words, the fit database has the following path:
 
     *result_dir*\ ``/`` *database_dir*\ ``/dismod.db``
 
 
-{xsrst_end get_database_dir}
+{xrst_end get_database_dir}
 '''
 import dismod_at
 # ----------------------------------------------------------------------------

@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin clear_shared}
-{xsrst_spell
+{xrst_begin clear_shared}
+{xrst_spell
     inuse
     Errno
 }
@@ -38,10 +38,10 @@ all_node_database
 *****************
 is a ``str`` containing a path to the :ref:`all_node_db`.
 This is used to determine the
-:ref:`all_option_table.shared_memory_prefix`.
+:ref:`all_option_table@shared_memory_prefix`.
 
 
-{xsrst_end clear_shared}
+{xrst_end clear_shared}
 '''
 import dismod_at
 from multiprocessing import shared_memory

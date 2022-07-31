@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin_parent one_at_function}
-{xsrst_spell
+{xrst_begin_parent one_at_function}
+{xrst_spell
     avg
     dage
     dtime
@@ -23,8 +23,8 @@ functions below do not depend on time.
 Nodes
 *****
 The following is a diagram of the node tree for this example.
-The :ref:`glossary.root_node` is n1,
-the :ref:`glossary.fit_goal_set` is {n3, n4},
+The :ref:`glossary@root_node` is n1,
+the :ref:`glossary@fit_goal_set` is {n3, n4},
 and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
@@ -35,7 +35,7 @@ and the leaf nodes are {n3, n4, n5, n6}::
 
 fit_goal_set
 ============
-{xsrst_file
+{xrst_file
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -43,10 +43,10 @@ fit_goal_set
 Rates
 *****
 The only non-zero dismod_at rate for this example is
-:ref:`glossary.iota`; i.e.,
+:ref:`glossary@iota`; i.e.,
 we choose iota to represent the function that we are estimating.
 (We could have used
-:ref:`glossary.rho` or :ref:`glossary.chi` but not :ref:`glossary.omega`
+:ref:`glossary@rho` or :ref:`glossary@chi` but not :ref:`glossary@omega`
 for this purpose.)
 We use *iota_n(a, n, I)* to denote the value for iota
 as a function of age *a* node number *n* and income *I*.
@@ -55,13 +55,13 @@ Covariate
 *********
 The only covariate for this example is income.
 Its reference value is the average income corresponding
-to the :ref:`glossary.fit_node`.
+to the :ref:`glossary@fit_node`.
 
 r_n
 ===
 We use *r_n* for the reference value of income at node *n*.
 The code below sets this reference using the name avg_income:
-{xsrst_file
+{xrst_file
     # BEGIN avg_income
     # END avg_income
 }
@@ -69,11 +69,11 @@ The code below sets this reference using the name avg_income:
 alpha
 =====
 We use *alpha*
-for the :ref:`glossary.rate_value` covariate multiplier
+for the :ref:`glossary@rate_value` covariate multiplier
 that multipliers income.
 This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
-{xsrst_file
+{xrst_file
     # BEGIN alpha_true
     # END alpha_true
 }
@@ -89,7 +89,7 @@ s_n
 ===
 We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
-{xsrst_file
+{xrst_file
     # BEGIN sum_random
     # END sum_random
 }
@@ -102,7 +102,7 @@ Random Seed
 The random seed can be used to reproduce results.
 If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
-{xsrst_file
+{xrst_file
     # BEGIN random_seed
     # END random_seed
 }
@@ -116,14 +116,14 @@ in node *n* at age *a*, time *t*, and covariate values *c*.
 The covariate values are a list in the
 same order as the covariate table.
 The value *t* is not used by this function for this example.
-{xsrst_file
+{xrst_file
     # BEGIN rate_true
     # END rate_true
 }
 
 y_i
 ===
-The only simulated integrand for this example is :ref:`glossary.sincidence`
+The only simulated integrand for this example is :ref:`glossary@sincidence`
 which is a direct measurement of iota.
 (If we had used a different rate to represent the function we are estimating,
 we would use the corresponding direct measurement of that rate.)
@@ -145,7 +145,7 @@ of how good the fit is for the nodes in the fit_goal_set.
 a_i
 ===
 For each leaf node, data is generated on the following *age_grid*:
-{xsrst_file
+{xrst_file
     # BEGIN age_grid
     # END age_grid
 }
@@ -154,7 +154,7 @@ I_i
 ===
 For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
-{xsrst_file
+{xrst_file
     # BEGIN income_grid
     # END income_grid
 }
@@ -165,13 +165,13 @@ Parent Rate Smoothing
 *********************
 This is the iota smoothing used for the fit_node.
 This smoothing uses the *age_gird* and one time point.
-There are no :ref:`glossary.dtime`
+There are no :ref:`glossary@dtime`
 priors because there is only one time point.
 
 Value Prior
 ===========
 The following is the value prior used for the root_node
-{xsrst_file
+{xrst_file
     # BEGIN parent_value_prior
     # END parent_value_prior
 }
@@ -182,7 +182,7 @@ routine replaces them for other nodes.
 dage Prior
 ==========
 The following is the dage prior used for the fit_node:
-{xsrst_file
+{xrst_file
     # BEGIN parent_dage_prior
     # END parent_dage_prior
 }
@@ -191,13 +191,13 @@ Child Rate Smoothing
 ********************
 This is the smoothing used for the
 random effect for each child of the fit_node.
-There are no :ref:`glossary.dage` or dtime
+There are no :ref:`glossary@dage` or dtime
 priors because there is only one age and one time point in this smoothing.
 
 Value Prior
 ===========
 The following is the value prior used for the children of the fit_node:
-{xsrst_file
+{xrst_file
     # BEGIN child_value_prior
     # END child_value_prior
 }
@@ -211,7 +211,7 @@ so it does not have dage or dtime priors.
 Value Prior
 ===========
 The following is the value prior used for this smoothing:
-{xsrst_file
+{xrst_file
     # BEGIN alpha_value_prior
     # END alpha_value_prior
 }
@@ -222,25 +222,25 @@ routine replaces them for other nodes.
 Checking The Fit
 ****************
 The results of the fit are checked by check_cascade_node
-using the :ref:`check_cascade_node.avgint_table`
+using the :ref:`check_cascade_node@avgint_table`
 that was created by the root_node_db routine.
 The node_id for each row is replaced by the node_id for the
 fit being checked.
 routine uses these tables to check that fit against the truth.
 
-{xsrst_end one_at_function}
+{xrst_end one_at_function}
 ------------------------------------------------------------------------------
-{xsrst_begin one_at_function_py}
+{xrst_begin one_at_function_py}
 
 one_at_function: Python Source Code
 ###################################
 
-{xsrst_file
+{xrst_file
     BEGIN one_at_function source code
     END one_at_function source code
 }
 
-{xsrst_end one_at_function_py}
+{xrst_end one_at_function_py}
 '''
 # BEGIN one_at_function source code
 # ----------------------------------------------------------------------------

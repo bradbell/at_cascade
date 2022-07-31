@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin_parent no_ode_xam}
-{xsrst_spell
+{xrst_begin_parent no_ode_xam}
+{xrst_spell
     avg
     dtime
     dage
@@ -18,7 +18,7 @@
 
 Example Using no_ode_fit To Initialize Optimization
 ###################################################
-This example uses :ref:`glossary.mtexcess` data during a :ref:`no_ode_fit`
+This example uses :ref:`glossary@mtexcess` data during a :ref:`no_ode_fit`
 and then holds it out during the actual estimation.
 This is meant to simulate the case where mtexcess is obtain
 form other data to help initialize the optimization
@@ -29,8 +29,8 @@ functions below do not depend on time.
 Nodes
 *****
 The following is a diagram of the node tree for this example.
-The :ref:`glossary.root_node` is n0,
-the :ref:`glossary.fit_goal_set` and the leaf node set
+The :ref:`glossary@root_node` is n0,
+the :ref:`glossary@fit_goal_set` and the leaf node set
 are both {n2, n3} for this example::
 
                 n0
@@ -39,7 +39,7 @@ are both {n2, n3} for this example::
 
 fit_goal_set
 ============
-{xsrst_file
+{xrst_file
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -47,7 +47,7 @@ fit_goal_set
 Rates
 *****
 The non-zero dismod_at rates for this example are
-:ref:`glossary.iota`, :ref:`glossary.chi`, and :ref:`glossary.omega`.
+:ref:`glossary@iota`, :ref:`glossary@chi`, and :ref:`glossary@omega`.
 We use *iota(a, n, I)* , *chi(a, n, I)*
 to denote the value for iota and chi
 as a function of age *a*, node number *n*, and income *I*.
@@ -59,13 +59,13 @@ Covariate
 *********
 There is one covariate for this example, income.
 The reference value for income is the average income corresponding
-to the :ref:`glossary.root_node`.
+to the :ref:`glossary@root_node`.
 
 I_n
 ===
 We use *I_n* for the reference value of income at node *n*.
 The code below sets this reference using the name avg_income:
-{xsrst_file
+{xrst_file
     # BEGIN avg_income
     # END avg_income
 }
@@ -73,11 +73,11 @@ The code below sets this reference using the name avg_income:
 alpha
 =====
 We use *alpha_iota* ( *alpha_chi* )
-for the :ref:`glossary.rate_value` covariate multiplier
+for the :ref:`glossary@rate_value` covariate multiplier
 which multiplies income and affects iota (chi).
 The true value for these multipliers
 (used which simulating the data) is
-{xsrst_file
+{xrst_file
     # BEGIN alpha_true
     # END alpha_true
 }
@@ -92,7 +92,7 @@ R_n
 ===
 We use *R_n* to denote the random effects for node *n*.
 The code below sets this value:
-{xsrst_file
+{xrst_file
     # BEGIN random_effect_true
     # END random_effect_true
 }
@@ -105,7 +105,7 @@ Random Seed
 The random seed can be used to reproduce results.
 If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
-{xsrst_file
+{xrst_file
     # BEGIN random_seed
     # END random_seed
 }
@@ -118,7 +118,7 @@ in node *n* at age *a*, time *t*, and covariate values *c*.
 The covariate values are a list in the
 same order as the covariate table.
 The values *t* and *c[1]* are not used by this function for this example.
-{xsrst_file
+{xrst_file
     # BEGIN rate_true
     # END rate_true
 }
@@ -129,9 +129,9 @@ and prevalence measurements.
 y_i
 ===
 The simulated integrands for this example are
-:ref:`glossary.mtexcess`,
-:ref:`glossary.Sincidence`, and
-:ref:`glossary.prevalence`.
+:ref:`glossary@mtexcess`,
+:ref:`glossary@Sincidence`, and
+:ref:`glossary@prevalence`.
 The data is simulated without any noise
 but it is modeled as having noise.
 In addition, the mtexcess data is only used for the
@@ -149,7 +149,7 @@ of how good the fit is for the nodes in the fit_goal_set.
 a_i
 ===
 For each leaf node, data is generated on the following *age_grid*:
-{xsrst_file
+{xrst_file
     # BEGIN age_grid
     # END age_grid
 }
@@ -158,7 +158,7 @@ I_i
 ===
 For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
-{xsrst_file
+{xrst_file
     # BEGIN income_grid
     # END income_grid
 }
@@ -174,7 +174,7 @@ Parent Rate Smoothing
 *********************
 The parent smoothings use the true value of iota and chi at age 50
 and in the root_node:
-{xsrst_file
+{xrst_file
     # BEGIN iota_chi_50
     # END iota_chi_50
 }
@@ -184,7 +184,7 @@ iota and chi
 This is the smoothing used in the root_node model for the rates.
 Note that the value part of this smoothing is only used for the *root_node*.
 This smoothing uses the *age_gird* and one time point.
-There are no :ref:`glossary.dtime` priors because there is only one time point.
+There are no :ref:`glossary@dtime` priors because there is only one time point.
 The smoothing for chi does not use the first age grid point, age zero,
 because it is not possible to determine chi at age zero from Sincidence
 and prevalence measurements.
@@ -192,11 +192,11 @@ and prevalence measurements.
 Value Prior
 ===========
 The following is the value prior used for the root_node
-{xsrst_file
+{xrst_file
     # BEGIN parent_iota_value_prior
     # END parent_iota_value_prior
 }
-{xsrst_file
+{xrst_file
     # BEGIN parent_chi_value_prior
     # END parent_chi_value_prior
 }
@@ -207,7 +207,7 @@ routine replaces them for other nodes.
 dage Prior
 ==========
 The following is the dage prior used for the root_node:
-{xsrst_file
+{xrst_file
     # BEGIN parent_dage_prior
     # END parent_dage_prior
 }
@@ -216,13 +216,13 @@ Child Rate Smoothing
 ********************
 This is the smoothing used for the
 random effect for each child of the root_node.
-There are no :ref:`glossary.dage` or dtime
+There are no :ref:`glossary@dage` or dtime
 priors because there is only one age and one time point in this smoothing.
 
 Value Prior
 ===========
 The following is the value prior used for the children of the root_node:
-{xsrst_file
+{xrst_file
     # BEGIN child_value_prior
     # END child_value_prior
 }
@@ -236,7 +236,7 @@ so it does not have dage or dtime priors.
 Value Prior
 ===========
 The following is the value prior used for this smoothing:
-{xsrst_file
+{xrst_file
     # BEGIN alpha_value_prior
     # END alpha_value_prior
 }
@@ -247,28 +247,28 @@ routine replaces them for other nodes.
 Checking The Fit
 ****************
 The results of the fit are checked by check_cascade_node
-using the :ref:`check_cascade_node.avgint_table`
+using the :ref:`check_cascade_node@avgint_table`
 that was created by the root_node_db routine.
 The node_id for each row is replaced by the node_id for the
 fit being checked.
 routine uses these tables to check that fit against the truth.
 
-{xsrst_end no_ode_xam}
+{xrst_end no_ode_xam}
 ------------------------------------------------------------------------------
-{xsrst_begin no_ode_xam_py}
-{xsrst_spell
+{xrst_begin no_ode_xam_py}
+{xrst_spell
     xam
 }
 
 no_ode_xam: Python Source Code
 #################################
 
-{xsrst_file
+{xrst_file
     BEGIN no_ode_xam source code
     END no_ode_xam source code
 }
 
-{xsrst_end no_ode_xam_py}
+{xrst_end no_ode_xam_py}
 '''
 # BEGIN no_ode_xam source code
 # ----------------------------------------------------------------------------

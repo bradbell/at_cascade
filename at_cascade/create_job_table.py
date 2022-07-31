@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -8,14 +8,14 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin create_job_table}
+{xrst_begin create_job_table}
 
 Table of Jobs That Can Run in Parallel
 ######################################
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -55,7 +55,7 @@ This is ``None`` if and only if
 
 fit_goal_set
 ************
-This is the :ref:`glossary.fit_goal_set`.
+This is the :ref:`glossary@fit_goal_set`.
 
 job_table
 *********
@@ -80,13 +80,13 @@ where *split_reference_name* is the split reference name corresponding to
 fit_node_id
 ===========
 This is an ``int`` containing the node_id for the
-:ref:`glossary.fit_node` for this *this_job_id*.
+:ref:`glossary@fit_node` for this *this_job_id*.
 
 split_reference_id
 ==================
 If the split_reference table is empty, this is ``None``.
 Otherwise it is an ``int`` containing the
-:ref:`split_reference_table.split_reference_id`
+:ref:`split_reference_table@split_reference_id`
 for this *this_job_id*; i.e. the splitting covariate has this reference
 value.
 
@@ -112,7 +112,7 @@ there are no jobs that require the results of this job.
 Note that this job is the parent of each job between the start and end,
 
 
-{xsrst_end create_job_table}
+{xrst_end create_job_table}
 '''
 # -----------------------------------------------------------------------------
 import dismod_at

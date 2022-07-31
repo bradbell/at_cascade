@@ -7,27 +7,25 @@ This program is distributed under the terms of the
     GNU Affero General Public License version 3.0 or later
 see http://www.gnu.org/licenses/agpl.txt
 -----------------------------------------------------------------------------
-{xsrst_begin at_cascade}
+{xrst_begin example}
 
-Cascading Dismod_at Analysis From Parent To Child Regions
-=========================================================
+The at_cascade Examples
+#######################
 
-Version 2022.6.18
-******************
+.. comment BEGIN_SORT_THIS_LINE_PLUS_3
 
-Git Repository
-**************
-https://github.com/bradbell/at_cascade
-
-Children
-********
-{xsrst_child_table
-    xsrst/glossary.xsrst
-    xsrst/all_node_db.xsrst
-    example/example.xsrst
-    at_cascade/__init__.py
-    xsrst/wish_list.xsrst
-    xsrst/release_notes.xsrst
+{xrst_child_table
+    example/absolute_covariates.py
+    example/continue_cascade.py
+    example/max_fit_option.py
+    example/mulcov_freeze.py
+    example/no_ode_xam.py
+    example/one_at_function.py
+    example/prevalence2iota.py
+    example/remission.py
+    example/split_covariate.py
 }
 
-{xsrst_end at_cascade}
+.. comment END_SORT_THIS_LINE_MINUS_3
+
+{xrst_end example}

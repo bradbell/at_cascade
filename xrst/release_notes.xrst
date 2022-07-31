@@ -7,14 +7,14 @@ This program is distributed under the terms of the
     GNU Affero General Public License version 3.0 or later
 see http://www.gnu.org/licenses/agpl.txt
 -----------------------------------------------------------------------------
-{xsrst_begin_parent release_notes}
+{xrst_begin_parent release_notes}
 
 Release Notes for at_cascade
 ############################
 
-{xsrst_end release_notes}
+{xrst_end release_notes}
 -----------------------------------------------------------------------------
-{xsrst_begin 2022}
+{xrst_begin 2022}
 
 Release Notes for 2022
 ######################
@@ -27,7 +27,7 @@ because they have been completed.
 
 03-22
 *****
-Add :ref:`all_option_table.balance_fit` to the all_option table.
+Add :ref:`all_option_table@balance_fit` to the all_option table.
 
 03-14
 *****
@@ -38,7 +38,7 @@ Add :ref:`all_option_table.balance_fit` to the all_option table.
     covariate effects were not being handled properly.
 2.  A check of the prior mean for iota was added at the end of
     the :ref:`split_covariate<split_covariate>` example
-3.  Add the :ref:`no_ode_fit.fit_type` argument to no_ode_fit.
+3.  Add the :ref:`no_ode_fit@fit_type` argument to no_ode_fit.
 
 03-12
 *****
@@ -49,7 +49,7 @@ to :ref:`clear_shared` so it would know the shared memory prefix.
 
 03-10
 *****
-Add the :ref:`cascade_root_node.fit_type_list` argument to
+Add the :ref:`cascade_root_node@fit_type_list` argument to
 cascade_root_node and continue_cascade.
 
 03-08
@@ -58,7 +58,7 @@ The :ref:`remission<remission>` example was added.
 
 03-07
 *****
-The :ref:`all_option_table.shared_memory_prefix` was added to the
+The :ref:`all_option_table@shared_memory_prefix` was added to the
 all_option table.
 
 03-05
@@ -89,17 +89,17 @@ routines to the at_cascade module.
 01-27
 *****
 1.  The max_fit value is now doubled when doing
-    :ref:`all_option_table.max_fit.mulcov_freeze` fit.
+    :ref:`all_option_table@max_fit@mulcov_freeze` fit.
 
-2.  If :ref:`all_option_table.max_number_cpu` was one,
+2.  If :ref:`all_option_table@max_number_cpu` was one,
     the optimizer trace was not printed to the screen.
     This has been fixed.
 
 01-26
 *****
 Change perturb_optimization_scaling to
-:ref:`all_option_table.perturb_optimization_scale` and add the
-:ref:`all_option_table.perturb_optimization_start` option.
+:ref:`all_option_table@perturb_optimization_scale` and add the
+:ref:`all_option_table@perturb_optimization_start` option.
 
 01-25
 *****
@@ -113,22 +113,22 @@ at_cascade module.
     database (child database) might not satisfy the prior limits.
     This violated the dismod_at assumptions about the value prior means.
 
-2.  Change :ref:`create_shift_db.shift_databases.dage_and_dtime_priors`
+2.  Change :ref:`create_shift_db@shift_databases@dage_and_dtime_priors`
     to be difference predicted by parent fit.
 
 01-02
 *****
 1.  The cascade would hang at the end, instead of detecting completion,
-    when :ref:`all_option_table.max_number_cpu` was greater the one.
+    when :ref:`all_option_table@max_number_cpu` was greater the one.
     This has been fixed.
 
-2.  Use :ref:`create_job_table.job_table.job_name`
-    as the key for each job in the :ref:`check_log.message_dict` return value.
+2.  Use :ref:`create_job_table@job_table@job_name`
+    as the key for each job in the :ref:`check_log@message_dict` return value.
 
-{xsrst_end 2022}
+{xrst_end 2022}
 -----------------------------------------------------------------------------
-{xsrst_begin 2021}
-{xsrst_spell
+{xrst_begin 2021}
+{xrst_spell
     dir
     iter
 }
@@ -141,7 +141,7 @@ Release Notes for 2021
 1.  Fix error recovery and add more job status reporting to
     :ref:`run_parallel`.
 
-2.  Document the :ref:`run_parallel.trace_out` file.
+2.  Document the :ref:`run_parallel@trace.out` file.
 
 12-28
 *****
@@ -155,29 +155,29 @@ Release Notes for 2021
     program does not hang when a job fails.
 
 2.  Change the run_one_job trace_fit argument to
-    :ref:`run_one_job.trace_file_obj` so that opening and closing the file
+    :ref:`run_one_job@trace_file_obj` so that opening and closing the file
     is managed by the calling program.
 
 12-24
 *****
-1.  The base_directory was changed to the :ref:`all_option_table.result_dir`
+1.  The base_directory was changed to the :ref:`all_option_table@result_dir`
     and now a required option the all_option table.
 
 2.  Change required precision in example/mulcov_freeze.py to reduce probability
     of random test failure.
 
 3.  Replace :ref:`no_ode_fit` max_fit and max_abs_effect arguments by
-    :ref:`no_ode_fit.all_option_dict`.
+    :ref:`no_ode_fit@all_option_dict`.
 
-4.  In no_ode_fit, change in_database to :ref:`no_ode_fit.root_node_database`,
-    and change out_database to :ref:`no_ode_fit.root_fit_database`.
+4.  In no_ode_fit, change in_database to :ref:`no_ode_fit@root_node_database`,
+    and change out_database to :ref:`no_ode_fit@root_fit_database`.
 
 12-21
 *****
 1.  The output files are now relative to the base_directory
     (they used to be relative to the current working directory).
 
-2.  Starting from a :ref:`glossary.root_node` that was not at the top
+2.  Starting from a :ref:`glossary@root_node` that was not at the top
     of the node tree did not work. The :ref:`one_at_function` was
     modified to test for this problem and the problem was fixed.
 
@@ -185,7 +185,7 @@ Release Notes for 2021
 *****
 Remove the convergence problem :ref:`wish_list`
 entry becasue it was completed
-when the :ref:`all_option_table.perturb_optimization_scale` option
+when the :ref:`all_option_table@perturb_optimization_scale` option
 was added.
 
 12-06
@@ -198,14 +198,14 @@ below a certain point.
 *****
 1.  Add the :ref:`check_log` routine.
 
-2.  Add the :ref:`all_option_table.perturb_optimization_scale` option
+2.  Add the :ref:`all_option_table@perturb_optimization_scale` option
     and list options in alphabetical order.
 
 12-03
 *****
 1.  Add the :ref:`run_parallel` routine which
-    runs :ref:`create_job_table.job_table` jobs
-    sequentially (in parallel) when :ref:`run_parallel.max_number_cpu` is
+    runs :ref:`create_job_table@job_table` jobs
+    sequentially (in parallel) when :ref:`run_parallel@max_number_cpu` is
     one (greater than one).
 
 2.  Add a :ref:`wish_list` for at_cascade.
@@ -218,7 +218,7 @@ below a certain point.
 
 2.  Move cascade_fit_node to :ref:`cascade_root_node` (better name now that
     the routine is not recursive. In addition, change the fit_node_database
-    argument name to :ref:`cascade_root_node.root_node_database`.
+    argument name to :ref:`cascade_root_node@root_node_database`.
 
 12-01
 *****
@@ -226,10 +226,10 @@ below a certain point.
     This routine is for use with parallel processing.
 
 2.  Change fit_node_database base create_job_table argument to
-    :ref:`create_job_table.node_table`.
+    :ref:`create_job_table@node_table`.
 
-3.  Add :ref:`create_job_table.job_table.start_child_job_id` and
-    :ref:`create_job_table.job_table.end_child_job_id` to the job table.
+3.  Add :ref:`create_job_table@job_table@start_child_job_id` and
+    :ref:`create_job_table@job_table@end_child_job_id` to the job table.
 
 11-30
 *****
@@ -241,23 +241,23 @@ Change the name get_job_table to
 1.  Add get_job_table. This routine is under construction and planned
     and part of a re-factoring for parallel processing.
 
-2.  Add :ref:`all_option_table.root_split_reference_name`
+2.  Add :ref:`all_option_table@root_split_reference_name`
     to the all_option table (so that get_job_table can use any
     fit_node_database).
 
 11-28
 *****
-1.  Change the :ref:`create_all_node_db.all_option` argument to
+1.  Change the :ref:`create_all_node_db@all_option` argument to
     create_all_node_db to be a complete representation of the
     :ref:`all_option_table`.
     This reduces the amount of necessary documentation.
     It also requires that root_node_name be in the all_option argument.
 
-2.  Change the :ref:`create_all_node_db.split_reference_table` argument to
+2.  Change the :ref:`create_all_node_db@split_reference_table` argument to
     have a default value (corresponding to the empty table).
 
 3.  Change split_level in the all_option table to the
     :ref:`node_split_table`.
 
 
-{xsrst_end 2021}
+{xrst_end 2021}

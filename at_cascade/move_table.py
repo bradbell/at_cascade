@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin move_table}
-{xsrst_spell
+{xrst_begin move_table}
+{xrst_spell
     src
     dst
 }
@@ -19,7 +19,7 @@ Move Table
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -53,7 +53,7 @@ to table *dst_name*.
 5.  *seconds* is the integer unit time
 6.  *message* is the text message
 
-{xsrst_end   move_table}
+{xrst_end   move_table}
 '''
 import dismod_at
 import at_cascade

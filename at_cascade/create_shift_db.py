@@ -8,8 +8,8 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin create_shift_db}
-{xsrst_spell
+{xrst_begin create_shift_db}
+{xrst_spell
     var
     dage
     dtime
@@ -20,7 +20,7 @@ Create Database With Shifted Covariate References
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -33,7 +33,7 @@ This argument can't be ``None``.
 fit_node_database
 *****************
 is a python string containing the name of a dismod_at database.
-This is a :ref:`glossary.fit_node_database` which
+This is a :ref:`glossary@fit_node_database` which
 has two predict tables (mentioned below).
 These tables are used to create priors in the child node databases.
 This argument can't be ``None``.
@@ -77,12 +77,12 @@ We use the notation *shift_name* for the keys in this ``dict``.
 shift_name
 ==========
 For each *shift_name*, *shift_databases[shift_name]* is the name of
-a :ref:`glossary.input_node_database` that is created by this command.
+a :ref:`glossary@input_node_database` that is created by this command.
 The corresponding directory is assumed to alread exist.
 
 split_reference_name
 ====================
-If *shift_name* is a :ref:`split_reference_table.split_reference_name`,
+If *shift_name* is a :ref:`split_reference_table@split_reference_name`,
 the node corresponding to this shift database is the fit_node.
 
 Child Node
@@ -126,7 +126,7 @@ are replaced using the results of the fit.
 Otherwise, only the means are replaced.
 
 
-{xsrst_end create_shift_db}
+{xrst_end create_shift_db}
 '''
 # ----------------------------------------------------------------------------
 import math

@@ -8,14 +8,14 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 '''
-{xsrst_begin check_cascade_node}
+{xrst_begin check_cascade_node}
 
 Check the Cascade Results for a Node
 ####################################
 
 Syntax
 ******
-{xsrst_file
+{xrst_file
     # BEGIN syntax
     # END syntax
 }
@@ -28,13 +28,13 @@ is a function with the following syntax
 rate = rate_true(rate_name, a, t, n, c)
 ```
 The argument *rate_name* is one of the following:
-:ref:`glossary.iota`,
-:ref:`glossary.rho`,
-:ref:`glossary.chi`, or
-:ref:`glossary.omega`.
+:ref:`glossary@iota`,
+:ref:`glossary@rho`,
+:ref:`glossary@chi`, or
+:ref:`glossary@omega`.
 The argument *a* ( *t* ) is the age ( time ) at which we
 are evaluating the rate.
-The argument *n* is the :ref:`glossary.node_name` for the
+The argument *n* is the :ref:`glossary@node_name` for the
 node where we are evaluating the rate.
 The argument *c* is a list of covariate values
 in the same order as the covariate table.
@@ -51,9 +51,9 @@ fit_node_database
 *****************
 is a python string specifying the location of a
 dismod_at database relative to the current working directory.
-It is a :ref:`glossary.fit_node_database` with the
+It is a :ref:`glossary@fit_node_database` with the
 extra properties listed under
-:ref:`cascade_root_node.output_dismod_db`
+:ref:`cascade_root_node@output_dismod.db`
 in the cascade_root_node documentation.
 This argument can't be ``None``.
 
@@ -77,7 +77,7 @@ minus the prediction using the estimated rates.
 If this argument is ``None``, the maximum relative error is printed.
 This is intended as an aid in setting the relative tolerance.
 
-{xsrst_end check_cascade_node}
+{xrst_end check_cascade_node}
 '''
 # ----------------------------------------------------------------------------
 import copy

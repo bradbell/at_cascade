@@ -7,8 +7,8 @@ This program is distributed under the terms of the
     GNU Affero General Public License version 3.0 or later
 see http://www.gnu.org/licenses/agpl.txt
 -----------------------------------------------------------------------------
-{xsrst_begin wish_list}
-{xsrst_spell
+{xrst_begin wish_list}
+{xrst_spell
     podman
 }
 
@@ -19,7 +19,7 @@ Disk Space
 **********
 Certain tables are the same in every dismod_at database; i.e.
 for each node and each sex; see
-:ref:`glossary.fit_node_database.constant_tables`.
+:ref:`glossary@fit_node_database@constant_tables`.
 The data is one of these and can be very large.
 It would be nice of there was an option in dismod_at to read the
 data table from a different database.
@@ -31,4 +31,4 @@ Create a pip package for at_cascade; see
 In addition, create a docker / podman image that includes dismod_at
 and can run the cascade.
 
-{xsrst_end wish_list}
+{xrst_end wish_list}
