@@ -1,7 +1,7 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -20,7 +20,7 @@ then
     exit 1
 fi
 # -----------------------------------------------------------------------------
-echo_eval bin/run_sphinx.sh 0
+echo_eval bin/run_sphinx.sh html 0
 # -----------------------------------------------------------------------------
 list=$(ls example/*.py test/*.py)
 for script in $list
