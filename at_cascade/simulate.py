@@ -11,6 +11,7 @@
 {xrst_begin_parent simulate}
 {xrst_spell
     dir
+    csv
 }
 
 Simulate an AT Cascade Data Set
@@ -72,6 +73,15 @@ Sex is the
 :ref:`all_option_table@split_covariate_name` and is not
 referred to as a covariate for this simulations.
 
+Data Type
+*********
+The actual data type for each entry in a csv file is a string; i.e.,
+an arbitrary sequence of characters.
+
+1.  An integer field is a start that represents an integer.
+2.  A float field is a string that represents a floating point number.
+3.  A sex field has the value ``male`` or ``female`` .
+
 CSV Files
 *********
 {xrst_child_list}
@@ -111,7 +121,7 @@ It has the following columns (it may have others):
 
 node_name
 =========
-This text is a name describing the node in a way that is easy for a human to
+This string is a name describing the node in a way that is easy for a human to
 remember. It be unique for each row.
 
 node_id
@@ -150,33 +160,29 @@ This integer identifies the node corresponding to this row.
 
 sex
 ===
-This text is ``male`` or ``female`` and identifies which sex
-this row corresponds to. When estimating for both sexes, the
+This identifies which sex this row corresponds to.
+When estimating for both sexes, the
 average of the corresponding male and female data is used.
 
 age
 ===
-This real is the age, in years,  corresponding to this row.
+This float is the age, in years,  corresponding to this row.
 
 time
 ====
-This real is the time, in years, corresponding to this row.
+This float is the time, in years, corresponding to this row.
 
 omega
 =====
-This real is the value of omega (other cause mortality) for this row.
+This float is the value of omega (other cause mortality) for this row.
 Often other cause mortality is approximated by all cause mortality.
 Omega is a rate, not a covariate.
-
-sex
-===
-This is ``male`` or ``female`` and is the sex for this simulated data.
 
 covariate_name
 ==============
 For each covariate that we are including in this simulation,
 there is a column in the header that contains the *covariate_name*.
-In the other rows, this column  contain a real that is the
+In the other rows, this column  contain a float that is the
 corresponding covariate value.
 
 -----------------------------------------------------------------------------
@@ -189,12 +195,12 @@ different multiplier (the multipliers are constant in age and time)
 
 rate_name
 =========
-This text is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies
+This string is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies
 which rate this covariate multiplier is affecting.
 
 covariate_name
 ==============
-This text is a covariate name and specifies which covariate
+This string is a covariate name and specifies which covariate
 is being multiplied by this multiplier.
 It can be ``sex`` or any of the covariate names in covariate.csv file.
 Note that for sex, the corresponding covariate values are
@@ -242,32 +248,32 @@ no-effect rates corresponding to the fitting.
 
 rate_name
 =========
-This text is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies the rate.
+This string is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies the rate.
 If one of these rates doe not appear, it is modeled as always zero.
 
 age
 ===
-This real is the age, in years,  corresponding to this row.
+This float is the age, in years,  corresponding to this row.
 
 time
 ====
-This real is the time, in years, corresponding to this row.
+This float is the time, in years, corresponding to this row.
 
 truth
 =====
-This real is the rate value for the root node (the world)
+This float is the rate value for the root node (the world)
 with no covariate or random effects.
 It is used to simulate the data.
 
 mean
 ====
-This real is the mean used in the prior for the rate
+This float is the mean used in the prior for the rate
 without covariate or random effects
 (normal distribution).
 
 std
 ===
-This real is the standard deviation used in the prior for the rate
+This float is the standard deviation used in the prior for the rate
 without covariate or random effects
 (normal distribution).
 
@@ -288,9 +294,9 @@ simulate.csv
 This csv file specifies the simulated data set.
 Subsets of the data set will be used when fitting the data.
 For each node in :ref:`simulate_csv_in@node.csv@node_id`,
-sex equal to male and female,
+sex equal to ``male`` and ``female``,
 :ref:`simulate_csv_in@node.csv@n_simulate`
-a rows of simulate.csv are randomly selected (without replacement).
+rows of simulate.csv are randomly selected (without replacement).
 A simulated data point is created for each such selection.
 Each such simulate data point corresponds to a row in
 :ref:`simulate_csv_out@data.csv`.
@@ -306,7 +312,7 @@ to each node and sex.
 
 integrand_name
 ==============
-This text is a dismod_at integrand; e.g. ``Sincidence``.
+This string is a dismod_at integrand; e.g. ``Sincidence``.
 
 age_lower
 =========
@@ -364,15 +370,15 @@ This integer identifies the node for this data row by its node_id in node.csv.
 
 integrand_name
 ==============
-This text identifies the integrand for this simulated data.
+This string identifies the integrand for this simulated data.
 
 meas_value
 ==========
-This real is the simulated measured value
+This float is the simulated measured value
 
 meas_std
 ========
-This real is the measurement standard deviation for the simulated
+This float is the measurement standard deviation for the simulated
 data point. This standard deviation is before censoring.
 
 age_lower
@@ -395,13 +401,13 @@ is the upper time limit for this data row.
 
 sex
 ===
-This is ``male`` or ``female`` and is the sex for this simulated data.
+This is the sex for this simulated data.
 
 covariate_name
 ==============
 For each covariate that we are including in this simulation,
 there is a column in the header that contains the *covariate_name*.
-In the other rows, this column  contain a real that is the
+In the other rows, this column  contain a float that is the
 corresponding covariate value at the mid point of the ages and time
 intervals for this data point. This value is obtained using
 bilinear interpolation of the covariate values in covariate.csv.
