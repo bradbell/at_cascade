@@ -20,28 +20,41 @@ Simulate and Fit an AT Cascade Data Set
 Under Construction
 ******************
 
-Syntax
-******
+Definition
+**********
 {xrst_file
-        # BEGIN Syntax
-        # END Syntax
+        # BEGIN Definition
+        # END Definition
 }
 
-simulate_dir
-************
+Arguments
+*********
+
+csv_dir
+=======
 This ``str`` is the directory name where the CSV input and output files
 are located.
 
+command
+=======
+This ``str`` is either ``simulate`` or ``fit``.
+During a simulate command, only the :ref:`simulate_csv_out@data.csv` file
+is created.
+During a fit command, the data.csv file must already exist
+and the other output files are created.
 
-Demographer Notation
-********************
+Notation
+********
+
+Demographer
+===========
 None of the data is in demographer notation.
 For example,
 :ref:`simulate_csv_in@covariate.csv@time` 1990 means the beginning of 1990,
 not the time interval from 1990 to 1991.
 
 Rectangular Grid
-****************
+================
 A CSV file is said to have a rectangular grid in columns
 *name_a* , *name_b*, *name_c* if the following holds:
 
@@ -66,7 +79,7 @@ A CSV file is said to have a rectangular grid in columns
     *name_c* equal to :math:`c_n`.
 
 Covariates
-**********
+==========
 For these simulations, all the covariates are
 :ref:`glossary@relative_covariate` (called country covariates at IHME).
 Sex is the
@@ -74,7 +87,7 @@ Sex is the
 referred to as a covariate for this simulations.
 
 Data Type
-*********
+=========
 The actual data type for each entry in a csv file is a string; i.e.,
 an arbitrary sequence of characters.
 
@@ -83,7 +96,7 @@ an arbitrary sequence of characters.
 3.  A sex field has the value ``male`` or ``female`` .
 
 Index Column
-************
+============
 An index column for a csv file is an integer column
 that has the row number corresponding to each row.
 It starts with zero at the first row below the header row.
@@ -113,14 +126,6 @@ This csv file has two columns,
 one called ``name`` and the other called ``value``.
 The rows are documented below by the name column:
 
-command
-=======
-This is either ``simulate`` or ``fit.
-During a simulate command, only the :ref:`simulate_csv_out@data.csv` file
-is created.
-During a fit command, the data.csv file must alread exist
-and the other output files are created.
-
 std_random_effects
 ==================
 This is the standard deviation of the random effects.
@@ -141,7 +146,7 @@ remember. It be unique for each row.
 
 node_id
 =======
-is an :ref:`simulate@index_column` for this file.
+is an :ref:`simulate@notation@index_column` for this file.
 
 parent_node_id
 ==============
@@ -156,7 +161,7 @@ to child nodes.
 covariate.csv
 *************
 This csv file specifies the value of omega and the covariates.
-It has a :ref:`simulate@rectangular_grid` in the columns
+It has a :ref:`simulate@notation@rectangular_grid` in the columns
 ``node_id``, ``sex``, ``age``, ``time`` .
 
 node_id
@@ -251,7 +256,7 @@ rate.csv
 ********
 This csv file specifies the grid points at which each rate is modeled.
 This file has a
-:ref:`simulate@rectangular_grid` in the columns
+:ref:`simulate@notation@rectangular_grid` in the columns
 ``rate_name``, ``age``, ``time`` .
 These are no-effect rates; i.e., the rates without
 the random and covariate effects.
@@ -497,12 +502,12 @@ This has a simple form because there are no noise covariates; i.e.,
 
 {xrst_end simulate_csv_out}
 """
+# BEGIN Definition
+# at_cascade.simulate
 def simulate(
-# BEGIN Syntax
-# at_cascade.simulate(
-    simulate_dir
-# )
-# END Syntax
+    csv_dir ,
+    command ,
 ) :
-    assert type(simulate_dir) == str
+# END Definition
+    assert type(csv_dir) == str
     assert False
