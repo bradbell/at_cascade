@@ -113,6 +113,14 @@ This csv file has two columns,
 one called ``name`` and the other called ``value``.
 The rows are documented below by the name column:
 
+command
+=======
+This is either ``simulate`` or ``fit.
+During a simulate command, only the :ref:`simulate_csv_out@data.csv` file
+is created.
+During a fit command, the data.csv file must alread exist
+and the other output files are created.
+
 std_random_effects
 ==================
 This is the standard deviation of the random effects.
@@ -142,14 +150,6 @@ The root node of the tree has an empty entry for this column.
 If a node is a parent, it must have at least two children.
 This avoids fitting the same location twice as one goes from parent
 to child nodes.
-
-n_simulate
-==========
-This integer is the number of rows in simulate.csv that will be randomly chosen
-(without replacement) for this node. This value must be less than or equal
-the number of rows (not counting the header) in the simulate.csv file.
-For example, we could only simulate data for the leaf nodes by setting
-n_simulate to zero for the other nodes.
 
 -----------------------------------------------------------------------------
 
@@ -196,7 +196,7 @@ multiplier.csv
 **************
 This csv file provides information about the covariate multipliers.
 Each row of this file, except the header row, corresponds to a
-different multiplier (the multipliers are constant in age and time)
+different multiplier (the multipliers are constant in age and time).
 
 multiplier_id
 =============
@@ -223,21 +223,26 @@ mean
 ====
 This is the prior mean used when fitting this multiplier
 (normal distribution).
+This column is not used during a simulate command.
+
 
 std
 ===
 This is the prior standard deviation used when fitting this multiplier
 (normal distribution).
+This column is not used during a simulate command.
 
 lower
 =====
 is the lower limit (during fitting) for this covariate multiplier.
+This column is not used during a simulate command.
 
 upper
 =====
 is the upper limit (during fitting) for this covariate multiplier.
 Note that using lower and upper limit are zero and the true value is non-zero,
 one can simulate data that does not correspond to the model.
+This column is not used during a simulate command.
 
 
 -----------------------------------------------------------------------------
@@ -283,49 +288,49 @@ mean
 This float is the mean used in the prior for the rate
 without covariate or random effects
 (normal distribution).
+This column is not used during a simulate command.
 
 std
 ===
 This float is the standard deviation used in the prior for the rate
 without covariate or random effects
 (normal distribution).
+This column is not used during a simulate command.
 
 lower
 =====
 is the lower limit (during fitting) for this covariate multiplier.
+This column is not used during a simulate command.
 
 upper
 =====
 is the upper limit (during fitting) for this covariate multiplier.
 Note that using lower and upper limit are zero and the true value is non-zero,
 one can simulate data that does not correspond to the model.
+This column is not used during a simulate command.
 
 -----------------------------------------------------------------------------
 
 simulate.csv
 ************
-This csv file specifies the simulated data set.
-Subsets of the data set will be used when fitting the data.
-For each node in :ref:`simulate_csv_in@node.csv@node_id`,
-sex equal to ``male`` and ``female``,
-:ref:`simulate_csv_in@node.csv@n_simulate`
-rows of simulate.csv are randomly selected (without replacement).
-A simulated data point is created for each such selection.
-Each such simulate data point corresponds to a row in
-:ref:`simulate_csv_out@data.csv`.
+This csv file specifies the simulated data set
+with each row corresponding to a data point.
 
 simulate_id
 ===========
-For each row, the value in this column is the number of rows that come before
-this row, not counting the header row.
-In other words, it counts the data rows starting at row index zero.
-This column is used to select subsets of the simulation corresponding
-to each node and sex.
-
+is an index column for this file.
 
 integrand_name
 ==============
 This string is a dismod_at integrand; e.g. ``Sincidence``.
+
+node_id
+=======
+This integer identifies the node corresponding to this data point.
+
+sex
+===
+is the sex for this data pont.
 
 age_lower
 =========
@@ -376,50 +381,31 @@ simulate CSV Output Files
 data.csv
 ********
 This contains the simulated data.
-It as the following columns:
+It is created during a simulate command
+and has the following columns:
 
-data_id
-=======
-is an index column for this csv file.
+simulate_id
+===========
+is an index column for this csv file and for the
+:ref:`simulate_csv_in@simulate.csv` .
 
 node_id
 =======
-This integer identifies the node for this data row by its node_id in node.csv.
+This integer identifies the node for this data row.
 
 integrand_name
 ==============
-This string identifies the integrand for this simulated data.
+This string identifies the integrand.
+
 
 meas_value
 ==========
-This float is the simulated measured value
+This float is the simulated measured value.
 
 meas_std
 ========
 This float is the measurement standard deviation for the simulated
 data point. This standard deviation is before censoring.
-
-age_lower
-=========
-is the lower age limit for this data row.
-
-age_upper
-=========
-is the upper age limit for this data row.
-Note that the age midpoint will be used to interpolate covariates values
-corresponding to this data row.
-
-time_lower
-==========
-is the lower time limit for this data row.
-
-time_upper
-==========
-is the upper time limit for this data row.
-
-sex
-===
-This is the sex for this simulated data.
 
 covariate_name
 ==============
@@ -437,7 +423,8 @@ outside the age rage (time range) in the covariate.csv file.
 multiplier_fit.csv
 ******************
 This contains the fit results for the covariate multipliers.
-It has the following columns:
+It is created during a fit command and
+has the following columns:
 
 multiplier_id
 =============
@@ -458,7 +445,8 @@ for the standard deviation of the estimate.
 rate_fit.csv
 ************
 This contains the fit results for the no-effect rate values.
-It has the following columns:
+It is created during a fit command and
+has the following columns:
 
 node_id
 =======
@@ -488,7 +476,8 @@ for the standard deviation of the estimate.
 data_fit.csv
 ************
 This contains the fit results for the simulated data values.
-It has the following columns:
+It is created during a fit command and
+has the following columns:
 
 data_id
 =======
