@@ -50,6 +50,15 @@ If a node is a parent, it must have at least two children.
 This avoids fitting the same location twice as one goes from parent
 to child nodes.
 
+n_simulate
+==========
+This integer is the number of rows in simulate.csv that will be randomly chosen
+(without replacement) for this node. This value must be less than or equal
+the number of rows (not counting the header) in the simulate.csv file.
+For example, we could only simulate data for the leaf nodes by setting
+n_simulate to zero for the other nodes.
+
+
 -----------------------------------------------------------------------------
 
 covariate.csv
@@ -70,12 +79,6 @@ covariate.csv
 node_id
 =======
 This integer identifies the node corresponding to this row.
-
-simulate
-========
-This text column is true (false)  if data is simulated (is not simulated)
-for this node. For example, we could only simulate data for the leaf nodes;
-i.e., the nodes that have no children.
 
 sex
 ===
@@ -113,7 +116,7 @@ Each row of this file, except the header row, corresponds to a multiplier.
 
 rate_name
 =========
-This text is ``iota``, ``rho``, or ``chi`` and specifies
+This text is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies
 which rate this covariate multiplier is affecting.
 
 covariate_name
@@ -124,8 +127,8 @@ It can be ``sex`` or any of the covariate names in covariate.csv file.
 Note that for sex, the corresponding covariate values are
 female = -0.5 and male = +0.5.
 
-true
-====
+truth
+=====
 This is the value of the covariate multiplier used to simulate the data.
 
 mean
@@ -138,6 +141,17 @@ std
 This is the prior standard deviation used when fitting this multiplier
 (normal distribution).
 
+lower
+=====
+is the lower limit (during fitting) for this covariate multiplier.
+
+upper
+=====
+is the upper limit (during fitting) for this covariate multiplier.
+Note that using lower and upper limit are zero and the true value is non-zero,
+one can simulate data that does not correspond to the model.
+
+
 -----------------------------------------------------------------------------
 
 rate.csv
@@ -149,7 +163,8 @@ None of this data is in demographer notation.
 
 rate_name
 =========
-This text is ``iota``, ``rho``, or ``chi`` and specifies the rate.
+This text is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies the rate.
+If one of these rates doe not appear, it is modeled as always zero.
 
 age
 ===
@@ -159,8 +174,8 @@ time
 ====
 This real is the time, in years, corresponding to this row.
 
-true
-====
+truth
+=====
 This real is the rate value for the root node (the world)
 with no covariate or random effects.
 It is used to simulate the data.
@@ -177,6 +192,16 @@ This real is the standard deviation used in the prior for the rate
 without covariate or random effects
 (normal distribution).
 
+lower
+=====
+is the lower limit (during fitting) for this covariate multiplier.
+
+upper
+=====
+is the upper limit (during fitting) for this covariate multiplier.
+Note that using lower and upper limit are zero and the true value is non-zero,
+one can simulate data that does not correspond to the model.
+
 -----------------------------------------------------------------------------
 
 simulate.csv
@@ -186,6 +211,15 @@ Subsets of the complete data set will be used when fitting the data.
 For each row of this file,
 a data point is simulated for each sex and
 each node (with data equal to one in node.csv).
+
+simulate_id
+===========
+For each row, the value in this column is the number of rows that come before
+this row, not counting the header row.
+In other words, it counts the data rows starting at row index zero.
+This column is used to select subsets of the simulation corresponding
+to each node.
+
 
 integrand
 =========
