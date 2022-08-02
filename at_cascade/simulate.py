@@ -8,21 +8,37 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 """
-{xrst_begin simulate}
-{xrst_spell
-    csv
-    std
-}
+{xrst_begin_parent simulate}
 
 Under Construction: Simulate an AT Cascade Data Set
 ###################################################
 
-Discussion
-**********
-So far this is just specifications for the input to the simulations.
-The following inputs are missing:
 
-#.  The standard deviation of the random effects.
+{xrst_end simulate}
+
+===============================================================================
+
+{xrst_begin simulate_csv_in}
+{xrst_spell
+    csv
+    std
+    cv
+}
+
+simulate CSV Input Files
+#########################
+
+option.csv
+**********
+This csv file has two columns,
+one called ``name`` and the other called ``value``.
+The rows are documented below by the name column:
+
+std_random_effects
+==================
+This is the standard deviation of the random effects.
+All fo the effects are in log of rate space, so this standard deviation
+is also in log of rate space.
 
 -----------------------------------------------------------------------------
 
@@ -221,8 +237,8 @@ This column is used to select subsets of the simulation corresponding
 to each node.
 
 
-integrand
-=========
+integrand_name
+==============
 This text is a dismod_at integrand; e.g. ``Sincidence``.
 
 age_lower
@@ -243,14 +259,90 @@ time_upper
 ==========
 is the upper time limit for this data row.
 
-std_log
+percent_cv
+==========
+is the coefficient of variation as a percent of the corresponding
+average integrand; i.e., the model for the integrand
+without any measurement noise.
+The noise will be generated with a normal distribution
+that has mean equal to the average integrand and
+standard deviation equal to the mean times percent_cv / 100.
+If the resulting measurement value would be less than zero,
+the value zero is be used; i.e.,
+a censored normal is used to simulate the data.
+
+
+{xrst_end simulate_csv_in}
+
+==============================================================================
+
+{xrst_begin simulate_csv_out}
+{xrst_spell
+    csv
+    meas
+    std
+    bilinear
+}
+
+simulate CSV Output Files
+##########################
+
+data.csv
+********
+This is the simulate data, it as the following columns
+
+node_id
 =======
-is the standard deviation, in log space,
-used ot simulate data corresponding to this row
-(log-normal distribution).
+This integer identifies the node for this data row by its node_id in node.csv.
+
+integrand_name
+==============
+This text identifies the integrand for this simulated data.
+
+meas_value
+==========
+This real is the simulated measured value
+
+meas_std
+========
+This real is the measurement standard deviation for the simulated
+data point. This standard deviation is before censoring.
+
+age_lower
+=========
+is the lower age limit for this data row.
+
+age_upper
+=========
+is the upper age limit for this data row.
+Note that the age midpoint will be used to interpolate covariates values
+corresponding to this data row.
+
+time_lower
+==========
+is the lower time limit for this data row.
+
+time_upper
+==========
+is the upper time limit for this data row.
+
+sex
+===
+This is ``male`` or ``female`` and is the sex for this simulated data.
+
+covariate_name
+==============
+For each covariate that we are including in this simulation,
+there is a column in the header that contains the *covariate_name*.
+In the other rows, this column  contain a real that is the
+corresponding covariate value at the mid point of the ages and time
+intervals for this data point. This value is obtained using
+bilinear interpolation of the covariate values in covariate.csv.
+The interpolate is extended as constant in age (time) for points
+outside the age rage (time range) in the covariate.csv file.
 
 
-{xrst_end simulate}
+{xrst_end simulate_csv_out}
 """
 def simulate() :
     assert False
