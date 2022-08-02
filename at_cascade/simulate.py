@@ -9,10 +9,72 @@
 # -----------------------------------------------------------------------------
 """
 {xrst_begin_parent simulate}
+{xrst_spell
+    dir
+}
 
-Under Construction: Simulate an AT Cascade Data Set
-###################################################
+Simulate an AT Cascade Data Set
+###############################
 
+Under Construction
+******************
+
+Syntax
+******
+{xrst_file
+        # BEGIN Syntax
+        # END Syntax
+}
+
+simulate_dir
+************
+This ``str`` is the directory name where the CSV input and output files
+are located.
+
+
+Demographer Notation
+********************
+None of the data is in demographer notation.
+For example,
+:ref:`simulate_csv_in@covariate.csv@time` 1990 means the beginning of 1990,
+not the time interval from 1990 to 1991.
+
+Rectangular Grid
+****************
+A CSV file is said to have a rectangular grid in columns
+*name_a* , *name_b*, *name_c* if the following holds:
+
+#.  The CSV file has columns with the names
+    *name_a*, *name_b*, *name_c*.
+
+#.  :math:`( a_1 , \ldots , a_L )`
+    is the vector of values in column *name_a* .
+
+#.  :math:`( b_1 , \ldots , b_M )`
+    is the vector of values in column *name_b* .
+
+#.  :math:`( c_1 , \ldots , c_N )`
+    is the vector of values in column *name_c* .
+
+#.  For :math:`\ell = 1 , \ldots , L`,
+    :math:`m = 1 , \ldots , M`,
+    :math:`n = 1,  \ldots , N` ,
+    there is one and only one row with
+    *name_a* equal to :math:`a_\ell`,
+    *name_b* equal to :math:`b_m`, and
+    *name_c* equal to :math:`c_n`.
+
+Covariates
+**********
+For these simulations, all the covariates are
+:ref:`glossary@relative_covariate` (called country covariates at IHME).
+Sex is the
+:ref:`all_option_table@split_covariate_name` and is not
+referred to as a covariate for this simulations.
+
+CSV Files
+*********
+{xrst_child_list}
 
 {xrst_end simulate}
 
@@ -74,23 +136,13 @@ the number of rows (not counting the header) in the simulate.csv file.
 For example, we could only simulate data for the leaf nodes by setting
 n_simulate to zero for the other nodes.
 
-
 -----------------------------------------------------------------------------
 
 covariate.csv
 *************
-1.  This csv file specifies the value of omega and the covariates.
-2.  None of the data in this file uses demographer notation; e.g.,
-    year 1990 means the beginning of 1990,
-    not the time interval from 1990 to 1991.
-3.  There is a vector of ages :math:`(a_1 , \ldots , a_m )`
-    and a vector of times :math:`(t_1 , \ldots , t_n)`
-    that define the rectangular grid for this age time csv file.
-    In other words, for each node_id, for each sex,
-    for :math:`i = 1 , \dots , m`,
-    and for :math:`j = 1, \ldots , n`
-    there is one and only one row with the corresponding
-    node_id, sex, age, and time.
+This csv file specifies the value of omega and the covariates.
+It has a :ref:`simulate@rectangular_grid` in the columns
+``node_id``, ``sex``, ``age``, ``time`` .
 
 node_id
 =======
@@ -112,9 +164,13 @@ This real is the time, in years, corresponding to this row.
 
 omega
 =====
-This real is the value of  omega (other cause mortality) for this row.
+This real is the value of omega (other cause mortality) for this row.
 Often other cause mortality is approximated by all cause mortality.
 Omega is a rate, not a covariate.
+
+sex
+===
+This is ``male`` or ``female`` and is the sex for this simulated data.
 
 covariate_name
 ==============
@@ -128,7 +184,8 @@ corresponding covariate value.
 multiplier.csv
 **************
 This csv file provides information about the covariate multipliers.
-Each row of this file, except the header row, corresponds to a multiplier.
+Each row of this file, except the header row, corresponds to a
+different multiplier (the multipliers are constant in age and time)
 
 rate_name
 =========
@@ -173,9 +230,15 @@ one can simulate data that does not correspond to the model.
 rate.csv
 ********
 This csv file specifies the grid points at which each rate is modeled.
-It also specifies the true value (for the world).
-For each rate, the  (age, time) grid is rectangular.
-None of this data is in demographer notation.
+This file has a
+:ref:`simulate@rectangular_grid` in the columns
+``rate_name``, ``age``, ``time`` .
+These are no-effect rates; i.e., the rates without
+the random and covariate effects.
+It is the same for all nodes.
+Covariate multipliers that are constrained to zero during the fitting
+can be used to get variation between nodes in the
+no-effect rates corresponding to the fitting.
 
 rate_name
 =========
@@ -222,11 +285,15 @@ one can simulate data that does not correspond to the model.
 
 simulate.csv
 ************
-This csv file specifies the complete data set.
-Subsets of the complete data set will be used when fitting the data.
-For each row of this file,
-a data point is simulated for each sex and
-each node (with data equal to one in node.csv).
+This csv file specifies the simulated data set.
+Subsets of the data set will be used when fitting the data.
+For each node in :ref:`simulate_csv_in@node.csv@node_id`,
+sex equal to male and female,
+:ref:`simulate_csv_in@node.csv@n_simulate`
+a rows of simulate.csv are randomly selected (without replacement).
+A simulated data point is created for each such selection.
+Each such simulate data point corresponds to a row in
+:ref:`simulate_csv_out@data.csv`.
 
 simulate_id
 ===========
@@ -234,7 +301,7 @@ For each row, the value in this column is the number of rows that come before
 this row, not counting the header row.
 In other words, it counts the data rows starting at row index zero.
 This column is used to select subsets of the simulation corresponding
-to each node.
+to each node and sex.
 
 
 integrand_name
@@ -344,5 +411,12 @@ outside the age rage (time range) in the covariate.csv file.
 
 {xrst_end simulate_csv_out}
 """
-def simulate() :
+def simulate(
+# BEGIN Syntax
+# at_cascade.simulate(
+    simulate_dir
+# )
+# END Syntax
+) :
+    assert type(simulate_dir) == str
     assert False
