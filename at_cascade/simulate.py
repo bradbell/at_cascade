@@ -14,8 +14,8 @@
     csv
 }
 
-Simulate an AT Cascade Data Set
-###############################
+Simulate and Fit an AT Cascade Data Set
+#######################################
 
 Under Construction
 ******************
@@ -82,6 +82,13 @@ an arbitrary sequence of characters.
 2.  A float field is a string that represents a floating point number.
 3.  A sex field has the value ``male`` or ``female`` .
 
+Index Column
+************
+An index column for a csv file is an integer column
+that has the row number corresponding to each row.
+It starts with zero at the first row below the header row.
+
+
 CSV Files
 *********
 {xrst_child_list}
@@ -126,9 +133,7 @@ remember. It be unique for each row.
 
 node_id
 =======
-For each row, the value in this column is the number of rows that come before
-this row, not counting the header row.
-In other words, it counts the data rows starting at row index zero.
+is an :ref:`simulate@index_column` for this file.
 
 parent_node_id
 ==============
@@ -156,7 +161,7 @@ It has a :ref:`simulate@rectangular_grid` in the columns
 
 node_id
 =======
-This integer identifies the node corresponding to this row.
+This integer identifies the node, in node.csv, corresponding to this row.
 
 sex
 ===
@@ -192,6 +197,10 @@ multiplier.csv
 This csv file provides information about the covariate multipliers.
 Each row of this file, except the header row, corresponds to a
 different multiplier (the multipliers are constant in age and time)
+
+multiplier_id
+=============
+is an index column for this file.
 
 rate_name
 =========
@@ -245,6 +254,10 @@ It is the same for all nodes.
 Covariate multipliers that are constrained to zero during the fitting
 can be used to get variation between nodes in the
 no-effect rates corresponding to the fitting.
+
+rate_id
+=======
+is an index column for this file.
 
 rate_name
 =========
@@ -362,7 +375,12 @@ simulate CSV Output Files
 
 data.csv
 ********
-This is the simulate data, it as the following columns
+This contains the simulated data.
+It as the following columns:
+
+data_id
+=======
+is an index column for this csv file.
 
 node_id
 =======
@@ -413,6 +431,79 @@ intervals for this data point. This value is obtained using
 bilinear interpolation of the covariate values in covariate.csv.
 The interpolate is extended as constant in age (time) for points
 outside the age rage (time range) in the covariate.csv file.
+
+------------------------------------------------------------------------------
+
+multiplier_fit.csv
+******************
+This contains the fit results for the covariate multipliers.
+It has the following columns:
+
+multiplier_id
+=============
+This integer identifies the row in the multiplier.csv file
+corresponding to this multiplier estimate.
+
+estimate
+========
+This float is the estimated value for the covariate multiplier.
+
+estimate_std
+============
+This float is the asymptotic statistics approximation
+for the standard deviation of the estimate.
+
+------------------------------------------------------------------------------
+
+rate_fit.csv
+************
+This contains the fit results for the no-effect rate values.
+It has the following columns:
+
+node_id
+=======
+This integer identifies the row in the node.csv file
+corresponding to this rate estimate.
+
+rate_id
+=======
+This integer identifies the row in the rate.csv file
+corresponding to this the rate estimate.
+
+sex
+===
+This is the sex for this rate estimate.
+
+estimate
+========
+This float is the estimated value for the covariate multiplier.
+
+estimate_std
+============
+This float is the asymptotic statistics approximation
+for the standard deviation of the estimate.
+
+------------------------------------------------------------------------------
+
+data_fit.csv
+************
+This contains the fit results for the simulated data values.
+It has the following columns:
+
+data_id
+=======
+This integer identifies the row in the data.csv file
+corresponding to this data estimate.
+
+estimate
+========
+This float is the estimated value for the data
+
+residual
+========
+This float is the weighted residual corresponding to this data point.
+This has a simple form because there are no noise covariates; i.e.,
+(meas_value - estimate) / meas_std.
 
 
 {xrst_end simulate_csv_out}
