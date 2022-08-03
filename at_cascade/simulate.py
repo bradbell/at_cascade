@@ -32,7 +32,7 @@ Arguments
 
 csv_dir
 =======
-This ``str`` is the directory name where the CSV input and output files
+This ``str`` is the directory name where the csv input and output files
 are located.
 
 command
@@ -55,10 +55,10 @@ not the time interval from 1990 to 1991.
 
 Rectangular Grid
 ================
-A CSV file is said to have a rectangular grid in columns
+A csv file is said to have a rectangular grid in columns
 *name_a* , *name_b*, *name_c* if the following holds:
 
-#.  The CSV file has columns with the names
+#.  The csv file has columns with the names
     *name_a*, *name_b*, *name_c*.
 
 #.  :math:`( a_1 , \ldots , a_L )`
@@ -84,16 +84,17 @@ For these simulations, all the covariates are
 :ref:`glossary@relative_covariate` (called country covariates at IHME).
 Sex is the
 :ref:`all_option_table@split_covariate_name` and is not
-referred to as a covariate for this simulations.
+referred to as a covariate by the simulate routine.
 
 Data Type
 =========
 The actual data type for each entry in a csv file is a string; i.e.,
-an arbitrary sequence of characters.
+an arbitrary sequence of characters. Certain columns have further
+restrictions as described below
 
-1.  An integer field is a start that represents an integer.
-2.  A float field is a string that represents a floating point number.
-3.  A sex field has the value ``male`` or ``female`` .
+1.  An integer value is a string represents of an integer.
+2.  A float value is a string that represents a floating point number.
+3.  A sex value is either ``male`` or ``female`` .
 
 Index Column
 ============
@@ -101,8 +102,13 @@ An index column for a csv file is an integer column
 that has the row number corresponding to each row.
 It starts with zero at the first row below the header row.
 
+Distributions
+=============
+Unless other wise specified, the mean and standard deviations that
+simulate refers to are for a normal distribution.
 
-CSV Files
+
+Csv Files
 *********
 {xrst_child_list}
 
@@ -117,7 +123,7 @@ CSV Files
     cv
 }
 
-simulate CSV Input Files
+simulate Csv Input Files
 #########################
 
 option.csv
@@ -137,7 +143,9 @@ is also in log of rate space.
 node.csv
 ********
 This csv file defines the node tree.
-It has the following columns (it may have others):
+It has the columns documented below.
+Columns that are not documented are not used by simulate.
+This is true for all the :ref:`simulate_csv_in`.
 
 node_name
 =========
@@ -150,7 +158,7 @@ is an :ref:`simulate@notation@index_column` for this file.
 
 parent_node_id
 ==============
-This integer is the node_id corresponding to the parent node for this node.
+This integer is the node_id corresponding to the parent of this node.
 The root node of the tree has an empty entry for this column.
 If a node is a parent, it must have at least two children.
 This avoids fitting the same location twice as one goes from parent
@@ -172,7 +180,7 @@ sex
 ===
 This identifies which sex this row corresponds to.
 When estimating for both sexes, the
-average of the corresponding male and female data is used.
+average of the corresponding male and female covariates is used.
 
 age
 ===
@@ -192,8 +200,10 @@ covariate_name
 ==============
 For each covariate that we are including in this simulation,
 there is a column in the header that contains the *covariate_name*.
-In the other rows, this column  contain a float that is the
-corresponding covariate value.
+The other values in that column are float representations of the covariate.
+All of these covariates are
+:ref:`glossary@relative_covariate`; see
+:ref:`simulate@notation@covariates`.
 
 -----------------------------------------------------------------------------
 
@@ -201,7 +211,7 @@ multiplier.csv
 **************
 This csv file provides information about the covariate multipliers.
 Each row of this file, except the header row, corresponds to a
-different multiplier (the multipliers are constant in age and time).
+different multiplier. The multipliers are constant in age and time.
 
 multiplier_id
 =============
@@ -212,13 +222,12 @@ rate_name
 This string is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies
 which rate this covariate multiplier is affecting.
 
-covariate_name
-==============
-This string is a covariate name and specifies which covariate
-is being multiplied by this multiplier.
-It can be ``sex`` or any of the covariate names in covariate.csv file.
-Note that for sex, the corresponding covariate values are
-female = -0.5 and male = +0.5.
+covariate_or_sex
+================
+If this is ``sex`` it specifies that this multiplier multiples
+the sex values where female = -0.5 and male = +0.5.
+Otherwise this is one of the covariate names in the covariate.csv file
+and specifies which covariate is being multiplied.
 
 truth
 =====
@@ -226,28 +235,26 @@ This is the value of the covariate multiplier used to simulate the data.
 
 mean
 ====
-This is the prior mean used when fitting this multiplier
-(normal distribution).
-This column is not used during a simulate command.
+This is the prior mean used when fitting this multiplier.
+This column is not used during the ``simulate`` command.
 
 
 std
 ===
-This is the prior standard deviation used when fitting this multiplier
-(normal distribution).
-This column is not used during a simulate command.
+This is the prior standard deviation used when fitting this multiplier.
+This column is not used during the ``simulate`` command.
 
 lower
 =====
 is the lower limit (during fitting) for this covariate multiplier.
-This column is not used during a simulate command.
+This column is not used during the ``simulate`` command.
 
 upper
 =====
 is the upper limit (during fitting) for this covariate multiplier.
-Note that using lower and upper limit are zero and the true value is non-zero,
-one can simulate data that does not correspond to the model.
-This column is not used during a simulate command.
+If the lower and upper limits are zero and the true value is non-zero,
+the multiplier will be included in the simulated data but not in the model fit.
+This column is not used during the ``simulate`` command.
 
 
 -----------------------------------------------------------------------------
@@ -260,10 +267,9 @@ This file has a
 ``rate_name``, ``age``, ``time`` .
 These are no-effect rates; i.e., the rates without
 the random and covariate effects.
-It is the same for all nodes.
 Covariate multipliers that are constrained to zero during the fitting
 can be used to get variation between nodes in the
-no-effect rates corresponding to the fitting.
+no-effect rates corresponding to the fit.
 
 rate_id
 =======
@@ -272,7 +278,7 @@ is an index column for this file.
 rate_name
 =========
 This string is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies the rate.
-If one of these rates doe not appear, it is modeled as always zero.
+If one of these rates does not appear, it is modeled as always zero.
 
 age
 ===
@@ -284,46 +290,44 @@ This float is the time, in years, corresponding to this row.
 
 truth
 =====
-This float is the rate value for the root node (the world)
-with no covariate or random effects.
+This float is the no-effect rate value for all the nodes.
 It is used to simulate the data.
+As mentioned, above knocking out covariate multipliers can be
+used to get variation in the no-effect rates that correspond to the fit.
 
 mean
 ====
 This float is the mean used in the prior for the rate
-without covariate or random effects
-(normal distribution).
-This column is not used during a simulate command.
+without covariate or random effects.
+This column is not used during the ``simulate`` command.
 
 std
 ===
 This float is the standard deviation used in the prior for the rate
 without covariate or random effects
-(normal distribution).
-This column is not used during a simulate command.
+This column is not used during the ``simulate`` command.
 
 lower
 =====
-is the lower limit (during fitting) for this covariate multiplier.
-This column is not used during a simulate command.
+is the lower limit (during fitting) for this no-effect rate.
+This column is not used during the ``simulate`` command.
 
 upper
 =====
-is the upper limit (during fitting) for this covariate multiplier.
-Note that using lower and upper limit are zero and the true value is non-zero,
-one can simulate data that does not correspond to the model.
-This column is not used during a simulate command.
+is the upper limit (during fitting) for this no-effect rate.
+This column is not used during the ``simulate`` command.
 
 -----------------------------------------------------------------------------
 
 simulate.csv
 ************
 This csv file specifies the simulated data set
-with each row corresponding to a data point.
+with each row corresponding to one data point.
 
 simulate_id
 ===========
 is an index column for this file.
+This column avoids having data.csv reproduce the columns in this file.
 
 integrand_name
 ==============
@@ -344,8 +348,6 @@ is the lower age limit for this data row.
 age_upper
 =========
 is the upper age limit for this data row.
-Note that the age midpoint will be used to interpolate covariates values
-corresponding to this data row.
 
 time_lower
 ==========
@@ -380,7 +382,7 @@ a censored normal is used to simulate the data.
     bilinear
 }
 
-simulate CSV Output Files
+simulate Csv Output Files
 ##########################
 
 data.csv
@@ -391,8 +393,8 @@ and has the following columns:
 
 simulate_id
 ===========
-is an index column for this csv file and for the
-:ref:`simulate_csv_in@simulate.csv` .
+This integer identifies the row in the simulate.csv table
+corresponding to this data point.
 
 node_id
 =======
@@ -401,7 +403,6 @@ This integer identifies the node for this data row.
 integrand_name
 ==============
 This string identifies the integrand.
-
 
 meas_value
 ==========
@@ -414,8 +415,8 @@ data point. This standard deviation is before censoring.
 
 covariate_name
 ==============
-For each covariate that we are including in this simulation,
-there is a column in the header that contains the *covariate_name*.
+For each :ref:`simulate_csv_in@covariate.csv@covariate_name`
+there is a column in the simulate.csv header that contains the name.
 In the other rows, this column  contain a float that is the
 corresponding covariate value at the mid point of the ages and time
 intervals for this data point. This value is obtained using
@@ -469,7 +470,7 @@ This is the sex for this rate estimate.
 
 estimate
 ========
-This float is the estimated value for the covariate multiplier.
+This float is the estimated value for the no-effect rate.
 
 estimate_std
 ============
