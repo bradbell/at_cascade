@@ -1,4 +1,4 @@
 Documentation
 =============
-https://bradbell.github.io/at_cascade/doc/xrst/at_cascade.html
+https://bradbell.github.io/at_cascade/doc/rst/at_cascade.html
 
