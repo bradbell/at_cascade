@@ -124,7 +124,7 @@ The following is the value prior used for the root_node
     # END parent_value_prior
 }
 The mean and standard deviation are only used for the root_node.
-The :ref:`create_shift_db<create_shift_db>`
+The :ref:`create_shift_db`
 routine replaces them for other nodes.
 
 Child Rate Smoothing

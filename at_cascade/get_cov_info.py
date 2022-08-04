@@ -25,7 +25,7 @@ Syntax
 
 all_option_table
 ****************
-This is the :ref:`all_option_table` as a python list
+This is the :ref:`@all_option_table` as a python list
 of python dictionaries.
 This argument can't be ``None``.
 
@@ -37,7 +37,7 @@ This argument can't be ``None``.
 
 split_reference_table
 *********************
-This is the :ref:`split_reference_table` as a python list
+This is the :ref:`@split_reference_table` as a python list
 of python dictionaries.
 This argument can't be ``None``.
 
@@ -63,14 +63,14 @@ This is the set of covariate_id values corresponding to the
 
 split_covariate_id
 ==================
-If :ref:`split_reference_table` is empty, this key is not present.
+If :ref:`@split_reference_table` is empty, this key is not present.
 Otherwise, for *key* equal to split_covariate_id, *cov_info[key]* is an ``int``
 equal to the covariate_id corresponding to the
 :ref:`all_option_table@split_covariate_name`.
 
 split_reference_list
 ====================
-If :ref:`split_reference_table` is empty, this key is not present.
+If :ref:`@split_reference_table` is empty, this key is not present.
 Otherwise, for *key* equal to split_reference_list, *cov_info[key]* is a
 ``list`` of ``float`` representation of
 :ref:`split_reference_table@split_reference_value` in the
@@ -78,7 +78,7 @@ same order as they appear in the table.
 
 split_reference_id
 ===================
-If :ref:`split_reference_table` is empty, this key is not present.
+If :ref:`@split_reference_table` is empty, this key is not present.
 Otherwise, for *key* equal to split_reference_id, *cov_info[key]* is an ``int``
 containing an index in the split_reference_list.
 The corresponding value in split_reference_list is equal to

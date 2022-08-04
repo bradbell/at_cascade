@@ -33,7 +33,7 @@ split reference values.
 
 all_node_database
 *****************
-is a python string containing the name of the :ref:`all_node_db`.
+is a python string containing the name of the :ref:`@all_node_db`.
 This argument can't be ``None``.
 
 fit_node_database

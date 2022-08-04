@@ -28,7 +28,7 @@ Syntax
 all_node_database
 *****************
 is a python string specifying the location of the
-:ref:`all_node_db<all_node_db>`
+:ref:`all_node_db`
 relative to the current working directory.
 This argument can't be ``None``.
 

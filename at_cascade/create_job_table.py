@@ -30,7 +30,7 @@ and which jobs can be run after this job.
 all_node_database
 *****************
 is a python string specifying the location of the
-:ref:`all_node_db<all_node_db>`
+:ref:`all_node_db`
 relative to the current working directory.
 This argument can't be ``None``.
 
@@ -51,7 +51,7 @@ corresponds to a completed fit that we are starting from.
 Only jobs that depend on the start jobs completion will be included in
 the job table.
 This is ``None`` if and only if
-:ref:`split_reference_table` is empty.
+:ref:`@split_reference_table` is empty.
 
 fit_goal_set
 ************
@@ -69,7 +69,7 @@ The value *job_table[job_id]* is a ``dict`` with the following keys:
 job_name
 ========
 This is a ``str`` containing the job name.
-If the :ref:`split_reference_table` is empty,
+If the :ref:`@split_reference_table` is empty,
 *jon_name* is equal to *node_name*
 where *node_name* is the node name corresponding to *node_id*.
 Otherwise, *job_name* is equal to

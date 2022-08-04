@@ -51,12 +51,12 @@ This cascade is set up to split by the sex covariate at level zero:
     # BEGIN all_option_table
     # END all_option_table
 }
-The :ref:`split_reference_table` for this example is:
+The :ref:`@split_reference_table` for this example is:
 {xrst_file
     # BEGIN split_reference_table
     # END split_reference_table
 }
-The :ref:`node_split_table` for this example is
+The :ref:`@node_split_table` for this example is
 {xrst_file
     # BEGIN node_split_table
     # END node_split_table
@@ -104,7 +104,7 @@ mtall
 =====
 The ref:`all_mtall` data for this example is simulated as equal to
 the true value for omega (see rate_true directly below) and there is
-no :ref:`all_mtspecific` data for this example.
+no :ref:`@all_mtspecific` data for this example.
 
 rate_true(rate, a, t, n, c)
 ===========================
@@ -149,7 +149,7 @@ The following is the value prior used for the root_node
     # END parent_value_prior
 }
 The mean and standard deviation are only used for the root_node.
-The :ref:`create_shift_db<create_shift_db>`
+The :ref:`create_shift_db`
 routine replaces them for other nodes.
 
 Alpha Smoothing

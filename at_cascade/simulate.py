@@ -145,7 +145,7 @@ node.csv
 This csv file defines the node tree.
 It has the columns documented below.
 Columns that are not documented are not used by simulate.
-This is true for all the :ref:`simulate_csv_in`.
+This is true for all the :ref:`@simulate_csv_in`.
 
 node_name
 =========

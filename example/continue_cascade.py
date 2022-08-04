@@ -47,9 +47,9 @@ Parallel Processing
 This example sets :ref:`all_option_table@max_number_cpu`
 as an example of parallel processing.
 The results for nodes n3 and n4 are computed in parallel
-during the call to :ref:`cascade_root_node<cascade_root_node>`.
+during the call to :ref:`cascade_root_node`.
 The results for nodes n5 and n6 are computed in parallel
-during the call to :ref:`continue_cascade<continue_cascade>`.
+during the call to :ref:`continue_cascade`.
 {xrst_file
     # BEGIN all_option
     # END all_option
@@ -109,7 +109,7 @@ The following is the value prior used for the root_node
     # END parent_value_prior
 }
 The mean and standard deviation are only used for the root_node.
-The :ref:`create_shift_db<create_shift_db>`
+The :ref:`create_shift_db`
 routine replaces them for other nodes.
 
 Child Rate Smoothing

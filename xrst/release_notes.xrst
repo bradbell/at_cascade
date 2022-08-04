@@ -27,7 +27,7 @@ Start construction of a cascade data simulation tool; see
 04-18
 *****
 Remove shared memory and LD_LIBRARY_PATH items from the
-:ref:`wish_list<wish_list>`
+:ref:`wish_list`
 because they have been completed.
 
 03-22
@@ -37,12 +37,12 @@ Add :ref:`all_option_table@balance_fit` to the all_option table.
 03-14
 *****
 1.  Fix a bug in how
-    :ref:`avgint_parent_grid<avgint_parent_grid>` and
-    :ref:`create_shift_db<create_shift_db>` pass
+    :ref:`avgint_parent_grid` and
+    :ref:`create_shift_db` pass
     priors down the cascade. To be more specific, the split reference
     covariate effects were not being handled properly.
 2.  A check of the prior mean for iota was added at the end of
-    the :ref:`split_covariate<split_covariate>` example
+    the :ref:`split_covariate` example
 3.  Add the :ref:`no_ode_fit@fit_type` argument to no_ode_fit.
 
 03-12
@@ -59,7 +59,7 @@ cascade_root_node and continue_cascade.
 
 03-08
 *****
-The :ref:`remission<remission>` example was added.
+The :ref:`remission` example was added.
 
 03-07
 *****
@@ -68,12 +68,12 @@ all_option table.
 
 03-05
 *****
-Change :ref:`no_ode_fit<no_ode_fit>` to always use Gaussian data densities.
+Change :ref:`no_ode_fit` to always use Gaussian data densities.
 
 02-05
 *****
 Use :ref:`get_cov_reference` to compute references for relative covariates
-and remove the all_cov_reference table from the :ref:`all_node_db`.
+and remove the all_cov_reference table from the :ref:`@all_node_db`.
 
 02-04
 *****
@@ -84,7 +84,7 @@ Change 'rood_node_db routine' to 'root_node_db routine'.
 
 02-03
 *****
-Add new :ref:`wish_list` entries and remove old ones the have been completed.
+Add new :ref:`@wish_list` entries and remove old ones the have been completed.
 
 01-28
 *****
@@ -108,12 +108,12 @@ Change perturb_optimization_scaling to
 
 01-25
 *****
-The :ref:`clear_shared<clear_shared>` routine was added to the
+The :ref:`clear_shared` routine was added to the
 at_cascade module.
 
 01-08
 *****
-1.  Fix a bug in :ref:`create_shift_db<create_shift_db>`.
+1.  Fix a bug in :ref:`create_shift_db`.
     To be specific, the mean int a value prior child variable in the shifted
     database (child database) might not satisfy the prior limits.
     This violated the dismod_at assumptions about the value prior means.
@@ -183,19 +183,19 @@ Release Notes for 2021
     (they used to be relative to the current working directory).
 
 2.  Starting from a :ref:`glossary@root_node` that was not at the top
-    of the node tree did not work. The :ref:`one_at_function` was
+    of the node tree did not work. The :ref:`@one_at_function` was
     modified to test for this problem and the problem was fixed.
 
 12-08
 *****
-Remove the convergence problem :ref:`wish_list`
+Remove the convergence problem :ref:`@wish_list`
 entry becasue it was completed
 when the :ref:`all_option_table@perturb_optimization_scale` option
 was added.
 
 12-06
 *****
-Add the :ref:`mulcov_freeze` table which enables one to freeze the
+Add the :ref:`@mulcov_freeze` table which enables one to freeze the
 value of a covariate multiplier so it is the same for all fits
 below a certain point.
 
@@ -213,7 +213,7 @@ below a certain point.
     sequentially (in parallel) when :ref:`run_parallel@max_number_cpu` is
     one (greater than one).
 
-2.  Add a :ref:`wish_list` for at_cascade.
+2.  Add a :ref:`@wish_list` for at_cascade.
 
 12-02
 *****
@@ -227,7 +227,7 @@ below a certain point.
 
 12-01
 *****
-1.  Add :ref:`get_database_dir<get_database_dir>`.
+1.  Add :ref:`get_database_dir`.
     This routine is for use with parallel processing.
 
 2.  Change fit_node_database base create_job_table argument to
@@ -239,7 +239,7 @@ below a certain point.
 11-30
 *****
 Change the name get_job_table to
-:ref:`create_job_table<create_job_table>`.
+:ref:`create_job_table`.
 
 11-29
 *****
@@ -254,7 +254,7 @@ Change the name get_job_table to
 *****
 1.  Change the :ref:`create_all_node_db@all_option` argument to
     create_all_node_db to be a complete representation of the
-    :ref:`all_option_table`.
+    :ref:`@all_option_table`.
     This reduces the amount of necessary documentation.
     It also requires that root_node_name be in the all_option argument.
 
@@ -262,7 +262,7 @@ Change the name get_job_table to
     have a default value (corresponding to the empty table).
 
 3.  Change split_level in the all_option table to the
-    :ref:`node_split_table`.
+    :ref:`@node_split_table`.
 
 
 {xrst_end 2021}

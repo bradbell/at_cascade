@@ -162,7 +162,7 @@ expects much more accuracy when the income grid is not chosen randomly.
 
 Omega Constraints
 *****************
-The :ref:`omega_constraint<omega_constraint>` routine is used
+The :ref:`omega_constraint` routine is used
 to set the value of omega in the parent and child nodes.
 
 Parent Rate Smoothing
@@ -187,7 +187,7 @@ The following is the value prior used for the root_node
     # END parent_value_prior
 }
 The mean and standard deviation are only used for the root_node.
-The :ref:`create_shift_db<create_shift_db>`
+The :ref:`create_shift_db`
 routine replaces them for other nodes.
 
 dage Prior

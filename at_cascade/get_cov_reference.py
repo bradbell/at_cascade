@@ -44,7 +44,7 @@ where n is the number of covariates minus one.
 all_node_database
 *****************
 This argument can't be ``None`` and is the :ref:all_node_db`.
-Only the :ref:`all_option_table` and :ref:`split_reference_table` are used.
+Only the :ref:`@all_option_table` and :ref:`@split_reference_table` are used.
 
 all_option Table
 ================
