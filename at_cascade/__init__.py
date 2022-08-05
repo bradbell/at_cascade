@@ -25,6 +25,7 @@ The at_cascade Python Module
     at_cascade/create_all_node_db.py
     at_cascade/create_job_table.py
     at_cascade/create_shift_db.py
+    at_cascade/csv_interface.py
     at_cascade/empty_avgint_table.py
     at_cascade/get_cov_info.py
     at_cascade/get_cov_reference.py
@@ -38,7 +39,6 @@ The at_cascade Python Module
     at_cascade/omega_constraint.py
     at_cascade/run_one_job.py
     at_cascade/run_parallel.py
-    at_cascade/simulate.py
     at_cascade/table_name2id.py
 }
 .. END_SORT_THIS_LINE_MINUS_2
@@ -57,6 +57,7 @@ from .continue_cascade      import continue_cascade
 from .create_all_node_db    import create_all_node_db
 from .create_job_table      import create_job_table
 from .create_shift_db       import create_shift_db
+from .csv_interface         import csv_interface
 from .empty_avgint_table    import empty_avgint_table
 from .get_cov_info          import get_cov_info
 from .get_cov_reference     import get_cov_reference
@@ -70,6 +71,5 @@ from .no_ode_fit            import no_ode_fit
 from .omega_constraint      import omega_constraint
 from .run_one_job           import run_one_job
 from .run_parallel          import run_parallel
-from .simulate              import simulate
 from .table_name2id         import table_name2id
 # END_SORT_THIS_LINE_MINUS_1

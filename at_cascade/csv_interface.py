@@ -8,7 +8,7 @@
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
 """
-{xrst_begin_parent simulate}
+{xrst_begin_parent csv_interface}
 {xrst_spell
     dir
     csv
@@ -112,7 +112,7 @@ Csv Files
 *********
 {xrst_child_list}
 
-{xrst_end simulate}
+{xrst_end csv_interface}
 
 ===============================================================================
 
@@ -154,7 +154,7 @@ remember. It be unique for each row.
 
 node_id
 =======
-is an :ref:`simulate@notation@index_column` for this file.
+is an :ref:`csv_interface@notation@index_column` for this file.
 
 parent_node_id
 ==============
@@ -169,7 +169,7 @@ to child nodes.
 covariate.csv
 *************
 This csv file specifies the value of omega and the covariates.
-It has a :ref:`simulate@notation@rectangular_grid` in the columns
+It has a :ref:`csv_interface@notation@rectangular_grid` in the columns
 ``node_id``, ``sex``, ``age``, ``time`` .
 
 node_id
@@ -203,7 +203,7 @@ there is a column in the header that contains the *covariate_name*.
 The other values in that column are float representations of the covariate.
 All of these covariates are
 :ref:`glossary@relative_covariate`; see
-:ref:`simulate@notation@covariates`.
+:ref:`csv_interface@notation@covariates`.
 
 -----------------------------------------------------------------------------
 
@@ -263,7 +263,7 @@ rate.csv
 ********
 This csv file specifies the grid points at which each rate is modeled.
 This file has a
-:ref:`simulate@notation@rectangular_grid` in the columns
+:ref:`csv_interface@notation@rectangular_grid` in the columns
 ``rate_name``, ``age``, ``time`` .
 These are no-effect rates; i.e., the rates without
 the random and covariate effects.
@@ -504,11 +504,12 @@ This has a simple form because there are no noise covariates; i.e.,
 {xrst_end simulate_csv_out}
 """
 # BEGIN Definition
-# at_cascade.simulate
-def simulate(
+# at_cascade.csv_inferface
+def csv_inferface(
     csv_dir ,
     command ,
 ) :
 # END Definition
     assert type(csv_dir) == str
+    assert type(command) == str
     assert False
