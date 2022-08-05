@@ -7,11 +7,11 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
-"""
 {xrst_begin_parent csv_interface}
 {xrst_spell
     dir
     csv
+    sim
 }
 
 Simulate and Fit an AT Cascade Data Set
@@ -22,25 +22,24 @@ Under Construction
 
 Definition
 **********
-{xrst_file
-        # BEGIN Definition
-        # END Definition
-}
+{xrst_code py}
+at_cascade.csv_interface( csv_dir , command )
+{xrst_code}
 
 Arguments
 *********
 
 csv_dir
 =======
-This ``str`` is the directory name where the csv input and output files
+This ``str`` is the directory name where the csv files
 are located.
 
 command
 =======
 This ``str`` is either ``simulate`` or ``fit``.
-During a simulate command, only the :ref:`simulate_csv_out@data.csv` file
-is created.
-During a fit command, the data.csv file must already exist
+During a simulate command,
+only the :ref:`csv_simulate@data_sim.csv` file is created.
+During a fit command, the data_sim.csv file must already exist
 and the other output files are created.
 
 Notation
@@ -50,7 +49,7 @@ Demographer
 ===========
 None of the data is in demographer notation.
 For example,
-:ref:`simulate_csv_in@covariate.csv@time` 1990 means the beginning of 1990,
+:ref:`csv_simulate@covariate.csv@time` 1990 means the beginning of 1990,
 not the time interval from 1990 to 1991.
 
 Rectangular Grid
@@ -116,15 +115,18 @@ Csv Files
 
 ===============================================================================
 
-{xrst_begin simulate_csv_in}
+{xrst_begin csv_simulate}
 {xrst_spell
     csv
     std
     cv
+    sim
+    meas
+    bilinear
 }
 
-simulate Csv Input Files
-#########################
+Simulate A Cascade Data Set
+###########################
 
 option.csv
 **********
@@ -144,8 +146,6 @@ node.csv
 ********
 This csv file defines the node tree.
 It has the columns documented below.
-Columns that are not documented are not used by simulate.
-This is true for all the :ref:`@simulate_csv_in`.
 
 node_name
 =========
@@ -207,8 +207,8 @@ All of these covariates are
 
 -----------------------------------------------------------------------------
 
-multiplier.csv
-**************
+multiplier_sim.csv
+******************
 This csv file provides information about the covariate multipliers.
 Each row of this file, except the header row, corresponds to a
 different multiplier. The multipliers are constant in age and time.
@@ -233,36 +233,12 @@ truth
 =====
 This is the value of the covariate multiplier used to simulate the data.
 
-mean
-====
-This is the prior mean used when fitting this multiplier.
-This column is not used during the ``simulate`` command.
-
-
-std
-===
-This is the prior standard deviation used when fitting this multiplier.
-This column is not used during the ``simulate`` command.
-
-lower
-=====
-is the lower limit (during fitting) for this covariate multiplier.
-This column is not used during the ``simulate`` command.
-
-upper
-=====
-is the upper limit (during fitting) for this covariate multiplier.
-If the lower and upper limits are zero and the true value is non-zero,
-the multiplier will be included in the simulated data but not in the model fit.
-This column is not used during the ``simulate`` command.
-
-
 -----------------------------------------------------------------------------
 
-rate.csv
-********
-This csv file specifies the grid points at which each rate is modeled.
-This file has a
+rate_sim.csv
+************
+This csv file specifies the grid points at which each rate is modeled
+during a simulation. It has a
 :ref:`csv_interface@notation@rectangular_grid` in the columns
 ``rate_name``, ``age``, ``time`` .
 These are no-effect rates; i.e., the rates without
@@ -295,28 +271,6 @@ It is used to simulate the data.
 As mentioned, above knocking out covariate multipliers can be
 used to get variation in the no-effect rates that correspond to the fit.
 
-mean
-====
-This float is the mean used in the prior for the rate
-without covariate or random effects.
-This column is not used during the ``simulate`` command.
-
-std
-===
-This float is the standard deviation used in the prior for the rate
-without covariate or random effects
-This column is not used during the ``simulate`` command.
-
-lower
-=====
-is the lower limit (during fitting) for this no-effect rate.
-This column is not used during the ``simulate`` command.
-
-upper
-=====
-is the upper limit (during fitting) for this no-effect rate.
-This column is not used during the ``simulate`` command.
-
 -----------------------------------------------------------------------------
 
 simulate.csv
@@ -327,7 +281,6 @@ with each row corresponding to one data point.
 simulate_id
 ===========
 is an index column for this file.
-This column avoids having data.csv reproduce the columns in this file.
 
 integrand_name
 ==============
@@ -369,40 +322,18 @@ If the resulting measurement value would be less than zero,
 the value zero is be used; i.e.,
 a censored normal is used to simulate the data.
 
+------------------------------------------------------------------------------
 
-{xrst_end simulate_csv_in}
-
-==============================================================================
-
-{xrst_begin simulate_csv_out}
-{xrst_spell
-    csv
-    meas
-    std
-    bilinear
-}
-
-simulate Csv Output Files
-##########################
-
-data.csv
-********
+data_sim.csv
+************
 This contains the simulated data.
 It is created during a simulate command
 and has the following columns:
 
 simulate_id
 ===========
-This integer identifies the row in the simulate.csv table
-corresponding to this data point.
-
-node_id
-=======
-This integer identifies the node for this data row.
-
-integrand_name
-==============
-This string identifies the integrand.
+This integer identifies the row in the simulate.csv
+corresponding to this row in data_sim.csv.
 
 meas_value
 ==========
@@ -415,7 +346,7 @@ data point. This standard deviation is before censoring.
 
 covariate_name
 ==============
-For each :ref:`simulate_csv_in@covariate.csv@covariate_name`
+For each :ref:`csv_simulate@covariate.csv@covariate_name`
 there is a column in the simulate.csv header that contains the name.
 In the other rows, this column  contain a float that is the
 corresponding covariate value at the mid point of the ages and time
@@ -426,56 +357,78 @@ outside the age rage (time range) in the covariate.csv file.
 
 ------------------------------------------------------------------------------
 
-multiplier_fit.csv
-******************
-This contains the fit results for the covariate multipliers.
-It is created during a fit command and
-has the following columns:
+{xrst_end csv_simulate}
+
+==============================================================================
+
+{xrst_begin csv_fit}
+{xrst_spell
+    csv
+    meas
+    std
+    sim
+}
+
+Fit a Simulated Data Set
+########################
+
+multiplier_prior.csv
+********************
+This file adds prior information for the multipliers in
+:ref:`csv_simulate@multiplier_sim.csv`.
 
 multiplier_id
 =============
-This integer identifies the row in the multiplier.csv file
-corresponding to this multiplier estimate.
+This integer identifies the row in multiplier_sim.csv that
+corresponds to this row in multiplier_prior.csv.
 
-estimate
-========
-This float is the estimated value for the covariate multiplier.
+prior_mean
+==========
+This is the prior mean used when fitting this multiplier.
 
-estimate_std
-============
-This float is the asymptotic statistics approximation
-for the standard deviation of the estimate.
+prior_std
+=========
+This is the prior standard deviation used when fitting this multiplier.
+
+lower
+=====
+is the lower limit (during fitting) for this covariate multiplier.
+
+upper
+=====
+is the upper limit (during fitting) for this covariate multiplier.
+If the lower and upper limits are zero and the true value is non-zero,
+the multiplier will be included in the simulated data but not in the model fit.
 
 ------------------------------------------------------------------------------
 
-rate_fit.csv
-************
-This contains the fit results for the no-effect rate values.
-It is created during a fit command and
-has the following columns:
-
-node_id
-=======
-This integer identifies the row in the node.csv file
-corresponding to this rate estimate.
+rate_prior.csv
+**************
+This file adds prior information for the rates in
+:ref:`csv_simulate@rate_sim.csv`.
 
 rate_id
 =======
-This integer identifies the row in the rate.csv file
-corresponding to this the rate estimate.
+This integer identifies the row in rate_sim.csv that
+corresponds to this row in rate_prior.csv.
 
-sex
-===
-This is the sex for this rate estimate.
+prior_mean
+==========
+This float is the mean used in the prior for the rate
+without covariate or random effects.
 
-estimate
-========
-This float is the estimated value for the no-effect rate.
+prior_std
+=========
+This float is the standard deviation used in the prior for the rate
+without covariate or random effects
 
-estimate_std
-============
-This float is the asymptotic statistics approximation
-for the standard deviation of the estimate.
+lower
+=====
+is the lower limit (during fitting) for this no-effect rate.
+
+upper
+=====
+is the upper limit (during fitting) for this no-effect rate.
 
 ------------------------------------------------------------------------------
 
@@ -485,9 +438,9 @@ This contains the fit results for the simulated data values.
 It is created during a fit command and
 has the following columns:
 
-data_id
-=======
-This integer identifies the row in the data.csv file
+simulate_id
+===========
+This integer identifies the row in the simulate.csv and data_sim.csv
 corresponding to this data estimate.
 
 estimate
@@ -497,19 +450,49 @@ This float is the estimated value for the data
 residual
 ========
 This float is the weighted residual corresponding to this data point.
-This has a simple form because there are no noise covariates; i.e.,
-(meas_value - estimate) / meas_std.
+This has a simple form because there are no noise covariates;
+i.e., (meas_value - estimate) / meas_std.
 
+------------------------------------------------------------------------------
 
-{xrst_end simulate_csv_out}
-"""
-# BEGIN Definition
-# at_cascade.csv_inferface
-def csv_inferface(
-    csv_dir ,
-    command ,
-) :
-# END Definition
-    assert type(csv_dir) == str
-    assert type(command) == str
-    assert False
+rate_fit.csv
+************
+This contains the fit results for the rate values.
+It is created during a fit command and
+has the following columns:
+
+rate_id
+=======
+This integer identifies the row in the rate_sim.csv and rate_prior.csv
+corresponding to this rate estimate.
+
+estimate
+========
+This float is the estimated value for the rate.
+
+std_error
+=========
+Is the asymptotic estimate for the accuracy of the estimate.
+
+------------------------------------------------------------------------------
+
+multiplier_fit.csv
+******************
+This contains the fit results for the multiplier values.
+It is created during a fit command and
+has the following columns:
+
+multiplier_id
+=============
+This integer identifies the row in the multiplier_sim.csv and
+multiplier_prior.csv corresponding to this multiplier estimate.
+
+estimate
+========
+This float is the estimated value for the multiplier.
+
+std_error
+=========
+Is the asymptotic estimate for the accuracy of the estimate.
+
+{xrst_end csv_fit}
