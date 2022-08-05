@@ -355,8 +355,6 @@ bilinear interpolation of the covariate values in covariate.csv.
 The interpolate is extended as constant in age (time) for points
 outside the age rage (time range) in the covariate.csv file.
 
-------------------------------------------------------------------------------
-
 {xrst_end csv_simulate}
 
 ==============================================================================

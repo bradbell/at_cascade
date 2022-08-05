@@ -22,7 +22,7 @@ Release Notes for 2022
 08-01
 *****
 Start construction of a cascade data simulation tool; see
-:ref:`simulate`.
+:ref:`csv_interface`.
 
 04-18
 *****
