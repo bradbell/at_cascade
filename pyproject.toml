@@ -1,8 +1,25 @@
-# copied from
-# https://packaging.python.org/en/latest/tutorials/packaging-projects/
+# -----------------------------------------------------------------------------
+# at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
+#           Copyright (C) 2021-22 University of Washington
+#              (Bradley M. Bell bradbell@uw.edu)
+#
+# This program is distributed under the terms of the
+#     GNU Affero General Public License version 3.0 or later
+# see http://www.gnu.org/licenses/agpl.txt
+# -----------------------------------------------------------------------------
+
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
+requires      = ['hatchling']
+build-backend = 'hatchling.build'
+
+[project]
+name    = 'at_cascade'
+version = '2022.8.9'
+authors = [
+  {name  = 'Bradley M. Bell', email = 'bradbell@seanet.com'},
 ]
-build-backend = "setuptools.build_meta"
+description       = 'Exract Sphinx RST Files'
+
+[project.urls]
+'Homepage'    = 'https://bradbell.github.io/at_cascade'
+'Bug Tracker' = 'https://github.com/bradbell/at_cascade/issues'

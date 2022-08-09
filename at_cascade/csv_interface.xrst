@@ -374,8 +374,8 @@ All the csv_simulate :ref:`csv_simulate` input and output files
 are inputs to the ``csv_fit`` command.
 The files listed below are additional inputs:
 
-data_subset
-===========
+data_subset.csv
+===============
 This file identifies which rows of data_sim.csv are
 included during the next fit command.
 
