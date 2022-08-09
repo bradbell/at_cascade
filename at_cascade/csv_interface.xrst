@@ -21,21 +21,20 @@ Under Construction
 
 Syntax
 **********
-{xrst_code py}
-at_cascade.csv_interface( csv_dir , command )
-{xrst_code}
+
+- ``at_cascade.csv_interface(`` *csv_dir* ``,`` *command* ``)``
 
 Arguments
 *********
 
 csv_dir
 =======
-This ``str`` is the directory name where the csv files
+This string is the directory name where the csv files
 are located.
 
 command
 =======
-This ``str`` is either ``simulate`` or ``fit`` .
+This string is either ``simulate``, ``fit`` , or ``predict``  .
 {xrst_child_table}
 
 Notation
@@ -224,8 +223,8 @@ the sex values where female = -0.5 and male = +0.5.
 Otherwise this is one of the covariate names in the covariate.csv file
 and specifies which covariate is being multiplied.
 
-truth
------
+multiplier_truth
+----------------
 This is the value of the covariate multiplier used to simulate the data.
 
 -----------------------------------------------------------------------------
@@ -259,8 +258,8 @@ time
 ----
 This float is the time, in years, corresponding to this row.
 
-truth
------
+rate_truth
+----------
 This float is the no-effect rate value for all the nodes.
 It is used to simulate the data.
 As mentioned, above knocking out covariate multipliers can be
@@ -356,7 +355,7 @@ outside the age rage (time range) in the covariate.csv file.
 
 {xrst_end csv_simulate}
 
-------------------------------------------------------------------------------
+===============================================================================
 
 {xrst_begin csv_fit}
 {xrst_spell
@@ -371,8 +370,8 @@ Fit a Simulated Data Set
 
 Input Files
 ***********
-All the csv_simulate :ref:`csv_simulate@input_files`
-and :ref:`csv_simulate@output_files` are inputs to the ``csv_fit`` command.
+All the csv_simulate :ref:`csv_simulate` input and output files
+are inputs to the ``csv_fit`` command.
 The files listed below are additional inputs:
 
 data_subset
@@ -514,3 +513,84 @@ std_error
 Is the asymptotic estimate for the accuracy of the estimate.
 
 {xrst_end csv_fit}
+
+===============================================================================
+
+{xrst_begin csv_predict}
+{xrst_spell
+    csv
+}
+
+Predictions
+###########
+
+Input Files
+***********
+All the csv_simulate :ref:`csv_simulate` and :ref:`csv_fit`
+input and output files are inputs to the ``csv_predict`` command.
+The files listed below are additional inputs:
+
+case.csv
+========
+This csv file specifies the prediction cases.
+with each row corresponding to one data point.
+
+case_id
+-------
+is an index column for this file.
+
+integrand_name
+--------------
+This string is a dismod_at integrand; e.g. ``Sincidence`` for this prediction.
+
+node_id
+-------
+This integer identifies the node corresponding to this prediction.
+
+sex
+---
+is the sex for this prediction.
+
+age_lower
+---------
+is the lower age limit for this prediction.
+
+age_upper
+---------
+is the upper age limit for this prediction.
+
+time_lower
+----------
+is the lower time limit for this prediction.
+
+time_upper
+----------
+is the upper time limit for this prediction.
+
+------------------------------------------------------------------------------
+
+Output Files
+************
+
+predict.csv
+===========
+
+case_id
+-------
+is an index column for this file
+and also corresponds to *case_id* in the case.csv file.
+
+integrand_predict
+-----------------
+is the value of the predicted integrand value corresponding to this case_id,
+the fit values for the variables, plus the covariate effect.
+Note that the variables are the no-effect rates and the covariate multipliers.
+
+integrand_truth
+---------------
+is the value of the predicted integrand value corresponding to this case_id,
+truth values for the variables, plus the covariate effect.
+Note that the variables are the no-effect rates and the covariate multipliers.
+
+
+{xrst_end csv_predict}
