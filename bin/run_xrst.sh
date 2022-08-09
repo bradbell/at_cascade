@@ -14,9 +14,9 @@ echo_eval() {
     eval $*
 }
 # -----------------------------------------------------------------------------
-if [ "$0" != 'bin/run_sphinx.sh' ]
+if [ "$0" != 'bin/run_xrst.sh' ]
 then
-    echo 'bin/run_sphinx.sh must be run from its parent directory.'
+    echo 'bin/run_xrst.sh must be run from its parent directory.'
     exit 1
 fi
 ok='yes'
@@ -37,7 +37,7 @@ else
 fi
 if [ "$ok" == 'no' ]
 then
-    echo 'usage: bin/run_sphinx.sh target error_line'
+    echo 'usage: bin/run_xrst.sh target error_line'
     echo 'target is html or pdf'
     echo 'error_line = 0 for no line number table'
     exit 1
@@ -58,5 +58,5 @@ then
 fi
 # -----------------------------------------------------------------------------
 rm run_sphinx.$$
-echo 'run_sphinx.sh: OK'
+echo 'run_xrst.sh: OK'
 exit 0

@@ -12,14 +12,17 @@
 # The files in bin/devel.sh ignore_files are automatically in this list
 # (see devel.sh for pattern matching convention).
 # ignore_files='
-#   xrst/all_node_db.xrst
 # '
 # list of files and or directories that are moved to new names
 # move_paths='
+#   at_cascade/csv_interface.rst
+#   bin/run_sphinx.sh
 # '
 # list of sed commands that map old file and directory names to new names.
 # The characters @s, @d, @n get converted to a space, dollar sign, new line.
 # move_seds='
+#   s|at_cascade/csv_interface.rst|at_cascade/csv_interface.xrst|
+#   s|run_sphinx.sh|run_xrst.sh|
 # '
 # list of files that get edited by the extra_seds command
 # extra_files='
@@ -31,14 +34,5 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|Factor that multipliers|Factor that multiplies|
-s|used to initial root|used to initialize root|
-s|The gamma for each|gamma for each|
-s|optimization scaling point|optimization scaling and|
-s|in a f$|in a fit|
-s|equal ites compression|equal its compression|
-s|value of the intrval|value of the interval|
-s|This reduced the|This reduces the|
-s|# smooh_list_dict|# smooth_list_dict|
-s|^# smooth_list_dict|&\
-# https://bradbell.github.io/dismod_at/doc/create_database.htm#smooth_table|
+s|at_cascade/csv_interface.rst|at_cascade/csv_interface.xrst|
+s|run_sphinx.sh|run_xrst.sh|

@@ -38,7 +38,7 @@ git checkout --quiet $at_cascade_hash && \
 grep "$at_cascade_version" doc.xrst
 
 # 3. Run Tests
-RUN sed -i bin/check_all.sh -e '/run_sphinx.sh/d' && bin/check_all.sh
+RUN sed -i bin/check_all.sh -e '/run_xrst.sh/d' && bin/check_all.sh
 
 # 4. Install at_cascade
 RUN python3 -m build && \
