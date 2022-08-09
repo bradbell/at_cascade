@@ -43,8 +43,8 @@ then
     exit 1
 fi
 # -----------------------------------------------------------------------------
-echo "xrst doc.xrst -t $target -o doc $error_line"
-if ! xrst doc.xrst -t $target $error_line -o doc >& >( tee run_sphinx.$$ )
+echo "xrst at_cascade.xrst -t $target -o doc $error_line"
+if ! xrst at_cascade.xrst -t $target $error_line -o doc >& >( tee run_sphinx.$$ )
 then
     echo 'bin/run_sphinx: aboring due to xrst errors above'
     rm run_sphinx.$$
