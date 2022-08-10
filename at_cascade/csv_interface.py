@@ -97,6 +97,9 @@ Index Column
 An index column for a csv file is an integer column
 that has the row number corresponding to each row.
 It starts with zero at the first row below the header row.
+If a column name is an index column for two or more files,
+rows with the same index value in the different files
+correspond to each other.
 
 Distributions
 =============
@@ -206,7 +209,7 @@ different multiplier. The multipliers are constant in age and time.
 
 multiplier_id
 -------------
-is an index column for this file.
+is an :ref:`csv_interface@Notation@index_column` for multiplier_sim.csv.
 
 rate_name
 ---------
@@ -238,9 +241,9 @@ Covariate multipliers that are constrained to zero during the fitting
 can be used to get variation between nodes in the
 no-effect rates corresponding to the fit.
 
-rate_id
--------
-is an index column for this file.
+rate_sim_id
+-----------
+is an :ref:`csv_interface@Notation@index_column` for rate_sim.csv.
 
 rate_name
 ---------
@@ -271,7 +274,7 @@ with each row corresponding to one data point.
 
 simulate_id
 -----------
-is an index column for this file.
+is an :ref:`csv_interface@Notation@index_column` for simulate.csv.
 
 integrand_name
 --------------
@@ -328,7 +331,8 @@ simulate_id
 -----------
 This integer identifies the row in the simulate.csv
 corresponding to this row in data_sim.csv.
-This is an index column for both simulate.csv and data.csv.
+This is an :ref:`csv_interface@Notation@index_column`
+for simulate.csv and data_sim.csv.
 
 meas_value
 ----------
@@ -418,10 +422,10 @@ rate_prior.csv
 This file adds prior information for the rates in
 :ref:`csv_simulate@input_files@rate_sim.csv`.
 
-rate_id
--------
-This integer identifies the row in rate_sim.csv that
-corresponds to this row in rate_prior.csv.
+rate_sim_id
+-----------
+is an :ref:`csv_interface@Notation@index_column` for rate_sim.csv
+and rate_prior.csv.
 
 prior_mean
 ----------
@@ -475,10 +479,10 @@ This contains the fit results for the rate values.
 It is created during a fit command and
 has the following columns:
 
-rate_id
--------
-This integer identifies the row in the rate_sim.csv and rate_prior.csv
-corresponding to this rate estimate.
+rate_sim_id
+-----------
+is an :ref:`csv_interface@Notation@index_column` for rate_sim.csv,
+rate_prior.csv and rate_fit.csv.
 
 estimate
 --------
@@ -534,7 +538,7 @@ with each row corresponding to one data point.
 
 case_id
 -------
-is an index column for this file.
+is an :ref:`csv_interface@notation@index_column` for case.csv.
 
 integrand_name
 --------------
@@ -574,8 +578,8 @@ predict.csv
 
 case_id
 -------
-is an index column for this file
-and also corresponds to *case_id* in the case.csv file.
+is an :ref:`csv_interface@Notation@index_column` for
+predict.csv and case.csv.
 
 integrand_predict
 -----------------
