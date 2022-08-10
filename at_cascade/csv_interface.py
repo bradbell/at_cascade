@@ -7,6 +7,7 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
+"""
 {xrst_begin_parent csv_interface}
 {xrst_spell
     dir
@@ -146,13 +147,9 @@ node_name
 This string is a name describing the node in a way that is easy for a human to
 remember. It be unique for each row.
 
-node_id
--------
-is an :ref:`csv_interface@notation@index_column` for this file.
-
-parent_node_id
---------------
-This integer is the node_id corresponding to the parent of this node.
+parent
+------
+This string is the name corresponding to the parent of this node.
 The root node of the tree has an empty entry for this column.
 If a node is a parent, it must have at least two children.
 This avoids fitting the same location twice as one goes from parent
@@ -164,11 +161,11 @@ covariate.csv
 =============
 This csv file specifies the value of omega and the covariates.
 It has a :ref:`csv_interface@notation@rectangular_grid` in the columns
-``node_id``, ``sex``, ``age``, ``time`` .
+``node_name``, ``sex``, ``age``, ``time`` .
 
-node_id
--------
-This integer identifies the node, in node.csv, corresponding to this row.
+node_name
+---------
+This string identifies the node, in node.csv, corresponding to this row.
 
 sex
 ---
@@ -280,9 +277,9 @@ integrand_name
 --------------
 This string is a dismod_at integrand; e.g. ``Sincidence``.
 
-node_id
--------
-This integer identifies the node corresponding to this data point.
+node_name
+---------
+This string identifies the node corresponding to this data point.
 
 sex
 ---
@@ -543,9 +540,9 @@ integrand_name
 --------------
 This string is a dismod_at integrand; e.g. ``Sincidence`` for this prediction.
 
-node_id
--------
-This integer identifies the node corresponding to this prediction.
+node_name
+---------
+This string identifies the node corresponding to this prediction.
 
 sex
 ---
@@ -594,3 +591,61 @@ Note that the variables are the no-effect rates and the covariate multipliers.
 
 
 {xrst_end csv_predict}
+"""
+# -----------------------------------------------------------------------------
+# option_dict['std_random_effect']:
+# is a float that is greater than zero
+#
+# option_dict = option_table2dict(option_table)
+def option_table2dict(option_table) :
+    #
+    # option_dict
+    option_dict = dict()
+    valid_name  = { 'std_random_effects' }
+    line_number = 0
+    for row in option_table :
+        line_number += 1
+        name         = row['name']
+        value        = row['value']
+        if name in option_dict :
+            msg  = f'csv_simulate: Error: line {line_number} in option.csv\n'
+            msg += f'the name {name} appears twice in this table'
+            assert False, msg
+        if not name in valid_name :
+            msg  = f'csv_simulate: Error: line {line_number} in option.csv\n'
+            msg += f'{name} is not a valid option name'
+            assert False, msg
+        option_dict[name] = value
+    #
+    # option_dict
+    for name in valid_name :
+        if not name in option_dict :
+            msg  = 'csv_simulate: Error: in option.csv\n'
+            msg += f'the name {name} does not apper'
+            assert False, msg
+    #
+    # option_dict['std_random_effects']
+    std_random_effects = float( option_dict['std_random_effects'] )
+    if std_random_effects <= 0.0 :
+        msg  = 'csv_simulate: Error: in option.csv\n'
+        msg += f'std_random_effect = {std_random_effect} <= 0'
+        assert False, msg
+    #
+    return option_dict
+# ----------------------------------------------------------------------------
+def check_node_table( node_table ) :
+
+# ----------------------------------------------------------------------------
+def csv_simulate(csv_dir) :
+    #
+    # input_table
+    input_table = dict()
+    input_list  = [
+        'optiion',
+    ]
+    for name in input_list :
+        file_name         = name + '.csv'
+        input_table[name] = at_cascade.read_csv_file(file_name)
+    #
+    # option_dict
+    option_dict = option_table2dict( input_table['option'] )
