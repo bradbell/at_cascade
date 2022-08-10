@@ -46,5 +46,5 @@ def write_node_split_table(
     at_cascade.write_csv_table(
        file_name   = node_split_table_file,
         table      = node_split_table,
-        fieldnames = fieldnames,
+        columns    = fieldnames,
     )

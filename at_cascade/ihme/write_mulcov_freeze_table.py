@@ -91,5 +91,5 @@ def write_mulcov_freeze_table(
     at_cascade.write_csv_table(
         file_name  = mulcov_freeze_table_file,
         table      = mulcov_freeze_table,
-        fieldnames = fieldnames,
+        columns    = fieldnames,
     )

@@ -160,7 +160,7 @@ def combine_predict_files(
         for row in reader :
             if writer is None :
                 keys   = row.keys()
-                writer = csv.DictWriter(file_obj_out, fieldnames=keys)
+                writer = csv.DictWriter(file_obj_out, columns=keys)
                 writer.writeheader()
             writer.writerow(row)
         file_obj_in.close()
@@ -205,7 +205,7 @@ def combine_variable_files(
                 assert 'location_id' not in fieldnames
                 assert 'sex_id' not in fieldnames
                 fieldnames = [ 'location_id', 'sex_id' ] + fieldnames
-                writer = csv.DictWriter(file_obj_out, fieldnames=fieldnames)
+                writer = csv.DictWriter(file_obj_out, columns=fieldnames)
                 writer.writeheader()
             row['location_id'] = location_id
             row['sex_id']      = sex_id
