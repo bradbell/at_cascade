@@ -150,9 +150,9 @@ node_name
 This string is a name describing the node in a way that is easy for a human to
 remember. It be unique for each row.
 
-parent
-------
-This string is the name corresponding to the parent of this node.
+parent_name
+-----------
+This string is the node name corresponding to the parent of this node.
 The root node of the tree has an empty entry for this column.
 If a node is a parent, it must have at least two children.
 This avoids fitting the same location twice as one goes from parent
@@ -264,6 +264,8 @@ This float is the no-effect rate value for all the nodes.
 It is used to simulate the data.
 As mentioned, above knocking out covariate multipliers can be
 used to get variation in the no-effect rates that correspond to the fit.
+If *rate_name* is ``pini``, *rate_truth*  must be constant w.r.t *age*
+(because it is prevalence at age zero).
 
 -----------------------------------------------------------------------------
 
@@ -612,11 +614,11 @@ def option_table2dict(option_table) :
         name         = row['name']
         value        = row['value']
         if name in option_dict :
-            msg  = f'csv_simulate: Error: line {line_number} in option.csv\n'
+            msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
             msg += f'the name {name} appears twice in this table'
             assert False, msg
         if not name in valid_name :
-            msg  = f'csv_simulate: Error: line {line_number} in option.csv\n'
+            msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
             msg += f'{name} is not a valid option name'
             assert False, msg
         option_dict[name] = value
@@ -624,32 +626,203 @@ def option_table2dict(option_table) :
     # option_dict
     for name in valid_name :
         if not name in option_dict :
-            msg  = 'csv_simulate: Error: in option.csv\n'
+            msg  = 'csv_interface: Error: in option.csv\n'
             msg += f'the name {name} does not apper'
             assert False, msg
     #
     # option_dict['std_random_effects']
     std_random_effects = float( option_dict['std_random_effects'] )
     if std_random_effects <= 0.0 :
-        msg  = 'csv_simulate: Error: in option.csv\n'
+        msg  = 'csv_interface: Error: in option.csv\n'
         msg += f'std_random_effect = {std_random_effect} <= 0'
         assert False, msg
     #
     return option_dict
 # ----------------------------------------------------------------------------
-def check_node_table( node_table ) :
-
+# node_dict:
+# The keys in this dictionary are the values of node_name in the table.
+# For each node_name,
+# node_dict[node_name] is the corresponding parent_name.
+#
+# node_dict = node_table2dict(node_table)
+def node_table2dict( node_table ) :
+    #
+    # node_dict, count_children
+    line_number = 0
+    node_dict   = dict()
+    for row in node_table :
+        line_number += 1
+        node_name    = row['node_name']
+        parent_name  = row['parent_name']
+        if node_name in node_dict :
+            msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
+            msg += f'node_name {node_name} appears twice'
+            assert False, msg
+        node_dict[node_name]      = parent_name
+        count_children[node_name] = 0
+    #
+    # count_children
+    line_number    = 0
+    for row in node_table :
+        line_number += 1
+        node_name    = row['node_name']
+        parent_name  = row['parent_name']
+        if parent_name not in count_children :
+            msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
+            msg += f'parent_name {parent_name} is not a valid node_name'
+            assert False, msg
+        else :
+            count_children[parent_name] += 1
+    #
+    # count_children
+    for parent_name in count_children :
+        if count_children[parent_name] == 1 :
+            msg  = 'csv_interface: Error in node.csv\n'
+            msg += f'the parent_name {parent_name} apprears once and only once'
+    #
+    return
+# ----------------------------------------------------------------------------
+#
+# interpolate_dict = interpolate_covariate_dict(covariate_table, node_set)
+def interpolate_covariate_dict(covariate_table , node_set) :
+    #
+    # interpolate_name_list
+    # this is the covariate names and omega
+    interpolate_name_list = list()
+    for key in covariate_table[0].keys() :
+        if key not in [ 'node_name', 'sex', 'age', 'time' ]
+            interpolate_name_list.append( key )
+    #
+    # covariate_dict_list, age_set, time_set
+    covariate_dict_list = dict()
+    age_set             = set()
+    time_set            = set()
+    line_number         = 0
+    for row in covariate_table :
+        line_number += 1
+        node_name    = row['node_name']
+        sex          = row['sex']
+        age          = float( row['age'] )
+        time         = float( row['time'] )
+        if node_name not in node_set :
+            msg  = f'csv_interface: Error: '
+            msg += f'line {line_number} in covariate.csv\n'
+            msg += 'node_name {node_name} is not in node.csv'
+            assert Flase, msg
+        if sex not in ['male', 'female'] :
+            msg  = f'csv_interface: Error: '
+            msg += f'line {line_number} in covariate.csv\n'
+            msg += 'sex {sex} is not male of female'
+            assert Flase, msg
+        #
+        if node_name not in covariate_dict_list :
+            covariate_dict_list[node_name] = dict()
+        if sex not in covariate_dict_list[node_name] :
+            covariate_dict_list[node_name][sex] = list()
+        #
+        # covariate_dict_list, age_set, time_set
+        covariate_dict_list[node_name][sex].append( row )
+        age_set.add( age )
+        time_set.add( time )
+    #
+    # age_grid, time_grid
+    age_grid  = sorted( age_set )
+    time_grid = sorted( time_set)
+    #
+    # n_age, n_time
+    n_age  = len(age_grid)
+    n_time = len(time_grid)
+    #
+    # covariate_grid
+    covariate_grid = numpy.empty( (n_age, n_time) )
+    #
+    # interpolate_dict, node_name, sex
+    interpolate_dict = dict()
+    for node_name in covariate_dict_list :
+        interpolate_dict[node_name] = dict()
+        for sex in covariate_dict_list[node_name] :
+            interpolate_dict[node_name][sex] = dict()
+            #
+            # triple_list
+            triple_list = list()
+            for row in covariate_dict_list[node_name][sex] :
+                triple = (age, time, row)
+                triple_list.append( triple )
+            #
+            # triple_list
+            triple_list = sorted(triple_list)
+            #
+            # msg
+            msg  = 'csv_interface: Error in covaraite.csv\n'
+            msg += 'node_name = {node_name}, sex = {sex} \n'
+            msg += 'Expected rectangular grid with following:\n'
+            msg += f'age_grid  = {age_grid}\n'
+            msg += f'time_grid = {time_grid}'
+            #
+            if len(triple_list) != n_age * n_time
+                assert False, msg
+            #
+            # interpolate_name
+            for interpolate_name in interpolate_name_list :
+                #
+                # covariate_grid
+                covariate_grid = numpy.nan
+                #
+                # index, triple
+                for (index, triple) in enumerate( tripe_list ) :
+                    #
+                    # age_index, time_index
+                    age        = triple[0]
+                    time       = triple[1]
+                    age_index  = int( index / n_time )
+                    time_index = index % n_time
+                    if age != age_grid[age_index] :
+                        assert False, msg
+                    if time != time_grie[time_index] :
+                        assert False, msg
+                    #
+                    # covariate_grid
+                    row   = triple[2]
+                    value = float( row[interpolate_name] )
+                    covariate_grid[age_index][time_index] =  value
+            #
+            # interpolate_dict
+            spline= RectBivariateSpline(
+                age_grid, time_grid, covariate_grid, kx=1, ky=1, s=0
+            )
+            interpolate_dict[node_name][sex][interpolate_name] = spline
+    return interpolate_dict
 # ----------------------------------------------------------------------------
 def csv_simulate(csv_dir) :
     #
     # input_table
     input_table = dict()
-    input_list  = [
-        'optiion',
-    ]
+    input_list  = [ 'optiion', 'node' ]
     for name in input_list :
-        file_name         = name + '.csv'
+        file_name         = f'{csv_dir}/{name}.csv'
         input_table[name] = at_cascade.read_csv_file(file_name)
     #
     # option_dict
     option_dict = option_table2dict( input_table['option'] )
+    #
+    # node_table_dict
+    node_table_dict = node_table2dict( input_table['node'] )
+    #
+    # interpolate_dict
+    node_set = set( node_table_dict.keys() )
+    interploate_dict = interpolate_covaraite_dict(
+        input_table['covariate'], node_set
+    )
+# ----------------------------------------------------------------------------
+def csv_interface(csv_dir, command) :
+    #
+    # command_dict
+    command_dict = {
+        'simulate' : csv_simulate,
+    }
+    if command not in command_dict :
+        msg  = f'csv_interface: Error: command {command} is not implemented'
+        assert False, msg
+    #
+    # execute the command
+    command_dict[command](csv_dir)
