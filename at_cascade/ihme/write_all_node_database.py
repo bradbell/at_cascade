@@ -68,7 +68,7 @@ def write_all_node_database(result_dir, root_node_database) :
     connection = dismod_at.create_connection(all_node_database, new)
     #
     # all_option
-    all_option_table = at_cascade.ihme.get_table_csv(all_option_table_file)
+    all_option_table = at_cascade.read_csv_table(all_option_table_file)
     tbl_name = 'all_option'
     col_list = [ ('option_name', 'text'), ('option_value', 'text') ]
     write_table(connection, all_option_table, tbl_name, col_list)
@@ -103,7 +103,7 @@ def write_all_node_database(result_dir, root_node_database) :
         all_option[option_name] = option_value
     #
     # node_split_table
-    node_split_table = at_cascade.ihme.get_table_csv( node_split_table_file )
+    node_split_table = at_cascade.read_csv_table( node_split_table_file )
     for row in node_split_table :
         row['node_id'] = int( row['node_id'] )
     tbl_name = 'node_split'
@@ -111,7 +111,7 @@ def write_all_node_database(result_dir, root_node_database) :
     write_table(connection, node_split_table, tbl_name, col_list)
     #
     # mulcov_freeze_table
-    mulcov_freeze_table = at_cascade.ihme.get_table_csv(
+    mulcov_freeze_table = at_cascade.read_csv_table(
         mulcov_freeze_table_file
     )
     for row in mulcov_freeze_table :
@@ -127,7 +127,7 @@ def write_all_node_database(result_dir, root_node_database) :
     write_table(connection, mulcov_freeze_table, tbl_name, col_list)
     #
     # omega_age_grid_table
-    omega_age_table  = at_cascade.ihme.get_table_csv(omega_age_table_file)
+    omega_age_table  = at_cascade.read_csv_table(omega_age_table_file)
     age_list         = list()
     for row in root_table['age'] :
         age_list.append( row['age'] )
@@ -141,7 +141,7 @@ def write_all_node_database(result_dir, root_node_database) :
     write_table(connection, omega_age_grid_table, tbl_name, col_list)
     #
     # omega_time_grid_table
-    omega_time_table  = at_cascade.ihme.get_table_csv(omega_time_table_file)
+    omega_time_table  = at_cascade.read_csv_table(omega_time_table_file)
     time_list         = list()
     for row in root_table['time'] :
         time_list.append( row['time'] )
@@ -155,7 +155,7 @@ def write_all_node_database(result_dir, root_node_database) :
     write_table(connection, omega_time_grid_table, tbl_name, col_list)
     #
     # mtall_index_table
-    mtall_index_table = at_cascade.ihme.get_table_csv(mtall_index_table_file)
+    mtall_index_table = at_cascade.read_csv_table(mtall_index_table_file)
     tbl_name = 'mtall_index'
     col_list = [
         ('node_id', 'integer'),
@@ -165,7 +165,7 @@ def write_all_node_database(result_dir, root_node_database) :
     write_table(connection, mtall_index_table, tbl_name, col_list)
     #
     # all_mtall_table
-    all_mtall_table   = at_cascade.ihme.get_table_csv(all_mtall_table_file)
+    all_mtall_table   = at_cascade.read_csv_table(all_mtall_table_file)
     tbl_name = 'all_mtall'
     col_list = [ ('all_mtall_value', 'real') ]
     write_table(connection, all_mtall_table, tbl_name, col_list)

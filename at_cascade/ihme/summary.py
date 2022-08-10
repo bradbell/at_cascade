@@ -172,7 +172,7 @@ def combine_variable_files(
     #
     # node_table
     file_path = f'{result_dir}/node_table.csv'
-    node_table = at_cascade.ihme.get_table_csv(file_path)
+    node_table = at_cascade.read_csv_table(file_path)
     #
     # path_table
     file_name = 'variable.csv'

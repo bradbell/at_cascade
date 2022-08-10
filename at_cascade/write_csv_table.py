@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
-#           Copyright (C) 2021-21 University of Washington
+#           Copyright (C) 2021-22 University of Washington
 #              (Bradley M. Bell bradbell@uw.edu)
 #
 # This program is distributed under the terms of the
@@ -10,9 +10,9 @@
 import csv
 # -----------------------------------------------------------------------------
 #
-# write_csv(file_name, table)
-# write_csv(file_name, table, fieldnames)
-def write_csv(
+# write_csv_table(file_name, table)
+# write_csv_table(file_name, table, fieldnames)
+def write_csv_table(
     file_name  = None,
     table      = None,
     fieldnames = None,

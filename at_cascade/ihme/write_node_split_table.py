@@ -43,7 +43,7 @@ def write_node_split_table(
     #
     # node_split_table_file
     fieldnames = [ 'node_name', 'node_id' ]
-    at_cascade.ihme.write_csv(
+    at_cascade.write_csv_table(
        file_name   = node_split_table_file,
         table      = node_split_table,
         fieldnames = fieldnames,

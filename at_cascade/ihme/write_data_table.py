@@ -326,4 +326,4 @@ def write_data_table(
                 row[covariate_name] = value
     #
     # data_table_file
-    at_cascade.ihme.write_csv(data_table_file, data_table)
+    at_cascade.write_csv_table(data_table_file, data_table)

@@ -48,6 +48,8 @@ The at_cascade Python Module
 
 # BEGIN_SORT_THIS_LINE_PLUS_1
 from .add_log_entry         import add_log_entry
+from .write_csv_table       import write_csv_table
+from .read_csv_table        import read_csv_table
 from .avgint_parent_grid    import avgint_parent_grid
 from .cascade_root_node     import cascade_root_node
 from .check_cascade_node    import check_cascade_node
