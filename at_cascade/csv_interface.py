@@ -682,8 +682,13 @@ def node_table2dict( node_table ) :
     #
     return
 # ----------------------------------------------------------------------------
+# spline = covarite_dict[node_name][sex][interpolate_name] :
+# 1. node_name is any of thoes in the covariate table
+# 2. sex is any of the sexes in the covariate table
+# 3. interpolate_name is any covariate_name or omega
+# 4. spline(age, time, grid=False) evaluates the spline at (age, time)
 #
-# interpolate_dict = interpolate_covariate_dict(covariate_table, node_set)
+# covariate_dict = interpolate_covariate_dict(covariate_table, node_set)
 def interpolate_covariate_dict(covariate_table , node_set) :
     #
     # interpolate_name_list
@@ -693,8 +698,8 @@ def interpolate_covariate_dict(covariate_table , node_set) :
         if key not in [ 'node_name', 'sex', 'age', 'time' ]
             interpolate_name_list.append( key )
     #
-    # covariate_dict_list, age_set, time_set
-    covariate_dict_list = dict()
+    # covariate_dict_row, age_set, time_set
+    covariate_dict_row  = dict()
     age_set             = set()
     time_set            = set()
     line_number         = 0
@@ -715,13 +720,13 @@ def interpolate_covariate_dict(covariate_table , node_set) :
             msg += 'sex {sex} is not male of female'
             assert Flase, msg
         #
-        if node_name not in covariate_dict_list :
-            covariate_dict_list[node_name] = dict()
-        if sex not in covariate_dict_list[node_name] :
-            covariate_dict_list[node_name][sex] = list()
+        if node_name not in covariate_dict_row :
+            covariate_dict_row[node_name] = dict()
+        if sex not in covariate_dict_row[node_name] :
+            covariate_dict_row[node_name][sex] = list()
         #
-        # covariate_dict_list, age_set, time_set
-        covariate_dict_list[node_name][sex].append( row )
+        # covariate_dict_row, age_set, time_set
+        covariate_dict_row[node_name][sex].append( row )
         age_set.add( age )
         time_set.add( time )
     #
@@ -736,16 +741,16 @@ def interpolate_covariate_dict(covariate_table , node_set) :
     # covariate_grid
     covariate_grid = numpy.empty( (n_age, n_time) )
     #
-    # interpolate_dict, node_name, sex
-    interpolate_dict = dict()
-    for node_name in covariate_dict_list :
-        interpolate_dict[node_name] = dict()
-        for sex in covariate_dict_list[node_name] :
-            interpolate_dict[node_name][sex] = dict()
+    # covariate_dict, node_name, sex
+    covariate_dict = dict()
+    for node_name in covariate_dict_row :
+        covariate_dict[node_name] = dict()
+        for sex in covariate_dict_row[node_name] :
+            covariate_dict[node_name][sex] = dict()
             #
             # triple_list
             triple_list = list()
-            for row in covariate_dict_list[node_name][sex] :
+            for row in covariate_dict_row[node_name][sex] :
                 triple = (age, time, row)
                 triple_list.append( triple )
             #
@@ -786,12 +791,14 @@ def interpolate_covariate_dict(covariate_table , node_set) :
                     value = float( row[interpolate_name] )
                     covariate_grid[age_index][time_index] =  value
             #
-            # interpolate_dict
+            # covariate_dict
             spline= RectBivariateSpline(
                 age_grid, time_grid, covariate_grid, kx=1, ky=1, s=0
             )
-            interpolate_dict[node_name][sex][interpolate_name] = spline
-    return interpolate_dict
+            covariate_dict[node_name][sex][interpolate_name] = spline
+    return covariate_dict
+# ----------------------------------------------------------------------------
+def multiplier
 # ----------------------------------------------------------------------------
 def csv_simulate(csv_dir) :
     #
@@ -808,9 +815,9 @@ def csv_simulate(csv_dir) :
     # node_table_dict
     node_table_dict = node_table2dict( input_table['node'] )
     #
-    # interpolate_dict
+    # covariate_dict
     node_set = set( node_table_dict.keys() )
-    interploate_dict = interpolate_covaraite_dict(
+    covariate_dict = interpolate_covaraite_dict(
         input_table['covariate'], node_set
     )
 # ----------------------------------------------------------------------------
@@ -826,3 +833,5 @@ def csv_interface(csv_dir, command) :
     #
     # execute the command
     command_dict[command](csv_dir)
+    #
+    print('No errors detected')

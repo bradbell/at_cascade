@@ -19,6 +19,18 @@ authors = [
   {name  = 'Bradley M. Bell', email = 'bradbell@seanet.com'},
 ]
 description       = 'Exract Sphinx RST Files'
+license           = 'GPL-3.0-or-later'
+requires-python   = '>=3.8'
+classifiers       = [
+'Programming Language :: Python :: 3',
+'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+'Operating System :: OS Independent',
+]
+install_requires = [
+  'matplotlib',
+  'numpy',
+  'scipy',
+]
 
 [project.urls]
 'Homepage'    = 'https://bradbell.github.io/at_cascade'
