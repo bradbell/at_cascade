@@ -264,7 +264,7 @@ This float is the no-effect rate value for all the nodes.
 It is used to simulate the data.
 As mentioned, above knocking out covariate multipliers can be
 used to get variation in the no-effect rates that correspond to the fit.
-If *rate_name* is ``pini``, *rate_truth*  must be constant w.r.t *age*
+If *rate_name* is ``pini``, *rate_truth*  should be constant w.r.t *age*
 (because it is prevalence at age zero).
 
 -----------------------------------------------------------------------------
@@ -683,10 +683,10 @@ def node_table2dict( node_table ) :
     return
 # ----------------------------------------------------------------------------
 # spline = covarite_dict[node_name][sex][interpolate_name] :
-# 1. node_name is any of thoes in the covariate table
+# 1. node_name is any of those in the covariate table
 # 2. sex is any of the sexes in the covariate table
 # 3. interpolate_name is any covariate_name or omega
-# 4. spline(age, time, grid=False) evaluates the spline at (age, time)
+# 4. spline(age, time, grid=False) evaluates the interpolant at (age, time)
 #
 # covariate_dict = interpolate_covariate_dict(covariate_table, node_set)
 def interpolate_covariate_dict(covariate_table , node_set) :
@@ -698,8 +698,8 @@ def interpolate_covariate_dict(covariate_table , node_set) :
         if key not in [ 'node_name', 'sex', 'age', 'time' ]
             interpolate_name_list.append( key )
     #
-    # covariate_dict_row, age_set, time_set
-    covariate_dict_row  = dict()
+    # covariate_row_list, age_set, time_set
+    covariate_row_list  = dict()
     age_set             = set()
     time_set            = set()
     line_number         = 0
@@ -720,13 +720,13 @@ def interpolate_covariate_dict(covariate_table , node_set) :
             msg += 'sex {sex} is not male of female'
             assert Flase, msg
         #
-        if node_name not in covariate_dict_row :
-            covariate_dict_row[node_name] = dict()
-        if sex not in covariate_dict_row[node_name] :
-            covariate_dict_row[node_name][sex] = list()
+        if node_name not in covariate_row_list :
+            covariate_row_list[node_name] = dict()
+        if sex not in covariate_row_list[node_name] :
+            covariate_row_list[node_name][sex] = list()
         #
-        # covariate_dict_row, age_set, time_set
-        covariate_dict_row[node_name][sex].append( row )
+        # covariate_row_list, age_set, time_set
+        covariate_row_list[node_name][sex].append( row )
         age_set.add( age )
         time_set.add( time )
     #
@@ -743,14 +743,16 @@ def interpolate_covariate_dict(covariate_table , node_set) :
     #
     # covariate_dict, node_name, sex
     covariate_dict = dict()
-    for node_name in covariate_dict_row :
+    for node_name in covariate_row_list :
         covariate_dict[node_name] = dict()
-        for sex in covariate_dict_row[node_name] :
+        for sex in covariate_row_list[node_name] :
             covariate_dict[node_name][sex] = dict()
             #
             # triple_list
             triple_list = list()
-            for row in covariate_dict_row[node_name][sex] :
+            for row in covariate_row_list[node_name][sex] :
+                age    = float( row['age'] )
+                time   = float( row['time'] )
                 triple = (age, time, row)
                 triple_list.append( triple )
             #
@@ -760,7 +762,7 @@ def interpolate_covariate_dict(covariate_table , node_set) :
             # msg
             msg  = 'csv_interface: Error in covaraite.csv\n'
             msg += 'node_name = {node_name}, sex = {sex} \n'
-            msg += 'Expected rectangular grid with following:\n'
+            msg += 'Expected following rectangular grid:\n'
             msg += f'age_grid  = {age_grid}\n'
             msg += f'time_grid = {time_grid}'
             #
@@ -771,7 +773,7 @@ def interpolate_covariate_dict(covariate_table , node_set) :
             for interpolate_name in interpolate_name_list :
                 #
                 # covariate_grid
-                covariate_grid = numpy.nan
+                covariate_grid[:] = numpy.nan
                 #
                 # index, triple
                 for (index, triple) in enumerate( tripe_list ) :
@@ -798,13 +800,109 @@ def interpolate_covariate_dict(covariate_table , node_set) :
             covariate_dict[node_name][sex][interpolate_name] = spline
     return covariate_dict
 # ----------------------------------------------------------------------------
-def multiplier
+# spline = rate_truth_dict[rate_name] :
+# 1. rate_name is any of the rates in the ; table
+# 4. spline(age, time, grid=False) evaluates the interpolant at (age, time)
+#
+# rate_truth_dict = interpolate_rate_truth(rate_sim_table)
+def interpolate_rate_truth_dict(rate_sim_table) :
+    #
+    # valid_rate_name
+    valid_rate_name = [ 'iota', 'rho', 'chi', 'pini' ]
+    #
+    # age_set, time_set
+    rate_row_list   = dict()
+    age_set         = set()
+    time_set        = set()
+    line_number     = 0
+    for row in rate_sim_table :
+        line_number += 1
+        rate_name    = row['rate_name']
+        age          = float( row['age'] )
+        time         = float( row['time'] )
+        rate_truth   = float( row['rate_truth'] )
+        #
+        if rate_name not in rate_row_list :
+            rate_row_list[rate_name] = list()
+        rate_row_list[rate_name].append( row )
+        age_set.add( age )
+        time_set.add( time )
+    #
+    # age_grid, time_grid
+    age_grid  = sorted( age_set )
+    time_grid = sorted( time_set)
+    #
+    # n_age, n_time
+    n_age  = len(age_grid)
+    n_time = len(time_grid)
+    #
+    # covariate_grid
+    rate_grid = numpy.empty( (n_age, n_time) )
+    #
+    # rate_truth_dict, rate_name
+    rate_truth_dict = dict()
+    for rate_name in rate_row_list :
+        #
+        # triple_list
+        triple_list = list()
+        for row in rate_row_list[rate_name] :
+            age    = float( row['age'] )
+            time   = float( row['time'] )
+            triple = (age, time, row)
+            triple_list.append( triple )
+        #
+        # triple_list
+        triple_list = sorted(triple_list)
+        #
+        # msg
+        msg  = 'csv_interface: Error in rate_sim.csv\n'
+        msg += 'rate_name = {rate_name}\n'
+        msg += 'Expected following rectangular grid:\n'
+        msg += f'age_grid  = {age_grid}\n'
+        msg += f'time_grid = {time_grid}'
+        #
+        if len(triple_list) != n_age * n_time
+            assert False, msg
+        #
+        # rate_grid
+        rate_grid[:] = numpy.nan
+        #
+        # index, triple
+        for (index, triple) in enumerate( tripe_list ) :
+            #
+            # age_index, time_index
+            age        = triple[0]
+            time       = triple[1]
+            age_index  = int( index / n_time )
+            time_index = index % n_time
+            if age != age_grid[age_index] :
+                assert False, msg
+            if time != time_grie[time_index] :
+                assert False, msg
+            #
+            # covariate_grid
+            row   = triple[2]
+            value = float( row['rate_truth'] )
+            rate_grid[age_index][time_index] =  value
+            #
+            # rate_truth_dict
+            spline= RectBivariateSpline(
+                age_grid, time_grid, covariate_grid, kx=1, ky=1, s=0
+            )
+            rate_truth_dict[rate_name]= spline
+    return rate_truth_dict
 # ----------------------------------------------------------------------------
 def csv_simulate(csv_dir) :
     #
     # input_table
     input_table = dict()
-    input_list  = [ 'optiion', 'node' ]
+    input_list  = [
+        'optiion',
+        'node',
+        'covariate',
+        'multiplier',
+        'rate_sim',
+    ]
     for name in input_list :
         file_name         = f'{csv_dir}/{name}.csv'
         input_table[name] = at_cascade.read_csv_file(file_name)
@@ -820,6 +918,9 @@ def csv_simulate(csv_dir) :
     covariate_dict = interpolate_covaraite_dict(
         input_table['covariate'], node_set
     )
+    #
+    # rate_truth_dict
+    rate_truth_dict = ineterpolate_rate_truth_dict( input_table['rate_sim'] )
 # ----------------------------------------------------------------------------
 def csv_interface(csv_dir, command) :
     #
