@@ -217,7 +217,7 @@ which rate this covariate multiplier is affecting.
 covariate_or_sex
 ----------------
 If this is ``sex`` it specifies that this multiplier multiples
-the sex values where female = -0.5 and male = +0.5.
+the sex values where female = -0.5, male = +0.5, and both = 0.0.
 Otherwise this is one of the covariate names in the covariate.csv file
 and specifies which covariate is being multiplied.
 
@@ -933,8 +933,25 @@ def csv_simulate(csv_dir) :
         input_table['covariate'], node_set
     )
     #
+    # covariate_name_list
+    covariate_name_list = list()
+    covariate_sum_list = list()
+    for key in input_table['covariate'][0].keys() :
+        if key not in [ 'node_name', 'sex', 'age', 'time', 'omega' ] :
+            covariate_name_list.append(key)
+            covariate_sum_list.append( 0.0 )
+    #
     # rate_truth_dict
     rate_truth_dict = ineterpolate_rate_truth_dict( input_table['rate_sim'] )
+    #
+    # multiplier_dict
+    multiplier_dict = dict()
+    for rate_name in rate_truth_dict :
+        multiplier_dict[rate_name] = list()
+    for row in input_file['multiplier_sim'] :
+        rate_name = row['rate_name']
+        if rate_name in multiplier_dict :
+                multiplier_dict[rate_name].append(row)
     #
     # data_sim_table
     data_sim_table = list()
@@ -980,7 +997,19 @@ def csv_simulate(csv_dir) :
         age_mid  = (float(row['age_lower']  + float(row['age_upper']))  / 2.0
         time_mid = (float(row['time_lower'] + float(row['time_upper'])) / 2.0
         #
+        # covariate_value_list
+        # covaraite_sum_list
+        covariate_value_list = list()
+        for (index, covariate_name) in enumerate( covariate_name_list ) :
+            spline = covariate_dict[node_name][sex][[covariate_name]
+            value  =  spline(age_mid, time_mid, grid = False)
+            covariate_value_list.append(value )
+            covariate_sum_list[index] += value
         #
+        # row
+        row = dict( zip(covariate_name_list, covariate_value_list) )
+        row['simulate_id'] = simulate_id
+        data_sim_table.append( row )
 # ----------------------------------------------------------------------------
 def csv_interface(csv_dir, command) :
     #
