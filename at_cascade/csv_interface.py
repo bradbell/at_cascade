@@ -139,6 +139,17 @@ This is the standard deviation of the random effects.
 All fo the effects are in log of rate space, so this standard deviation
 is also in log of rate space.
 
+integrand_step_size
+--------------------
+This is the step size in age and time used to approximate integrand averages
+from age_lower to age_upper and time_lower to time_upper (in data_sim.csv).
+It must be greater than zero.
+
+random_seed_in
+--------------
+This integer is used to seed the random number generator.
+If it is zero, the system clock is used.
+
 -----------------------------------------------------------------------------
 
 node.csv
@@ -352,12 +363,25 @@ This contains the simulated data.
 It is created during a simulate command
 and has the following columns:
 
+random_seed_out
+---------------
+This is the actual random seed used.
+If :ref:`csv_simulate@input_files@option.csv@random_seed_in`
+is non-zero, it is the same as *random_seed_in*.
+
 simulate_id
 -----------
 This integer identifies the row in the simulate.csv
 corresponding to this row in data_sim.csv.
 This is an :ref:`csv_interface@Notation@index_column`
 for simulate.csv and data_sim.csv.
+Not that not all these row get included during fitting; see
+:ref:`csv_fit@input_files@data_subset.csv@simulate_id`.
+
+meas_mean
+---------
+This float is the mean value for the measurement.
+This is the model value without any measurement noise.
 
 meas_value
 ----------
@@ -407,8 +431,8 @@ included during the next fit command.
 
 simulate_id
 -----------
-This identifies a row in data_csv that is included during the next
-file command.
+This identifies a row in data_sim.csv that is included during the next
+fit command.
 
 ------------------------------------------------------------------------------
 
@@ -630,7 +654,7 @@ def option_table2dict(option_table) :
     #
     # option_dict
     option_dict = dict()
-    valid_name  = { 'std_random_effects' }
+    valid_name  = { 'std_random_effects', 'integrand_step_size' }
     line_number = 0
     for row in option_table :
         line_number += 1
@@ -653,12 +677,15 @@ def option_table2dict(option_table) :
             msg += f'the name {name} does not apper'
             assert False, msg
     #
-    # option_dict['std_random_effects']
-    std_random_effects = float( option_dict['std_random_effects'] )
-    if std_random_effects <= 0.0 :
-        msg  = 'csv_interface: Error: in option.csv\n'
-        msg += f'std_random_effect = {std_random_effect} <= 0'
-        assert False, msg
+    # options that must be greater than zero
+    for name in ['std_random_effects', 'integrand_step_size']
+        #
+        # option_dict['std_random_effects']
+        value = float( option_dict[name] )
+        if value <= 0.0 :
+            msg  = 'csv_interface: Error: in option.csv\n'
+            msg += f'{name} = {value} <= 0'
+            assert False, msg
     #
     return option_dict
 # ----------------------------------------------------------------------------
@@ -915,14 +942,26 @@ def interpolate_rate_truth_dict(rate_sim_table) :
             rate_truth_dict[rate_name]= spline
     return rate_truth_dict
 # ----------------------------------------------------------------------------
+# covarite_avg_table:
+# is the table corresponding to covariate_avg.csv
 #
-# covariate_avg_table = get_covariate_sim_table(
+# covariate_avg_dict[node_name][sex][covariate_name]
+# is the average corresponding to the specified node, sex, and covariate
+#
+# covariate_table:
+# is the table corresponding to covariate.csv
+#
+# covariate_name_list:
+# is a list of the covariate names
+#
+# covariate_avg_dict, covariate_avg_table = get_covariate_sim_table(
 #   covariate_table, covariate_name_list
 # )
 def get_covariate_avg_table( covariate_table, covariate_name_list) :
     #
     # covariate_avg_table
     covariate_avg_table = list()
+    covariate_avg_dict  = dict()
     #
     # node_name_set
     # sex_set
@@ -971,11 +1010,73 @@ def get_covariate_avg_table( covariate_table, covariate_name_list) :
                     assert False, msg
             #
             # covariate_avg_table
+            # covariate_avg_dict
+            covariate_avg_dict[node_name][sex] = dict()
             row = { 'sex' : sex, 'node_name' : node_name }
             for (i, covariate_name) in enumerate(covariate_name_list) :
                 average = covariate_sum[node_name][i] / node_count[node_name]
                 row[covariate_name] = average
             covariate_avg_table.append(row)
+            covariate_avg_dict[node_name][sex] = row
+            #
+# ----------------------------------------------------------------------------
+def average_integrand_rate(
+    rate_truth_dict      ,
+    covariate_name_list  ,
+    covariate_dict       ,
+    covariate_avg_dict   ,
+    multiplier_dict      ,
+    node_name            ,
+    sex                  ,
+) :
+    def fun(age, time, rate_name) :
+        spline         = rate_truth_dict[rate_name]
+        no_effect_rate = spline(age, time, grid = False)
+        effect         = 0.0
+        for row in multiplier_dict[rate_name] :
+            assert row['rate_name'] == rate_name
+            covariate_or_sex = row['covariate_or_sex'] :
+            if covariate_or_sex != 'sex' :
+                covariate_name = covariate_or_sex
+                spline     = covariate_dict[node_name][sex][covariate_name]
+                covariate  = spline((age, time, grid = False)
+                average    = covariate_avg_dict[node_name][sex][covariate_name]
+                difference = covariate - average
+                effect += float( row['multiplir_truth'] ) * difference
+        rate = math.exp(effect) * no_effect_rate
+        return rate
+    result = dict()
+    result['pini']  = lambda age, time : fun(age, time, 'pini')
+    result['iota']  = lambda age, time : fun(age, time, 'iota')
+    result['rho']   = lambda age, time : fun(age, time, 'rho')
+    result['chi']   = lambda age, time : fun(age, time, 'chi')
+    result['omega'] = lambda age, time : fun(age, time, 'omega')
+    return rate_fun
+# ----------------------------------------------------------------------------
+def avgerage_integrand_grid(
+    integrand_step_size, age_lower, age_upper, time_lower, time_upper
+) :
+    #
+    # age_grid
+    if age_lower == age_upper :
+        age_grid = [ age_lower ]
+    else :
+        n_age    = int( (age_upper - age_lower) / intgrand_step_size) + 1
+        dage     = (age_upper - age_lower) / n_age
+        age_grid = [ age_lower + i * dage for i in range(n_age+1) ]
+    #
+    # time_grid
+    if time_lower == time_upper :
+        time_grid = [ time_lower ]
+    else :
+        n_time    = int( (time_upper - time_lower) / intgrand_step_size) + 1
+        dtime     = (time_upper - time_lower) / n_time
+        time_grid = [ time_lower + i * dtime for i in range(n_time+1) ]
+    # grid
+    grid = { 'age' : age_grid , 'time' : time_grid }
+    #
+    return grid
+
 # ----------------------------------------------------------------------------
 def csv_simulate(csv_dir) :
     valid_integrand_name = {
@@ -1027,8 +1128,8 @@ def csv_simulate(csv_dir) :
         if key not in [ 'node_name', 'sex', 'age', 'time', 'omega' ] :
             covariate_name_list.append(key)
     #
-    # covariate_avg_table
-    covariate_avg_table = get_covariate_avg_table(
+    # covariate_avg_dict, covariate_avg_table
+    covariate_avg_dit, covariate_avg_table = get_covariate_avg_table(
         input_table['covariate'] , covariate_list
     )
     #
@@ -1101,6 +1202,37 @@ def csv_simulate(csv_dir) :
         row = dict( zip(covariate_name_list, covariate_value_list) )
         row['simulate_id'] = simulate_id
         data_sim_table.append( row )
+        #
+        # rate_fun_dict
+        rate_fun_dict = average_integrand_rate(
+            rate_truth_dict      ,
+            covariate_name_list  ,
+            covariate_dict       ,
+            covariate_avg_dict   ,
+            multiplier_dict      ,
+            node_name            ,
+            sex
+        )
+        #
+        # grid
+        integrand_step_size = option_dict['integrand_step_size']
+        grid = averate_integrand_grid(
+            integrand_step_size, age_lower, age_upper, time_lower, time_upper
+        )
+        #
+        # avg_integrand
+        avg_integrand = dismod_at.average_integrand(
+            rate_fun_dict, integrand_name, grid, abs_tol
+        )
+        #
+        # row['meas_mean']
+        row['meas_mean'] = avg_integrand
+        #
+        # row['meas_std']
+        row['meas_std'] = float( row_sim['precent_cv'] ) * average / 100.0
+        #
+        # meas_noise
+
 # ----------------------------------------------------------------------------
 def csv_interface(csv_dir, command) :
     #
