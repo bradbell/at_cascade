@@ -112,6 +112,7 @@ simulate refers to are for a normal distribution.
 
 {xrst_begin csv_simulate}
 {xrst_spell
+    avg
     csv
     std
     cv
@@ -173,6 +174,7 @@ This string identifies the node, in node.csv, corresponding to this row.
 sex
 ---
 This identifies which sex this row corresponds to.
+The sex value ``both`` does not appear in this table.
 
 age
 ---
@@ -320,6 +322,29 @@ a censored normal is used to simulate the data.
 
 Output Files
 ************
+
+covariate_avg.csv
+=================
+This file contains the averages in covariate.csv for each sex and node.
+These averages are used as reference values when determining the
+covariate difference betwen the rate values in rate.csv and
+a particular node and sex.
+
+node_name
+---------
+This string identifies the node corresponding to the average.
+The specified node and all its descendants are included in the average.
+
+sex
+---
+This is ``male`` or ``female`` and
+specifies wich sex, in covariate.csv, the average was for.
+
+covariate_name
+--------------
+For each :ref:`csv_simulate@input_files@covariate.csv@covariate_name`
+there is a colum that contains a float value equal to
+the average for the corresponding sex and node.
 
 data_sim.csv
 ============
@@ -637,26 +662,26 @@ def option_table2dict(option_table) :
     #
     return option_dict
 # ----------------------------------------------------------------------------
-# node_dict:
+# parent_dict:
 # The keys in this dictionary are the values of node_name in the table.
 # For each node_name,
-# node_dict[node_name] is the corresponding parent_name.
+# parent_dict[node_name] is the corresponding parent_name.
 #
-# node_dict = node_table2dict(node_table)
+# parent_dict = node_table2dict(node_table)
 def node_table2dict( node_table ) :
     #
-    # node_dict, count_children
+    # parent_dict, count_children
     line_number = 0
-    node_dict   = dict()
+    parent_dict   = dict()
     for row in node_table :
         line_number += 1
         node_name    = row['node_name']
         parent_name  = row['parent_name']
-        if node_name in node_dict :
+        if node_name in parent_dict :
             msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
             msg += f'node_name {node_name} appears twice'
             assert False, msg
-        node_dict[node_name]      = parent_name
+        parent_dict[node_name]      = parent_name
         count_children[node_name] = 0
     #
     # count_children
@@ -758,7 +783,7 @@ def interpolate_covariate_dict(covariate_table , node_set) :
             triple_list = sorted(triple_list)
             #
             # msg
-            msg  = 'csv_interface: Error in covaraite.csv\n'
+            msg  = 'csv_interface: Error in covariate.csv\n'
             msg += 'node_name = {node_name}, sex = {sex} \n'
             msg += 'Expected following rectangular grid:\n'
             msg += f'age_grid  = {age_grid}\n'
@@ -783,7 +808,7 @@ def interpolate_covariate_dict(covariate_table , node_set) :
                     time_index = index % n_time
                     if age != age_grid[age_index] :
                         assert False, msg
-                    if time != time_grie[time_index] :
+                    if time != time_grid[time_index] :
                         assert False, msg
                     #
                     # covariate_grid
@@ -799,8 +824,8 @@ def interpolate_covariate_dict(covariate_table , node_set) :
     return covariate_dict
 # ----------------------------------------------------------------------------
 # spline = rate_truth_dict[rate_name] :
-# 1. rate_name is any of the rates in the ; table
-# 4. spline(age, time, grid=False) evaluates the interpolant at (age, time)
+# 1. rate_name is any of the rates in the rate_sim table.
+# 2. spline(age, time, grid=False) evaluates the interpolant at (age, time)
 #
 # rate_truth_dict = interpolate_rate_truth(rate_sim_table)
 def interpolate_rate_truth_dict(rate_sim_table) :
@@ -875,7 +900,7 @@ def interpolate_rate_truth_dict(rate_sim_table) :
             time_index = index % n_time
             if age != age_grid[age_index] :
                 assert False, msg
-            if time != time_grie[time_index] :
+            if time != time_grid[time_index] :
                 assert False, msg
             #
             # covariate_grid
@@ -889,6 +914,68 @@ def interpolate_rate_truth_dict(rate_sim_table) :
             )
             rate_truth_dict[rate_name]= spline
     return rate_truth_dict
+# ----------------------------------------------------------------------------
+#
+# covariate_avg_table = get_covariate_sim_table(
+#   covariate_table, covariate_name_list
+# )
+def get_covariate_avg_table( covariate_table, covariate_name_list) :
+    #
+    # covariate_avg_table
+    covariate_avg_table = list()
+    #
+    # node_name_set
+    # sex_set
+    node_name_set = set()
+    sex_set       = set()
+    for row in covariate_table :
+        node_name_set.add( row['node_name'] )
+        sex_set.add( row['sex'] )
+    #
+    if 'both' in sex_set :
+        msg = 'csv_interface: sex = both can not appear in covariate.csv'
+        assert False, msg
+    #
+    # sex
+    for sex in set_sex :
+        #
+        # covariate_sum, node_count
+        covariate_sum   = dict()
+        for node_name in node_name_set :
+            node_count[node_name]      = 0
+            covariate_sum[node_name]   = list()
+            for covariate_name in covariate_name_list :
+                covariate_sum[node_name].append(0.0)
+        #
+        # covariate_sum,
+        for row in covariate_table :
+            if row['sex'] == sex :
+                node_name = covariate_table['node_name']
+                node_count[node_name] += 1
+                for (i, covariate_name) in enumerate( covariate_name_list ) :
+                    covariate_sum[node_name][i] += float(row[covariate_name])
+        #
+        # covariate_avg_table
+        previous_count = None
+        previous_node  = None
+        for node_name in node_name_set :
+            if previous_count != None :
+                if node_count[node_name] != previous_count :
+                    count = node_count[node_name]
+                    msg   = 'csv_interface: covariate.csv: '
+                    msg  += 'number of covariates depends on node\n'
+                    msg  += f'sex = {sex}, node_name = {node_name}, '
+                    msg  += f'count = {count}\n'
+                    msg  += f'sex = {sex}, node_name = {previous_node_name}, '
+                    msg  += f'count = {previous_count}\n'
+                    assert False, msg
+            #
+            # covariate_avg_table
+            row = { 'sex' : sex, 'node_name' : node_name }
+            for (i, covariate_name) in enumerate(covariate_name_list) :
+                average = covariate_sum[node_name][i] / node_count[node_name]
+                row[covariate_name] = average
+            covariate_avg_table.append(row)
 # ----------------------------------------------------------------------------
 def csv_simulate(csv_dir) :
     valid_integrand_name = {
@@ -924,12 +1011,12 @@ def csv_simulate(csv_dir) :
     # option_dict
     option_dict = option_table2dict( input_table['option'] )
     #
-    # node_table_dict
-    node_table_dict = node_table2dict( input_table['node'] )
+    # parent_dict
+    parent_dict = node_table2dict( input_table['node'] )
     #
     # covariate_dict
-    node_set = set( node_table_dict.keys() )
-    covariate_dict = interpolate_covaraite_dict(
+    node_set = set( parent_dict.keys() )
+    covariate_dict = interpolate_covariate_dict(
         input_table['covariate'], node_set
     )
     #
@@ -939,7 +1026,11 @@ def csv_simulate(csv_dir) :
     for key in input_table['covariate'][0].keys() :
         if key not in [ 'node_name', 'sex', 'age', 'time', 'omega' ] :
             covariate_name_list.append(key)
-            covariate_sum_list.append( 0.0 )
+    #
+    # covariate_avg_table
+    covariate_avg_table = get_covariate_avg_table(
+        input_table['covariate'] , covariate_list
+    )
     #
     # rate_truth_dict
     rate_truth_dict = ineterpolate_rate_truth_dict( input_table['rate_sim'] )
@@ -998,7 +1089,7 @@ def csv_simulate(csv_dir) :
         time_mid = (float(row['time_lower'] + float(row['time_upper'])) / 2.0
         #
         # covariate_value_list
-        # covaraite_sum_list
+        # covariate_sum_list
         covariate_value_list = list()
         for (index, covariate_name) in enumerate( covariate_name_list ) :
             spline = covariate_dict[node_name][sex][[covariate_name]
