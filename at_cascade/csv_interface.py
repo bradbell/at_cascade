@@ -90,7 +90,7 @@ restrictions as described below
 
 1.  An integer value is a string represents of an integer.
 2.  A float value is a string that represents a floating point number.
-3.  A sex value is either ``male`` or ``female`` .
+3.  A sex value is either ``female`` , ``male`` or ``both`` .
 
 Index Column
 ============
@@ -173,8 +173,6 @@ This string identifies the node, in node.csv, corresponding to this row.
 sex
 ---
 This identifies which sex this row corresponds to.
-When estimating for both sexes, the
-average of the corresponding male and female covariates is used.
 
 age
 ---
@@ -893,15 +891,31 @@ def interpolate_rate_truth_dict(rate_sim_table) :
     return rate_truth_dict
 # ----------------------------------------------------------------------------
 def csv_simulate(csv_dir) :
+    valid_integrand_name = {
+        'Sincidence',
+        'remission',
+        'mtexcess',
+        'mtother',
+        'mtwith',
+        'susceptible',
+        'withC',
+        'prevalence',
+        'Tincidence',
+        'mtspecific',
+        'mtall',
+        'mtstandard',
+        'relrisk',
+    }
     #
     # input_table
     input_table = dict()
     input_list  = [
-        'optiion',
+        'option',
         'node',
         'covariate',
-        'multiplier',
+        'multiplier_sim',
         'rate_sim',
+        'simulate',
     ]
     for name in input_list :
         file_name         = f'{csv_dir}/{name}.csv'
@@ -921,6 +935,52 @@ def csv_simulate(csv_dir) :
     #
     # rate_truth_dict
     rate_truth_dict = ineterpolate_rate_truth_dict( input_table['rate_sim'] )
+    #
+    # data_sim_table
+    data_sim_table = list()
+    for (simulate_id, row) in enumerate( input_table['simlate'] ) :
+        line_nmber = simulate_id + 1
+        #
+        # simulate_id
+        if simulate_id != int( row['simulate_id'] ) :
+            msg  = f'csv_interface: Error at line {line_number} '
+            msg += f' in simulate.csv\n'
+            msg += f'simulate_id = ' + row['simulate_id']
+            msg += ' is not equal line number minus one'
+            assert False, msg
+        #
+        # integrand_name
+        integrand_name = row['integrand_name']
+        if integrand_name not in valid_intergrand_name :
+            msg  = f'csv_interface: Error at line {line_number} '
+            msg += f' in simulate.csv\n'
+            msg += f'integrand_name = ' + integrand_name
+            msg += ' is not a valid integrand name'
+            assert False, msg
+        #
+        # node_name
+        node_name = row['node_name']
+        if node_name not in node_set :
+            msg  = f'csv_interface: Error at line {line_number} '
+            msg += f' in simulate.csv\n'
+            msg += f'node_name = ' + node_name
+            msg += ' is not in node.csv'
+            assert False, msg
+        #
+        # sex
+        sex = row['sex']
+        if sex not in [ 'male', 'female', 'both' ] :
+            msg  = f'csv_interface: Error at line {line_number} '
+            msg += f' in simulate.csv\n'
+            msg += f'sex = ' + sex
+            msg += ' is not male, feamle, or both'
+            assert False, msg
+        #
+        # age_mid, time_mid
+        age_mid  = (float(row['age_lower']  + float(row['age_upper']))  / 2.0
+        time_mid = (float(row['time_lower'] + float(row['time_upper'])) / 2.0
+        #
+        #
 # ----------------------------------------------------------------------------
 def csv_interface(csv_dir, command) :
     #
