@@ -11,7 +11,6 @@
 {xrst_begin no_ode_fit}
 {xrst_spell
     dir
-    csv
 }
 
 Do A No Ode Fit For One Node

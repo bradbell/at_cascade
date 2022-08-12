@@ -10,7 +10,6 @@
 '''
 {xrst_begin cascade_root_node}
 {xrst_spell
-    csv
     var
     dir
 }

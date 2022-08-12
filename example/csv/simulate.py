@@ -17,7 +17,6 @@ import at_cascade
 """
 {xrst_begin example_csv_simulate}
 {xrst_spell
-    csv
     dir
     sim
 }

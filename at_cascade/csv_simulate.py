@@ -16,7 +16,6 @@ import scipy.interpolate
 {xrst_begin csv_simulate}
 {xrst_spell
     avg
-    csv
     std
     cv
     sim
