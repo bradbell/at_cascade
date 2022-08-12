@@ -124,33 +124,35 @@ simulate refers to are for a normal distribution.
 Simulate A Cascade Data Set
 ###########################
 
-Input Files
-***********
-
 option.csv
-==========
+**********
 This csv file has two columns,
 one called ``name`` and the other called ``value``.
 The rows are documented below by the name column:
 
 std_random_effects
-------------------
-This is the standard deviation of the random effects.
+==================
+This input float is the standard deviation of the random effects.
 All fo the effects are in log of rate space, so this standard deviation
 is also in log of rate space.
 
 integrand_step_size
---------------------
-This is the step size in age and time used to approximate integrand averages
-from age_lower to age_upper and time_lower to time_upper (in data_sim.csv).
+===================
+This input float is the step size in age and time used to approximate
+integrand averages from age_lower to age_upper
+and time_lower to time_upper (in data_sim.csv).
 It must be greater than zero.
 
-random_seed_in
---------------
+random_seed
+===========
 This integer is used to seed the random number generator.
-If it is zero, the system clock is used.
+This row is optional in option.csv.
+If it is not present, the system clock is used to choose *random_seed*
+and the corresponding row is added to option.csv.
 
------------------------------------------------------------------------------
+
+Input Files
+***********
 
 node.csv
 ========
@@ -362,12 +364,6 @@ data_sim.csv
 This contains the simulated data.
 It is created during a simulate command
 and has the following columns:
-
-random_seed_out
----------------
-This is the actual random seed used.
-If :ref:`csv_simulate@input_files@option.csv@random_seed_in`
-is non-zero, it is the same as *random_seed_in*.
 
 simulate_id
 -----------
@@ -646,15 +642,21 @@ Note that the variables are the no-effect rates and the covariate multipliers.
 {xrst_end csv_predict}
 """
 # -----------------------------------------------------------------------------
-# option_dict['std_random_effect']:
-# is a float that is greater than zero
+# Returns a dictionary verison of option_table.
 #
-# option_dict = option_table2dict(option_table)
-def option_table2dict(option_table) :
+# This routine will set random.seed to the value in the option.csv table.
+#
+# option_dict = option_table2dict(csv_dir, option_table)
+def option_table2dict(csv_dir, option_table) :
     #
     # option_dict
     option_dict = dict()
-    valid_name  = { 'std_random_effects', 'integrand_step_size' }
+    valid_name  = {
+        'std_random_effects', 'integrand_step_size', 'random_seed'
+    }
+    required_name  = {
+        'std_random_effects', 'integrand_step_size'
+    }
     line_number = 0
     for row in option_table :
         line_number += 1
@@ -671,21 +673,33 @@ def option_table2dict(option_table) :
         option_dict[name] = value
     #
     # option_dict
-    for name in valid_name :
+    for name in required_name :
         if not name in option_dict :
             msg  = 'csv_interface: Error: in option.csv\n'
             msg += f'the name {name} does not apper'
             assert False, msg
     #
-    # options that must be greater than zero
+    # float options that must be greater than zero
     for name in ['std_random_effects', 'integrand_step_size']
-        #
-        # option_dict['std_random_effects']
         value = float( option_dict[name] )
         if value <= 0.0 :
             msg  = 'csv_interface: Error: in option.csv\n'
             msg += f'{name} = {value} <= 0'
             assert False, msg
+    #
+    # random_seed
+    name = 'random_seed'
+    if name not in option_dict :
+        value = str( int( time.time() ) )
+        row   = { 'name' : 'random_seed' ,  'value' : value }
+        option_table.append(row)
+        file_name = f'{csv_dir}/option.csv'
+        write_csv_table(file_name, option_table)
+        optin_dict[name] = value
+    #
+    # set the random seed
+    random.seed( int( option_dict['random_seed'] ) )
+    #
     #
     return option_dict
 # ----------------------------------------------------------------------------
@@ -1110,7 +1124,7 @@ def csv_simulate(csv_dir) :
         input_table[name] = at_cascade.read_csv_file(file_name)
     #
     # option_dict
-    option_dict = option_table2dict( input_table['option'] )
+    option_dict = option_table2dict(csv_dir, input_table['option'] )
     #
     # parent_dict
     parent_dict = node_table2dict( input_table['node'] )
@@ -1201,7 +1215,6 @@ def csv_simulate(csv_dir) :
         # row
         row = dict( zip(covariate_name_list, covariate_value_list) )
         row['simulate_id'] = simulate_id
-        data_sim_table.append( row )
         #
         # rate_fun_dict
         rate_fun_dict = average_integrand_rate(
@@ -1231,8 +1244,22 @@ def csv_simulate(csv_dir) :
         # row['meas_std']
         row['meas_std'] = float( row_sim['precent_cv'] ) * average / 100.0
         #
-        # meas_noise
-
+        # row['meas_value']
+        meas_noise        = random.gauss(row['meas_mean'], row['meas_std'] )
+        meas_value        = row['meas_mean'] + mean_noise
+        meas_value        = max(meas_value, 0.0)
+        row['meas_value'] = meas_value
+        #
+        # data_sim_table
+        data_sim_table.append( row )
+    #
+    # data.csv
+    file_name = f'{csv_dir}/data_sim.csv'
+    at_cascade.write_csv_table(file_name, data_sim_table)
+    #
+    # covariate_avg.csv
+    file_name = f'{csr_dir}/covariate_avg.csv'
+    at_cascade.write_csv_table(file_name, covaraite_avg_table)
 # ----------------------------------------------------------------------------
 def csv_interface(csv_dir, command) :
     #

@@ -70,11 +70,11 @@ Example
 def write_csv_table(
 # BEGIN_SYNTAX
 # table = at_cascade.write_csv_table(
-# END_SYNTAX
     file_name  = None,
     table      = None,
-    columns       = None,
+    columns    = None,
 # )
+# END_SYNTAX
 ) :
     assert type(file_name)  == str
     assert type(table)      == list
