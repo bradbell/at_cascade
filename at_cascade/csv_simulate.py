@@ -144,8 +144,8 @@ This is the value of the covariate multiplier used to simulate the data.
 
 -----------------------------------------------------------------------------
 
-rate_sim.csv
-============
+no_effect_rate.csv
+==================
 This csv file specifies the grid points at which each rate is modeled
 during a simulation. It has a
 :ref:`csv_interface@notation@rectangular_grid` in the columns
@@ -476,15 +476,15 @@ def interpolate_covariate_dict(covariate_table , node_set) :
     return covariate_dict
 # ----------------------------------------------------------------------------
 # spline = rate_truth_dict[rate_name] :
-# 1. rate_name is any of the rates in the rate_sim table.
+# 1. rate_name is any of the rates in the no_effect_rate table.
 # 2. spline(age, time, grid=False) evaluates the interpolant at (age, time)
 #
-# rate_truth_dict = interpolate_rate_truth(rate_sim_table)
-def interpolate_rate_truth_dict(rate_sim_table) :
+# rate_truth_dict = interpolate_rate_truth(no_effect_rate_table)
+def interpolate_rate_truth_dict(no_effect_rate_table) :
     #
     # age_set, time_set
     rate_row_list   = dict()
-    for row in rate_sim_table :
+    for row in no_effect_rate_table :
         rate_name    = row['rate_name']
         age          = float( row['age'] )
         time         = float( row['time'] )
@@ -507,7 +507,7 @@ def interpolate_rate_truth_dict(rate_sim_table) :
         )
         #
         if spline_dict == None :
-            msg  = 'csv_interface: Error in rate_sim.csv\n'
+            msg  = 'csv_interface: Error in no_effect_rate.csv\n'
             msg += 'rate_name = {rate_name}\n'
             msg += 'Expected following rectangular grid:\n'
             msg += f'age_grid  = {age_grid}\n'
@@ -684,10 +684,10 @@ def csv_simulate(csv_dir) :
         'node',
         'covariate',
         'multiplier_sim',
-        'rate_sim',
+        'no_effect_rate',
         'simulate',
     ]
-    input_list = [ 'option', 'node', 'covariate', 'rate_sim' ]
+    input_list = [ 'option', 'node', 'covariate', 'no_effect_rate' ]
     for name in input_list :
         file_name         = f'{csv_dir}/{name}.csv'
         input_table[name] = at_cascade.read_csv_table(file_name)
@@ -717,7 +717,9 @@ def csv_simulate(csv_dir) :
     )
     #
     # rate_truth_dict
-    rate_truth_dict = interpolate_rate_truth_dict( input_table['rate_sim'] )
+    rate_truth_dict = interpolate_rate_truth_dict(
+        input_table['no_effect_rate']
+    )
     #
     # Testing stopped here
     return
