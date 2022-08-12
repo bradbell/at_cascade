@@ -36,11 +36,16 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
     sys.path.insert(0, current_directory)
 import at_cascade
 #
-def main() :
+def test_n_time(n_time) :
     #
     # age_list, time_list
     age_list  = [ 80.0,   20.0   ]
-    time_list = [ 2200.0, 1980.0 ]
+    if n_time == 1 :
+        time_list = [ 2000.0 ]
+    elif n_time == 2 :
+        time_list = [ 2200.0, 1980.0 ]
+    else :
+        assert False
     #
     # limit_age_time
     def limit_age_time(age, time) :
@@ -115,7 +120,8 @@ def main() :
 #
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :
-    main()
+    test_n_time(1)
+    test_n_time(2)
     print('bilinear: OK')
     sys.exit(0)
 # END_SOURCE

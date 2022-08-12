@@ -47,6 +47,7 @@ This is a ``list`` of ``dict``.
 The values *x_name* , *y_name* and each element of *z_list*
 must be a key in each of the dictionaries.
 Furthermore, the corresponding dictionary values must be ``str`` or ``float`` .
+This table must be non-empty.
 
 x_grid
 ******
@@ -91,18 +92,55 @@ def bilinear(
 # END_SYNTAX
 ) :
     #
-    # triple_list, x_set, y_set
-    triple_list = list()
+    if len(table) == 0 :
+        return (list(), list(), None)
+    #
+    # x_set, y_set
     x_set       = set()
     y_set       = set()
     for row in table :
         x      = float( row[x_name] )
         y      = float( row[y_name] )
-        triple = (x, y, row)
-        #
-        triple_list.append( triple )
         x_set.add(x)
         y_set.add(y)
+    #
+    # n_x, n_y
+    n_x = len(x_set)
+    n_y = len(y_set)
+    #
+    # x_grid_in, y_grid_in
+    x_grid_in = sorted(x_set)
+    y_grid_in = sorted(y_set)
+    #
+    # triple_list, x_set, y_set
+    triple_list = list()
+    for row in table :
+        x      = float( row[x_name] )
+        y      = float( row[y_name] )
+        triple = (x, y, row)
+        triple_list.append( triple )
+        #
+        if n_x == 1 :
+            if x == 0.0 :
+                x_other = 1.0
+            else :
+                x_other = 2.0 * x
+            triple = (x_other, y, row)
+            triple_list.append( triple )
+            x_set.add(x_other)
+        #
+        if n_y == 1 :
+            if y == 0.0 :
+                y_other = 1.0
+            else :
+                y_other = 2.0 * y
+            triple = (x, y_other, row)
+            triple_list.append( triple )
+            y_set.add(y_other)
+        #
+        if n_x == 1 and n_y == 1 :
+            triple = (x_other, y_other, row)
+            triple_list.append( triple )
     #
     # n_x, n_y
     n_x = len(x_set)
@@ -112,8 +150,8 @@ def bilinear(
     x_grid = sorted(x_set)
     y_grid = sorted(y_set)
     #
-    if len(table) != n_x * n_y :
-        return (x_grid, y_grid, None)
+    if len(triple_list) != n_x * n_y :
+        return (x_grid_in, y_grid_in, None)
     #
     # triple_list
     triple_list = sorted(triple_list)
@@ -139,9 +177,9 @@ def bilinear(
             x_index  = int( index / n_y )
             y_index  = index % n_y
             if x != x_grid[x_index] :
-                return(x_grid, y_grid, None)
+                return(x_grid_in, y_grid_in, None)
             if y != y_grid[y_index] :
-                return(x_grid, y_grid, None)
+                return(x_grid_in, y_grid_in, None)
             #
             # z_grid
             row   = triple[2]
@@ -154,4 +192,4 @@ def bilinear(
         )
         spline_dict[z_name] = spline
     #
-    return (x_grid, y_grid, spline_dict)
+    return (x_grid_in, y_grid_in, spline_dict)
