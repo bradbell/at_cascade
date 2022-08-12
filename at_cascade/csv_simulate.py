@@ -157,10 +157,6 @@ Covariate multipliers that are constrained to zero during the fitting
 can be used to get variation between nodes in the
 no-effect rates corresponding to the fit.
 
-rate_sim_id
------------
-is an :ref:`csv_interface@Notation@index_column` for rate_sim.csv.
-
 rate_name
 ---------
 This string is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies the rate.
@@ -487,16 +483,9 @@ def interpolate_covariate_dict(covariate_table , node_set) :
 # rate_truth_dict = interpolate_rate_truth(rate_sim_table)
 def interpolate_rate_truth_dict(rate_sim_table) :
     #
-    # valid_rate_name
-    valid_rate_name = [ 'iota', 'rho', 'chi', 'pini' ]
-    #
     # age_set, time_set
     rate_row_list   = dict()
-    age_set         = set()
-    time_set        = set()
-    line_number     = 0
     for row in rate_sim_table :
-        line_number += 1
         rate_name    = row['rate_name']
         age          = float( row['age'] )
         time         = float( row['time'] )
@@ -505,71 +494,30 @@ def interpolate_rate_truth_dict(rate_sim_table) :
         if rate_name not in rate_row_list :
             rate_row_list[rate_name] = list()
         rate_row_list[rate_name].append( row )
-        age_set.add( age )
-        time_set.add( time )
-    #
-    # age_grid, time_grid
-    age_grid  = sorted( age_set )
-    time_grid = sorted( time_set)
-    #
-    # n_age, n_time
-    n_age  = len(age_grid)
-    n_time = len(time_grid)
-    #
-    # covariate_grid
-    rate_grid = numpy.empty( (n_age, n_time) )
     #
     # rate_truth_dict, rate_name
     rate_truth_dict = dict()
     for rate_name in rate_row_list :
         #
-        # triple_list
-        triple_list = list()
-        for row in rate_row_list[rate_name] :
-            age    = float( row['age'] )
-            time   = float( row['time'] )
-            triple = (age, time, row)
-            triple_list.append( triple )
+        # age_grid, time_grid, spline_dict
+        age_grid, time_grid, spline_dict = at_cascade.bilinear(
+            table  = rate_row_list[rate_name],
+            x_name = 'age',
+            y_name = 'time',
+            z_list = [ 'rate_truth' ]
+        )
         #
-        # triple_list
-        triple_list = sorted(triple_list)
-        #
-        # msg
-        msg  = 'csv_interface: Error in rate_sim.csv\n'
-        msg += 'rate_name = {rate_name}\n'
-        msg += 'Expected following rectangular grid:\n'
-        msg += f'age_grid  = {age_grid}\n'
-        msg += f'time_grid = {time_grid}'
-        #
-        if len(triple_list) != n_age * n_time :
+        if spline_dict == None :
+            msg  = 'csv_interface: Error in rate_sim.csv\n'
+            msg += 'rate_name = {rate_name}\n'
+            msg += 'Expected following rectangular grid:\n'
+            msg += f'age_grid  = {age_grid}\n'
+            msg += f'time_grid = {time_grid}'
             assert False, msg
         #
-        # rate_grid
-        rate_grid[:] = numpy.nan
-        #
-        # index, triple
-        for (index, triple) in enumerate( tripe_list ) :
-            #
-            # age_index, time_index
-            age        = triple[0]
-            time       = triple[1]
-            age_index  = int( index / n_time )
-            time_index = index % n_time
-            if age != age_grid[age_index] :
-                assert False, msg
-            if time != time_grid[time_index] :
-                assert False, msg
-            #
-            # covariate_grid
-            row   = triple[2]
-            value = float( row['rate_truth'] )
-            rate_grid[age_index][time_index] =  value
-            #
-            # rate_truth_dict
-            spline= RectBivariateSpline(
-                age_grid, time_grid, covariate_grid, kx=1, ky=1, s=0
-            )
-            rate_truth_dict[rate_name]= spline
+        # rate_truth_dict
+        rate_truth_dict[rate_name]= spline_dict['rate_truth']
+    #
     return rate_truth_dict
 # ----------------------------------------------------------------------------
 # covarite_avg_table:
@@ -589,7 +537,7 @@ def interpolate_rate_truth_dict(rate_sim_table) :
 # )
 def get_covariate_avg_table( covariate_table, covariate_name_list) :
     #
-    # covariate_avg_table
+    # covariate_avg_table, covariate_avg_dict
     covariate_avg_table = list()
     covariate_avg_dict  = dict()
     #
@@ -605,11 +553,16 @@ def get_covariate_avg_table( covariate_table, covariate_name_list) :
         msg = 'csv_interface: sex = both can not appear in covariate.csv'
         assert False, msg
     #
+    # covariate_avg_dict
+    for node_name in node_name_set :
+        covariate_avg_dict[node_name] = dict()
+    #
     # sex
-    for sex in set_sex :
+    for sex in sex_set :
         #
         # covariate_sum, node_count
         covariate_sum   = dict()
+        node_count      = dict()
         for node_name in node_name_set :
             node_count[node_name]      = 0
             covariate_sum[node_name]   = list()
@@ -619,7 +572,7 @@ def get_covariate_avg_table( covariate_table, covariate_name_list) :
         # covariate_sum,
         for row in covariate_table :
             if row['sex'] == sex :
-                node_name = covariate_table['node_name']
+                node_name = row['node_name']
                 node_count[node_name] += 1
                 for (i, covariate_name) in enumerate( covariate_name_list ) :
                     covariate_sum[node_name][i] += float(row[covariate_name])
@@ -641,7 +594,6 @@ def get_covariate_avg_table( covariate_table, covariate_name_list) :
             #
             # covariate_avg_table
             # covariate_avg_dict
-            covariate_avg_dict[node_name][sex] = dict()
             row = { 'sex' : sex, 'node_name' : node_name }
             for (i, covariate_name) in enumerate(covariate_name_list) :
                 average = covariate_sum[node_name][i] / node_count[node_name]
@@ -649,6 +601,7 @@ def get_covariate_avg_table( covariate_table, covariate_name_list) :
             covariate_avg_table.append(row)
             covariate_avg_dict[node_name][sex] = row
             #
+    return covariate_avg_dict, covariate_avg_table
 # ----------------------------------------------------------------------------
 def average_integrand_rate(
     rate_truth_dict      ,
@@ -735,7 +688,7 @@ def csv_simulate(csv_dir) :
         'rate_sim',
         'simulate',
     ]
-    input_list = [ 'option', 'node', 'covariate' ]
+    input_list = [ 'option', 'node', 'covariate', 'rate_sim' ]
     for name in input_list :
         file_name         = f'{csv_dir}/{name}.csv'
         input_table[name] = at_cascade.read_csv_table(file_name)
@@ -752,9 +705,6 @@ def csv_simulate(csv_dir) :
         input_table['covariate'], node_set
     )
     #
-    # Testing stopped here
-    return
-    #
     # covariate_name_list
     covariate_name_list = list()
     covariate_sum_list = list()
@@ -763,12 +713,15 @@ def csv_simulate(csv_dir) :
             covariate_name_list.append(key)
     #
     # covariate_avg_dict, covariate_avg_table
-    covariate_avg_dit, covariate_avg_table = get_covariate_avg_table(
-        input_table['covariate'] , covariate_list
+    covariate_avg_dict, covariate_avg_table = get_covariate_avg_table(
+        input_table['covariate'] , covariate_name_list
     )
     #
     # rate_truth_dict
-    rate_truth_dict = ineterpolate_rate_truth_dict( input_table['rate_sim'] )
+    rate_truth_dict = interpolate_rate_truth_dict( input_table['rate_sim'] )
+    #
+    # Testing stopped here
+    return
     #
     # multiplier_dict
     multiplier_dict = dict()

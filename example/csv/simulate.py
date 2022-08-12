@@ -19,6 +19,7 @@ import at_cascade
 {xrst_spell
     csv
     dir
+    sim
 }
 
 Example Using csv_simulate
@@ -26,6 +27,8 @@ Example Using csv_simulate
 
 Node Tree
 *********
+::
+
                 n0
           /-----/\-----\
         n1              n2
@@ -39,8 +42,14 @@ Node Tree
         -   :ref:`csv_interface@arguments@csv_dir`
     *   -   command
         -   :ref:`csv_interface@arguments@command`
-    *   -   ``option_csv``
+    *   -   csv_file['option.csv']
         -   :ref:`csv_simulate@option.csv`
+    *   -   csv_file['node.csv']
+        -   :ref:`csv_simulate@input_files@node.csv`
+    *   -   csv_file['covariate.csv']
+        -   :ref:`csv_simulate@input_files@covariate.csv`
+    *   -   csv_file['rate_sim.csv']
+        -   :ref:`csv_simulate@input_files@rate_sim.csv`
 
 
 {xrst_file
@@ -80,6 +89,12 @@ n1,female,50,2000,0.01,0.5
 n1,male,50,2000,0.01,0.5
 n2,female,50,2000,0.01,1.5
 n2,male,50,2000,0.01,1.5
+'''
+#
+# rate_sim.csv
+csv_file['rate_sim.csv'] = \
+'''rate_name,age,time,rate_truth
+iota,50.0,50.0,1.0
 '''
 #
 def main() :
