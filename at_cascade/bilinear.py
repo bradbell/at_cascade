@@ -1,0 +1,157 @@
+# -----------------------------------------------------------------------------
+# at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
+#           Copyright (C) 2021-22 University of Washington
+#              (Bradley M. Bell bradbell@uw.edu)
+#
+# This program is distributed under the terms of the
+#     GNU Affero General Public License version 3.0 or later
+# see http://www.gnu.org/licenses/agpl.txt
+# -----------------------------------------------------------------------------
+import numpy
+import scipy.interpolate
+"""
+{xrst_begin bilinear}
+{xrst_spell
+    bilinear
+}
+
+Bilinear Spline Interpolation
+#############################
+
+Syntax
+******
+{xrst_file
+    BEGIN_SYNTAX
+    END_SYNTAX
+}
+
+x_name
+******
+Is a ``str`` containing the name in *table* for the x
+variable in the interpolation.
+
+y_name
+******
+Is a ``str`` containing the name in *table* for the y
+variable in the interpolation.
+
+z_list
+******
+Is a ``list`` of ``str`` .
+Each element of *z_list*  contains the name in *table* for a z
+variable in the interpolation.
+
+table
+******
+This is a ``list`` of ``dict``.
+The values *x_name* , *y_name* and each element of *z_list*
+must be a key in each of the dictionaries.
+Furthermore, the corresponding dictionary values must be ``str`` or ``float`` .
+
+x_grid
+******
+Is the a sorted ``list`` of values that appear
+in the *x_name* column of *table* .
+Duplicates are not included in this list.
+
+y_grid
+******
+Is the a sorted ``list`` of values that appear
+in the *y_name* column of *table* .
+Duplicates are not included in this list.
+
+spline_dict
+***********
+Is a ``dict`` of spline functions.
+This for each *z_name* in  *z_list* .
+The function call
+{xrst_code py}
+    z = spline_dict[z_name](x, y)
+{xrst_code}
+sets z to the value of the spline for *z_name*
+where the values x, y, and z are ``float`` ,
+
+Rectangular Grid
+================
+For each x in *x_grid* and y in *y_grid* there must be one,
+and only one, row in *table* with that x and y value.
+If this is not the case, ``bilinear`` will return with *spline_dict*
+equal to ``None`` .
+
+{xrst_end bilinear}
+"""
+def bilinear(
+# BEGIN_SYNTAX
+# x_grid, y_grid, spline_dict = bilinear(
+    table,
+    x_name,
+    y_name,
+    z_list
+# )
+# END_SYNTAX
+) :
+    #
+    # triple_list, x_set, y_set
+    triple_list = list()
+    x_set       = set()
+    y_set       = set()
+    for row in table :
+        x      = float( row[x_name] )
+        y      = float( row[y_name] )
+        triple = (x, y, row)
+        #
+        triple_list.append( triple )
+        x_set.add(x)
+        y_set.add(y)
+    #
+    # n_x, n_y
+    n_x = len(x_set)
+    n_y = len(y_set)
+    #
+    # x_grid, y_grid
+    x_grid = sorted(x_set)
+    y_grid = sorted(y_set)
+    #
+    if len(table) != n_x * n_y :
+        return (x_grid, y_grid, None)
+    #
+    # triple_list
+    triple_list = sorted(triple_list)
+    #
+    # spline_dict
+    spline_dict = dict()
+    #
+    # z_grid
+    z_grid = numpy.empty( (n_x, n_y) )
+    #
+    # z_name
+    for z_name in z_list :
+        #
+        # z_grid
+        z_grid[:] = numpy.nan
+        #
+        # index, triple
+        for (index, triple) in enumerate( triple_list ) :
+            #
+            # x_index, y_index
+            x        = triple[0]
+            y        = triple[1]
+            x_index  = int( index / n_y )
+            y_index  = index % n_y
+            if x != x_grid[x_index] :
+                return(x_grid, y_grid, None)
+            if y != y_grid[y_index] :
+                return(x_grid, y_grid, None)
+            #
+            # z_grid
+            row   = triple[2]
+            value = float( row[z_name] )
+            z_grid[x_index][y_index] =  value
+        #
+        # spline_dict
+        spline= scipy.interpolate.RectBivariateSpline(
+            x_grid, y_grid, z_grid, kx=1, ky=1, s=0
+        )
+        spline_dict[z_name] = spline
+    #
+    return (x_grid, y_grid, spline_dict)

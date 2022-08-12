@@ -29,8 +29,6 @@ Node Tree
                 n0
           /-----/\-----\
         n1              n2
-       /  \            /  \
-     n3    n4        n5    n6
 
 ..  list-table::
     :header-rows: 1
@@ -55,23 +53,33 @@ Node Tree
 """
 # BEGIN_PYTHON
 #
+# csv_file
+csv_file = dict()
+#
 # option.csv
-option_csv = \
+csv_file['option.csv'] = \
 '''name,value
 std_random_effects,.1
 integrand_step_size,5
 '''
 #
 # node.csv
-node_csv = \
+csv_file['node.csv'] = \
 '''node_name,parent_name
 n0,
 n1,n0
 n2,n0
-n3,n1
-n4,n1
-n5,n2
-n6,n2
+'''
+#
+# covariate.csv
+csv_file['covariate.csv'] = \
+'''node_name,sex,age,time,omega,haqi
+n0,female,50,2000,0.01,1.0
+n0,male,50,2000,0.01,1.0
+n1,female,50,2000,0.01,0.5
+n1,male,50,2000,0.01,0.5
+n2,female,50,2000,0.01,1.5
+n2,male,50,2000,0.01,1.5
 '''
 #
 def main() :
@@ -81,17 +89,12 @@ def main() :
     if not os.path.exists(csv_dir) :
         os.mkdir(csv_dir)
     #
-    # option.csv
-    file_name = f'{csv_dir}/option.csv'
-    file_ptr  = open(file_name, 'w')
-    file_ptr.write(option_csv)
-    file_ptr.close()
-    #
-    # node.csv
-    file_name = f'{csv_dir}/node.csv'
-    file_ptr  = open(file_name, 'w')
-    file_ptr.write(node_csv)
-    file_ptr.close()
+    # write csv files
+    for name in csv_file :
+        file_name = f'{csv_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
     #
     # simulate command
     command = 'simulate'

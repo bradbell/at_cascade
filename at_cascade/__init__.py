@@ -17,6 +17,7 @@ The at_cascade Python Module
 {xrst_child_table
     at_cascade/add_log_entry.py
     at_cascade/avgint_parent_grid.py
+    at_cascade/bilinear.py
     at_cascade/cascade_root_node.py
     at_cascade/check_cascade_node.py
     at_cascade/check_log.py
@@ -52,9 +53,9 @@ The at_cascade Python Module
 from .csv_simulate          import csv_simulate
 
 # BEGIN_SORT_THIS_LINE_PLUS_1
-from .csv_interface         import csv_interface
 from .add_log_entry         import add_log_entry
 from .avgint_parent_grid    import avgint_parent_grid
+from .bilinear              import bilinear
 from .cascade_root_node     import cascade_root_node
 from .check_cascade_node    import check_cascade_node
 from .check_log             import check_log
@@ -63,6 +64,7 @@ from .continue_cascade      import continue_cascade
 from .create_all_node_db    import create_all_node_db
 from .create_job_table      import create_job_table
 from .create_shift_db       import create_shift_db
+from .csv_interface         import csv_interface
 from .empty_avgint_table    import empty_avgint_table
 from .get_cov_info          import get_cov_info
 from .get_cov_reference     import get_cov_reference

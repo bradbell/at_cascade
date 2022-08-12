@@ -19,6 +19,10 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+08-12
+*****
+Add the :ref:`bilinear` spline routine.
+
 08-09
 *****
 1.  Advance to xrst-2022.8.8 (this improves the documentation).

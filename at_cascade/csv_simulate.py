@@ -10,6 +10,8 @@
 import at_cascade
 import random
 import time
+import numpy
+import scipy.interpolate
 """
 {xrst_begin csv_simulate}
 {xrst_spell
@@ -502,7 +504,7 @@ def interpolate_covariate_dict(covariate_table , node_set) :
                 covariate_grid[:] = numpy.nan
                 #
                 # index, triple
-                for (index, triple) in enumerate( tripe_list ) :
+                for (index, triple) in enumerate( triple_list ) :
                     #
                     # age_index, time_index
                     age        = triple[0]
@@ -520,7 +522,7 @@ def interpolate_covariate_dict(covariate_table , node_set) :
                     covariate_grid[age_index][time_index] =  value
             #
             # covariate_dict
-            spline= RectBivariateSpline(
+            spline= scipy.interpolate.RectBivariateSpline(
                 age_grid, time_grid, covariate_grid, kx=1, ky=1, s=0
             )
             covariate_dict[node_name][sex][interpolate_name] = spline
@@ -781,7 +783,7 @@ def csv_simulate(csv_dir) :
         'rate_sim',
         'simulate',
     ]
-    input_list = [ 'option', 'node' ]
+    input_list = [ 'option', 'node', 'covariate' ]
     for name in input_list :
         file_name         = f'{csv_dir}/{name}.csv'
         input_table[name] = at_cascade.read_csv_table(file_name)
@@ -800,6 +802,7 @@ def csv_simulate(csv_dir) :
     covariate_dict = interpolate_covariate_dict(
         input_table['covariate'], node_set
     )
+    print( covariate_dict )
     #
     # covariate_name_list
     covariate_name_list = list()
