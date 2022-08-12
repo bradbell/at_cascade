@@ -426,10 +426,8 @@ def interpolate_covariate_dict(covariate_table , node_set) :
         if key not in [ 'node_name', 'sex', 'age', 'time' ] :
             interpolate_name_list.append( key )
     #
-    # covariate_row_list, age_set, time_set
+    # covariate_row_list
     covariate_row_list  = dict()
-    age_set             = set()
-    time_set            = set()
     line_number         = 0
     for row in covariate_table :
         line_number += 1
@@ -448,26 +446,12 @@ def interpolate_covariate_dict(covariate_table , node_set) :
             msg += 'sex {sex} is not male of female'
             assert Flase, msg
         #
+        # covariate_row_list
         if node_name not in covariate_row_list :
             covariate_row_list[node_name] = dict()
         if sex not in covariate_row_list[node_name] :
             covariate_row_list[node_name][sex] = list()
-        #
-        # covariate_row_list, age_set, time_set
         covariate_row_list[node_name][sex].append( row )
-        age_set.add( age )
-        time_set.add( time )
-    #
-    # age_grid, time_grid
-    age_grid  = sorted( age_set )
-    time_grid = sorted( time_set)
-    #
-    # n_age, n_time
-    n_age  = len(age_grid)
-    n_time = len(time_grid)
-    #
-    # covariate_grid
-    covariate_grid = numpy.empty( (n_age, n_time) )
     #
     # covariate_dict, node_name, sex
     covariate_dict = dict()
@@ -476,56 +460,24 @@ def interpolate_covariate_dict(covariate_table , node_set) :
         for sex in covariate_row_list[node_name] :
             covariate_dict[node_name][sex] = dict()
             #
-            # triple_list
-            triple_list = list()
-            for row in covariate_row_list[node_name][sex] :
-                age    = float( row['age'] )
-                time   = float( row['time'] )
-                triple = (age, time, row)
-                triple_list.append( triple )
+            # age_grid, time_grid, spline_dict
+            age_grid, time_grid, spline_dict = at_cascade.bilinear(
+                table  = covariate_row_list[node_name][sex] ,
+                x_name = 'age',
+                y_name = 'time',
+                z_list = interpolate_name_list
+            )
             #
-            # triple_list
-            triple_list = sorted(triple_list)
-            #
-            # msg
-            msg  = 'csv_interface: Error in covariate.csv\n'
-            msg += 'node_name = {node_name}, sex = {sex} \n'
-            msg += 'Expected following rectangular grid:\n'
-            msg += f'age_grid  = {age_grid}\n'
-            msg += f'time_grid = {time_grid}'
-            #
-            if len(triple_list) != n_age * n_time :
+            if spline_dict == None :
+                msg  = 'csv_interface: Error in covariate.csv\n'
+                msg += 'node_name = {node_name}, sex = {sex} \n'
+                msg += 'Expected following rectangular grid:\n'
+                msg += f'age_grid  = {age_grid}\n'
+                msg += f'time_grid = {time_grid}'
                 assert False, msg
             #
-            # interpolate_name
-            for interpolate_name in interpolate_name_list :
-                #
-                # covariate_grid
-                covariate_grid[:] = numpy.nan
-                #
-                # index, triple
-                for (index, triple) in enumerate( triple_list ) :
-                    #
-                    # age_index, time_index
-                    age        = triple[0]
-                    time       = triple[1]
-                    age_index  = int( index / n_time )
-                    time_index = index % n_time
-                    if age != age_grid[age_index] :
-                        assert False, msg
-                    if time != time_grid[time_index] :
-                        assert False, msg
-                    #
-                    # covariate_grid
-                    row   = triple[2]
-                    value = float( row[interpolate_name] )
-                    covariate_grid[age_index][time_index] =  value
-            #
             # covariate_dict
-            spline= scipy.interpolate.RectBivariateSpline(
-                age_grid, time_grid, covariate_grid, kx=1, ky=1, s=0
-            )
-            covariate_dict[node_name][sex][interpolate_name] = spline
+            covariate_dict[node_name][sex] = spline_dict
     return covariate_dict
 # ----------------------------------------------------------------------------
 # spline = rate_truth_dict[rate_name] :
@@ -794,15 +746,14 @@ def csv_simulate(csv_dir) :
     # parent_dict
     parent_dict = node_table2dict( input_table['node'] )
     #
-    # Testing stopped here
-    return
-    #
     # covariate_dict
     node_set = set( parent_dict.keys() )
     covariate_dict = interpolate_covariate_dict(
         input_table['covariate'], node_set
     )
-    print( covariate_dict )
+    #
+    # Testing stopped here
+    return
     #
     # covariate_name_list
     covariate_name_list = list()
@@ -928,4 +879,4 @@ def csv_simulate(csv_dir) :
     #
     # covariate_avg.csv
     file_name = f'{csr_dir}/covariate_avg.csv'
-    at_cascade.write_csv_table(file_name, covaraite_avg_table)
+    at_cascade.write_csv_table(file_name, covariate_avg_table)

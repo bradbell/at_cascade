@@ -99,6 +99,9 @@ def main() :
     # simulate command
     command = 'simulate'
     at_cascade.csv_interface(csv_dir, command)
+    #
+    print('simulte.py: OK')
+    sys.exit(0)
 #
 main()
 # END_PYTHON

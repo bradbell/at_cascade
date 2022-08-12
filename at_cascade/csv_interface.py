@@ -365,4 +365,4 @@ def csv_interface(csv_dir, command) :
     # execute the command
     command_dict[command](csv_dir)
     #
-    print('No errors detected')
+    return
