@@ -7,6 +7,9 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
+import at_cascade
+import random
+import time
 """
 {xrst_begin csv_simulate}
 {xrst_spell
@@ -301,7 +304,6 @@ outside the age rage (time range) in the covariate.csv file.
 """
 # -----------------------------------------------------------------------------
 # Returns a dictionary verison of option_table.
-#
 # This routine will set random.seed to the value in the option.csv table.
 #
 # option_dict = option_table2dict(csv_dir, option_table)
@@ -352,8 +354,8 @@ def option_table2dict(csv_dir, option_table) :
         row   = { 'name' : 'random_seed' ,  'value' : value }
         option_table.append(row)
         file_name = f'{csv_dir}/option.csv'
-        write_csv_table(file_name, option_table)
-        optin_dict[name] = value
+        at_cascade.write_csv_table(file_name, option_table)
+        option_dict[name] = value
     #
     # set the random seed
     random.seed( int( option_dict['random_seed'] ) )
@@ -777,12 +779,16 @@ def csv_simulate(csv_dir) :
         'rate_sim',
         'simulate',
     ]
+    input_list = [ 'option' ]
     for name in input_list :
         file_name         = f'{csv_dir}/{name}.csv'
-        input_table[name] = at_cascade.read_csv_file(file_name)
+        input_table[name] = at_cascade.read_csv_table(file_name)
     #
     # option_dict
     option_dict = option_table2dict(csv_dir, input_table['option'] )
+    #
+    # Testing stopped here
+    return
     #
     # parent_dict
     parent_dict = node_table2dict( input_table['node'] )

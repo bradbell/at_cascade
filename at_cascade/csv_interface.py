@@ -7,6 +7,7 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
+import at_cascade
 """
 {xrst_begin_parent csv_interface}
 {xrst_spell
@@ -355,7 +356,7 @@ def csv_interface(csv_dir, command) :
     #
     # command_dict
     command_dict = {
-        'simulate' : csv_simulate,
+        'simulate' : at_cascade.csv_simulate,
     }
     if command not in command_dict :
         msg  = f'csv_interface: Error: command {command} is not implemented'
