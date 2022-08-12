@@ -48,7 +48,11 @@ The at_cascade Python Module
 {xrst_end module}
 '''
 
+# Documentaiton for this routines are included by  csv_interface
+from .csv_simulate          import csv_simulate
+
 # BEGIN_SORT_THIS_LINE_PLUS_1
+from .csv_interface         import csv_interface
 from .add_log_entry         import add_log_entry
 from .avgint_parent_grid    import avgint_parent_grid
 from .cascade_root_node     import cascade_root_node
