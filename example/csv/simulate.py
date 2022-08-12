@@ -24,6 +24,14 @@ import at_cascade
 Example Using csv_simulate
 ##########################
 
+Node Tree
+*********
+                n0
+          /-----/\-----\
+        n1              n2
+       /  \            /  \
+     n3    n4        n5    n6
+
 ..  list-table::
     :header-rows: 1
 
@@ -47,11 +55,25 @@ Example Using csv_simulate
 """
 # BEGIN_PYTHON
 #
+# option.csv
 option_csv = \
 '''name,value
 std_random_effects,.1
 integrand_step_size,5
 '''
+#
+# node.csv
+node_csv = \
+'''node_name,parent_name
+n0,
+n1,n0
+n2,n0
+n3,n1
+n4,n1
+n5,n2
+n6,n2
+'''
+#
 def main() :
     #
     # csv_dir
@@ -59,11 +81,16 @@ def main() :
     if not os.path.exists(csv_dir) :
         os.mkdir(csv_dir)
     #
-    #
     # option.csv
     file_name = f'{csv_dir}/option.csv'
     file_ptr  = open(file_name, 'w')
     file_ptr.write(option_csv)
+    file_ptr.close()
+    #
+    # node.csv
+    file_name = f'{csv_dir}/node.csv'
+    file_ptr  = open(file_name, 'w')
+    file_ptr.write(node_csv)
     file_ptr.close()
     #
     # simulate command

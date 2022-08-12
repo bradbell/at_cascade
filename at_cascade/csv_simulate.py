@@ -373,7 +373,8 @@ def node_table2dict( node_table ) :
     #
     # parent_dict, count_children
     line_number = 0
-    parent_dict   = dict()
+    parent_dict    = dict()
+    count_children = dict()
     for row in node_table :
         line_number += 1
         node_name    = row['node_name']
@@ -391,12 +392,13 @@ def node_table2dict( node_table ) :
         line_number += 1
         node_name    = row['node_name']
         parent_name  = row['parent_name']
-        if parent_name not in count_children :
-            msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
-            msg += f'parent_name {parent_name} is not a valid node_name'
-            assert False, msg
-        else :
-            count_children[parent_name] += 1
+        if parent_name != '' :
+            if parent_name not in count_children :
+                msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
+                msg += f'parent_name {parent_name} is not a valid node_name'
+                assert False, msg
+            else :
+                count_children[parent_name] += 1
     #
     # count_children
     for parent_name in count_children :
@@ -404,7 +406,7 @@ def node_table2dict( node_table ) :
             msg  = 'csv_interface: Error in node.csv\n'
             msg += f'the parent_name {parent_name} apprears once and only once'
     #
-    return
+    return parent_dict
 # ----------------------------------------------------------------------------
 # spline = covarite_dict[node_name][sex][interpolate_name] :
 # 1. node_name is any of those in the covariate table
@@ -779,7 +781,7 @@ def csv_simulate(csv_dir) :
         'rate_sim',
         'simulate',
     ]
-    input_list = [ 'option' ]
+    input_list = [ 'option', 'node' ]
     for name in input_list :
         file_name         = f'{csv_dir}/{name}.csv'
         input_table[name] = at_cascade.read_csv_table(file_name)
@@ -787,11 +789,11 @@ def csv_simulate(csv_dir) :
     # option_dict
     option_dict = option_table2dict(csv_dir, input_table['option'] )
     #
-    # Testing stopped here
-    return
-    #
     # parent_dict
     parent_dict = node_table2dict( input_table['node'] )
+    #
+    # Testing stopped here
+    return
     #
     # covariate_dict
     node_set = set( parent_dict.keys() )
