@@ -22,7 +22,7 @@ fi
 # -----------------------------------------------------------------------------
 echo_eval bin/run_xrst.sh html 0
 # -----------------------------------------------------------------------------
-list=$(ls example/*.py test/*.py)
+list=$(ls example/*.py example/csv/*.py test/*.py)
 for script in $list
 do
     echo_eval python3 $script
