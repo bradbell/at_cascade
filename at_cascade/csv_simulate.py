@@ -116,34 +116,6 @@ All of these covariates are
 
 -----------------------------------------------------------------------------
 
-multiplier_sim.csv
-==================
-This csv file provides information about the covariate multipliers.
-Each row of this file, except the header row, corresponds to a
-different multiplier. The multipliers are constant in age and time.
-
-multiplier_id
--------------
-is an :ref:`csv_interface@Notation@index_column` for multiplier_sim.csv.
-
-rate_name
----------
-This string is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies
-which rate this covariate multiplier is affecting.
-
-covariate_or_sex
-----------------
-If this is ``sex`` it specifies that this multiplier multiples
-the sex values where female = -0.5, male = +0.5, and both = 0.0.
-Otherwise this is one of the covariate names in the covariate.csv file
-and specifies which covariate is being multiplied.
-
-multiplier_truth
-----------------
-This is the value of the covariate multiplier used to simulate the data.
-
------------------------------------------------------------------------------
-
 no_effect_rate.csv
 ==================
 This csv file specifies the grid points at which each rate is modeled
@@ -177,6 +149,35 @@ As mentioned, above knocking out covariate multipliers can be
 used to get variation in the no-effect rates that correspond to the fit.
 If *rate_name* is ``pini``, *rate_truth*  should be constant w.r.t *age*
 (because it is prevalence at age zero).
+
+-----------------------------------------------------------------------------
+
+multiplier_sim.csv
+==================
+This csv file provides information about the covariate multipliers.
+Each row of this file, except the header row, corresponds to a
+different multiplier. The multipliers are constant in age and time.
+
+multiplier_id
+-------------
+is an :ref:`csv_interface@Notation@index_column` for multiplier_sim.csv.
+
+rate_name
+---------
+This string is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies
+which rate this covariate multiplier is affecting.
+
+covariate_or_sex
+----------------
+If this is ``sex`` it specifies that this multiplier multiples
+the sex values where female = -0.5, male = +0.5, and both = 0.0.
+Otherwise this is one of the covariate names in the covariate.csv file
+and specifies which covariate is being multiplied.
+
+multiplier_truth
+----------------
+This is the value of the covariate multiplier used to simulate the data.
+
 
 -----------------------------------------------------------------------------
 
@@ -411,8 +412,8 @@ def node_table2dict( node_table ) :
 # 3. interpolate_name is any covariate_name or omega
 # 4. spline(age, time, grid=False) evaluates the interpolant at (age, time)
 #
-# covariate_dict = interpolate_covariate_dict(covariate_table, node_set)
-def interpolate_covariate_dict(covariate_table , node_set) :
+# covariate_dict = spline_covariate_dict(covariate_table, node_set)
+def spline_covariate_dict(covariate_table , node_set) :
     #
     # interpolate_name_list
     # this is the covariate names and omega
@@ -479,8 +480,8 @@ def interpolate_covariate_dict(covariate_table , node_set) :
 # 1. rate_name is any of the rates in the no_effect_rate table.
 # 2. spline(age, time, grid=False) evaluates the interpolant at (age, time)
 #
-# rate_truth_dict = interpolate_rate_truth(no_effect_rate_table)
-def interpolate_rate_truth_dict(no_effect_rate_table) :
+# rate_truth_dict = spline_rate_truth(no_effect_rate_table)
+def spline_rate_truth_dict(no_effect_rate_table) :
     #
     # age_set, time_set
     rate_row_list   = dict()
@@ -518,6 +519,19 @@ def interpolate_rate_truth_dict(no_effect_rate_table) :
         rate_truth_dict[rate_name]= spline_dict['rate_truth']
     #
     return rate_truth_dict
+# ----------------------------------------------------------------------------
+#
+# multiplier_dict[rate_name] = list of multiplier_sim table rows for this rate
+def get_multiplier_dict(multiplier_sim_table) :
+    #
+    # multiplier_dict
+    multiplier_dict = dict()
+    for rate_name in [ 'pini', 'iota', 'rho', 'chi' ] :
+        multiplier_dict[rate_name] = list()
+    for row in multiplier_sim_table :
+        rate_name = row['rate_name']
+        multiplier_dict[rate_name].append(row)
+    return multiplier_dict
 # ----------------------------------------------------------------------------
 # covarite_avg_table:
 # is the table corresponding to covariate_avg.csv
@@ -687,7 +701,8 @@ def csv_simulate(csv_dir) :
         'no_effect_rate',
         'simulate',
     ]
-    input_list = [ 'option', 'node', 'covariate', 'no_effect_rate' ]
+    input_list = [ 'option', 'node', 'covariate', 'no_effect_rate',
+        'multiplier_sim' ]
     for name in input_list :
         file_name         = f'{csv_dir}/{name}.csv'
         input_table[name] = at_cascade.read_csv_table(file_name)
@@ -700,7 +715,7 @@ def csv_simulate(csv_dir) :
     #
     # covariate_dict
     node_set = set( parent_dict.keys() )
-    covariate_dict = interpolate_covariate_dict(
+    covariate_dict = spline_covariate_dict(
         input_table['covariate'], node_set
     )
     #
@@ -717,21 +732,16 @@ def csv_simulate(csv_dir) :
     )
     #
     # rate_truth_dict
-    rate_truth_dict = interpolate_rate_truth_dict(
+    rate_truth_dict = spline_rate_truth_dict(
         input_table['no_effect_rate']
     )
     #
+    # multiplier_dict
+    multiplier_dict = get_multiplier_dict( input_table['multiplier_sim'] )
+    print( multiplier_dict )
+    #
     # Testing stopped here
     return
-    #
-    # multiplier_dict
-    multiplier_dict = dict()
-    for rate_name in rate_truth_dict :
-        multiplier_dict[rate_name] = list()
-    for row in input_file['multiplier_sim'] :
-        rate_name = row['rate_name']
-        if rate_name in multiplier_dict :
-                multiplier_dict[rate_name].append(row)
     #
     # data_sim_table
     data_sim_table = list()
