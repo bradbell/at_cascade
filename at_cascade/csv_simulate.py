@@ -405,21 +405,30 @@ def node_table2dict( node_table ) :
     #
     return node2parent
 # ----------------------------------------------------------------------------
-# spline = covarite_dict[node_name][sex][interpolate_name] :
-# 1. node_name is any of those in the covariate table
-# 2. sex is any of the sexes in the covariate table
-# 3. interpolate_name is any covariate_name or omega
-# 4. spline(age, time, grid=False) evaluates the interpolant at (age, time)
 #
-# covariate_dict = spline_covariate_dict(covariate_table, node_set)
-def spline_covariate_dict(covariate_table , node_set) :
+# spline = spline_node_sex_cov[node_name][sex][cov] :
+# 1. node_name is any of the nodes in the covariate table (string)
+# 2. sex is any of the sexes in the covariate table (string)
+# 3. cov is any covariate_name or omega (string)
+# 4. value = spline(age, time) evaluates the interpolant at (age, time)
+#    where age, time, and value are floats.
+#
+# covariate_table:
+# is the table corresponding to covariate_csv.
+#
+# node_set
+# is the set of node_name that appear in node.csv.
+#
+#
+# spline_node_sex_cov = get_spline_node_sex_cov(covariate_table, node_set)
+def get_spline_node_sex_cov(covariate_table , node_set) :
     #
-    # interpolate_name_list
+    # cov_name_list
     # this is the covariate names and omega
-    interpolate_name_list = list()
+    cov_name_list = list()
     for key in covariate_table[0].keys() :
         if key not in [ 'node_name', 'sex', 'age', 'time' ] :
-            interpolate_name_list.append( key )
+            cov_name_list.append( key )
     #
     # covariate_row_list
     covariate_row_list  = dict()
@@ -448,19 +457,23 @@ def spline_covariate_dict(covariate_table , node_set) :
             covariate_row_list[node_name][sex] = list()
         covariate_row_list[node_name][sex].append( row )
     #
-    # covariate_dict, node_name, sex
-    covariate_dict = dict()
+    # spline_node_sex_cov
+    spline_node_sex_cov = dict()
+    #
+    # node_name
     for node_name in covariate_row_list :
-        covariate_dict[node_name] = dict()
+        spline_node_sex_cov[node_name] = dict()
+        #
+        # sex
         for sex in covariate_row_list[node_name] :
-            covariate_dict[node_name][sex] = dict()
+            spline_node_sex_cov[node_name][sex] = dict()
             #
             # age_grid, time_grid, spline_dict
             age_grid, time_grid, spline_dict = at_cascade.bilinear(
                 table  = covariate_row_list[node_name][sex] ,
                 x_name = 'age',
                 y_name = 'time',
-                z_list = interpolate_name_list
+                z_list = cov_name_list
             )
             #
             if spline_dict == None :
@@ -471,9 +484,9 @@ def spline_covariate_dict(covariate_table , node_set) :
                 msg += f'time_grid = {time_grid}'
                 assert False, msg
             #
-            # covariate_dict
-            covariate_dict[node_name][sex] = spline_dict
-    return covariate_dict
+            # spline_node_sex_cov
+            spline_node_sex_cov[node_name][sex] = spline_dict
+    return spline_node_sex_cov
 # ----------------------------------------------------------------------------
 # spline = rate_truth_dict[rate_name] :
 # 1. rate_name is any of the rates in the no_effect_rate table.
@@ -620,7 +633,7 @@ def average_integrand_rate(
     rate_truth_dict      ,
     random_effect_dict   ,
     covariate_name_list  ,
-    covariate_dict       ,
+    spline_node_sex_cov       ,
     covariate_avg_dict   ,
     multiplier_dict      ,
     node_name            ,
@@ -647,7 +660,7 @@ def average_integrand_rate(
             covariate_or_sex = row['covariate_or_sex']
             if covariate_or_sex != 'sex' :
                 covariate_name = covariate_or_sex
-                spline     = covariate_dict[node_name][sex][covariate_name]
+                spline     = spline_node_sex_cov[node_name][sex][covariate_name]
                 covariate  = spline(age, time, grid = False)
                 average    = covariate_avg_dict[node_name][sex][covariate_name]
                 difference = covariate - average
@@ -721,9 +734,9 @@ def csv_simulate(csv_dir) :
     # node2parent
     node2parent = node_table2dict( input_table['node'] )
     #
-    # covariate_dict
+    # spline_node_sex_cov
     node_set = set( node2parent.keys() )
-    covariate_dict = spline_covariate_dict(
+    spline_node_sex_cov = get_spline_node_sex_cov(
         input_table['covariate'], node_set
     )
     #
@@ -810,7 +823,7 @@ def csv_simulate(csv_dir) :
         # covariate_value_list
         covariate_value_list = list()
         for (index, covariate_name) in enumerate( covariate_name_list ) :
-            spline = covariate_dict[node_name][sex][covariate_name]
+            spline = spline_node_sex_cov[node_name][sex][covariate_name]
             value  =  spline(age_mid, time_mid, grid = False)
             covariate_value_list.append(value )
         #
@@ -824,7 +837,7 @@ def csv_simulate(csv_dir) :
             rate_truth_dict      ,
             random_effect_dict   ,
             covariate_name_list  ,
-            covariate_dict       ,
+            spline_node_sex_cov  ,
             covariate_avg_dict   ,
             multiplier_dict      ,
             node_name            ,
