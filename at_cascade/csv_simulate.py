@@ -7,11 +7,13 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
-import at_cascade
+import math
 import random
 import time
 import numpy
 import scipy.interpolate
+import dismod_at
+import at_cascade
 """
 {xrst_begin csv_simulate}
 {xrst_spell
@@ -617,7 +619,9 @@ def get_covariate_avg_table( covariate_table, covariate_name_list) :
     return covariate_avg_dict, covariate_avg_table
 # ----------------------------------------------------------------------------
 def average_integrand_rate(
+    parent_dict          ,
     rate_truth_dict      ,
+    random_effect_dict   ,
     covariate_name_list  ,
     covariate_dict       ,
     covariate_avg_dict   ,
@@ -626,9 +630,21 @@ def average_integrand_rate(
     sex                  ,
 ) :
     def fun(age, time, rate_name) :
+        #
+        # no_effect_rage
         spline         = rate_truth_dict[rate_name]
         no_effect_rate = spline(age, time, grid = False)
+        #
+        # effect
+        # random effects
         effect         = 0.0
+        parent_node    = parent_dict[node_name]
+        while parent_node != '' :
+            effect     += random_effect_dict[node_name][rate_name]
+            parent_node = parent_dict[parent_node]
+        #
+        # effect
+        # covariate effects: 2DO: add sex covariate effect
         for row in multiplier_dict[rate_name] :
             assert row['rate_name'] == rate_name
             covariate_or_sex = row['covariate_or_sex']
@@ -638,18 +654,15 @@ def average_integrand_rate(
                 covariate  = spline(age, time, grid = False)
                 average    = covariate_avg_dict[node_name][sex][covariate_name]
                 difference = covariate - average
-                effect += float( row['multiplir_truth'] ) * difference
+                effect += float( row['multiplier_truth'] ) * difference
         rate = math.exp(effect) * no_effect_rate
         return rate
     result = dict()
-    result['pini']  = lambda age, time : fun(age, time, 'pini')
-    result['iota']  = lambda age, time : fun(age, time, 'iota')
-    result['rho']   = lambda age, time : fun(age, time, 'rho')
-    result['chi']   = lambda age, time : fun(age, time, 'chi')
-    result['omega'] = lambda age, time : fun(age, time, 'omega')
-    return rate_fun
+    for rate_name in rate_truth_dict :
+        result[rate_name]  = lambda age, time : fun(age, time, rate_name)
+    return result
 # ----------------------------------------------------------------------------
-def avgerage_integrand_grid(
+def average_integrand_grid(
     integrand_step_size, age_lower, age_upper, time_lower, time_upper
 ) :
     #
@@ -657,7 +670,7 @@ def avgerage_integrand_grid(
     if age_lower == age_upper :
         age_grid = [ age_lower ]
     else :
-        n_age    = int( (age_upper - age_lower) / intgrand_step_size) + 1
+        n_age    = int( (age_upper - age_lower) / integrand_step_size) + 1
         dage     = (age_upper - age_lower) / n_age
         age_grid = [ age_lower + i * dage for i in range(n_age+1) ]
     #
@@ -665,7 +678,7 @@ def avgerage_integrand_grid(
     if time_lower == time_upper :
         time_grid = [ time_lower ]
     else :
-        n_time    = int( (time_upper - time_lower) / intgrand_step_size) + 1
+        n_time    = int( (time_upper - time_lower) / integrand_step_size) + 1
         dtime     = (time_upper - time_lower) / n_time
         time_grid = [ time_lower + i * dtime for i in range(n_time+1) ]
     # grid
@@ -701,8 +714,6 @@ def csv_simulate(csv_dir) :
         'no_effect_rate',
         'simulate',
     ]
-    input_list = [ 'option', 'node', 'covariate', 'no_effect_rate',
-        'multiplier_sim' ]
     for name in input_list :
         file_name         = f'{csv_dir}/{name}.csv'
         input_table[name] = at_cascade.read_csv_table(file_name)
@@ -721,7 +732,6 @@ def csv_simulate(csv_dir) :
     #
     # covariate_name_list
     covariate_name_list = list()
-    covariate_sum_list = list()
     for key in input_table['covariate'][0].keys() :
         if key not in [ 'node_name', 'sex', 'age', 'time', 'omega' ] :
             covariate_name_list.append(key)
@@ -736,29 +746,35 @@ def csv_simulate(csv_dir) :
         input_table['no_effect_rate']
     )
     #
+    # random_effect_dict
+    std_random_effects  = float( option_dict['std_random_effects'] )
+    random_effect_dict  = dict()
+    for node_name in parent_dict :
+        random_effect_dict[node_name] = dict()
+        for rate_name in rate_truth_dict :
+            random_effect_dict[node_name][rate_name] = random.gauss(
+                0.0, std_random_effects
+            )
+    #
     # multiplier_dict
     multiplier_dict = get_multiplier_dict( input_table['multiplier_sim'] )
-    print( multiplier_dict )
-    #
-    # Testing stopped here
-    return
     #
     # data_sim_table
     data_sim_table = list()
-    for (simulate_id, row) in enumerate( input_table['simlate'] ) :
+    for (simulate_id, row_sim) in enumerate( input_table['simulate'] ) :
         line_nmber = simulate_id + 1
         #
         # simulate_id
-        if simulate_id != int( row['simulate_id'] ) :
+        if simulate_id != int( row_sim['simulate_id'] ) :
             msg  = f'csv_interface: Error at line {line_number} '
             msg += f' in simulate.csv\n'
-            msg += f'simulate_id = ' + row['simulate_id']
+            msg += f'simulate_id = ' + row_sim['simulate_id']
             msg += ' is not equal line number minus one'
             assert False, msg
         #
         # integrand_name
-        integrand_name = row['integrand_name']
-        if integrand_name not in valid_intergrand_name :
+        integrand_name = row_sim['integrand_name']
+        if integrand_name not in valid_integrand_name :
             msg  = f'csv_interface: Error at line {line_number} '
             msg += f' in simulate.csv\n'
             msg += f'integrand_name = ' + integrand_name
@@ -766,7 +782,7 @@ def csv_simulate(csv_dir) :
             assert False, msg
         #
         # node_name
-        node_name = row['node_name']
+        node_name = row_sim['node_name']
         if node_name not in node_set :
             msg  = f'csv_interface: Error at line {line_number} '
             msg += f' in simulate.csv\n'
@@ -775,7 +791,7 @@ def csv_simulate(csv_dir) :
             assert False, msg
         #
         # sex
-        sex = row['sex']
+        sex = row_sim['sex']
         if sex not in [ 'male', 'female', 'both' ] :
             msg  = f'csv_interface: Error at line {line_number} '
             msg += f' in simulate.csv\n'
@@ -783,26 +799,33 @@ def csv_simulate(csv_dir) :
             msg += ' is not male, feamle, or both'
             assert False, msg
         #
+        # age_lower, age_upper, time_lower, time_upper
+        age_lower  = float( row_sim['age_lower'] )
+        age_upper  = float( row_sim['age_upper'] )
+        time_lower = float( row_sim['time_lower'] )
+        time_upper = float( row_sim['time_upper'] )
+        #
+        #
         # age_mid, time_mid
-        age_mid  = ( float(row['age_lower']) + float(row['age_upper']) ) / 2.0
-        time_mid = ( float(row['time_lower']) + float(row['time_upper']) ) / 2.0
+        age_mid  = ( age_lower  + age_upper )  / 2.0
+        time_mid = ( time_lower + time_upper ) / 2.0
         #
         # covariate_value_list
-        # covariate_sum_list
         covariate_value_list = list()
         for (index, covariate_name) in enumerate( covariate_name_list ) :
             spline = covariate_dict[node_name][sex][covariate_name]
             value  =  spline(age_mid, time_mid, grid = False)
             covariate_value_list.append(value )
-            covariate_sum_list[index] += value
         #
-        # row
-        row = dict( zip(covariate_name_list, covariate_value_list) )
-        row['simulate_id'] = simulate_id
+        # row_data
+        row_data = dict( zip(covariate_name_list, covariate_value_list) )
+        row_data['simulate_id'] = simulate_id
         #
         # rate_fun_dict
         rate_fun_dict = average_integrand_rate(
+            parent_dict          ,
             rate_truth_dict      ,
+            random_effect_dict   ,
             covariate_name_list  ,
             covariate_dict       ,
             covariate_avg_dict   ,
@@ -812,35 +835,39 @@ def csv_simulate(csv_dir) :
         )
         #
         # grid
-        integrand_step_size = option_dict['integrand_step_size']
-        grid = averate_integrand_grid(
+        integrand_step_size = float( option_dict['integrand_step_size'] )
+        grid = average_integrand_grid(
             integrand_step_size, age_lower, age_upper, time_lower, time_upper
         )
         #
         # avg_integrand
+        abs_tol = 1e-5
         avg_integrand = dismod_at.average_integrand(
             rate_fun_dict, integrand_name, grid, abs_tol
         )
         #
-        # row['meas_mean']
-        row['meas_mean'] = avg_integrand
+        # row_data['meas_mean']
+        meas_mean             = avg_integrand
+        row_data['meas_mean'] = meas_mean
         #
-        # row['meas_std']
-        row['meas_std'] = float( row_sim['precent_cv'] ) * average / 100.0
+        # row_data['meas_std']
+        percent_cv           = float( row_sim['percent_cv'] )
+        meas_std             = percent_cv * meas_mean / 100.0
+        row_data['meas_std'] = meas_std
         #
-        # row['meas_value']
-        meas_noise        = random.gauss(row['meas_mean'], row['meas_std'] )
-        meas_value        = row['meas_mean'] + mean_noise
-        meas_value        = max(meas_value, 0.0)
-        row['meas_value'] = meas_value
+        # row_data['meas_value']
+        meas_noise             = random.gauss(meas_mean, meas_std )
+        meas_value             = meas_mean + meas_noise
+        meas_value             = max(meas_value, 0.0)
+        row_data['meas_value'] = meas_value
         #
         # data_sim_table
-        data_sim_table.append( row )
+        data_sim_table.append( row_data )
     #
     # data.csv
     file_name = f'{csv_dir}/data_sim.csv'
     at_cascade.write_csv_table(file_name, data_sim_table)
     #
     # covariate_avg.csv
-    file_name = f'{csr_dir}/covariate_avg.csv'
+    file_name = f'{csv_dir}/covariate_avg.csv'
     at_cascade.write_csv_table(file_name, covariate_avg_table)

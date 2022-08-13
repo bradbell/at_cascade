@@ -51,6 +51,8 @@ Node Tree
         -   :ref:`csv_simulate@input_files@no_effect_rate.csv`
     *   -   csv_file['multiplier_sim.csv']
         -   :ref:`csv_simulate@input_files@multiplier_sim.csv`
+    *   -   csv_file['simulate.csv']
+        -   :ref:`csv_simulate@input_files@simulate.csv`
 
 
 {xrst_file
@@ -95,12 +97,23 @@ n2,male,50,2000,0.01,1.5
 # no_effect_rate.csv
 csv_file['no_effect_rate.csv'] = \
 '''rate_name,age,time,rate_truth
-iota,50.0,50.0,0.01
+iota,0.0,1980.0,0.01
 '''
+#
 # multiplier_sim.csv
 csv_file['multiplier_sim.csv'] = \
 '''multiplier_id,rate_name,covariate_or_sex,multiplier_truth
 0,iota,haqi,0.5
+'''
+#
+# simulate.csv
+header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
+header += 'time_lower,time_upper,percent_cv'
+csv_file['simulate.csv'] = header + \
+'''
+0,Sincidence,n0,female,0,10,1990,2000,0.2
+1,Sincidence,n1,male,10,20,2000,2010,0.2
+2,Sincidence,n2,female,20,30,2010,2020,0.2
 '''
 #
 def main() :
