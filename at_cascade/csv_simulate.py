@@ -641,7 +641,7 @@ def get_covariate_avg_table( covariate_table, covariate_name_list) :
 def average_integrand_rate(
     node2parent            ,
     spline_no_effect_rate  ,
-    random_effect_dict     ,
+    random_effect_node     ,
     covariate_name_list    ,
     spline_node_sex_cov    ,
     avg_node_sex_covariate ,
@@ -660,7 +660,7 @@ def average_integrand_rate(
         effect         = 0.0
         parent_node    = node2parent[node_name]
         while parent_node != '' :
-            effect     += random_effect_dict[node_name][rate_name]
+            effect     += random_effect_node[node_name][rate_name]
             parent_node = node2parent[parent_node]
         #
         # effect
@@ -767,13 +767,13 @@ def csv_simulate(csv_dir) :
         input_table['no_effect_rate']
     )
     #
-    # random_effect_dict
+    # random_effect_node
     std_random_effects  = option_value['std_random_effects']
-    random_effect_dict  = dict()
+    random_effect_node  = dict()
     for node_name in node2parent :
-        random_effect_dict[node_name] = dict()
+        random_effect_node[node_name] = dict()
         for rate_name in spline_no_effect_rate :
-            random_effect_dict[node_name][rate_name] = random.gauss(
+            random_effect_node[node_name][rate_name] = random.gauss(
                 0.0, std_random_effects
             )
     #
@@ -848,7 +848,7 @@ def csv_simulate(csv_dir) :
         rate_fun_dict = average_integrand_rate(
             node2parent            ,
             spline_no_effect_rate  ,
-            random_effect_dict     ,
+            random_effect_node     ,
             covariate_name_list    ,
             spline_node_sex_cov    ,
             avg_node_sex_covariate ,
