@@ -235,29 +235,6 @@ a censored normal is used to simulate the data.
 Output Files
 ************
 
-covariate_avg.csv
-=================
-This file contains the averages in covariate.csv for each sex and node.
-These averages are used as reference values when determining the
-covariate difference betwen the rate values in rate.csv and
-a particular node and sex.
-
-node_name
----------
-This string identifies the node corresponding to the average.
-The specified node and all its descendants are included in the average.
-
-sex
----
-This is ``male`` or ``female`` and
-specifies wich sex, in covariate.csv, the average was for.
-
-covariate_name
---------------
-For each :ref:`csv_simulate@input_files@covariate.csv@covariate_name`
-there is a colum that contains a float value equal to
-the average for the corresponding sex and node.
-
 data_sim.csv
 ============
 This contains the simulated data.
@@ -366,7 +343,7 @@ def option_table2dict(csv_dir, option_table) :
 # The keys and values in this dictionary are strings.
 #
 # node2parent =
-def node_table2dict( node_table ) :
+def get_node2parent( node_table ) :
     #
     # node2parent, count_children, root_node_name
     line_number = 0
@@ -583,85 +560,57 @@ def get_multiplier_list_rate(multiplier_sim_table) :
         multiplier_list_rate[rate_name].append(row)
     return multiplier_list_rate
 # ----------------------------------------------------------------------------
-# avg_node_sex_covariate[node_name][sex][covariate_name]:
-# is average covariate value for the specified node, sex and covaraite name.
-#
-# covaraite_avg_table;
-# is the table corresponding to covariate_avg.csv.
+# root_covariate_avg[covariate_name]:
+# is average covariate value for the specified covariate at the root node.
+# Note that this is an average w.r.t. sex, age, and time.
+# This is used as a reference value for the covariate effects.
 #
 # covariate_table:
 # is the table corresponding to covariate.csv
 #
 # covariate_name_list:
-# is a list of the covariate names
+# is a list of the covariate names.
 #
-# avg_node_sex_covariate, covariate_avg_table =
-def get_covariate_avg_table( covariate_table, covariate_name_list) :
+# node2parent:
+# mapping from each node name to the name of the corresponding parent.
+#
+# root_covariate_avg =
+def get_root_covariate_avg(covariate_table, covariate_name_list, node2parent) :
     #
-    # covariate_avg_table, avg_node_sex_covariate
-    covariate_avg_table     = list()
-    avg_node_sex_covariate  = dict()
+    # covariate_sum, root_count
+    covariate_sum = dict()
+    for covariate_name in covariate_name_list :
+        covariate_sum[covariate_name] = 0.0
+    root_count = 0
     #
-    # node_name_set, sex_set
-    node_name_set = set()
-    sex_set       = set()
+    # covariate_sum, root_count
+    line_number = 0;
     for row in covariate_table :
-        node_name_set.add( row['node_name'] )
-        sex_set.add( row['sex'] )
+        line_number += 1
+        node_name    = row['node_name']
+        sex          = row['sex']
+        #
+        if sex not in  { 'female', 'male' } :
+            msg  = f'csv_interface: covariate.csv at line {line_number}\n'
+            msg += 'sex = {sex} is not female or male'
+            assert False, msg
+        #
+        if node2parent[node_name] == '' :
+            root_count += 1
+            for covariate_name in covariate_name_list :
+                covariate_sum[covariate_name] += float( row[covariate_name] )
     #
-    if 'both' in sex_set :
-        msg = 'csv_interface: sex = both can not appear in covariate.csv'
+    if root_count == 0 :
+        msg  = 'csv_interface: root node does not appear in covariate.csv'
         assert False, msg
     #
-    # avg_node_sex_covariate[node_name]
-    for node_name in node_name_set :
-        avg_node_sex_covariate[node_name] = dict()
+    # root_covariate_avg
+    root_covariate_avg = dict()
+    for covariate_name in covariate_name_list :
+        root_covariate_avg[covariate_name] = \
+            covariate_sum[covariate_name] / root_count
     #
-    # sex
-    for sex in sex_set :
-        #
-        # covariate_sum, node_count
-        covariate_sum   = dict()
-        node_count      = dict()
-        for node_name in node_name_set :
-            node_count[node_name]      = 0
-            covariate_sum[node_name]   = list()
-            for covariate_name in covariate_name_list :
-                covariate_sum[node_name].append(0.0)
-        #
-        # covariate_sum, node_count
-        for row in covariate_table :
-            if row['sex'] == sex :
-                node_name              = row['node_name']
-                node_count[node_name] += 1
-                for (i, covariate_name) in enumerate( covariate_name_list ) :
-                    covariate_sum[node_name][i] += float(row[covariate_name])
-        #
-        # covariate_avg_table
-        previous_count = None
-        previous_node  = None
-        for node_name in node_name_set :
-            if previous_count != None :
-                if node_count[node_name] != previous_count :
-                    count = node_count[node_name]
-                    msg   = 'csv_interface: covariate.csv: '
-                    msg  += 'number of covariates depends on node\n'
-                    msg  += f'sex = {sex}, node_name = {node_name}, '
-                    msg  += f'count = {count}\n'
-                    msg  += f'sex = {sex}, node_name = {previous_node_name}, '
-                    msg  += f'count = {previous_count}\n'
-                    assert False, msg
-            #
-            # covariate_avg_table
-            # avg_node_sex_covariate
-            row = { 'sex' : sex, 'node_name' : node_name }
-            for (i, covariate_name) in enumerate(covariate_name_list) :
-                average = covariate_sum[node_name][i] / node_count[node_name]
-                row[covariate_name] = average
-            covariate_avg_table.append(row)
-            avg_node_sex_covariate[node_name][sex] = row
-            #
-    return avg_node_sex_covariate, covariate_avg_table
+    return root_covariate_avg
 # ----------------------------------------------------------------------------
 def average_integrand_rate(
     node2parent             ,
@@ -669,7 +618,7 @@ def average_integrand_rate(
     random_effect_node_rate ,
     covariate_name_list     ,
     spline_node_sex_cov     ,
-    avg_node_sex_covariate  ,
+    root_covariate_avg      ,
     multiplier_list_rate    ,
     node_name               ,
     sex                     ,
@@ -696,9 +645,8 @@ def average_integrand_rate(
                 covariate_name = covariate_or_sex
                 spline     = spline_node_sex_cov[node_name][sex][covariate_name]
                 covariate  = spline(age, time)
-                average    = \
-                    avg_node_sex_covariate[node_name][sex][covariate_name]
-                difference = covariate - average
+                reference  = root_covariate_avg[covariate_name]
+                difference = covariate - reference
                 effect += float( row['multiplier_truth'] ) * difference
         rate = math.exp(effect) * no_effect_rate
         return rate
@@ -767,7 +715,7 @@ def csv_simulate(csv_dir) :
     option_value = option_table2dict(csv_dir, input_table['option'] )
     #
     # node2parent
-    node2parent = node_table2dict( input_table['node'] )
+    node2parent = get_node2parent( input_table['node'] )
     #
     # spline_node_sex_cov
     node_set = set( node2parent.keys() )
@@ -781,9 +729,9 @@ def csv_simulate(csv_dir) :
         if key not in [ 'node_name', 'sex', 'age', 'time', 'omega' ] :
             covariate_name_list.append(key)
     #
-    # avg_node_sex_covariate, covariate_avg_table
-    avg_node_sex_covariate, covariate_avg_table = get_covariate_avg_table(
-        input_table['covariate'] , covariate_name_list
+    # root_covariate_avg
+    root_covariate_avg = get_root_covariate_avg(
+        input_table['covariate'] , covariate_name_list, node2parent
     )
     #
     # spline_no_effect_rate
@@ -875,7 +823,7 @@ def csv_simulate(csv_dir) :
             random_effect_node_rate ,
             covariate_name_list     ,
             spline_node_sex_cov     ,
-            avg_node_sex_covariate  ,
+            root_covariate_avg      ,
             multiplier_list_rate    ,
             node_name               ,
             sex
@@ -914,7 +862,3 @@ def csv_simulate(csv_dir) :
     # data.csv
     file_name = f'{csv_dir}/data_sim.csv'
     at_cascade.write_csv_table(file_name, data_sim_table)
-    #
-    # covariate_avg.csv
-    file_name = f'{csv_dir}/covariate_avg.csv'
-    at_cascade.write_csv_table(file_name, covariate_avg_table)
