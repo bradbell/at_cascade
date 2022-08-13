@@ -16,7 +16,6 @@ import at_cascade
 """
 {xrst_begin csv_simulate}
 {xrst_spell
-    avg
     std
     cv
     sim
@@ -168,7 +167,7 @@ rate_name
 This string is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies
 which rate this covariate multiplier is affecting.
 
-covaraite_or_sex
+covariate_or_sex
 ----------------
 If this is ``sex`` it specifies that this multiplier multiples
 the sex values where
@@ -641,7 +640,7 @@ def get_root_covariate_avg(covariate_table, covariate_name_list, node2parent) :
 # age, time, and value are floats
 #
 # root_covariate_avg[covariate_name] :
-# is the average, restricted to the root node, of the specified covaraite.
+# is the average, restricted to the root node, of the specified covariate.
 #
 # multiplier_list_rate[rate_name] :
 # is the list of rows, in the multiplier_sim table, that have rate_name

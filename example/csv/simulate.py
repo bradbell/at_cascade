@@ -43,7 +43,7 @@ Node Tree
     *   -   command
         -   :ref:`csv_interface@arguments@command`
     *   -   csv_file['option.csv']
-        -   :ref:`csv_simulate@option.csv`
+        -   :ref:`csv_simulate@input_files@option.csv`
     *   -   csv_file['node.csv']
         -   :ref:`csv_simulate@input_files@node.csv`
     *   -   csv_file['covariate.csv']

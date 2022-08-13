@@ -173,7 +173,7 @@ the multiplier will be included in the simulated data but not in the model fit.
 rate_prior.csv
 ==============
 This file adds prior information for the rates in
-:ref:`csv_simulate@input_files@rate_sim.csv`.
+:ref:`csv_simulate@input_files@no_effect_rate.csv` .
 
 rate_sim_id
 -----------
