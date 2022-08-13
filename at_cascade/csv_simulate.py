@@ -558,11 +558,11 @@ def get_multiplier_list_rate(multiplier_sim_table) :
         multiplier_list_rate[rate_name].append(row)
     return multiplier_list_rate
 # ----------------------------------------------------------------------------
-# covarite_avg_table:
-# is the table corresponding to covariate_avg.csv
+# avg_node_sex_covariate[node_name][sex][covariate_name]:
+# is average covariate value for the specified node, sex and covaraite name.
 #
-# covariate_avg_dict[node_name][sex][covariate_name]
-# is the average corresponding to the specified node, sex, and covariate
+# covaraite_avg_table;
+# is the table corresponding to covariate_avg.csv.
 #
 # covariate_table:
 # is the table corresponding to covariate.csv
@@ -570,17 +570,14 @@ def get_multiplier_list_rate(multiplier_sim_table) :
 # covariate_name_list:
 # is a list of the covariate names
 #
-# covariate_avg_dict, covariate_avg_table = get_covariate_sim_table(
-#   covariate_table, covariate_name_list
-# )
+# avg_node_sex_covariate, covariate_avg_table =
 def get_covariate_avg_table( covariate_table, covariate_name_list) :
     #
-    # covariate_avg_table, covariate_avg_dict
-    covariate_avg_table = list()
-    covariate_avg_dict  = dict()
+    # covariate_avg_table, avg_node_sex_covariate
+    covariate_avg_table     = list()
+    avg_node_sex_covariate  = dict()
     #
-    # node_name_set
-    # sex_set
+    # node_name_set, sex_set
     node_name_set = set()
     sex_set       = set()
     for row in covariate_table :
@@ -591,9 +588,9 @@ def get_covariate_avg_table( covariate_table, covariate_name_list) :
         msg = 'csv_interface: sex = both can not appear in covariate.csv'
         assert False, msg
     #
-    # covariate_avg_dict
+    # avg_node_sex_covariate[node_name]
     for node_name in node_name_set :
-        covariate_avg_dict[node_name] = dict()
+        avg_node_sex_covariate[node_name] = dict()
     #
     # sex
     for sex in sex_set :
@@ -607,10 +604,10 @@ def get_covariate_avg_table( covariate_table, covariate_name_list) :
             for covariate_name in covariate_name_list :
                 covariate_sum[node_name].append(0.0)
         #
-        # covariate_sum,
+        # covariate_sum, node_count
         for row in covariate_table :
             if row['sex'] == sex :
-                node_name = row['node_name']
+                node_name              = row['node_name']
                 node_count[node_name] += 1
                 for (i, covariate_name) in enumerate( covariate_name_list ) :
                     covariate_sum[node_name][i] += float(row[covariate_name])
@@ -631,26 +628,26 @@ def get_covariate_avg_table( covariate_table, covariate_name_list) :
                     assert False, msg
             #
             # covariate_avg_table
-            # covariate_avg_dict
+            # avg_node_sex_covariate
             row = { 'sex' : sex, 'node_name' : node_name }
             for (i, covariate_name) in enumerate(covariate_name_list) :
                 average = covariate_sum[node_name][i] / node_count[node_name]
                 row[covariate_name] = average
             covariate_avg_table.append(row)
-            covariate_avg_dict[node_name][sex] = row
+            avg_node_sex_covariate[node_name][sex] = row
             #
-    return covariate_avg_dict, covariate_avg_table
+    return avg_node_sex_covariate, covariate_avg_table
 # ----------------------------------------------------------------------------
 def average_integrand_rate(
-    node2parent           ,
-    spline_no_effect_rate ,
-    random_effect_dict    ,
-    covariate_name_list   ,
-    spline_node_sex_cov   ,
-    covariate_avg_dict    ,
-    multiplier_list_rate  ,
-    node_name             ,
-    sex                   ,
+    node2parent            ,
+    spline_no_effect_rate  ,
+    random_effect_dict     ,
+    covariate_name_list    ,
+    spline_node_sex_cov    ,
+    avg_node_sex_covariate ,
+    multiplier_list_rate   ,
+    node_name              ,
+    sex                    ,
 ) :
     def fun(age, time, rate_name) :
         #
@@ -675,7 +672,8 @@ def average_integrand_rate(
                 covariate_name = covariate_or_sex
                 spline     = spline_node_sex_cov[node_name][sex][covariate_name]
                 covariate  = spline(age, time, grid = False)
-                average    = covariate_avg_dict[node_name][sex][covariate_name]
+                average    = \
+                    avg_node_sex_covariate[node_name][sex][covariate_name]
                 difference = covariate - average
                 effect += float( row['multiplier_truth'] ) * difference
         rate = math.exp(effect) * no_effect_rate
@@ -759,8 +757,8 @@ def csv_simulate(csv_dir) :
         if key not in [ 'node_name', 'sex', 'age', 'time', 'omega' ] :
             covariate_name_list.append(key)
     #
-    # covariate_avg_dict, covariate_avg_table
-    covariate_avg_dict, covariate_avg_table = get_covariate_avg_table(
+    # avg_node_sex_covariate, covariate_avg_table
+    avg_node_sex_covariate, covariate_avg_table = get_covariate_avg_table(
         input_table['covariate'] , covariate_name_list
     )
     #
@@ -848,14 +846,14 @@ def csv_simulate(csv_dir) :
         #
         # rate_fun_dict
         rate_fun_dict = average_integrand_rate(
-            node2parent           ,
-            spline_no_effect_rate ,
-            random_effect_dict    ,
-            covariate_name_list   ,
-            spline_node_sex_cov   ,
-            covariate_avg_dict    ,
-            multiplier_list_rate  ,
-            node_name             ,
+            node2parent            ,
+            spline_no_effect_rate  ,
+            random_effect_dict     ,
+            covariate_name_list    ,
+            spline_node_sex_cov    ,
+            avg_node_sex_covariate ,
+            multiplier_list_rate   ,
+            node_name              ,
             sex
         )
         #
