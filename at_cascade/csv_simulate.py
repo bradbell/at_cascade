@@ -494,6 +494,9 @@ def get_spline_node_sex_cov(covariate_table , node_set) :
 #    for rate_name at the specified age and time where age, time, value
 #    are all floats.
 #
+# no_effect_rate_table:
+# is the table correspnding to no_effect_rate.csv
+#
 # spline_no_effect_rate =
 def get_spline_no_effect_rate(no_effect_rate_table) :
     #
@@ -536,18 +539,24 @@ def get_spline_no_effect_rate(no_effect_rate_table) :
     #
     return spline_no_effect_rate
 # ----------------------------------------------------------------------------
+# multiplier_list_rate[rate_name]:
+# list of rows in multiplier_sim_table that have the specified rate name
+# were rate_name is a string.
 #
-# multiplier_dict[rate_name] = list of multiplier_sim table rows for this rate
-def get_multiplier_dict(multiplier_sim_table) :
+# multiplier_sim_table:
+# is the table corresponding to multiplier_sim.csv.
+#
+# multiplier_list_rate =
+def get_multiplier_list_rate(multiplier_sim_table) :
     #
-    # multiplier_dict
-    multiplier_dict = dict()
+    # multiplier_list_rate
+    multiplier_list_rate = dict()
     for rate_name in [ 'pini', 'iota', 'rho', 'chi' ] :
-        multiplier_dict[rate_name] = list()
+        multiplier_list_rate[rate_name] = list()
     for row in multiplier_sim_table :
         rate_name = row['rate_name']
-        multiplier_dict[rate_name].append(row)
-    return multiplier_dict
+        multiplier_list_rate[rate_name].append(row)
+    return multiplier_list_rate
 # ----------------------------------------------------------------------------
 # covarite_avg_table:
 # is the table corresponding to covariate_avg.csv
@@ -639,7 +648,7 @@ def average_integrand_rate(
     covariate_name_list   ,
     spline_node_sex_cov   ,
     covariate_avg_dict    ,
-    multiplier_dict       ,
+    multiplier_list_rate  ,
     node_name             ,
     sex                   ,
 ) :
@@ -659,7 +668,7 @@ def average_integrand_rate(
         #
         # effect
         # covariate effects: 2DO: add sex covariate effect
-        for row in multiplier_dict[rate_name] :
+        for row in multiplier_list_rate[rate_name] :
             assert row['rate_name'] == rate_name
             covariate_or_sex = row['covariate_or_sex']
             if covariate_or_sex != 'sex' :
@@ -770,8 +779,10 @@ def csv_simulate(csv_dir) :
                 0.0, std_random_effects
             )
     #
-    # multiplier_dict
-    multiplier_dict = get_multiplier_dict( input_table['multiplier_sim'] )
+    # multiplier_list_rate
+    multiplier_list_rate = get_multiplier_list_rate(
+        input_table['multiplier_sim']
+    )
     #
     # data_sim_table
     data_sim_table = list()
@@ -843,7 +854,7 @@ def csv_simulate(csv_dir) :
             covariate_name_list   ,
             spline_node_sex_cov   ,
             covariate_avg_dict    ,
-            multiplier_dict       ,
+            multiplier_list_rate  ,
             node_name             ,
             sex
         )
