@@ -89,7 +89,8 @@ This string identifies the node, in node.csv, corresponding to this row.
 sex
 ---
 This identifies which sex this row corresponds to.
-The sex value ``both`` does not appear in this table.
+The sex values ``male`` and ``female`` must appear in this table.
+The sex value ``both`` does not appear.
 
 age
 ---
@@ -167,12 +168,16 @@ rate_name
 This string is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies
 which rate this covariate multiplier is affecting.
 
-covariate_or_sex
+covaraite_or_sex
 ----------------
 If this is ``sex`` it specifies that this multiplier multiples
-the sex values where female = -0.5, male = +0.5, and both = 0.0.
+the sex values where
+{xrst_code py}"""
+sex_covariate_value = { 'female' : -0.5,  'both' : 0.0, 'male' : +0.5 }
+"""{xrst_code}
+female = -0.5, male = +0.5, and both = 0.0.
 Otherwise this is one of the covariate names in the covariate.csv file
-and specifies which covariate is being multiplied.
+and specifies which covariate value is being multiplied.
 
 multiplier_truth
 ----------------
@@ -408,10 +413,10 @@ def get_node2parent( node_table ) :
     return node2parent
 # ----------------------------------------------------------------------------
 #
-# spline = spline_node_sex_cov[node_name][sex][cov] :
+# spline = spline_node_sex_cov[node_name][sex][cov_name] :
 # 1. node_name is any of the nodes in the covariate table (string)
 # 2. sex is any of the sexes in the covariate table (string)
-# 3. cov is any covariate_name or omega (string)
+# 3. cov_name is any covariate_name or omega (string)
 # 4. value = spline(age, time) evaluates the interpolant at (age, time)
 #    where age, time, and value are floats.
 #
@@ -612,24 +617,65 @@ def get_root_covariate_avg(covariate_table, covariate_name_list, node2parent) :
     #
     return root_covariate_avg
 # ----------------------------------------------------------------------------
-def average_integrand_rate(
+# rate_fun = rate_fun_dict[rate_name] :
+# For each of rate_name in spline_no_effect_rate, value = rate_fun(age, time)
+# is the value of the corresponding rate included all fo the effects
+# where age, time, and value are floats.
+#
+# node2parent:
+# is mapping from each node name to the name of its parent node.
+#
+# spline_no_effect_rate[rate_name] :
+# is a spline that evaluates the specified no_effect rate.
+#
+# random_effect_node_rate[node_name][rate_name] :
+# is the random effect for the specified node and rate.
+# Note that to get the difference from the root node, one has to sum
+# the random effect for this node and its ancestors not including the
+# root node in the sum.
+#
+# spline = spline_node_sex_cov[node_name][sex][cov_name] :
+# is a function that evaluates value = spline(age, time) where
+# node_name is a node name, sex is 'male' or 'female' (not 'both'),
+# cov_name is a covariate name or 'sex,
+# age, time, and value are floats
+#
+# root_covariate_avg[covariate_name] :
+# is the average, restricted to the root node, of the specified covaraite.
+#
+# multiplier_list_rate[rate_name] :
+# is the list of rows, in the multiplier_sim table, that have rate_name
+# equal to the specified rate_name.
+#
+# node_name :
+# The node that rate_fun will compute rates for.
+#
+# sex :
+# The sex that rate_fun will compute rates for.
+# This can be male, female or both.
+#
+# rate_fun_dict =
+def get_rate_fun_dict(
     node2parent             ,
     spline_no_effect_rate   ,
     random_effect_node_rate ,
-    covariate_name_list     ,
     spline_node_sex_cov     ,
     root_covariate_avg      ,
     multiplier_list_rate    ,
     node_name               ,
     sex                     ,
 ) :
+    assert sex in { 'female', 'male', 'both' }
+    #
+    # fun
     def fun(age, time, rate_name) :
         #
-        # no_effect_rage
+        # no_effect_rate
         spline         = spline_no_effect_rate[rate_name]
         no_effect_rate = spline(age, time)
         #
-        # effect = random effects
+        # effect
+        # random effects
         effect         = 0.0
         parent_node    = node2parent[node_name]
         while parent_node != '' :
@@ -637,23 +683,44 @@ def average_integrand_rate(
             parent_node = node2parent[parent_node]
         #
         # effect
-        # covariate effects: 2DO: add sex covariate effect
+        # covariate and sex effects
         for row in multiplier_list_rate[rate_name] :
             assert row['rate_name'] == rate_name
+            #
             covariate_or_sex = row['covariate_or_sex']
-            if covariate_or_sex != 'sex' :
+            if covariate_or_sex == 'sex' :
+                difference = sex_covariate_value[sex]
+            else :
                 covariate_name = covariate_or_sex
-                spline     = spline_node_sex_cov[node_name][sex][covariate_name]
-                covariate  = spline(age, time)
-                reference  = root_covariate_avg[covariate_name]
-                difference = covariate - reference
-                effect += float( row['multiplier_truth'] ) * difference
+                if sex in [ 'male', 'female' ] :
+                    spline         = \
+                        spline_node_sex_cov[node_name][sex][covariate_name]
+                    covariate      = spline(age, time)
+                    reference      = root_covariate_avg[covariate_name]
+                    difference     = covariate - reference
+                else :
+                    spline         = \
+                        spline_node_sex_cov[node_name]['female'][covariate_name]
+                    female         = spline(age, time)
+                    spline         = \
+                        spline_node_sex_cov[node_name]['male'][covariate_name]
+                    male           = spline(age, time)
+                    reference      = root_covariate_avg[covariate_name]
+                    difference     = (female + male) / 2.0  - reference
+            effect    += float( row['multiplier_truth'] ) * difference
+        #
+        # rate
         rate = math.exp(effect) * no_effect_rate
         return rate
-    result = dict()
+    #
+    rate_fun_dict = dict()
     for rate_name in spline_no_effect_rate :
-        result[rate_name]  = lambda age, time : fun(age, time, rate_name)
-    return result
+        rate_fun_dict[rate_name] = lambda age, time : fun(age, time, rate_name)
+    #
+    # rate_fun_dict['omega']
+    rate_fun_dict['omega'] = spline_node_sex_cov[node_name][sex]['omega']
+    #
+    return rate_fun_dict
 # ----------------------------------------------------------------------------
 def average_integrand_grid(
     integrand_step_size, age_lower, age_upper, time_lower, time_upper
@@ -817,11 +884,10 @@ def csv_simulate(csv_dir) :
         row_data['simulate_id'] = simulate_id
         #
         # rate_fun_dict
-        rate_fun_dict = average_integrand_rate(
+        rate_fun_dict = get_rate_fun_dict(
             node2parent             ,
             spline_no_effect_rate   ,
             random_effect_node_rate ,
-            covariate_name_list     ,
             spline_node_sex_cov     ,
             root_covariate_avg      ,
             multiplier_list_rate    ,
