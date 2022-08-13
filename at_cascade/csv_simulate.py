@@ -639,28 +639,27 @@ def get_covariate_avg_table( covariate_table, covariate_name_list) :
     return avg_node_sex_covariate, covariate_avg_table
 # ----------------------------------------------------------------------------
 def average_integrand_rate(
-    node2parent            ,
-    spline_no_effect_rate  ,
-    random_effect_node     ,
-    covariate_name_list    ,
-    spline_node_sex_cov    ,
-    avg_node_sex_covariate ,
-    multiplier_list_rate   ,
-    node_name              ,
-    sex                    ,
+    node2parent             ,
+    spline_no_effect_rate   ,
+    random_effect_node_rate ,
+    covariate_name_list     ,
+    spline_node_sex_cov     ,
+    avg_node_sex_covariate  ,
+    multiplier_list_rate    ,
+    node_name               ,
+    sex                     ,
 ) :
     def fun(age, time, rate_name) :
         #
         # no_effect_rage
         spline         = spline_no_effect_rate[rate_name]
-        no_effect_rate = spline(age, time, grid = False)
+        no_effect_rate = spline(age, time)
         #
-        # effect
-        # random effects
+        # effect = random effects
         effect         = 0.0
         parent_node    = node2parent[node_name]
         while parent_node != '' :
-            effect     += random_effect_node[node_name][rate_name]
+            effect     += random_effect_node_rate[node_name][rate_name]
             parent_node = node2parent[parent_node]
         #
         # effect
@@ -671,7 +670,7 @@ def average_integrand_rate(
             if covariate_or_sex != 'sex' :
                 covariate_name = covariate_or_sex
                 spline     = spline_node_sex_cov[node_name][sex][covariate_name]
-                covariate  = spline(age, time, grid = False)
+                covariate  = spline(age, time)
                 average    = \
                     avg_node_sex_covariate[node_name][sex][covariate_name]
                 difference = covariate - average
@@ -767,13 +766,13 @@ def csv_simulate(csv_dir) :
         input_table['no_effect_rate']
     )
     #
-    # random_effect_node
+    # random_effect_node_rate
     std_random_effects  = option_value['std_random_effects']
-    random_effect_node  = dict()
+    random_effect_node_rate  = dict()
     for node_name in node2parent :
-        random_effect_node[node_name] = dict()
+        random_effect_node_rate[node_name] = dict()
         for rate_name in spline_no_effect_rate :
-            random_effect_node[node_name][rate_name] = random.gauss(
+            random_effect_node_rate[node_name][rate_name] = random.gauss(
                 0.0, std_random_effects
             )
     #
@@ -837,7 +836,7 @@ def csv_simulate(csv_dir) :
         covariate_value_list = list()
         for (index, covariate_name) in enumerate( covariate_name_list ) :
             spline = spline_node_sex_cov[node_name][sex][covariate_name]
-            value  =  spline(age_mid, time_mid, grid = False)
+            value  =  spline(age_mid, time_mid)
             covariate_value_list.append(value )
         #
         # row_data
@@ -846,14 +845,14 @@ def csv_simulate(csv_dir) :
         #
         # rate_fun_dict
         rate_fun_dict = average_integrand_rate(
-            node2parent            ,
-            spline_no_effect_rate  ,
-            random_effect_node     ,
-            covariate_name_list    ,
-            spline_node_sex_cov    ,
-            avg_node_sex_covariate ,
-            multiplier_list_rate   ,
-            node_name              ,
+            node2parent             ,
+            spline_no_effect_rate   ,
+            random_effect_node_rate ,
+            covariate_name_list     ,
+            spline_node_sex_cov     ,
+            avg_node_sex_covariate  ,
+            multiplier_list_rate    ,
+            node_name               ,
             sex
         )
         #
