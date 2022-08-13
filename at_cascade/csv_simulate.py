@@ -368,20 +368,33 @@ def option_table2dict(csv_dir, option_table) :
 # node2parent =
 def node_table2dict( node_table ) :
     #
-    # node2parent, count_children
+    # node2parent, count_children, root_node_name
     line_number = 0
     node2parent    = dict()
     count_children = dict()
+    root_node_name = None
     for row in node_table :
         line_number += 1
-        node_name    = row['node_name']
-        parent_name  = row['parent_name']
+        node_name                 = row['node_name']
+        parent_name               = row['parent_name']
+        count_children[node_name] = 0
         if node_name in node2parent :
             msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
             msg += f'node_name {node_name} appears twice'
             assert False, msg
-        node2parent[node_name]      = parent_name
-        count_children[node_name] = 0
+        node2parent[node_name]    = parent_name
+        #
+        if parent_name == '' :
+            if root_node_name != None :
+                msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
+                msg += 'one and only one node should have no parent\n'
+                msg += 'node {node_name} and {root_node_name} have no parent'
+                assert False, msg
+            root_node_name = node_name
+    if root_node_name == None :
+        msg  = f'csv_interface: Error in node.csv\n'
+        msg += 'there is no root node; i.e.,  node with no parent node'
+        assert False, msg
     #
     # count_children
     line_number    = 0
@@ -402,6 +415,18 @@ def node_table2dict( node_table ) :
         if count_children[parent_name] == 1 :
             msg  = 'csv_interface: Error in node.csv\n'
             msg += f'the parent_name {parent_name} apprears once and only once'
+    #
+    # check that no node is and ancestor of itself
+    for node_name in node2parent :
+        ancestor_set = { node_name }
+        parent_name  = node2parent[node_name]
+        while parent_name != '' :
+            if parent_name in ancestor_set :
+                msg  = 'csv_interface: Error in node_table.csv\n'
+                msg += f'node {parent_name} is an ancestor of itself'
+                assert False, msg
+            ancestor_set.add(parent_name)
+            parent_name = node2parent[parent_name]
     #
     return node2parent
 # ----------------------------------------------------------------------------
