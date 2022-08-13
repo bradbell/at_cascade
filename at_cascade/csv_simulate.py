@@ -313,7 +313,7 @@ outside the age rage (time range) in the covariate.csv file.
 # The random.seed fucntion is called with the seed value
 # option_value['random_seed']
 #
-# option_value = option_table2dict(csv_dir, option_table)
+# option_value =
 def option_table2dict(csv_dir, option_table) :
     #
     # option_value
@@ -365,7 +365,7 @@ def option_table2dict(csv_dir, option_table) :
 # The is the name of the node that is the parent of node_node.
 # The keys and values in this dictionary are strings.
 #
-# node2parent = node_table2dict(node_table)
+# node2parent =
 def node_table2dict( node_table ) :
     #
     # node2parent, count_children
@@ -420,7 +420,7 @@ def node_table2dict( node_table ) :
 # is the set of node_name that appear in node.csv.
 #
 #
-# spline_node_sex_cov = get_spline_node_sex_cov(covariate_table, node_set)
+# spline_node_sex_cov =
 def get_spline_node_sex_cov(covariate_table , node_set) :
     #
     # cov_name_list
@@ -488,12 +488,14 @@ def get_spline_node_sex_cov(covariate_table , node_set) :
             spline_node_sex_cov[node_name][sex] = spline_dict
     return spline_node_sex_cov
 # ----------------------------------------------------------------------------
-# spline = rate_truth_dict[rate_name] :
-# 1. rate_name is any of the rates in the no_effect_rate table.
-# 2. spline(age, time, grid=False) evaluates the interpolant at (age, time)
+# spline = spline_no_effect_rate[rate_name] :
+# 1. rate_name is any of the rate names in the no_effect_rate table.
+# 2. value = spline(age, time) evaluates the no_effect spline
+#    for rate_name at the specified age and time where age, time, value
+#    are all floats.
 #
-# rate_truth_dict = spline_rate_truth(no_effect_rate_table)
-def spline_rate_truth_dict(no_effect_rate_table) :
+# spline_no_effect_rate =
+def get_spline_no_effect_rate(no_effect_rate_table) :
     #
     # age_set, time_set
     rate_row_list   = dict()
@@ -507,8 +509,10 @@ def spline_rate_truth_dict(no_effect_rate_table) :
             rate_row_list[rate_name] = list()
         rate_row_list[rate_name].append( row )
     #
-    # rate_truth_dict, rate_name
-    rate_truth_dict = dict()
+    # spline_no_effect_rate
+    spline_no_effect_rate = dict()
+    #
+    # rate_name
     for rate_name in rate_row_list :
         #
         # age_grid, time_grid, spline_dict
@@ -527,10 +531,10 @@ def spline_rate_truth_dict(no_effect_rate_table) :
             msg += f'time_grid = {time_grid}'
             assert False, msg
         #
-        # rate_truth_dict
-        rate_truth_dict[rate_name]= spline_dict['rate_truth']
+        # spline_no_effect_rate
+        spline_no_effect_rate[rate_name]= spline_dict['rate_truth']
     #
-    return rate_truth_dict
+    return spline_no_effect_rate
 # ----------------------------------------------------------------------------
 #
 # multiplier_dict[rate_name] = list of multiplier_sim table rows for this rate
@@ -629,20 +633,20 @@ def get_covariate_avg_table( covariate_table, covariate_name_list) :
     return covariate_avg_dict, covariate_avg_table
 # ----------------------------------------------------------------------------
 def average_integrand_rate(
-    node2parent          ,
-    rate_truth_dict      ,
-    random_effect_dict   ,
-    covariate_name_list  ,
-    spline_node_sex_cov       ,
-    covariate_avg_dict   ,
-    multiplier_dict      ,
-    node_name            ,
-    sex                  ,
+    node2parent           ,
+    spline_no_effect_rate ,
+    random_effect_dict    ,
+    covariate_name_list   ,
+    spline_node_sex_cov   ,
+    covariate_avg_dict    ,
+    multiplier_dict       ,
+    node_name             ,
+    sex                   ,
 ) :
     def fun(age, time, rate_name) :
         #
         # no_effect_rage
-        spline         = rate_truth_dict[rate_name]
+        spline         = spline_no_effect_rate[rate_name]
         no_effect_rate = spline(age, time, grid = False)
         #
         # effect
@@ -668,7 +672,7 @@ def average_integrand_rate(
         rate = math.exp(effect) * no_effect_rate
         return rate
     result = dict()
-    for rate_name in rate_truth_dict :
+    for rate_name in spline_no_effect_rate :
         result[rate_name]  = lambda age, time : fun(age, time, rate_name)
     return result
 # ----------------------------------------------------------------------------
@@ -751,8 +755,8 @@ def csv_simulate(csv_dir) :
         input_table['covariate'] , covariate_name_list
     )
     #
-    # rate_truth_dict
-    rate_truth_dict = spline_rate_truth_dict(
+    # spline_no_effect_rate
+    spline_no_effect_rate = get_spline_no_effect_rate(
         input_table['no_effect_rate']
     )
     #
@@ -761,7 +765,7 @@ def csv_simulate(csv_dir) :
     random_effect_dict  = dict()
     for node_name in node2parent :
         random_effect_dict[node_name] = dict()
-        for rate_name in rate_truth_dict :
+        for rate_name in spline_no_effect_rate :
             random_effect_dict[node_name][rate_name] = random.gauss(
                 0.0, std_random_effects
             )
@@ -833,14 +837,14 @@ def csv_simulate(csv_dir) :
         #
         # rate_fun_dict
         rate_fun_dict = average_integrand_rate(
-            node2parent          ,
-            rate_truth_dict      ,
-            random_effect_dict   ,
-            covariate_name_list  ,
-            spline_node_sex_cov  ,
-            covariate_avg_dict   ,
-            multiplier_dict      ,
-            node_name            ,
+            node2parent           ,
+            spline_no_effect_rate ,
+            random_effect_dict    ,
+            covariate_name_list   ,
+            spline_node_sex_cov   ,
+            covariate_avg_dict    ,
+            multiplier_dict       ,
+            node_name             ,
             sex
         )
         #
