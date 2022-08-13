@@ -302,13 +302,21 @@ outside the age rage (time range) in the covariate.csv file.
 """
 # -----------------------------------------------------------------------------
 # Returns a dictionary verison of option_table.
-# This routine will set random.seed to the value in the option.csv table.
 #
-# option_dict = option_table2dict(csv_dir, option_table)
+# option_value[name] :
+# for is the value of the option corresponding to name. Note that the value
+# has been coverted to its corresponding type; e.g.
+# option_value['random_seed'] is an ``int``.
+#
+# Side Effects:
+# The random.seed fucntion is called with the seed value
+# option_value['random_seed']
+#
+# option_value = option_table2dict(csv_dir, option_table)
 def option_table2dict(csv_dir, option_table) :
     #
-    # option_dict
-    option_dict = dict()
+    # option_value
+    option_value = dict()
     valid_name  = {
         'std_random_effects', 'integrand_step_size', 'random_seed'
     }
@@ -317,7 +325,7 @@ def option_table2dict(csv_dir, option_table) :
         line_number += 1
         name         = row['name']
         value        = row['value']
-        if name in option_dict :
+        if name in option_value :
             msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
             msg += f'the name {name} appears twice in this table'
             assert False, msg
@@ -325,24 +333,30 @@ def option_table2dict(csv_dir, option_table) :
             msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
             msg += f'{name} is not a valid option name'
             assert False, msg
-        option_dict[name] = value
+        option_value[name] = value
     #
-    # option_dict
+    # option_value
     for name in valid_name :
-        if not name in option_dict :
+        if not name in option_value :
             msg  = 'csv_interface: Error: in option.csv\n'
             msg += f'the name {name} does not apper'
             assert False, msg
     #
     # float options that must be greater than zero
     for name in ['std_random_effects', 'integrand_step_size'] :
-        value = float( option_dict[name] )
+        value = float( option_value[name] )
         if value <= 0.0 :
             msg  = 'csv_interface: Error: in option.csv\n'
             msg += f'{name} = {value} <= 0'
             assert False, msg
+        option_value[name] = value
     #
-    return option_dict
+    # random_seed
+    value = int( option_value['random_seed'] )
+    option_value['random_seed'] = value
+    random.seed(value)
+    #
+    return option_value
 # ----------------------------------------------------------------------------
 # parent_dict:
 # The keys in this dictionary are the values of node_name in the table.
@@ -699,8 +713,8 @@ def csv_simulate(csv_dir) :
         file_name         = f'{csv_dir}/{name}.csv'
         input_table[name] = at_cascade.read_csv_table(file_name)
     #
-    # option_dict
-    option_dict = option_table2dict(csv_dir, input_table['option'] )
+    # option_value
+    option_value = option_table2dict(csv_dir, input_table['option'] )
     #
     # parent_dict
     parent_dict = node_table2dict( input_table['node'] )
@@ -728,7 +742,7 @@ def csv_simulate(csv_dir) :
     )
     #
     # random_effect_dict
-    std_random_effects  = float( option_dict['std_random_effects'] )
+    std_random_effects  = option_value['std_random_effects']
     random_effect_dict  = dict()
     for node_name in parent_dict :
         random_effect_dict[node_name] = dict()
@@ -816,7 +830,7 @@ def csv_simulate(csv_dir) :
         )
         #
         # grid
-        integrand_step_size = float( option_dict['integrand_step_size'] )
+        integrand_step_size = option_value['integrand_step_size']
         grid = average_integrand_grid(
             integrand_step_size, age_lower, age_upper, time_lower, time_upper
         )
