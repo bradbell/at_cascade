@@ -304,7 +304,8 @@ outside the age rage (time range) in the covariate.csv file.
 # Returns a dictionary verison of option_table.
 #
 # option_value[name] :
-# for is the value of the option corresponding to name. Note that the value
+# for is the value of the option corresponding to name.
+# Here name is a string and value
 # has been coverted to its corresponding type; e.g.
 # option_value['random_seed'] is an ``int``.
 #
@@ -358,27 +359,28 @@ def option_table2dict(csv_dir, option_table) :
     #
     return option_value
 # ----------------------------------------------------------------------------
-# parent_dict:
-# The keys in this dictionary are the values of node_name in the table.
-# For each node_name,
-# parent_dict[node_name] is the corresponding parent_name.
+# node2parent:
 #
-# parent_dict = node_table2dict(node_table)
+# node2parent[node_name]:
+# The is the name of the node that is the parent of node_node.
+# The keys and values in this dictionary are strings.
+#
+# node2parent = node_table2dict(node_table)
 def node_table2dict( node_table ) :
     #
-    # parent_dict, count_children
+    # node2parent, count_children
     line_number = 0
-    parent_dict    = dict()
+    node2parent    = dict()
     count_children = dict()
     for row in node_table :
         line_number += 1
         node_name    = row['node_name']
         parent_name  = row['parent_name']
-        if node_name in parent_dict :
+        if node_name in node2parent :
             msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
             msg += f'node_name {node_name} appears twice'
             assert False, msg
-        parent_dict[node_name]      = parent_name
+        node2parent[node_name]      = parent_name
         count_children[node_name] = 0
     #
     # count_children
@@ -401,7 +403,7 @@ def node_table2dict( node_table ) :
             msg  = 'csv_interface: Error in node.csv\n'
             msg += f'the parent_name {parent_name} apprears once and only once'
     #
-    return parent_dict
+    return node2parent
 # ----------------------------------------------------------------------------
 # spline = covarite_dict[node_name][sex][interpolate_name] :
 # 1. node_name is any of those in the covariate table
@@ -614,7 +616,7 @@ def get_covariate_avg_table( covariate_table, covariate_name_list) :
     return covariate_avg_dict, covariate_avg_table
 # ----------------------------------------------------------------------------
 def average_integrand_rate(
-    parent_dict          ,
+    node2parent          ,
     rate_truth_dict      ,
     random_effect_dict   ,
     covariate_name_list  ,
@@ -633,10 +635,10 @@ def average_integrand_rate(
         # effect
         # random effects
         effect         = 0.0
-        parent_node    = parent_dict[node_name]
+        parent_node    = node2parent[node_name]
         while parent_node != '' :
             effect     += random_effect_dict[node_name][rate_name]
-            parent_node = parent_dict[parent_node]
+            parent_node = node2parent[parent_node]
         #
         # effect
         # covariate effects: 2DO: add sex covariate effect
@@ -716,11 +718,11 @@ def csv_simulate(csv_dir) :
     # option_value
     option_value = option_table2dict(csv_dir, input_table['option'] )
     #
-    # parent_dict
-    parent_dict = node_table2dict( input_table['node'] )
+    # node2parent
+    node2parent = node_table2dict( input_table['node'] )
     #
     # covariate_dict
-    node_set = set( parent_dict.keys() )
+    node_set = set( node2parent.keys() )
     covariate_dict = spline_covariate_dict(
         input_table['covariate'], node_set
     )
@@ -744,7 +746,7 @@ def csv_simulate(csv_dir) :
     # random_effect_dict
     std_random_effects  = option_value['std_random_effects']
     random_effect_dict  = dict()
-    for node_name in parent_dict :
+    for node_name in node2parent :
         random_effect_dict[node_name] = dict()
         for rate_name in rate_truth_dict :
             random_effect_dict[node_name][rate_name] = random.gauss(
@@ -818,7 +820,7 @@ def csv_simulate(csv_dir) :
         #
         # rate_fun_dict
         rate_fun_dict = average_integrand_rate(
-            parent_dict          ,
+            node2parent          ,
             rate_truth_dict      ,
             random_effect_dict   ,
             covariate_name_list  ,
