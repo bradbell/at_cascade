@@ -9,7 +9,6 @@
 # -----------------------------------------------------------------------------
 import math
 import random
-import time
 import numpy
 import scipy.interpolate
 import dismod_at
@@ -28,35 +27,34 @@ import at_cascade
 Simulate A Cascade Data Set
 ###########################
 
+
+Input Files
+***********
+
 option.csv
-**********
+==========
 This csv file has two columns,
 one called ``name`` and the other called ``value``.
 The rows are documented below by the name column:
 
 std_random_effects
-==================
+------------------
 This input float is the standard deviation of the random effects.
 All fo the effects are in log of rate space, so this standard deviation
 is also in log of rate space.
 
 integrand_step_size
-===================
+-------------------
 This input float is the step size in age and time used to approximate
 integrand averages from age_lower to age_upper
 and time_lower to time_upper (in data_sim.csv).
 It must be greater than zero.
 
 random_seed
-===========
+-----------
 This integer is used to seed the random number generator.
-This row is optional in option.csv.
-If it is not present, the system clock is used to choose *random_seed*
-and the corresponding row is added to option.csv.
 
-
-Input Files
-***********
+-----------------------------------------------------------------------------
 
 node.csv
 ========
@@ -314,9 +312,6 @@ def option_table2dict(csv_dir, option_table) :
     valid_name  = {
         'std_random_effects', 'integrand_step_size', 'random_seed'
     }
-    required_name  = {
-        'std_random_effects', 'integrand_step_size'
-    }
     line_number = 0
     for row in option_table :
         line_number += 1
@@ -333,7 +328,7 @@ def option_table2dict(csv_dir, option_table) :
         option_dict[name] = value
     #
     # option_dict
-    for name in required_name :
+    for name in valid_name :
         if not name in option_dict :
             msg  = 'csv_interface: Error: in option.csv\n'
             msg += f'the name {name} does not apper'
@@ -346,20 +341,6 @@ def option_table2dict(csv_dir, option_table) :
             msg  = 'csv_interface: Error: in option.csv\n'
             msg += f'{name} = {value} <= 0'
             assert False, msg
-    #
-    # random_seed
-    name = 'random_seed'
-    if name not in option_dict :
-        value = str( int( time.time() ) )
-        row   = { 'name' : 'random_seed' ,  'value' : value }
-        option_table.append(row)
-        file_name = f'{csv_dir}/option.csv'
-        at_cascade.write_csv_table(file_name, option_table)
-        option_dict[name] = value
-    #
-    # set the random seed
-    random.seed( int( option_dict['random_seed'] ) )
-    #
     #
     return option_dict
 # ----------------------------------------------------------------------------

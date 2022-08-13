@@ -9,6 +9,7 @@
 # -----------------------------------------------------------------------------
 import os
 import sys
+import time
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
@@ -69,11 +70,13 @@ Node Tree
 csv_file = dict()
 #
 # option.csv
+random_seed = str( int( time.time() ) )
 csv_file['option.csv'] = \
 '''name,value
 std_random_effects,.1
 integrand_step_size,5
 '''
+csv_file['option.csv'] += f'random_seed,{random_seed}\n'
 #
 # node.csv
 csv_file['node.csv'] = \
