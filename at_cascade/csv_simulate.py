@@ -417,8 +417,8 @@ def get_node2parent( node_table ) :
 # 1. node_name is any of the nodes in the covariate table (string)
 # 2. sex is any of the sexes in the covariate table (string)
 # 3. cov_name is any covariate_name or omega (string)
-# 4. value = spline(age, time) evaluates the interpolant at (age, time)
-#    where age, time, and value are floats.
+# 4. value = float( spline(age, time) ) evaluates the interpolant at
+#   (age, time) where age, time, and value are floats.
 #
 # covariate_table:
 # is the table corresponding to covariate_csv.
@@ -497,7 +497,7 @@ def get_spline_node_sex_cov(covariate_table , node_set) :
 # ----------------------------------------------------------------------------
 # spline = spline_no_effect_rate[rate_name] :
 # 1. rate_name is any of the rate names in the no_effect_rate table.
-# 2. value = spline(age, time) evaluates the no_effect spline
+# 2. value = float( spline(age, time) ) evaluates the no_effect spline
 #    for rate_name at the specified age and time where age, time, value
 #    are all floats.
 #
@@ -635,7 +635,7 @@ def get_root_covariate_avg(covariate_table, covariate_name_list, node2parent) :
 # root node in the sum.
 #
 # spline = spline_node_sex_cov[node_name][sex][cov_name] :
-# is a function that evaluates value = spline(age, time) where
+# is a function that evaluates value = float( spline(age, time) ) where
 # node_name is a node name, sex is 'male' or 'female' (not 'both'),
 # cov_name is a covariate name or 'sex,
 # age, time, and value are floats
@@ -672,7 +672,7 @@ def get_rate_fun_dict(
         #
         # no_effect_rate
         spline         = spline_no_effect_rate[rate_name]
-        no_effect_rate = spline(age, time)
+        no_effect_rate = float( spline(age, time) )
         #
         # effect
         # random effects
@@ -695,16 +695,16 @@ def get_rate_fun_dict(
                 if sex in [ 'male', 'female' ] :
                     spline         = \
                         spline_node_sex_cov[node_name][sex][covariate_name]
-                    covariate      = spline(age, time)
+                    covariate      = float( spline(age, time) )
                     reference      = root_covariate_avg[covariate_name]
                     difference     = covariate - reference
                 else :
                     spline         = \
                         spline_node_sex_cov[node_name]['female'][covariate_name]
-                    female         = spline(age, time)
+                    female         = float( spline(age, time) )
                     spline         = \
                         spline_node_sex_cov[node_name]['male'][covariate_name]
-                    male           = spline(age, time)
+                    male           = float( spline(age, time) )
                     reference      = root_covariate_avg[covariate_name]
                     difference     = (female + male) / 2.0  - reference
             effect    += float( row['multiplier_truth'] ) * difference
@@ -838,19 +838,19 @@ def csv_simulate(csv_dir) :
     #
     # data_sim_table
     data_sim_table = list()
-    for (simulate_id, row_sim) in enumerate( input_table['simulate'] ) :
+    for (simulate_id, sim_row) in enumerate( input_table['simulate'] ) :
         line_nmber = simulate_id + 1
         #
         # simulate_id
-        if simulate_id != int( row_sim['simulate_id'] ) :
+        if simulate_id != int( sim_row['simulate_id'] ) :
             msg  = f'csv_interface: Error at line {line_number} '
             msg += f' in simulate.csv\n'
-            msg += f'simulate_id = ' + row_sim['simulate_id']
+            msg += f'simulate_id = ' + sim_row['simulate_id']
             msg += ' is not equal line number minus one'
             assert False, msg
         #
         # integrand_name
-        integrand_name = row_sim['integrand_name']
+        integrand_name = sim_row['integrand_name']
         if integrand_name not in valid_integrand_name :
             msg  = f'csv_interface: Error at line {line_number} '
             msg += f' in simulate.csv\n'
@@ -859,7 +859,7 @@ def csv_simulate(csv_dir) :
             assert False, msg
         #
         # node_name
-        node_name = row_sim['node_name']
+        node_name = sim_row['node_name']
         if node_name not in node_set :
             msg  = f'csv_interface: Error at line {line_number} '
             msg += f' in simulate.csv\n'
@@ -868,7 +868,7 @@ def csv_simulate(csv_dir) :
             assert False, msg
         #
         # sex
-        sex = row_sim['sex']
+        sex = sim_row['sex']
         if sex not in [ 'male', 'female', 'both' ] :
             msg  = f'csv_interface: Error at line {line_number} '
             msg += f' in simulate.csv\n'
@@ -877,10 +877,10 @@ def csv_simulate(csv_dir) :
             assert False, msg
         #
         # age_lower, age_upper, time_lower, time_upper
-        age_lower  = float( row_sim['age_lower'] )
-        age_upper  = float( row_sim['age_upper'] )
-        time_lower = float( row_sim['time_lower'] )
-        time_upper = float( row_sim['time_upper'] )
+        age_lower  = float( sim_row['age_lower'] )
+        age_upper  = float( sim_row['age_upper'] )
+        time_lower = float( sim_row['time_lower'] )
+        time_upper = float( sim_row['time_upper'] )
         #
         #
         # age_mid, time_mid
@@ -891,12 +891,12 @@ def csv_simulate(csv_dir) :
         covariate_value_list = list()
         for (index, covariate_name) in enumerate( covariate_name_list ) :
             spline = spline_node_sex_cov[node_name][sex][covariate_name]
-            value  =  spline(age_mid, time_mid)
+            value  =  float( spline(age_mid, time_mid) )
             covariate_value_list.append(value )
         #
-        # row_data
-        row_data = dict( zip(covariate_name_list, covariate_value_list) )
-        row_data['simulate_id'] = simulate_id
+        # data_row
+        data_row = dict( zip(covariate_name_list, covariate_value_list) )
+        data_row['simulate_id'] = simulate_id
         #
         # rate_fun_dict
         rate_fun_dict = get_rate_fun_dict(
@@ -922,23 +922,23 @@ def csv_simulate(csv_dir) :
             rate_fun_dict, integrand_name, grid, abs_tol
         )
         #
-        # row_data['meas_mean']
+        # data_row['meas_mean']
         meas_mean             = avg_integrand
-        row_data['meas_mean'] = meas_mean
+        data_row['meas_mean'] = meas_mean
         #
-        # row_data['meas_std']
-        percent_cv           = float( row_sim['percent_cv'] )
+        # data_row['meas_std']
+        percent_cv           = float( sim_row['percent_cv'] )
         meas_std             = percent_cv * meas_mean / 100.0
-        row_data['meas_std'] = meas_std
+        data_row['meas_std'] = meas_std
         #
-        # row_data['meas_value']
+        # data_row['meas_value']
         meas_noise             = random.gauss(meas_mean, meas_std )
         meas_value             = meas_mean + meas_noise
         meas_value             = max(meas_value, 0.0)
-        row_data['meas_value'] = meas_value
+        data_row['meas_value'] = meas_value
         #
         # data_sim_table
-        data_sim_table.append( row_data )
+        data_sim_table.append( data_row )
     #
     # data.csv
     file_name = f'{csv_dir}/data_sim.csv'
