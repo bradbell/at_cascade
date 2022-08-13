@@ -722,15 +722,30 @@ def get_rate_fun_dict(
     #
     return rate_fun_dict
 # ----------------------------------------------------------------------------
+# grid['age'] :
+# is a list of age point starting at age_lower, ending at age_upper
+# and such that the difference between points is less than or equal
+# step_size.
+#
+# grid['time'] :
+# is a list of time point starting at time_lower, ending at time_upper
+# and such that the difference between points is less than or equal
+# step_size.
+#
+# step_size :
+# The maximum allowable distance between grid point.
+# This must be grater than zero
+#
+# grid =
 def average_integrand_grid(
-    integrand_step_size, age_lower, age_upper, time_lower, time_upper
+    step_size, age_lower, age_upper, time_lower, time_upper
 ) :
     #
     # age_grid
     if age_lower == age_upper :
         age_grid = [ age_lower ]
     else :
-        n_age    = int( (age_upper - age_lower) / integrand_step_size) + 1
+        n_age    = int( (age_upper - age_lower) / step_size) + 1
         dage     = (age_upper - age_lower) / n_age
         age_grid = [ age_lower + i * dage for i in range(n_age+1) ]
     #
@@ -738,7 +753,7 @@ def average_integrand_grid(
     if time_lower == time_upper :
         time_grid = [ time_lower ]
     else :
-        n_time    = int( (time_upper - time_lower) / integrand_step_size) + 1
+        n_time    = int( (time_upper - time_lower) / step_size) + 1
         dtime     = (time_upper - time_lower) / n_time
         time_grid = [ time_lower + i * dtime for i in range(n_time+1) ]
     # grid
