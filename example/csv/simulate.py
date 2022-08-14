@@ -10,6 +10,7 @@
 import os
 import sys
 import time
+import numpy
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
@@ -121,6 +122,9 @@ csv_file['simulate.csv'] = header + \
 #
 def main() :
     #
+    # eps99
+    eps99 = 99.0 * numpy.finfo(float).eps
+    #
     # csv_dir
     csv_dir = 'build/csv'
     if not os.path.exists(csv_dir) :
@@ -136,6 +140,20 @@ def main() :
     # simulate command
     command = 'simulate'
     at_cascade.csv_interface(csv_dir, command)
+    #
+    # random_effect_table
+    file_name           = f'{csv_dir}/random_effect.csv'
+    random_effect_table = at_cascade.read_csv_table(file_name)
+    for sex in [ 'male', 'female' ] :
+        sum_random = 0.0
+        sum_abs    = 0.0
+        for row in random_effect_table :
+            if row['node_name'] == 'n0' :
+                assert float( row['iota'] ) == 0.0
+            if row['sex'] == sex :
+                sum_abs    += abs( float( row['iota'] ) )
+                sum_random += float( row['iota'] )
+        assert abs( sum_random ) < eps99 * sum_abs
     #
     print('simulte.py: OK')
     sys.exit(0)
