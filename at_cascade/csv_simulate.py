@@ -239,6 +239,32 @@ a censored normal is used to simulate the data.
 Output Files
 ************
 
+random_effect.csv
+=================
+This file reports the random effect for each node and rate.
+It has a :ref:`csv_interface@notation@rectangular_grid` in the columns
+``node_name`` and  ``sex`` .
+
+node_name
+---------
+This string identifies the row in :ref:`csv_simulate@input_files@node.csv`
+that this row corresponds to.
+
+sex
+---
+This identifies which sex the random effect corresponds to.
+The sex values ``male`` and ``female`` will appear.
+
+rate_name
+---------
+For each :ref:`csv_simulate@input_files@no_effect_rate@rate_name`
+in the no_effect rate table,
+there is a data column wih that *rate_name*.
+The float values in this columns
+are the random effects for the specified node, sex, and rate.
+
+-----------------------------------------------------------------------------
+
 data_sim.csv
 ============
 This contains the simulated data.
@@ -627,8 +653,8 @@ def get_root_covariate_avg(covariate_table, covariate_name_list, node2parent) :
 # spline_no_effect_rate[rate_name] :
 # is a spline that evaluates the specified no_effect rate.
 #
-# random_effect_node_rate[node_name][rate_name] :
-# is the random effect for the specified node and rate.
+# random_effect_node_sex_rate[node_name][sex][rate_name] :
+# is the random effect for the specified node, sex, and rate.
 # Note that to get the difference from the root node, one has to sum
 # the random effect for this node and its ancestors not including the
 # root node in the sum.
@@ -655,14 +681,14 @@ def get_root_covariate_avg(covariate_table, covariate_name_list, node2parent) :
 #
 # rate_fun_dict =
 def get_rate_fun_dict(
-    node2parent             ,
-    spline_no_effect_rate   ,
-    random_effect_node_rate ,
-    spline_node_sex_cov     ,
-    root_covariate_avg      ,
-    multiplier_list_rate    ,
-    node_name               ,
-    sex                     ,
+    node2parent                 ,
+    spline_no_effect_rate       ,
+    random_effect_node_sex_rate ,
+    spline_node_sex_cov         ,
+    root_covariate_avg          ,
+    multiplier_list_rate        ,
+    node_name                   ,
+    sex                         ,
 ) :
     assert sex in { 'female', 'male', 'both' }
     #
@@ -678,7 +704,8 @@ def get_rate_fun_dict(
         effect         = 0.0
         parent_node    = node2parent[node_name]
         while parent_node != '' :
-            effect     += random_effect_node_rate[node_name][rate_name]
+            effect     += \
+                random_effect_node_sex_rate[node_name][sex][rate_name]
             parent_node = node2parent[parent_node]
         #
         # effect
@@ -820,15 +847,16 @@ def csv_simulate(csv_dir) :
         input_table['no_effect_rate']
     )
     #
-    # random_effect_node_rate
+    # random_effect_node_sex_rate
     std_random_effects  = option_value['std_random_effects']
-    random_effect_node_rate  = dict()
+    random_effect_node_sex_rate  = dict()
     for node_name in node2parent :
-        random_effect_node_rate[node_name] = dict()
-        for rate_name in spline_no_effect_rate :
-            random_effect_node_rate[node_name][rate_name] = random.gauss(
-                0.0, std_random_effects
-            )
+        random_effect_node_sex_rate[node_name] = dict()
+        for sex in ['male', 'female'] :
+            random_effect_node_sex_rate[node_name][sex] = dict()
+            for rate_name in spline_no_effect_rate :
+                random_effect_node_sex_rate[node_name][sex][rate_name] = \
+                    random.gauss( 0.0, std_random_effects )
     #
     # multiplier_list_rate
     multiplier_list_rate = get_multiplier_list_rate(
@@ -881,7 +909,6 @@ def csv_simulate(csv_dir) :
         time_lower = float( sim_row['time_lower'] )
         time_upper = float( sim_row['time_upper'] )
         #
-        #
         # age_mid, time_mid
         age_mid  = ( age_lower  + age_upper )  / 2.0
         time_mid = ( time_lower + time_upper ) / 2.0
@@ -899,13 +926,13 @@ def csv_simulate(csv_dir) :
         #
         # rate_fun_dict
         rate_fun_dict = get_rate_fun_dict(
-            node2parent             ,
-            spline_no_effect_rate   ,
-            random_effect_node_rate ,
-            spline_node_sex_cov     ,
-            root_covariate_avg      ,
-            multiplier_list_rate    ,
-            node_name               ,
+            node2parent                 ,
+            spline_no_effect_rate       ,
+            random_effect_node_sex_rate ,
+            spline_node_sex_cov         ,
+            root_covariate_avg          ,
+            multiplier_list_rate        ,
+            node_name                   ,
             sex
         )
         #
@@ -942,3 +969,15 @@ def csv_simulate(csv_dir) :
     # data.csv
     file_name = f'{csv_dir}/data_sim.csv'
     at_cascade.write_csv_table(file_name, data_sim_table)
+    #
+    # random_effect.csv
+    random_effect_table = list()
+    for node_name in node2parent :
+        for sex in [ 'male', 'female' ] :
+            row = { 'node_name' : node_name, 'sex' : sex }
+            for rate_name in spline_no_effect_rate :
+                row[rate_name] = \
+                    random_effect_node_sex_rate[node_name][sex][rate_name]
+            random_effect_table.append( row )
+    file_name = f'{csv_dir}/random_effect.csv'
+    at_cascade.write_csv_table(file_name, random_effect_table)
