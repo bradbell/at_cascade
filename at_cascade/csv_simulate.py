@@ -249,6 +249,7 @@ node_name
 ---------
 This string identifies the row in :ref:`csv_simulate@input_files@node.csv`
 that this row corresponds to.
+All the random effects for the root node are zero.
 
 sex
 ---
@@ -366,30 +367,32 @@ def option_table2dict(csv_dir, option_table) :
     #
     return option_value
 # ----------------------------------------------------------------------------
-# parent_node_dict:
-#
 # parent_node_dict[node_name]:
 # The is the name of the node that is the parent of node_node.
 # The keys and values in this dictionary are strings.
 #
-# parent_node_dict =
+# child_list_node[node_name]:
+# A ``list`` of nodes that has all the children of node_name
+# where node_name is an ``str`` .
+#
+# parent_node_dict, child_list_node =
 def get_parent_node_dict( node_table ) :
     #
     # parent_node_dict, count_children, root_node_name
     line_number = 0
-    parent_node_dict    = dict()
-    count_children = dict()
-    root_node_name = None
+    parent_node_dict  = dict()
+    child_list_node   = dict()
+    root_node_name    = None
     for row in node_table :
         line_number += 1
-        node_name                 = row['node_name']
-        parent_name               = row['parent_name']
-        count_children[node_name] = 0
+        node_name                  = row['node_name']
+        parent_name                = row['parent_name']
+        child_list_node[node_name] = list()
         if node_name in parent_node_dict :
             msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
             msg += f'node_name {node_name} appears twice'
             assert False, msg
-        parent_node_dict[node_name]    = parent_name
+        parent_node_dict[node_name] = parent_name
         #
         if parent_name == '' :
             if root_node_name != None :
@@ -403,23 +406,23 @@ def get_parent_node_dict( node_table ) :
         msg += 'there is no root node; i.e.,  node with no parent node'
         assert False, msg
     #
-    # count_children
+    # child_list_node
     line_number    = 0
     for row in node_table :
         line_number += 1
         node_name    = row['node_name']
         parent_name  = row['parent_name']
         if parent_name != '' :
-            if parent_name not in count_children :
+            if parent_name not in child_list_node :
                 msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
                 msg += f'parent_name {parent_name} is not a valid node_name'
                 assert False, msg
             else :
-                count_children[parent_name] += 1
+                child_list_node[parent_name].append(node_name)
     #
-    # count_children
-    for parent_name in count_children :
-        if count_children[parent_name] == 1 :
+    # check number of children
+    for parent_name in child_list_node :
+        if len( child_list_node[parent_name] ) == 1 :
             msg  = 'csv_interface: Error in node.csv\n'
             msg += f'the parent_name {parent_name} apprears once and only once'
     #
@@ -435,7 +438,7 @@ def get_parent_node_dict( node_table ) :
             ancestor_set.add(parent_name)
             parent_name = parent_node_dict[parent_name]
     #
-    return parent_node_dict
+    return parent_node_dict, child_list_node
 # ----------------------------------------------------------------------------
 #
 # spline = spline_node_sex_cov[node_name][sex][cov_name] :
@@ -788,7 +791,125 @@ def average_integrand_grid(
     grid = { 'age' : age_grid , 'time' : time_grid }
     #
     return grid
+# ----------------------------------------------------------------------------
+# random_effect_node_sex_rate[node_name][sex][rate_name] :
+# is the simulated random effect for the corresponding node, sex and rate.
+# For a given node_name, sex and rate_name, the sum of
+#   random_effect_node_sex_rate[child_node][sex][rate_name]
+# is zero where child_node ranges over values in child_list_node[node_name]
+# All the random effects for the root node are zero
+# (prent_node_dict[root_node_name] == '' )
+#
+#
+# std_random_effects:
+# is a float specifying the standard deviation of the random effects
+#
+# rate_name_list:
+# is the list of rate_names the the random effects are simulated for
+#
+# parent_node_dict;
+# is the mapping from a node_name to its parent node_name.
+#
+# child_list_node:
+# for each node_name in parent_node_dict this is a list of
+# node that have node_name as its parent node.
+#
+# random_effect_node_sex_rate =
+def get_random_effect_node_sex_rate (
+    std_random_effects ,
+    rate_name_list     ,
+    parent_node_dict   ,
+    child_list_node    ,
+) :
+    def recursive_call(
+        random_effect_node_sex_rate ,
+        node_name                   ,
+        sex                         ,
+        rate_name                   ,
+        std_random_effects          ,
+        parent_node_dict            ,
+        child_list_node             ,
+    ) :
+        #
+        # child_list
+        child_list = child_list_node[node_name]
+        #
+        # n_children
+        n_children = len(child_list)
+        if n_children == 0 :
+            return None
+        assert 1 < n_children
+        #
+        # factor
+        factor  = n_children / (n_children - 1)
+        assert type(factor) == float
+        factor  = math.sqrt( factor )
+        #
+        # random_effect_dict, sum_random_effect
+        random_effect_dict = dict()
+        sum_random_effect  = 0.0
+        for child_name in child_list :
+            random_effect = random.gauss(0.0, factor * std_random_effects)
+            sum_random_effect += random_effect
+            random_effect_dict[child_name] = random_effect
+        #
+        # random_effect_dict
+        avg_random_effect = sum_random_effect / n_children
+        for child_name in child_list :
+            random_effect_dict[child_name] -= avg_random_effect
+        #
+        # random_effect_node_sex_rate
+        for child_name in child_list :
+            random_effect_node_sex_rate[child_name][sex][rate_name] = \
+                random_effect_dict[child_name]
+        #
+        # random_effect_node_sex_rate
+        for child_name in child_list :
+            recursive_call(
+                random_effect_node_sex_rate ,
+                child_name                  ,
+                sex                         ,
+                rate_name                   ,
+                std_random_effects          ,
+                parent_node_dict            ,
+                child_list_node             ,
+            )
+        return None
+    #
+    # root_node_name
+    root_node_name = None
+    for node_name in parent_node_dict :
+        if parent_node_dict[node_name] == '' :
+            root_node_name = node_name
+    assert root_node_name != None
+    #
+    # random_effect_node_sex_rate
+    random_effect_node_sex_rate  = dict()
+    for node_name in parent_node_dict :
+        random_effect_node_sex_rate[node_name] = dict()
+        for sex in ['male', 'female'] :
+            random_effect_node_sex_rate[node_name][sex] = dict()
+    #
+    # random_effect_node_sex_rate[root_node_name]
+    for sex in [ 'male', 'female' ] :
+        for rate_name in rate_name_list :
+            random_effect_node_sex_rate[root_node_name][sex][rate_name] = 0.0
 
+    #
+    # random_effect_node_sex_rate
+    for sex in [ 'male', 'female' ] :
+        for rate_name in rate_name_list :
+            recursive_call(
+                random_effect_node_sex_rate ,
+                root_node_name              ,
+                sex                         ,
+                rate_name                   ,
+                std_random_effects          ,
+                parent_node_dict            ,
+                child_list_node             ,
+            )
+    #
+    return random_effect_node_sex_rate
 # ----------------------------------------------------------------------------
 def csv_simulate(csv_dir) :
     valid_integrand_name = {
@@ -824,8 +945,9 @@ def csv_simulate(csv_dir) :
     # option_value
     option_value = option_table2dict(csv_dir, input_table['option'] )
     #
-    # parent_node_dict
-    parent_node_dict = get_parent_node_dict( input_table['node'] )
+    # parent_node_dict, child_list_node
+    parent_node_dict, child_list_node = \
+        get_parent_node_dict( input_table['node'] )
     #
     # spline_node_sex_cov
     node_set = set( parent_node_dict.keys() )
@@ -851,14 +973,13 @@ def csv_simulate(csv_dir) :
     #
     # random_effect_node_sex_rate
     std_random_effects  = option_value['std_random_effects']
-    random_effect_node_sex_rate  = dict()
-    for node_name in parent_node_dict :
-        random_effect_node_sex_rate[node_name] = dict()
-        for sex in ['male', 'female'] :
-            random_effect_node_sex_rate[node_name][sex] = dict()
-            for rate_name in spline_no_effect_rate :
-                random_effect_node_sex_rate[node_name][sex][rate_name] = \
-                    random.gauss( 0.0, std_random_effects )
+    rate_name_list      = spline_no_effect_rate.keys()
+    random_effect_node_sex_rate = get_random_effect_node_sex_rate(
+        std_random_effects ,
+        rate_name_list     ,
+        parent_node_dict   ,
+        child_list_node    ,
+    )
     #
     # multiplier_list_rate
     multiplier_list_rate = get_multiplier_list_rate(
