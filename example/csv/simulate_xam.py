@@ -56,6 +56,10 @@ Node Tree
         -   :ref:`csv_simulate@input_files@multiplier_sim.csv`
     *   -   csv_file['simulate.csv']
         -   :ref:`csv_simulate@input_files@simulate.csv`
+    *   -   csv_file['random_effect.csv']
+        -   :ref:`csv_simulate@output_files@random_effect.csv`
+    *   -   csv_file['data_sim.csv']
+        -   :ref:`csv_simulate@output_files@data_sim.csv`
 
 
 {xrst_file
