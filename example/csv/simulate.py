@@ -141,13 +141,21 @@ def main() :
     command = 'simulate'
     at_cascade.csv_interface(csv_dir, command)
     #
-    # random_effect_table
-    file_name           = f'{csv_dir}/random_effect.csv'
-    random_effect_table = at_cascade.read_csv_table(file_name)
+    # csv_table
+    csv_table = dict()
+    for name in csv_file :
+        file_name       = f'{csv_dir}/{name}'
+        csv_table[name] = at_cascade.read_csv_table( file_name )
+    #
+    for name in [ 'random_effect.csv', 'data_sim.csv' ] :
+        file_name       = f'{csv_dir}/{name}'
+        csv_table[name] = at_cascade.read_csv_table( file_name )
+    #
+    # random_effect.csv
     for sex in [ 'male', 'female' ] :
         sum_random = 0.0
         sum_abs    = 0.0
-        for row in random_effect_table :
+        for row in csv_table['random_effect.csv'] :
             if row['node_name'] == 'n0' :
                 assert float( row['iota'] ) == 0.0
             if row['sex'] == sex :
@@ -155,6 +163,10 @@ def main() :
                 sum_random += float( row['iota'] )
         assert abs( sum_random ) < eps99 * sum_abs
     #
+    # simulate.csv
+    for (row_id, row) in enumerate( csv_table['simulate.csv'] ) :
+        assert row_id == int( row['simulate_id'] )
+
     print('simulte.py: OK')
     sys.exit(0)
 #
