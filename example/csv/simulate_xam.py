@@ -10,6 +10,7 @@
 import os
 import sys
 import time
+import math
 import numpy
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
@@ -17,7 +18,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
     sys.path.insert(0, current_directory)
 import at_cascade
 """
-{xrst_begin example_csv_simulate}
+{xrst_begin csv_simulate_xam}
 {xrst_spell
     dir
     sim
@@ -63,7 +64,7 @@ Node Tree
 }
 
 
-{xrst_end example_csv_simulate}
+{xrst_end csv_simulate_xam}
 """
 # BEGIN_PYTHON
 #
@@ -157,17 +158,79 @@ def main() :
         sum_abs    = 0.0
         for row in csv_table['random_effect.csv'] :
             if row['node_name'] == 'n0' :
-                assert float( row['iota'] ) == 0.0
+                assert float( row['random_effect'] ) == 0.0
             if row['sex'] == sex :
-                sum_abs    += abs( float( row['iota'] ) )
-                sum_random += float( row['iota'] )
-        assert abs( sum_random ) < eps99 * sum_abs
+                assert row['rate_name'] == 'iota'
+                sum_abs    += abs( float( row['random_effect'] ) )
+                sum_random += float( row['random_effect'] )
+        assert abs( sum_random ) <= eps99 * sum_abs
     #
-    # simulate.csv
-    for (row_id, row) in enumerate( csv_table['simulate.csv'] ) :
-        assert row_id == int( row['simulate_id'] )
-
-    print('simulte.py: OK')
+    # random_effect_node_sex
+    random_effect_node_sex = dict()
+    for node_name in [ 'n0', 'n1', 'n2' ] :
+        random_effect_node_sex[node_name] = dict()
+    for row in csv_table['random_effect.csv'] :
+        node_name     = row['node_name']
+        sex           = row['sex']
+        rate_name     = row['rate_name']
+        random_effect = row['random_effect']
+        assert rate_name == 'iota'
+        random_effect_node_sex[node_name][sex] = float( random_effect )
+    #
+    # no_effect_iota
+    assert len( csv_table['no_effect_rate.csv'] ) == 1
+    for row in csv_table['no_effect_rate.csv'] :
+        assert row['rate_name'] == 'iota'
+        no_effect_iota = float( row['rate_truth'] )
+    #
+    # haqi_node_sex
+    haqi_node_sex = dict()
+    for node_name in ['n0', 'n1', 'n2'] :
+        haqi_node_sex[node_name] = dict()
+    for row in csv_table['covariate.csv'] :
+        node_name  = row['node_name']
+        sex        = row['sex']
+        haqi_node_sex[node_name][sex] = row['haqi']
+    #
+    # haqi_reference
+    female = float( haqi_node_sex['n0']['female'] )
+    male   = float( haqi_node_sex['n0']['male'] )
+    haqi_reference = (female + male) / 2.0
+    #
+    # mul_haqi_iota
+    assert len( csv_table['multiplier_sim.csv'] ) == 1
+    for row in csv_table['multiplier_sim.csv'] :
+        assert row['rate_name'] == 'iota'
+        assert row['covariate_or_sex'] == 'haqi'
+        mul_haqi_iota = float( row['multiplier_truth'] )
+    #
+    # data_sim.csv
+    for data_row in csv_table['data_sim.csv'] :
+        #
+        # node_name, meas_mean
+        simulate_id    = int( data_row['simulate_id'] )
+        sim_row        = csv_table['simulate.csv'][simulate_id]
+        integrand_name = sim_row['integrand_name']
+        node_name      = sim_row['node_name']
+        sex            = sim_row['sex']
+        meas_mean      = float( data_row['meas_mean'] )
+        assert integrand_name == 'Sincidence'
+        #
+        # random_effect
+        random_effect = random_effect_node_sex[node_name][sex]
+        #
+        # covariate effect
+        haqi             = float( haqi_node_sex[node_name][sex] )
+        covariate_effect = mul_haqi_iota * (haqi - haqi_reference)
+        #
+        # effect
+        effect = random_effect + covariate_effect
+        #
+        # check_mean
+        check_mean = math.exp(effect) * no_effect_iota
+        assert abs( check_mean - meas_mean ) <= eps99 * meas_mean
+    #
+    print('simulte_xam.py: OK')
     sys.exit(0)
 #
 main()

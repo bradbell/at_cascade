@@ -26,6 +26,10 @@ import at_cascade
 Simulate A Cascade Data Set
 ###########################
 
+Example
+*******
+:ref:`csv_simulate_xam`
+
 
 Input Files
 ***********
@@ -243,7 +247,7 @@ random_effect.csv
 =================
 This file reports the random effect for each node and rate.
 It has a :ref:`csv_interface@notation@rectangular_grid` in the columns
-``node_name`` and  ``sex`` .
+``node_name`` , ``sex`` and ``rate_name`` .
 
 node_name
 ---------
@@ -257,11 +261,15 @@ The sex values ``male`` and ``female`` will appear.
 
 rate_name
 ---------
+This is a string and is one of the
 For each :ref:`csv_simulate@input_files@no_effect_rate.csv@rate_name`
 in the no_effect rate table,
-there is a data column wih that *rate_name*.
-The float values in this columns
-are the random effects for the specified node, sex, and rate.
+All of the rates in the no_effect rate table are present in this file.
+
+random_effect
+-------------
+This float value is the random effect
+for the specified node, sex, and rate.
 
 Discussion
 ----------
@@ -1103,10 +1111,11 @@ def csv_simulate(csv_dir) :
     random_effect_table = list()
     for node_name in parent_node_dict :
         for sex in [ 'male', 'female' ] :
-            row = { 'node_name' : node_name, 'sex' : sex }
             for rate_name in spline_no_effect_rate :
-                row[rate_name] = \
+                row                  = { 'node_name' : node_name, 'sex' : sex }
+                row['rate_name']     = rate_name
+                row['random_effect'] = \
                     random_effect_node_sex_rate[node_name][sex][rate_name]
-            random_effect_table.append( row )
+                random_effect_table.append( row )
     file_name = f'{csv_dir}/random_effect.csv'
     at_cascade.write_csv_table(file_name, random_effect_table)
