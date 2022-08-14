@@ -366,18 +366,18 @@ def option_table2dict(csv_dir, option_table) :
     #
     return option_value
 # ----------------------------------------------------------------------------
-# node2parent:
+# parent_node_dict:
 #
-# node2parent[node_name]:
+# parent_node_dict[node_name]:
 # The is the name of the node that is the parent of node_node.
 # The keys and values in this dictionary are strings.
 #
-# node2parent =
-def get_node2parent( node_table ) :
+# parent_node_dict =
+def get_parent_node_dict( node_table ) :
     #
-    # node2parent, count_children, root_node_name
+    # parent_node_dict, count_children, root_node_name
     line_number = 0
-    node2parent    = dict()
+    parent_node_dict    = dict()
     count_children = dict()
     root_node_name = None
     for row in node_table :
@@ -385,11 +385,11 @@ def get_node2parent( node_table ) :
         node_name                 = row['node_name']
         parent_name               = row['parent_name']
         count_children[node_name] = 0
-        if node_name in node2parent :
+        if node_name in parent_node_dict :
             msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
             msg += f'node_name {node_name} appears twice'
             assert False, msg
-        node2parent[node_name]    = parent_name
+        parent_node_dict[node_name]    = parent_name
         #
         if parent_name == '' :
             if root_node_name != None :
@@ -424,18 +424,18 @@ def get_node2parent( node_table ) :
             msg += f'the parent_name {parent_name} apprears once and only once'
     #
     # check that no node is and ancestor of itself
-    for node_name in node2parent :
+    for node_name in parent_node_dict :
         ancestor_set = { node_name }
-        parent_name  = node2parent[node_name]
+        parent_name  = parent_node_dict[node_name]
         while parent_name != '' :
             if parent_name in ancestor_set :
                 msg  = 'csv_interface: Error in node_table.csv\n'
                 msg += f'node {parent_name} is an ancestor of itself'
                 assert False, msg
             ancestor_set.add(parent_name)
-            parent_name = node2parent[parent_name]
+            parent_name = parent_node_dict[parent_name]
     #
-    return node2parent
+    return parent_node_dict
 # ----------------------------------------------------------------------------
 #
 # spline = spline_node_sex_cov[node_name][sex][cov_name] :
@@ -601,11 +601,13 @@ def get_multiplier_list_rate(multiplier_sim_table) :
 # covariate_name_list:
 # is a list of the covariate names.
 #
-# node2parent:
+# parent_node_dict:
 # mapping from each node name to the name of the corresponding parent.
 #
 # root_covariate_avg =
-def get_root_covariate_avg(covariate_table, covariate_name_list, node2parent) :
+def get_root_covariate_avg(
+    covariate_table, covariate_name_list, parent_node_dict
+) :
     #
     # covariate_sum, root_count
     covariate_sum = dict()
@@ -625,7 +627,7 @@ def get_root_covariate_avg(covariate_table, covariate_name_list, node2parent) :
             msg += 'sex = {sex} is not female or male'
             assert False, msg
         #
-        if node2parent[node_name] == '' :
+        if parent_node_dict[node_name] == '' :
             root_count += 1
             for covariate_name in covariate_name_list :
                 covariate_sum[covariate_name] += float( row[covariate_name] )
@@ -647,7 +649,7 @@ def get_root_covariate_avg(covariate_table, covariate_name_list, node2parent) :
 # is the value of the corresponding rate included all fo the effects
 # where age, time, and value are floats.
 #
-# node2parent:
+# parent_node_dict:
 # is mapping from each node name to the name of its parent node.
 #
 # spline_no_effect_rate[rate_name] :
@@ -681,7 +683,7 @@ def get_root_covariate_avg(covariate_table, covariate_name_list, node2parent) :
 #
 # rate_fun_dict =
 def get_rate_fun_dict(
-    node2parent                 ,
+    parent_node_dict            ,
     spline_no_effect_rate       ,
     random_effect_node_sex_rate ,
     spline_node_sex_cov         ,
@@ -702,11 +704,11 @@ def get_rate_fun_dict(
         # effect
         # random effects
         effect         = 0.0
-        parent_node    = node2parent[node_name]
+        parent_node    = parent_node_dict[node_name]
         while parent_node != '' :
             effect     += \
                 random_effect_node_sex_rate[node_name][sex][rate_name]
-            parent_node = node2parent[parent_node]
+            parent_node = parent_node_dict[parent_node]
         #
         # effect
         # covariate and sex effects
@@ -822,11 +824,11 @@ def csv_simulate(csv_dir) :
     # option_value
     option_value = option_table2dict(csv_dir, input_table['option'] )
     #
-    # node2parent
-    node2parent = get_node2parent( input_table['node'] )
+    # parent_node_dict
+    parent_node_dict = get_parent_node_dict( input_table['node'] )
     #
     # spline_node_sex_cov
-    node_set = set( node2parent.keys() )
+    node_set = set( parent_node_dict.keys() )
     spline_node_sex_cov = get_spline_node_sex_cov(
         input_table['covariate'], node_set
     )
@@ -839,7 +841,7 @@ def csv_simulate(csv_dir) :
     #
     # root_covariate_avg
     root_covariate_avg = get_root_covariate_avg(
-        input_table['covariate'] , covariate_name_list, node2parent
+        input_table['covariate'] , covariate_name_list, parent_node_dict
     )
     #
     # spline_no_effect_rate
@@ -850,7 +852,7 @@ def csv_simulate(csv_dir) :
     # random_effect_node_sex_rate
     std_random_effects  = option_value['std_random_effects']
     random_effect_node_sex_rate  = dict()
-    for node_name in node2parent :
+    for node_name in parent_node_dict :
         random_effect_node_sex_rate[node_name] = dict()
         for sex in ['male', 'female'] :
             random_effect_node_sex_rate[node_name][sex] = dict()
@@ -926,7 +928,7 @@ def csv_simulate(csv_dir) :
         #
         # rate_fun_dict
         rate_fun_dict = get_rate_fun_dict(
-            node2parent                 ,
+            parent_node_dict            ,
             spline_no_effect_rate       ,
             random_effect_node_sex_rate ,
             spline_node_sex_cov         ,
@@ -972,7 +974,7 @@ def csv_simulate(csv_dir) :
     #
     # random_effect.csv
     random_effect_table = list()
-    for node_name in node2parent :
+    for node_name in parent_node_dict :
         for sex in [ 'male', 'female' ] :
             row = { 'node_name' : node_name, 'sex' : sex }
             for rate_name in spline_no_effect_rate :
