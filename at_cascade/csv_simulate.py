@@ -249,7 +249,6 @@ node_name
 ---------
 This string identifies the row in :ref:`csv_simulate@input_files@node.csv`
 that this row corresponds to.
-All the random effects for the root node are zero.
 
 sex
 ---
@@ -258,11 +257,18 @@ The sex values ``male`` and ``female`` will appear.
 
 rate_name
 ---------
-For each :ref:`csv_simulate@input_files@no_effect_rate@rate_name`
+For each :ref:`csv_simulate@input_files@no_effect_rate.csv@rate_name`
 in the no_effect rate table,
 there is a data column wih that *rate_name*.
 The float values in this columns
 are the random effects for the specified node, sex, and rate.
+
+Discussion
+----------
+1.  For a given parent node, sex, and rate,
+    the sum of the random effects with respect to the child nodes is zero.
+2.  All the random effects for the root node are set to zero
+    (the root node does not have a parent node).
 
 -----------------------------------------------------------------------------
 
