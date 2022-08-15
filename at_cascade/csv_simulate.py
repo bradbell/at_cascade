@@ -108,6 +108,8 @@ omega
 This float is the value of omega (other cause mortality) for this row.
 Often other cause mortality is approximated by all cause mortality.
 Omega is a rate, not a covariate.
+The values in this column do not matter if
+omega does not appear in :ref:`csv_simulate@input_files@no_effect_rate.csv`,
 
 covariate_name
 --------------
@@ -1080,9 +1082,10 @@ def csv_simulate(csv_dir) :
         )
         #
         # avg_integrand
-        abs_tol = 1e-5
+        abs_tol = 1e-11
+        rel_tol = 1e-6
         avg_integrand = dismod_at.average_integrand(
-            rate_fun_dict, integrand_name, grid, abs_tol
+            rate_fun_dict, integrand_name, grid, abs_tol, rel_tol
         )
         #
         # data_row['meas_mean']

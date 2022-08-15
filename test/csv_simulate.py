@@ -7,6 +7,19 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
+# Test the following:
+# 1. if omega is not in no_effect_rate,
+#    values for omega in covariate.csv do not matter
+# 2. Prevalence data requires solving the ODE.
+#
+# All the rates are constant and omega is zero, so prevalence is given by
+#   p(a, t) = 1 - exp(-iota * a).
+# The average of prevalence from age L to age U
+#   = 1/(U-L) int_U^L [ 1 - exp(-iota*a) ] da
+#   = 1 - 1/(U-L) exp(-iota*a) / iota |_U^L
+#   = 1 - [ exp(-iota*L) - exp(-iota*U) ] / [ iota * (U-L) ]
+#
+#
 import os
 import sys
 import time
@@ -17,59 +30,6 @@ current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
     sys.path.insert(0, current_directory)
 import at_cascade
-"""
-{xrst_begin csv_simulate_xam}
-{xrst_spell
-    dir
-    sim
-}
-
-Example Using csv_simulate
-##########################
-
-Node Tree
-*********
-::
-
-                n0
-          /-----/\-----\
-        n1              n2
-
-..  list-table::
-    :header-rows: 1
-
-    *   -   Symbol
-        -   Documentation
-    *   -   csv_dir
-        -   :ref:`csv_interface@arguments@csv_dir`
-    *   -   command
-        -   :ref:`csv_interface@arguments@command`
-    *   -   csv_file['option.csv']
-        -   :ref:`csv_simulate@input_files@option.csv`
-    *   -   csv_file['node.csv']
-        -   :ref:`csv_simulate@input_files@node.csv`
-    *   -   csv_file['covariate.csv']
-        -   :ref:`csv_simulate@input_files@covariate.csv`
-    *   -   csv_file['no_effect_rate.csv']
-        -   :ref:`csv_simulate@input_files@no_effect_rate.csv`
-    *   -   csv_file['multiplier_sim.csv']
-        -   :ref:`csv_simulate@input_files@multiplier_sim.csv`
-    *   -   csv_file['simulate.csv']
-        -   :ref:`csv_simulate@input_files@simulate.csv`
-    *   -   csv_file['random_effect.csv']
-        -   :ref:`csv_simulate@output_files@random_effect.csv`
-    *   -   csv_file['data_sim.csv']
-        -   :ref:`csv_simulate@output_files@data_sim.csv`
-
-
-{xrst_file
-    BEGIN_PYTHON
-    END_PYTHON
-}
-
-
-{xrst_end csv_simulate_xam}
-"""
 # BEGIN_PYTHON
 #
 # csv_file
@@ -77,10 +37,11 @@ csv_file = dict()
 #
 # option.csv
 random_seed = str( int( time.time() ) )
+random_seed = 1660588020
 csv_file['option.csv'] = \
 '''name,value
 std_random_effects,.1
-integrand_step_size,5
+integrand_step_size,1.0
 '''
 csv_file['option.csv'] += f'random_seed,{random_seed}\n'
 #
@@ -120,9 +81,9 @@ header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,percent_cv'
 csv_file['simulate.csv'] = header + \
 '''
-0,Sincidence,n0,female,0,10,1990,2000,0.2
-1,Sincidence,n1,male,10,20,2000,2010,0.2
-2,Sincidence,n2,female,20,30,2010,2020,0.2
+0,prevalence,n0,female,0,10,1990,2000,0.2
+1,prevalence,n1,male,10,20,2000,2010,0.2
+2,prevalence,n2,female,20,30,2010,2020,0.2
 '''
 #
 def main() :
@@ -208,17 +169,16 @@ def main() :
         assert row['covariate_or_sex'] == 'haqi'
         mul_haqi_iota = float( row['multiplier_truth'] )
     #
-    # data_sim.csv
+    # data_row
     for data_row in csv_table['data_sim.csv'] :
         #
-        # node_name, meas_mean
+        # sim_row
         simulate_id    = int( data_row['simulate_id'] )
         sim_row        = csv_table['simulate.csv'][simulate_id]
-        integrand_name = sim_row['integrand_name']
+        #
+        # node_name, sex
         node_name      = sim_row['node_name']
         sex            = sim_row['sex']
-        meas_mean      = float( data_row['meas_mean'] )
-        assert integrand_name == 'Sincidence'
         #
         # random_effect
         random_effect = random_effect_node_sex[node_name][sex]
@@ -230,9 +190,21 @@ def main() :
         # effect
         effect = random_effect + covariate_effect
         #
-        # check_mean
-        check_mean = math.exp(effect) * no_effect_iota
-        assert abs( check_mean - meas_mean ) <= eps99 * meas_mean
+        # iota
+        iota = math.exp(effect) * no_effect_iota
+        #
+        # age_lower, age_upper
+        age_lower = float( sim_row['age_lower'] )
+        age_upper = float( sim_row['age_upper'] )
+        #
+        # average_prevalence
+        numerator = math.exp(-iota * age_lower) - math.exp(-iota * age_upper)
+        average_prevalence = 1.0 - numerator/( iota * (age_upper - age_lower) )
+        #
+        # meas_mean
+        meas_mean = float( data_row['meas_mean'] )
+        #
+        assert abs( meas_mean / average_prevalence - 1.0 ) < 1e-3
     #
     print('simulte_xam.py: OK')
     sys.exit(0)
