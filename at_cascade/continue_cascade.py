@@ -67,7 +67,6 @@ import os
 import multiprocessing
 import dismod_at
 import at_cascade
-import distutils.dir_util
 # ----------------------------------------------------------------------------
 def continue_cascade(
 # BEGIN syntax

@@ -15,9 +15,16 @@ Release Notes for at_cascade
 {xrst_end release_notes}
 -----------------------------------------------------------------------------
 {xrst_begin 2022}
+{xrst_spell
+    distutils
+}
 
 Release Notes for 2022
 ######################
+
+08-15
+*****
+Remove use of the python distutils package because it has been deprecated.
 
 08-12
 *****

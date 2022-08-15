@@ -11,7 +11,6 @@
 # ----------------------------------------------------------------------------
 import sys
 import os
-import distutils.dir_util
 import dismod_at
 #
 # import at_cascade with a preference current directory version
@@ -26,7 +25,8 @@ import at_cascade
 def main() :
     # -------------------------------------------------------------------------
     # change into the build/test directory
-    distutils.dir_util.mkpath('build/test')
+    if not os.path.exists('build/test') :
+        os.makedirs('build/test')
     os.chdir('build/test')
     # ------------------------------------------------------------------------
     # all_node_database

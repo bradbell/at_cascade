@@ -204,7 +204,6 @@ import time
 import csv
 import random
 import shutil
-import distutils.dir_util
 import dismod_at
 from math import exp
 #
@@ -475,7 +474,8 @@ def main() :
     # -------------------------------------------------------------------------
     # result_dir
     result_dir = all_option['result_dir']
-    distutils.dir_util.mkpath(result_dir)
+    if not os.path.exists(result_dir) :
+        os.makedirs(result_dir)
     #
     # Create root_node.db
     root_node_database  = f'{result_dir}/root_node.db'

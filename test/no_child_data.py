@@ -14,7 +14,6 @@ import sys
 import os
 import copy
 import shutil
-import distutils.dir_util
 import dismod_at
 import math
 #
@@ -307,7 +306,8 @@ def main() :
     #
     # result_dir
     result_dir = 'build/test'
-    distutils.dir_util.mkpath(result_dir)
+    if not os.path.exists(result_dir) :
+        os.makedirs(result_dir)
     #
     # root_node.db
     root_node_database  = f'{result_dir}/root_node.db'

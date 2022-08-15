@@ -30,4 +30,6 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-/^ *csv *$/d
+/import distutils/d
+s|^\( *\)distutils.dir_util.mkpath(\([^)]*\)) *$|\1if not os.path.exists(\2) :\
+\1    os.makedirs(\2)|

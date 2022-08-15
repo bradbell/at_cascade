@@ -13,7 +13,6 @@ import sys
 import os
 import copy
 import shutil
-import distutils.dir_util
 import dismod_at
 from math import exp
 #
@@ -223,7 +222,8 @@ def table_name2id(table, col_name, row_name) :
 def main() :
     # -------------------------------------------------------------------------
     # change into the build/test directory
-    distutils.dir_util.mkpath('build/test')
+    if not os.path.exists('build/test') :
+        os.makedirs('build/test')
     os.chdir('build/test')
     #
     # Create root_node.db

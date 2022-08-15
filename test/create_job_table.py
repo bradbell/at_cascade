@@ -56,7 +56,6 @@ import time
 import csv
 import random
 import shutil
-import distutils.dir_util
 import dismod_at
 from math import exp
 #
@@ -346,7 +345,8 @@ def main() :
     # -------------------------------------------------------------------------
     # wrok_dir
     work_dir = 'build/example'
-    distutils.dir_util.mkpath(work_dir)
+    if not os.path.exists(work_dir) :
+        os.makedirs(work_dir)
     os.chdir(work_dir)
     #
     # Create root_node.db
