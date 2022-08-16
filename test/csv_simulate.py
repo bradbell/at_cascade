@@ -56,12 +56,12 @@ n2,n0
 # covariate.csv
 csv_file['covariate.csv'] = \
 '''node_name,sex,age,time,omega,haqi
-n0,female,50,2000,0.0,1.0
-n0,male,50,2000,0.0,1.0
-n1,female,50,2000,0.0,0.5
-n1,male,50,2000,0.0,0.5
-n2,female,50,2000,0.0,1.5
-n2,male,50,2000,0.0,1.5
+n0,female,50,2000,0.3,1.0
+n0,male,50,2000,0.3,1.0
+n1,female,50,2000,0.3,0.5
+n1,male,50,2000,0.3,0.5
+n2,female,50,2000,0.3,1.5
+n2,male,50,2000,0.3,1.5
 '''
 #
 # no_effect_rate.csv
