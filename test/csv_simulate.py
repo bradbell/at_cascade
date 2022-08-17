@@ -17,10 +17,13 @@
 #   S'(a) = - iota * S(a)
 #   C'(a) = + iota * S(a) - omega * C(a)
 #
-# This corresponding solution, when omega != iota, is
+# This corresponding solution is
 #   S(a) = exp[ - (ometa + iota) * a ]
 #   C(a) =  exp(-omega * a] - exp[ -(omega + iota) * a ]
 # see ode_iota_omega in doucmentation.
+#
+# The average of exp( -lambda * a) from a = low to a = up is
+#   [ exp( -lambda * low) - exp( -lambda * up) ] / [ lambda * (up - low) ]
 #
 import os
 import sys
@@ -83,12 +86,13 @@ header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,percent_cv'
 csv_file['simulate.csv'] = header + \
 '''
-0,withC,n0,female,50,50,1990,2000,0.2
-1,withC,n1,male,50,50,2000,2010,0.2
-2,withC,n2,female,50,50,2010,2020,0.2
+0,withC,n0,female,20,30,1990,2000,0.2
+1,withC,n1,male,30,40,2000,2010,0.2
+2,withC,n2,female,10,50,2010,2020,0.2
 '''
 #
 def run_test() :
+    from math import exp
     #
     # eps99
     eps99 = 99.0 * numpy.finfo(float).eps
@@ -201,24 +205,27 @@ def run_test() :
         effect = random_effect + covariate_effect
         #
         # iota
-        iota = math.exp(effect) * no_effect_iota
+        iota = exp(effect) * no_effect_iota
         #
         # age_lower, age_upper
         age_lower = float( sim_row['age_lower'] )
         age_upper = float( sim_row['age_upper'] )
         #
-        # average_prevalence
-        a     = age_lower
-        check = math.exp(-omega * a) - math.exp(-(omega + iota) * a)
+        # average_withC
+        term_1 = exp(-omega * age_lower)  - exp(-omega * age_upper)
+        term_1 = term_1 / ( omega * (age_upper - age_lower) )
+        term_2 = exp(-(omega+iota) * age_lower)  \
+                - exp(-(omega+iota) * age_upper)
+        term_2 = term_2 / ( (omega+iota) * (age_upper - age_lower) )
+        average_withC = term_1 - term_2
         #
         # meas_mean
         meas_mean = float( data_row['meas_mean'] )
         #
-        assert abs( meas_mean / check - 1.0 ) < 1e-3
-    #
+        assert abs( meas_mean / average_withC - 1.0 ) < 1e-3
 #
-# Case I
 run_test()
+#
 print('simulte_xam.py: OK')
 sys.exit(0)
 # END_PYTHON
