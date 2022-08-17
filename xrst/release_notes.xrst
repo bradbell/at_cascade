@@ -22,6 +22,11 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+08-16
+*****
+Add the section :ref:`ode_iota_omega` which derives the dismod ODE solution
+when rates are constant and only iota, omega are non-zero.
+
 08-15
 *****
 Remove use of the python distutils package because it has been deprecated.

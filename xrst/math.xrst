@@ -1,0 +1,96 @@
+-----------------------------------------------------------------------------
+at_cascade: Cascading Dismod_at Analysis From Parent To Child Regions
+          Copyright (C) 2021-22 University of Washington
+             (Bradley M. Bell bradbell@uw.edu)
+
+This program is distributed under the terms of the
+    GNU Affero General Public License version 3.0 or later
+see http://www.gnu.org/licenses/agpl.txt
+-----------------------------------------------------------------------------
+{xrst_begin_parent math}
+
+At Cascade Math
+###############
+
+{xrst_end math}
+-----------------------------------------------------------------------------
+{xrst_begin ode_iota_omega}
+{xrst_spell
+    ds
+}
+
+Dismod ODE With Constant iota and omega
+#######################################
+If :math:`iota` and :math:`\omega` are constant w.r.t. age and time,
+and the other rates are zero, the dismod ode is
+
+.. math::
+
+    \begin{align*}
+        S'(a) &= - \iota S(a) \\
+        C'(a) &= + \iota  S(a) - \omega C(a)
+    \end{align*}
+
+Using the first equation with initial condition :math:`S(0) = 1`,
+we have :math:`S(a) = \exp( - \iota a )` .
+The integrating factor for the second equation is
+:math:`D(a) = \exp( \omega a )` .
+The derivative of :math:`D(a) C(a)` is
+
+.. math::
+
+    \begin{align*}
+    \frac{d}{da} [ D(a) C(a) ]
+    &= D'(a) C(a) + D(a) C'(a) \\
+    &= \omega D(a) C(a) + \iota D(a) S(a) - \omega D(a) C(a)  \\
+    &= \iota D(a) S(a)
+    \end{align*}
+
+Note that the right hand side does not depend on :math:`C(a)` .
+Integrating both sides of the last equation above from zero to :math:`a`,
+and using the initial condition :math:`C(0) = 0`, we obtain
+
+.. math::
+
+    \begin{align*}
+    D(a) C(a)
+    &= \iota \int_0^a D(s) S(s) ds \\
+    &= \iota \int_0^a \exp( \omega s ) \exp( - \iota s ) ds \\
+    &= \frac{\iota}{\omega - \iota}
+        \left\{ \exp[ (\omega - \iota) s ] \right\}_0^a \\
+    &= \frac{\iota}{\omega - \iota}
+        \left\{ \exp[ (\omega - \iota) a ]  - 1 \right\}
+    \end{align*}
+
+Dividing both sides of the last equation by :math:`D(a)` we obtain
+
+.. math::
+
+    \begin{align*}
+    C(a)
+    &= \frac{\iota}{\omega - \iota}
+        \left[ \exp( - \iota a )  - \exp( - \omega a ) \right]
+    \end{align*}
+
+As a check of this solutions we compute
+
+.. math::
+
+    \begin{align*}
+    C'(a)
+    &= \frac{\iota}{\omega - \iota}
+        \left[ - \iota \exp( - \iota a )  + \omega \exp( - \omega a ) \right]
+    \\
+    C'(a) + \omega C(a)
+    &= \frac{\iota}{\omega - \iota}
+        \left[ (\omega - \iota) \exp( - \iota a )  \right]
+    \\
+    C'(a) + \omega C(a)
+    &= \iota S(a)
+    \end{align*}
+
+Furthermore :math:`C(0) = 0` . Thus :math:`C(a)` satisfies its
+differential equation and its initial condition.
+
+
+{xrst_end ode_iota_omega}

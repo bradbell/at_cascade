@@ -86,7 +86,7 @@ csv_file['simulate.csv'] = header + \
 2,prevalence,n2,female,20,30,2010,2020,0.2
 '''
 #
-def main() :
+def run_test() :
     #
     # eps99
     eps99 = 99.0 * numpy.finfo(float).eps
@@ -206,8 +206,8 @@ def main() :
         #
         assert abs( meas_mean / average_prevalence - 1.0 ) < 1e-3
     #
-    print('simulte_xam.py: OK')
-    sys.exit(0)
 #
-main()
+run_test()
+print('simulte_xam.py: OK')
+sys.exit(0)
 # END_PYTHON

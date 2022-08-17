@@ -28,6 +28,7 @@ Children
     at_cascade/__init__.py
     xrst/wish_list.xrst
     xrst/release_notes.xrst
+    xrst/math.xrst
 }
 
 {xrst_end at_cascade}
