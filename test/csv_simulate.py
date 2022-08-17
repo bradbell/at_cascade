@@ -12,13 +12,15 @@
 #    values for omega in covariate.csv do not matter
 # 2. Prevalence data requires solving the ODE.
 #
-# All the rates are constant and omega is zero, so prevalence is given by
-#   p(a, t) = 1 - exp(-iota * a).
-# The average of prevalence from age L to age U
-#   = 1/(U-L) int_U^L [ 1 - exp(-iota*a) ] da
-#   = 1 - 1/(U-L) exp(-iota*a) / iota |_U^L
-#   = 1 - [ exp(-iota*L) - exp(-iota*U) ] / [ iota * (U-L) ]
+# For this test, rho and chi are zero, iota and omega are constant, and
+# the dismod ODE is S(0) = 1, C(0) = 0,
+#   S'(a) = - iota * S(a)
+#   C'(a) = + iota * S(a) - omega * C(a)
 #
+# This corresponding solution, when omega != iota, is
+#   S(a) = exp[ - (ometa + iota) * a ]
+#   C(a) =  exp(-omega * a] - exp[ -(omega + iota) * a ]
+# see ode_iota_omega in doucmentation.
 #
 import os
 import sys
@@ -56,12 +58,12 @@ n2,n0
 # covariate.csv
 csv_file['covariate.csv'] = \
 '''node_name,sex,age,time,omega,haqi
-n0,female,50,2000,0.3,1.0
-n0,male,50,2000,0.3,1.0
-n1,female,50,2000,0.3,0.5
-n1,male,50,2000,0.3,0.5
-n2,female,50,2000,0.3,1.5
-n2,male,50,2000,0.3,1.5
+n0,female,50,2000,.03,1.0
+n0,male,50,2000,.03,1.0
+n1,female,50,2000,.03,0.5
+n1,male,50,2000,.03,0.5
+n2,female,50,2000,.03,1.5
+n2,male,50,2000,.03,1.5
 '''
 #
 # no_effect_rate.csv
@@ -81,9 +83,9 @@ header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,percent_cv'
 csv_file['simulate.csv'] = header + \
 '''
-0,prevalence,n0,female,0,10,1990,2000,0.2
-1,prevalence,n1,male,10,20,2000,2010,0.2
-2,prevalence,n2,female,20,30,2010,2020,0.2
+0,withC,n0,female,50,50,1990,2000,0.2
+1,withC,n1,male,50,50,2000,2010,0.2
+2,withC,n2,female,50,50,2010,2020,0.2
 '''
 #
 def run_test() :
@@ -157,6 +159,14 @@ def run_test() :
         sex        = row['sex']
         haqi_node_sex[node_name][sex] = row['haqi']
     #
+    # omega
+    omega = None
+    for row in csv_table['covariate.csv'] :
+        if omega == None :
+            omega = float( row['omega'] )
+        else :
+            assert omega == float( row['omega'] )
+    #
     # haqi_reference
     female = float( haqi_node_sex['n0']['female'] )
     male   = float( haqi_node_sex['n0']['male'] )
@@ -198,15 +208,16 @@ def run_test() :
         age_upper = float( sim_row['age_upper'] )
         #
         # average_prevalence
-        numerator = math.exp(-iota * age_lower) - math.exp(-iota * age_upper)
-        average_prevalence = 1.0 - numerator/( iota * (age_upper - age_lower) )
+        a     = age_lower
+        check = math.exp(-omega * a) - math.exp(-(omega + iota) * a)
         #
         # meas_mean
         meas_mean = float( data_row['meas_mean'] )
         #
-        assert abs( meas_mean / average_prevalence - 1.0 ) < 1e-3
+        assert abs( meas_mean / check - 1.0 ) < 1e-3
     #
 #
+# Case I
 run_test()
 print('simulte_xam.py: OK')
 sys.exit(0)

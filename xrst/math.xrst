@@ -27,12 +27,17 @@ and the other rates are zero, the dismod ode is
 .. math::
 
     \begin{align*}
-        S'(a) &= - \iota S(a) \\
+        S'(a) &= - (\omega + \iota) S(a) \\
         C'(a) &= + \iota  S(a) - \omega C(a)
     \end{align*}
 
 Using the first equation with initial condition :math:`S(0) = 1`,
-we have :math:`S(a) = \exp( - \iota a )` .
+we have
+
+.. math::
+
+    S(a) = \exp[ - (\omega + \iota)  a ]
+
 The integrating factor for the second equation is
 :math:`D(a) = \exp( \omega a )` .
 The derivative of :math:`D(a) C(a)` is
@@ -41,9 +46,9 @@ The derivative of :math:`D(a) C(a)` is
 
     \begin{align*}
     \frac{d}{da} [ D(a) C(a) ]
-    &= D'(a) C(a) + D(a) C'(a) \\
-    &= \omega D(a) C(a) + \iota D(a) S(a) - \omega D(a) C(a)  \\
-    &= \iota D(a) S(a)
+        &= D'(a) C(a) + D(a) C'(a) \\
+        &= \omega D(a) C(a) + \iota D(a) S(a) - \omega D(a) C(a)  \\
+        &= \iota D(a) S(a)
     \end{align*}
 
 Note that the right hand side does not depend on :math:`C(a)` .
@@ -54,23 +59,17 @@ and using the initial condition :math:`C(0) = 0`, we obtain
 
     \begin{align*}
     D(a) C(a)
-    &= \iota \int_0^a D(s) S(s) ds \\
-    &= \iota \int_0^a \exp( \omega s ) \exp( - \iota s ) ds \\
-    &= \frac{\iota}{\omega - \iota}
-        \left\{ \exp[ (\omega - \iota) s ] \right\}_0^a \\
-    &= \frac{\iota}{\omega - \iota}
-        \left\{ \exp[ (\omega - \iota) a ]  - 1 \right\}
+        &= \iota \int_0^a D(s) S(s) ds \\
+        &= \iota \int_0^a \exp( \omega s ) \exp[ -(\omega + \iota) s ] ds \\
+        &= \left[ - \exp( - \iota s ) \right]_0^a \\
+        &= 1 - \exp( - \iota a )
     \end{align*}
 
 Dividing both sides of the last equation by :math:`D(a)` we obtain
 
 .. math::
 
-    \begin{align*}
-    C(a)
-    &= \frac{\iota}{\omega - \iota}
-        \left[ \exp( - \iota a )  - \exp( - \omega a ) \right]
-    \end{align*}
+    C(a) = \exp( - \omega a ) - \exp[ - (\omega + \iota) a ]
 
 As a check of this solutions we compute
 
@@ -78,15 +77,14 @@ As a check of this solutions we compute
 
     \begin{align*}
     C'(a)
-    &= \frac{\iota}{\omega - \iota}
-        \left[ - \iota \exp( - \iota a )  + \omega \exp( - \omega a ) \right]
+        & = (\omega + \iota) \exp[ - (\omega + \iota) a ]
+            - \omega \exp( - \omega a )
     \\
     C'(a) + \omega C(a)
-    &= \frac{\iota}{\omega - \iota}
-        \left[ (\omega - \iota) \exp( - \iota a )  \right]
+        & = \iota \exp[ - (\omega + \iota) a ]
     \\
     C'(a) + \omega C(a)
-    &= \iota S(a)
+        &= \iota S(a)
     \end{align*}
 
 Furthermore :math:`C(0) = 0` . Thus :math:`C(a)` satisfies its

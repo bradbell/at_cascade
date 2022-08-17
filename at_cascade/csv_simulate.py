@@ -783,9 +783,6 @@ def get_rate_fun_dict(
         rate_fun_dict[rate_name] = \
             lambda age, time : rate_fun(age, time, rate_name)
     #
-    # rate_fun_dict['omega']
-    rate_fun_dict['omega'] = spline_node_sex_cov[node_name][sex]['omega']
-    #
     return rate_fun_dict
 # ----------------------------------------------------------------------------
 # grid['age'] :
