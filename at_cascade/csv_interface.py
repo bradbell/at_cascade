@@ -78,11 +78,13 @@ A csv file is said to have a rectangular grid in columns
 
 Covariates
 ==========
-For these simulations, all the covariates are
+For this csv interface, all the covariates are
 :ref:`glossary@relative_covariate` (called country covariates at IHME).
+Other cause mortality ``omega`` is referred to as a
+covariate (not as a rate) for this interface.
 Sex is the
 :ref:`all_option_table@split_covariate_name` and is not
-referred to as a covariate by the simulate routine.
+referred to as a covariate.
 
 Data Type
 =========

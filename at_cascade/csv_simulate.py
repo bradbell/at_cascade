@@ -138,6 +138,8 @@ rate_name
 ---------
 This string is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies the rate.
 If one of these rates does not appear, it is modeled as always zero.
+Other cause mortality ``omega`` is specified in
+:ref:`csv_simulate@input_files@covariate.csv` .
 
 age
 ---
@@ -683,7 +685,7 @@ def get_root_covariate_avg(
 # spline = spline_node_sex_cov[node_name][sex][cov_name] :
 # is a function that evaluates value = float( spline(age, time) ) where
 # node_name is a node name, sex is 'male' or 'female' (not 'both'),
-# cov_name is a covariate name or 'sex,
+# cov_name is a covariate name or 'sex',
 # age, time, and value are floats
 #
 # root_covariate_avg[covariate_name] :
@@ -712,9 +714,9 @@ def get_rate_fun_dict(
     sex                         ,
 ) :
     assert sex in { 'female', 'male', 'both' }
-    #
-    # fun
-    def fun(age, time, rate_name) :
+    # -----------------------------------------------------------------------
+    # rate_fun
+    def rate_fun(age, time, rate_name) :
         #
         # no_effect_rate
         spline         = spline_no_effect_rate[rate_name]
@@ -742,16 +744,17 @@ def get_rate_fun_dict(
                 if sex in [ 'male', 'female' ] :
                     spline         = \
                         spline_node_sex_cov[node_name][sex][covariate_name]
-                    covariate      = float( spline(age, time) )
+                    covariate      = spline(age, time)
                     reference      = root_covariate_avg[covariate_name]
                     difference     = covariate - reference
                 else :
+                    assert sex == 'both'
                     spline         = \
                         spline_node_sex_cov[node_name]['female'][covariate_name]
-                    female         = float( spline(age, time) )
+                    female         = spline(age, time)
                     spline         = \
                         spline_node_sex_cov[node_name]['male'][covariate_name]
-                    male           = float( spline(age, time) )
+                    male           = spline(age, time)
                     reference      = root_covariate_avg[covariate_name]
                     difference     = (female + male) / 2.0  - reference
             effect    += float( row['multiplier_truth'] ) * difference
@@ -759,10 +762,26 @@ def get_rate_fun_dict(
         # rate
         rate = math.exp(effect) * no_effect_rate
         return rate
+    # -----------------------------------------------------------------------
+    # omega_fun
+    def omega_fun(age, time) :
+        if sex in [ 'male', 'female' ] :
+            spline = spline_node_sex_cov[node_name][sex]['omega']
+            omega  = spline(age, time)
+        else :
+            assert sex == 'both'
+            spline = spline_node_sex_cov[node_name]['female']['omega']
+            female = spline(age, time)
+            spline = spline_node_sex_cov[node_name]['male']['omega']
+            male   = spline(age, time)
+            omega  = (female + male) / 2.0
+        return omega
     #
     rate_fun_dict = dict()
+    rate_fun_dict['omega'] = lambda age, time : omega_fun(age, time)
     for rate_name in spline_no_effect_rate :
-        rate_fun_dict[rate_name] = lambda age, time : fun(age, time, rate_name)
+        rate_fun_dict[rate_name] = \
+            lambda age, time : rate_fun(age, time, rate_name)
     #
     # rate_fun_dict['omega']
     rate_fun_dict['omega'] = spline_node_sex_cov[node_name][sex]['omega']
