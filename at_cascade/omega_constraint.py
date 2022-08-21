@@ -19,7 +19,7 @@ Set Omega Constraints in a Fit Node Database
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

@@ -22,29 +22,20 @@ fi
 ok='yes'
 if [ "$1" != 'html' ] && [ "$1" != 'pdf' ]
 then
-    ok='no'
-else
-    target="$1"
-fi
-if [ "$2" == '' ]
-then
-    ok='no'
-elif [ "$2" == '0' ]
-then
-    error_line=''
-else
-    error_line="-e $2"
-fi
-if [ "$ok" == 'no' ]
-then
-    echo 'usage: bin/run_xrst.sh target error_line'
+    echo 'usage: bin/run_xrst.sh target [ rst_line ]'
     echo 'target is html or pdf'
-    echo 'error_line = 0 for no line number table'
     exit 1
 fi
+target="$1"
+rst_line="$2"
+if [ "$rst_line" != '' ]
+then
+    rst_line="-rst $rst_line"
+fi
 # -----------------------------------------------------------------------------
-echo "xrst at_cascade.xrst -t $target -o doc $error_line"
-if ! xrst at_cascade.xrst -t $target $error_line -o doc >& >( tee run_sphinx.$$ )
+echo "xrst at_cascade.xrst --target $target --output doc $rst_line"
+if ! xrst at_cascade.xrst --target $target --output doc $rst_line >& \
+    >( tee run_sphinx.$$ )
 then
     echo 'bin/run_sphinx: aboring due to xrst errors above'
     rm run_sphinx.$$

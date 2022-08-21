@@ -34,7 +34,7 @@ and the leaf nodes are {n3, n4, n5, n6}::
 
 fit_goal_set
 ============
-{xrst_file
+{xrst_literal
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -47,17 +47,17 @@ The only non-zero dismod_at rates for this example are
 Splitting Covariate
 *******************
 This cascade is set up to split by the sex covariate at level zero:
-{xrst_file
+{xrst_literal
     # BEGIN all_option_table
     # END all_option_table
 }
 The :ref:`@split_reference_table` for this example is:
-{xrst_file
+{xrst_literal
     # BEGIN split_reference_table
     # END split_reference_table
 }
 The :ref:`@node_split_table` for this example is
-{xrst_file
+{xrst_literal
     # BEGIN node_split_table
     # END node_split_table
 }
@@ -72,7 +72,7 @@ The cascade computation tree is::
      n3    n4        n5    n6      n3    n4        n5    n6
 
 The sex reference value for the root node (n0) corresponds to both sexes:
-{xrst_file
+{xrst_literal
     # BEGIN root_split_reference_id
     # END root_split_reference_id
 }
@@ -88,7 +88,7 @@ for the :ref:`glossary@rate_value` covariate multiplier
 that multiplies sex.
 This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
-{xrst_file
+{xrst_literal
     # BEGIN alpha_true
     # END alpha_true
 }
@@ -113,7 +113,7 @@ this is the true value for *rate*
 in node *n* at age *a*, time *t*, and covariate values *c=[sex]*.
 The covariate values are a list in the same order as the covariate table.
 The values *a* and *t* are not used by this function for this example.
-{xrst_file
+{xrst_literal
     # BEGIN rate_true
     # END rate_true
 }
@@ -144,7 +144,7 @@ priors because there is only one age and one time point in the smoothing grid.
 Value Prior
 ===========
 The following is the value prior used for the root_node
-{xrst_file
+{xrst_literal
     # BEGIN parent_value_prior
     # END parent_value_prior
 }
@@ -161,7 +161,7 @@ so it does not have dage or dtime priors.
 Value Prior
 ===========
 The following is the value prior used for this smoothing:
-{xrst_file
+{xrst_literal
     # BEGIN alpha_value_prior
     # END alpha_value_prior
 }
@@ -185,7 +185,7 @@ routine uses these tables to check that fit against the truth.
 split_covariate: Python Source Code
 ###################################
 
-{xrst_file
+{xrst_literal
     BEGIN split_covariate source code
     END split_covariate source code
 }

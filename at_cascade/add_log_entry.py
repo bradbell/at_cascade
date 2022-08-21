@@ -15,7 +15,7 @@ Add Log Table Entry
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

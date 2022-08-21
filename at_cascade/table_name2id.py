@@ -18,7 +18,7 @@ Map a Table Row Name to The Row Index
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

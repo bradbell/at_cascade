@@ -14,7 +14,7 @@ The at_cascade Examples
 
 .. comment BEGIN_SORT_THIS_LINE_PLUS_3
 
-{xrst_child_table
+{xrst_toc_table
     example/absolute_covariates.py
     example/bilinear.py
     example/continue_cascade.py

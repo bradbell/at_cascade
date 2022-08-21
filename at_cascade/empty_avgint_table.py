@@ -15,7 +15,7 @@ Create An Empty avgint Table
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

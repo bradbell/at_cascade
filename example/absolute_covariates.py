@@ -33,7 +33,7 @@ and the leaf nodes are {n3, n4, n5, n6}::
 
 fit_goal_set
 ============
-{xrst_file
+{xrst_literal
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -47,7 +47,7 @@ Splitting Covariate
 ===================
 This cascade is set up to split by sex reference value; see
 :ref:`@split_reference_table`
-{xrst_file
+{xrst_literal
     # BEGIN split_reference_table
     # END split_reference_table
 }
@@ -56,11 +56,11 @@ Covariate
 *********
 There are three covariates for this example, sex, vaccine, and income.
 Income is the only :ref:`glossary@relative_covariate`.
-{xrst_file
+{xrst_literal
     # BEGIN avg_income
     # END avg_income
 }
-{xrst_file
+{xrst_literal
     # BEGIN split_reference_list
     # END split_reference_list
 }
@@ -69,7 +69,7 @@ absolute_covariates
 ===================
 The only absolute covariate in this example is vaccine
 (0 for no vaccine, 1 for yes vaccine).
-{xrst_file
+{xrst_literal
     # BEGIN_1 absolute_covariates
     # END_1 absolute_covariates
 }
@@ -81,7 +81,7 @@ and  *alpha*\ ``[vaccine]``
 for the :ref:`glossary@rate_value` covariate multipliers
 that multiply the income and vaccine covariates.
 The true value for *alpha* (used which simulating the data) is
-{xrst_file
+{xrst_literal
     # BEGIN alpha_true
     # END alpha_true
 }
@@ -108,7 +108,7 @@ The covariate values are a list in the
 same order as the covariate table.
 The values *a*, *t*, *n*, *sex*
 are not used by this function for this example.
-{xrst_file
+{xrst_literal
     # BEGIN rate_true
     # END rate_true
 }
@@ -139,7 +139,7 @@ priors because there is only one age and one time point in the smoothing grid.
 Value Prior
 ===========
 The following is the value prior used for the root_node
-{xrst_file
+{xrst_literal
     # BEGIN parent_value_prior
     # END parent_value_prior
 }
@@ -156,7 +156,7 @@ so it does not have dage or dtime priors.
 Value Prior
 ===========
 The following is the value prior used for this smoothing:
-{xrst_file
+{xrst_literal
     # BEGIN alpha_value_prior
     # END alpha_value_prior
 }
@@ -179,7 +179,7 @@ fit being checked.
 absolute_covariates: Python Source Code
 #######################################
 
-{xrst_file
+{xrst_literal
     BEGIN_2 absolute_covariates source code
     END_2 absolute_covariates source code
 }

@@ -15,7 +15,7 @@ Check the Cascade Results for a Node
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

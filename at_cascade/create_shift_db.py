@@ -20,7 +20,7 @@ Create Database With Shifted Covariate References
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

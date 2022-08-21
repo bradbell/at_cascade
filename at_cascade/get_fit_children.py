@@ -15,7 +15,7 @@ Determine the Set of Nodes to Fit
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

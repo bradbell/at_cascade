@@ -15,7 +15,7 @@ Get Covariate Reference Values
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

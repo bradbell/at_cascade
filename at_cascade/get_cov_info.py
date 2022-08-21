@@ -18,7 +18,7 @@ Get Covariate Information
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

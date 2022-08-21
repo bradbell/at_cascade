@@ -15,7 +15,7 @@ Determine the Set of Integrands in Data Table
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

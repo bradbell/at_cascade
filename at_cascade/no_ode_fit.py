@@ -18,7 +18,7 @@ Do A No Ode Fit For One Node
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

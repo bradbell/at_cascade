@@ -15,7 +15,7 @@ Get Parent Node Name From Option Table
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

@@ -18,7 +18,7 @@ Run With Specified Maximum Number of Processes
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

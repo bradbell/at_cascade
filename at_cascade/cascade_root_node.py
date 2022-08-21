@@ -19,7 +19,7 @@ Cascade Fits Starting at Root Node
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

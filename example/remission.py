@@ -34,7 +34,7 @@ the :ref:`glossary@fit_goal_set` is equal to the leaf set
 
 fit_goal_set
 ============
-{xrst_file
+{xrst_literal
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -62,7 +62,7 @@ s_n
 ===
 We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
-{xrst_file
+{xrst_literal
     # BEGIN sum_random
     # END sum_random
 }
@@ -75,7 +75,7 @@ Random Seed
 The random seed can be used to reproduce results.
 If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
-{xrst_file
+{xrst_literal
     # BEGIN random_seed
     # END random_seed
 }
@@ -86,7 +86,7 @@ For *rate* equal to iota, rho, omega,
 this is the true value for *rate*
 in node *n* at age *a*, time *t*, and covariate values *c*.
 The time and covariate list are not used.
-{xrst_file
+{xrst_literal
     # BEGIN rate_true
     # END rate_true
 }
@@ -108,7 +108,7 @@ of how good the fit is for the nodes in the fit_goal_set.
 a_i
 ===
 For each leaf node, data is generated on the following *age_grid*:
-{xrst_file
+{xrst_literal
     # BEGIN age_grid
     # END age_grid
 }
@@ -131,7 +131,7 @@ There are no :ref:`glossary@dtime` priors because there is only one time point.
 Parent Rate Priors
 ==================
 The following is the value and dage priors used for the root_node
-{xrst_file
+{xrst_literal
     # BEGIN parent_prior
     # END parent_prior
 }
@@ -149,7 +149,7 @@ priors because there is only one age and one time point in this smoothing.
 Value Prior
 ===========
 The following is the value prior used for the children of the fit_node:
-{xrst_file
+{xrst_literal
     # BEGIN child_value_prior
     # END child_value_prior
 }
@@ -170,7 +170,7 @@ routine uses these tables to check that fit against the truth.
 remission: Python Source Code
 ###################################
 
-{xrst_file
+{xrst_literal
     BEGIN remission source code
     END remission source code
 }

@@ -34,7 +34,7 @@ and the leaf nodes are {n3, n4, n5, n6}::
 
 fit_goal_set
 ============
-{xrst_file
+{xrst_literal
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -50,7 +50,7 @@ The results for nodes n3 and n4 are computed in parallel
 during the call to :ref:`cascade_root_node`.
 The results for nodes n5 and n6 are computed in parallel
 during the call to :ref:`continue_cascade`.
-{xrst_file
+{xrst_literal
     # BEGIN all_option
     # END all_option
 }
@@ -74,7 +74,7 @@ For *rate* equal to iota,
 this is the true value for *rate*
 in node *n* at age *a*, time *t*, and covariate values *c*.
 The values *a*, *t*. *c*, are not used by this function for this example.
-{xrst_file
+{xrst_literal
     # BEGIN rate_true
     # END rate_true
 }
@@ -104,7 +104,7 @@ priors because there is only one age and one time point.
 Value Prior
 ===========
 The following is the value prior used for the root_node
-{xrst_file
+{xrst_literal
     # BEGIN parent_value_prior
     # END parent_value_prior
 }
@@ -122,7 +122,7 @@ priors because there is only one age and one time point in this smoothing.
 Value Prior
 ===========
 The following is the value prior used for the children of the fit_node:
-{xrst_file
+{xrst_literal
     # BEGIN child_value_prior
     # END child_value_prior
 }
@@ -143,7 +143,7 @@ routine uses these tables to check that fit against the truth.
 continue_cascade: Python Source Code
 ####################################
 
-{xrst_file
+{xrst_literal
     BEGIN source code
     END source code
 }

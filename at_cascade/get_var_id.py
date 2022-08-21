@@ -22,7 +22,7 @@ Map Var Table Values to its Primary Key
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

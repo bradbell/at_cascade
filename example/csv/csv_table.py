@@ -19,7 +19,7 @@ Example Reading and Writing CSV Files
 
 Example Source Code
 *******************
-{xrst_file
+{xrst_literal
     BEGIN_SOURCE
     END_SOURCE
 }

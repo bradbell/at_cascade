@@ -17,7 +17,7 @@ Predicts Rates and Covariate Multipliers on Parent Grid
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

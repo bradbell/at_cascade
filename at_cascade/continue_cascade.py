@@ -15,7 +15,7 @@ Continue Cascade From a Fit Node
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

@@ -21,7 +21,7 @@ Example Bilinear Interpolation
 
 Example Source Code
 *******************
-{xrst_file
+{xrst_literal
     BEGIN_SOURCE
     END_SOURCE
 }

@@ -35,7 +35,7 @@ and the leaf nodes are {n3, n4, n5, n6}::
 
 fit_goal_set
 ============
-{xrst_file
+{xrst_literal
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -61,7 +61,7 @@ r_n
 ===
 We use *r_n* for the reference value of income at node *n*.
 The code below sets this reference using the name avg_income:
-{xrst_file
+{xrst_literal
     # BEGIN avg_income
     # END avg_income
 }
@@ -73,7 +73,7 @@ for the :ref:`glossary@rate_value` covariate multiplier
 that multipliers income.
 This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
-{xrst_file
+{xrst_literal
     # BEGIN alpha_true
     # END alpha_true
 }
@@ -89,7 +89,7 @@ s_n
 ===
 We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
-{xrst_file
+{xrst_literal
     # BEGIN sum_random
     # END sum_random
 }
@@ -102,7 +102,7 @@ Random Seed
 The random seed can be used to reproduce results.
 If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
-{xrst_file
+{xrst_literal
     # BEGIN random_seed
     # END random_seed
 }
@@ -116,7 +116,7 @@ in node *n* at age *a*, time *t*, and covariate values *c*.
 The covariate values are a list in the
 same order as the covariate table.
 The value *t* is not used by this function for this example.
-{xrst_file
+{xrst_literal
     # BEGIN rate_true
     # END rate_true
 }
@@ -145,7 +145,7 @@ of how good the fit is for the nodes in the fit_goal_set.
 a_i
 ===
 For each leaf node, data is generated on the following *age_grid*:
-{xrst_file
+{xrst_literal
     # BEGIN age_grid
     # END age_grid
 }
@@ -154,7 +154,7 @@ I_i
 ===
 For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
-{xrst_file
+{xrst_literal
     # BEGIN income_grid
     # END income_grid
 }
@@ -171,7 +171,7 @@ priors because there is only one time point.
 Value Prior
 ===========
 The following is the value prior used for the root_node
-{xrst_file
+{xrst_literal
     # BEGIN parent_value_prior
     # END parent_value_prior
 }
@@ -182,7 +182,7 @@ routine replaces them for other nodes.
 dage Prior
 ==========
 The following is the dage prior used for the fit_node:
-{xrst_file
+{xrst_literal
     # BEGIN parent_dage_prior
     # END parent_dage_prior
 }
@@ -197,7 +197,7 @@ priors because there is only one age and one time point in this smoothing.
 Value Prior
 ===========
 The following is the value prior used for the children of the fit_node:
-{xrst_file
+{xrst_literal
     # BEGIN child_value_prior
     # END child_value_prior
 }
@@ -211,7 +211,7 @@ so it does not have dage or dtime priors.
 Value Prior
 ===========
 The following is the value prior used for this smoothing:
-{xrst_file
+{xrst_literal
     # BEGIN alpha_value_prior
     # END alpha_value_prior
 }
@@ -235,7 +235,7 @@ routine uses these tables to check that fit against the truth.
 one_at_function: Python Source Code
 ###################################
 
-{xrst_file
+{xrst_literal
     BEGIN one_at_function source code
     END one_at_function source code
 }

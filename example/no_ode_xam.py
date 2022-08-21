@@ -39,7 +39,7 @@ are both {n2, n3} for this example::
 
 fit_goal_set
 ============
-{xrst_file
+{xrst_literal
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -65,7 +65,7 @@ I_n
 ===
 We use *I_n* for the reference value of income at node *n*.
 The code below sets this reference using the name avg_income:
-{xrst_file
+{xrst_literal
     # BEGIN avg_income
     # END avg_income
 }
@@ -77,7 +77,7 @@ for the :ref:`glossary@rate_value` covariate multiplier
 which multiplies income and affects iota (chi).
 The true value for these multipliers
 (used which simulating the data) is
-{xrst_file
+{xrst_literal
     # BEGIN alpha_true
     # END alpha_true
 }
@@ -92,7 +92,7 @@ R_n
 ===
 We use *R_n* to denote the random effects for node *n*.
 The code below sets this value:
-{xrst_file
+{xrst_literal
     # BEGIN random_effect_true
     # END random_effect_true
 }
@@ -105,7 +105,7 @@ Random Seed
 The random seed can be used to reproduce results.
 If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
-{xrst_file
+{xrst_literal
     # BEGIN random_seed
     # END random_seed
 }
@@ -118,7 +118,7 @@ in node *n* at age *a*, time *t*, and covariate values *c*.
 The covariate values are a list in the
 same order as the covariate table.
 The values *t* and *c[1]* are not used by this function for this example.
-{xrst_file
+{xrst_literal
     # BEGIN rate_true
     # END rate_true
 }
@@ -149,7 +149,7 @@ of how good the fit is for the nodes in the fit_goal_set.
 a_i
 ===
 For each leaf node, data is generated on the following *age_grid*:
-{xrst_file
+{xrst_literal
     # BEGIN age_grid
     # END age_grid
 }
@@ -158,7 +158,7 @@ I_i
 ===
 For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
-{xrst_file
+{xrst_literal
     # BEGIN income_grid
     # END income_grid
 }
@@ -174,7 +174,7 @@ Parent Rate Smoothing
 *********************
 The parent smoothings use the true value of iota and chi at age 50
 and in the root_node:
-{xrst_file
+{xrst_literal
     # BEGIN iota_chi_50
     # END iota_chi_50
 }
@@ -192,11 +192,11 @@ and prevalence measurements.
 Value Prior
 ===========
 The following is the value prior used for the root_node
-{xrst_file
+{xrst_literal
     # BEGIN parent_iota_value_prior
     # END parent_iota_value_prior
 }
-{xrst_file
+{xrst_literal
     # BEGIN parent_chi_value_prior
     # END parent_chi_value_prior
 }
@@ -207,7 +207,7 @@ routine replaces them for other nodes.
 dage Prior
 ==========
 The following is the dage prior used for the root_node:
-{xrst_file
+{xrst_literal
     # BEGIN parent_dage_prior
     # END parent_dage_prior
 }
@@ -222,7 +222,7 @@ priors because there is only one age and one time point in this smoothing.
 Value Prior
 ===========
 The following is the value prior used for the children of the root_node:
-{xrst_file
+{xrst_literal
     # BEGIN child_value_prior
     # END child_value_prior
 }
@@ -236,7 +236,7 @@ so it does not have dage or dtime priors.
 Value Prior
 ===========
 The following is the value prior used for this smoothing:
-{xrst_file
+{xrst_literal
     # BEGIN alpha_value_prior
     # END alpha_value_prior
 }
@@ -263,7 +263,7 @@ routine uses these tables to check that fit against the truth.
 no_ode_xam: Python Source Code
 #################################
 
-{xrst_file
+{xrst_literal
     BEGIN no_ode_xam source code
     END no_ode_xam source code
 }

@@ -15,7 +15,7 @@ Checks Logs For Warnings and Errors
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

@@ -20,7 +20,7 @@ Bilinear Spline Interpolation
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     BEGIN_SYNTAX
     END_SYNTAX
 }

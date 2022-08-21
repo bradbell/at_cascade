@@ -14,7 +14,7 @@ The at_cascade Python Module
 ****************************
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
-{xrst_child_table
+{xrst_toc_table
     at_cascade/add_log_entry.py
     at_cascade/avgint_parent_grid.py
     at_cascade/bilinear.py

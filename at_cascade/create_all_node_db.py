@@ -15,7 +15,7 @@ Create an All Node Database
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

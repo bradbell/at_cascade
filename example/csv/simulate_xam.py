@@ -62,7 +62,7 @@ Node Tree
         -   :ref:`csv_simulate@output_files@data_sim.csv`
 
 
-{xrst_file
+{xrst_literal
     BEGIN_PYTHON
     END_PYTHON
 }

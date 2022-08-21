@@ -16,7 +16,7 @@ Create A Table from a CSV File
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     BEGIN_SYNTAX
     END_SYNTAX
 }

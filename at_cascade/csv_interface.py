@@ -36,7 +36,7 @@ are located.
 command
 =======
 This string is either ``simulate``, ``fit`` , or ``predict``  .
-{xrst_child_table
+{xrst_toc_table
     at_cascade/csv_simulate.py
 }
 

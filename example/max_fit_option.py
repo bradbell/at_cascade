@@ -33,7 +33,7 @@ and the leaf nodes are {n3, n4, n5, n6}::
 
 fit_goal_set
 ============
-{xrst_file
+{xrst_literal
     # BEGIN fit_goal_set
     # END fit_goal_set
 }
@@ -55,7 +55,7 @@ Random Seed
 The random seed can be used to reproduce results.
 If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
-{xrst_file
+{xrst_literal
     # BEGIN random_seed
     # END random_seed
 }
@@ -67,7 +67,7 @@ For *rate* equal to iota,
 this is the true value for *rate*
 in node *n* at age *a*, time *t*, and covariate values *c*.
 The values *a*, *t*. *c*, are not used by this function for this example.
-{xrst_file
+{xrst_literal
     # BEGIN rate_true
     # END rate_true
 }
@@ -94,7 +94,7 @@ This is the value of the :ref:`all_option_table@max_fit` option.
 It is also te number of data values per leaf.
 Thus the leaf nodes fit all their data while the other nodes only fit
 a randomly chosen subset of their data.
-{xrst_file
+{xrst_literal
     # BEGIN max_fit_option
     # END max_fit_option
 }
@@ -105,7 +105,7 @@ This is the value of the
 :ref:`all_option_table@perturb_optimization_scale` option.
 It is only included as an example of using this option and is not
 necessary.
-{xrst_file
+{xrst_literal
     # BEGIN perturb_optimization_scale
     # END perturb_optimization_scale
 }
@@ -119,7 +119,7 @@ priors because there is only one age and one time point.
 Value Prior
 ===========
 The following is the value prior used for the root_node
-{xrst_file
+{xrst_literal
     # BEGIN parent_value_prior
     # END parent_value_prior
 }
@@ -137,7 +137,7 @@ priors because there is only one age and one time point in this smoothing.
 Value Prior
 ===========
 The following is the value prior used for the children of the fit_node:
-{xrst_file
+{xrst_literal
     # BEGIN child_value_prior
     # END child_value_prior
 }
@@ -158,7 +158,7 @@ routine uses these tables to check that fit against the truth.
 max_fit_option: Python Source Code
 ###################################
 
-{xrst_file
+{xrst_literal
     BEGIN source code
     END source code
 }

@@ -18,7 +18,7 @@ Get Database Directory Corresponding To a Fit
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

@@ -15,7 +15,7 @@ Table of Jobs That Can Run in Parallel
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     # BEGIN syntax
     # END syntax
 }

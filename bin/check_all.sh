@@ -20,7 +20,7 @@ then
     exit 1
 fi
 # -----------------------------------------------------------------------------
-echo_eval bin/run_xrst.sh html 0
+echo_eval bin/run_xrst.sh html
 # -----------------------------------------------------------------------------
 list=$(ls example/*.py example/csv/*.py test/*.py)
 for script in $list

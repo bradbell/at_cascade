@@ -19,7 +19,7 @@ Create A CSV File from a Table
 
 Syntax
 ******
-{xrst_file
+{xrst_literal
     BEGIN_SYNTAX
     END_SYNTAX
 }
