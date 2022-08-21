@@ -22,6 +22,11 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+08-21
+*****
+1.  Fix some error message and add some tracing to :ref:`csv_simulate` .
+2.  Update documentation to use xrst-2022.8.21.
+
 08-16
 *****
 Add the section :ref:`ode_iota_omega` which derives the dismod ODE solution

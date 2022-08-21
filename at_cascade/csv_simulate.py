@@ -443,6 +443,7 @@ def get_parent_node_dict( node_table ) :
         if len( child_list_node[parent_name] ) == 1 :
             msg  = 'csv_interface: Error in node.csv\n'
             msg += f'the parent_name {parent_name} apprears once and only once'
+            assert False, msg
     #
     # check that no node is and ancestor of itself
     for node_name in parent_node_dict :
@@ -496,12 +497,12 @@ def get_spline_node_sex_cov(covariate_table , node_set) :
             msg  = f'csv_interface: Error: '
             msg += f'line {line_number} in covariate.csv\n'
             msg += 'node_name {node_name} is not in node.csv'
-            assert Flase, msg
+            assert False, msg
         if sex not in ['male', 'female'] :
             msg  = f'csv_interface: Error: '
             msg += f'line {line_number} in covariate.csv\n'
-            msg += 'sex {sex} is not male of female'
-            assert Flase, msg
+            msg += f'sex {sex} is not male or female'
+            assert False, msg
         #
         # covariate_row_list
         if node_name not in covariate_row_list :
@@ -970,9 +971,12 @@ def csv_simulate(csv_dir) :
         'no_effect_rate',
         'simulate',
     ]
+    print('csv_simulate: begin reading csv files')
     for name in input_list :
         file_name         = f'{csv_dir}/{name}.csv'
+        print( f'reading {file_name}' )
         input_table[name] = at_cascade.read_csv_table(file_name)
+    print('csv_simulate: end reading csv files')
     #
     # option_value
     option_value = option_table2dict(csv_dir, input_table['option'] )
