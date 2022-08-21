@@ -496,7 +496,7 @@ def get_spline_node_sex_cov(covariate_table , node_set) :
         if node_name not in node_set :
             msg  = f'csv_interface: Error: '
             msg += f'line {line_number} in covariate.csv\n'
-            msg += 'node_name {node_name} is not in node.csv'
+            msg += f'node_name {node_name} is not in node.csv'
             assert False, msg
         if sex not in ['male', 'female'] :
             msg  = f'csv_interface: Error: '
@@ -971,12 +971,11 @@ def csv_simulate(csv_dir) :
         'no_effect_rate',
         'simulate',
     ]
-    print('csv_simulate: begin reading csv files')
     for name in input_list :
         file_name         = f'{csv_dir}/{name}.csv'
         print( f'reading {file_name}' )
         input_table[name] = at_cascade.read_csv_table(file_name)
-    print('csv_simulate: end reading csv files')
+    print('finish reading csv files')
     #
     # option_value
     option_value = option_table2dict(csv_dir, input_table['option'] )
@@ -1025,14 +1024,14 @@ def csv_simulate(csv_dir) :
     # data_sim_table
     data_sim_table = list()
     for (simulate_id, sim_row) in enumerate( input_table['simulate'] ) :
-        line_nmber = simulate_id + 1
+        line_number = simulate_id + 2
         #
         # simulate_id
         if simulate_id != int( sim_row['simulate_id'] ) :
             msg  = f'csv_interface: Error at line {line_number} '
-            msg += f' in simulate.csv\n'
+            msg += f'in simulate.csv\n'
             msg += f'simulate_id = ' + sim_row['simulate_id']
-            msg += ' is not equal line number minus one'
+            msg += ' is not equal line number minus two'
             assert False, msg
         #
         # integrand_name
