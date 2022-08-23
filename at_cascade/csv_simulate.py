@@ -16,11 +16,11 @@ import at_cascade
 """
 {xrst_begin csv_simulate}
 {xrst_spell
-    std
-    cv
-    sim
-    meas
-    bilinear
+   std
+   cv
+   sim
+   meas
+   bilinear
 }
 
 Simulate A Cascade Data Set
@@ -277,10 +277,10 @@ for the specified node, sex, and rate.
 
 Discussion
 ----------
-1.  For a given parent node, sex, and rate,
-    the sum of the random effects with respect to the child nodes is zero.
-2.  All the random effects for the root node are set to zero
-    (the root node does not have a parent node).
+1. For a given parent node, sex, and rate,
+   the sum of the random effects with respect to the child nodes is zero.
+2. All the random effects for the root node are set to zero
+   (the root node does not have a parent node).
 
 -----------------------------------------------------------------------------
 
@@ -341,49 +341,49 @@ outside the age rage (time range) in the covariate.csv file.
 #
 # option_value =
 def option_table2dict(csv_dir, option_table) :
-    #
-    # option_value
-    option_value = dict()
-    valid_name  = {
-        'std_random_effects', 'integrand_step_size', 'random_seed'
-    }
-    line_number = 0
-    for row in option_table :
-        line_number += 1
-        name         = row['name']
-        value        = row['value']
-        if name in option_value :
-            msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
-            msg += f'the name {name} appears twice in this table'
-            assert False, msg
-        if not name in valid_name :
-            msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
-            msg += f'{name} is not a valid option name'
-            assert False, msg
-        option_value[name] = value
-    #
-    # option_value
-    for name in valid_name :
-        if not name in option_value :
-            msg  = 'csv_interface: Error: in option.csv\n'
-            msg += f'the name {name} does not apper'
-            assert False, msg
-    #
-    # float options that must be greater than zero
-    for name in ['std_random_effects', 'integrand_step_size'] :
-        value = float( option_value[name] )
-        if value <= 0.0 :
-            msg  = 'csv_interface: Error: in option.csv\n'
-            msg += f'{name} = {value} <= 0'
-            assert False, msg
-        option_value[name] = value
-    #
-    # random_seed
-    value = int( option_value['random_seed'] )
-    option_value['random_seed'] = value
-    random.seed(value)
-    #
-    return option_value
+   #
+   # option_value
+   option_value = dict()
+   valid_name  = {
+      'std_random_effects', 'integrand_step_size', 'random_seed'
+   }
+   line_number = 0
+   for row in option_table :
+      line_number += 1
+      name         = row['name']
+      value        = row['value']
+      if name in option_value :
+         msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
+         msg += f'the name {name} appears twice in this table'
+         assert False, msg
+      if not name in valid_name :
+         msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
+         msg += f'{name} is not a valid option name'
+         assert False, msg
+      option_value[name] = value
+   #
+   # option_value
+   for name in valid_name :
+      if not name in option_value :
+         msg  = 'csv_interface: Error: in option.csv\n'
+         msg += f'the name {name} does not apper'
+         assert False, msg
+   #
+   # float options that must be greater than zero
+   for name in ['std_random_effects', 'integrand_step_size'] :
+      value = float( option_value[name] )
+      if value <= 0.0 :
+         msg  = 'csv_interface: Error: in option.csv\n'
+         msg += f'{name} = {value} <= 0'
+         assert False, msg
+      option_value[name] = value
+   #
+   # random_seed
+   value = int( option_value['random_seed'] )
+   option_value['random_seed'] = value
+   random.seed(value)
+   #
+   return option_value
 # ----------------------------------------------------------------------------
 # parent_node_dict[node_name]:
 # The is the name of the node that is the parent of node_node.
@@ -395,69 +395,69 @@ def option_table2dict(csv_dir, option_table) :
 #
 # parent_node_dict, child_list_node =
 def get_parent_node_dict( node_table ) :
-    #
-    # parent_node_dict, count_children, root_node_name
-    line_number = 0
-    parent_node_dict  = dict()
-    child_list_node   = dict()
-    root_node_name    = None
-    for row in node_table :
-        line_number += 1
-        node_name                  = row['node_name']
-        parent_name                = row['parent_name']
-        child_list_node[node_name] = list()
-        if node_name in parent_node_dict :
+   #
+   # parent_node_dict, count_children, root_node_name
+   line_number = 0
+   parent_node_dict  = dict()
+   child_list_node   = dict()
+   root_node_name    = None
+   for row in node_table :
+      line_number += 1
+      node_name                  = row['node_name']
+      parent_name                = row['parent_name']
+      child_list_node[node_name] = list()
+      if node_name in parent_node_dict :
+         msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
+         msg += f'node_name {node_name} appears twice'
+         assert False, msg
+      parent_node_dict[node_name] = parent_name
+      #
+      if parent_name == '' :
+         if root_node_name != None :
             msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
-            msg += f'node_name {node_name} appears twice'
+            msg += 'one and only one node should have no parent\n'
+            msg += 'node {node_name} and {root_node_name} have no parent'
             assert False, msg
-        parent_node_dict[node_name] = parent_name
-        #
-        if parent_name == '' :
-            if root_node_name != None :
-                msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
-                msg += 'one and only one node should have no parent\n'
-                msg += 'node {node_name} and {root_node_name} have no parent'
-                assert False, msg
-            root_node_name = node_name
-    if root_node_name == None :
-        msg  = f'csv_interface: Error in node.csv\n'
-        msg += 'there is no root node; i.e.,  node with no parent node'
-        assert False, msg
-    #
-    # child_list_node
-    line_number    = 0
-    for row in node_table :
-        line_number += 1
-        node_name    = row['node_name']
-        parent_name  = row['parent_name']
-        if parent_name != '' :
-            if parent_name not in child_list_node :
-                msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
-                msg += f'parent_name {parent_name} is not a valid node_name'
-                assert False, msg
-            else :
-                child_list_node[parent_name].append(node_name)
-    #
-    # check number of children
-    for parent_name in child_list_node :
-        if len( child_list_node[parent_name] ) == 1 :
-            msg  = 'csv_interface: Error in node.csv\n'
-            msg += f'the parent_name {parent_name} apprears once and only once'
+         root_node_name = node_name
+   if root_node_name == None :
+      msg  = f'csv_interface: Error in node.csv\n'
+      msg += 'there is no root node; i.e.,  node with no parent node'
+      assert False, msg
+   #
+   # child_list_node
+   line_number    = 0
+   for row in node_table :
+      line_number += 1
+      node_name    = row['node_name']
+      parent_name  = row['parent_name']
+      if parent_name != '' :
+         if parent_name not in child_list_node :
+            msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
+            msg += f'parent_name {parent_name} is not a valid node_name'
             assert False, msg
-    #
-    # check that no node is and ancestor of itself
-    for node_name in parent_node_dict :
-        ancestor_set = { node_name }
-        parent_name  = parent_node_dict[node_name]
-        while parent_name != '' :
-            if parent_name in ancestor_set :
-                msg  = 'csv_interface: Error in node_table.csv\n'
-                msg += f'node {parent_name} is an ancestor of itself'
-                assert False, msg
-            ancestor_set.add(parent_name)
-            parent_name = parent_node_dict[parent_name]
-    #
-    return parent_node_dict, child_list_node
+         else :
+            child_list_node[parent_name].append(node_name)
+   #
+   # check number of children
+   for parent_name in child_list_node :
+      if len( child_list_node[parent_name] ) == 1 :
+         msg  = 'csv_interface: Error in node.csv\n'
+         msg += f'the parent_name {parent_name} apprears once and only once'
+         assert False, msg
+   #
+   # check that no node is and ancestor of itself
+   for node_name in parent_node_dict :
+      ancestor_set = { node_name }
+      parent_name  = parent_node_dict[node_name]
+      while parent_name != '' :
+         if parent_name in ancestor_set :
+            msg  = 'csv_interface: Error in node_table.csv\n'
+            msg += f'node {parent_name} is an ancestor of itself'
+            assert False, msg
+         ancestor_set.add(parent_name)
+         parent_name = parent_node_dict[parent_name]
+   #
+   return parent_node_dict, child_list_node
 # ----------------------------------------------------------------------------
 #
 # spline = spline_node_sex_cov[node_name][sex][cov_name] :
@@ -465,7 +465,7 @@ def get_parent_node_dict( node_table ) :
 # 2. sex is any of the sexes in the covariate table (string)
 # 3. cov_name is any covariate_name or omega (string)
 # 4. value = float( spline(age, time) ) evaluates the interpolant at
-#   (age, time) where age, time, and value are floats.
+#  (age, time) where age, time, and value are floats.
 #
 # covariate_table:
 # is the table corresponding to covariate_csv.
@@ -476,71 +476,71 @@ def get_parent_node_dict( node_table ) :
 #
 # spline_node_sex_cov =
 def get_spline_node_sex_cov(covariate_table , node_set) :
-    #
-    # cov_name_list
-    # this is the covariate names and omega
-    cov_name_list = list()
-    for key in covariate_table[0].keys() :
-        if key not in [ 'node_name', 'sex', 'age', 'time' ] :
-            cov_name_list.append( key )
-    #
-    # covariate_row_list
-    covariate_row_list  = dict()
-    line_number         = 0
-    for row in covariate_table :
-        line_number += 1
-        node_name    = row['node_name']
-        sex          = row['sex']
-        age          = float( row['age'] )
-        time         = float( row['time'] )
-        if node_name not in node_set :
-            msg  = f'csv_interface: Error: '
-            msg += f'line {line_number} in covariate.csv\n'
-            msg += f'node_name {node_name} is not in node.csv'
+   #
+   # cov_name_list
+   # this is the covariate names and omega
+   cov_name_list = list()
+   for key in covariate_table[0].keys() :
+      if key not in [ 'node_name', 'sex', 'age', 'time' ] :
+         cov_name_list.append( key )
+   #
+   # covariate_row_list
+   covariate_row_list  = dict()
+   line_number         = 0
+   for row in covariate_table :
+      line_number += 1
+      node_name    = row['node_name']
+      sex          = row['sex']
+      age          = float( row['age'] )
+      time         = float( row['time'] )
+      if node_name not in node_set :
+         msg  = f'csv_interface: Error: '
+         msg += f'line {line_number} in covariate.csv\n'
+         msg += f'node_name {node_name} is not in node.csv'
+         assert False, msg
+      if sex not in ['male', 'female'] :
+         msg  = f'csv_interface: Error: '
+         msg += f'line {line_number} in covariate.csv\n'
+         msg += f'sex {sex} is not male or female'
+         assert False, msg
+      #
+      # covariate_row_list
+      if node_name not in covariate_row_list :
+         covariate_row_list[node_name] = dict()
+      if sex not in covariate_row_list[node_name] :
+         covariate_row_list[node_name][sex] = list()
+      covariate_row_list[node_name][sex].append( row )
+   #
+   # spline_node_sex_cov
+   spline_node_sex_cov = dict()
+   #
+   # node_name
+   for node_name in covariate_row_list :
+      spline_node_sex_cov[node_name] = dict()
+      #
+      # sex
+      for sex in covariate_row_list[node_name] :
+         spline_node_sex_cov[node_name][sex] = dict()
+         #
+         # age_grid, time_grid, spline_dict
+         age_grid, time_grid, spline_dict = at_cascade.bilinear(
+            table  = covariate_row_list[node_name][sex] ,
+            x_name = 'age',
+            y_name = 'time',
+            z_list = cov_name_list
+         )
+         #
+         if spline_dict == None :
+            msg  = 'csv_interface: Error in covariate.csv\n'
+            msg += 'node_name = {node_name}, sex = {sex} \n'
+            msg += 'Expected following rectangular grid:\n'
+            msg += f'age_grid  = {age_grid}\n'
+            msg += f'time_grid = {time_grid}'
             assert False, msg
-        if sex not in ['male', 'female'] :
-            msg  = f'csv_interface: Error: '
-            msg += f'line {line_number} in covariate.csv\n'
-            msg += f'sex {sex} is not male or female'
-            assert False, msg
-        #
-        # covariate_row_list
-        if node_name not in covariate_row_list :
-            covariate_row_list[node_name] = dict()
-        if sex not in covariate_row_list[node_name] :
-            covariate_row_list[node_name][sex] = list()
-        covariate_row_list[node_name][sex].append( row )
-    #
-    # spline_node_sex_cov
-    spline_node_sex_cov = dict()
-    #
-    # node_name
-    for node_name in covariate_row_list :
-        spline_node_sex_cov[node_name] = dict()
-        #
-        # sex
-        for sex in covariate_row_list[node_name] :
-            spline_node_sex_cov[node_name][sex] = dict()
-            #
-            # age_grid, time_grid, spline_dict
-            age_grid, time_grid, spline_dict = at_cascade.bilinear(
-                table  = covariate_row_list[node_name][sex] ,
-                x_name = 'age',
-                y_name = 'time',
-                z_list = cov_name_list
-            )
-            #
-            if spline_dict == None :
-                msg  = 'csv_interface: Error in covariate.csv\n'
-                msg += 'node_name = {node_name}, sex = {sex} \n'
-                msg += 'Expected following rectangular grid:\n'
-                msg += f'age_grid  = {age_grid}\n'
-                msg += f'time_grid = {time_grid}'
-                assert False, msg
-            #
-            # spline_node_sex_cov
-            spline_node_sex_cov[node_name][sex] = spline_dict
-    return spline_node_sex_cov
+         #
+         # spline_node_sex_cov
+         spline_node_sex_cov[node_name][sex] = spline_dict
+   return spline_node_sex_cov
 # ----------------------------------------------------------------------------
 # spline = spline_no_effect_rate[rate_name] :
 # 1. rate_name is any of the rate names in the no_effect_rate table.
@@ -553,45 +553,45 @@ def get_spline_node_sex_cov(covariate_table , node_set) :
 #
 # spline_no_effect_rate =
 def get_spline_no_effect_rate(no_effect_rate_table) :
-    #
-    # age_set, time_set
-    rate_row_list   = dict()
-    for row in no_effect_rate_table :
-        rate_name    = row['rate_name']
-        age          = float( row['age'] )
-        time         = float( row['time'] )
-        rate_truth   = float( row['rate_truth'] )
-        #
-        if rate_name not in rate_row_list :
-            rate_row_list[rate_name] = list()
-        rate_row_list[rate_name].append( row )
-    #
-    # spline_no_effect_rate
-    spline_no_effect_rate = dict()
-    #
-    # rate_name
-    for rate_name in rate_row_list :
-        #
-        # age_grid, time_grid, spline_dict
-        age_grid, time_grid, spline_dict = at_cascade.bilinear(
-            table  = rate_row_list[rate_name],
-            x_name = 'age',
-            y_name = 'time',
-            z_list = [ 'rate_truth' ]
-        )
-        #
-        if spline_dict == None :
-            msg  = 'csv_interface: Error in no_effect_rate.csv\n'
-            msg += 'rate_name = {rate_name}\n'
-            msg += 'Expected following rectangular grid:\n'
-            msg += f'age_grid  = {age_grid}\n'
-            msg += f'time_grid = {time_grid}'
-            assert False, msg
-        #
-        # spline_no_effect_rate
-        spline_no_effect_rate[rate_name]= spline_dict['rate_truth']
-    #
-    return spline_no_effect_rate
+   #
+   # age_set, time_set
+   rate_row_list   = dict()
+   for row in no_effect_rate_table :
+      rate_name    = row['rate_name']
+      age          = float( row['age'] )
+      time         = float( row['time'] )
+      rate_truth   = float( row['rate_truth'] )
+      #
+      if rate_name not in rate_row_list :
+         rate_row_list[rate_name] = list()
+      rate_row_list[rate_name].append( row )
+   #
+   # spline_no_effect_rate
+   spline_no_effect_rate = dict()
+   #
+   # rate_name
+   for rate_name in rate_row_list :
+      #
+      # age_grid, time_grid, spline_dict
+      age_grid, time_grid, spline_dict = at_cascade.bilinear(
+         table  = rate_row_list[rate_name],
+         x_name = 'age',
+         y_name = 'time',
+         z_list = [ 'rate_truth' ]
+      )
+      #
+      if spline_dict == None :
+         msg  = 'csv_interface: Error in no_effect_rate.csv\n'
+         msg += 'rate_name = {rate_name}\n'
+         msg += 'Expected following rectangular grid:\n'
+         msg += f'age_grid  = {age_grid}\n'
+         msg += f'time_grid = {time_grid}'
+         assert False, msg
+      #
+      # spline_no_effect_rate
+      spline_no_effect_rate[rate_name]= spline_dict['rate_truth']
+   #
+   return spline_no_effect_rate
 # ----------------------------------------------------------------------------
 # multiplier_list_rate[rate_name]:
 # list of rows in multiplier_sim_table that have the specified rate name
@@ -602,15 +602,15 @@ def get_spline_no_effect_rate(no_effect_rate_table) :
 #
 # multiplier_list_rate =
 def get_multiplier_list_rate(multiplier_sim_table) :
-    #
-    # multiplier_list_rate
-    multiplier_list_rate = dict()
-    for rate_name in [ 'pini', 'iota', 'rho', 'chi' ] :
-        multiplier_list_rate[rate_name] = list()
-    for row in multiplier_sim_table :
-        rate_name = row['rate_name']
-        multiplier_list_rate[rate_name].append(row)
-    return multiplier_list_rate
+   #
+   # multiplier_list_rate
+   multiplier_list_rate = dict()
+   for rate_name in [ 'pini', 'iota', 'rho', 'chi' ] :
+      multiplier_list_rate[rate_name] = list()
+   for row in multiplier_sim_table :
+      rate_name = row['rate_name']
+      multiplier_list_rate[rate_name].append(row)
+   return multiplier_list_rate
 # ----------------------------------------------------------------------------
 # root_covariate_avg[covariate_name]:
 # is average covariate value for the specified covariate at the root node.
@@ -628,43 +628,43 @@ def get_multiplier_list_rate(multiplier_sim_table) :
 #
 # root_covariate_avg =
 def get_root_covariate_avg(
-    covariate_table, covariate_name_list, parent_node_dict
+   covariate_table, covariate_name_list, parent_node_dict
 ) :
-    #
-    # covariate_sum, root_count
-    covariate_sum = dict()
-    for covariate_name in covariate_name_list :
-        covariate_sum[covariate_name] = 0.0
-    root_count = 0
-    #
-    # covariate_sum, root_count
-    line_number = 0;
-    for row in covariate_table :
-        line_number += 1
-        node_name    = row['node_name']
-        sex          = row['sex']
-        #
-        if sex not in  { 'female', 'male' } :
-            msg  = f'csv_interface: covariate.csv at line {line_number}\n'
-            msg += 'sex = {sex} is not female or male'
-            assert False, msg
-        #
-        if parent_node_dict[node_name] == '' :
-            root_count += 1
-            for covariate_name in covariate_name_list :
-                covariate_sum[covariate_name] += float( row[covariate_name] )
-    #
-    if root_count == 0 :
-        msg  = 'csv_interface: root node does not appear in covariate.csv'
-        assert False, msg
-    #
-    # root_covariate_avg
-    root_covariate_avg = dict()
-    for covariate_name in covariate_name_list :
-        root_covariate_avg[covariate_name] = \
-            covariate_sum[covariate_name] / root_count
-    #
-    return root_covariate_avg
+   #
+   # covariate_sum, root_count
+   covariate_sum = dict()
+   for covariate_name in covariate_name_list :
+      covariate_sum[covariate_name] = 0.0
+   root_count = 0
+   #
+   # covariate_sum, root_count
+   line_number = 0;
+   for row in covariate_table :
+      line_number += 1
+      node_name    = row['node_name']
+      sex          = row['sex']
+      #
+      if sex not in  { 'female', 'male' } :
+         msg  = f'csv_interface: covariate.csv at line {line_number}\n'
+         msg += 'sex = {sex} is not female or male'
+         assert False, msg
+      #
+      if parent_node_dict[node_name] == '' :
+         root_count += 1
+         for covariate_name in covariate_name_list :
+            covariate_sum[covariate_name] += float( row[covariate_name] )
+   #
+   if root_count == 0 :
+      msg  = 'csv_interface: root node does not appear in covariate.csv'
+      assert False, msg
+   #
+   # root_covariate_avg
+   root_covariate_avg = dict()
+   for covariate_name in covariate_name_list :
+      root_covariate_avg[covariate_name] = \
+         covariate_sum[covariate_name] / root_count
+   #
+   return root_covariate_avg
 # ----------------------------------------------------------------------------
 # rate_fun = rate_fun_dict[rate_name] :
 # For each of rate_name in spline_no_effect_rate, value = rate_fun(age, time)
@@ -705,86 +705,86 @@ def get_root_covariate_avg(
 #
 # rate_fun_dict =
 def get_rate_fun_dict(
-    parent_node_dict            ,
-    spline_no_effect_rate       ,
-    random_effect_node_sex_rate ,
-    spline_node_sex_cov         ,
-    root_covariate_avg          ,
-    multiplier_list_rate        ,
-    node_name                   ,
-    sex                         ,
+   parent_node_dict            ,
+   spline_no_effect_rate       ,
+   random_effect_node_sex_rate ,
+   spline_node_sex_cov         ,
+   root_covariate_avg          ,
+   multiplier_list_rate        ,
+   node_name                   ,
+   sex                         ,
 ) :
-    assert sex in { 'female', 'male', 'both' }
-    # -----------------------------------------------------------------------
-    # rate_fun
-    def rate_fun(age, time, rate_name) :
-        #
-        # no_effect_rate
-        spline         = spline_no_effect_rate[rate_name]
-        no_effect_rate = float( spline(age, time) )
-        #
-        # effect
-        # random effects
-        effect         = 0.0
-        parent_node    = parent_node_dict[node_name]
-        while parent_node != '' :
-            effect     += \
-                random_effect_node_sex_rate[node_name][sex][rate_name]
-            parent_node = parent_node_dict[parent_node]
-        #
-        # effect
-        # covariate and sex effects
-        for row in multiplier_list_rate[rate_name] :
-            assert row['rate_name'] == rate_name
-            #
-            covariate_or_sex = row['covariate_or_sex']
-            if covariate_or_sex == 'sex' :
-                difference = sex_covariate_value[sex]
+   assert sex in { 'female', 'male', 'both' }
+   # -----------------------------------------------------------------------
+   # rate_fun
+   def rate_fun(age, time, rate_name) :
+      #
+      # no_effect_rate
+      spline         = spline_no_effect_rate[rate_name]
+      no_effect_rate = float( spline(age, time) )
+      #
+      # effect
+      # random effects
+      effect         = 0.0
+      parent_node    = parent_node_dict[node_name]
+      while parent_node != '' :
+         effect     += \
+            random_effect_node_sex_rate[node_name][sex][rate_name]
+         parent_node = parent_node_dict[parent_node]
+      #
+      # effect
+      # covariate and sex effects
+      for row in multiplier_list_rate[rate_name] :
+         assert row['rate_name'] == rate_name
+         #
+         covariate_or_sex = row['covariate_or_sex']
+         if covariate_or_sex == 'sex' :
+            difference = sex_covariate_value[sex]
+         else :
+            covariate_name = covariate_or_sex
+            if sex in [ 'male', 'female' ] :
+               spline         = \
+                  spline_node_sex_cov[node_name][sex][covariate_name]
+               covariate      = spline(age, time)
+               reference      = root_covariate_avg[covariate_name]
+               difference     = covariate - reference
             else :
-                covariate_name = covariate_or_sex
-                if sex in [ 'male', 'female' ] :
-                    spline         = \
-                        spline_node_sex_cov[node_name][sex][covariate_name]
-                    covariate      = spline(age, time)
-                    reference      = root_covariate_avg[covariate_name]
-                    difference     = covariate - reference
-                else :
-                    assert sex == 'both'
-                    spline         = \
-                        spline_node_sex_cov[node_name]['female'][covariate_name]
-                    female         = spline(age, time)
-                    spline         = \
-                        spline_node_sex_cov[node_name]['male'][covariate_name]
-                    male           = spline(age, time)
-                    reference      = root_covariate_avg[covariate_name]
-                    difference     = (female + male) / 2.0  - reference
-            effect    += float( row['multiplier_truth'] ) * difference
-        #
-        # rate
-        rate = math.exp(effect) * no_effect_rate
-        return rate
-    # -----------------------------------------------------------------------
-    # omega_fun
-    def omega_fun(age, time) :
-        if sex in [ 'male', 'female' ] :
-            spline = spline_node_sex_cov[node_name][sex]['omega']
-            omega  = spline(age, time)
-        else :
-            assert sex == 'both'
-            spline = spline_node_sex_cov[node_name]['female']['omega']
-            female = spline(age, time)
-            spline = spline_node_sex_cov[node_name]['male']['omega']
-            male   = spline(age, time)
-            omega  = (female + male) / 2.0
-        return omega
-    #
-    rate_fun_dict = dict()
-    rate_fun_dict['omega'] = lambda age, time : omega_fun(age, time)
-    for rate_name in spline_no_effect_rate :
-        rate_fun_dict[rate_name] = \
-            lambda age, time : rate_fun(age, time, rate_name)
-    #
-    return rate_fun_dict
+               assert sex == 'both'
+               spline         = \
+                  spline_node_sex_cov[node_name]['female'][covariate_name]
+               female         = spline(age, time)
+               spline         = \
+                  spline_node_sex_cov[node_name]['male'][covariate_name]
+               male           = spline(age, time)
+               reference      = root_covariate_avg[covariate_name]
+               difference     = (female + male) / 2.0  - reference
+         effect    += float( row['multiplier_truth'] ) * difference
+      #
+      # rate
+      rate = math.exp(effect) * no_effect_rate
+      return rate
+   # -----------------------------------------------------------------------
+   # omega_fun
+   def omega_fun(age, time) :
+      if sex in [ 'male', 'female' ] :
+         spline = spline_node_sex_cov[node_name][sex]['omega']
+         omega  = spline(age, time)
+      else :
+         assert sex == 'both'
+         spline = spline_node_sex_cov[node_name]['female']['omega']
+         female = spline(age, time)
+         spline = spline_node_sex_cov[node_name]['male']['omega']
+         male   = spline(age, time)
+         omega  = (female + male) / 2.0
+      return omega
+   #
+   rate_fun_dict = dict()
+   rate_fun_dict['omega'] = lambda age, time : omega_fun(age, time)
+   for rate_name in spline_no_effect_rate :
+      rate_fun_dict[rate_name] = \
+         lambda age, time : rate_fun(age, time, rate_name)
+   #
+   return rate_fun_dict
 # ----------------------------------------------------------------------------
 # grid['age'] :
 # is a list of age point starting at age_lower, ending at age_upper
@@ -802,33 +802,33 @@ def get_rate_fun_dict(
 #
 # grid =
 def average_integrand_grid(
-    step_size, age_lower, age_upper, time_lower, time_upper
+   step_size, age_lower, age_upper, time_lower, time_upper
 ) :
-    #
-    # age_grid
-    if age_lower == age_upper :
-        age_grid = [ age_lower ]
-    else :
-        n_age    = int( (age_upper - age_lower) / step_size) + 1
-        dage     = (age_upper - age_lower) / n_age
-        age_grid = [ age_lower + i * dage for i in range(n_age+1) ]
-    #
-    # time_grid
-    if time_lower == time_upper :
-        time_grid = [ time_lower ]
-    else :
-        n_time    = int( (time_upper - time_lower) / step_size) + 1
-        dtime     = (time_upper - time_lower) / n_time
-        time_grid = [ time_lower + i * dtime for i in range(n_time+1) ]
-    # grid
-    grid = { 'age' : age_grid , 'time' : time_grid }
-    #
-    return grid
+   #
+   # age_grid
+   if age_lower == age_upper :
+      age_grid = [ age_lower ]
+   else :
+      n_age    = int( (age_upper - age_lower) / step_size) + 1
+      dage     = (age_upper - age_lower) / n_age
+      age_grid = [ age_lower + i * dage for i in range(n_age+1) ]
+   #
+   # time_grid
+   if time_lower == time_upper :
+      time_grid = [ time_lower ]
+   else :
+      n_time    = int( (time_upper - time_lower) / step_size) + 1
+      dtime     = (time_upper - time_lower) / n_time
+      time_grid = [ time_lower + i * dtime for i in range(n_time+1) ]
+   # grid
+   grid = { 'age' : age_grid , 'time' : time_grid }
+   #
+   return grid
 # ----------------------------------------------------------------------------
 # random_effect_node_sex_rate[node_name][sex][rate_name] :
 # is the simulated random effect for the corresponding node, sex and rate.
 # For a given node_name, sex and rate_name, the sum of
-#   random_effect_node_sex_rate[child_node][sex][rate_name]
+#  random_effect_node_sex_rate[child_node][sex][rate_name]
 # is zero where child_node ranges over values in child_list_node[node_name]
 # All the random effects for the root node are zero
 # (prent_node_dict[root_node_name] == '' )
@@ -849,295 +849,295 @@ def average_integrand_grid(
 #
 # random_effect_node_sex_rate =
 def get_random_effect_node_sex_rate (
-    std_random_effects ,
-    rate_name_list     ,
-    parent_node_dict   ,
-    child_list_node    ,
+   std_random_effects ,
+   rate_name_list     ,
+   parent_node_dict   ,
+   child_list_node    ,
 ) :
-    def recursive_call(
-        random_effect_node_sex_rate ,
-        node_name                   ,
-        sex                         ,
-        rate_name                   ,
-        std_random_effects          ,
-        parent_node_dict            ,
-        child_list_node             ,
-    ) :
-        #
-        # child_list
-        child_list = child_list_node[node_name]
-        #
-        # n_children
-        n_children = len(child_list)
-        if n_children == 0 :
-            return None
-        assert 1 < n_children
-        #
-        # factor
-        factor  = n_children / (n_children - 1)
-        assert type(factor) == float
-        factor  = math.sqrt( factor )
-        #
-        # random_effect_dict, sum_random_effect
-        random_effect_dict = dict()
-        sum_random_effect  = 0.0
-        for child_name in child_list :
-            random_effect = random.gauss(0.0, factor * std_random_effects)
-            sum_random_effect += random_effect
-            random_effect_dict[child_name] = random_effect
-        #
-        # random_effect_dict
-        avg_random_effect = sum_random_effect / n_children
-        for child_name in child_list :
-            random_effect_dict[child_name] -= avg_random_effect
-        #
-        # random_effect_node_sex_rate
-        for child_name in child_list :
-            random_effect_node_sex_rate[child_name][sex][rate_name] = \
-                random_effect_dict[child_name]
-        #
-        # random_effect_node_sex_rate
-        for child_name in child_list :
-            recursive_call(
-                random_effect_node_sex_rate ,
-                child_name                  ,
-                sex                         ,
-                rate_name                   ,
-                std_random_effects          ,
-                parent_node_dict            ,
-                child_list_node             ,
-            )
-        return None
-    #
-    # root_node_name
-    root_node_name = None
-    for node_name in parent_node_dict :
-        if parent_node_dict[node_name] == '' :
-            root_node_name = node_name
-    assert root_node_name != None
-    #
-    # random_effect_node_sex_rate
-    random_effect_node_sex_rate  = dict()
-    for node_name in parent_node_dict :
-        random_effect_node_sex_rate[node_name] = dict()
-        for sex in ['male', 'female'] :
-            random_effect_node_sex_rate[node_name][sex] = dict()
-    #
-    # random_effect_node_sex_rate[root_node_name]
-    for sex in [ 'male', 'female' ] :
-        for rate_name in rate_name_list :
-            random_effect_node_sex_rate[root_node_name][sex][rate_name] = 0.0
+   def recursive_call(
+      random_effect_node_sex_rate ,
+      node_name                   ,
+      sex                         ,
+      rate_name                   ,
+      std_random_effects          ,
+      parent_node_dict            ,
+      child_list_node             ,
+   ) :
+      #
+      # child_list
+      child_list = child_list_node[node_name]
+      #
+      # n_children
+      n_children = len(child_list)
+      if n_children == 0 :
+         return None
+      assert 1 < n_children
+      #
+      # factor
+      factor  = n_children / (n_children - 1)
+      assert type(factor) == float
+      factor  = math.sqrt( factor )
+      #
+      # random_effect_dict, sum_random_effect
+      random_effect_dict = dict()
+      sum_random_effect  = 0.0
+      for child_name in child_list :
+         random_effect = random.gauss(0.0, factor * std_random_effects)
+         sum_random_effect += random_effect
+         random_effect_dict[child_name] = random_effect
+      #
+      # random_effect_dict
+      avg_random_effect = sum_random_effect / n_children
+      for child_name in child_list :
+         random_effect_dict[child_name] -= avg_random_effect
+      #
+      # random_effect_node_sex_rate
+      for child_name in child_list :
+         random_effect_node_sex_rate[child_name][sex][rate_name] = \
+            random_effect_dict[child_name]
+      #
+      # random_effect_node_sex_rate
+      for child_name in child_list :
+         recursive_call(
+            random_effect_node_sex_rate ,
+            child_name                  ,
+            sex                         ,
+            rate_name                   ,
+            std_random_effects          ,
+            parent_node_dict            ,
+            child_list_node             ,
+         )
+      return None
+   #
+   # root_node_name
+   root_node_name = None
+   for node_name in parent_node_dict :
+      if parent_node_dict[node_name] == '' :
+         root_node_name = node_name
+   assert root_node_name != None
+   #
+   # random_effect_node_sex_rate
+   random_effect_node_sex_rate  = dict()
+   for node_name in parent_node_dict :
+      random_effect_node_sex_rate[node_name] = dict()
+      for sex in ['male', 'female'] :
+         random_effect_node_sex_rate[node_name][sex] = dict()
+   #
+   # random_effect_node_sex_rate[root_node_name]
+   for sex in [ 'male', 'female' ] :
+      for rate_name in rate_name_list :
+         random_effect_node_sex_rate[root_node_name][sex][rate_name] = 0.0
 
-    #
-    # random_effect_node_sex_rate
-    for sex in [ 'male', 'female' ] :
-        for rate_name in rate_name_list :
-            recursive_call(
-                random_effect_node_sex_rate ,
-                root_node_name              ,
-                sex                         ,
-                rate_name                   ,
-                std_random_effects          ,
-                parent_node_dict            ,
-                child_list_node             ,
-            )
-    #
-    return random_effect_node_sex_rate
+   #
+   # random_effect_node_sex_rate
+   for sex in [ 'male', 'female' ] :
+      for rate_name in rate_name_list :
+         recursive_call(
+            random_effect_node_sex_rate ,
+            root_node_name              ,
+            sex                         ,
+            rate_name                   ,
+            std_random_effects          ,
+            parent_node_dict            ,
+            child_list_node             ,
+         )
+   #
+   return random_effect_node_sex_rate
 # ----------------------------------------------------------------------------
 def csv_simulate(csv_dir) :
-    valid_integrand_name = {
-        'Sincidence',
-        'remission',
-        'mtexcess',
-        'mtother',
-        'mtwith',
-        'susceptible',
-        'withC',
-        'prevalence',
-        'Tincidence',
-        'mtspecific',
-        'mtall',
-        'mtstandard',
-        'relrisk',
-    }
-    #
-    # input_table
-    input_table = dict()
-    input_list  = [
-        'option',
-        'node',
-        'covariate',
-        'multiplier_sim',
-        'no_effect_rate',
-        'simulate',
-    ]
-    for name in input_list :
-        file_name         = f'{csv_dir}/{name}.csv'
-        print( f'reading {file_name}' )
-        input_table[name] = at_cascade.read_csv_table(file_name)
-    print('finish reading csv files')
-    #
-    # option_value
-    option_value = option_table2dict(csv_dir, input_table['option'] )
-    #
-    # parent_node_dict, child_list_node
-    parent_node_dict, child_list_node = \
-        get_parent_node_dict( input_table['node'] )
-    #
-    # spline_node_sex_cov
-    node_set = set( parent_node_dict.keys() )
-    spline_node_sex_cov = get_spline_node_sex_cov(
-        input_table['covariate'], node_set
-    )
-    #
-    # covariate_name_list
-    covariate_name_list = list()
-    for key in input_table['covariate'][0].keys() :
-        if key not in [ 'node_name', 'sex', 'age', 'time', 'omega' ] :
-            covariate_name_list.append(key)
-    #
-    # root_covariate_avg
-    root_covariate_avg = get_root_covariate_avg(
-        input_table['covariate'] , covariate_name_list, parent_node_dict
-    )
-    #
-    # spline_no_effect_rate
-    spline_no_effect_rate = get_spline_no_effect_rate(
-        input_table['no_effect_rate']
-    )
-    #
-    # random_effect_node_sex_rate
-    std_random_effects  = option_value['std_random_effects']
-    rate_name_list      = spline_no_effect_rate.keys()
-    random_effect_node_sex_rate = get_random_effect_node_sex_rate(
-        std_random_effects ,
-        rate_name_list     ,
-        parent_node_dict   ,
-        child_list_node    ,
-    )
-    #
-    # multiplier_list_rate
-    multiplier_list_rate = get_multiplier_list_rate(
-        input_table['multiplier_sim']
-    )
-    #
-    # data_sim_table
-    data_sim_table = list()
-    for (simulate_id, sim_row) in enumerate( input_table['simulate'] ) :
-        line_number = simulate_id + 2
-        #
-        # simulate_id
-        if simulate_id != int( sim_row['simulate_id'] ) :
-            msg  = f'csv_interface: Error at line {line_number} '
-            msg += f'in simulate.csv\n'
-            msg += f'simulate_id = ' + sim_row['simulate_id']
-            msg += ' is not equal line number minus two'
-            assert False, msg
-        #
-        # integrand_name
-        integrand_name = sim_row['integrand_name']
-        if integrand_name not in valid_integrand_name :
-            msg  = f'csv_interface: Error at line {line_number} '
-            msg += f' in simulate.csv\n'
-            msg += f'integrand_name = ' + integrand_name
-            msg += ' is not a valid integrand name'
-            assert False, msg
-        #
-        # node_name
-        node_name = sim_row['node_name']
-        if node_name not in node_set :
-            msg  = f'csv_interface: Error at line {line_number} '
-            msg += f' in simulate.csv\n'
-            msg += f'node_name = ' + node_name
-            msg += ' is not in node.csv'
-            assert False, msg
-        #
-        # sex
-        sex = sim_row['sex']
-        if sex not in [ 'male', 'female', 'both' ] :
-            msg  = f'csv_interface: Error at line {line_number} '
-            msg += f' in simulate.csv\n'
-            msg += f'sex = ' + sex
-            msg += ' is not male, feamle, or both'
-            assert False, msg
-        #
-        # age_lower, age_upper, time_lower, time_upper
-        age_lower  = float( sim_row['age_lower'] )
-        age_upper  = float( sim_row['age_upper'] )
-        time_lower = float( sim_row['time_lower'] )
-        time_upper = float( sim_row['time_upper'] )
-        #
-        # age_mid, time_mid
-        age_mid  = ( age_lower  + age_upper )  / 2.0
-        time_mid = ( time_lower + time_upper ) / 2.0
-        #
-        # covariate_value_list
-        covariate_value_list = list()
-        for (index, covariate_name) in enumerate( covariate_name_list ) :
-            spline = spline_node_sex_cov[node_name][sex][covariate_name]
-            value  =  float( spline(age_mid, time_mid) )
-            covariate_value_list.append(value )
-        #
-        # data_row
-        data_row = dict( zip(covariate_name_list, covariate_value_list) )
-        data_row['simulate_id'] = simulate_id
-        #
-        # rate_fun_dict
-        rate_fun_dict = get_rate_fun_dict(
-            parent_node_dict            ,
-            spline_no_effect_rate       ,
-            random_effect_node_sex_rate ,
-            spline_node_sex_cov         ,
-            root_covariate_avg          ,
-            multiplier_list_rate        ,
-            node_name                   ,
-            sex
-        )
-        #
-        # grid
-        integrand_step_size = option_value['integrand_step_size']
-        grid = average_integrand_grid(
-            integrand_step_size, age_lower, age_upper, time_lower, time_upper
-        )
-        #
-        # avg_integrand
-        abs_tol = 1e-11
-        rel_tol = 1e-6
-        avg_integrand = dismod_at.average_integrand(
-            rate_fun_dict, integrand_name, grid, abs_tol, rel_tol
-        )
-        #
-        # data_row['meas_mean']
-        meas_mean             = avg_integrand
-        data_row['meas_mean'] = meas_mean
-        #
-        # data_row['meas_std']
-        percent_cv           = float( sim_row['percent_cv'] )
-        meas_std             = percent_cv * meas_mean / 100.0
-        data_row['meas_std'] = meas_std
-        #
-        # data_row['meas_value']
-        meas_noise             = random.gauss(meas_mean, meas_std )
-        meas_value             = meas_mean + meas_noise
-        meas_value             = max(meas_value, 0.0)
-        data_row['meas_value'] = meas_value
-        #
-        # data_sim_table
-        data_sim_table.append( data_row )
-    #
-    # data.csv
-    file_name = f'{csv_dir}/data_sim.csv'
-    at_cascade.write_csv_table(file_name, data_sim_table)
-    #
-    # random_effect.csv
-    random_effect_table = list()
-    for node_name in parent_node_dict :
-        for sex in [ 'male', 'female' ] :
-            for rate_name in spline_no_effect_rate :
-                row                  = { 'node_name' : node_name, 'sex' : sex }
-                row['rate_name']     = rate_name
-                row['random_effect'] = \
-                    random_effect_node_sex_rate[node_name][sex][rate_name]
-                random_effect_table.append( row )
-    file_name = f'{csv_dir}/random_effect.csv'
-    at_cascade.write_csv_table(file_name, random_effect_table)
+   valid_integrand_name = {
+      'Sincidence',
+      'remission',
+      'mtexcess',
+      'mtother',
+      'mtwith',
+      'susceptible',
+      'withC',
+      'prevalence',
+      'Tincidence',
+      'mtspecific',
+      'mtall',
+      'mtstandard',
+      'relrisk',
+   }
+   #
+   # input_table
+   input_table = dict()
+   input_list  = [
+      'option',
+      'node',
+      'covariate',
+      'multiplier_sim',
+      'no_effect_rate',
+      'simulate',
+   ]
+   for name in input_list :
+      file_name         = f'{csv_dir}/{name}.csv'
+      print( f'reading {file_name}' )
+      input_table[name] = at_cascade.read_csv_table(file_name)
+   print('finish reading csv files')
+   #
+   # option_value
+   option_value = option_table2dict(csv_dir, input_table['option'] )
+   #
+   # parent_node_dict, child_list_node
+   parent_node_dict, child_list_node = \
+      get_parent_node_dict( input_table['node'] )
+   #
+   # spline_node_sex_cov
+   node_set = set( parent_node_dict.keys() )
+   spline_node_sex_cov = get_spline_node_sex_cov(
+      input_table['covariate'], node_set
+   )
+   #
+   # covariate_name_list
+   covariate_name_list = list()
+   for key in input_table['covariate'][0].keys() :
+      if key not in [ 'node_name', 'sex', 'age', 'time', 'omega' ] :
+         covariate_name_list.append(key)
+   #
+   # root_covariate_avg
+   root_covariate_avg = get_root_covariate_avg(
+      input_table['covariate'] , covariate_name_list, parent_node_dict
+   )
+   #
+   # spline_no_effect_rate
+   spline_no_effect_rate = get_spline_no_effect_rate(
+      input_table['no_effect_rate']
+   )
+   #
+   # random_effect_node_sex_rate
+   std_random_effects  = option_value['std_random_effects']
+   rate_name_list      = spline_no_effect_rate.keys()
+   random_effect_node_sex_rate = get_random_effect_node_sex_rate(
+      std_random_effects ,
+      rate_name_list     ,
+      parent_node_dict   ,
+      child_list_node    ,
+   )
+   #
+   # multiplier_list_rate
+   multiplier_list_rate = get_multiplier_list_rate(
+      input_table['multiplier_sim']
+   )
+   #
+   # data_sim_table
+   data_sim_table = list()
+   for (simulate_id, sim_row) in enumerate( input_table['simulate'] ) :
+      line_number = simulate_id + 2
+      #
+      # simulate_id
+      if simulate_id != int( sim_row['simulate_id'] ) :
+         msg  = f'csv_interface: Error at line {line_number} '
+         msg += f'in simulate.csv\n'
+         msg += f'simulate_id = ' + sim_row['simulate_id']
+         msg += ' is not equal line number minus two'
+         assert False, msg
+      #
+      # integrand_name
+      integrand_name = sim_row['integrand_name']
+      if integrand_name not in valid_integrand_name :
+         msg  = f'csv_interface: Error at line {line_number} '
+         msg += f' in simulate.csv\n'
+         msg += f'integrand_name = ' + integrand_name
+         msg += ' is not a valid integrand name'
+         assert False, msg
+      #
+      # node_name
+      node_name = sim_row['node_name']
+      if node_name not in node_set :
+         msg  = f'csv_interface: Error at line {line_number} '
+         msg += f' in simulate.csv\n'
+         msg += f'node_name = ' + node_name
+         msg += ' is not in node.csv'
+         assert False, msg
+      #
+      # sex
+      sex = sim_row['sex']
+      if sex not in [ 'male', 'female', 'both' ] :
+         msg  = f'csv_interface: Error at line {line_number} '
+         msg += f' in simulate.csv\n'
+         msg += f'sex = ' + sex
+         msg += ' is not male, feamle, or both'
+         assert False, msg
+      #
+      # age_lower, age_upper, time_lower, time_upper
+      age_lower  = float( sim_row['age_lower'] )
+      age_upper  = float( sim_row['age_upper'] )
+      time_lower = float( sim_row['time_lower'] )
+      time_upper = float( sim_row['time_upper'] )
+      #
+      # age_mid, time_mid
+      age_mid  = ( age_lower  + age_upper )  / 2.0
+      time_mid = ( time_lower + time_upper ) / 2.0
+      #
+      # covariate_value_list
+      covariate_value_list = list()
+      for (index, covariate_name) in enumerate( covariate_name_list ) :
+         spline = spline_node_sex_cov[node_name][sex][covariate_name]
+         value  =  float( spline(age_mid, time_mid) )
+         covariate_value_list.append(value )
+      #
+      # data_row
+      data_row = dict( zip(covariate_name_list, covariate_value_list) )
+      data_row['simulate_id'] = simulate_id
+      #
+      # rate_fun_dict
+      rate_fun_dict = get_rate_fun_dict(
+         parent_node_dict            ,
+         spline_no_effect_rate       ,
+         random_effect_node_sex_rate ,
+         spline_node_sex_cov         ,
+         root_covariate_avg          ,
+         multiplier_list_rate        ,
+         node_name                   ,
+         sex
+      )
+      #
+      # grid
+      integrand_step_size = option_value['integrand_step_size']
+      grid = average_integrand_grid(
+         integrand_step_size, age_lower, age_upper, time_lower, time_upper
+      )
+      #
+      # avg_integrand
+      abs_tol = 1e-11
+      rel_tol = 1e-6
+      avg_integrand = dismod_at.average_integrand(
+         rate_fun_dict, integrand_name, grid, abs_tol, rel_tol
+      )
+      #
+      # data_row['meas_mean']
+      meas_mean             = avg_integrand
+      data_row['meas_mean'] = meas_mean
+      #
+      # data_row['meas_std']
+      percent_cv           = float( sim_row['percent_cv'] )
+      meas_std             = percent_cv * meas_mean / 100.0
+      data_row['meas_std'] = meas_std
+      #
+      # data_row['meas_value']
+      meas_noise             = random.gauss(meas_mean, meas_std )
+      meas_value             = meas_mean + meas_noise
+      meas_value             = max(meas_value, 0.0)
+      data_row['meas_value'] = meas_value
+      #
+      # data_sim_table
+      data_sim_table.append( data_row )
+   #
+   # data.csv
+   file_name = f'{csv_dir}/data_sim.csv'
+   at_cascade.write_csv_table(file_name, data_sim_table)
+   #
+   # random_effect.csv
+   random_effect_table = list()
+   for node_name in parent_node_dict :
+      for sex in [ 'male', 'female' ] :
+         for rate_name in spline_no_effect_rate :
+            row                  = { 'node_name' : node_name, 'sex' : sex }
+            row['rate_name']     = rate_name
+            row['random_effect'] = \
+               random_effect_node_sex_rate[node_name][sex][rate_name]
+            random_effect_table.append( row )
+   file_name = f'{csv_dir}/random_effect.csv'
+   at_cascade.write_csv_table(file_name, random_effect_table)

@@ -16,7 +16,7 @@ At Cascade Math
 -----------------------------------------------------------------------------
 {xrst_begin ode_iota_omega}
 {xrst_spell
-    ds
+   ds
 }
 
 Dismod ODE With Constant iota and omega
@@ -26,17 +26,17 @@ and the other rates are zero, the dismod ode is
 
 .. math::
 
-    \begin{align*}
-        S'(a) &= - (\omega + \iota) S(a) \\
-        C'(a) &= + \iota  S(a) - \omega C(a)
-    \end{align*}
+   \begin{align*}
+      S'(a) &= - (\omega + \iota) S(a) \\
+      C'(a) &= + \iota  S(a) - \omega C(a)
+   \end{align*}
 
 Using the first equation with initial condition :math:`S(0) = 1`,
 we have
 
 .. math::
 
-    S(a) = \exp[ - (\omega + \iota)  a ]
+   S(a) = \exp[ - (\omega + \iota)  a ]
 
 The integrating factor for the second equation is
 :math:`D(a) = \exp( \omega a )` .
@@ -44,12 +44,12 @@ The derivative of :math:`D(a) C(a)` is
 
 .. math::
 
-    \begin{align*}
-    \frac{d}{da} [ D(a) C(a) ]
-        &= D'(a) C(a) + D(a) C'(a) \\
-        &= \omega D(a) C(a) + \iota D(a) S(a) - \omega D(a) C(a)  \\
-        &= \iota D(a) S(a)
-    \end{align*}
+   \begin{align*}
+   \frac{d}{da} [ D(a) C(a) ]
+      &= D'(a) C(a) + D(a) C'(a) \\
+      &= \omega D(a) C(a) + \iota D(a) S(a) - \omega D(a) C(a)  \\
+      &= \iota D(a) S(a)
+   \end{align*}
 
 Note that the right hand side does not depend on :math:`C(a)` .
 Integrating both sides of the last equation above from zero to :math:`a`,
@@ -57,35 +57,35 @@ and using the initial condition :math:`C(0) = 0`, we obtain
 
 .. math::
 
-    \begin{align*}
-    D(a) C(a)
-        &= \iota \int_0^a D(s) S(s) ds \\
-        &= \iota \int_0^a \exp( \omega s ) \exp[ -(\omega + \iota) s ] ds \\
-        &= \left[ - \exp( - \iota s ) \right]_0^a \\
-        &= 1 - \exp( - \iota a )
-    \end{align*}
+   \begin{align*}
+   D(a) C(a)
+      &= \iota \int_0^a D(s) S(s) ds \\
+      &= \iota \int_0^a \exp( \omega s ) \exp[ -(\omega + \iota) s ] ds \\
+      &= \left[ - \exp( - \iota s ) \right]_0^a \\
+      &= 1 - \exp( - \iota a )
+   \end{align*}
 
 Dividing both sides of the last equation by :math:`D(a)` we obtain
 
 .. math::
 
-    C(a) = \exp( - \omega a ) - \exp[ - (\omega + \iota) a ]
+   C(a) = \exp( - \omega a ) - \exp[ - (\omega + \iota) a ]
 
 As a check of this solutions we compute
 
 .. math::
 
-    \begin{align*}
-    C'(a)
-        & = (\omega + \iota) \exp[ - (\omega + \iota) a ]
-            - \omega \exp( - \omega a )
-    \\
-    C'(a) + \omega C(a)
-        & = \iota \exp[ - (\omega + \iota) a ]
-    \\
-    C'(a) + \omega C(a)
-        &= \iota S(a)
-    \end{align*}
+   \begin{align*}
+   C'(a)
+      & = (\omega + \iota) \exp[ - (\omega + \iota) a ]
+         - \omega \exp( - \omega a )
+   \\
+   C'(a) + \omega C(a)
+      & = \iota \exp[ - (\omega + \iota) a ]
+   \\
+   C'(a) + \omega C(a)
+      &= \iota S(a)
+   \end{align*}
 
 Furthermore :math:`C(0) = 0` . Thus :math:`C(a)` satisfies its
 differential equation and its initial condition.

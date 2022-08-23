@@ -22,13 +22,13 @@ https://github.com/bradbell/at_cascade
 Children
 ********
 {xrst_toc_table
-    xrst/glossary.xrst
-    xrst/all_node_db.xrst
-    example/example.xrst
-    at_cascade/__init__.py
-    xrst/wish_list.xrst
-    xrst/release_notes.xrst
-    xrst/math.xrst
+   xrst/glossary.xrst
+   xrst/all_node_db.xrst
+   example/example.xrst
+   at_cascade/__init__.py
+   xrst/wish_list.xrst
+   xrst/release_notes.xrst
+   xrst/math.xrst
 }
 
 {xrst_end at_cascade}

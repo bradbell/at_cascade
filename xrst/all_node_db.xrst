@@ -9,7 +9,7 @@ see http://www.gnu.org/licenses/agpl.txt
 -----------------------------------------------------------------------------
 {xrst_begin_parent all_node_db}
 {xrst_spell
-    tbl
+   tbl
 }
 
 The All Node DataBase
@@ -135,7 +135,7 @@ For the age index *i* equal 0 through
 and time index *j* equal 0 through
 :ref:`n_omega_time-1<omega_grid@omega_time_grid_table@n_omega_time>` ::
 
-    all_mtall_id + i * n_omega_time + j
+   all_mtall_id + i * n_omega_time + j
 
 is the value of *all_mtall_id* in the all_mtall table where the
 *all_mtall_value* is located
@@ -218,7 +218,7 @@ For *i* equal 0 through
 and *j* equal 0 through
 :ref:`n_omega_time-1<omega_grid@omega_time_grid_table@n_omega_time>`
 
-    all_mtspecific_id + i * n_omega_time + j
+   all_mtspecific_id + i * n_omega_time + j
 
 is the index in the all_mtspecific table of the value for this node,
 the *i*-th age in the omega_grid,
@@ -232,10 +232,10 @@ split_reference value).
 ------------------------------------------------------------------------------
 {xrst_begin all_option_table}
 {xrst_spell
-    bnd
-    std
-    cpus
-    dir
+   bnd
+   std
+   cpus
+   dir
 }
 
 All Node Option Table

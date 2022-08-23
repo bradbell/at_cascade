@@ -12,7 +12,7 @@ image_link='https://bradbell.github.io/at_cascade'
 # List of files, besides CMakeLists.txt, that have have a copy of the
 # version number (can be empty).
 version_files='
-    at_cascade.xrst
+   at_cascade.xrst
 '
 #
 # List of special files, for this repository, that the devel tools ignore.
@@ -22,11 +22,11 @@ version_files='
 # Names that begin with a / are relative to top source directroy.
 # All other names are relavie paths somewhere below the top source directory.
 ignore_files='
-    /.gitignore
-    /batch_edit.sed
-    /bin/devel.sh
-    /readme.rst
-    /sphinx/
+   /.gitignore
+   /batch_edit.sed
+   /bin/devel.sh
+   /readme.rst
+   /sphinx/
 '
 # ----------------------------------------------------------------------------
 echo "copyright_owner=$copyright_owner"

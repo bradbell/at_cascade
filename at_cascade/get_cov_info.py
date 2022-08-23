@@ -10,7 +10,7 @@
 '''
 {xrst_begin get_cov_info}
 {xrst_spell
-    rel
+   rel
 }
 
 Get Covariate Information
@@ -19,8 +19,8 @@ Get Covariate Information
 Syntax
 ******
 {xrst_literal
-    # BEGIN syntax
-    # END syntax
+   # BEGIN syntax
+   # END syntax
 }
 
 all_option_table
@@ -91,86 +91,86 @@ import at_cascade
 def get_cov_info(
 # BEGIN syntax
 # cov_info = at_cascade.get_cov_info(
-    all_option_table      = None ,
-    covariate_table       = None ,
-    split_reference_table = None,
+   all_option_table      = None ,
+   covariate_table       = None ,
+   split_reference_table = None,
 # )
 # END syntax
 ) :
-    assert not all_option_table      is None
-    assert not covariate_table       is None
-    assert not split_reference_table is None
-    #
-    # all_option
-    all_option = dict()
-    for row in all_option_table :
-        all_option[ row['option_name'] ] = row['option_value']
-    #
-    # check split_covariate_name
-    if len(split_reference_table) == 0 :
-        assert not 'split_covariate_name' in all_option
-    else :
-        assert 'split_covariate_name' in all_option
-    #
-    # split_reference_list
-    split_reference_list = list()
-    for row in split_reference_table :
-        split_reference_list.append( row['split_reference_value'] )
-    #
-    # abs_covariate_id_set
-    abs_covariate_id_set = set()
-    if 'absolute_covariates' in all_option :
-        absolute_covariate_list = all_option['absolute_covariates'].split()
-        for covariate_name in absolute_covariate_list :
-            covariate_id = at_cascade.table_name2id(
-                covariate_table, 'covariate', covariate_name
-            )
-            abs_covariate_id_set.add(covariate_id)
-    #
-    # rel_covariate_id_set
-    rel_covariate_id_set = set()
-    for covariate_id in range( len(covariate_table) ) :
-        if not covariate_id in abs_covariate_id_set :
-            rel_covariate_id_set.add( covariate_id )
-    #
-    # case where no spliting covariate
-    if len(split_reference_table) == 0 :
-        cov_info = {
-            'abs_covariate_id_set':  abs_covariate_id_set,
-            'rel_covariate_id_set':  rel_covariate_id_set,
-        }
-        return cov_info
-    #
-    # split_covarate_name
-    split_covariate_name = all_option['split_covariate_name']
-    #
-    # split_covariate_id
-    split_covariate_id   = at_cascade.table_name2id(
-        covariate_table, 'covariate', split_covariate_name
-    )
-    #
-    # rel_covariate_id_set
-    rel_covariate_id_set.discard( split_covariate_id )
-    #
-    # split_reference
-    split_reference = covariate_table[split_covariate_id]['reference']
-    #
-    # split_reference_id
-    if not split_reference in split_reference_list :
-        msg  = 'Cannot find covariate table value for splitting covariate '
-        msg += 'in split_reference table\n'
-        msg += f'split_reference_value = {split_reference_list}, '
-        msg += f'split_covariate_id = {split_covariate_id}, '
-        msg += f'covariate table reference value = {split_reference}'
-        assert False, msg
-    split_reference_id = split_reference_list.index( split_reference )
-    #
-    cov_info = {
-        'abs_covariate_id_set':  abs_covariate_id_set,
-        'rel_covariate_id_set':  rel_covariate_id_set,
-        'split_covariate_id':    split_covariate_id,
-        'split_reference_list':  split_reference_list,
-        'split_reference_id':    split_reference_id,
-    }
-    #
-    return cov_info
+   assert not all_option_table      is None
+   assert not covariate_table       is None
+   assert not split_reference_table is None
+   #
+   # all_option
+   all_option = dict()
+   for row in all_option_table :
+      all_option[ row['option_name'] ] = row['option_value']
+   #
+   # check split_covariate_name
+   if len(split_reference_table) == 0 :
+      assert not 'split_covariate_name' in all_option
+   else :
+      assert 'split_covariate_name' in all_option
+   #
+   # split_reference_list
+   split_reference_list = list()
+   for row in split_reference_table :
+      split_reference_list.append( row['split_reference_value'] )
+   #
+   # abs_covariate_id_set
+   abs_covariate_id_set = set()
+   if 'absolute_covariates' in all_option :
+      absolute_covariate_list = all_option['absolute_covariates'].split()
+      for covariate_name in absolute_covariate_list :
+         covariate_id = at_cascade.table_name2id(
+            covariate_table, 'covariate', covariate_name
+         )
+         abs_covariate_id_set.add(covariate_id)
+   #
+   # rel_covariate_id_set
+   rel_covariate_id_set = set()
+   for covariate_id in range( len(covariate_table) ) :
+      if not covariate_id in abs_covariate_id_set :
+         rel_covariate_id_set.add( covariate_id )
+   #
+   # case where no spliting covariate
+   if len(split_reference_table) == 0 :
+      cov_info = {
+         'abs_covariate_id_set':  abs_covariate_id_set,
+         'rel_covariate_id_set':  rel_covariate_id_set,
+      }
+      return cov_info
+   #
+   # split_covarate_name
+   split_covariate_name = all_option['split_covariate_name']
+   #
+   # split_covariate_id
+   split_covariate_id   = at_cascade.table_name2id(
+      covariate_table, 'covariate', split_covariate_name
+   )
+   #
+   # rel_covariate_id_set
+   rel_covariate_id_set.discard( split_covariate_id )
+   #
+   # split_reference
+   split_reference = covariate_table[split_covariate_id]['reference']
+   #
+   # split_reference_id
+   if not split_reference in split_reference_list :
+      msg  = 'Cannot find covariate table value for splitting covariate '
+      msg += 'in split_reference table\n'
+      msg += f'split_reference_value = {split_reference_list}, '
+      msg += f'split_covariate_id = {split_covariate_id}, '
+      msg += f'covariate table reference value = {split_reference}'
+      assert False, msg
+   split_reference_id = split_reference_list.index( split_reference )
+   #
+   cov_info = {
+      'abs_covariate_id_set':  abs_covariate_id_set,
+      'rel_covariate_id_set':  rel_covariate_id_set,
+      'split_covariate_id':    split_covariate_id,
+      'split_reference_list':  split_reference_list,
+      'split_reference_id':    split_reference_id,
+   }
+   #
+   return cov_info

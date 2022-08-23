@@ -15,18 +15,18 @@ The at_cascade Examples
 .. comment BEGIN_SORT_THIS_LINE_PLUS_3
 
 {xrst_toc_table
-    example/absolute_covariates.py
-    example/bilinear.py
-    example/continue_cascade.py
-    example/csv/csv_table.py
-    example/csv/simulate_xam.py
-    example/max_fit_option.py
-    example/mulcov_freeze.py
-    example/no_ode_xam.py
-    example/one_at_function.py
-    example/prevalence2iota.py
-    example/remission.py
-    example/split_covariate.py
+   example/absolute_covariates.py
+   example/bilinear.py
+   example/continue_cascade.py
+   example/csv/csv_table.py
+   example/csv/simulate_xam.py
+   example/max_fit_option.py
+   example/mulcov_freeze.py
+   example/no_ode_xam.py
+   example/one_at_function.py
+   example/prevalence2iota.py
+   example/remission.py
+   example/split_covariate.py
 }
 
 .. comment END_SORT_THIS_LINE_MINUS_3

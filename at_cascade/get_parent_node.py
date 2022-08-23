@@ -16,8 +16,8 @@ Get Parent Node Name From Option Table
 Syntax
 ******
 {xrst_literal
-    # BEGIN syntax
-    # END syntax
+   # BEGIN syntax
+   # END syntax
 }
 
 database
@@ -39,22 +39,22 @@ import dismod_at
 def get_parent_node(
 # BEGIN syntax
 # parent_node_name = at_cascade.get_parent_node(
-    database = None
+   database = None
 # )
 # END syntax
 ) :
-    # option_table
-    new              = False
-    connection       = dismod_at.create_connection(database, new)
-    option_table     = dismod_at.get_table_dict(connection, 'option')
-    connection.close()
-    #
-    # parent_node_name
-    parent_node_name = None
-    for row in option_table :
-        if row['option_name'] == 'parent_node_name' :
-            parent_node_name = row['option_value']
-    msg = 'Cannot find parent_node_name row in option table in ' + database
-    assert not parent_node_name is None, msg
-    #
-    return parent_node_name
+   # option_table
+   new              = False
+   connection       = dismod_at.create_connection(database, new)
+   option_table     = dismod_at.get_table_dict(connection, 'option')
+   connection.close()
+   #
+   # parent_node_name
+   parent_node_name = None
+   for row in option_table :
+      if row['option_name'] == 'parent_node_name' :
+         parent_node_name = row['option_value']
+   msg = 'Cannot find parent_node_name row in option table in ' + database
+   assert not parent_node_name is None, msg
+   #
+   return parent_node_name

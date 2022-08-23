@@ -11,7 +11,7 @@ import csv
 """
 {xrst_begin write_csv_table}
 {xrst_spell
-    len
+   len
 }
 
 Create A CSV File from a Table
@@ -20,8 +20,8 @@ Create A CSV File from a Table
 Syntax
 ******
 {xrst_literal
-    BEGIN_SYNTAX
-    END_SYNTAX
+   BEGIN_SYNTAX
+   END_SYNTAX
 }
 
 table
@@ -43,22 +43,22 @@ Upon return, this file has ``len(`` *table* ``)`` + 1 lines,
 
 .. list-table::
 
-    * - columns[0]
-      - columns[1]
-      - columns[2]
-      - ...
-    * - table[0][ columns[0] ]
-      - table[0][ columns[1] ]
-      - table[0][ columns[2] ]
-      - ...
-    * - table[1][ columns[0] ]
-      - table[1][ columns[1] ]
-      - table[1][ columns[2] ]
-      - ...
-    * - \:
-      - \:
-      - \:
-      - ...
+   * - columns[0]
+     - columns[1]
+     - columns[2]
+     - ...
+   * - table[0][ columns[0] ]
+     - table[0][ columns[1] ]
+     - table[0][ columns[2] ]
+     - ...
+   * - table[1][ columns[0] ]
+     - table[1][ columns[1] ]
+     - table[1][ columns[2] ]
+     - ...
+   * - \:
+     - \:
+     - \:
+     - ...
 
 Example
 *******
@@ -70,20 +70,20 @@ Example
 def write_csv_table(
 # BEGIN_SYNTAX
 # table = at_cascade.write_csv_table(
-    file_name  = None,
-    table      = None,
-    columns    = None,
+   file_name  = None,
+   table      = None,
+   columns    = None,
 # )
 # END_SYNTAX
 ) :
-    assert type(file_name)  == str
-    assert type(table)      == list
-    assert type(columns) == list or columns == None
-    if columns == None :
-        columns = table[0].keys()
-    #
-    file_ptr    = open(file_name, 'w')
-    writer      = csv.DictWriter(file_ptr, fieldnames = columns)
-    writer.writeheader()
-    writer.writerows( table )
-    file_ptr.close()
+   assert type(file_name)  == str
+   assert type(table)      == list
+   assert type(columns) == list or columns == None
+   if columns == None :
+      columns = table[0].keys()
+   #
+   file_ptr    = open(file_name, 'w')
+   writer      = csv.DictWriter(file_ptr, fieldnames = columns)
+   writer.writeheader()
+   writer.writerows( table )
+   file_ptr.close()

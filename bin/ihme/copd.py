@@ -18,7 +18,7 @@ import dismod_at
 import multiprocessing
 #
 if os.path.isfile( os.getcwd() + '/at_cascade/__init__.py' ) :
-    sys.path.insert(0, os.getcwd())
+   sys.path.insert(0, os.getcwd())
 #
 import at_cascade.ihme
 # ----------------------------------------------------------------------------
@@ -28,11 +28,11 @@ import at_cascade.ihme
 # The keys in this dictionary are the relative covariate names
 covariate_csv_file_dict = {
 'log_sev_copd' :
-    'ihme_db/DisMod_AT/covariates/gbd2019_SEV_scalar_COPD_age_std_log_transform_covariate.csv',
+   'ihme_db/DisMod_AT/covariates/gbd2019_SEV_scalar_COPD_age_std_log_transform_covariate.csv',
 'elevation' :
-    'ihme_db/DisMod_AT/covariates/gbd2019_elevation_over_1500m_covariate.csv',
+   'ihme_db/DisMod_AT/covariates/gbd2019_elevation_over_1500m_covariate.csv',
 'haqi' :
-    'ihme_db/DisMod_AT/covariates/gbd2019_haqi_covariate.csv',
+   'ihme_db/DisMod_AT/covariates/gbd2019_haqi_covariate.csv',
 }
 #
 # scale_covaraite_dict
@@ -170,130 +170,130 @@ age_avg_split_list = [ 0.1, 1.0 ]
 # model_rate_age_grid, model_rate_time_grid
 # age and time grid points for the smoothing for non-zero rates except omega
 model_rate_age_grid = [
-    0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0
+   0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0
 ]
 model_rate_time_grid = [ 1990, 2000, 2005, 2010, 2015, 2020 ]
 #
 # prior_table
 # https://bradbell.github.io/dismod_at/doc/create_database.htm#prior_table
 prior_table = [
-    {   'name'    :    'parent_rate_value',
-        'density' :    'log_gaussian',
-        'lower'   :    1e-7,
-        'upper'   :    1.0,
-        'mean'    :    1e-2,
-        'std'     :    3.0,
-        'eta'     :    1e-7,
-    },
-    {   'name'    :    'parent_chi_delta',
-        'density' :    'log_gaussian',
-        'mean'    :    0.0,
-        'std'     :    0.3,
-        'eta'     :    1e-7,
-    },
-    {   'name'    :    'parent_iota_dage',
-        'density' :    'log_gaussian',
-        'mean'    :    0.0,
-        'std'     :    0.3,
-        'eta'     :    1e-7,
-    },
-    {   'name'    :    'parent_iota_dtime',
-        'density' :    'log_gaussian',
-        'mean'    :    0.0,
-        'std'     :    0.3,
-        'eta'     :    1e-7,
-    },
-    {   'name'    :   'child_rate_value',
-        'density' :   'gaussian',
-        'mean'    :   0.0,
-        'std'     :   0.1,
-    },
-    {   'name'    :   'alpha_value',
-        'density' :   'gaussian',
-        'mean'    :   0.0,
-        'std'     :   0.1,
-    },
+   {   'name'    :    'parent_rate_value',
+      'density' :    'log_gaussian',
+      'lower'   :    1e-7,
+      'upper'   :    1.0,
+      'mean'    :    1e-2,
+      'std'     :    3.0,
+      'eta'     :    1e-7,
+   },
+   {   'name'    :    'parent_chi_delta',
+      'density' :    'log_gaussian',
+      'mean'    :    0.0,
+      'std'     :    0.3,
+      'eta'     :    1e-7,
+   },
+   {   'name'    :    'parent_iota_dage',
+      'density' :    'log_gaussian',
+      'mean'    :    0.0,
+      'std'     :    0.3,
+      'eta'     :    1e-7,
+   },
+   {   'name'    :    'parent_iota_dtime',
+      'density' :    'log_gaussian',
+      'mean'    :    0.0,
+      'std'     :    0.3,
+      'eta'     :    1e-7,
+   },
+   {   'name'    :   'child_rate_value',
+      'density' :   'gaussian',
+      'mean'    :   0.0,
+      'std'     :   0.1,
+   },
+   {   'name'    :   'alpha_value',
+      'density' :   'gaussian',
+      'mean'    :   0.0,
+      'std'     :   0.1,
+   },
 ]
 #
 # smooth_list_dict
 # https://bradbell.github.io/dismod_at/doc/create_database.htm#smooth_table
 smooth_list_dict = [
-    {   'name'        : 'parent_chi',
-        'value_prior' : 'parent_rate_value',
-        'dage_prior'  : 'parent_chi_delta',
-        'dtime_prior' : 'parent_chi_delta',
-    },
-    {   'name'        : 'parent_iota',
-        'value_prior' : 'parent_rate_value',
-        'dage_prior'  : 'parent_iota_dage',
-        'dtime_prior' : 'parent_iota_dtime',
-    },
-    {   'name'        : 'child_smooth',
-        'value_prior' : 'child_rate_value',
-    },
-    {   'name'        : 'alpha_smooth',
-        'value_prior' : 'alpha_value',
-    },
+   {   'name'        : 'parent_chi',
+      'value_prior' : 'parent_rate_value',
+      'dage_prior'  : 'parent_chi_delta',
+      'dtime_prior' : 'parent_chi_delta',
+   },
+   {   'name'        : 'parent_iota',
+      'value_prior' : 'parent_rate_value',
+      'dage_prior'  : 'parent_iota_dage',
+      'dtime_prior' : 'parent_iota_dtime',
+   },
+   {   'name'        : 'child_smooth',
+      'value_prior' : 'child_rate_value',
+   },
+   {   'name'        : 'alpha_smooth',
+      'value_prior' : 'alpha_value',
+   },
 ]
 #
 # rate_table
 # https://bradbell.github.io/dismod_at/doc/create_database.htm#rate_table
 rate_table = [
-    {   'name':           'iota',
-        'parent_smooth': 'parent_iota',
-        'child_smooth':  'child_smooth',
-    },
-    {   'name':          'chi',
-        'parent_smooth': 'parent_chi',
-        'child_smooth':  'child_smooth',
-    },
+   {   'name':           'iota',
+      'parent_smooth': 'parent_iota',
+      'child_smooth':  'child_smooth',
+   },
+   {   'name':          'chi',
+      'parent_smooth': 'parent_chi',
+      'child_smooth':  'child_smooth',
+   },
 ]
 #
 # multov_list_dict
 # define covriate multipliers that effect rate values
 mulcov_list_dict = [
-    {   # alpha_iota_log_sev_copd
-        'covariate': 'log_sev_copd',
-        'effected':  'iota',
-        'smooth':    'alpha_smooth',
-    },
-    {   # alpha_chi_elevation
-        'covariate': 'elevation',
-        'effected':  'chi',
-        'smooth':    'alpha_smooth',
-    },
-    {   # alpha_chi_haqi
-        'covariate': 'haqi',
-        'effected':  'chi',
-        'smooth':    'alpha_smooth',
-    },
-    {   # alpha_iota_sex
-        'covariate': 'sex',
-        'effected':  'iota',
-        'smooth':    'alpha_smooth',
-    },
-    {   # alpha_chi_sex
-        'covariate': 'sex',
-        'effected':  'chi',
-        'smooth':    'alpha_smooth',
-    },
+   {   # alpha_iota_log_sev_copd
+      'covariate': 'log_sev_copd',
+      'effected':  'iota',
+      'smooth':    'alpha_smooth',
+   },
+   {   # alpha_chi_elevation
+      'covariate': 'elevation',
+      'effected':  'chi',
+      'smooth':    'alpha_smooth',
+   },
+   {   # alpha_chi_haqi
+      'covariate': 'haqi',
+      'effected':  'chi',
+      'smooth':    'alpha_smooth',
+   },
+   {   # alpha_iota_sex
+      'covariate': 'sex',
+      'effected':  'iota',
+      'smooth':    'alpha_smooth',
+   },
+   {   # alpha_chi_sex
+      'covariate': 'sex',
+      'effected':  'chi',
+      'smooth':    'alpha_smooth',
+   },
 ]
 #
 # mulcov_freeze_list
 # Freeze the covariate multipliers  at the Global level after the sex split
 mulcov_freeze_list = [
-    {   'node'      :  root_node_name ,
-        'sex'       : 'Male',
-    },
-    {   'node'      :  root_node_name ,
-        'sex'       : 'Female',
-    },
+   {   'node'      :  root_node_name ,
+      'sex'       : 'Male',
+   },
+   {   'node'      :  root_node_name ,
+      'sex'       : 'Female',
+   },
 ]
 #
 # fit_goal_set
 # Name of the nodes that we are drilling to (must be below root_node).
 # You can change this setting and then run
-#   bin/ihme/diabetes.py continue database
+#  bin/ihme/diabetes.py continue database
 # fit_goal_set = { '1_Global' }
 # fit_goal_set = { '64_High-income' }
 # fit_goal_set = { '81_Germany' }
@@ -303,50 +303,50 @@ mulcov_freeze_list = [
 #     '527_California', '547_Mississippi', '81_Germany', '84_Ireland'
 # }
 fit_goal_set = {
-    '8_Taiwan',
-    '514_Shanghai',
-    '18_Thailand',
-    '16_Philippines',
-    '22_Fiji',
-    '26_Papua_New_Guinea',
-    '41_Uzbekistan',
-    '38_Mongolia',
-    '505_Inner_Mongolia',
-    '61_Republic_of_Moldova',
-    '44850_New_Zealand_Maori_population',
-    '44851_New_Zealand_non-Maori_population',
-    '35469_Kagoshima',
-    '68_Republic_of_Korea',
-    '7_Democratic_People_s_Republic_of_Korea',
-    '349_Greenland',
-    '527_California',
-    '4644_Baja_California',
-    '4645_Baja_California_Sur',
-    '547_Mississippi',
-    '97_Argentina',
-    '99_Uruguay',
-    '81_Germany',
-    '84_Ireland',
-    '433_Northern_Ireland',
-    '44758_Tower_Hamlets',
-    '123_Peru',
-    '121_Bolivia',
-    '107_Barbados',
-    '116_Saint_Lucia',
-    '129_Honduras',
-    '4670_Tamaulipas',
-    '136_Paraguay',
-    '150_Oman',
-    '44872_Golestan',
-    '161_Bangladesh',
-    '171_Democratic_Republic_of_the_Congo',
-    '168_Angola',
-    '185_Rwanda',
-    '179_Ethiopia',
-    '194_Lesotho',
-    '482_Eastern_Cape',
-    '218_Togo',
-    '25329_Edo',
+   '8_Taiwan',
+   '514_Shanghai',
+   '18_Thailand',
+   '16_Philippines',
+   '22_Fiji',
+   '26_Papua_New_Guinea',
+   '41_Uzbekistan',
+   '38_Mongolia',
+   '505_Inner_Mongolia',
+   '61_Republic_of_Moldova',
+   '44850_New_Zealand_Maori_population',
+   '44851_New_Zealand_non-Maori_population',
+   '35469_Kagoshima',
+   '68_Republic_of_Korea',
+   '7_Democratic_People_s_Republic_of_Korea',
+   '349_Greenland',
+   '527_California',
+   '4644_Baja_California',
+   '4645_Baja_California_Sur',
+   '547_Mississippi',
+   '97_Argentina',
+   '99_Uruguay',
+   '81_Germany',
+   '84_Ireland',
+   '433_Northern_Ireland',
+   '44758_Tower_Hamlets',
+   '123_Peru',
+   '121_Bolivia',
+   '107_Barbados',
+   '116_Saint_Lucia',
+   '129_Honduras',
+   '4670_Tamaulipas',
+   '136_Paraguay',
+   '150_Oman',
+   '44872_Golestan',
+   '161_Bangladesh',
+   '171_Democratic_Republic_of_the_Congo',
+   '168_Angola',
+   '185_Rwanda',
+   '179_Ethiopia',
+   '194_Lesotho',
+   '482_Eastern_Cape',
+   '218_Togo',
+   '25329_Edo',
 }
 fit_goal_set = { '1_Global' }
 # ----------------------------------------------------------------------------
@@ -355,90 +355,90 @@ fit_goal_set = { '1_Global' }
 #
 # random.seed
 if __name__ == '__main__' :
-    if random_seed == 0 :
-        random_seed = int( time.time() )
+   if random_seed == 0 :
+      random_seed = int( time.time() )
 # ----------------------------------------------------------------------------
 def setup_function() :
-    #
-    # write_node_table
-    at_cascade.ihme.write_node_table(result_dir)
-    #
-    # write_data_table
-    at_cascade.ihme.write_data_table(
-        result_dir              = result_dir,
-        data_inp_file           = data_inp_file,
-        csmr_inp_file           = csmr_inp_file,
-        covariate_csv_file_dict = covariate_csv_file_dict,
-        scale_covariate_dict    = scale_covariate_dict,
-    )
-    #
-    # write_mtall_tables
-    at_cascade.ihme.write_mtall_tables(result_dir)
-    #
-    # write_root_node_database
-    at_cascade.ihme.write_root_node_database(
-        result_dir              = result_dir,
-        root_node_database      = root_node_database,
-        hold_out_integrand      = hold_out_integrand,
-        hold_out_nid_set        = hold_out_nid_set,
-        covariate_csv_file_dict = covariate_csv_file_dict,
-        gamma_factor            = gamma_factor,
-        root_node_name          = root_node_name,
-        model_rate_age_grid     = model_rate_age_grid,
-        model_rate_time_grid    = model_rate_time_grid,
-        prior_table             = prior_table,
-        smooth_list_dict        = smooth_list_dict,
-        rate_table              = rate_table,
-        mulcov_list_dict        = mulcov_list_dict,
-        rate_case               = rate_case,
-        zero_sum_child_rate     = zero_sum_child_rate,
-        ode_step_size           = ode_step_size,
-        age_avg_split_list      = age_avg_split_list,
-        compress_interval_list  = compress_interval_list,
-        quasi_fixed             = quasi_fixed,
-        tolerance_fixed         = tolerance_fixed,
-        max_num_iter_fixed      = max_num_iter_fixed,
-    )
-    #
-    # write_all_option_table
-    at_cascade.ihme.write_all_option_table(
-        result_dir                   = result_dir,
-        root_node_name               = root_node_name ,
-        shift_prior_std_factor       = shift_prior_std_factor,
-        perturb_optimization_scale   = perturb_optimization_scale,
-        perturb_optimization_start   = perturb_optimization_start,
-        max_abs_effect               = max_abs_effect,
-        max_fit                      = max_fit,
-        max_number_cpu               = max_number_cpu,
-        shared_memory_prefix         = shared_memory_prefix,
-    )
-    #
-    # write_mulcov_freeze_table
-    at_cascade.ihme.write_mulcov_freeze_table(
-        result_dir, root_node_database, mulcov_list_dict, mulcov_freeze_list
-    )
-    #
-    # write_node_split_table
-    at_cascade.ihme.write_node_split_table(
-        result_dir, node_split_name_set, root_node_database
-    )
-    #
-    # write_all_node_database
-    at_cascade.ihme.write_all_node_database(result_dir, root_node_database)
+   #
+   # write_node_table
+   at_cascade.ihme.write_node_table(result_dir)
+   #
+   # write_data_table
+   at_cascade.ihme.write_data_table(
+      result_dir              = result_dir,
+      data_inp_file           = data_inp_file,
+      csmr_inp_file           = csmr_inp_file,
+      covariate_csv_file_dict = covariate_csv_file_dict,
+      scale_covariate_dict    = scale_covariate_dict,
+   )
+   #
+   # write_mtall_tables
+   at_cascade.ihme.write_mtall_tables(result_dir)
+   #
+   # write_root_node_database
+   at_cascade.ihme.write_root_node_database(
+      result_dir              = result_dir,
+      root_node_database      = root_node_database,
+      hold_out_integrand      = hold_out_integrand,
+      hold_out_nid_set        = hold_out_nid_set,
+      covariate_csv_file_dict = covariate_csv_file_dict,
+      gamma_factor            = gamma_factor,
+      root_node_name          = root_node_name,
+      model_rate_age_grid     = model_rate_age_grid,
+      model_rate_time_grid    = model_rate_time_grid,
+      prior_table             = prior_table,
+      smooth_list_dict        = smooth_list_dict,
+      rate_table              = rate_table,
+      mulcov_list_dict        = mulcov_list_dict,
+      rate_case               = rate_case,
+      zero_sum_child_rate     = zero_sum_child_rate,
+      ode_step_size           = ode_step_size,
+      age_avg_split_list      = age_avg_split_list,
+      compress_interval_list  = compress_interval_list,
+      quasi_fixed             = quasi_fixed,
+      tolerance_fixed         = tolerance_fixed,
+      max_num_iter_fixed      = max_num_iter_fixed,
+   )
+   #
+   # write_all_option_table
+   at_cascade.ihme.write_all_option_table(
+      result_dir                   = result_dir,
+      root_node_name               = root_node_name ,
+      shift_prior_std_factor       = shift_prior_std_factor,
+      perturb_optimization_scale   = perturb_optimization_scale,
+      perturb_optimization_start   = perturb_optimization_start,
+      max_abs_effect               = max_abs_effect,
+      max_fit                      = max_fit,
+      max_number_cpu               = max_number_cpu,
+      shared_memory_prefix         = shared_memory_prefix,
+   )
+   #
+   # write_mulcov_freeze_table
+   at_cascade.ihme.write_mulcov_freeze_table(
+      result_dir, root_node_database, mulcov_list_dict, mulcov_freeze_list
+   )
+   #
+   # write_node_split_table
+   at_cascade.ihme.write_node_split_table(
+      result_dir, node_split_name_set, root_node_database
+   )
+   #
+   # write_all_node_database
+   at_cascade.ihme.write_all_node_database(result_dir, root_node_database)
 # ----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :
-    at_cascade.ihme.main(
-        result_dir              = result_dir,
-        root_node_name          = root_node_name,
-        fit_goal_set            = fit_goal_set,
-        setup_function          = setup_function,
-        max_plot                = max_plot,
-        covariate_csv_file_dict = covariate_csv_file_dict,
-        scale_covariate_dict    = scale_covariate_dict,
-        root_node_database      = root_node_database,
-        no_ode_fit              = no_ode_fit,
-        fit_type_list           = fit_type_list,
-        random_seed             = random_seed,
-    )
-    print('copd.py: OK')
+   at_cascade.ihme.main(
+      result_dir              = result_dir,
+      root_node_name          = root_node_name,
+      fit_goal_set            = fit_goal_set,
+      setup_function          = setup_function,
+      max_plot                = max_plot,
+      covariate_csv_file_dict = covariate_csv_file_dict,
+      scale_covariate_dict    = scale_covariate_dict,
+      root_node_database      = root_node_database,
+      no_ode_fit              = no_ode_fit,
+      fit_type_list           = fit_type_list,
+      random_seed             = random_seed,
+   )
+   print('copd.py: OK')

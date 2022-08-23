@@ -16,8 +16,8 @@ Create An Empty avgint Table
 Syntax
 ******
 {xrst_literal
-    # BEGIN syntax
-    # END syntax
+   # BEGIN syntax
+   # END syntax
 }
 
 connection
@@ -48,46 +48,46 @@ import at_cascade
 def empty_avgint_table(connection) :
 # END syntax
 # ----------------------------------------------------------------------------
-    #
-    # n_covariate
-    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
-    n_covariate     = len(covariate_table)
-    #
-    # col_name
-    col_name = [
-        'integrand_id',
-        'node_id',
-        'subgroup_id',
-        'weight_id',
-        'age_lower',
-        'age_upper',
-        'time_lower',
-        'time_upper',
-    ]
-    for covariate_id in range(n_covariate) :
-        col_name.append(f'x_{covariate_id}')
-    #
-    # col_type
-    col_type = [
-        'integer',
-        'integer',
-        'integer',
-        'integer',
-        'real',
-        'real',
-        'real',
-        'real',
-    ]
-    for covariate_id in range(n_covariate) :
-        col_type.append('real')
-    #
-    # create_table
-    row_list = list()
-    tbl_name = 'avgint'
-    dismod_at.create_table(
-        connection, tbl_name, col_name, col_type, row_list
-    )
-    #
-    # add_log_entry
-    message = 'empty_avgint_table'
-    at_cascade.add_log_entry(connection, message)
+   #
+   # n_covariate
+   covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+   n_covariate     = len(covariate_table)
+   #
+   # col_name
+   col_name = [
+      'integrand_id',
+      'node_id',
+      'subgroup_id',
+      'weight_id',
+      'age_lower',
+      'age_upper',
+      'time_lower',
+      'time_upper',
+   ]
+   for covariate_id in range(n_covariate) :
+      col_name.append(f'x_{covariate_id}')
+   #
+   # col_type
+   col_type = [
+      'integer',
+      'integer',
+      'integer',
+      'integer',
+      'real',
+      'real',
+      'real',
+      'real',
+   ]
+   for covariate_id in range(n_covariate) :
+      col_type.append('real')
+   #
+   # create_table
+   row_list = list()
+   tbl_name = 'avgint'
+   dismod_at.create_table(
+      connection, tbl_name, col_name, col_type, row_list
+   )
+   #
+   # add_log_entry
+   message = 'empty_avgint_table'
+   at_cascade.add_log_entry(connection, message)

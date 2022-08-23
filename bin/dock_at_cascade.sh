@@ -14,9 +14,9 @@ at_cascade_hash='2c66f70092dcc4d6f0f9b76190b0e4a0fbbcbeef'
 # -----------------------------------------------------------------------------
 if [ -e 'Dockerfile' ]
 then
-    echo 'dock_at_cascade.sh: Error'
-    echo 'Must first remove ./DockerFile'
-    exit 1
+   echo 'dock_at_cascade.sh: Error'
+   echo 'Must first remove ./DockerFile'
+   exit 1
 fi
 # ---------------------------------------------------------------------------
 cat << EOF > Dockerfile
@@ -43,7 +43,7 @@ RUN sed -i bin/check_all.sh -e '/run_xrst.sh/d' && bin/check_all.sh
 # 4. Install at_cascade
 RUN python3 -m build && \
 pip3 install --force-reinstall dist/at_cascade-$at_cascade_version.tar.gz \
-    --prefix=/home/prefix/dismod_at
+   --prefix=/home/prefix/dismod_at
 
 EOF
 # ---------------------------------------------------------------------------

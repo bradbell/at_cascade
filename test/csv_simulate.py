@@ -14,16 +14,16 @@
 #
 # For this test, rho and chi are zero, iota and omega are constant, and
 # the dismod ODE is S(0) = 1, C(0) = 0,
-#   S'(a) = - iota * S(a)
-#   C'(a) = + iota * S(a) - omega * C(a)
+#  S'(a) = - iota * S(a)
+#  C'(a) = + iota * S(a) - omega * C(a)
 #
 # This corresponding solution is
-#   S(a) = exp[ - (ometa + iota) * a ]
-#   C(a) =  exp(-omega * a] - exp[ -(omega + iota) * a ]
+#  S(a) = exp[ - (ometa + iota) * a ]
+#  C(a) =  exp(-omega * a] - exp[ -(omega + iota) * a ]
 # see ode_iota_omega in doucmentation.
 #
 # The average of exp( -lambda * a) from a = low to a = up is
-#   [ exp( -lambda * low) - exp( -lambda * up) ] / [ lambda * (up - low) ]
+#  [ exp( -lambda * low) - exp( -lambda * up) ] / [ lambda * (up - low) ]
 #
 import os
 import sys
@@ -33,7 +33,7 @@ import numpy
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-    sys.path.insert(0, current_directory)
+   sys.path.insert(0, current_directory)
 import at_cascade
 # BEGIN_PYTHON
 #
@@ -92,137 +92,137 @@ csv_file['simulate.csv'] = header + \
 '''
 #
 def run_test() :
-    from math import exp
-    #
-    # eps99
-    eps99 = 99.0 * numpy.finfo(float).eps
-    #
-    # csv_dir
-    csv_dir = 'build/csv'
-    if not os.path.exists(csv_dir) :
-        os.mkdir(csv_dir)
-    #
-    # write csv files
-    for name in csv_file :
-        file_name = f'{csv_dir}/{name}'
-        file_ptr  = open(file_name, 'w')
-        file_ptr.write( csv_file[name] )
-        file_ptr.close()
-    #
-    # simulate command
-    command = 'simulate'
-    at_cascade.csv_interface(csv_dir, command)
-    #
-    # csv_table
-    csv_table = dict()
-    for name in csv_file :
-        file_name       = f'{csv_dir}/{name}'
-        csv_table[name] = at_cascade.read_csv_table( file_name )
-    #
-    for name in [ 'random_effect.csv', 'data_sim.csv' ] :
-        file_name       = f'{csv_dir}/{name}'
-        csv_table[name] = at_cascade.read_csv_table( file_name )
-    #
-    # random_effect.csv
-    for sex in [ 'male', 'female' ] :
-        sum_random = 0.0
-        sum_abs    = 0.0
-        for row in csv_table['random_effect.csv'] :
-            if row['node_name'] == 'n0' :
-                assert float( row['random_effect'] ) == 0.0
-            if row['sex'] == sex :
-                assert row['rate_name'] == 'iota'
-                sum_abs    += abs( float( row['random_effect'] ) )
-                sum_random += float( row['random_effect'] )
-        assert abs( sum_random ) <= eps99 * sum_abs
-    #
-    # random_effect_node_sex
-    random_effect_node_sex = dict()
-    for node_name in [ 'n0', 'n1', 'n2' ] :
-        random_effect_node_sex[node_name] = dict()
-    for row in csv_table['random_effect.csv'] :
-        node_name     = row['node_name']
-        sex           = row['sex']
-        rate_name     = row['rate_name']
-        random_effect = row['random_effect']
-        assert rate_name == 'iota'
-        random_effect_node_sex[node_name][sex] = float( random_effect )
-    #
-    # no_effect_iota
-    assert len( csv_table['no_effect_rate.csv'] ) == 1
-    for row in csv_table['no_effect_rate.csv'] :
-        assert row['rate_name'] == 'iota'
-        no_effect_iota = float( row['rate_truth'] )
-    #
-    # haqi_node_sex
-    haqi_node_sex = dict()
-    for node_name in ['n0', 'n1', 'n2'] :
-        haqi_node_sex[node_name] = dict()
-    for row in csv_table['covariate.csv'] :
-        node_name  = row['node_name']
-        sex        = row['sex']
-        haqi_node_sex[node_name][sex] = row['haqi']
-    #
-    # omega
-    omega = None
-    for row in csv_table['covariate.csv'] :
-        if omega == None :
-            omega = float( row['omega'] )
-        else :
-            assert omega == float( row['omega'] )
-    #
-    # haqi_reference
-    female = float( haqi_node_sex['n0']['female'] )
-    male   = float( haqi_node_sex['n0']['male'] )
-    haqi_reference = (female + male) / 2.0
-    #
-    # mul_haqi_iota
-    assert len( csv_table['multiplier_sim.csv'] ) == 1
-    for row in csv_table['multiplier_sim.csv'] :
-        assert row['rate_name'] == 'iota'
-        assert row['covariate_or_sex'] == 'haqi'
-        mul_haqi_iota = float( row['multiplier_truth'] )
-    #
-    # data_row
-    for data_row in csv_table['data_sim.csv'] :
-        #
-        # sim_row
-        simulate_id    = int( data_row['simulate_id'] )
-        sim_row        = csv_table['simulate.csv'][simulate_id]
-        #
-        # node_name, sex
-        node_name      = sim_row['node_name']
-        sex            = sim_row['sex']
-        #
-        # random_effect
-        random_effect = random_effect_node_sex[node_name][sex]
-        #
-        # covariate effect
-        haqi             = float( haqi_node_sex[node_name][sex] )
-        covariate_effect = mul_haqi_iota * (haqi - haqi_reference)
-        #
-        # effect
-        effect = random_effect + covariate_effect
-        #
-        # iota
-        iota = exp(effect) * no_effect_iota
-        #
-        # age_lower, age_upper
-        age_lower = float( sim_row['age_lower'] )
-        age_upper = float( sim_row['age_upper'] )
-        #
-        # average_withC
-        term_1 = exp(-omega * age_lower)  - exp(-omega * age_upper)
-        term_1 = term_1 / ( omega * (age_upper - age_lower) )
-        term_2 = exp(-(omega+iota) * age_lower)  \
-                - exp(-(omega+iota) * age_upper)
-        term_2 = term_2 / ( (omega+iota) * (age_upper - age_lower) )
-        average_withC = term_1 - term_2
-        #
-        # meas_mean
-        meas_mean = float( data_row['meas_mean'] )
-        #
-        assert abs( meas_mean / average_withC - 1.0 ) < 1e-3
+   from math import exp
+   #
+   # eps99
+   eps99 = 99.0 * numpy.finfo(float).eps
+   #
+   # csv_dir
+   csv_dir = 'build/csv'
+   if not os.path.exists(csv_dir) :
+      os.mkdir(csv_dir)
+   #
+   # write csv files
+   for name in csv_file :
+      file_name = f'{csv_dir}/{name}'
+      file_ptr  = open(file_name, 'w')
+      file_ptr.write( csv_file[name] )
+      file_ptr.close()
+   #
+   # simulate command
+   command = 'simulate'
+   at_cascade.csv_interface(csv_dir, command)
+   #
+   # csv_table
+   csv_table = dict()
+   for name in csv_file :
+      file_name       = f'{csv_dir}/{name}'
+      csv_table[name] = at_cascade.read_csv_table( file_name )
+   #
+   for name in [ 'random_effect.csv', 'data_sim.csv' ] :
+      file_name       = f'{csv_dir}/{name}'
+      csv_table[name] = at_cascade.read_csv_table( file_name )
+   #
+   # random_effect.csv
+   for sex in [ 'male', 'female' ] :
+      sum_random = 0.0
+      sum_abs    = 0.0
+      for row in csv_table['random_effect.csv'] :
+         if row['node_name'] == 'n0' :
+            assert float( row['random_effect'] ) == 0.0
+         if row['sex'] == sex :
+            assert row['rate_name'] == 'iota'
+            sum_abs    += abs( float( row['random_effect'] ) )
+            sum_random += float( row['random_effect'] )
+      assert abs( sum_random ) <= eps99 * sum_abs
+   #
+   # random_effect_node_sex
+   random_effect_node_sex = dict()
+   for node_name in [ 'n0', 'n1', 'n2' ] :
+      random_effect_node_sex[node_name] = dict()
+   for row in csv_table['random_effect.csv'] :
+      node_name     = row['node_name']
+      sex           = row['sex']
+      rate_name     = row['rate_name']
+      random_effect = row['random_effect']
+      assert rate_name == 'iota'
+      random_effect_node_sex[node_name][sex] = float( random_effect )
+   #
+   # no_effect_iota
+   assert len( csv_table['no_effect_rate.csv'] ) == 1
+   for row in csv_table['no_effect_rate.csv'] :
+      assert row['rate_name'] == 'iota'
+      no_effect_iota = float( row['rate_truth'] )
+   #
+   # haqi_node_sex
+   haqi_node_sex = dict()
+   for node_name in ['n0', 'n1', 'n2'] :
+      haqi_node_sex[node_name] = dict()
+   for row in csv_table['covariate.csv'] :
+      node_name  = row['node_name']
+      sex        = row['sex']
+      haqi_node_sex[node_name][sex] = row['haqi']
+   #
+   # omega
+   omega = None
+   for row in csv_table['covariate.csv'] :
+      if omega == None :
+         omega = float( row['omega'] )
+      else :
+         assert omega == float( row['omega'] )
+   #
+   # haqi_reference
+   female = float( haqi_node_sex['n0']['female'] )
+   male   = float( haqi_node_sex['n0']['male'] )
+   haqi_reference = (female + male) / 2.0
+   #
+   # mul_haqi_iota
+   assert len( csv_table['multiplier_sim.csv'] ) == 1
+   for row in csv_table['multiplier_sim.csv'] :
+      assert row['rate_name'] == 'iota'
+      assert row['covariate_or_sex'] == 'haqi'
+      mul_haqi_iota = float( row['multiplier_truth'] )
+   #
+   # data_row
+   for data_row in csv_table['data_sim.csv'] :
+      #
+      # sim_row
+      simulate_id    = int( data_row['simulate_id'] )
+      sim_row        = csv_table['simulate.csv'][simulate_id]
+      #
+      # node_name, sex
+      node_name      = sim_row['node_name']
+      sex            = sim_row['sex']
+      #
+      # random_effect
+      random_effect = random_effect_node_sex[node_name][sex]
+      #
+      # covariate effect
+      haqi             = float( haqi_node_sex[node_name][sex] )
+      covariate_effect = mul_haqi_iota * (haqi - haqi_reference)
+      #
+      # effect
+      effect = random_effect + covariate_effect
+      #
+      # iota
+      iota = exp(effect) * no_effect_iota
+      #
+      # age_lower, age_upper
+      age_lower = float( sim_row['age_lower'] )
+      age_upper = float( sim_row['age_upper'] )
+      #
+      # average_withC
+      term_1 = exp(-omega * age_lower)  - exp(-omega * age_upper)
+      term_1 = term_1 / ( omega * (age_upper - age_lower) )
+      term_2 = exp(-(omega+iota) * age_lower)  \
+            - exp(-(omega+iota) * age_upper)
+      term_2 = term_2 / ( (omega+iota) * (age_upper - age_lower) )
+      average_withC = term_1 - term_2
+      #
+      # meas_mean
+      meas_mean = float( data_row['meas_mean'] )
+      #
+      assert abs( meas_mean / average_withC - 1.0 ) < 1e-3
 #
 run_test()
 #

@@ -16,8 +16,8 @@ Determine the Set of Integrands in Data Table
 Syntax
 ******
 {xrst_literal
-    # BEGIN syntax
-    # END syntax
+   # BEGIN syntax
+   # END syntax
 }
 
 
@@ -46,21 +46,21 @@ import dismod_at
 def get_fit_integrand(
 # BEGIN syntax
 # fit_integrand = at_cascade.get_fit_integrand(
-    fit_node_database = None ,
+   fit_node_database = None ,
 # )
 # END syntax
 ) :
-    #
-    # data_table
-    new  = False
-    connection = dismod_at.create_connection(fit_node_database, new)
-    data_table = dismod_at.get_table_dict(connection, 'data')
-    connection.close()
-    #
-    # fit_integrand
-    fit_integrand = set()
-    for row in data_table :
-        if row['hold_out'] == 0 :
-            fit_integrand.add( row['integrand_id'] )
-    #
-    return fit_integrand
+   #
+   # data_table
+   new  = False
+   connection = dismod_at.create_connection(fit_node_database, new)
+   data_table = dismod_at.get_table_dict(connection, 'data')
+   connection.close()
+   #
+   # fit_integrand
+   fit_integrand = set()
+   for row in data_table :
+      if row['hold_out'] == 0 :
+         fit_integrand.add( row['integrand_id'] )
+   #
+   return fit_integrand

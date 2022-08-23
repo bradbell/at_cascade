@@ -11,7 +11,7 @@ import at_cascade
 """
 {xrst_begin_parent csv_interface}
 {xrst_spell
-    dir
+   dir
 }
 
 Simulate and Fit an AT Cascade Data Set
@@ -37,7 +37,7 @@ command
 =======
 This string is either ``simulate``, ``fit`` , or ``predict``  .
 {xrst_toc_table
-    at_cascade/csv_simulate.py
+   at_cascade/csv_simulate.py
 }
 
 Notation
@@ -56,25 +56,25 @@ Rectangular Grid
 A csv file is said to have a rectangular grid in columns
 *name_a* , *name_b*, *name_c* if the following holds:
 
-#.  The csv file has columns with the names
-    *name_a*, *name_b*, *name_c*.
+#. The csv file has columns with the names
+   *name_a*, *name_b*, *name_c*.
 
-#.  :math:`( a_1 , \ldots , a_L )`
-    is the vector of values in column *name_a* .
+#. :math:`( a_1 , \ldots , a_L )`
+   is the vector of values in column *name_a* .
 
-#.  :math:`( b_1 , \ldots , b_M )`
-    is the vector of values in column *name_b* .
+#. :math:`( b_1 , \ldots , b_M )`
+   is the vector of values in column *name_b* .
 
-#.  :math:`( c_1 , \ldots , c_N )`
-    is the vector of values in column *name_c* .
+#. :math:`( c_1 , \ldots , c_N )`
+   is the vector of values in column *name_c* .
 
-#.  For :math:`\ell = 1 , \ldots , L`,
-    :math:`m = 1 , \ldots , M`,
-    :math:`n = 1,  \ldots , N` ,
-    there is one and only one row with
-    *name_a* equal to :math:`a_\ell`,
-    *name_b* equal to :math:`b_m`, and
-    *name_c* equal to :math:`c_n`.
+#. For :math:`\ell = 1 , \ldots , L`,
+   :math:`m = 1 , \ldots , M`,
+   :math:`n = 1,  \ldots , N` ,
+   there is one and only one row with
+   *name_a* equal to :math:`a_\ell`,
+   *name_b* equal to :math:`b_m`, and
+   *name_c* equal to :math:`c_n`.
 
 Covariates
 ==========
@@ -92,9 +92,9 @@ The actual data type for each entry in a csv file is a string; i.e.,
 an arbitrary sequence of characters. Certain columns have further
 restrictions as described below
 
-1.  An integer value is a string represents of an integer.
-2.  A float value is a string that represents a floating point number.
-3.  A sex value is either ``female`` , ``male`` or ``both`` .
+1. An integer value is a string represents of an integer.
+2. A float value is a string that represents a floating point number.
+3. A sex value is either ``female`` , ``male`` or ``both`` .
 
 Index Column
 ============
@@ -116,9 +116,9 @@ simulate refers to are for a normal distribution.
 
 {xrst_begin csv_fit}
 {xrst_spell
-    meas
-    std
-    sim
+   meas
+   std
+   sim
 }
 
 Fit a Simulated Data Set
@@ -352,16 +352,16 @@ Note that the variables are the no-effect rates and the covariate multipliers.
 """
 # ----------------------------------------------------------------------------
 def csv_interface(csv_dir, command) :
-    #
-    # command_dict
-    command_dict = {
-        'simulate' : at_cascade.csv_simulate,
-    }
-    if command not in command_dict :
-        msg  = f'csv_interface: Error: command {command} is not implemented'
-        assert False, msg
-    #
-    # execute the command
-    command_dict[command](csv_dir)
-    #
-    return
+   #
+   # command_dict
+   command_dict = {
+      'simulate' : at_cascade.csv_simulate,
+   }
+   if command not in command_dict :
+      msg  = f'csv_interface: Error: command {command} is not implemented'
+      assert False, msg
+   #
+   # execute the command
+   command_dict[command](csv_dir)
+   #
+   return

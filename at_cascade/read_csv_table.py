@@ -17,8 +17,8 @@ Create A Table from a CSV File
 Syntax
 ******
 {xrst_literal
-    BEGIN_SYNTAX
-    END_SYNTAX
+   BEGIN_SYNTAX
+   END_SYNTAX
 }
 
 
@@ -49,12 +49,12 @@ Example
 # table = read_csv_table(file_name)
 # END_SYNTAX
 def read_csv_table(file_name) :
-    assert type(file_name)  == str
-    #
-    file_ptr   = open(file_name)
-    reader     = csv.DictReader(file_ptr)
-    table      = list()
-    for row in reader :
-        table.append(row)
-    file_ptr.close()
-    return table
+   assert type(file_name)  == str
+   #
+   file_ptr   = open(file_name)
+   reader     = csv.DictReader(file_ptr)
+   table      = list()
+   for row in reader :
+      table.append(row)
+   file_ptr.close()
+   return table
