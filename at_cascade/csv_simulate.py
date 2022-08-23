@@ -7,6 +7,7 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
+import time
 import math
 import random
 import numpy
@@ -971,11 +972,12 @@ def csv_simulate(csv_dir) :
       'no_effect_rate',
       'simulate',
    ]
+   print('begin reading csv files')
    for name in input_list :
       file_name         = f'{csv_dir}/{name}.csv'
-      print( f'reading {file_name}' )
       input_table[name] = at_cascade.read_csv_table(file_name)
-   print('finish reading csv files')
+   #
+   print('being creating data structures' )
    #
    # option_value
    option_value = option_table2dict(csv_dir, input_table['option'] )
@@ -1021,13 +1023,22 @@ def csv_simulate(csv_dir) :
       input_table['multiplier_sim']
    )
    #
+   # t_last
+   print('being simulation' )
+   t_last = time.time()
+   #
    # data_sim_table
    data_sim_table = list()
    for (simulate_id, sim_row) in enumerate( input_table['simulate'] ) :
       line_number = simulate_id + 2
       #
+      t_current = time.time()
+      if t_current - t_last > 30.0 :
+            print( f'simulate_id = {simulate_id:,}')
+            t_last = t_current
+      #
       # simulate_id
-      if simulate_id != int( sim_row['simulate_id'] ) :
+      if simulate_id != int( float(sim_row['simulate_id']) ) :
          msg  = f'csv_interface: Error at line {line_number} '
          msg += f'in simulate.csv\n'
          msg += f'simulate_id = ' + sim_row['simulate_id']
@@ -1117,13 +1128,14 @@ def csv_simulate(csv_dir) :
       data_row['meas_std'] = meas_std
       #
       # data_row['meas_value']
-      meas_noise             = random.gauss(meas_mean, meas_std )
-      meas_value             = meas_mean + meas_noise
+      meas_value             = random.gauss(meas_mean, meas_std )
       meas_value             = max(meas_value, 0.0)
       data_row['meas_value'] = meas_value
       #
       # data_sim_table
       data_sim_table.append( data_row )
+   #
+   print( 'write files' )
    #
    # data.csv
    file_name = f'{csv_dir}/data_sim.csv'
@@ -1141,3 +1153,5 @@ def csv_simulate(csv_dir) :
             random_effect_table.append( row )
    file_name = f'{csv_dir}/random_effect.csv'
    at_cascade.write_csv_table(file_name, random_effect_table)
+   #
+   print( 'csv_simulate done' )

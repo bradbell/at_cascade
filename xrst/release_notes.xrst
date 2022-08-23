@@ -22,6 +22,10 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+08-23
+*****
+Add tracing to :ref:`csv_simulate` ; i.e., it will report is progress.
+
 08-21
 *****
 1. Fix some error message and add some tracing to :ref:`csv_simulate` .
