@@ -1023,27 +1023,34 @@ def csv_simulate(csv_dir) :
       input_table['multiplier_sim']
    )
    #
-   # t_last
-   print('being simulation' )
-   t_last = time.time()
+   # s_last, s_start
+   simulate_id = len( input_table['simulate'] )
+   print( f'begin simulation: total id = {simulate_id:,}' )
+   s_last  = time.time()
+   s_start = s_last
    #
    # data_sim_table
    data_sim_table = list()
    for (simulate_id, sim_row) in enumerate( input_table['simulate'] ) :
       line_number = simulate_id + 2
       #
-      t_current = time.time()
-      if t_current - t_last > 30.0 :
-            print( f'simulate_id = {simulate_id:,}')
-            t_last = t_current
+      # s_current
+      s_current = time.time()
+      if s_current - s_last > 30.0 :
+            #
+            # seconds, s_last
+            seconds = s_current - s_start
+            s_last  = s_current
+            print( f'{simulate_id:,} id, {seconds:.0f} sec' )
       #
       # simulate_id
-      if simulate_id != int( float(sim_row['simulate_id']) ) :
-         msg  = f'csv_interface: Error at line {line_number} '
-         msg += f'in simulate.csv\n'
-         msg += f'simulate_id = ' + sim_row['simulate_id']
-         msg += ' is not equal line number minus two'
-         assert False, msg
+      if True :
+         if simulate_id != int( float(sim_row['simulate_id']) ) :
+            msg  = f'csv_interface: Error at line {line_number} '
+            msg += f'in simulate.csv\n'
+            msg += f'simulate_id = ' + sim_row['simulate_id']
+            msg += ' is not equal line number minus two'
+            assert False, msg
       #
       # integrand_name
       integrand_name = sim_row['integrand_name']
@@ -1112,8 +1119,8 @@ def csv_simulate(csv_dir) :
       )
       #
       # avg_integrand
-      abs_tol = 1e-11
-      rel_tol = 1e-6
+      abs_tol = 1e-8
+      rel_tol = 1e-3
       avg_integrand = dismod_at.average_integrand(
          rate_fun_dict, integrand_name, grid, abs_tol, rel_tol
       )
@@ -1134,6 +1141,11 @@ def csv_simulate(csv_dir) :
       #
       # data_sim_table
       data_sim_table.append( data_row )
+   #
+   # seconds, simulate_id
+   seconds = s_current - s_start
+   simulate_id = len( input_table['simulate'] )
+   print( f'end simulation: total seconds = {seconds:.0f}' )
    #
    print( 'write files' )
    #
