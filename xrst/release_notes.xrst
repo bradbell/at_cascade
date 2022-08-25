@@ -29,7 +29,9 @@ columns to the :ref:`csv_simulate@input_files@option.csv` file.
 
 08-23
 *****
-Add tracing to :ref:`csv_simulate` ; i.e., it will report is progress.
+1. Add tracing to :ref:`csv_simulate` ; i.e., it will report is progress.
+2. Change number of spaces corresponding an indent from 4 to 3.
+   (This interacts better with the sphinx documentation system.)
 
 08-21
 *****
