@@ -22,6 +22,11 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+08-24
+*****
+Add the absolute_tolerance, relative_tolerance, and float_precision
+columns to the :ref:`csv_simulate@input_files@option.csv` file.
+
 08-23
 *****
 Add tracing to :ref:`csv_simulate` ; i.e., it will report is progress.

@@ -45,6 +45,9 @@ random_seed = str( int( time.time() ) )
 random_seed = 1660588020
 csv_file['option.csv'] = \
 '''name,value
+absolute_tolerance,1e-8
+relative_tolerance,1e-4
+float_precision,4
 std_random_effects,.1
 integrand_step_size,1.0
 '''

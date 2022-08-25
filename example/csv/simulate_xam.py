@@ -79,8 +79,11 @@ csv_file = dict()
 random_seed = str( int( time.time() ) )
 csv_file['option.csv'] = \
 '''name,value
-std_random_effects,.1
+absolute_tolerance,1e-8
+float_precision,4
 integrand_step_size,5
+relative_tolerance,1e-3
+std_random_effects,.1
 '''
 csv_file['option.csv'] += f'random_seed,{random_seed}\n'
 #
@@ -127,9 +130,6 @@ csv_file['simulate.csv'] = header + \
 #
 def main() :
    #
-   # eps99
-   eps99 = 99.0 * numpy.finfo(float).eps
-   #
    # csv_dir
    csv_dir = 'build/csv'
    if not os.path.exists(csv_dir) :
@@ -156,6 +156,13 @@ def main() :
       file_name       = f'{csv_dir}/{name}'
       csv_table[name] = at_cascade.read_csv_table( file_name )
    #
+   # float_precision
+   float_precision = None
+   for row in csv_table['option.csv'] :
+      if row['name'] == 'float_precision' :
+         float_precision = int( row['value'] )
+   eps10 = 10 * 10.0 ** (- float_precision )
+   #
    # random_effect.csv
    for sex in [ 'male', 'female' ] :
       sum_random = 0.0
@@ -167,7 +174,7 @@ def main() :
             assert row['rate_name'] == 'iota'
             sum_abs    += abs( float( row['random_effect'] ) )
             sum_random += float( row['random_effect'] )
-      assert abs( sum_random ) <= eps99 * sum_abs
+      assert abs( sum_random ) <= eps10 * sum_abs
    #
    # random_effect_node_sex
    random_effect_node_sex = dict()
@@ -232,7 +239,7 @@ def main() :
       #
       # check_mean
       check_mean = math.exp(effect) * no_effect_iota
-      assert abs( check_mean - meas_mean ) <= eps99 * meas_mean
+      assert abs( check_mean - meas_mean ) <= eps10 * meas_mean
    #
    print('simulte_xam.py: OK')
    sys.exit(0)

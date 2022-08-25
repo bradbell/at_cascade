@@ -11,7 +11,6 @@ import time
 import math
 import random
 import numpy
-import scipy.interpolate
 import dismod_at
 import at_cascade
 """
@@ -31,7 +30,6 @@ Example
 *******
 :ref:`csv_simulate_xam`
 
-
 Input Files
 ***********
 
@@ -41,15 +39,19 @@ This csv file has two columns,
 one called ``name`` and the other called ``value``.
 The rows are documented below by the name column:
 
-std_random_effects
+absolute_tolerance
 ------------------
-This input float is the standard deviation of the random effects.
-All fo the effects are in log of rate space, so this standard deviation
-is also in log of rate space.
+This float is the absolute error tolerance for the integrator. It is used
+when the integrand values are near zero.
+
+float_precision
+---------------
+This integer is the number of decimal digits of precision to
+include for float values in the output csv files.
 
 integrand_step_size
 -------------------
-This input float is the step size in age and time used to approximate
+This float is the step size in age and time used to approximate
 integrand averages from age_lower to age_upper
 and time_lower to time_upper (in data_sim.csv).
 It must be greater than zero.
@@ -57,6 +59,18 @@ It must be greater than zero.
 random_seed
 -----------
 This integer is used to seed the random number generator.
+
+relative_tolerance
+------------------
+This float is the relative error tolerance for the integrator. It is used
+when the relative tolerance times the integrand is greater than the
+absolute tolerance.
+
+std_random_effects
+------------------
+This float is the standard deviation of the random effects.
+All fo the effects are in log of rate space, so this standard deviation
+is also in log of rate space.
 
 -----------------------------------------------------------------------------
 
@@ -345,44 +359,53 @@ def option_table2dict(csv_dir, option_table) :
    #
    # option_value
    option_value = dict()
-   valid_name  = {
-      'std_random_effects', 'integrand_step_size', 'random_seed'
+   option_type  = {
+      'absolute_tolerance'     : float   ,
+      'float_precision'        : int     ,
+      'integrand_step_size'    : float   ,
+      'random_seed'            : int     ,
+      'relative_tolerance'     : float   ,
+      'std_random_effects'     : float   ,
    }
    line_number = 0
    for row in option_table :
       line_number += 1
       name         = row['name']
-      value        = row['value']
       if name in option_value :
          msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
          msg += f'the name {name} appears twice in this table'
          assert False, msg
-      if not name in valid_name :
+      if not name in option_type :
          msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
+      value        = option_type[name]( row['value'] )
       option_value[name] = value
    #
    # option_value
-   for name in valid_name :
+   for name in option_type :
       if not name in option_value :
          msg  = 'csv_interface: Error: in option.csv\n'
          msg += f'the name {name} does not apper'
          assert False, msg
    #
-   # float options that must be greater than zero
-   for name in ['std_random_effects', 'integrand_step_size'] :
-      value = float( option_value[name] )
-      if value <= 0.0 :
+   # options that must be greater than zero
+   for name in [
+      'absolute_tolerance',
+      'integrand_step_size',
+      'float_precision',
+      'relative_tolerance',
+      'std_random_effects',
+   ] :
+      value = option_value[name]
+      if value <= 0 :
          msg  = 'csv_interface: Error: in option.csv\n'
          msg += f'{name} = {value} <= 0'
          assert False, msg
       option_value[name] = value
    #
    # random_seed
-   value = int( option_value['random_seed'] )
-   option_value['random_seed'] = value
-   random.seed(value)
+   random.seed( option_value['random_seed'] )
    #
    return option_value
 # ----------------------------------------------------------------------------
@@ -1029,6 +1052,10 @@ def csv_simulate(csv_dir) :
    s_last  = time.time()
    s_start = s_last
    #
+   # float_format
+   n_digits = str( option_value['float_precision'] )
+   float_format = '{0:.' + n_digits + 'g}'
+   #
    # data_sim_table
    data_sim_table = list()
    for (simulate_id, sim_row) in enumerate( input_table['simulate'] ) :
@@ -1119,8 +1146,8 @@ def csv_simulate(csv_dir) :
       )
       #
       # avg_integrand
-      abs_tol = 1e-8
-      rel_tol = 1e-3
+      abs_tol = option_value['absolute_tolerance']
+      rel_tol = option_value['relative_tolerance']
       avg_integrand = dismod_at.average_integrand(
          rate_fun_dict, integrand_name, grid, abs_tol, rel_tol
       )
@@ -1139,6 +1166,12 @@ def csv_simulate(csv_dir) :
       meas_value             = max(meas_value, 0.0)
       data_row['meas_value'] = meas_value
       #
+      # data_row
+      for key in data_row :
+         value = data_row[key]
+         if type( value ) == float :
+            data_row[key] = float_format.format(value)
+      #
       # data_sim_table
       data_sim_table.append( data_row )
    #
@@ -1153,16 +1186,23 @@ def csv_simulate(csv_dir) :
    file_name = f'{csv_dir}/data_sim.csv'
    at_cascade.write_csv_table(file_name, data_sim_table)
    #
-   # random_effect.csv
+   # random_effect_table
    random_effect_table = list()
    for node_name in parent_node_dict :
       for sex in [ 'male', 'female' ] :
          for rate_name in spline_no_effect_rate :
+            #
+            # row
             row                  = { 'node_name' : node_name, 'sex' : sex }
             row['rate_name']     = rate_name
-            row['random_effect'] = \
+            random_effect = \
                random_effect_node_sex_rate[node_name][sex][rate_name]
+            row['random_effect'] = float_format.format(random_effect)
+            #
+            # random_effect_table
             random_effect_table.append( row )
+   #
+   # random_effect.csv
    file_name = f'{csv_dir}/random_effect.csv'
    at_cascade.write_csv_table(file_name, random_effect_table)
    #
