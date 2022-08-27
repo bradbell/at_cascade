@@ -41,8 +41,7 @@ The rows are documented below by the name column:
 
 absolute_tolerance
 ------------------
-This float is the absolute error tolerance for the integrator. It is used
-when the integrand values are near zero.
+This float is the absolute error tolerance for the integrator.
 
 float_precision
 ---------------
@@ -59,12 +58,6 @@ It must be greater than zero.
 random_seed
 -----------
 This integer is used to seed the random number generator.
-
-relative_tolerance
-------------------
-This float is the relative error tolerance for the integrator. It is used
-when the relative tolerance times the integrand is greater than the
-absolute tolerance.
 
 std_random_effects
 ------------------
@@ -364,7 +357,6 @@ def option_table2dict(csv_dir, option_table) :
       'float_precision'        : int     ,
       'integrand_step_size'    : float   ,
       'random_seed'            : int     ,
-      'relative_tolerance'     : float   ,
       'std_random_effects'     : float   ,
    }
    line_number = 0
@@ -394,7 +386,6 @@ def option_table2dict(csv_dir, option_table) :
       'absolute_tolerance',
       'integrand_step_size',
       'float_precision',
-      'relative_tolerance',
       'std_random_effects',
    ] :
       value = option_value[name]
@@ -1147,9 +1138,8 @@ def csv_simulate(csv_dir) :
       #
       # avg_integrand
       abs_tol = option_value['absolute_tolerance']
-      rel_tol = option_value['relative_tolerance']
       avg_integrand = dismod_at.average_integrand(
-         rate_fun_dict, integrand_name, grid, abs_tol, rel_tol
+         rate_fun_dict, integrand_name, grid, abs_tol,
       )
       #
       # data_row['meas_mean']

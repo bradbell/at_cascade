@@ -79,10 +79,9 @@ csv_file = dict()
 random_seed = str( int( time.time() ) )
 csv_file['option.csv'] = \
 '''name,value
-absolute_tolerance,1e-8
+absolute_tolerance,1e-5
 float_precision,4
 integrand_step_size,5
-relative_tolerance,1e-3
 std_random_effects,.1
 '''
 csv_file['option.csv'] += f'random_seed,{random_seed}\n'
