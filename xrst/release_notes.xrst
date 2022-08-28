@@ -24,10 +24,12 @@ Release Notes for 2022
 
 08-27
 *****
-Remove the relative_tolerance option from :ref:`csv_simulate` and
-increase absolute_tolerance in its :ref:`example<csv_simulate_xam>`.
-(It was removed from ``dismod_at.average_integrand`` because
-testing it with :ref:`csv_simulate_xam` revealed problems.)
+1. Remove the relative_tolerance option from :ref:`csv_simulate` and
+   increase absolute_tolerance in its :ref:`example<csv_simulate_xam>`.
+   (It was removed from ``dismod_at.average_integrand`` because
+   testing it with :ref:`csv_simulate_xam` revealed problems.)
+2. Remove ``\begin{align*}`` from math directives
+   (sphinx automatically adds a split to math directives).
 
 08-25
 *****
