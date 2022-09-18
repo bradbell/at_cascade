@@ -46,7 +46,7 @@ The only non-zero dismod_at rates for this example are
 Splitting Covariate
 ===================
 This cascade is set up to split by sex reference value; see
-:ref:`@split_reference_table`
+:ref:`split_reference_table`
 {xrst_literal
    # BEGIN split_reference_table
    # END split_reference_table
@@ -97,7 +97,7 @@ mtall
 =====
 The ref:`all_mtall` data fro this example is simulated as equal to
 the true value for omega (see rate_true directly below) and there is
-no :ref:`@all_mtspecific` data for this example.
+no :ref:`all_mtspecific` data for this example.
 
 rate_true(rate, a, t, n, c)
 ===========================

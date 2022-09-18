@@ -22,6 +22,14 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
+09-27
+*****
+1. Adapt to xrst-2022.9.18. This changes the location of documentation
+   html files from the ``doc/rst`` directory to the ``doc`` directory.
+2. Change the linking text for web pages from the page title to the
+   page name. For example, use :ref:`all_node_db` instead of
+   :ref:`all_node_db-0` to link to the all node database documentation.
+
 08-27
 *****
 1. Remove the relative_tolerance option from :ref:`csv_simulate` and
@@ -122,7 +130,7 @@ Change :ref:`no_ode_fit` to always use Gaussian data densities.
 02-05
 *****
 Use :ref:`get_cov_reference` to compute references for relative covariates
-and remove the all_cov_reference table from the :ref:`@all_node_db`.
+and remove the all_cov_reference table from the :ref:`all_node_db`.
 
 02-04
 *****
@@ -133,7 +141,7 @@ Change 'rood_node_db routine' to 'root_node_db routine'.
 
 02-03
 *****
-Add new :ref:`@wish_list` entries and remove old ones the have been completed.
+Add new :ref:`wish_list` entries and remove old ones the have been completed.
 
 01-28
 *****
@@ -232,19 +240,19 @@ Release Notes for 2021
    (they used to be relative to the current working directory).
 
 2. Starting from a :ref:`glossary@root_node` that was not at the top
-   of the node tree did not work. The :ref:`@one_at_function` was
+   of the node tree did not work. The :ref:`one_at_function` was
    modified to test for this problem and the problem was fixed.
 
 12-08
 *****
-Remove the convergence problem :ref:`@wish_list`
+Remove the convergence problem :ref:`wish_list`
 entry becasue it was completed
 when the :ref:`all_option_table@perturb_optimization_scale` option
 was added.
 
 12-06
 *****
-Add the :ref:`@mulcov_freeze` table which enables one to freeze the
+Add the :ref:`mulcov_freeze` table which enables one to freeze the
 value of a covariate multiplier so it is the same for all fits
 below a certain point.
 
@@ -262,7 +270,7 @@ below a certain point.
    sequentially (in parallel) when :ref:`run_parallel@max_number_cpu` is
    one (greater than one).
 
-2. Add a :ref:`@wish_list` for at_cascade.
+2. Add a :ref:`wish_list` for at_cascade.
 
 12-02
 *****
@@ -303,7 +311,7 @@ Change the name get_job_table to
 *****
 1. Change the :ref:`create_all_node_db@all_option` argument to
    create_all_node_db to be a complete representation of the
-   :ref:`@all_option_table`.
+   :ref:`all_option_table`.
    This reduces the amount of necessary documentation.
    It also requires that root_node_name be in the all_option argument.
 
@@ -311,7 +319,7 @@ Change the name get_job_table to
    have a default value (corresponding to the empty table).
 
 3. Change split_level in the all_option table to the
-   :ref:`@node_split_table`.
+   :ref:`node_split_table`.
 
 
 {xrst_end 2021}

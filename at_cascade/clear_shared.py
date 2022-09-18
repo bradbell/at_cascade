@@ -36,7 +36,7 @@ did not terminate cleanly; e.g., if the system crashed.
 
 all_node_database
 *****************
-is a ``str`` containing a path to the :ref:`@all_node_db`.
+is a ``str`` containing a path to the :ref:`all_node_db`.
 This is used to determine the
 :ref:`all_option_table@shared_memory_prefix`.
 

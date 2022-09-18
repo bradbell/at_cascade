@@ -81,8 +81,8 @@ the value of :ref:`glossary@mtall` for all the nodes that have mtall data.
 all_mtall Table
 ***************
 This table specifies the value of :ref:`glossary@mtall` for each
-age, time point in the :ref:`@omega_grid`, every node, and each reference
-in the :ref:`@split_reference_table`.
+age, time point in the :ref:`omega_grid`, every node, and each reference
+in the :ref:`split_reference_table`.
 This data is used to compute the :ref:`omega_constraint` for each node.
 If mtall is not specified for a node, it will use the same *mtall*
 values as its nearest ancestor node.
@@ -121,7 +121,7 @@ split_reference_id
 ==================
 This column has type ``integer`` and it specifies the
 index of a value in
-:ref:`@split_reference_table`.
+:ref:`split_reference_table`.
 If split_reference_table is empty (is not empty),
 the values in this column must be (must not be) null.
 
@@ -166,8 +166,8 @@ If there is no ancestor of a node that has mtspecific data,
 all_mtspecific Table
 ********************
 This table specifies the value of :ref:`glossary@mtspecific` for each
-age, time point in the :ref:`@omega_grid`,  every node, and each reference
-in the :ref:`@split_reference_table`.
+age, time point in the :ref:`omega_grid`,  every node, and each reference
+in the :ref:`split_reference_table`.
 If mtspecific is not specified for a node, it will use the same *mtspecific*
 values as its nearest ancestor node.
 If none of its ancestors have mtspecific data,
@@ -204,7 +204,7 @@ split_reference_id
 ==================
 This column has type ``integer`` and it specifies the
 index of a value in
-:ref:`@split_reference_table`.
+:ref:`split_reference_table`.
 If split_reference_table is empty (is not empty),
 the values in this column must be (must not be) null.
 
@@ -308,7 +308,7 @@ If this option does not appear, all of the data for each integrand is included
 mulcov_freeze
 =============
 If this the node_id and split_reference_id for this fit appears in the
-:ref:`@mulcov_freeze_table`, the maximum number of values to fit is doubled.
+:ref:`mulcov_freeze_table`, the maximum number of values to fit is doubled.
 This results in a better representation of the covariate multipliers
 before freezing them for the jobs that will use the value determined
 by this fit.
@@ -365,7 +365,7 @@ root_split_reference_name
 *************************
 This is the `split_reference_table.split_reference_name`
 corresponding to the root_node_database.
-If :ref:`@split_reference_table` is empty (is not empty)
+If :ref:`split_reference_table` is empty (is not empty)
 this option must not (must) appear.
 
 shift_prior_std_factor
@@ -382,7 +382,7 @@ split_covariate_name
 ********************
 is the name, in the root_node_database covariate table, of the splitting
 covariate.
-If :ref:`@split_reference_table` is empty (is not empty)
+If :ref:`split_reference_table` is empty (is not empty)
 this option must not (must) appear.
 
 {xrst_end all_option_table}
@@ -421,7 +421,7 @@ by the value of the splitting covariate.
 If this table is not empty,
 the :ref:`all_option_table@split_covariate_name`
 must appear and the
-:ref:`@split_reference_table` must not be empty.
+:ref:`split_reference_table` must not be empty.
 
 node_split_id
 *************
