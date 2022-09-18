@@ -179,7 +179,7 @@ This file adds prior information for the rates in
 
 rate_sim_id
 -----------
-is an :ref:`csv_interface@Notation@index_column` for rate_sim.csv
+is an :ref:`csv_interface@Notation@Index Column` for rate_sim.csv
 and rate_prior.csv.
 
 prior_mean
@@ -236,7 +236,7 @@ has the following columns:
 
 rate_sim_id
 -----------
-is an :ref:`csv_interface@Notation@index_column` for rate_sim.csv,
+is an :ref:`csv_interface@Notation@Index Column` for rate_sim.csv,
 rate_prior.csv and rate_fit.csv.
 
 estimate
@@ -332,7 +332,7 @@ predict.csv
 
 case_id
 -------
-is an :ref:`csv_interface@Notation@index_column` for
+is an :ref:`csv_interface@Notation@Index Column` for
 predict.csv and case.csv.
 
 integrand_predict

@@ -176,7 +176,7 @@ different multiplier. The multipliers are constant in age and time.
 
 multiplier_id
 -------------
-is an :ref:`csv_interface@Notation@index_column` for multiplier_sim.csv.
+is an :ref:`csv_interface@Notation@Index Column` for multiplier_sim.csv.
 
 rate_name
 ---------
@@ -208,7 +208,7 @@ with each row corresponding to one data point.
 
 simulate_id
 -----------
-is an :ref:`csv_interface@Notation@index_column` for simulate.csv.
+is an :ref:`csv_interface@Notation@Index Column` for simulate.csv.
 
 integrand_name
 --------------
@@ -302,7 +302,7 @@ simulate_id
 -----------
 This integer identifies the row in the simulate.csv
 corresponding to this row in data_sim.csv.
-This is an :ref:`csv_interface@Notation@index_column`
+This is an :ref:`csv_interface@Notation@Index Column`
 for simulate.csv and data_sim.csv.
 Not that not all these row get included during fitting; see
 :ref:`csv_fit@Input Files@data_subset.csv@simulate_id`.

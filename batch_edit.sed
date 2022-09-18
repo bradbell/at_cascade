@@ -30,4 +30,4 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|:ref:`@\([a-z_.]*\)`|:ref:`\1`|g
+s/csv_interface@Notation@index_column/csv_interface@Notation@Index Column/g
