@@ -16,14 +16,19 @@ Release Notes for at_cascade
 -----------------------------------------------------------------------------
 {xrst_begin 2022}
 {xrst_spell
+   dd
    distutils
+   mm
 }
 
 Release Notes for 2022
 ######################
 
-09-27
+mm-dd
 *****
+
+09-27
+=====
 1. Adapt to xrst-2022.9.18. This changes the location of documentation
    html files from the ``doc/rst`` directory to the ``doc`` directory.
 2. Change the linking text for web pages from the page title to the
@@ -31,7 +36,7 @@ Release Notes for 2022
    :ref:`all_node_db-0` to link to the all node database documentation.
 
 08-27
-*****
+=====
 1. Remove the relative_tolerance option from :ref:`csv_simulate` and
    increase absolute_tolerance in its :ref:`example<csv_simulate_xam>`.
    (It was removed from ``dismod_at.average_integrand`` because
@@ -40,36 +45,36 @@ Release Notes for 2022
    (sphinx automatically adds a split to math directives).
 
 08-25
-*****
+=====
 Add the absolute_tolerance, relative_tolerance, and float_precision
 columns to the :ref:`csv_simulate@Input Files@option.csv` file.
 
 08-23
-*****
+=====
 1. Add tracing to :ref:`csv_simulate` ; i.e., it will report is progress.
 2. Change number of spaces corresponding an indent from 4 to 3.
    (This interacts better with the sphinx documentation system.)
 
 08-21
-*****
+=====
 1. Fix some error message and add some tracing to :ref:`csv_simulate` .
 2. Update documentation to use xrst-2022.8.21.
 
 08-16
-*****
+=====
 Add the section :ref:`ode_iota_omega` which derives the dismod ODE solution
 when rates are constant and only iota, omega are non-zero.
 
 08-15
-*****
+=====
 Remove use of the python distutils package because it has been deprecated.
 
 08-12
-*****
+=====
 Add the :ref:`bilinear` spline routine.
 
 08-09
-*****
+=====
 1. Advance to xrst-2022.8.8 (this improves the documentation).
 2. Improve the :ref:`index<genindex>`
    using the keyword file to exclude some entries .
@@ -77,22 +82,22 @@ Add the :ref:`bilinear` spline routine.
    to the at_cascade module.
 
 08-01
-*****
+=====
 Start construction of a cascade data simulation tool; see
 :ref:`csv_interface`.
 
 04-18
-*****
+=====
 Remove shared memory and LD_LIBRARY_PATH items from the
 :ref:`wish_list`
 because they have been completed.
 
 03-22
-*****
+=====
 Add :ref:`all_option_table@balance_fit` to the all_option table.
 
 03-14
-*****
+=====
 1. Fix a bug in how
    :ref:`avgint_parent_grid` and
    :ref:`create_shift_db` pass
@@ -103,53 +108,53 @@ Add :ref:`all_option_table@balance_fit` to the all_option table.
 3. Add the :ref:`no_ode_fit@fit_type` argument to no_ode_fit.
 
 03-12
-*****
+=====
 The shared memory names were shortened,
 to be specific _at_cascade was removed from theses names.
 In addition, the all node database was added as an argument
 to :ref:`clear_shared` so it would know the shared memory prefix.
 
 03-10
-*****
+=====
 Add the :ref:`cascade_root_node@fit_type_list` argument to
 cascade_root_node and continue_cascade.
 
 03-08
-*****
+=====
 The :ref:`remission` example was added.
 
 03-07
-*****
+=====
 The :ref:`all_option_table@shared_memory_prefix` was added to the
 all_option table.
 
 03-05
-*****
+=====
 Change :ref:`no_ode_fit` to always use Gaussian data densities.
 
 02-05
-*****
+=====
 Use :ref:`get_cov_reference` to compute references for relative covariates
 and remove the all_cov_reference table from the :ref:`all_node_db`.
 
 02-04
-*****
+=====
 In the examples, fix the following typos:
 Change 'are checked for check_cascade_node'
 to 'are checked by check_cascade_node'.
 Change 'rood_node_db routine' to 'root_node_db routine'.
 
 02-03
-*****
+=====
 Add new :ref:`wish_list` entries and remove old ones the have been completed.
 
 01-28
-*****
+=====
 Add the :ref:`add_log_entry`, :ref:`move_table`, and :ref:`empty_avgint_table`
 routines to the at_cascade module.
 
 01-27
-*****
+=====
 1. The max_fit value is now doubled when doing
    :ref:`all_option_table@max_fit@mulcov_freeze` fit.
 
@@ -158,18 +163,18 @@ routines to the at_cascade module.
    This has been fixed.
 
 01-26
-*****
+=====
 Change perturb_optimization_scaling to
 :ref:`all_option_table@perturb_optimization_scale` and add the
 :ref:`all_option_table@perturb_optimization_start` option.
 
 01-25
-*****
+=====
 The :ref:`clear_shared` routine was added to the
 at_cascade module.
 
 01-08
-*****
+=====
 1. Fix a bug in :ref:`create_shift_db`.
    To be specific, the mean int a value prior child variable in the shifted
    database (child database) might not satisfy the prior limits.
@@ -179,7 +184,7 @@ at_cascade module.
    to be difference predicted by parent fit.
 
 01-02
-*****
+=====
 1. The cascade would hang at the end, instead of detecting completion,
    when :ref:`all_option_table@max_number_cpu` was greater the one.
    This has been fixed.
@@ -191,28 +196,33 @@ at_cascade module.
 -----------------------------------------------------------------------------
 {xrst_begin 2021}
 {xrst_spell
+   dd
    dir
    iter
+   mm
 }
 
 Release Notes for 2021
 ######################
 
-12-29
+mm-dd
 *****
+
+12-29
+=====
 1. Fix error recovery and add more job status reporting to
    :ref:`run_parallel`.
 
 2. Document the :ref:`run_parallel@trace.out` file.
 
 12-28
-*****
+=====
 1. Change results_dir to result_dir.
 
 2. Remove the *trace_fit* parameter.
 
 12-26
-*****
+=====
 1. Add exception handling to running in parallel so that
    program does not hang when a job fails.
 
@@ -221,7 +231,7 @@ Release Notes for 2021
    is managed by the calling program.
 
 12-24
-*****
+=====
 1. The base_directory was changed to the :ref:`all_option_table@result_dir`
    and now a required option the all_option table.
 
@@ -235,7 +245,7 @@ Release Notes for 2021
    and change out_database to :ref:`no_ode_fit@root_fit_database`.
 
 12-21
-*****
+=====
 1. The output files are now relative to the base_directory
    (they used to be relative to the current working directory).
 
@@ -244,27 +254,27 @@ Release Notes for 2021
    modified to test for this problem and the problem was fixed.
 
 12-08
-*****
+=====
 Remove the convergence problem :ref:`wish_list`
 entry becasue it was completed
 when the :ref:`all_option_table@perturb_optimization_scale` option
 was added.
 
 12-06
-*****
+=====
 Add the :ref:`mulcov_freeze` table which enables one to freeze the
 value of a covariate multiplier so it is the same for all fits
 below a certain point.
 
 12-05
-*****
+=====
 1. Add the :ref:`check_log` routine.
 
 2. Add the :ref:`all_option_table@perturb_optimization_scale` option
    and list options in alphabetical order.
 
 12-03
-*****
+=====
 1. Add the :ref:`run_parallel` routine which
    runs :ref:`create_job_table@job_table` jobs
    sequentially (in parallel) when :ref:`run_parallel@max_number_cpu` is
@@ -273,7 +283,7 @@ below a certain point.
 2. Add a :ref:`wish_list` for at_cascade.
 
 12-02
-*****
+=====
 1. The :ref:`no_ode_fit` routine was setting the dismod_at
    max_num_iter_fixed option to 100 for all fits.
    This has been fixed and the option table setting is now used for all fits.
@@ -283,7 +293,7 @@ below a certain point.
    argument name to :ref:`cascade_root_node@root_node_database`.
 
 12-01
-*****
+=====
 1. Add :ref:`get_database_dir`.
    This routine is for use with parallel processing.
 
@@ -294,12 +304,12 @@ below a certain point.
    :ref:`create_job_table@job_table@end_child_job_id` to the job table.
 
 11-30
-*****
+=====
 Change the name get_job_table to
 :ref:`create_job_table`.
 
 11-29
-*****
+=====
 1. Add get_job_table. This routine is under construction and planned
    and part of a re-factoring for parallel processing.
 
@@ -308,7 +318,7 @@ Change the name get_job_table to
    fit_node_database).
 
 11-28
-*****
+=====
 1. Change the :ref:`create_all_node_db@all_option` argument to
    create_all_node_db to be a complete representation of the
    :ref:`all_option_table`.
