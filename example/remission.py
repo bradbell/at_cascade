@@ -168,7 +168,7 @@ routine uses these tables to check that fit against the truth.
 {xrst_begin remission_py}
 
 remission: Python Source Code
-###################################
+#############################
 
 {xrst_literal
    BEGIN remission source code

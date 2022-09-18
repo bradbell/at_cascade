@@ -191,7 +191,7 @@ node in this set.
 *root_node* to any other node.)
 
 ode_integrand
-**************
+*************
 The following integrands requires solving the dismod_at ode to model
 and hence each of them is called an *ode_integrand*:
 susceptible, withC, prevalence, Tprevalence, mtspecific, mtall, mtstandard.

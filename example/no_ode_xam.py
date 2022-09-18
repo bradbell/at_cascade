@@ -261,7 +261,7 @@ routine uses these tables to check that fit against the truth.
 }
 
 no_ode_xam: Python Source Code
-#################################
+##############################
 
 {xrst_literal
    BEGIN no_ode_xam source code

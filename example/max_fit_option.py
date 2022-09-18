@@ -100,7 +100,7 @@ a randomly chosen subset of their data.
 }
 
 perturb_optimization_scale
-****************************
+**************************
 This is the value of the
 :ref:`all_option_table@perturb_optimization_scale` option.
 It is only included as an example of using this option and is not
@@ -156,7 +156,7 @@ routine uses these tables to check that fit against the truth.
 {xrst_begin max_fit_option_py}
 
 max_fit_option: Python Source Code
-###################################
+##################################
 
 {xrst_literal
    BEGIN source code

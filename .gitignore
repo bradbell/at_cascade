@@ -14,10 +14,7 @@
 # used to build documentation
 /build/
 /sphinx/rst/
-/sphinx/latex/
-/sphinx/_static/
-/sphinx/index.rst
-/sphinx/conf.py
+/sphinx/label.sed
 #
 # used to store ihme databases
 /ihme_db/

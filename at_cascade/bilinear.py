@@ -42,7 +42,7 @@ Each element of *z_list*  contains the name in *table* for a z
 variable in the interpolation.
 
 table
-******
+*****
 This is a ``list`` of ``dict``.
 The values *x_name* , *y_name* and each element of *z_list*
 must be a key in each of the dictionaries.

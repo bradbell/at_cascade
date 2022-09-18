@@ -350,7 +350,7 @@ If this option does not appear, the empty string is used
 for the shared_memory_prefix.
 
 result_dir
-***********
+**********
 This option must appear and
 all of the at_cascade output files are placed in this directory.
 

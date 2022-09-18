@@ -30,7 +30,7 @@ of python dictionaries.
 This argument can't be ``None``.
 
 covariate_table
-****************
+***************
 This is the dismod_at covariate table as a python list
 of python dictionaries.
 This argument can't be ``None``.
@@ -77,7 +77,7 @@ Otherwise, for *key* equal to split_reference_list, *cov_info[key]* is a
 same order as they appear in the table.
 
 split_reference_id
-===================
+==================
 If :ref:`@split_reference_table` is empty, this key is not present.
 Otherwise, for *key* equal to split_reference_id, *cov_info[key]* is an ``int``
 containing an index in the split_reference_list.
