@@ -34,7 +34,7 @@ Release Notes for 2022
 08-25
 *****
 Add the absolute_tolerance, relative_tolerance, and float_precision
-columns to the :ref:`csv_simulate@input_files@option.csv` file.
+columns to the :ref:`csv_simulate@Input Files@option.csv` file.
 
 08-23
 *****
@@ -167,7 +167,7 @@ at_cascade module.
    database (child database) might not satisfy the prior limits.
    This violated the dismod_at assumptions about the value prior means.
 
-2. Change :ref:`create_shift_db@shift_databases@dage_and_dtime_priors`
+2. Change :ref:`create_shift_db@shift_databases@dage and dtime Priors`
    to be difference predicted by parent fit.
 
 01-02

@@ -38,9 +38,9 @@ all_option_dict
 ***************
 is a ``dict`` containing the values in the all_option table.
 This dictionary has a key for each
-:ref:`all_option_table@table_format@option_name`
+:ref:`all_option_table@Table Format@option_name`
 and the corresponding value is
-:ref:`all_option_table@table_format@option_value`.
+:ref:`all_option_table@Table Format@option_value`.
 If an option does not appear in the table, the corresponding key
 does not appear in *all_option_dict*.
 

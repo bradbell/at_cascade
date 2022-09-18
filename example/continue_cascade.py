@@ -81,7 +81,7 @@ The values *a*, *t*. *c*, are not used by this function for this example.
 
 y_i
 ===
-The only simulated integrand for this example is :ref:`glossary@sincidence`
+The only simulated integrand for this example is :ref:`glossary@Sincidence`
 which is a direct measurement of iota.
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as

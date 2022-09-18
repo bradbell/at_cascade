@@ -47,7 +47,7 @@ Demographer
 ===========
 None of the data is in demographer notation.
 For example,
-:ref:`csv_simulate@input_files@covariate.csv@time`
+:ref:`csv_simulate@Input Files@covariate.csv@time`
 1990 means the beginning of 1990,
 not the time interval from 1990 to 1991.
 
@@ -79,7 +79,7 @@ A csv file is said to have a rectangular grid in columns
 Covariates
 ==========
 For this csv interface, all the covariates are
-:ref:`glossary@relative_covariate` (called country covariates at IHME).
+:ref:`glossary@Relative Covariate` (called country covariates at IHME).
 Other cause mortality ``omega`` is referred to as a
 covariate (not as a rate) for this interface.
 Sex is the
@@ -145,7 +145,7 @@ fit command.
 multiplier_prior.csv
 ====================
 This file adds prior information for the multipliers in
-:ref:`csv_simulate@input_files@multiplier_sim.csv`.
+:ref:`csv_simulate@Input Files@multiplier_sim.csv`.
 
 multiplier_id
 -------------
@@ -175,7 +175,7 @@ the multiplier will be included in the simulated data but not in the model fit.
 rate_prior.csv
 ==============
 This file adds prior information for the rates in
-:ref:`csv_simulate@input_files@no_effect_rate.csv` .
+:ref:`csv_simulate@Input Files@no_effect_rate.csv` .
 
 rate_sim_id
 -----------
@@ -292,7 +292,7 @@ with each row corresponding to one data point.
 
 case_id
 -------
-is an :ref:`csv_interface@notation@index_column` for case.csv.
+is an :ref:`csv_interface@Notation@Index Column` for case.csv.
 
 integrand_name
 --------------

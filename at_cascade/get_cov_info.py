@@ -59,7 +59,7 @@ rel_covariate_id_set
 ====================
 if *key* is rel_covariate_id_set, *cov_info[key]* is a set of ``int``.
 This is the set of covariate_id values corresponding to the
-:ref:`relative covariates<glossary@relative_covariate>`.
+:ref:`relative covariates<glossary@Relative Covariate>`.
 
 split_covariate_id
 ==================

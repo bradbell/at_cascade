@@ -53,7 +53,7 @@ is a python string specifying the location of a
 dismod_at database relative to the current working directory.
 It is a :ref:`glossary@fit_node_database` with the
 extra properties listed under
-:ref:`cascade_root_node@output_dismod.db`
+:ref:`cascade_root_node@Output dismod.db`
 in the cascade_root_node documentation.
 This argument can't be ``None``.
 

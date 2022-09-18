@@ -41,25 +41,25 @@ Node Tree
    *  -  Symbol
       -  Documentation
    *  -  csv_dir
-      -  :ref:`csv_interface@arguments@csv_dir`
+      -  :ref:`csv_interface@Arguments@csv_dir`
    *  -  command
-      -  :ref:`csv_interface@arguments@command`
+      -  :ref:`csv_interface@Arguments@command`
    *  -  csv_file['option.csv']
-      -  :ref:`csv_simulate@input_files@option.csv`
+      -  :ref:`csv_simulate@Input Files@option.csv`
    *  -  csv_file['node.csv']
-      -  :ref:`csv_simulate@input_files@node.csv`
+      -  :ref:`csv_simulate@Input Files@node.csv`
    *  -  csv_file['covariate.csv']
-      -  :ref:`csv_simulate@input_files@covariate.csv`
+      -  :ref:`csv_simulate@Input Files@covariate.csv`
    *  -  csv_file['no_effect_rate.csv']
-      -  :ref:`csv_simulate@input_files@no_effect_rate.csv`
+      -  :ref:`csv_simulate@Input Files@no_effect_rate.csv`
    *  -  csv_file['multiplier_sim.csv']
-      -  :ref:`csv_simulate@input_files@multiplier_sim.csv`
+      -  :ref:`csv_simulate@Input Files@multiplier_sim.csv`
    *  -  csv_file['simulate.csv']
-      -  :ref:`csv_simulate@input_files@simulate.csv`
+      -  :ref:`csv_simulate@Input Files@simulate.csv`
    *  -  csv_file['random_effect.csv']
-      -  :ref:`csv_simulate@output_files@random_effect.csv`
+      -  :ref:`csv_simulate@Output Files@random_effect.csv`
    *  -  csv_file['data_sim.csv']
-      -  :ref:`csv_simulate@output_files@data_sim.csv`
+      -  :ref:`csv_simulate@Output Files@data_sim.csv`
 
 
 {xrst_literal

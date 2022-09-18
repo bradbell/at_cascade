@@ -90,7 +90,7 @@ to child nodes.
 covariate.csv
 =============
 This csv file specifies the value of omega and the covariates.
-It has a :ref:`csv_interface@notation@rectangular_grid` in the columns
+It has a :ref:`csv_interface@Notation@Rectangular Grid` in the columns
 ``node_name``, ``sex``, ``age``, ``time`` .
 
 node_name
@@ -117,7 +117,7 @@ This float is the value of omega (other cause mortality) for this row.
 Often other cause mortality is approximated by all cause mortality.
 Omega is a rate, not a covariate.
 The values in this column do not matter if
-omega does not appear in :ref:`csv_simulate@input_files@no_effect_rate.csv`,
+omega does not appear in :ref:`csv_simulate@Input Files@no_effect_rate.csv`,
 
 covariate_name
 --------------
@@ -125,8 +125,8 @@ For each covariate that we are including in this simulation,
 there is a column in the header that contains the *covariate_name*.
 The other values in that column are float representations of the covariate.
 All of these covariates are
-:ref:`glossary@relative_covariate`; see
-:ref:`csv_interface@notation@covariates`.
+:ref:`glossary@Relative Covariate`; see
+:ref:`csv_interface@Notation@Covariates`.
 
 -----------------------------------------------------------------------------
 
@@ -134,7 +134,7 @@ no_effect_rate.csv
 ==================
 This csv file specifies the grid points at which each rate is modeled
 during a simulation. It has a
-:ref:`csv_interface@notation@rectangular_grid` in the columns
+:ref:`csv_interface@Notation@Rectangular Grid` in the columns
 ``rate_name``, ``age``, ``time`` .
 These are no-effect rates; i.e., the rates without
 the random and covariate effects.
@@ -147,7 +147,7 @@ rate_name
 This string is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies the rate.
 If one of these rates does not appear, it is modeled as always zero.
 Other cause mortality ``omega`` is specified in
-:ref:`csv_simulate@input_files@covariate.csv` .
+:ref:`csv_simulate@Input Files@covariate.csv` .
 
 age
 ---
@@ -258,12 +258,12 @@ Output Files
 random_effect.csv
 =================
 This file reports the random effect for each node and rate.
-It has a :ref:`csv_interface@notation@rectangular_grid` in the columns
+It has a :ref:`csv_interface@Notation@Rectangular Grid` in the columns
 ``node_name`` , ``sex`` and ``rate_name`` .
 
 node_name
 ---------
-This string identifies the row in :ref:`csv_simulate@input_files@node.csv`
+This string identifies the row in :ref:`csv_simulate@Input Files@node.csv`
 that this row corresponds to.
 
 sex
@@ -274,7 +274,7 @@ The sex values ``male`` and ``female`` will appear.
 rate_name
 ---------
 This is a string and is one of the
-For each :ref:`csv_simulate@input_files@no_effect_rate.csv@rate_name`
+For each :ref:`csv_simulate@Input Files@no_effect_rate.csv@rate_name`
 in the no_effect rate table,
 All of the rates in the no_effect rate table are present in this file.
 
@@ -305,7 +305,7 @@ corresponding to this row in data_sim.csv.
 This is an :ref:`csv_interface@Notation@index_column`
 for simulate.csv and data_sim.csv.
 Not that not all these row get included during fitting; see
-:ref:`csv_fit@input_files@data_subset.csv@simulate_id`.
+:ref:`csv_fit@Input Files@data_subset.csv@simulate_id`.
 
 meas_mean
 ---------
@@ -323,7 +323,7 @@ data point. This standard deviation is before censoring.
 
 covariate_name
 --------------
-For each :ref:`csv_simulate@input_files@covariate.csv@covariate_name`
+For each :ref:`csv_simulate@Input Files@covariate.csv@covariate_name`
 there is a column in the simulate.csv header that contains the name.
 In the other rows, this column  contain a float that is the
 corresponding covariate value at the mid point of the ages and time

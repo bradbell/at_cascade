@@ -70,7 +70,7 @@ cov_reference_list
    reference value as in the *fit_node_database* covariate table.
 3. The splitting covariate has reference value corresponding to
    *split_reference_id* in the split_reference table.
-4. The :ref:`glossary@relative_covariate` reference values are equal to
+4. The :ref:`glossary@Relative Covariate` reference values are equal to
    the average of the corresponding covariates in the data table.
 5. Only rows of the data table that get included when *shift_node_id*
    is the parent node are included in the average.

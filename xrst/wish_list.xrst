@@ -19,7 +19,7 @@ Disk Space
 **********
 Certain tables are the same in every dismod_at database; i.e.
 for each node and each sex; see
-:ref:`glossary@fit_node_database@constant_tables`.
+:ref:`glossary@fit_node_database@Constant Tables`.
 The data is one of these and can be very large.
 It would be nice of there was an option in dismod_at to read the
 data table from a different database.

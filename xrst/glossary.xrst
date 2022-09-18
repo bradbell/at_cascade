@@ -82,7 +82,7 @@ The value of *parent_node_id* does not appear in the option table.
 
 Covariate Table
 ===============
-For each :ref:`glossary@relative_covariate`,
+For each :ref:`glossary@Relative Covariate`,
 the covariate table reference value is the average returned by
 :ref:`get_cov_reference` for this node and split_reference_id.
 The split covariate reference value is one of the

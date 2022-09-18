@@ -46,10 +46,10 @@ all_option
 **********
 This argument can't be ``None``.
 It is a ``dict`` with a key equal to each
-:ref:`all_option_table@table_format@option_name` that appears in the
+:ref:`all_option_table@Table Format@option_name` that appears in the
 all_option table.
 The value corresponding to the key is the
-:ref:`all_option_table@table_format@option_value`
+:ref:`all_option_table@Table Format@option_value`
 in the same row of the all_option_table.
 Note that keys must have type ``str`` and all the values will be converted
 to ``str``.
@@ -105,8 +105,8 @@ omega_grid
 **********
 is a dictionary with two keys ``age`` and ``time``.
 If this argument is ``None``,
-the :ref:`omega_grid@omega_age_grid_table` and
-the :ref:`omega_grid@omega_time_grid_table` are empty.
+the :ref:`omega_grid@omega_age_grid Table` and
+the :ref:`omega_grid@omega_time_grid Table` are empty.
 
 age
 ===
@@ -145,8 +145,8 @@ default
 =======
 The *mtall_data* argument is ``None`` if and only if *omega_grid* is ``None``.
 If *mtall_data* is ``None`` the
-:ref:`all_mtall@all_mtall_table` and
-:ref:`all_mtall@mtall_index_table` will be empty.
+:ref:`all_mtall@all_mtall Table` and
+:ref:`all_mtall@mtall_index Table` will be empty.
 
 mtspecific_data
 ***************
@@ -171,8 +171,8 @@ default
 =======
 If *omega_grid* is ``None``, *mtspecific_data* must also be ``None``.
 If *mtspecific_data* is ``None`` the
-:ref:`all_mtspecific@all_mtspecific_table` and
-:ref:`all_mtspecific@mtspecific_index_table` will be empty.
+:ref:`all_mtspecific@all_mtspecific Table` and
+:ref:`all_mtspecific@mtspecific_index Table` will be empty.
 
 {xrst_end create_all_node_db}
 '''

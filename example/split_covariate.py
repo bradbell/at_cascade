@@ -80,7 +80,7 @@ The sex reference value for the root node (n0) corresponds to both sexes:
 Covariate
 *********
 There are two covariates for this example, sex and income.
-Income is the only :ref:`glossary@relative_covariate`:
+Income is the only :ref:`glossary@Relative Covariate`:
 {xrst_literal
    # BEGIN avg_income
    # END avg_income
@@ -125,7 +125,7 @@ The values *a* and *t* are not used by this function for this example.
 
 y_i
 ===
-The only simulated integrand for this example is :ref:`glossary@sincidence`
+The only simulated integrand for this example is :ref:`glossary@Sincidence`
 which is a direct measurement of iota.
 This data is simulated without any noise; i.e.,
 the i-th measurement is simulated as

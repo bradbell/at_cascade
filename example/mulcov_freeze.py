@@ -128,7 +128,7 @@ The value *t* is not used by this function for this example.
 
 y_i
 ===
-The only simulated integrand for this example is :ref:`glossary@sincidence`
+The only simulated integrand for this example is :ref:`glossary@Sincidence`
 which is a direct measurement of iota.
 (If we had used a different rate to represent the function we are estimating,
 we would use the corresponding direct measurement of that rate.)

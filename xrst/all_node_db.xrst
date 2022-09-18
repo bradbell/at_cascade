@@ -44,7 +44,7 @@ We use the notation n_omega_age for the number of values in this table.
 
 omega_age_grid_id
 =================
-is the :ref:`all_node_db@primary_key` for this table.
+is the :ref:`all_node_db@Primary Key` for this table.
 
 age_id
 ======
@@ -62,7 +62,7 @@ We use the notation n_omega_time for the number of values in this table.
 
 omega_time_grid_id
 ==================
-is the :ref:`all_node_db@primary_key` for this table.
+is the :ref:`all_node_db@Primary Key` for this table.
 
 time_id
 =======
@@ -91,7 +91,7 @@ It is an error if there is no ancestor of a
 
 all_mtall_id
 ============
-is the :ref:`all_node_db@primary_key` for this table.
+is the :ref:`all_node_db@Primary Key` for this table.
 
 all_mtall_value
 ===============
@@ -110,7 +110,7 @@ correspond to each all_mtall_id are included below.
 
 mtall_index_id
 ==============
-is the :ref:`all_node_db@primary_key` for this table.
+is the :ref:`all_node_db@Primary Key` for this table.
 
 node_id
 =======
@@ -131,9 +131,9 @@ This column has type ``integer`` and specifies the index in the
 all_mtall table where the mtall values begin,
 for this node and split_reference value.
 For the age index *i* equal 0 through
-:ref:`n_omega_age-1<omega_grid@omega_age_grid_table@n_omega_age>`
+:ref:`n_omega_age-1<omega_grid@omega_age_grid Table@n_omega_age>`
 and time index *j* equal 0 through
-:ref:`n_omega_time-1<omega_grid@omega_time_grid_table@n_omega_time>` ::
+:ref:`n_omega_time-1<omega_grid@omega_time_grid Table@n_omega_time>` ::
 
    all_mtall_id + i * n_omega_time + j
 
@@ -175,14 +175,14 @@ omega will be constrained to be equal to its mtall data for that node.
 
 all_mtspecific_id
 =================
-is the :ref:`all_node_db@primary_key` for this table.
+is the :ref:`all_node_db@Primary Key` for this table.
 
 all_mtspecific_value
 ====================
 This column has type ``real`` and is the value of mtspecific
 for a specific node, age, and time; see mtspecific_index table below.
 Each value in this column is mtspecific at the same age and time
-as the corresponding :ref:`all_mtall@all_mtall_table@all_mtall_value`.
+as the corresponding :ref:`all_mtall@all_mtall Table@all_mtall_value`.
 
 mtspecific_index Table
 **********************
@@ -193,7 +193,7 @@ correspond to each all_mtspecific_id are included.
 
 mtspecific_index_id
 ===================
-is the :ref:`all_node_db@primary_key` for this table.
+is the :ref:`all_node_db@Primary Key` for this table.
 
 node_id
 =======
@@ -214,9 +214,9 @@ This column has type ``integer`` and specifies the index in the
 all_mtspecific table where the mtspecific values,
 for this node and split_reference, begin.
 For *i* equal 0 through
-:ref:`n_omega_age-1<omega_grid@omega_age_grid_table@n_omega_age>`
+:ref:`n_omega_age-1<omega_grid@omega_age_grid Table@n_omega_age>`
 and *j* equal 0 through
-:ref:`n_omega_time-1<omega_grid@omega_time_grid_table@n_omega_time>`
+:ref:`n_omega_time-1<omega_grid@omega_time_grid Table@n_omega_time>`
 
    all_mtspecific_id + i * n_omega_time + j
 
@@ -247,7 +247,7 @@ Table Format
 
 all_option_id
 =============
-is the :ref:`all_node_db@primary_key` for this table.
+is the :ref:`all_node_db@Primary Key` for this table.
 
 option_name
 ===========
@@ -371,7 +371,7 @@ this option must not (must) appear.
 shift_prior_std_factor
 **********************
 This factor multiplies the parent fit posterior standard deviation
-for the :ref:`create_shift_db@shift_databases@value_priors`
+for the :ref:`create_shift_db@shift_databases@Value Priors`
 in the shifted databases.
 If it is greater (less) than one, the child priors are larger (smaller)
 than the posterior corresponding to the parent node fit.
@@ -398,7 +398,7 @@ must not appear (must appear).
 
 split_reference_id
 ******************
-is the :ref:`all_node_db@primary_key` for this table.
+is the :ref:`all_node_db@Primary Key` for this table.
 
 split_reference_name
 ********************
@@ -425,7 +425,7 @@ must appear and the
 
 node_split_id
 *************
-is the :ref:`all_node_db@primary_key` for this table.
+is the :ref:`all_node_db@Primary Key` for this table.
 
 node_id
 *******
@@ -450,7 +450,7 @@ see :ref:`create_job_table@job_table@parent_job_id` in the job table.
 
 mulcov_freeze_id
 ****************
-is the :ref:`all_node_db@primary_key` for this table.
+is the :ref:`all_node_db@Primary Key` for this table.
 
 fit_node_id
 ***********
