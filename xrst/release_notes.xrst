@@ -27,7 +27,7 @@ Release Notes for 2022
 mm-dd
 *****
 
-09-27
+09-18
 =====
 1. Adapt to xrst-2022.9.18. This changes the location of documentation
    html files from the ``doc/rst`` directory to the ``doc`` directory.
