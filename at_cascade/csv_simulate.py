@@ -220,7 +220,7 @@ This string identifies the node corresponding to this data point.
 
 sex
 ---
-is the sex for this data pont.
+is the sex for this data point.
 
 age_lower
 ---------

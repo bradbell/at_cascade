@@ -30,4 +30,13 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s/csv_interface@Notation@index_column/csv_interface@Notation@Index Column/g
+s|alwasy|always|g
+s|basse|base|g
+s|attemped|attempted|g
+s|becasue|because|g
+s|colum |column |g
+s|containg|containing|g
+s|happend|happened|g
+s|lenght|length|g
+s|spliting|splitting|g
+s|wich|which|g

@@ -23,8 +23,8 @@ Syntax
 Purpose
 *******
 Sometimes when running the cascade, the fit or statistics for a node fails.
-This may be becasue of something that happend on the system,
-or becasue of some of the settings in the :ref:`glossary@root_node_database`.
+This may be because of something that happened on the system,
+or because of some of the settings in the :ref:`glossary@root_node_database`.
 This routine enables you to continue the cascade from such a node.
 
 all_node_database
@@ -57,7 +57,7 @@ fit_type_list
 This is a list with one or two elements
 and its possible elements are ``both`` and ``fixed``.
 For each job, the first type of fit is attempted.
-If it fails, and there is a second type of fit, it is attemped.
+If it fails, and there is a second type of fit, it is attempted.
 If it also fails, the corresponding job fails.
 
 {xrst_end   continue_cascade}

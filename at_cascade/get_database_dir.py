@@ -32,7 +32,7 @@ split_reference_table
 *********************
 is the :ref:`split_reference_table` as a ``list`` of ``dict``.
 It can't be ``None``.
-If the list has lenght zero,
+If the list has length zero,
 we say that the table is empty.
 
 node_split_set
@@ -70,7 +70,7 @@ that the fit corresponds to.
 
 database_dir
 ************
-The return value is a ``str`` containg the directory,
+The return value is a ``str`` containing the directory,
 relative to the :ref:`all_option_table@result_dir`,
 where the database corresponding to the fit is (or will be) located.
 In other words, the fit database has the following path:

@@ -58,7 +58,7 @@ This avgint table enables the following predictions.
 1. Predictions can be made for the covariate multipliers
    mean value (with node_id and split_reference_id null).
 2. For the fit node and each possible child node,
-   predictions can be made for each rate variable at spliting
+   predictions can be made for each rate variable at splitting
    covariate value equal to the reference for the fit.
 3. For each splitting covariate value,
    predictions can be make for each rate variable at the fit node.

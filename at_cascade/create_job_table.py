@@ -93,14 +93,14 @@ value.
 parent_job_id
 =============
 This is an ``int`` containing the job_id corresponding to the parent job
-wich must be greater than the job_id for this row of the job table.
+which must be greater than the job_id for this row of the job table.
 The parent job (and only the parent job)
 must have completed before this job can be run.
 
 start_child_job_id
 ==================
 This is the job_id for the first job that can run as soon as this job
-is completed. The start_child_job_id is alwasy greater than the job_id
+is completed. The start_child_job_id is always greater than the job_id
 for the current row. The simplest way to run the jobs is in job table
 order (not in parallel).
 

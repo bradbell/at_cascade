@@ -39,7 +39,7 @@ node_split_set = { 1, 2 }  # n1, n2
 root_node_id            = 0      # n0
 root_split_reference_id = 1     # both
 #
-# node n1 before spliting by sex
+# node n1 before splitting by sex
 database_dir = at_cascade.get_database_dir(
    node_table              = node_table ,
    split_reference_table   = split_reference_table,
@@ -51,7 +51,7 @@ database_dir = at_cascade.get_database_dir(
 )
 assert database_dir == 'n0/n1'
 #
-# node n1 after spliting by sex
+# node n1 after splitting by sex
 database_dir = at_cascade.get_database_dir(
    node_table              = node_table ,
    split_reference_table   = split_reference_table,

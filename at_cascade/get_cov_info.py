@@ -133,7 +133,7 @@ def get_cov_info(
       if not covariate_id in abs_covariate_id_set :
          rel_covariate_id_set.add( covariate_id )
    #
-   # case where no spliting covariate
+   # case where no splitting covariate
    if len(split_reference_table) == 0 :
       cov_info = {
          'abs_covariate_id_set':  abs_covariate_id_set,

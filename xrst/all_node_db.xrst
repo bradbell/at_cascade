@@ -291,7 +291,7 @@ under the condition
 where *cov_bnd* is the non-negative covariate multiplier bound,
 *cov_value* is a data table value of the covariate,
 and *cov_ref* is the reference value for the covariate.
-It is an extra bound becasue it is in addition to the priors for a
+It is an extra bound because it is in addition to the priors for a
 covariate multiplier.
 
 max_fit

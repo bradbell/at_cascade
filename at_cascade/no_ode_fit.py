@@ -71,7 +71,7 @@ It also include relrisk which measures
    :ref:`omega_constraint`.
 3. The data likelihoods are fit as Gaussian using the dismod_at data_density
    command.
-4. The results of fitting this data basse can be converted to
+4. The results of fitting this data base can be converted to
    csv files and plotted using the dismod_at db2csv and plotting routines.
 
 root_fit_database

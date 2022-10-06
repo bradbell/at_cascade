@@ -72,7 +72,7 @@ fit_type_list
 This is a list with one or two elements
 and its possible elements are ``both`` and ``fixed``.
 For each job, the first type of fit is attempted.
-If it fails, and there is a second type of fit, it is attemped.
+If it fails, and there is a second type of fit, it is attempted.
 If it also fails, the corresponding job fails.
 
 trace.out

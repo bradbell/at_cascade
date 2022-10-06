@@ -27,7 +27,7 @@ file_name
 is a ``str`` with the name of the CSV file.
 The first line of the file is the header line and the others contain
 the data.
-The header value in the j-th colum of the first line is the
+The header value in the j-th column of the first line is the
 corresponding column name.
 
 table
