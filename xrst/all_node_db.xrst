@@ -151,6 +151,9 @@ split_reference value).
 {xrst_end all_mtall}
 ------------------------------------------------------------------------------
 {xrst_begin all_mtspecific}
+{xrst_spell
+   mtspecific
+}
 
 All Node mtspecific Values
 ##########################
@@ -233,9 +236,11 @@ split_reference value).
 {xrst_begin all_option_table}
 {xrst_spell
    bnd
-   std
+   cov
    cpus
    dir
+   perturb
+   std
 }
 
 All Node Option Table

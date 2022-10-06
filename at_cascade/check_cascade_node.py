@@ -9,6 +9,9 @@
 # -----------------------------------------------------------------------------
 '''
 {xrst_begin check_cascade_node}
+{xrst_spell
+   avgint
+}
 
 Check the Cascade Results for a Node
 ####################################

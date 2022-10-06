@@ -10,11 +10,24 @@ see http://www.gnu.org/licenses/agpl.txt
 
 {xrst_begin glossary}
 {xrst_spell
-   meas
-   nslist
-   smoothings
+   approximations
+   avgint
+   becasue
    dage
    dtime
+   init
+   meas
+   mtexcess
+   mtother
+   mtspecific
+   mtstandard
+   nslist
+   pini
+   rho
+   sincidence
+   smoothings
+   subgroup
+   tprevalence
 }
 
 Glossary

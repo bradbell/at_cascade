@@ -9,6 +9,9 @@
 # -----------------------------------------------------------------------------
 '''
 {xrst_begin empty_avgint_table}
+{xrst_spell
+   avgint
+}
 
 Create An Empty avgint Table
 ############################

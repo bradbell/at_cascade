@@ -16,11 +16,16 @@ import at_cascade
 """
 {xrst_begin csv_simulate}
 {xrst_spell
-   std
-   cv
-   sim
-   meas
    bilinear
+   cv
+   integrator
+   interpolate
+   meas
+   pini
+   rho
+   sim
+   sincidence
+   std
 }
 
 Simulate A Cascade Data Set

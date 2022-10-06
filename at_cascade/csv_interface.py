@@ -12,6 +12,7 @@ import at_cascade
 {xrst_begin_parent csv_interface}
 {xrst_spell
    dir
+   distributions
 }
 
 Simulate and Fit an AT Cascade Data Set
@@ -117,8 +118,8 @@ simulate refers to are for a normal distribution.
 {xrst_begin csv_fit}
 {xrst_spell
    meas
-   std
    sim
+   std
 }
 
 Fit a Simulated Data Set
@@ -274,6 +275,7 @@ Is the asymptotic estimate for the accuracy of the estimate.
 
 {xrst_begin csv_predict}
 {xrst_spell
+   sincidence
 }
 
 Predictions

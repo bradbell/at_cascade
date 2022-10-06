@@ -16,10 +16,15 @@ Release Notes for at_cascade
 -----------------------------------------------------------------------------
 {xrst_begin 2022}
 {xrst_spell
+   cov
    dd
    distutils
    mm
+   optimizer
+   perturb
    pyspellchecker
+   rst
+   spline
 }
 
 Release Notes for 2022
@@ -205,6 +210,7 @@ at_cascade module.
    dir
    iter
    mm
+   py
 }
 
 Release Notes for 2021

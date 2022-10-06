@@ -1,35 +1,9 @@
-#
-# words in xrst commands
-xrst
-rst
-#
-# i-th
-th
-#
-# database abbreviation
-db
-#
-# python types
-str
-dict
-#
-# special words for this package
-# BEGIN_SORT_THIS_LINE_PLUS_1
-avgint
 csv
+db
+dict
 dismod
-ihme
 mtall
-mtexcess
-mtother
-mtspecific
-mtstandard
 mulcov
-optimizer
-pini
-py
-relrisk
-sincidence
-spline
-tprevalence
-# END_SORT_THIS_LINE_MINUS_1
+multiplier
+str
+th

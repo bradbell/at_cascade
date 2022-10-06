@@ -10,9 +10,10 @@
 '''
 {xrst_begin create_shift_db}
 {xrst_spell
-   var
+   avgint
    dage
    dtime
+   var
 }
 
 Create Database With Shifted Covariate References

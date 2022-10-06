@@ -10,8 +10,8 @@
 '''
 {xrst_begin cascade_root_node}
 {xrst_spell
-   var
    dir
+   var
 }
 
 Cascade Fits Starting at Root Node

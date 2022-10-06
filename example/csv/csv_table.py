@@ -11,8 +11,6 @@ import os
 import sys
 '''
 {xrst_begin csv_table}
-{xrst_spell
-}
 
 Example Reading and Writing CSV Files
 #####################################

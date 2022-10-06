@@ -11,6 +11,12 @@
 {xrst_begin no_ode_fit}
 {xrst_spell
    dir
+   init
+   mtexcess
+   mtother
+   relrisk
+   rho
+   sincidence
 }
 
 Do A No Ode Fit For One Node

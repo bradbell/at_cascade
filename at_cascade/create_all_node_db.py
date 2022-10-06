@@ -9,6 +9,10 @@
 # -----------------------------------------------------------------------------
 '''
 {xrst_begin create_all_node_db}
+{xrst_spell
+   covariance
+   mtspecific
+}
 
 Create an All Node Database
 ###########################

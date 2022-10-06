@@ -9,6 +9,9 @@
 # -----------------------------------------------------------------------------
 '''
 {xrst_begin get_cov_reference}}
+{xrst_spell
+   cov
+}
 
 Get Covariate Reference Values
 ##############################

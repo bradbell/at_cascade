@@ -13,6 +13,7 @@ import scipy.interpolate
 {xrst_begin bilinear}
 {xrst_spell
    bilinear
+   spline
 }
 
 Bilinear Spline Interpolation

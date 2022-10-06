@@ -11,8 +11,8 @@
 {xrst_begin run_one_job}
 {xrst_spell
    dir
-   var
    obj
+   var
 }
 
 Run One Job

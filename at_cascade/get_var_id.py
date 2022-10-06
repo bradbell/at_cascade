@@ -10,11 +10,12 @@
 '''
 {xrst_begin get_var_id}
 {xrst_spell
-   var
-   mulstd
    dage
    dtime
    meas
+   mulstd
+   subgroup
+   var
 }
 
 Map Var Table Values to its Primary Key

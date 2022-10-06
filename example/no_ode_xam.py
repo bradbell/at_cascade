@@ -11,8 +11,10 @@
 {xrst_begin_parent no_ode_xam}
 {xrst_spell
    avg
-   dtime
    dage
+   dtime
+   mtexcess
+   sincidence
    smoothings
 }
 

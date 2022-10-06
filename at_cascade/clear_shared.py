@@ -10,8 +10,8 @@
 '''
 {xrst_begin clear_shared}
 {xrst_spell
+   errno
    inuse
-   Errno
 }
 
 Clear at_cascade Shared Memory
