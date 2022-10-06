@@ -8,6 +8,8 @@
 # ------------------
 # use to make git commits
 /git_commit.sh
+# log of run_xrst.sh
+/xrst.log
 # ------------------------
 # directories at top level
 # ------------------------
