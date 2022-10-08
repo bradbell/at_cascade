@@ -18,6 +18,7 @@ import at_cascade
 {xrst_spell
    bilinear
    cv
+   dir
    integrator
    interpolate
    meas
@@ -31,9 +32,22 @@ import at_cascade
 Simulate A Cascade Data Set
 ###########################
 
+Prototype
+*********
+{xrst_literal
+   # BEGIN_CSV_SIMULATE
+   # END_CSV_SIMULATE
+}
+
+sim_dir
+*******
+This string is the directory name where the csv files
+are located.
+
 Example
 *******
 :ref:`csv_simulate_xam`
+
 
 Input Files
 ***********
@@ -353,7 +367,7 @@ outside the age rage (time range) in the covariate.csv file.
 # option_value['random_seed']
 #
 # option_value =
-def option_table2dict(csv_dir, option_table) :
+def option_table2dict(sim_dir, option_table) :
    #
    # option_value
    option_value = dict()
@@ -964,7 +978,10 @@ def get_random_effect_node_sex_rate (
    #
    return random_effect_node_sex_rate
 # ----------------------------------------------------------------------------
-def csv_simulate(csv_dir) :
+# BEGIN_CSV_SIMULATE
+def csv_simulate(sim_dir) :
+   assert type(sim_dir) == str
+# END_CSV_SIMULATE
    valid_integrand_name = {
       'Sincidence',
       'remission',
@@ -993,13 +1010,13 @@ def csv_simulate(csv_dir) :
    ]
    print('begin reading csv files')
    for name in input_list :
-      file_name         = f'{csv_dir}/{name}.csv'
+      file_name         = f'{sim_dir}/{name}.csv'
       input_table[name] = at_cascade.read_csv_table(file_name)
    #
    print('being creating data structures' )
    #
    # option_value
-   option_value = option_table2dict(csv_dir, input_table['option'] )
+   option_value = option_table2dict(sim_dir, input_table['option'] )
    #
    # parent_node_dict, child_list_node
    parent_node_dict, child_list_node = \
@@ -1178,7 +1195,7 @@ def csv_simulate(csv_dir) :
    print( 'write files' )
    #
    # data.csv
-   file_name = f'{csv_dir}/data_sim.csv'
+   file_name = f'{sim_dir}/data_sim.csv'
    at_cascade.write_csv_table(file_name, data_sim_table)
    #
    # random_effect_table
@@ -1198,7 +1215,7 @@ def csv_simulate(csv_dir) :
             random_effect_table.append( row )
    #
    # random_effect.csv
-   file_name = f'{csv_dir}/random_effect.csv'
+   file_name = f'{sim_dir}/random_effect.csv'
    at_cascade.write_csv_table(file_name, random_effect_table)
    #
    print( 'csv_simulate done' )
