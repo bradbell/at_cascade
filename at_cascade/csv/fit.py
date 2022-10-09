@@ -234,37 +234,26 @@ def root_node_database(fit_dir) :
       file_name         = f'{sim_dir}/{name}.csv'
       input_table[name] = at_cascade.csv.read_table(file_name)
    #
-   print('being creating data structures' )
+   print('being creating root node database' )
    #
-   # option_value
+   # root_node_name
    option_value = option_table2dict(fit_dir, input_table['option'] )
-   #
-   # covariate_list
-   row = input_table['covariate'][0]
-   for key in [ 'node_name' , 'age', 'time', 'omega' ] :
-      del row[key]
-   covariate_list = row.keys()
-   assert 'sex' in covariate_list
-   #
-   # covariate_avg
    root_node_name = option_value['root_node_name']
-   covariate_avg   = zip( covariate_list, len(covaariate_list) * [ 0.0 ] )
-   covariate_count = 0
-   for row in input_table['covariate'] :
-      if row['node_name'] == root_node_name :
-         covariate_count += 1
-         for key in covariate_list :
-            covariate_avg[key] += row[key]
-   for key in covariate_list :
-      covariate_avg[key] /= covariate_count
+   #
+   # covariate_average
+   covariate_average = at_cascade.csv.covariate_average(
+      input_table['covariate'], root_node_name
+   )
    #
    # covariate_table
    covariate_table = [{
       'name': sex, 'reference': 0.0, 'max_difference' : 0.5
    }]
-   for key in covariate_list :
+   for key in covariate_average :
       covariate_table.append({
-         'name': key, 'reference': covariate_avg[key], 'max_difference' : None
+         'name':            key,
+         'reference':       covariate_average[key],
+         'max_difference' : None
       })
    #
    # data_table

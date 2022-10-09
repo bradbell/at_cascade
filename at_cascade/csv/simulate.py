@@ -644,60 +644,6 @@ def get_multiplier_list_rate(multiplier_sim_table) :
       multiplier_list_rate[rate_name].append(row)
    return multiplier_list_rate
 # ----------------------------------------------------------------------------
-# root_covariate_avg[covariate_name]:
-# is average covariate value for the specified covariate at the root node.
-# Note that this is an average w.r.t. sex, age, and time.
-# This is used as a reference value for the covariate effects.
-#
-# covariate_table:
-# is the table corresponding to covariate.csv
-#
-# covariate_name_list:
-# is a list of the covariate names.
-#
-# parent_node_dict:
-# mapping from each node name to the name of the corresponding parent.
-#
-# root_covariate_avg =
-def get_root_covariate_avg(
-   covariate_table, covariate_name_list, parent_node_dict
-) :
-   #
-   # covariate_sum, root_count
-   covariate_sum = dict()
-   for covariate_name in covariate_name_list :
-      covariate_sum[covariate_name] = 0.0
-   root_count = 0
-   #
-   # covariate_sum, root_count
-   line_number = 0;
-   for row in covariate_table :
-      line_number += 1
-      node_name    = row['node_name']
-      sex          = row['sex']
-      #
-      if sex not in  { 'female', 'male' } :
-         msg  = f'csv_interface: covariate.csv at line {line_number}\n'
-         msg += 'sex = {sex} is not female or male'
-         assert False, msg
-      #
-      if parent_node_dict[node_name] == '' :
-         root_count += 1
-         for covariate_name in covariate_name_list :
-            covariate_sum[covariate_name] += float( row[covariate_name] )
-   #
-   if root_count == 0 :
-      msg  = 'csv_interface: root node does not appear in covariate.csv'
-      assert False, msg
-   #
-   # root_covariate_avg
-   root_covariate_avg = dict()
-   for covariate_name in covariate_name_list :
-      root_covariate_avg[covariate_name] = \
-         covariate_sum[covariate_name] / root_count
-   #
-   return root_covariate_avg
-# ----------------------------------------------------------------------------
 # rate_fun = rate_fun_dict[rate_name] :
 # For each of rate_name in spline_no_effect_rate, value = rate_fun(age, time)
 # is the value of the corresponding rate included all fo the effects
@@ -1026,16 +972,25 @@ def simulate(sim_dir) :
       input_table['covariate'], node_set
    )
    #
-   # covariate_name_list
-   covariate_name_list = list()
-   for key in input_table['covariate'][0].keys() :
-      if key not in [ 'node_name', 'sex', 'age', 'time', 'omega' ] :
-         covariate_name_list.append(key)
+   # root_node_name
+   root_node_name = None
+   for node_name in parent_node_dict :
+      if parent_node_dict[node_name] == '' :
+         if root_node_name != None :
+            msg = 'node.csv has more than one node with no parent'
+            assert False, msg
+         root_node_name = node_name
+   if root_node_name == None :
+      msg = 'node.csv every node has a parent node; i.e, no root node'
+      assert False, msg
    #
    # root_covariate_avg
-   root_covariate_avg = get_root_covariate_avg(
-      input_table['covariate'] , covariate_name_list, parent_node_dict
+   root_covariate_avg = at_cascade.csv.covariate_avg(
+      input_table['covariate'] , root_node_name
    )
+   #
+   # covariate_name_list
+   covariate_name_list = root_covariate_avg.keys()
    #
    # spline_no_effect_rate
    spline_no_effect_rate = get_spline_no_effect_rate(
