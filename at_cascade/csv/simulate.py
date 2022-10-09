@@ -35,8 +35,8 @@ Simulate A Cascade Data Set
 Prototype
 *********
 {xrst_literal
-   # BEGIN_CSV_SIMULATE
-   # END_CSV_SIMULATE
+   # BEGIN_SIMULATE
+   # END_SIMULATE
 }
 
 sim_dir
@@ -109,7 +109,7 @@ to child nodes.
 covariate.csv
 =============
 This csv file specifies the value of omega and the covariates.
-It has a :ref:`csv_interface@Notation@Rectangular Grid` in the columns
+It has a :ref:`csv_module@Notation@Rectangular Grid` in the columns
 ``node_name``, ``sex``, ``age``, ``time`` .
 
 node_name
@@ -145,7 +145,7 @@ there is a column in the header that contains the *covariate_name*.
 The other values in that column are float representations of the covariate.
 All of these covariates are
 :ref:`glossary@Relative Covariate`; see
-:ref:`csv_interface@Notation@Covariates`.
+:ref:`csv_module@Notation@Covariates`.
 
 -----------------------------------------------------------------------------
 
@@ -153,7 +153,7 @@ no_effect_rate.csv
 ==================
 This csv file specifies the grid points at which each rate is modeled
 during a simulation. It has a
-:ref:`csv_interface@Notation@Rectangular Grid` in the columns
+:ref:`csv_module@Notation@Rectangular Grid` in the columns
 ``rate_name``, ``age``, ``time`` .
 These are no-effect rates; i.e., the rates without
 the random and covariate effects.
@@ -195,7 +195,7 @@ different multiplier. The multipliers are constant in age and time.
 
 multiplier_id
 -------------
-is an :ref:`csv_interface@Notation@Index Column` for multiplier_sim.csv.
+is an :ref:`csv_module@Notation@Index Column` for multiplier_sim.csv.
 
 rate_name
 ---------
@@ -227,7 +227,7 @@ with each row corresponding to one data point.
 
 simulate_id
 -----------
-is an :ref:`csv_interface@Notation@Index Column` for simulate.csv.
+is an :ref:`csv_module@Notation@Index Column` for simulate.csv.
 
 integrand_name
 --------------
@@ -277,7 +277,7 @@ Output Files
 random_effect.csv
 =================
 This file reports the random effect for each node and rate.
-It has a :ref:`csv_interface@Notation@Rectangular Grid` in the columns
+It has a :ref:`csv_module@Notation@Rectangular Grid` in the columns
 ``node_name`` , ``sex`` and ``rate_name`` .
 
 node_name
@@ -321,7 +321,7 @@ simulate_id
 -----------
 This integer identifies the row in the simulate.csv
 corresponding to this row in data_sim.csv.
-This is an :ref:`csv_interface@Notation@Index Column`
+This is an :ref:`csv_module@Notation@Index Column`
 for simulate.csv and data_sim.csv.
 
 meas_mean
@@ -976,10 +976,10 @@ def get_random_effect_node_sex_rate (
    #
    return random_effect_node_sex_rate
 # ----------------------------------------------------------------------------
-# BEGIN_CSV_SIMULATE
-def csv_simulate(sim_dir) :
+# BEGIN_SIMULATE
+def simulate(sim_dir) :
    assert type(sim_dir) == str
-# END_CSV_SIMULATE
+# END_SIMULATE
    valid_integrand_name = {
       'Sincidence',
       'remission',

@@ -25,8 +25,8 @@ Fit a Simulated Data Set
 Prototype
 *********
 {xrst_literal
-   # BEGIN_CSV_FIT
-   # END_CSV_FIT
+   # BEGIN_FIT
+   # END_FIT
 }
 
 fit_dir
@@ -64,7 +64,7 @@ with each row corresponding to one data point.
 
 data_id
 -------
-is an :ref:`csv_interface@Notation@Index Column` for data.csv.
+is an :ref:`csv_module@Notation@Index Column` for data.csv.
 
 integrand_name
 --------------
@@ -151,7 +151,7 @@ has the following columns:
 
 rate_sim_id
 -----------
-is an :ref:`csv_interface@Notation@Index Column` for rate_sim.csv,
+is an :ref:`csv_module@Notation@Index Column` for rate_sim.csv,
 rate_prior.csv and rate_fit.csv.
 
 estimate
@@ -206,11 +206,11 @@ def option_table2dict(fit_dir, option_table) :
       line_number += 1
       name         = row['name']
       if name in option_value :
-         msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
+         msg  = f'csv_fit: Error: line {line_number} in option.csv\n'
          msg += f'the name {name} appears twice in this table'
          assert False, msg
       if not name in option_type :
-         msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
+         msg  = f'csv_fit: Error: line {line_number} in option.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
       value        = option_type[name]( row['value'] )
@@ -248,7 +248,7 @@ def root_node_database(fit_dir) :
    #
    # covariate_avg
    root_node_name = option_value['root_node_name']
-   covariate_avg   = zip[ covariate_list, len(covaariate_list) * [ 0.0 ] )
+   covariate_avg   = zip( covariate_list, len(covaariate_list) * [ 0.0 ] )
    covariate_count = 0
    for row in input_table['covariate'] :
       if row['node_name'] == root_node_name :
@@ -265,7 +265,7 @@ def root_node_database(fit_dir) :
    for key in covariate_list :
       covariate_table.append({
          'name': key, 'reference': covariate_avg[key], 'max_difference' : None
-      }]
+      })
    #
    # data_table
    data_table = input_table['data']
@@ -275,24 +275,24 @@ def root_node_database(fit_dir) :
    #
    dismod_at.create_database(
          file_name         = output_file,
-         age_list          = ,
-         time_list         = ,
-         integrand_table   = ,
+         age_list          = None,
+         time_list         = None,
+         integrand_table   = None,
          node_table        = input_table['node'],
-         subgroup_table    = ,
-         weight_table      = ,
+         subgroup_table    = None,
+         weight_table      = None,
          covariate_table   = covariate_table,
          avgint_table      = list(),
          data_table        = data_table,
-         prior_table_copy  = ,
-         smooth_table      = ,
-         nslist_table      = ,
-         rate_table        = ,
-         mulcov_table      = ,
-         option_table      = ,
+         prior_table_copy  = None,
+         smooth_table      = None,
+         nslist_table      = None,
+         rate_table        = None,
+         mulcov_table      = None,
+         option_table      = None,
    )
 # ----------------------------------------------------------------------------
-# BEGIN_CSV_FIT
-def csv_fit(fit_dir) :
+# BEGIN_FIT
+def fit(fit_dir) :
    assert type(fit_dir) == str
-# END_CSV_FIT
+# END_FIT

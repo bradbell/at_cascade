@@ -27,6 +27,7 @@
 #
 # python compiled files
 /at_cascade/__pycache__
+/at_cascade/csv/__pycache__
 /at_cascade/ihme/__pycache__
 #
 # used to build distribution

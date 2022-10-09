@@ -17,6 +17,7 @@ current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
+import at_cascade.csv
 """
 {xrst_begin csv_simulate_xam}
 {xrst_spell
@@ -142,7 +143,7 @@ def main() :
    #
    # simulate command
    command = 'simulate'
-   at_cascade.csv_interface(directory, command)
+   at_cascade.csv.interface(directory, command)
    #
    # csv_table
    csv_table = dict()

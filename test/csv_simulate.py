@@ -35,6 +35,7 @@ current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
+import at_cascade.csv
 # BEGIN_PYTHON
 #
 # csv_file
@@ -112,7 +113,7 @@ def run_test() :
    #
    # simulate command
    command = 'simulate'
-   at_cascade.csv_interface(csv_dir, command)
+   at_cascade.csv.interface(csv_dir, command)
    #
    # csv_table
    csv_table = dict()
