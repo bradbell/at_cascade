@@ -16,6 +16,7 @@ import at_cascade
    meas
    sim
    std
+   sincidence
 }
 
 Fit a Simulated Data Set
@@ -35,86 +36,91 @@ are located.
 
 Input Files
 ***********
-All the csv_simulate :ref:`csv_simulate` input and output files
-are inputs to the ``csv_fit`` command.
-The files listed below are additional inputs:
 
-data_subset.csv
-===============
-This file identifies which rows of data_sim.csv are
-included during the next fit command.
+option.csv
+==========
+This csv file has two columns,
+one called ``name`` and the other called ``value``.
+The rows are documented below by the name column:
 
-simulate_id
------------
-This identifies a row in data_sim.csv that is included during the next
-fit command.
+root_node_name
+--------------
+This string is the name of the root node.
 
-------------------------------------------------------------------------------
+node.csv
+========
+This csv file has the same description as the simulate
+:ref:`csv_simulate@Input Files@node.csv` file.
 
-multiplier_prior.csv
-====================
-This file adds prior information for the multipliers in
-:ref:`csv_simulate@Input Files@multiplier_sim.csv`.
+covariate_csv
+=============
+This csv file has the same description as the simulate
+:ref:`csv_simulate@Input Files@covariate.csv` file.
 
-multiplier_id
--------------
-This integer identifies the row in multiplier_sim.csv that
-corresponds to this row in multiplier_prior.csv.
+data_in.csv
+===========
+This csv file specifies the data set
+with each row corresponding to one data point.
 
-prior_mean
-----------
-This is the prior mean used when fitting this multiplier.
+data_id
+-------
+is an :ref:`csv_interface@Notation@Index Column` for data.csv.
 
-prior_std
+integrand_name
+--------------
+This string is a dismod_at integrand; e.g. ``Sincidence``.
+
+node_name
 ---------
-This is the prior standard deviation used when fitting this multiplier.
+This string identifies the node corresponding to this data point.
 
-lower
------
-is the lower limit (during fitting) for this covariate multiplier.
+sex
+---
+This string is the sex for this data point.
 
-upper
------
-is the upper limit (during fitting) for this covariate multiplier.
-If the lower and upper limits are zero and the true value is non-zero,
-the multiplier will be included in the simulated data but not in the model fit.
-
-------------------------------------------------------------------------------
-
-rate_prior.csv
-==============
-This file adds prior information for the rates in
-:ref:`csv_simulate@Input Files@no_effect_rate.csv` .
-
-rate_sim_id
------------
-is an :ref:`csv_interface@Notation@Index Column` for rate_sim.csv
-and rate_prior.csv.
-
-prior_mean
-----------
-This float is the mean used in the prior for the rate
-without covariate or random effects.
-
-prior_std
+age_lower
 ---------
-This float is the standard deviation used in the prior for the rate
-without covariate or random effects
+This float is the lower age limit for this data row.
 
-lower
------
-is the lower limit (during fitting) for this no-effect rate.
+age_upper
+---------
+This float is the upper age limit for this data row.
 
-upper
------
-is the upper limit (during fitting) for this no-effect rate.
+time_lower
+----------
+This float is the lower time limit for this data row.
+
+time_upper
+----------
+This float is the upper time limit for this data row.
+
+meas_value
+----------
+This float is the measured value for this data point.
+
+meas_std
+--------
+This float is the standard deviation of the measurement noise
+for this data point.
+
+hold_out
+--------
+This integer is one (zero) if this data point is held out (not held out)
+from the fit.
+
+covariate_name
+--------------
+For each :ref:`csv_simulate@Input Files@covariate.csv@covariate_name`
+there is a column with this name in data.csv.
+The values in these columns are floats corresponding to the covariate value
+at the mid point of the ages and time intervals for this data point.
 
 ------------------------------------------------------------------------------
 
 Output Files
 ************
 
-data_fit.csv
+data_out.csv
 ============
 This contains the fit results for the simulated data values.
 It is created during a fit command and
@@ -180,26 +186,110 @@ Is the asymptotic estimate for the accuracy of the estimate.
 {xrst_end csv_fit}
 """
 # ----------------------------------------------------------------------------
+# Returns a dictionary version of option table
+#
+# option_table :
+# is the list of dict corresponding to the option table
+#
+# option_value[name] :
+# is the option value corresponding the the specified option name.
+# Here name is a string and value
+# has been coverted to its corresponding type.
+#
+# option_value =
+def option_table2dict(fit_dir, option_table) :
+   option_type  = {
+      'root_not_name'     : string ,
+   }
+   line_number = 0
+   for row in option_table :
+      line_number += 1
+      name         = row['name']
+      if name in option_value :
+         msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
+         msg += f'the name {name} appears twice in this table'
+         assert False, msg
+      if not name in option_type :
+         msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
+         msg += f'{name} is not a valid option name'
+         assert False, msg
+      value        = option_type[name]( row['value'] )
+      option_value[name] = value
+# ----------------------------------------------------------------------------
 def root_node_database(fit_dir) :
-   file_name = f'{csr_dir}/root_node_db'
+   #
+   # output_file
+   output_file = f'{csr_dir}/root_node_db'
+   #
+   # input_table
+   input_table = dict()
+   input_list = [
+      'data',
+      'covariate',
+      'node',
+      'option',
+   ]
+   print('begin reading csv files')
+   for name in input_list :
+      file_name         = f'{sim_dir}/{name}.csv'
+      input_table[name] = at_cascade.read_csv_table(file_name)
+   #
+   print('being creating data structures' )
+   #
+   # option_value
+   option_value = option_table2dict(fit_dir, input_table['option'] )
+   #
+   # covariate_list
+   row = input_table['covariate'][0]
+   for key in [ 'node_name' , 'age', 'time', 'omega' ] :
+      del row[key]
+   covariate_list = row.keys()
+   assert 'sex' in covariate_list
+   #
+   # covariate_avg
+   root_node_name = option_value['root_node_name']
+   covariate_avg   = zip[ covariate_list, len(covaariate_list) * [ 0.0 ] )
+   covariate_count = 0
+   for row in input_table['covariate'] :
+      if row['node_name'] == root_node_name :
+         covariate_count += 1
+         for key in covariate_list :
+            covariate_avg[key] += row[key]
+   for key in covariate_list :
+      covariate_avg[key] /= covariate_count
+   #
+   # covariate_table
+   covariate_table = [{
+      'name': sex, 'reference': 0.0, 'max_difference' : 0.5
+   }]
+   for key in covariate_list :
+      covariate_table.append({
+         'name': key, 'reference': covariate_avg[key], 'max_difference' : None
+      }]
+   #
+   # data_table
+   data_table = input_table['data']
+   for row in data_table () :
+      row['weight'] = ''
+      row['subgroup'] = 'world'
    #
    dismod_at.create_database(
-         file_name         = file_name,
-         age_list          = age_list,
-         time_list         = time_list,
-         integrand_table   = integrand_table,
-         node_table        = node_table,
-         subgroup_table    = subgroup_table,
-         weight_table      = weight_table,
+         file_name         = output_file,
+         age_list          = ,
+         time_list         = ,
+         integrand_table   = ,
+         node_table        = input_table['node'],
+         subgroup_table    = ,
+         weight_table      = ,
          covariate_table   = covariate_table,
-         avgint_table      = avgint_table,
+         avgint_table      = list(),
          data_table        = data_table,
-         prior_table_copy  = prior_table_copy,
-         smooth_table      = smooth_table,
-         nslist_table      = nslist_table,
-         rate_table        = rate_table,
-         mulcov_table      = mulcov_table,
-         option_table      = option_table,
+         prior_table_copy  = ,
+         smooth_table      = ,
+         nslist_table      = ,
+         rate_table        = ,
+         mulcov_table      = ,
+         option_table      = ,
    )
 # ----------------------------------------------------------------------------
 # BEGIN_CSV_FIT

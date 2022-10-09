@@ -20,7 +20,6 @@ import at_cascade
 """
 {xrst_begin csv_simulate_xam}
 {xrst_spell
-   dir
    sim
 }
 
@@ -40,8 +39,8 @@ Node Tree
 
    *  -  Symbol
       -  Documentation
-   *  -  sim_dir
-      -  :ref:`csv_interface@Arguments@sim_dir`
+   *  -  directory
+      -  :ref:`csv_interface@Arguments@directory`
    *  -  command
       -  :ref:`csv_interface@Arguments@command`
    *  -  csv_file['option.csv']
@@ -129,30 +128,30 @@ csv_file['simulate.csv'] = header + \
 #
 def main() :
    #
-   # sim_dir
-   sim_dir = 'build/csv'
-   if not os.path.exists(sim_dir) :
-      os.makedirs(sim_dir)
+   # directory
+   directory = 'build/csv'
+   if not os.path.exists(directory) :
+      os.makedirs(directory)
    #
    # write csv files
    for name in csv_file :
-      file_name = f'{sim_dir}/{name}'
+      file_name = f'{directory}/{name}'
       file_ptr  = open(file_name, 'w')
       file_ptr.write( csv_file[name] )
       file_ptr.close()
    #
    # simulate command
    command = 'simulate'
-   at_cascade.csv_interface(sim_dir, command)
+   at_cascade.csv_interface(directory, command)
    #
    # csv_table
    csv_table = dict()
    for name in csv_file :
-      file_name       = f'{sim_dir}/{name}'
+      file_name       = f'{directory}/{name}'
       csv_table[name] = at_cascade.read_csv_table( file_name )
    #
    for name in [ 'random_effect.csv', 'data_sim.csv' ] :
-      file_name       = f'{sim_dir}/{name}'
+      file_name       = f'{directory}/{name}'
       csv_table[name] = at_cascade.read_csv_table( file_name )
    #
    # float_precision

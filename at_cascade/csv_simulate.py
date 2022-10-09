@@ -239,27 +239,27 @@ This string identifies the node corresponding to this data point.
 
 sex
 ---
-is the sex for this data point.
+This string is the sex for this data point.
 
 age_lower
 ---------
-is the lower age limit for this data row.
+This float is the lower age limit for this data row.
 
 age_upper
 ---------
-is the upper age limit for this data row.
+This float is the upper age limit for this data row.
 
 time_lower
 ----------
-is the lower time limit for this data row.
+This float is the lower time limit for this data row.
 
 time_upper
 ----------
-is the upper time limit for this data row.
+This float is the upper time limit for this data row.
 
 percent_cv
 ----------
-is the coefficient of variation as a percent of the corresponding
+This float is the coefficient of variation as a percent of the corresponding
 average integrand; i.e., the model for the integrand
 without any measurement noise.
 The noise will be generated with a normal distribution
@@ -323,8 +323,6 @@ This integer identifies the row in the simulate.csv
 corresponding to this row in data_sim.csv.
 This is an :ref:`csv_interface@Notation@Index Column`
 for simulate.csv and data_sim.csv.
-Not that not all these row get included during fitting; see
-:ref:`csv_fit@Input Files@data_subset.csv@simulate_id`.
 
 meas_mean
 ---------
@@ -343,9 +341,9 @@ data point. This standard deviation is before censoring.
 covariate_name
 --------------
 For each :ref:`csv_simulate@Input Files@covariate.csv@covariate_name`
-there is a column in the simulate.csv header that contains the name.
-In the other rows, this column  contain a float that is the
-corresponding covariate value at the mid point of the ages and time
+there is a column with this name in simulate.csv.
+The values in these columns are floats
+corresponding to the covariate value at the mid point of the ages and time
 intervals for this data point. This value is obtained using
 bilinear interpolation of the covariate values in covariate.csv.
 The interpolate is extended as constant in age (time) for points
@@ -357,7 +355,7 @@ outside the age rage (time range) in the covariate.csv file.
 # Returns a dictionary verison of option_table.
 #
 # option_value[name] :
-# for is the value of the option corresponding to name.
+# is the option value corresponding the the specified option name.
 # Here name is a string and value
 # has been coverted to its corresponding type; e.g.
 # option_value['random_seed'] is an ``int``.
