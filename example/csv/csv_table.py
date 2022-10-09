@@ -48,7 +48,7 @@ def main() :
    at_cascade.write_csv_table(file_name, write_table)
    #
    # read_table
-   read_table = at_cascade.read_csv_table(file_name)
+   read_table = at_cascade.csv.read_table(file_name)
    #
    # check
    assert write_table == read_table

@@ -62,7 +62,7 @@ def predict_csv_one_job(
    # Note that this node table has map to location_id
    file_name  = at_cascade.ihme.csv_file['node']
    file_path  = f'{result_dir}/{file_name}'
-   node_table = at_cascade.read_csv_table(file_path)
+   node_table = at_cascade.csv.read_table(file_path)
    #
    # fit_node_dir
    assert fit_node_database.endswith('/dismod.db')

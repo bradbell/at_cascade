@@ -93,6 +93,7 @@ Routines
 {xrst_toc_table
    at_cascade/csv/fit.py
    at_cascade/csv/interface.py
+   at_cascade/csv/read_table.py
    at_cascade/csv/simulate.py
 }
 .. END_SORT_THIS_LINE_MINUS_2
@@ -100,7 +101,8 @@ Routines
 {xrst_end csv_module}
 '''
 # BEGIN_SORT_THIS_LINE_PLUS_1
-from .fit             import fit
+from .fit            import fit
 from .interface      import interface
+from .read_table     import read_table
 from .simulate       import simulate
 # END_SORT_THIS_LINE_MINUS_1

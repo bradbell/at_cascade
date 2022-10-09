@@ -72,11 +72,11 @@ def write_root_node_database(
    #
    # table_in
    table_in = dict()
-   table_in['data']      = at_cascade.read_csv_table(data_table_file )
-   table_in['node']      = at_cascade.read_csv_table(node_table_file )
-   table_in['omega_age'] = at_cascade.read_csv_table(omega_age_table_file)
+   table_in['data']      = at_cascade.csv.read_table(data_table_file )
+   table_in['node']      = at_cascade.csv.read_table(node_table_file )
+   table_in['omega_age'] = at_cascade.csv.read_table(omega_age_table_file)
    table_in['omega_time'] = \
-      at_cascade.read_csv_table(omega_time_table_file)
+      at_cascade.csv.read_table(omega_time_table_file)
    # sex_name2covariate_value
    sex_name2covariate_value = dict()
    sex_info_dict            = at_cascade.ihme.sex_info_dict

@@ -88,7 +88,7 @@ Add the :ref:`bilinear` spline routine.
 1. Advance to xrst-2022.8.8 (this improves the documentation).
 2. Improve the :ref:`index<genindex>`
    using the keyword file to exclude some entries .
-3. Add the :ref:`read_csv_table` and :ref:`write_csv_table` routines
+3. Add the :ref:`csv_read_table` and :ref:`write_csv_table` routines
    to the at_cascade module.
 
 08-01

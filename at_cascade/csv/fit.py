@@ -232,7 +232,7 @@ def root_node_database(fit_dir) :
    print('begin reading csv files')
    for name in input_list :
       file_name         = f'{sim_dir}/{name}.csv'
-      input_table[name] = at_cascade.read_csv_table(file_name)
+      input_table[name] = at_cascade.csv.read_table(file_name)
    #
    print('being creating data structures' )
    #

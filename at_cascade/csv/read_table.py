@@ -9,7 +9,7 @@
 # -----------------------------------------------------------------------------
 import csv
 """
-{xrst_begin read_csv_table}
+{xrst_begin csv_read_table}
 
 Create A Table from a CSV File
 ##############################
@@ -43,12 +43,12 @@ Example
 *******
 :ref:`csv_table`
 
-{xrst_end read_csv_table}
+{xrst_end csv_read_table}
 """
 # BEGIN_SYNTAX
-# table = read_csv_table(file_name)
+# table = at_cascade.csv.read_table(file_name)
 # END_SYNTAX
-def read_csv_table(file_name) :
+def read_table(file_name) :
    assert type(file_name)  == str
    #
    file_ptr   = open(file_name)

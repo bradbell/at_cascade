@@ -35,7 +35,6 @@ current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
-import at_cascade.csv
 # BEGIN_PYTHON
 #
 # csv_file
@@ -119,11 +118,11 @@ def run_test() :
    csv_table = dict()
    for name in csv_file :
       file_name       = f'{csv_dir}/{name}'
-      csv_table[name] = at_cascade.read_csv_table( file_name )
+      csv_table[name] = at_cascade.csv.read_table( file_name )
    #
    for name in [ 'random_effect.csv', 'data_sim.csv' ] :
       file_name       = f'{csv_dir}/{name}'
-      csv_table[name] = at_cascade.read_csv_table( file_name )
+      csv_table[name] = at_cascade.csv.read_table( file_name )
    #
    # random_effect.csv
    for sex in [ 'male', 'female' ] :
