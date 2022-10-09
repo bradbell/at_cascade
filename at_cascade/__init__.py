@@ -41,7 +41,6 @@ The at_cascade Python Module
    at_cascade/run_one_job.py
    at_cascade/run_parallel.py
    at_cascade/table_name2id.py
-   at_cascade/write_csv_table.py
 }
 .. END_SORT_THIS_LINE_MINUS_2
 
@@ -75,5 +74,4 @@ from .omega_constraint      import omega_constraint
 from .run_one_job           import run_one_job
 from .run_parallel          import run_parallel
 from .table_name2id         import table_name2id
-from .write_csv_table       import write_csv_table
 # END_SORT_THIS_LINE_MINUS_1

@@ -9,7 +9,7 @@
 # -----------------------------------------------------------------------------
 import csv
 """
-{xrst_begin write_csv_table}
+{xrst_begin csv_write_table}
 {xrst_spell
    len
 }
@@ -65,11 +65,11 @@ Example
 :ref:`csv_table`
 
 
-{xrst_end write_csv_table}
+{xrst_end csv_write_table}
 """
-def write_csv_table(
+def write_table(
 # BEGIN_SYNTAX
-# table = at_cascade.write_csv_table(
+# table = at_cascade.csv.write_table(
    file_name  = None,
    table      = None,
    columns    = None,

@@ -95,6 +95,7 @@ Routines
    at_cascade/csv/interface.py
    at_cascade/csv/read_table.py
    at_cascade/csv/simulate.py
+   at_cascade/csv/write_table.py
 }
 .. END_SORT_THIS_LINE_MINUS_2
 
@@ -105,4 +106,5 @@ from .fit            import fit
 from .interface      import interface
 from .read_table     import read_table
 from .simulate       import simulate
+from .write_table    import write_table
 # END_SORT_THIS_LINE_MINUS_1

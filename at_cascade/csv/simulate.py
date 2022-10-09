@@ -1194,7 +1194,7 @@ def simulate(sim_dir) :
    #
    # data.csv
    file_name = f'{sim_dir}/data_sim.csv'
-   at_cascade.write_csv_table(file_name, data_sim_table)
+   at_cascade.csv.write_table(file_name, data_sim_table)
    #
    # random_effect_table
    random_effect_table = list()
@@ -1214,6 +1214,6 @@ def simulate(sim_dir) :
    #
    # random_effect.csv
    file_name = f'{sim_dir}/random_effect.csv'
-   at_cascade.write_csv_table(file_name, random_effect_table)
+   at_cascade.csv.write_table(file_name, random_effect_table)
    #
    print( 'csv_simulate done' )

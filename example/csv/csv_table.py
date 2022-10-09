@@ -44,8 +44,8 @@ def main() :
    # file_name
    file_name = 'build/file.csv'
    #
-   # write_csv_table
-   at_cascade.write_csv_table(file_name, write_table)
+   # csv_write_table
+   at_cascade.csv.write_table(file_name, write_table)
    #
    # read_table
    read_table = at_cascade.csv.read_table(file_name)

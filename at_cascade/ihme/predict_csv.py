@@ -376,7 +376,7 @@ def predict_csv_one_job(
    #
    # predict.csv
    output_csv = f'{fit_node_dir}/predict.csv'
-   at_cascade.write_csv_table(output_csv, output_table)
+   at_cascade.csv.write_table(output_csv, output_table)
    #
    # plot_limit
    age_min = min(  [ row['age']  for row in age_table  ] )

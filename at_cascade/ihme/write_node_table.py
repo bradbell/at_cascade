@@ -118,4 +118,4 @@ def write_node_table(result_dir) :
       }
       node_table.append(row_out)
    #
-   at_cascade.write_csv_table(node_table_file, node_table)
+   at_cascade.csv.write_table(node_table_file, node_table)

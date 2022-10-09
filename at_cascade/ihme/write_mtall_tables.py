@@ -222,13 +222,13 @@ def write_mtall_tables(result_dir) :
                all_mtall_id += 1
    #
    # all_mtall_table_file
-   at_cascade.write_csv_table(all_mtall_table_file, all_mtall_table)
+   at_cascade.csv.write_table(all_mtall_table_file, all_mtall_table)
    #
    # mtall_index_table_file
-   at_cascade.write_csv_table(mtall_index_table_file, mtall_index_table)
+   at_cascade.csv.write_table(mtall_index_table_file, mtall_index_table)
    #
    # omega_age_table_file
-   at_cascade.write_csv_table(omega_age_table_file, omega_age_table)
+   at_cascade.csv.write_table(omega_age_table_file, omega_age_table)
    #
    # omega_time_table_file
-   at_cascade.write_csv_table(omega_time_table_file, omega_time_table)
+   at_cascade.csv.write_table(omega_time_table_file, omega_time_table)
