@@ -35,9 +35,9 @@ table
 the return value *table* is a ``list`` of ``dict``.
 We use *n* to denote the length of the list which is
 the number of lines in the file minus one.
-For *i*, an ``int`` ,  between zero and *n*-1,
+For *i*, an ``int`` ,  between zero and *n* -1,
 and each column name *key* , a string,
-*table*[i][*key*] is the ``str`` in line i+2 and column *key*.
+*table* [ *i* ][ *key* ] is the ``str`` in line *i* +2 and column *key*.
 
 Example
 *******

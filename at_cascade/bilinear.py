@@ -50,6 +50,13 @@ must be a key in each of the dictionaries.
 Furthermore, the corresponding dictionary values must be ``str`` or ``float`` .
 This table must be non-empty.
 
+Rectangular Grid
+================
+For each x in *x_grid* and y in *y_grid* there must be one,
+and only one, row in *table* with that x and y value.
+If this is not the case, ``bilinear`` will return with *spline_dict*
+equal to ``None`` .
+
 x_grid
 ******
 Is the a sorted ``list`` of values that appear
@@ -73,15 +80,23 @@ The function call
 sets z to the value of the spline for *z_name*
 where the values x, y, and z are ``float`` ,
 
-Rectangular Grid
-================
-For each x in *x_grid* and y in *y_grid* there must be one,
-and only one, row in *table* with that x and y value.
-If this is not the case, ``bilinear`` will return with *spline_dict*
-equal to ``None`` .
+Example
+*******
+:ref:`example_bilinear`
 
 {xrst_end bilinear}
 """
+class spline_wrapper :
+   def __init__(self, spline) :
+      self.spline = spline
+   def __call__(self, x, y) :
+      assert type(x) == float
+      assert type(y) == float
+      result = self.spline(x, y)
+      assert type(result) == numpy.ndarray
+      assert result.size == 1
+      return float(result)
+
 def bilinear(
 # BEGIN_SYNTAX
 # x_grid, y_grid, spline_dict = bilinear(
@@ -188,9 +203,9 @@ def bilinear(
          z_grid[x_index][y_index] =  value
       #
       # spline_dict
-      spline= scipy.interpolate.RectBivariateSpline(
+      spline = scipy.interpolate.RectBivariateSpline(
          x_grid, y_grid, z_grid, kx=1, ky=1, s=0
       )
-      spline_dict[z_name] = spline
+      spline_dict[z_name] = spline_wrapper( spline )
    #
    return (x_grid_in, y_grid_in, spline_dict)

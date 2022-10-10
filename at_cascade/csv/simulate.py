@@ -496,7 +496,7 @@ def get_parent_node_dict( node_table ) :
 # 1. node_name is any of the nodes in the covariate table (string)
 # 2. sex is any of the sexes in the covariate table (string)
 # 3. cov_name is any covariate_name or omega (string)
-# 4. value = float( spline(age, time) ) evaluates the interpolant at
+# 4. value = spline(age, time) evaluates the interpolant at
 #  (age, time) where age, time, and value are floats.
 #
 # covariate_table:
@@ -576,7 +576,7 @@ def get_spline_node_sex_cov(covariate_table , node_set) :
 # ----------------------------------------------------------------------------
 # spline = spline_no_effect_rate[rate_name] :
 # 1. rate_name is any of the rate names in the no_effect_rate table.
-# 2. value = float( spline(age, time) ) evaluates the no_effect spline
+# 2. value = spline(age, time) evaluates the no_effect spline
 #    for rate_name at the specified age and time where age, time, value
 #    are all floats.
 #
@@ -662,7 +662,7 @@ def get_multiplier_list_rate(multiplier_sim_table) :
 # root node in the sum.
 #
 # spline = spline_node_sex_cov[node_name][sex][cov_name] :
-# is a function that evaluates value = float( spline(age, time) ) where
+# is a function that evaluates value = spline(age, time) where
 # node_name is a node name, sex is 'male' or 'female' (not 'both'),
 # cov_name is a covariate name or 'sex',
 # age, time, and value are floats
@@ -699,7 +699,7 @@ def get_rate_fun_dict(
       #
       # no_effect_rate
       spline         = spline_no_effect_rate[rate_name]
-      no_effect_rate = float( spline(age, time) )
+      no_effect_rate = spline(age, time)
       #
       # effect
       # random effects
@@ -1086,7 +1086,7 @@ def simulate(sim_dir) :
       covariate_value_list = list()
       for (index, covariate_name) in enumerate( covariate_name_list ) :
          spline = spline_node_sex_cov[node_name][sex][covariate_name]
-         value  =  float( spline(age_mid, time_mid) )
+         value  =  spline(age_mid, time_mid)
          covariate_value_list.append(value )
       #
       # data_row

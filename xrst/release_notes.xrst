@@ -20,6 +20,7 @@ Release Notes for at_cascade
    dd
    distutils
    mm
+   numpy
    optimizer
    perturb
    pyspellchecker
@@ -33,14 +34,22 @@ Release Notes for 2022
 fit branch
 **********
 
+10-10
+=====
+Fix the return value for :ref:`bilinear@spline_dict` function calls::
+
+   z = spline_dict[z_name](x, y)
+
+so that the result z is a float and not a numpy array of size one.
+
 10-09
 =====
 1. Move the csv interface files to the csv sub-module; see
    :ref:`csv_module`.
-2. Move ``at_cascade.read_csv_table`` and ``at_cascade.write_csv_table`` to
-   ``at_cascade.csv.read_table`` and ``at_cascade.csv.write_table``
-   respectively.
+2. Move
 
+   - read_csv_table to :ref:`csv_read_table`
+   - write_csv_table to :ref:`csv_write_table`
 
 mm-dd
 *****
