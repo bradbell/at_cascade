@@ -138,7 +138,7 @@ routine uses these tables to check that fit against the truth.
 
 {xrst_end continue_cascade_xam}
 ------------------------------------------------------------------------------
-{xrst_begin continue_cascade_py}
+{xrst_begin continue_cascade.py}
 
 continue_cascade: Python Source Code
 ####################################
@@ -148,7 +148,7 @@ continue_cascade: Python Source Code
    END source code
 }
 
-{xrst_end continue_cascade_py}
+{xrst_end continue_cascade.py}
 '''
 # BEGIN source code
 # ----------------------------------------------------------------------------

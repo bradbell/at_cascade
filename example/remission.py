@@ -166,7 +166,7 @@ routine uses these tables to check that fit against the truth.
 
 {xrst_end remission}
 ------------------------------------------------------------------------------
-{xrst_begin remission_py}
+{xrst_begin remission.py}
 
 remission: Python Source Code
 #############################
@@ -176,7 +176,7 @@ remission: Python Source Code
    END remission source code
 }
 
-{xrst_end remission_py}
+{xrst_end remission.py}
 '''
 # BEGIN remission source code
 # ----------------------------------------------------------------------------

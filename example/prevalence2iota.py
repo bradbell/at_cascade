@@ -253,7 +253,7 @@ routine uses these tables to check that fit against the truth.
 
 {xrst_end prevalence2iota}
 ------------------------------------------------------------------------------
-{xrst_begin prevalence2iota_py}
+{xrst_begin prevalence2iota.py}
 
 prevalence2iota: Python Source Code
 ###################################
@@ -263,7 +263,7 @@ prevalence2iota: Python Source Code
    END prevalence2iota source code
 }
 
-{xrst_end prevalence2iota_py}
+{xrst_end prevalence2iota.py}
 '''
 # BEGIN prevalence2iota source code
 # ----------------------------------------------------------------------------

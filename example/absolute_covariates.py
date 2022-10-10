@@ -174,7 +174,7 @@ fit being checked.
 
 {xrst_end absolute_covariates}
 ------------------------------------------------------------------------------
-{xrst_begin absolute_covariates_py}
+{xrst_begin absolute_covariates.py}
 
 absolute_covariates: Python Source Code
 #######################################
@@ -184,7 +184,7 @@ absolute_covariates: Python Source Code
    END_2 absolute_covariates source code
 }
 
-{xrst_end absolute_covariates_py}
+{xrst_end absolute_covariates.py}
 '''
 # BEGIN_2 absolute_covariates source code
 # ----------------------------------------------------------------------------

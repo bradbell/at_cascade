@@ -180,7 +180,7 @@ routine uses these tables to check that fit against the truth.
 
 {xrst_end split_covariate}
 ------------------------------------------------------------------------------
-{xrst_begin split_covariate_py}
+{xrst_begin split_covariate.py}
 
 split_covariate: Python Source Code
 ###################################
@@ -190,7 +190,7 @@ split_covariate: Python Source Code
    END split_covariate source code
 }
 
-{xrst_end split_covariate_py}
+{xrst_end split_covariate.py}
 '''
 # BEGIN split_covariate source code
 # ----------------------------------------------------------------------------

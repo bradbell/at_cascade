@@ -154,7 +154,7 @@ routine uses these tables to check that fit against the truth.
 
 {xrst_end max_fit_option}
 ------------------------------------------------------------------------------
-{xrst_begin max_fit_option_py}
+{xrst_begin max_fit_option.py}
 
 max_fit_option: Python Source Code
 ##################################
@@ -164,7 +164,7 @@ max_fit_option: Python Source Code
    END source code
 }
 
-{xrst_end max_fit_option_py}
+{xrst_end max_fit_option.py}
 '''
 # BEGIN source code
 # ----------------------------------------------------------------------------

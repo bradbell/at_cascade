@@ -230,7 +230,7 @@ routine uses these tables to check that fit against the truth.
 
 {xrst_end one_at_function}
 ------------------------------------------------------------------------------
-{xrst_begin one_at_function_py}
+{xrst_begin one_at_function.py}
 
 one_at_function: Python Source Code
 ###################################
@@ -240,7 +240,7 @@ one_at_function: Python Source Code
    END one_at_function source code
 }
 
-{xrst_end one_at_function_py}
+{xrst_end one_at_function.py}
 '''
 # BEGIN one_at_function source code
 # ----------------------------------------------------------------------------

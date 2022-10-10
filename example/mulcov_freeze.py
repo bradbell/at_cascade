@@ -235,7 +235,7 @@ routine uses these tables to check that fit against the truth.
 
 {xrst_end mulcov_freeze}
 ------------------------------------------------------------------------------
-{xrst_begin mulcov_freeze_py}
+{xrst_begin mulcov_freeze.py}
 
 mulcov_freeze: Python Source Code
 #################################
@@ -245,7 +245,7 @@ mulcov_freeze: Python Source Code
    END mulcov_freeze source code
 }
 
-{xrst_end mulcov_freeze_py}
+{xrst_end mulcov_freeze.py}
 '''
 # BEGIN mulcov_freeze source code
 # ----------------------------------------------------------------------------
