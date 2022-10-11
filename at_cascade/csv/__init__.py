@@ -92,6 +92,7 @@ Routines
 .. BEGIN_SORT_THIS_LINE_PLUS_2
 {xrst_toc_table
    at_cascade/csv/covariate_avg.py
+   at_cascade/csv/covariate_spline.py
    at_cascade/csv/fit.py
    at_cascade/csv/interface.py
    at_cascade/csv/read_table.py
@@ -103,10 +104,11 @@ Routines
 {xrst_end csv_module}
 '''
 # BEGIN_SORT_THIS_LINE_PLUS_1
-from .covariate_avg  import covariate_avg
-from .fit            import fit
-from .interface      import interface
-from .read_table     import read_table
-from .simulate       import simulate
-from .write_table    import write_table
+from .covariate_avg    import covariate_avg
+from .covariate_spline import covariate_spline
+from .fit              import fit
+from .interface        import interface
+from .read_table       import read_table
+from .simulate         import simulate
+from .write_table      import write_table
 # END_SORT_THIS_LINE_MINUS_1

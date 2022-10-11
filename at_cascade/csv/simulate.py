@@ -491,89 +491,6 @@ def get_parent_node_dict( node_table ) :
    #
    return parent_node_dict, child_list_node
 # ----------------------------------------------------------------------------
-#
-# spline = spline_node_sex_cov[node_name][sex][cov_name] :
-# 1. node_name is any of the nodes in the covariate table (string)
-# 2. sex is any of the sexes in the covariate table (string)
-# 3. cov_name is any covariate_name or omega (string)
-# 4. value = spline(age, time) evaluates the interpolant at
-#  (age, time) where age, time, and value are floats.
-#
-# covariate_table:
-# is the table corresponding to covariate_csv.
-#
-# node_set
-# is the set of node_name that appear in node.csv.
-#
-#
-# spline_node_sex_cov =
-def get_spline_node_sex_cov(covariate_table , node_set) :
-   #
-   # cov_name_list
-   # this is the covariate names and omega
-   cov_name_list = list()
-   for key in covariate_table[0].keys() :
-      if key not in [ 'node_name', 'sex', 'age', 'time' ] :
-         cov_name_list.append( key )
-   #
-   # covariate_row_list
-   covariate_row_list  = dict()
-   line_number         = 0
-   for row in covariate_table :
-      line_number += 1
-      node_name    = row['node_name']
-      sex          = row['sex']
-      age          = float( row['age'] )
-      time         = float( row['time'] )
-      if node_name not in node_set :
-         msg  = f'csv_interface: Error: '
-         msg += f'line {line_number} in covariate.csv\n'
-         msg += f'node_name {node_name} is not in node.csv'
-         assert False, msg
-      if sex not in ['male', 'female'] :
-         msg  = f'csv_interface: Error: '
-         msg += f'line {line_number} in covariate.csv\n'
-         msg += f'sex {sex} is not male or female'
-         assert False, msg
-      #
-      # covariate_row_list
-      if node_name not in covariate_row_list :
-         covariate_row_list[node_name] = dict()
-      if sex not in covariate_row_list[node_name] :
-         covariate_row_list[node_name][sex] = list()
-      covariate_row_list[node_name][sex].append( row )
-   #
-   # spline_node_sex_cov
-   spline_node_sex_cov = dict()
-   #
-   # node_name
-   for node_name in covariate_row_list :
-      spline_node_sex_cov[node_name] = dict()
-      #
-      # sex
-      for sex in covariate_row_list[node_name] :
-         spline_node_sex_cov[node_name][sex] = dict()
-         #
-         # age_grid, time_grid, spline_dict
-         age_grid, time_grid, spline_dict = at_cascade.bilinear(
-            table  = covariate_row_list[node_name][sex] ,
-            x_name = 'age',
-            y_name = 'time',
-            z_list = cov_name_list
-         )
-         #
-         if spline_dict == None :
-            msg  = 'csv_interface: Error in covariate.csv\n'
-            msg += 'node_name = {node_name}, sex = {sex} \n'
-            msg += 'Expected following rectangular grid:\n'
-            msg += f'age_grid  = {age_grid}\n'
-            msg += f'time_grid = {time_grid}'
-            assert False, msg
-         #
-         # spline_node_sex_cov
-         spline_node_sex_cov[node_name][sex] = spline_dict
-   return spline_node_sex_cov
-# ----------------------------------------------------------------------------
 # spline = spline_no_effect_rate[rate_name] :
 # 1. rate_name is any of the rate names in the no_effect_rate table.
 # 2. value = spline(age, time) evaluates the no_effect spline
@@ -968,7 +885,7 @@ def simulate(sim_dir) :
    #
    # spline_node_sex_cov
    node_set = set( parent_node_dict.keys() )
-   spline_node_sex_cov = get_spline_node_sex_cov(
+   spline_node_sex_cov = at_cascade.csv.covariate_spline(
       input_table['covariate'], node_set
    )
    #
