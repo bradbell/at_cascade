@@ -7,16 +7,25 @@
 #     GNU Affero General Public License version 3.0 or later
 # see http://www.gnu.org/licenses/agpl.txt
 # -----------------------------------------------------------------------------
+import dismod_at
 import at_cascade
-"""
+import copy
+'''
 
 {xrst_begin csv_fit}
 {xrst_spell
+   const
+   dage
    dir
+   dtime
+   laplace
    meas
-   sim
-   std
+   pini
+   rho
    sincidence
+   std
+   sqlite
+   truncation
 }
 
 Fit a Simulated Data Set
@@ -37,16 +46,6 @@ are located.
 Input Files
 ***********
 
-option.csv
-==========
-This csv file has two columns,
-one called ``name`` and the other called ``value``.
-The rows are documented below by the name column:
-
-root_node_name
---------------
-This string is the name of the root node.
-
 node.csv
 ========
 This csv file has the same description as the simulate
@@ -56,6 +55,136 @@ covariate_csv
 =============
 This csv file has the same description as the simulate
 :ref:`csv_simulate@Input Files@covariate.csv` file.
+
+option.csv
+==========
+This csv file has two columns,
+one called ``name`` and the other called ``value``.
+The rows are documented below by the name column:
+
+root_node_name
+--------------
+This string is the name of the root node.
+The default for *root_node_name* is the not at he top (root) of
+the entire node tree.
+
+{xrst_comment ---------------------------------------------------------------}
+
+prior.csv
+=========
+This csv file has the following columns:
+
+name
+----
+is a string contain the name of this prior.
+No two priors can have the same name.
+
+lower
+-----
+is a float containing the lower limit for the truncated density
+for this prior.
+
+upper
+-----
+is a float containing the upper limit for the truncated density
+for this prior.
+
+std
+---
+is a float containing the standard deviation limit for the density
+for this prior (before truncation).
+
+density
+-------
+is one of the following strings:
+uniform, gaussian, cen_gaussian, laplace, cen_laplace.
+(Only these densities are included, so far, so that we do not have to
+worry about the log offset or degrees of freedom.)
+
+{xrst_comment ---------------------------------------------------------------}
+
+smooth_grid.csv
+===============
+For each value of *smooth_name*,
+this file must have a rectangular grid in *age* and *time* .
+
+name
+----
+is a string containing the name for this smoothing.
+
+age
+---
+is a float containing the age for this grid point or the empty string.
+
+time
+----
+is a float containing the time for this grid point or the empty string.
+
+value_prior
+-----------
+is a string containing the name of the value prior for this grid point.
+If value_prior is empty, const_value must be non-empty.
+
+dage_prior
+----------
+is a string containing the name of the dage prior for this grid point.
+The specified prior cannot be censored.
+
+dtime_prior
+-----------
+is a string containing the name of the dtime prior for this grid point.
+The specified prior cannot be censored.
+
+const_value
+-----------
+is a float specifying a constant value for this grid point or the empty string.
+This is equivalent to the upper and lower limits being equal to this value.
+If const_value is empty, value_prior must be non-empty.
+
+
+{xrst_comment ---------------------------------------------------------------}
+
+rate.csv
+========
+This csv file specifies which rates, besides omega,
+are non-zero and what their prior are.
+
+name
+----
+this string is the name of this rate and is one of the following:
+pini, iota, rho, chi (name cannot be omega).
+
+parent_smooth
+-------------
+This string is the name of the parent smoothing for this rate.
+
+child_smooth
+------------
+This string is the name of the child smoothing for this rate.
+
+{xrst_comment ---------------------------------------------------------------}
+
+mulcov.csv
+==========
+This csv file specifies the covariate multipliers.
+
+covariate
+---------
+this string is the name of the covariate for this multiplier.
+
+type
+----
+This string is rate_value, meas_value, or meas_noise.
+
+effected
+--------
+is the name of the integrand or rate affected by this multiplier.
+
+smooth
+------
+is the name of the smoothing for this multiplier.
+
+{xrst_comment ---------------------------------------------------------------}
 
 data_in.csv
 ===========
@@ -108,83 +237,23 @@ hold_out
 This integer is one (zero) if this data point is held out (not held out)
 from the fit.
 
-covariate_name
---------------
-For each :ref:`csv_simulate@Input Files@covariate.csv@covariate_name`
-there is a column with this name in data.csv.
-The values in these columns are floats corresponding to the covariate value
-at the mid point of the ages and time intervals for this data point.
-
-------------------------------------------------------------------------------
+{xrst_comment ---------------------------------------------------------------}
 
 Output Files
 ************
 
-data_out.csv
-============
-This contains the fit results for the simulated data values.
-It is created during a fit command and
-has the following columns:
+root_node.db
+************
+This is the dismod_at sqlite database corresponding to the root node for
+the cascade.
 
-simulate_id
------------
-This integer identifies the row in the simulate.csv and data_sim.csv
-corresponding to this data estimate.
+all_node.db
+***********
+This is the at_cascade sqlite all node database for the cascade.
 
-estimate
---------
-This float is the estimated value for the data
-
-residual
---------
-This float is the weighted residual corresponding to this data point.
-This has a simple form because there are no noise covariates;
-i.e., (meas_value - estimate) / meas_std.
-
-------------------------------------------------------------------------------
-
-rate_fit.csv
-============
-This contains the fit results for the rate values.
-It is created during a fit command and
-has the following columns:
-
-rate_sim_id
------------
-is an :ref:`csv_module@Notation@Index Column` for rate_sim.csv,
-rate_prior.csv and rate_fit.csv.
-
-estimate
---------
-This float is the estimated value for the rate.
-
-std_error
----------
-Is the asymptotic estimate for the accuracy of the estimate.
-
-------------------------------------------------------------------------------
-
-multiplier_fit.csv
-==================
-This contains the fit results for the multiplier values.
-It is created during a fit command and
-has the following columns:
-
-multiplier_id
--------------
-This integer identifies the row in the multiplier_sim.csv and
-multiplier_prior.csv corresponding to this multiplier estimate.
-
-estimate
---------
-This float is the estimated value for the multiplier.
-
-std_error
----------
-Is the asymptotic estimate for the accuracy of the estimate.
 
 {xrst_end csv_fit}
-"""
+'''
 # ----------------------------------------------------------------------------
 # Returns a dictionary version of option table
 #
@@ -216,18 +285,40 @@ def option_table2dict(fit_dir, option_table) :
       value        = option_type[name]( row['value'] )
       option_value[name] = value
 # ----------------------------------------------------------------------------
+class smoothing_function :
+   def __init__(self, name) :
+      self.name  = name
+      self.value = dict()
+   def set(age, time, value_prior, dage_prior = None, dtime_prior = None) :
+      if type( value_prior ) == float :
+         self.value[ (age, time) ] = value_prior
+      else :
+         type(value_prior) == str
+         type(dage_prior) == str
+         type(dtime_prior) == str
+         self.value[ (age, time) ] = (value_prior, dage_prior, dtime_prior)
+   def __call__(age, time) :
+      if (age, time) not in self.value :
+         msg = f'The grid for smoothing {self.name} is not rectangular'
+         assert False, msg
+      return self.value[ (age, time) ]
+# ----------------------------------------------------------------------------
+# age_list, time_list =
 def root_node_database(fit_dir) :
    #
    # output_file
-   output_file = f'{csr_dir}/root_node_db'
+   output_file = f'{fit_dir}/root_node.db'
    #
    # input_table
    input_table = dict()
    input_list = [
-      'data',
+      'data_in',
       'covariate',
       'node',
       'option',
+      'prior',
+      'rate',
+      'smooth_grid',
    ]
    print('begin reading csv files')
    for name in input_list :
@@ -245,41 +336,213 @@ def root_node_database(fit_dir) :
       input_table['covariate'], root_node_name
    )
    #
+   # forbidden_covariate
+   forbidden_covariate = set( input_table['data_in'][0].keys() )
+   #
    # covariate_table
    covariate_table = [{
       'name': sex, 'reference': 0.0, 'max_difference' : 0.5
    }]
-   for key in covariate_average :
+   for covariate_name in covariate_average.keys() :
       covariate_table.append({
-         'name':            key,
-         'reference':       covariate_average[key],
+         'name':            covariate_name,
+         'reference':       covariate_average[covariate_name],
          'max_difference' : None
       })
    #
+   # node_set, root_node_name
+   node_set       = set()
+   root_node_name = None
+   for row in input_table['node'] :
+      node_name   = row['node_name']
+      parent_name = row['parent_name']
+      if node_name in node_set :
+         msg = f'node_name {node_name} apprears twice in node.csv'
+         assert False, msg
+      if parent_name == '' :
+         if root_node_name != '' :
+            msg = 'node.csv: more than one node has no parent node'
+            assert False, msg
+         root_node_name = node_name
+      node_set.add( node_name )
+   if root_node_name == None :
+      msg = 'node.csv: no node has an empty parent_name'
+      assert False, msg
+   #
+   # root_node_name
+   for row in input_table['option'] :
+      if row['name'] == 'root_node_name' :
+         root_node_name = row['value']
+   #
+   # option_table
+   option_table = [
+      { 'option_name' : 'parent_node_name', 'option_value' : root_node_name }
+   ]
+   #
+   # spline_cov
+   spline_cov = at_cascade.csv.covariate_spline(
+      input_table['covariate'], node_set
+   )
+   #
    # data_table
-   data_table = input_table['data']
+   data_table = input_table['data_in']
    for row in data_table () :
-      row['weight'] = ''
+      #
+      # age_mid
+      age_lower = float( row['age_lower'] )
+      age_upper = float( row['age_upper'] )
+      age_mid   = (age_lower + age_upper) / 2.0
+      #
+      # time_mid
+      time_lower = float( row['time_lower'] )
+      time_upper = float( row['time_upper'] )
+      time_mid   = (time_lower + time_upper) / 2.0
+      #
+      # row[c_j] for j = 0, ..., n_covariate - 1
+      node_name = row['node_name']
+      sex       = row['sex']
+      for index, covariate_name in enumerate( covariate_average.keys() ) :
+         spline           = spline_cov[node_name][sex][covariate_name]
+         covariate_value  = spline(age_mid, time_mid)
+         column_name      = f'c_{index}'
+         row[column_name] = covariate_value
+      #
+      # row
+      row['weight']   = ''
       row['subgroup'] = 'world'
+      row['density']  = 'cen_gaussian'
+   #
+   # integrand_table
+   integrand_set = set()
+   for row in data_table :
+      integrand_set.add( row['integrand_name'] )
+   integrand_table = list()
+   for integrand_name in integrand_set :
+      row = { 'name' : integrand_name }
+      integrand_table.append(row)
+
+   #
+   # subgroup_table
+   subgroup_table = [{ 'subgroup' : 'world', 'group' : 'world' }]
+   #
+   # prior_table
+   prior_table = copy.copy( input_table['prior'] )
+   for row in prior_table :
+      row['lower'] = float( row['lower'] )
+      row['upper'] = float( row['upper'] )
+      row['std']   = float( row['std'] )
+   #
+   # min_data_age,  max_data_age
+   # min_data_time, max_data_time
+   min_data_age  = data_table[0]['age_lower']
+   max_data_age  = data_table[0]['age_upper']
+   min_data_time = data_table[0]['time_lower']
+   max_data_time = data_table[0]['time_upper']
+   for row in data_table :
+      min_data_age  = min( min_data_age, row['age_lower'] )
+      max_data_age  = max( max_data_age, row['age_upper'] )
+      min_data_time = min( min_data_time, row['time_lower'] )
+      max_data_time = max( max_data_time, row['time_upper'] )
+   #
+   # age_list, time_list
+   age_set   = {min_data_age, max_data_age}
+   time_set = {min_data_time, max_data_time}
+   for row in input_table['smooth_grid'] :
+      row['age']  = float(row['age'])
+      row['time'] = float(row['time'])
+      age_set.add( row['age'] )
+      time_set.add( row['time'] )
+   age_list  = list( age_set )
+   time_list = list( time_set )
+   #
+   # smooth_table
+   smooth_dict = dict()
+   for row in input_table['smooth_grid'] :
+      name = row['name']
+      age  = float( row['age'] )
+      time = float( row['time'] )
+      if name not in smooth_dict :
+         fun = smoothing_function(name)
+         smooth_dict[name] = {
+            'age_id'  : set() ,
+            'time_id' : set() ,
+            'fun'     : fun    ,
+         }
+      age_id  = age_list.index( age )
+      time_id = time_list.index( time )
+      smooh_dict[name]['age_id'].add( age_id )
+      smooh_dict[name]['time_id'].add( time_id )
+      if row['const_value'] != '' :
+         const_value = float( row['const_value'] )
+         smooth_dict[name].set(age, time, const_value)
+      else :
+         value_prior = row['value_prior']
+         dage_prior  = row['dage_prior']
+         dtime_prior = row['dtime_prior']
+         smooth_dict[name].set(age, time, value_prior, dage_prior, dtime_prior)
+   smooth_table = list()
+   for name in smooth_dict :
+      row = {
+         'name'    : name                           ,
+         'age_id'  : smooth_dict[name]['age_id']    ,
+         'time_id' : smooth_dict[name]['time_id']   ,
+         'fun'     : smooth_dict[name]['fun']       ,
+      }
+      smooth_table.append( row )
+
    #
    dismod_at.create_database(
          file_name         = output_file,
-         age_list          = None,
-         time_list         = None,
-         integrand_table   = None,
+         age_list          = age_list,
+         time_list         = age_list,
+         integrand_table   = integrand_table,
          node_table        = input_table['node'],
-         subgroup_table    = None,
-         weight_table      = None,
+         subgroup_table    = subgroup_table,
+         weight_table      = list(),
          covariate_table   = covariate_table,
          avgint_table      = list(),
          data_table        = data_table,
-         prior_table_copy  = None,
-         smooth_table      = None,
-         nslist_table      = None,
-         rate_table        = None,
-         mulcov_table      = None,
-         option_table      = None,
+         prior_table       = prior_table,
+         smooth_table      = smooth_table,
+         nslist_table      = dict(),
+         rate_table        = input_table['rate'],
+         mulcov_table      = input_table['mulcov'],
+         option_table      = option_table,
    )
+   #
+   return age_list, time_list
+# ----------------------------------------------------------------------------
+def all_node_database(fit_dir, root_node_database) :
+   #
+   # root_node_name
+   root_node_name = at_cascade.get_parent_node(root_node_database)
+   #
+   # all_node_database
+   all_node_database = f'{fit_dir}/all_node.db'
+   #
+   # all_node_db
+   new = True
+   all_node_db = dismod_at.create_connection(output_file, new)
+   #
+   #
+   # all_option
+   all_option = {
+      # 'absolute_covariates'        : None,
+      'balance_fit'                  : 'sex -0.5 +0.5' ,
+      'max_abs_effect'               : 2.0 ,
+      'max_fit'                      : 250,
+
+      'split_covariate_name'         : 'sex',
+      'root_split_reference_name'    : 'both',
+      'result_dir'                   : fit_dir,
+      'root_node_name'               : root_node_name,
+      'max_number_cpu'               : max_number_cpu,
+      'shared_memory_prefix'         : shared_memory_prefix,
+      'shift_prior_std_factor'       : shift_prior_std_factor,
+      'perturb_optimization_scale'   : perturb_optimization_scale,
+      'perturb_optimization_start'   : perturb_optimization_start,
+   }
+
 # ----------------------------------------------------------------------------
 # BEGIN_FIT
 def fit(fit_dir) :
