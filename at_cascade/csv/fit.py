@@ -323,7 +323,10 @@ class smoothing_function :
 # time_grid
 # is a sorted list of the time values in the covariae.csv file.
 #
-# age_grid, time_grid =
+# covariate_table
+# is the list of dict corresponding to the covariate.csv file
+#
+# age_grid, time_grid, covariate_table =
 def root_node_database(fit_dir) :
    #
    # output_file
@@ -531,7 +534,7 @@ def root_node_database(fit_dir) :
          option_table      = option_table,
    )
    #
-   return age_list, time_list
+   return age_grid, time_grid, input_table['covariate']
 # ----------------------------------------------------------------------------
 # Writes the all node data base.
 #
@@ -551,7 +554,11 @@ def root_node_database(fit_dir) :
 #
 # time_grid
 # is a sorted list of the time values in the covariae.csv file.
-def all_node_database(fit_dir, age_grid, time_grid) :
+#
+# covariate_table
+# is the list of dict corresponding to the covariate.csv file.
+#
+def all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    #
    # root_node_table
    root_node_table = dict()
@@ -619,11 +626,60 @@ def all_node_database(fit_dir, age_grid, time_grid) :
          mulcov_freeze_table.append(row)
    #
    # omega_grid
-   age_list     = [ row['age'] for row in root_node_table['age'] ]
+   age_list     = [ row['age'] for row  in root_node_table['age'] ]
    time_list    = [ row['time'] for row in root_node_table['time'] ]
-   age_id_grid  = [ age_list.index(age) for age in age_grid ]
+   age_id_grid  = [ age_list.index(age)  for age in age_grid ]
    time_id_grid = [ time_list.index(age) for time in time_grid ]
    omega_grid = { 'age' : age_id_grid, 'time' : time_id_grid }
+   #
+   # mtall_data
+   # This is set equal to the value of omega and is only used for the
+   # omega constraint.
+   none_list  = len( age_grid) * len( time_grid ) * [ None ]
+   mtall_data = dict()
+   for row in covariate_table :
+      node_name          = row['node_name']
+      sex                = row['sex']
+      age                = float( row['age'] )
+      time               = float( row['time'] )
+      omega              = float( row['omega'] )
+      #
+      if sex not in [ 'female', 'male' ] :
+         msg  = 'covariate.csv: sex is not female or male'
+         assert False, msg
+      split_reference_id = at_cascade.table_name2id(
+         split_reference_table, 'split_reference', sex
+      )
+      if node_name not in mtall_data :
+         mtall_data[node_name] = len(split_refernece_table) * [ none_list ]
+      #
+      k = split_reference_id
+      i = age_list.index(age)
+      j = time_list.index(time)
+      assert k in [0, 2]
+      mtall_data[node_name][k][i * len( time_grid )  + j] = omega
+   for node_name in mtall_data :
+      for i in range( len(age_grid) ) :
+         for j in range( len(time_grid) ) :
+            female = mtall_data[node_name][0][i * len( time_grid ) + j]
+            both   = mtall_data[node_name][1][i * len( time_grid ) + j]
+            male   = mtall_data[node_name][2][i * len( time_grid ) + j]
+            assert female != None and both == None and male != None
+            both   = (male + female) / 2.0
+            mtall_data[node_name][1][i * len( time_grid ) + j] = both
+   #
+   # create_all_node_db
+   at_cascade.create_all_node_db(
+   all_node_database         = f'{fit_dir}/all_node.db'  ,
+   root_node_database        = f'{fit_dir}/root_node.db' ,
+   all_option                = all_option                ,
+   split_reference_table     = split_reference_table     ,
+   node_split_table          = node_split_table          ,
+   mulcov_freeze_table       = mulcov_freeze_table       ,
+   omega_grid                = omega_grid                ,
+   mtall_data                = mtall_data                ,
+   mtspecific_data           = None,
+   )
 
 # ----------------------------------------------------------------------------
 # BEGIN_FIT
