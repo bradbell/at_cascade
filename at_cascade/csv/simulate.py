@@ -885,7 +885,7 @@ def simulate(sim_dir) :
    #
    # spline_node_sex_cov
    node_set = set( parent_node_dict.keys() )
-   spline_node_sex_cov = at_cascade.csv.covariate_spline(
+   age_grid, time_grid, spline_node_sex_cov = at_cascade.csv.covariate_spline(
       input_table['covariate'], node_set
    )
    #

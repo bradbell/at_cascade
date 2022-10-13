@@ -366,6 +366,13 @@ is the name of the :ref:`glossary@root_node` in the node table of the
 :ref:`glossary@root_node_database` .
 (The node table is the same in all the dismod_at databases.)
 
+split_covariate_name
+********************
+is the name, in the root_node_database covariate table, of the splitting
+covariate.
+If :ref:`split_reference_table` is empty (is not empty)
+this option must not (must) appear.
+
 root_split_reference_name
 *************************
 This is the `split_reference_table.split_reference_name`
@@ -382,13 +389,6 @@ If it is greater (less) than one, the child priors are larger (smaller)
 than the posterior corresponding to the parent node fit.
 If this option does not appear, the value one is used for the factor.
 
-
-split_covariate_name
-********************
-is the name, in the root_node_database covariate table, of the splitting
-covariate.
-If :ref:`split_reference_table` is empty (is not empty)
-this option must not (must) appear.
 
 {xrst_end all_option_table}
 ------------------------------------------------------------------------------

@@ -36,6 +36,16 @@ node_set
 ********
 This is the set of nodes in :ref:`csv_simulate@Input Files@node.csv`
 
+age_grid
+********
+This is a sorted list of float containing the age values
+that are present for each node_name and sex.
+
+time_grid
+*********
+This is a sorted list of float containing the time values
+that are present for each node_name and sex.
+
 spline_cov
 **********
 This is a dict of dict of dict.
@@ -54,10 +64,16 @@ To be more specific
 is the value of the covariate at the specified age and time where
 *age*, *time*, and *z* are floats.
 
+Side Effects
+************
+This routine aborts with an assert if covariate.csv does not have the
+same rectangular grid in age and time for each (node_name, sex) pair.
+
+
 {xrst_end covariate_spline}
 '''
 # BEGIN_SYNTAX
-# spline_cov =
+# age_grid, time_grid, spline_cov =
 def covariate_spline(covariate_table , node_set) :
    assert type( covariate_table ) == list
    assert type( covariate_table[0] ) == dict
@@ -80,12 +96,12 @@ def covariate_spline(covariate_table , node_set) :
       age          = float( row['age'] )
       time         = float( row['time'] )
       if node_name not in node_set :
-         msg  = f'csv_interface: Error: '
+         msg  = f'covariate_spline: Error: '
          msg += f'line {line_number} in covariate.csv\n'
          msg += f'node_name {node_name} is not in node.csv'
          assert False, msg
       if sex not in ['male', 'female'] :
-         msg  = f'csv_interface: Error: '
+         msg  = f'covariate_spline: Error: '
          msg += f'line {line_number} in covariate.csv\n'
          msg += f'sex {sex} is not male or female'
          assert False, msg
@@ -99,6 +115,9 @@ def covariate_spline(covariate_table , node_set) :
    #
    # spline_cov
    spline_cov = dict()
+   #
+   # previous
+   previous = dict()
    #
    # node_name
    for node_name in covariate_row_list :
@@ -118,14 +137,38 @@ def covariate_spline(covariate_table , node_set) :
          )
          #
          if spline_dict == None :
-            msg  = 'csv_interface: Error in covariate.csv\n'
+            msg  = 'covariate_spline: Error in covariate.csv\n'
             msg += 'node_name = {node_name}, sex = {sex} \n'
             msg += 'Expected following rectangular grid:\n'
             msg += f'age_grid  = {age_grid}\n'
             msg += f'time_grid = {time_grid}'
             assert False, msg
          #
+         if len( previous ) == 0 :
+            same_grid = True
+         else :
+            same_grid = previous['age_grid'] == age_grid
+            same_grid = same_grid and previous['time_grid'] == time_grid
+         if not same_grid :
+            msg  = 'covariate_spline: Error in covariate.csv\n'
+            msg += 'node_name = {node_name}, sex = {sex} \n'
+            msg += f'age_grid  = {age_grid}\n'
+            msg += f'time_grid = {time_grid}'
+            previous_name      = previous['node_name']
+            previous_sex       = previous['sex']
+            previous_age_grid  = previous['age_grid']
+            previous_time_grid = previous['time_grid']
+            msg += 'node_name = {previous_name}, sex = {previous_sex} \n'
+            msg += f'age_grid  = {previous_age_grid}\n'
+            msg += f'time_grid = {previous_time_grid}'
+            assert False, msg
+         #
          # spline_cov[node_name][sex]
          spline_cov[node_name][sex] = spline_dict
+         #
+         previous['node_name'] = node_name
+         previous['sex']       = sex
+         previous['age_grid']  = age_grid
+         previous['time_grid'] = time_grid
    #
-   return spline_cov
+   return age_grid, time_grid, spline_cov

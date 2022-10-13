@@ -65,7 +65,7 @@ The rows are documented below by the name column:
 root_node_name
 --------------
 This string is the name of the root node.
-The default for *root_node_name* is the not at he top (root) of
+The default for *root_node_name* is the top (root) of
 the entire node tree.
 
 {xrst_comment ---------------------------------------------------------------}
@@ -303,7 +303,7 @@ class smoothing_function :
          assert False, msg
       return self.value[ (age, time) ]
 # ----------------------------------------------------------------------------
-# age_list, time_list =
+# age_grid, time_grid =
 def root_node_database(fit_dir) :
    #
    # output_file
@@ -322,7 +322,7 @@ def root_node_database(fit_dir) :
    ]
    print('begin reading csv files')
    for name in input_list :
-      file_name         = f'{sim_dir}/{name}.csv'
+      file_name         = f'{fit_dir}/{name}.csv'
       input_table[name] = at_cascade.csv.read_table(file_name)
    #
    print('being creating root node database' )
@@ -380,12 +380,13 @@ def root_node_database(fit_dir) :
    ]
    #
    # spline_cov
-   spline_cov = at_cascade.csv.covariate_spline(
+   age_grid, time_grid, spline_cov = at_cascade.csv.covariate_spline(
       input_table['covariate'], node_set
    )
    #
    # data_table
    data_table = input_table['data_in']
+   sex_value  = { 'female' : -0.5, 'both' : 0.0, 'male' : +0.5 }
    for row in data_table () :
       #
       # age_mid
@@ -400,7 +401,7 @@ def root_node_database(fit_dir) :
       #
       # row[c_j] for j = 0, ..., n_covariate - 1
       node_name = row['node_name']
-      sex       = row['sex']
+      sex       = sex_value[ row['sex'] ]
       for index, covariate_name in enumerate( covariate_average.keys() ) :
          spline           = spline_cov[node_name][sex][covariate_name]
          covariate_value  = spline(age_mid, time_mid)
@@ -512,7 +513,13 @@ def root_node_database(fit_dir) :
    #
    return age_list, time_list
 # ----------------------------------------------------------------------------
-def all_node_database(fit_dir, root_node_database) :
+def all_node_database(fit_dir, root_node_database, age_grid, time_grid) :
+   #
+   # mulcov_table
+   new          = False
+   connection   = dismod_at.create_connection(root_node_database, new)
+   mulcov_table = dismod_at.get_table_dict(connection, tbl_name = 'mulcov')
+   connection.close()
    #
    # root_node_name
    root_node_name = at_cascade.get_parent_node(root_node_database)
@@ -524,6 +531,11 @@ def all_node_database(fit_dir, root_node_database) :
    new = True
    all_node_db = dismod_at.create_connection(output_file, new)
    #
+   # user
+   user  = os.environ.get('USER').replace(' ', '_')
+   #
+   # max_number_cpu
+   max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
    #
    # all_option
    all_option = {
@@ -531,17 +543,39 @@ def all_node_database(fit_dir, root_node_database) :
       'balance_fit'                  : 'sex -0.5 +0.5' ,
       'max_abs_effect'               : 2.0 ,
       'max_fit'                      : 250,
-
-      'split_covariate_name'         : 'sex',
-      'root_split_reference_name'    : 'both',
+      'max_number_cpu'               : max_number_cpu,
+      'perturb_optimization_scale'   : 0.2,
+      'perturb_optimization_start'   : 0.2,
+      'shared_memory_prefix'         : user,
       'result_dir'                   : fit_dir,
       'root_node_name'               : root_node_name,
-      'max_number_cpu'               : max_number_cpu,
-      'shared_memory_prefix'         : shared_memory_prefix,
-      'shift_prior_std_factor'       : shift_prior_std_factor,
-      'perturb_optimization_scale'   : perturb_optimization_scale,
-      'perturb_optimization_start'   : perturb_optimization_start,
+      'split_covariate_name'         : 'sex',
+      'root_split_reference_name'    : 'both',
+      'shift_prior_std_factor'       : 2.0,
    }
+   #
+   # split_reference_table
+   split_reference_table = [
+      { 'split_reference_name' : 'female' , 'split_reference_value' : -0.5 },
+      { 'split_reference_name' : 'both'   , 'split_reference_value' :  0.0 },
+      { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
+   ]
+   #
+   # node_split_table
+   node_split_table = [ { 'node_name' : root_node_name } ]
+   #
+   # mulcov_freeze_table
+   mulcov_freeze_table = list()
+   for mulcov_id in range( len(mulcov_table) ) :
+      for split_reference_id in [ 0 , 2 ] :
+         # split_reference_id 0 for female, 2 for male
+         row = {
+            'fit_node_name'      : root_node_name     ,
+            'split_reference_id' : split_reference_id ,
+            'mulcov_id'          : mulcov_id          ,
+         }
+         mulcov_freeze_table.append(row)
+
 
 # ----------------------------------------------------------------------------
 # BEGIN_FIT
