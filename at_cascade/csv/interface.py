@@ -60,7 +60,7 @@ with each row corresponding to one data point.
 
 case_id
 -------
-is an :ref:`csv_interface@Notation@Index Column` for case.csv.
+is an :ref:`csv_module@Notation@Index Column` for case.csv.
 
 integrand_name
 --------------
@@ -100,7 +100,7 @@ predict.csv
 
 case_id
 -------
-is an :ref:`csv_interface@Notation@Index Column` for
+is an :ref:`csv_module@Notation@Index Column` for
 predict.csv and case.csv.
 
 integrand_predict

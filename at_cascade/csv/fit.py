@@ -285,6 +285,11 @@ def option_table2dict(fit_dir, option_table) :
       value        = option_type[name]( row['value'] )
       option_value[name] = value
 # ----------------------------------------------------------------------------
+# Converts smoothing prioros on a grid to a prior function
+#
+# set:      sets the function value at one of the grid points
+# __call__: gets the function value at one of the grid points
+#
 class smoothing_function :
    def __init__(self, name) :
       self.name  = name
@@ -303,6 +308,21 @@ class smoothing_function :
          assert False, msg
       return self.value[ (age, time) ]
 # ----------------------------------------------------------------------------
+# Writes the root node data base
+#
+# root_node.db
+# this database is created by root_node_database.
+# If there is an existing version of this file it is overwrittern.
+#
+# fit_dir
+# is the directory where the csv and database files are located.
+#
+# age_grid
+# is a sorted list of the age values in the covariate.csv file.
+#
+# time_grid
+# is a sorted list of the time values in the covariae.csv file.
+#
 # age_grid, time_grid =
 def root_node_database(fit_dir) :
    #
@@ -513,12 +533,34 @@ def root_node_database(fit_dir) :
    #
    return age_list, time_list
 # ----------------------------------------------------------------------------
-def all_node_database(fit_dir, root_node_database, age_grid, time_grid) :
+# Writes the all node data base.
+#
+# all_node.db
+# this database is created by all_node_database.
+# If there is an existing version of this file it is overwrittern.
+#
+# root_node.db
+# is the name of the root node database
+# This data base must exist and is not modified.
+#
+# fit_dir
+# is the directory where the csv and database files are located.
+#
+# age_grid
+# is a sorted list of the age values in the covariate.csv file.
+#
+# time_grid
+# is a sorted list of the time values in the covariae.csv file.
+def all_node_database(fit_dir, age_grid, time_grid) :
    #
-   # mulcov_table
+   # root_node_table
+   root_node_table = dict()
    new          = False
-   connection   = dismod_at.create_connection(root_node_database, new)
-   mulcov_table = dismod_at.get_table_dict(connection, tbl_name = 'mulcov')
+   database     = f'{fit_dir}/root_node.db'
+   connection   = dismod_at.create_connection(database, new)
+   for name in [ 'mulcov', 'age', 'time' ] :
+      root_node_table[name] = dismod_at.get_table_dict(
+         connection = connection, tbl_name = name)
    connection.close()
    #
    # root_node_name
@@ -566,7 +608,7 @@ def all_node_database(fit_dir, root_node_database, age_grid, time_grid) :
    #
    # mulcov_freeze_table
    mulcov_freeze_table = list()
-   for mulcov_id in range( len(mulcov_table) ) :
+   for mulcov_id in range( len(root_node_table['mulcov']  ) ) :
       for split_reference_id in [ 0 , 2 ] :
          # split_reference_id 0 for female, 2 for male
          row = {
@@ -575,7 +617,13 @@ def all_node_database(fit_dir, root_node_database, age_grid, time_grid) :
             'mulcov_id'          : mulcov_id          ,
          }
          mulcov_freeze_table.append(row)
-
+   #
+   # omega_grid
+   age_list     = [ row['age'] for row in root_node_table['age'] ]
+   time_list    = [ row['time'] for row in root_node_table['time'] ]
+   age_id_grid  = [ age_list.index(age) for age in age_grid ]
+   time_id_grid = [ time_list.index(age) for time in time_grid ]
+   omega_grid = { 'age' : age_id_grid, 'time' : time_id_grid }
 
 # ----------------------------------------------------------------------------
 # BEGIN_FIT
