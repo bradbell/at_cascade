@@ -73,15 +73,24 @@ If it also fails, the corresponding job fails.
 
 Output dismod.db
 ****************
-There is a ``dismod.db`` output file for every row in the
-:ref:`create_job_table@job_table`.
-Upon return,
-the results for this fit are in ``dismod.db`` in the corresponding directory;
-see :ref:`get_database_dir`.
+Upon return for cascade_root_node,
+the results for the fits are in ``dismod.db`` in the corresponding
+directory relative to *result_dir*; i.e., sub-directory of *result_dir* .
 The *.csv* files can be created using the
 dismod_at db2csv command.
 The dismod_at function ``plot_rate_fit`` and ``plot_data_fit``
 can be used to crate the corresponding plots.
+
+The root level fit the directory is
+:ref:`all_option_table@root_node_name` .
+If the current fit is just before a split,
+there will be a sub-directory for the fit of each
+:ref:`split_reference_table@split_reference_name` after the split.
+Otherwise there will be a sub-directory for the fit of each child of the
+node corresponding to the current fit.
+You can determine the directory, relative to *result_dir*
+corresponding to a fit using the :ref:`get_database_dir` function.
+
 
 fit_var
 =======

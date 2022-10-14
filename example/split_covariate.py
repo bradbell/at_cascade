@@ -67,7 +67,7 @@ The cascade computation tree is::
 
             /-------------n0-------------\
           /---female---\                /----male----\
-      n1              n2            n1              n2
+         n1             n2            n1              n2
        /  \            /  \          /  \            /  \
      n3    n4        n5    n6      n3    n4        n5    n6
 

@@ -70,7 +70,7 @@ job_name
 ========
 This is a ``str`` containing the job name.
 If the :ref:`split_reference_table` is empty,
-*jon_name* is equal to *node_name*
+*job_name* is equal to *node_name*
 where *node_name* is the node name corresponding to *node_id*.
 Otherwise, *job_name* is equal to
 *node_name*\ ``.``\ *split_reference_name*
