@@ -34,6 +34,13 @@ Release Notes for 2022
 fit branch
 **********
 
+10-14
+=====
+1. Improve the description of the location of the fit results; see
+   :ref:`cascade_root_node@Output dismod.db` .
+2. Add the :ref:`wish_list@mtall_data` and :ref:`wish_list@avgint Table`
+   wish list entries.
+
 10-10
 =====
 Fix the return value for :ref:`bilinear@spline_dict` function calls::

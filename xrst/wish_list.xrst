@@ -9,12 +9,26 @@ see http://www.gnu.org/licenses/agpl.txt
 -----------------------------------------------------------------------------
 {xrst_begin wish_list}
 {xrst_spell
+   avgint
    mtspecific
    podman
 }
 
 Wish List for at_cascade
 ########################
+
+avgint Table
+************
+Remove the avgint table from the root node database; i.e.,
+ensure that it is empty.
+There is a lot of confusion about this table because it is used
+for other purposes during the creation of the child databases.
+It would be better to create an avgint table after the fit.
+This would allow it to be different for every node
+(which is necessary for IHME).
+If we do this, don't forget to remove the
+:ref:`cascade_root_node@Output dismod.db@sample` table from the outputs
+of a fit.
 
 mtall_data
 **********
