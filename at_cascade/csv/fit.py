@@ -68,6 +68,15 @@ This string is the name of the root node.
 The default for *root_node_name* is the top (root) of
 the entire node tree.
 
+fit_goal.csv
+============
+If a node is in this file, that node and all it's ancestors will be fit.
+
+node_name
+---------
+Is the name of a node in the fit goal set.
+Each such node must be an descendant of the root node.
+
 {xrst_comment ---------------------------------------------------------------}
 
 prior.csv
@@ -684,5 +693,26 @@ def all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
 # ----------------------------------------------------------------------------
 # BEGIN_FIT
 def fit(fit_dir) :
-   assert type(fit_dir) == str
+   #
+   # fit_goal_set
+   fit_goal_set   = set()
+   file_name      = f'{fit_dir}/fit_goal.csv'
+   fit_goal_table = at_cascade.read_table(file_name)
+   for row in fit_goal_table :
+      fit_goal_set.add( row['node_name'] )
+   #
+   # root_node.db
+   age_grid, time_grid, covariate_table = root_node_database(fit_dir)
+   #
+   # all_node.db
+   all_node_database(fit_dir, age_grid, time_grid, covariate_table)
+   #
+   # cascade_root_node
+   at_cascade.cascade_root_node(
+      all_node_database  = f'{fit_dir}/all_node.db'  ,
+      root_node_database = f'{fit_dir}/root_node.db' ,
+      fit_goal_set       = fit_goal_set              ,
+      no_ode_fit         = True                      ,
+      fit_type_list      = [ 'both', 'fixed']        ,
+   )
 # END_FIT
