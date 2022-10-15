@@ -71,9 +71,11 @@ n2,male,50,2000,.03,1.5
 '''
 #
 # no_effect_rate.csv
+# Add chi, but set it to zero.
 csv_file['no_effect_rate.csv'] = \
 '''rate_name,age,time,rate_truth
 iota,0.0,1980.0,0.01
+chi,0.0,1980.0,0.00
 '''
 #
 # multiplier_sim.csv
@@ -132,9 +134,9 @@ def run_test() :
          if row['node_name'] == 'n0' :
             assert float( row['random_effect'] ) == 0.0
          if row['sex'] == sex :
-            assert row['rate_name'] == 'iota'
-            sum_abs    += abs( float( row['random_effect'] ) )
-            sum_random += float( row['random_effect'] )
+            if row['rate_name'] == 'iota' :
+               sum_abs    += abs( float( row['random_effect'] ) )
+               sum_random += float( row['random_effect'] )
       assert abs( sum_random ) <= eps99 * sum_abs
    #
    # random_effect_node_sex
@@ -146,14 +148,15 @@ def run_test() :
       sex           = row['sex']
       rate_name     = row['rate_name']
       random_effect = row['random_effect']
-      assert rate_name == 'iota'
-      random_effect_node_sex[node_name][sex] = float( random_effect )
+      if rate_name == 'iota' :
+         random_effect_node_sex[node_name][sex] = float( random_effect )
    #
    # no_effect_iota
-   assert len( csv_table['no_effect_rate.csv'] ) == 1
+   # one row for iota the other for chi
+   assert len( csv_table['no_effect_rate.csv'] ) == 2
    for row in csv_table['no_effect_rate.csv'] :
-      assert row['rate_name'] == 'iota'
-      no_effect_iota = float( row['rate_truth'] )
+      if row['rate_name'] == 'iota' :
+         no_effect_iota = float( row['rate_truth'] )
    #
    # haqi_node_sex
    haqi_node_sex = dict()

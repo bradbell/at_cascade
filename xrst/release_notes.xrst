@@ -45,6 +45,10 @@ mm-dd
    :ref:`cascade_root_node@Output dismod.db` .
 2. Add the :ref:`wish_list@mtall_data` and :ref:`wish_list@avgint Table`
    wish list entries.
+3. Fix bug in :ref:`csv_simulate` . To be specific, one of the rate functions
+   was being used for all the rates. A regression test for this bug was added
+   (where is more than one rate in
+   :ref:`csv_simulate@Input Files@no_effect_rate.csv` ).
 
 10-10
 =====

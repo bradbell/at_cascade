@@ -675,9 +675,18 @@ def get_rate_fun_dict(
    #
    rate_fun_dict = dict()
    rate_fun_dict['omega'] = lambda age, time : omega_fun(age, time)
-   for rate_name in spline_no_effect_rate :
-      rate_fun_dict[rate_name] = \
-         lambda age, time : rate_fun(age, time, rate_name)
+   #
+   # cannot loop over rate name becasue it does not bind on assignment.
+   if 'iota' in  spline_no_effect_rate :
+      rate_fun_dict['iota'] = \
+         lambda age, time : rate_fun(age, time, 'iota')
+   if 'rho' in  spline_no_effect_rate :
+      rate_fun_dict['rho'] = \
+         lambda age, time : rate_fun(age, time, 'rho')
+   if 'chi' in  spline_no_effect_rate :
+      rate_fun_dict['chi'] = \
+         lambda age, time : rate_fun(age, time, 'chi')
+   #
    #
    return rate_fun_dict
 # ----------------------------------------------------------------------------
