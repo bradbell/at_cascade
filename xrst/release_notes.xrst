@@ -34,6 +34,12 @@ Currently Working on a first version of :ref:`csv_fit`
 mm-dd
 *****
 
+10-15
+=====
+Change license notice to SPDX_ format.
+
+.. _SPDX: https://spdx.dev/ids/
+
 10-14
 =====
 1. Improve the description of the location of the fit results; see
