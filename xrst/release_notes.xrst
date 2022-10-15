@@ -33,6 +33,11 @@ Release Notes for 2022
 
 fit branch
 **********
+Currently Working on a first version of :ref:`csv_fit`
+(not yet tested) .
+
+mm-dd
+*****
 
 10-14
 =====
@@ -57,9 +62,6 @@ so that the result z is a float and not a numpy array of size one.
 
    - read_csv_table to :ref:`csv_read_table`
    - write_csv_table to :ref:`csv_write_table`
-
-mm-dd
-*****
 
 10-06
 =====
