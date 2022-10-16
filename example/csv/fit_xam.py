@@ -110,15 +110,16 @@ n2
 # prior.csv
 csv_file['prior.csv'] = \
 '''name,lower,upper,mean,std,density
-uniform_01,0.0,1.0,0.5,1.0,uniform
+uniform_1_1,-1.0,1.0,0.5,1.0,uniform
+uniform_eps_1,1e-6,1.0,0.5,1.0,uniform
 gauss_01,,,0.0,1.0,gaussian
 '''
 #
 # smooth_grid.csv
 csv_file['smooth_grid.csv'] = \
 '''name,age,time,value_prior,dage_prior,dtime_prior,const_value
-mulcov_haqi,0.0,0.0,uniform_01,,,
-rate_parent,0.0,0.0,uniform_01,,,
+mulcov_haqi,0.0,0.0,uniform_1_1,,,
+rate_parent,0.0,0.0,uniform_eps_1,,,
 rate_child,0.0,0.0,gauss_01,,,
 '''
 #

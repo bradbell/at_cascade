@@ -342,7 +342,7 @@ def option_table2dict(option_table) :
 def option_table2dict(fit_dir, option_table) :
    option_type  = {
       'root_node_name'     : str ,
-      'random_seed'       : int ,
+      'random_seed'        : int ,
    }
    line_number  = 0
    option_value = dict()
@@ -481,7 +481,7 @@ def root_node_database(fit_dir) :
    # option_table
    option_table = [
       { 'name' : 'parent_node_name', 'value' : root_node_name },
-      { 'name' : 'random_seed',      'value' : random_seed },
+      { 'name' : 'random_seed',      'value' : str( random_seed ) },
    ]
    #
    # spline_cov
@@ -490,7 +490,8 @@ def root_node_database(fit_dir) :
    )
    #
    # data_table
-   data_table = input_table['data_in']
+   data_table     = input_table['data_in']
+   sex_name2value = { 'female' : -0.5, 'both' : 0.0, 'male' : 0.5 }
    for row in data_table :
       #
       # age_mid
@@ -520,6 +521,7 @@ def root_node_database(fit_dir) :
       row['weight']     = ''
       row['subgroup']   = 'world'
       row['density']    = 'cen_gaussian'
+      row['sex']        = sex_name2value[sex]
    #
    # integrand_table
    integrand_set = set()
@@ -529,6 +531,8 @@ def root_node_database(fit_dir) :
    for integrand in integrand_set :
       row = { 'name' : integrand }
       integrand_table.append(row)
+   for mulcov_id in range( len( input_table['mulcov'] ) ) :
+      integrand_table.append( { 'name': f'mulcov_{mulcov_id}' } )
    #
    # subgroup_table
    subgroup_table = [{ 'subgroup' : 'world', 'group' : 'world' }]
