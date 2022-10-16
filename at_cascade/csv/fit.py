@@ -2,9 +2,11 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-22 Bradley M. Bell
 # ----------------------------------------------------------------------------
+import multiprocessing
 import dismod_at
 import at_cascade
 import copy
+import os
 '''
 
 {xrst_begin csv_fit}
@@ -44,6 +46,22 @@ are located.
 Input Files
 ***********
 
+option.csv
+==========
+This csv file has two columns,
+one called ``name`` and the other called ``value``.
+The rows are documented below by the name column:
+
+random_seed
+-----------
+This integer is used to seed the random number generator.
+
+root_node_name
+--------------
+This string is the name of the root node.
+The default for *root_node_name* is the top (root) of
+the entire node tree.
+
 node.csv
 ========
 This csv file has the same description as the simulate
@@ -53,18 +71,6 @@ covariate_csv
 =============
 This csv file has the same description as the simulate
 :ref:`csv_simulate@Input Files@covariate.csv` file.
-
-option.csv
-==========
-This csv file has two columns,
-one called ``name`` and the other called ``value``.
-The rows are documented below by the name column:
-
-root_node_name
---------------
-This string is the name of the root node.
-The default for *root_node_name* is the top (root) of
-the entire node tree.
 
 fit_goal.csv
 ============
@@ -90,16 +96,26 @@ lower
 -----
 is a float containing the lower limit for the truncated density
 for this prior.
+If this value is empty, there is no lower bound.
 
 upper
 -----
 is a float containing the upper limit for the truncated density
 for this prior.
+If this value is empty, there is no upper bound.
+
+mean
+----
+is a float containing the mean for the density
+for this prior (before truncation).
+If density is uniform, this value is only used for a starting
+and scaling the optimization.
 
 std
 ---
-is a float containing the standard deviation limit for the density
+is a float containing the standard deviation for the density
 for this prior (before truncation).
+If density is uniform, this value is not used and can be empty.
 
 density
 -------
@@ -202,8 +218,8 @@ data_id
 -------
 is an :ref:`csv_module@Notation@Index Column` for data.csv.
 
-integrand_name
---------------
+integrand
+---------
 This string is a dismod_at integrand; e.g. ``Sincidence``.
 
 node_name
@@ -250,32 +266,33 @@ Output Files
 ************
 
 root_node.db
-************
+============
 This is the dismod_at sqlite database corresponding to the root node for
 the cascade.
 
 all_node.db
-***********
+===========
 This is the at_cascade sqlite all node database for the cascade.
-
 
 {xrst_end csv_fit}
 '''
-# ----------------------------------------------------------------------------
-# Returns a dictionary version of option table
-#
-# option_table :
-# is the list of dict corresponding to the option table
+# -----------------------------------------------------------------------------
+# Returns a dictionary verison of option_table.
 #
 # option_value[name] :
 # is the option value corresponding the the specified option name.
 # Here name is a string and value
-# has been coverted to its corresponding type.
+# has been coverted to its corresponding type; e.g.
+# option_value['random_seed'] is an ``int``.
 #
 # option_value =
-def option_table2dict(fit_dir, option_table) :
+def option_table2dict(option_table) :
+   #
+   # option_value
+   option_value = dict()
    option_type  = {
-      'root_not_name'     : string ,
+      'root_node_name'         : str     ,
+      'random_seed'            : int     ,
    }
    line_number = 0
    for row in option_table :
@@ -291,6 +308,58 @@ def option_table2dict(fit_dir, option_table) :
          assert False, msg
       value        = option_type[name]( row['value'] )
       option_value[name] = value
+   #
+   # option_value
+   for name in option_type :
+      if not name in option_value :
+         msg  = 'csv_fit: Error: in option.csv\n'
+         msg += f'the name {name} does not apper'
+         assert False, msg
+   #
+   # options that must be greater than zero
+   for name in [
+      'random_seed',
+   ] :
+      value = option_value[name]
+      if value <= 0 :
+         msg  = 'csv_fit: Error: in option.csv\n'
+         msg += f'{name} = {value} <= 0'
+         assert False, msg
+   #
+   return option_value
+# ----------------------------------------------------------------------------
+# Returns a dictionary version of option table
+#
+# option_table :
+# is the list of dict corresponding to the option table
+#
+# option_value[name] :
+# is the option value corresponding the the specified option name.
+# Here name is a string and value
+# has been coverted to its corresponding type.
+#
+# option_value =
+def option_table2dict(fit_dir, option_table) :
+   option_type  = {
+      'root_node_name'     : str ,
+      'random_seed'       : int ,
+   }
+   line_number  = 0
+   option_value = dict()
+   for row in option_table :
+      line_number += 1
+      name         = row['name']
+      if name in option_value :
+         msg  = f'csv_fit: Error: line {line_number} in option.csv\n'
+         msg += f'the name {name} appears twice in this table'
+         assert False, msg
+      if not name in option_type :
+         msg  = f'csv_fit: Error: line {line_number} in option.csv\n'
+         msg += f'{name} is not a valid option name'
+         assert False, msg
+      value        = option_type[name]( row['value'] )
+      option_value[name] = value
+   return option_value
 # ----------------------------------------------------------------------------
 # Converts smoothing prioros on a grid to a prior function
 #
@@ -301,15 +370,17 @@ class smoothing_function :
    def __init__(self, name) :
       self.name  = name
       self.value = dict()
-   def set(age, time, value_prior, dage_prior = None, dtime_prior = None) :
+   def set(self, age, time, value_prior, dage_prior, dtime_prior) :
       if type( value_prior ) == float :
+         assert dage_prior == None
+         assert dtime_prior == None
          self.value[ (age, time) ] = value_prior
       else :
          type(value_prior) == str
          type(dage_prior) == str
          type(dtime_prior) == str
          self.value[ (age, time) ] = (value_prior, dage_prior, dtime_prior)
-   def __call__(age, time) :
+   def __call__(self, age, time) :
       if (age, time) not in self.value :
          msg = f'The grid for smoothing {self.name} is not rectangular'
          assert False, msg
@@ -342,27 +413,30 @@ def root_node_database(fit_dir) :
    # input_table
    input_table = dict()
    input_list = [
-      'data_in',
-      'covariate',
       'node',
+      'covariate',
       'option',
       'prior',
-      'rate',
       'smooth_grid',
+      'rate',
+      'mulcov',
+      'data_in',
    ]
    print('begin reading csv files')
    for name in input_list :
       file_name         = f'{fit_dir}/{name}.csv'
-      input_table[name] = at_cascade.csv.read_table(file_name)
+      table             = at_cascade.csv.read_table(file_name)
+      input_table[name] = at_cascade.csv.empty_str(table, 'to_none')
    #
    print('being creating root node database' )
    #
-   # root_node_name
+   # root_node_name, random_seed
    option_value = option_table2dict(fit_dir, input_table['option'] )
    root_node_name = option_value['root_node_name']
+   random_seed    = option_value['random_seed']
    #
    # covariate_average
-   covariate_average = at_cascade.csv.covariate_average(
+   covariate_average = at_cascade.csv.covariate_avg(
       input_table['covariate'], root_node_name
    )
    #
@@ -371,7 +445,7 @@ def root_node_database(fit_dir) :
    #
    # covariate_table
    covariate_table = [{
-      'name': sex, 'reference': 0.0, 'max_difference' : 0.5
+      'name': 'sex', 'reference': 0.0, 'max_difference' : 0.5
    }]
    for covariate_name in covariate_average.keys() :
       covariate_table.append({
@@ -389,8 +463,8 @@ def root_node_database(fit_dir) :
       if node_name in node_set :
          msg = f'node_name {node_name} apprears twice in node.csv'
          assert False, msg
-      if parent_name == '' :
-         if root_node_name != '' :
+      if parent_name == None :
+         if root_node_name != None :
             msg = 'node.csv: more than one node has no parent node'
             assert False, msg
          root_node_name = node_name
@@ -406,7 +480,8 @@ def root_node_database(fit_dir) :
    #
    # option_table
    option_table = [
-      { 'option_name' : 'parent_node_name', 'option_value' : root_node_name }
+      { 'name' : 'parent_node_name', 'value' : root_node_name },
+      { 'name' : 'random_seed',      'value' : random_seed },
    ]
    #
    # spline_cov
@@ -416,8 +491,7 @@ def root_node_database(fit_dir) :
    #
    # data_table
    data_table = input_table['data_in']
-   sex_value  = { 'female' : -0.5, 'both' : 0.0, 'male' : +0.5 }
-   for row in data_table () :
+   for row in data_table :
       #
       # age_mid
       age_lower = float( row['age_lower'] )
@@ -431,27 +505,30 @@ def root_node_database(fit_dir) :
       #
       # row[c_j] for j = 0, ..., n_covariate - 1
       node_name = row['node_name']
-      sex       = sex_value[ row['sex'] ]
+      sex       = row['sex']
       for index, covariate_name in enumerate( covariate_average.keys() ) :
-         spline           = spline_cov[node_name][sex][covariate_name]
-         covariate_value  = spline(age_mid, time_mid)
-         column_name      = f'c_{index}'
-         row[column_name] = covariate_value
+         spline              = spline_cov[node_name][sex][covariate_name]
+         covariate_value     = spline(age_mid, time_mid)
+         row[covariate_name] = covariate_value
       #
       # row
-      row['weight']   = ''
-      row['subgroup'] = 'world'
-      row['density']  = 'cen_gaussian'
+      row['node']       = row['node_name']
+      row['age_lower']  = age_lower
+      row['age_upper']  = age_lower
+      row['time_lower'] = time_lower
+      row['time_upper'] = time_lower
+      row['weight']     = ''
+      row['subgroup']   = 'world'
+      row['density']    = 'cen_gaussian'
    #
    # integrand_table
    integrand_set = set()
    for row in data_table :
-      integrand_set.add( row['integrand_name'] )
+      integrand_set.add( row['integrand'] )
    integrand_table = list()
-   for integrand_name in integrand_set :
-      row = { 'name' : integrand_name }
+   for integrand in integrand_set :
+      row = { 'name' : integrand }
       integrand_table.append(row)
-
    #
    # subgroup_table
    subgroup_table = [{ 'subgroup' : 'world', 'group' : 'world' }]
@@ -459,9 +536,12 @@ def root_node_database(fit_dir) :
    # prior_table
    prior_table = copy.copy( input_table['prior'] )
    for row in prior_table :
-      row['lower'] = float( row['lower'] )
-      row['upper'] = float( row['upper'] )
-      row['std']   = float( row['std'] )
+      if row['lower'] != None :
+         row['lower'] = float( row['lower'] )
+      if row['upper'] != None :
+         row['upper'] = float( row['upper'] )
+      if row['std'] != None :
+         row['std']   = float( row['std'] )
    #
    # min_data_age,  max_data_age
    # min_data_time, max_data_time
@@ -475,16 +555,21 @@ def root_node_database(fit_dir) :
       min_data_time = min( min_data_time, row['time_lower'] )
       max_data_time = max( max_data_time, row['time_upper'] )
    #
-   # age_list, time_list
-   age_set   = {min_data_age, max_data_age}
-   time_set = {min_data_time, max_data_time}
+   # age_list
+   age_set = set( age_grid )
+   age_set.add(min_data_age)
+   age_set.add(max_data_age)
    for row in input_table['smooth_grid'] :
-      row['age']  = float(row['age'])
-      row['time'] = float(row['time'])
-      age_set.add( row['age'] )
-      time_set.add( row['time'] )
-   age_list  = list( age_set )
-   time_list = list( time_set )
+      age_set.add( float( row['age'] ) )
+   age_list = sorted( list( age_set ) )
+   #
+   # time_list
+   time_set = set( time_grid )
+   time_set.add(min_data_time)
+   time_set.add(max_data_time)
+   for row in input_table['smooth_grid'] :
+      time_set.add( float( row['time'] ) )
+   time_list = sorted( list( time_set ) )
    #
    # smooth_table
    smooth_dict = dict()
@@ -501,16 +586,18 @@ def root_node_database(fit_dir) :
          }
       age_id  = age_list.index( age )
       time_id = time_list.index( time )
-      smooh_dict[name]['age_id'].add( age_id )
-      smooh_dict[name]['time_id'].add( time_id )
-      if row['const_value'] != '' :
+      smooth_dict[name]['age_id'].add( age_id )
+      smooth_dict[name]['time_id'].add( time_id )
+      if row['const_value'] != None :
          const_value = float( row['const_value'] )
-         smooth_dict[name].set(age, time, const_value)
+         smooth_dict[name]['fun'].set(age, time, const_value)
       else :
          value_prior = row['value_prior']
          dage_prior  = row['dage_prior']
          dtime_prior = row['dtime_prior']
-         smooth_dict[name].set(age, time, value_prior, dage_prior, dtime_prior)
+         smooth_dict[name]['fun'].set(
+            age, time, value_prior, dage_prior, dtime_prior
+         )
    smooth_table = list()
    for name in smooth_dict :
       row = {
@@ -520,14 +607,28 @@ def root_node_database(fit_dir) :
          'fun'     : smooth_dict[name]['fun']       ,
       }
       smooth_table.append( row )
-
+   #
+   # node_table
+   node_table = list()
+   for row_in in input_table['node'] :
+      row_out = { 'name' : row_in['node_name'] }
+      if row_in['parent_name'] == None :
+         row_out['parent'] = ''
+      else :
+         row_out['parent'] = row_in['parent_name']
+      node_table.append( row_out )
+   #
+   # mulcov_table
+   mulcov_table = input_table['mulcov']
+   for row in mulcov_table :
+      row['group'] = 'world'
    #
    dismod_at.create_database(
          file_name         = output_file,
          age_list          = age_list,
-         time_list         = age_list,
+         time_list         = time_list,
          integrand_table   = integrand_table,
-         node_table        = input_table['node'],
+         node_table        = node_table,
          subgroup_table    = subgroup_table,
          weight_table      = list(),
          covariate_table   = covariate_table,
@@ -537,7 +638,7 @@ def root_node_database(fit_dir) :
          smooth_table      = smooth_table,
          nslist_table      = dict(),
          rate_table        = input_table['rate'],
-         mulcov_table      = input_table['mulcov'],
+         mulcov_table      = mulcov_table,
          option_table      = option_table,
    )
    #
@@ -578,14 +679,7 @@ def all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    connection.close()
    #
    # root_node_name
-   root_node_name = at_cascade.get_parent_node(root_node_database)
-   #
-   # all_node_database
-   all_node_database = f'{fit_dir}/all_node.db'
-   #
-   # all_node_db
-   new = True
-   all_node_db = dismod_at.create_connection(output_file, new)
+   root_node_name = at_cascade.get_parent_node(database)
    #
    # user
    user  = os.environ.get('USER').replace(' ', '_')
@@ -634,15 +728,19 @@ def all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    #
    # omega_grid
    age_list     = [ row['age'] for row  in root_node_table['age'] ]
-   time_list    = [ row['time'] for row in root_node_table['time'] ]
    age_id_grid  = [ age_list.index(age)  for age in age_grid ]
-   time_id_grid = [ time_list.index(age) for time in time_grid ]
+   #
+   time_list    = [ row['time'] for row in root_node_table['time'] ]
+   time_id_grid = [ time_list.index(time) for time in time_grid ]
+   #
    omega_grid = { 'age' : age_id_grid, 'time' : time_id_grid }
    #
    # mtall_data
    # This is set equal to the value of omega and is only used for the
    # omega constraint.
-   none_list  = len( age_grid) * len( time_grid ) * [ None ]
+   n_age      = len( age_grid )
+   n_time     = len( time_grid )
+   none_list  = (n_age * n_time)  * [ None ]
    mtall_data = dict()
    for row in covariate_table :
       node_name          = row['node_name']
@@ -657,23 +755,28 @@ def all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       split_reference_id = at_cascade.table_name2id(
          split_reference_table, 'split_reference', sex
       )
+      assert split_reference_id != 1
       if node_name not in mtall_data :
-         mtall_data[node_name] = len(split_refernece_table) * [ none_list ]
+         mtall_data[node_name] = list()
+         for k in range( len(split_reference_table) ) :
+               row = list()
+               for ij in range( n_age * n_time ) :
+                  row.append(None)
+               mtall_data[node_name].append(row)
       #
       k = split_reference_id
-      i = age_list.index(age)
-      j = time_list.index(time)
-      assert k in [0, 2]
-      mtall_data[node_name][k][i * len( time_grid )  + j] = omega
+      i = age_grid.index(age)
+      j = time_grid.index(time)
+      mtall_data[node_name][k][i * n_time + j] = omega
    for node_name in mtall_data :
-      for i in range( len(age_grid) ) :
-         for j in range( len(time_grid) ) :
-            female = mtall_data[node_name][0][i * len( time_grid ) + j]
-            both   = mtall_data[node_name][1][i * len( time_grid ) + j]
-            male   = mtall_data[node_name][2][i * len( time_grid ) + j]
+      for i in range( n_age ) :
+         for j in range( n_time ) :
+            female = mtall_data[node_name][0][i * n_time + j]
+            both   = mtall_data[node_name][1][i * n_time + j]
+            male   = mtall_data[node_name][2][i * n_time + j]
             assert female != None and both == None and male != None
             both   = (male + female) / 2.0
-            mtall_data[node_name][1][i * len( time_grid ) + j] = both
+            mtall_data[node_name][1][i * n_time + j] = both
    #
    # create_all_node_db
    at_cascade.create_all_node_db(
@@ -695,7 +798,7 @@ def fit(fit_dir) :
    # fit_goal_set
    fit_goal_set   = set()
    file_name      = f'{fit_dir}/fit_goal.csv'
-   fit_goal_table = at_cascade.read_table(file_name)
+   fit_goal_table = at_cascade.csv.read_table(file_name)
    for row in fit_goal_table :
       fit_goal_set.add( row['node_name'] )
    #

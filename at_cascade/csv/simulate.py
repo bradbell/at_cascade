@@ -360,7 +360,7 @@ outside the age rage (time range) in the covariate.csv file.
 # option_value['random_seed']
 #
 # option_value =
-def option_table2dict(sim_dir, option_table) :
+def option_table2dict(option_table) :
    #
    # option_value
    option_value = dict()
@@ -376,11 +376,11 @@ def option_table2dict(sim_dir, option_table) :
       line_number += 1
       name         = row['name']
       if name in option_value :
-         msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
+         msg  = f'csv_simulate: Error: line {line_number} in option.csv\n'
          msg += f'the name {name} appears twice in this table'
          assert False, msg
       if not name in option_type :
-         msg  = f'csv_interface: Error: line {line_number} in option.csv\n'
+         msg  = f'csv_simulate: Error: line {line_number} in option.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
       value        = option_type[name]( row['value'] )
@@ -389,7 +389,7 @@ def option_table2dict(sim_dir, option_table) :
    # option_value
    for name in option_type :
       if not name in option_value :
-         msg  = 'csv_interface: Error: in option.csv\n'
+         msg  = 'csv_simulate: Error: in option.csv\n'
          msg += f'the name {name} does not apper'
          assert False, msg
    #
@@ -402,7 +402,7 @@ def option_table2dict(sim_dir, option_table) :
    ] :
       value = option_value[name]
       if value <= 0 :
-         msg  = 'csv_interface: Error: in option.csv\n'
+         msg  = 'csv_simulate: Error: in option.csv\n'
          msg += f'{name} = {value} <= 0'
          assert False, msg
       option_value[name] = value
@@ -434,20 +434,20 @@ def get_parent_node_dict( node_table ) :
       parent_name                = row['parent_name']
       child_list_node[node_name] = list()
       if node_name in parent_node_dict :
-         msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
+         msg  = f'csv_simulate: Error: line {line_number} in node.csv\n'
          msg += f'node_name {node_name} appears twice'
          assert False, msg
       parent_node_dict[node_name] = parent_name
       #
       if parent_name == '' :
          if root_node_name != None :
-            msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
+            msg  = f'csv_simulate: Error: line {line_number} in node.csv\n'
             msg += 'one and only one node should have no parent\n'
             msg += 'node {node_name} and {root_node_name} have no parent'
             assert False, msg
          root_node_name = node_name
    if root_node_name == None :
-      msg  = f'csv_interface: Error in node.csv\n'
+      msg  = f'csv_simulate: Error in node.csv\n'
       msg += 'there is no root node; i.e.,  node with no parent node'
       assert False, msg
    #
@@ -459,7 +459,7 @@ def get_parent_node_dict( node_table ) :
       parent_name  = row['parent_name']
       if parent_name != '' :
          if parent_name not in child_list_node :
-            msg  = f'csv_interface: Error: line {line_number} in node.csv\n'
+            msg  = f'csv_simulate: Error: line {line_number} in node.csv\n'
             msg += f'parent_name {parent_name} is not a valid node_name'
             assert False, msg
          else :
@@ -468,7 +468,7 @@ def get_parent_node_dict( node_table ) :
    # check number of children
    for parent_name in child_list_node :
       if len( child_list_node[parent_name] ) == 1 :
-         msg  = 'csv_interface: Error in node.csv\n'
+         msg  = 'csv_simulate: Error in node.csv\n'
          msg += f'the parent_name {parent_name} apprears once and only once'
          assert False, msg
    #
@@ -478,7 +478,7 @@ def get_parent_node_dict( node_table ) :
       parent_name  = parent_node_dict[node_name]
       while parent_name != '' :
          if parent_name in ancestor_set :
-            msg  = 'csv_interface: Error in node_table.csv\n'
+            msg  = 'csv_simulate: Error in node_table.csv\n'
             msg += f'node {parent_name} is an ancestor of itself'
             assert False, msg
          ancestor_set.add(parent_name)
@@ -525,7 +525,7 @@ def get_spline_no_effect_rate(no_effect_rate_table) :
       )
       #
       if spline_dict == None :
-         msg  = 'csv_interface: Error in no_effect_rate.csv\n'
+         msg  = 'csv_simulate: Error in no_effect_rate.csv\n'
          msg += 'rate_name = {rate_name}\n'
          msg += 'Expected following rectangular grid:\n'
          msg += f'age_grid  = {age_grid}\n'
@@ -881,7 +881,7 @@ def simulate(sim_dir) :
    print('being creating data structures' )
    #
    # option_value
-   option_value = option_table2dict(sim_dir, input_table['option'] )
+   option_value = option_table2dict(input_table['option'] )
    #
    # parent_node_dict, child_list_node
    parent_node_dict, child_list_node = \
@@ -960,7 +960,7 @@ def simulate(sim_dir) :
       # simulate_id
       if True :
          if simulate_id != int( float(sim_row['simulate_id']) ) :
-            msg  = f'csv_interface: Error at line {line_number} '
+            msg  = f'csv_simulate: Error at line {line_number} '
             msg += f'in simulate.csv\n'
             msg += f'simulate_id = ' + sim_row['simulate_id']
             msg += ' is not equal line number minus two'
@@ -969,7 +969,7 @@ def simulate(sim_dir) :
       # integrand_name
       integrand_name = sim_row['integrand_name']
       if integrand_name not in valid_integrand_name :
-         msg  = f'csv_interface: Error at line {line_number} '
+         msg  = f'csv_simulate: Error at line {line_number} '
          msg += f' in simulate.csv\n'
          msg += f'integrand_name = ' + integrand_name
          msg += ' is not a valid integrand name'
@@ -978,7 +978,7 @@ def simulate(sim_dir) :
       # node_name
       node_name = sim_row['node_name']
       if node_name not in node_set :
-         msg  = f'csv_interface: Error at line {line_number} '
+         msg  = f'csv_simulate: Error at line {line_number} '
          msg += f' in simulate.csv\n'
          msg += f'node_name = ' + node_name
          msg += ' is not in node.csv'
@@ -987,7 +987,7 @@ def simulate(sim_dir) :
       # sex
       sex = sim_row['sex']
       if sex not in [ 'male', 'female', 'both' ] :
-         msg  = f'csv_interface: Error at line {line_number} '
+         msg  = f'csv_simulate: Error at line {line_number} '
          msg += f' in simulate.csv\n'
          msg += f'sex = ' + sex
          msg += ' is not male, feamle, or both'

@@ -29,7 +29,12 @@ Release Notes for 2022
 fit branch
 **********
 Currently Working on a first version of :ref:`csv_fit`
-(not yet tested) .
+(example not yet passing its test).
+
+10-16
+=====
+Add the :ref:`csv_empty_str` utility for converting
+empty strings to, and from, None.
 
 mm-dd
 *****
