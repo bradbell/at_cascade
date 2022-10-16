@@ -93,10 +93,10 @@ n2,n0
 csv_file['covariate.csv'] = \
 '''node_name,sex,age,time,omega,haqi
 n0,female,50,2000,0.02,1.0
-n0,male,50,2000,0.02,1.0
 n1,female,50,2000,0.02,0.5
-n1,male,50,2000,0.02,0.5
 n2,female,50,2000,0.02,1.5
+n0,male,50,2000,0.02,1.0
+n1,male,50,2000,0.02,0.5
 n2,male,50,2000,0.02,1.5
 '''
 #
@@ -141,8 +141,11 @@ header += 'time_lower,time_upper,meas_value,meas_std,hold_out'
 csv_file['data_in.csv'] = header + \
 '''
 0,Sincidence,n0,female,0,10,1990,2000,0.0100,0.001,0
+0,Sincidence,n0,male,0,10,1990,2000,0.0100,0.001,0
+1,Sincidence,n1,female,10,20,2000,2010,0.0078,0.001,0
 1,Sincidence,n1,male,10,20,2000,2010,0.0078,0.001,0
 2,Sincidence,n2,female,20,30,2010,2020,0.0128,0.001,0
+2,Sincidence,n2,male,20,30,2010,2020,0.0128,0.001,0
 '''
 
 #
@@ -168,6 +171,5 @@ def main() :
    at_cascade.csv.fit(fit_dir)
    #
 #
-# Test Not yet passing so comment it out
-# main()
+main()
 # END_PYTHON

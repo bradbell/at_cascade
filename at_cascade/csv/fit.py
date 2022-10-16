@@ -480,8 +480,9 @@ def root_node_database(fit_dir) :
    #
    # option_table
    option_table = [
-      { 'name' : 'parent_node_name', 'value' : root_node_name },
-      { 'name' : 'random_seed',      'value' : str( random_seed ) },
+      { 'name' : 'parent_node_name',  'value' : root_node_name },
+      { 'name' : 'random_seed',       'value' : str( random_seed ) },
+      { 'name' : 'print_level_fixed', 'value' : '5' },
    ]
    #
    # spline_cov
@@ -520,7 +521,7 @@ def root_node_database(fit_dir) :
       row['time_upper'] = time_lower
       row['weight']     = ''
       row['subgroup']   = 'world'
-      row['density']    = 'cen_gaussian'
+      row['density']    = 'gaussian'
       row['sex']        = sex_name2value[sex]
    #
    # integrand_table
