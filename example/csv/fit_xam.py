@@ -5,6 +5,7 @@
 import os
 import sys
 import time
+import math
 import shutil
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
@@ -166,6 +167,35 @@ def main() :
       file_ptr  = open(file_name, 'w')
       file_ptr.write( csv_file[name] )
       file_ptr.close()
+   #
+   # node2haqi, haqi_avg
+   node2haqi  = { 'n0' : 1.0, 'n1' : 0.5, 'n2' : 1.5 }
+   file_name  = f'{fit_dir}/covariate.csv'
+   table      = at_cascade.csv.read_table( file_name )
+   haqi_sum   = 0.0
+   for row in table :
+      node_name = row['node_name']
+      haqi      = float( row['haqi'] )
+      haqi_sum += haqi
+      assert haqi == node2haqi[node_name]
+   haqi_avg = haqi_sum / len(table)
+   #
+   # data_in.csv
+   float_format      = '{0:.5g}'
+   true_mulcov_haqi  = 0.5
+   no_effect_iota    = 0.1
+   file_name         = f'{fit_dir}/data_in.csv'
+   table             = at_cascade.csv.read_table( file_name )
+   for row in table :
+      node_name = row['node_name']
+      integrand = row['integrand']
+      assert integrand == 'Sincidence'
+      #
+      haqi      = node2haqi[node_name]
+      effect    = true_mulcov_haqi * (haqi - haqi_avg)
+      iota      = math.exp(effect) * no_effect_iota
+      row['meas_value'] = float_format.format( iota )
+   at_cascade.csv.write_table(file_name, table)
    #
    # csv.fit
    at_cascade.csv.fit(fit_dir)
