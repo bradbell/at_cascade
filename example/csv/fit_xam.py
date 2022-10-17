@@ -48,6 +48,8 @@ Node Tree
       -  :ref:`csv_fit@Input Files@option.csv`
    *  -  csv_file['fit_goal.csv']
       -  :ref:`csv_fit@Input Files@fit_goal.csv`
+   *  -  csv_file['predict_integrand.csv']
+      -  :ref:`csv_fit@Input Files@predict_integrand.csv`
    *  -  csv_file['prior.csv']
       -  :ref:`csv_fit@Input Files@prior.csv`
    *  -  csv_file['smooth_grid.csv']
@@ -108,6 +110,13 @@ n1
 n2
 '''
 #
+# predict_integrand.csv
+csv_file['predict_integrand.csv'] = \
+'''integrand_name
+Sincidence
+prevalence
+'''
+#
 # prior.csv
 csv_file['prior.csv'] = \
 '''name,lower,upper,mean,std,density
@@ -158,7 +167,7 @@ def main() :
    if not os.path.exists(fit_dir) :
       os.makedirs(fit_dir)
    #
-   if False :
+   if True :
       root_node_name = 'n0'
       if os.path.exists( fit_dir + '/' + root_node_name  ) :
          shutil.rmtree( fit_dir + '/' + root_node_name  )
