@@ -31,13 +31,14 @@ fit branch
 Currently Working on a first version of :ref:`csv_fit`
 (example not yet passing its test).
 
+
+mm-dd
+*****
+
 10-16
 =====
 Add the :ref:`csv_empty_str` utility for converting
 empty strings to, and from, None.
-
-mm-dd
-*****
 
 10-15
 =====
