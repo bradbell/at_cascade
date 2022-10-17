@@ -90,7 +90,6 @@ Routines
    at_cascade/csv/covariate_spline.py
    at_cascade/csv/empty_str.py
    at_cascade/csv/fit.py
-   at_cascade/csv/interface.py
    at_cascade/csv/read_table.py
    at_cascade/csv/simulate.py
    at_cascade/csv/write_table.py
@@ -104,7 +103,6 @@ from .covariate_avg    import covariate_avg
 from .covariate_spline import covariate_spline
 from .empty_str        import empty_str
 from .fit              import fit
-from .interface        import interface
 from .read_table       import read_table
 from .simulate         import simulate
 from .write_table      import write_table

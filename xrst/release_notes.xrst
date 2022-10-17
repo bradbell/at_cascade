@@ -26,14 +26,12 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
-fit branch
-**********
-Currently Working on a first version of :ref:`csv_fit`
-(example not yet passing its test).
-
-
 mm-dd
 *****
+
+10-27
+=====
+First tested version of :ref:`csv_fit` .
 
 10-16
 =====
@@ -135,7 +133,7 @@ Add the :ref:`bilinear` spline routine.
 08-01
 =====
 Start construction of a cascade data simulation tool; see
-:ref:`csv_interface`.
+:ref:`csv_simulate` .
 
 04-18
 =====

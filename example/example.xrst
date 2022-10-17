@@ -14,6 +14,7 @@ The at_cascade Examples
    example/bilinear.py
    example/continue_cascade.py
    example/csv/csv_table.py
+   example/csv/fit_xam.py
    example/csv/simulate_xam.py
    example/max_fit_option.py
    example/mulcov_freeze.py

@@ -30,15 +30,16 @@ import os
 Fit a Simulated Data Set
 ########################
 
-Under Construction
-******************
-
 Prototype
 *********
 {xrst_literal
    # BEGIN_FIT
    # END_FIT
 }
+
+Example
+*******
+:ref:`csv_fit_xam` .
 
 fit_dir
 *******
@@ -69,7 +70,7 @@ node.csv
 This csv file has the same description as the simulate
 :ref:`csv_simulate@Input Files@node.csv` file.
 
-covariate_csv
+covariate.csv
 =============
 This csv file has the same description as the simulate
 :ref:`csv_simulate@Input Files@covariate.csv` file.
@@ -1106,14 +1107,13 @@ def fit(fit_dir) :
    create_all_node_database(fit_dir, age_grid, time_grid, covariate_table)
    #
    # cascade_root_node
-   if True :
-      at_cascade.cascade_root_node(
-         all_node_database  = f'{fit_dir}/all_node.db'  ,
-         root_node_database = f'{fit_dir}/root_node.db' ,
-         fit_goal_set       = fit_goal_set              ,
-         no_ode_fit         = True                      ,
-         fit_type_list      = [ 'both', 'fixed']        ,
-      )
+   at_cascade.cascade_root_node(
+      all_node_database  = f'{fit_dir}/all_node.db'  ,
+      root_node_database = f'{fit_dir}/root_node.db' ,
+      fit_goal_set       = fit_goal_set              ,
+      no_ode_fit         = True                      ,
+      fit_type_list      = [ 'both', 'fixed']        ,
+   )
    #
    # predict
    predict_all(fit_dir, covariate_table, fit_goal_set)

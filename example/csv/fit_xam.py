@@ -16,14 +16,10 @@ import at_cascade
 {xrst_begin csv_fit_xam}
 {xrst_spell
    dir
-   sim
 }
 
 Example Using csv.fit
 #####################
-
-Under Construction
-******************
 
 Node Tree
 *********
@@ -61,7 +57,7 @@ Node Tree
    *  -  csv_file['data_in.csv']
       -  :ref:`csv_fit@Input Files@data_in.csv`
    *  -  root_node.db
-      -  :ref:`csv_fit@Output Files@ root
+      -  :ref:`csv_fit@Output Files@root_node.db`
 
 {xrst_literal
    BEGIN_PYTHON
@@ -166,11 +162,9 @@ def main() :
    fit_dir = 'build/csv'
    if not os.path.exists(fit_dir) :
       os.makedirs(fit_dir)
-   #
-   if True :
-      root_node_name = 'n0'
-      if os.path.exists( fit_dir + '/' + root_node_name  ) :
-         shutil.rmtree( fit_dir + '/' + root_node_name  )
+   root_node_name = 'n0'
+   if os.path.exists( fit_dir + '/' + root_node_name  ) :
+      shutil.rmtree( fit_dir + '/' + root_node_name  )
    #
    # write csv files
    for name in csv_file :
@@ -211,6 +205,34 @@ def main() :
    # csv.fit
    at_cascade.csv.fit(fit_dir)
    #
+   # all_predict_table
+   file_name = f'{fit_dir}/all_predict.csv'
+   all_predict_table = at_cascade.csv.read_table(file_name)
+   #
+   # node
+   for node in [ 'n0', 'n1', 'n2' ] :
+      # sex
+      for sex in [ 'female', 'both', 'male' ] :
+         #
+         # sample
+         sample_list = list()
+         for row in all_predict_table :
+            if row['integrand'] == 'Sincidence' and \
+                  row['node'] == node and \
+                     row['sex'] == sex :
+               #
+               sample_list.append(row)
+         #
+         if len(sample_list) > 0 :
+            sum_avgint = 0.0
+            for row in sample_list :
+               sum_avgint   += float( row['avgint'] )
+            avgint    = sum_avgint / len(sample_list)
+            haqi      = float( row['haqi'] )
+            effect    = true_mulcov_haqi * (haqi - haqi_avg)
+            iota      = math.exp(effect) * no_effect_iota
+            rel_error = (avgint - iota) / iota
+            assert abs(rel_error) < 0.01
 #
 main()
 # END_PYTHON
