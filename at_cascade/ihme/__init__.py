@@ -69,7 +69,6 @@ integrand_name2measure_id = {
    'mtstandard' : 12,
    'relrisk'    : 11,
 }
-#
 # ----------------------------------------------------------------------------
 # BEGIN_SORT_THIS_LINE_PLUS_1
 from .get_age_group_id_table      import get_age_group_id_table

@@ -157,9 +157,11 @@ def main() :
    fit_dir = 'build/csv'
    if not os.path.exists(fit_dir) :
       os.makedirs(fit_dir)
-   root_node_name = 'n0'
-   if os.path.exists( fit_dir + '/' + root_node_name  ) :
-      shutil.rmtree( fit_dir + '/' + root_node_name  )
+   #
+   if False :
+      root_node_name = 'n0'
+      if os.path.exists( fit_dir + '/' + root_node_name  ) :
+         shutil.rmtree( fit_dir + '/' + root_node_name  )
    #
    # write csv files
    for name in csv_file :

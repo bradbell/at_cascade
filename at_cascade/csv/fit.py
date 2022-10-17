@@ -276,57 +276,28 @@ This is the at_cascade sqlite all node database for the cascade.
 
 {xrst_end csv_fit}
 '''
-# -----------------------------------------------------------------------------
-# Returns a dictionary verison of option_table.
-#
-# option_value[name] :
-# is the option value corresponding the the specified option name.
-# Here name is a string and value
-# has been coverted to its corresponding type; e.g.
-# option_value['random_seed'] is an ``int``.
-#
-# option_value =
-def option_table2dict(option_table) :
-   #
-   # option_value
-   option_value = dict()
-   option_type  = {
-      'root_node_name'         : str     ,
-      'random_seed'            : int     ,
-   }
-   line_number = 0
-   for row in option_table :
-      line_number += 1
-      name         = row['name']
-      if name in option_value :
-         msg  = f'csv_fit: Error: line {line_number} in option.csv\n'
-         msg += f'the name {name} appears twice in this table'
-         assert False, msg
-      if not name in option_type :
-         msg  = f'csv_fit: Error: line {line_number} in option.csv\n'
-         msg += f'{name} is not a valid option name'
-         assert False, msg
-      value        = option_type[name]( row['value'] )
-      option_value[name] = value
-   #
-   # option_value
-   for name in option_type :
-      if not name in option_value :
-         msg  = 'csv_fit: Error: in option.csv\n'
-         msg += f'the name {name} does not apper'
-         assert False, msg
-   #
-   # options that must be greater than zero
-   for name in [
-      'random_seed',
-   ] :
-      value = option_value[name]
-      if value <= 0 :
-         msg  = 'csv_fit: Error: in option.csv\n'
-         msg += f'{name} = {value} <= 0'
-         assert False, msg
-   #
-   return option_value
+#-----------------------------------------------------------------------------
+# split_reference_table
+split_reference_table = [
+   { 'split_reference_name' : 'female' , 'split_reference_value' : -0.5 },
+   { 'split_reference_name' : 'both'   , 'split_reference_value' :  0.0 },
+   { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
+]
+#-----------------------------------------------------------------------------
+# predict_intgrand_list
+predict_integrand_list = [
+   'Sincidence'    ,
+   'remission'     ,
+   'mtexcess'      ,
+   'mtother'       ,
+   'mtwith'        ,
+   'prevalence'    ,
+   'Tincidence'    ,
+   'mtspecific'    ,
+   'mtall'         ,
+   'mtstandard'    ,
+   'relrisk'       ,
+]
 # ----------------------------------------------------------------------------
 # Returns a dictionary version of option table
 #
@@ -340,6 +311,9 @@ def option_table2dict(option_table) :
 #
 # option_value =
 def option_table2dict(fit_dir, option_table) :
+   assert type(option_table) == list
+   assert type( option_table[0] ) == dict
+   #
    option_type  = {
       'root_node_name'     : str ,
       'random_seed'        : int ,
@@ -359,6 +333,8 @@ def option_table2dict(fit_dir, option_table) :
          assert False, msg
       value        = option_type[name]( row['value'] )
       option_value[name] = value
+   #
+   assert type(option_value) == dict
    return option_value
 # ----------------------------------------------------------------------------
 # Converts smoothing prioros on a grid to a prior function
@@ -389,7 +365,7 @@ class smoothing_function :
 # Writes the root node data base
 #
 # root_node.db
-# this database is created by root_node_database.
+# this database is created by create_root_node_database.
 # If there is an existing version of this file it is overwrittern.
 #
 # fit_dir
@@ -405,7 +381,8 @@ class smoothing_function :
 # is the list of dict corresponding to the covariate.csv file
 #
 # age_grid, time_grid, covariate_table =
-def root_node_database(fit_dir) :
+def create_root_node_database(fit_dir) :
+   assert type(fit_dir) == str
    #
    # output_file
    output_file = f'{fit_dir}/root_node.db'
@@ -454,9 +431,9 @@ def root_node_database(fit_dir) :
          'max_difference' : None
       })
    #
-   # node_set, root_node_name
+   # node_set
    node_set       = set()
-   root_node_name = None
+   top_node_name  = None
    for row in input_table['node'] :
       node_name   = row['node_name']
       parent_name = row['parent_name']
@@ -464,19 +441,14 @@ def root_node_database(fit_dir) :
          msg = f'node_name {node_name} apprears twice in node.csv'
          assert False, msg
       if parent_name == None :
-         if root_node_name != None :
+         if top_node_name != None :
             msg = 'node.csv: more than one node has no parent node'
             assert False, msg
-         root_node_name = node_name
+         top_node_name = node_name
       node_set.add( node_name )
-   if root_node_name == None :
+   if top_node_name == None :
       msg = 'node.csv: no node has an empty parent_name'
       assert False, msg
-   #
-   # root_node_name
-   for row in input_table['option'] :
-      if row['name'] == 'root_node_name' :
-         root_node_name = row['value']
    #
    # option_table
    option_table = [
@@ -528,6 +500,8 @@ def root_node_database(fit_dir) :
    integrand_set = set()
    for row in data_table :
       integrand_set.add( row['integrand'] )
+   for integrand in predict_integrand_list :
+      integrand_set.add( integrand )
    integrand_table = list()
    for integrand in integrand_set :
       row = { 'name' : integrand }
@@ -646,13 +620,18 @@ def root_node_database(fit_dir) :
          mulcov_table      = mulcov_table,
          option_table      = option_table,
    )
+   covariate_table = input_table['covariate']
    #
+   assert type(age_grid) == list
+   assert type(time_grid) == list
+   assert type(covariate_table) == list
+   assert type( covariate_table[0] ) == dict
    return age_grid, time_grid, input_table['covariate']
 # ----------------------------------------------------------------------------
 # Writes the all node data base.
 #
 # all_node.db
-# this database is created by all_node_database.
+# this database is created by create_all_node_database.
 # If there is an existing version of this file it is overwrittern.
 #
 # root_node.db
@@ -671,7 +650,12 @@ def root_node_database(fit_dir) :
 # covariate_table
 # is the list of dict corresponding to the covariate.csv file.
 #
-def all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
+def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
+   assert type(fit_dir) == str
+   assert type(age_grid) == list
+   assert type(time_grid) == list
+   assert type(covariate_table) == list
+   assert type( covariate_table[0] ) == dict
    #
    # root_node_table
    root_node_table = dict()
@@ -708,13 +692,6 @@ def all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       'root_split_reference_name'    : 'both',
       'shift_prior_std_factor'       : 2.0,
    }
-   #
-   # split_reference_table
-   split_reference_table = [
-      { 'split_reference_name' : 'female' , 'split_reference_value' : -0.5 },
-      { 'split_reference_name' : 'both'   , 'split_reference_value' :  0.0 },
-      { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
-   ]
    #
    # node_split_table
    node_split_table = [ { 'node_name' : root_node_name } ]
@@ -785,17 +762,237 @@ def all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    #
    # create_all_node_db
    at_cascade.create_all_node_db(
-   all_node_database         = f'{fit_dir}/all_node.db'  ,
-   root_node_database        = f'{fit_dir}/root_node.db' ,
-   all_option                = all_option                ,
-   split_reference_table     = split_reference_table     ,
-   node_split_table          = node_split_table          ,
-   mulcov_freeze_table       = mulcov_freeze_table       ,
-   omega_grid                = omega_grid                ,
-   mtall_data                = mtall_data                ,
-   mtspecific_data           = None,
+      all_node_database         = f'{fit_dir}/all_node.db'  ,
+      root_node_database        = f'{fit_dir}/root_node.db' ,
+      all_option                = all_option                ,
+      split_reference_table     = split_reference_table     ,
+      node_split_table          = node_split_table          ,
+      mulcov_freeze_table       = mulcov_freeze_table       ,
+      omega_grid                = omega_grid                ,
+      mtall_data                = mtall_data                ,
+      mtspecific_data           = None,
    )
-
+# ----------------------------------------------------------------------------
+def predict_one(
+   fit_dir               ,
+   fit_node_database     ,
+   fit_node_id           ,
+   all_node_database     ,
+   all_covariate_table   ,
+) :
+   assert type(fit_dir) == str
+   assert type(fit_node_database) == str
+   assert type(fit_node_id) == int
+   assert type(all_node_database) == str
+   assert type(all_covariate_table) == list
+   assert type( all_covariate_table[0] ) == dict
+   #
+   # all_option_table
+   new               = False
+   connection       = dismod_at.create_connection(all_node_database, new)
+   all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+   connection.close()
+   #
+   # fit_covariate_table, integrand_table, node_table
+   new                 = False
+   connection          = dismod_at.create_connection(fit_node_database, new)
+   fit_covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+   integrand_table     = dismod_at.get_table_dict(connection, 'integrand')
+   node_table          = dismod_at.get_table_dict(connection, 'node')
+   connection.close()
+   #
+   # fit_node_name
+   fit_node_name = node_table[fit_node_id]['node_name']
+   #
+   # fit_split_reference_id
+   cov_info = at_cascade.get_cov_info(
+      all_option_table, fit_covariate_table, split_reference_table
+   )
+   fit_split_reference_id  = cov_info['split_reference_id']
+   #
+   # integrand_id_list
+   integrand_id_list = list()
+   for integrand_name in predict_integrand_list :
+      integrand_id = at_cascade.table_name2id(
+         integrand_table, 'integrand', integrand_name
+      )
+      integrand_id_list.append( integrand_id )
+   #
+   # avgint_table
+   avgint_table = list()
+   #
+   # cov_row
+   for cov_row in all_covariate_table :
+      #
+      # node_name
+      node_name = cov_row['node_name']
+      if node_name == fit_node_name :
+         #
+         # avgint_row
+         age  = float( cov_row['age'] )
+         time = float( cov_row['time'] )
+         avgint_row = {
+            'node_id'         : fit_node_id,
+            'subgroup_id'     : 0,
+            'weight_id'       : None,
+            'age_lower'       : age,
+            'age_upper'       : age,
+            'time_lower'      : time,
+            'time_upper'      : time,
+         }
+         #
+         # covariate_id
+         for covariate_id in range( len(fit_covariate_table) ) :
+            #
+            # covariate_name
+            covariate_name = fit_covariate_table[covariate_id]['covariate_name']
+            #
+            # covariate_value
+            if covariate_name == 'sex' :
+               split_row       = split_reference_table[fit_split_reference_id]
+               covariate_value = split_row['split_reference_value']
+            else :
+               covariate_value = cov_row[covariate_name]
+            #
+            # avgint_row
+            key = f'x_{covariate_id}'
+            avgint_row[key] = covariate_value
+         #
+         # integrand_id
+         for integrand_id in integrand_id_list :
+            avgint_row['integrand_id'] = integrand_id
+            avgint_table.append( copy.copy( avgint_row ) )
+   #
+   # avgint_table
+   new        = False
+   connection = dismod_at.create_connection(fit_node_database, new)
+   dismod_at.replace_table(connection, 'avgint', avgint_table)
+   connection.close()
+   #
+   # predict_fit_table
+   command = [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
+   dismod_at.system_command_prc(command, print_command = False )
+   new                  = False
+   connection           = dismod_at.create_connection(fit_node_database, new)
+   predict_fit_table    = dismod_at.get_table_dict(connection, 'predict')
+   assert len(predict_fit_table) == len(avgint_table)
+   connection.close()
+   #
+   # predict sample
+   command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
+   dismod_at.system_command_prc(command, print_command = False )
+   #
+   # db2csv
+   dismod_at.db2csv_command(fit_node_database)
+   #
+# ----------------------------------------------------------------------------
+def predict_all(fit_dir, covariate_table, fit_goal_set) :
+   assert type(fit_dir) == str
+   assert type(covariate_table) == list
+   assert type( covariate_table[0] ) == dict
+   assert type(fit_goal_set) == set
+   #
+   # all_node_db
+   all_node_db = f'{fit_dir}/all_node.db'
+   #
+   # root_node_db
+   root_node_db = f'{fit_dir}/root_node.db'
+   #
+   # root_node_name, random_seed
+   option_table = at_cascade.csv.read_table( f'{fit_dir}/option.csv' )
+   option_value = option_table2dict(fit_dir, option_table )
+   root_node_name = option_value['root_node_name']
+   #
+   # node_table
+   new             = False
+   connection      = dismod_at.create_connection(root_node_db, new)
+   node_table      = dismod_at.get_table_dict(connection, 'node')
+   connection.close()
+   #
+   # root_node_id
+   root_node_id = at_cascade.table_name2id(
+      node_table, 'node', root_node_name
+   )
+   #
+   # node_split_set
+   node_split_set = { root_node_id }
+   #
+   # split_reference_table
+   new             = False
+   connection      = dismod_at.create_connection(all_node_db, new)
+   split_reference_table = \
+      dismod_at.get_table_dict(connection, 'split_reference')
+   #
+   # root_split_reference_id
+   root_split_reference_id = 1
+   assert 'both' == split_reference_table[1]['split_reference_name']
+   #
+   # job_table
+   job_table = at_cascade.create_job_table(
+      all_node_database          = all_node_db              ,
+      node_table                 = node_table               ,
+      start_node_id              = root_node_id             ,
+      start_split_reference_id   = root_split_reference_id  ,
+      fit_goal_set               = fit_goal_set             ,
+   )
+   #
+   # error_message_dict
+   error_message_dict = at_cascade.check_log(
+      message_type = 'error',
+      all_node_database  = all_node_db    ,
+      root_node_database = root_node_db   ,
+      fit_goal_set       = fit_goal_set   ,
+   )
+   #
+   # n_job
+   n_job = len( job_table )
+   #
+   # job_id, job_row
+   for (job_id, job_row) in enumerate(job_table) :
+      #
+      # job_name, fit_node_id, fit_split_reference_id
+      job_name                = job_row['job_name']
+      fit_node_id             = job_row['fit_node_id']
+      fit_split_reference_id  = job_row['split_reference_id']
+      #
+      # fit_database_dir
+      fit_database_dir = at_cascade.get_database_dir(
+         node_table              = node_table               ,
+         split_reference_table   = split_reference_table    ,
+         node_split_set          = node_split_set           ,
+         root_node_id            = root_node_id             ,
+         root_split_reference_id = root_split_reference_id  ,
+         fit_node_id             = fit_node_id              ,
+         fit_split_reference_id  = fit_split_reference_id   ,
+      )
+      #
+      # fit_node_database
+      fit_node_database = f'{fit_dir}/{fit_database_dir}/dismod.db'
+      #
+      # fit_node_predict
+      fit_node_predict = f'{fit_dir}/{fit_database_dir}/predict.csv'
+      #
+      # check for an error during fit both and fit fixed
+      two_errors = False
+      if job_name in error_message_dict :
+            two_errors = len( error_message_dict[job_name] ) > 1
+      if two_errors :
+         if os.path.exists( fit_node_predict ) :
+            os.remove( fit_node_predict )
+         print( f'{job_id+1}/{n_job} Error in {job_name}' )
+      elif not os.path.exists( fit_node_database ) :
+         print( f'{job_id+1}/{n_job} Missing dismod.db for {job_name}' )
+      else :
+         print( f'{job_id+1}/{n_job} Creating predict.csv for {job_name}' )
+      #
+      # predict_one
+      predict_one(
+         fit_dir               = fit_dir          ,
+         fit_node_database     = fit_node_database ,
+         fit_node_id           = fit_node_id       ,
+         all_node_database     = all_node_db       ,
+         all_covariate_table   = covariate_table   ,
+      )
 # ----------------------------------------------------------------------------
 # BEGIN_FIT
 def fit(fit_dir) :
@@ -808,17 +1005,21 @@ def fit(fit_dir) :
       fit_goal_set.add( row['node_name'] )
    #
    # root_node.db
-   age_grid, time_grid, covariate_table = root_node_database(fit_dir)
+   age_grid, time_grid, covariate_table = create_root_node_database(fit_dir)
    #
    # all_node.db
-   all_node_database(fit_dir, age_grid, time_grid, covariate_table)
+   create_all_node_database(fit_dir, age_grid, time_grid, covariate_table)
    #
    # cascade_root_node
-   at_cascade.cascade_root_node(
-      all_node_database  = f'{fit_dir}/all_node.db'  ,
-      root_node_database = f'{fit_dir}/root_node.db' ,
-      fit_goal_set       = fit_goal_set              ,
-      no_ode_fit         = True                      ,
-      fit_type_list      = [ 'both', 'fixed']        ,
-   )
+   if False :
+      at_cascade.cascade_root_node(
+         all_node_database  = f'{fit_dir}/all_node.db'  ,
+         root_node_database = f'{fit_dir}/root_node.db' ,
+         fit_goal_set       = fit_goal_set              ,
+         no_ode_fit         = True                      ,
+         fit_type_list      = [ 'both', 'fixed']        ,
+      )
+   #
+   # predict
+   predict_all(fit_dir, covariate_table, fit_goal_set)
 # END_FIT
