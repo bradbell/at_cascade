@@ -28,9 +28,17 @@ then
    rst_line="-rst $rst_line"
 fi
 # -----------------------------------------------------------------------------
-echo "xrst at_cascade.xrst --target $target --output doc $rst_line"
-if ! xrst at_cascade.xrst --target $target --output doc $rst_line >& \
-   >( tee run_sphinx.$$ )
+cmd="xrst at_cascade.xrst --target $target --output doc"
+if [ "$rst_line" != '' ]
+then
+   cmd="$cmd --rst $rst_line"
+fi
+if [ "$target" == 'html' ]
+then
+   cmd="$cmd --html sphinx_rtd_theme"
+fi
+echo "$cmd"
+if ! $cmd >& >( tee run_sphinx.$$ )
 then
    echo 'bin/run_sphinx: aboring due to xrst errors above'
    rm run_sphinx.$$
