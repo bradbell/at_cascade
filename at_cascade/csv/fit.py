@@ -1092,6 +1092,8 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
 # ----------------------------------------------------------------------------
 # BEGIN_FIT
 def fit(fit_dir) :
+   assert type(fit_dir) == str
+# END_FIT
    #
    # fit_goal_set
    fit_goal_set   = set()
@@ -1117,4 +1119,3 @@ def fit(fit_dir) :
    #
    # predict
    predict_all(fit_dir, covariate_table, fit_goal_set)
-# END_FIT
