@@ -61,10 +61,10 @@ The rows are documented below by the name column:
 max_fit
 -------
 This is the maximum number of data values to fit per integrand.
-If for a particular fit and integrand has more than this number of
-data values exist, a subset of this size is randomly selected.
+If for a particular fit an integrand has more than this number of
+data values, a subset of this size is randomly selected.
 There is once exception to this rule, the female and male fit
-at the root node use twice this number of values per integrand
+at the root node uses twice this number of values per integrand
 (because the covariate multipliers are frozen after these fits).
 The default value for *max_fit* is 250.
 
@@ -72,17 +72,18 @@ random_seed
 -----------
 This integer is used to seed the random number generator.
 The default value of *random_seed* is chosen
-by the system time in seconds (as an integer).
+to be the system time in seconds (as an integer).
 
 root_node_name
 --------------
 This string is the name of the root node.
-The default for *root_node_name* is the top (root) of
-the entire node tree.
+The default for *root_node_name* is the top root of the entire node tree.
+Only the root node and its descendents will be fit.
+
 
 node.csv
 ========
-This csv file has the same description as the simulate
+This file has the same description as the simulate
 :ref:`csv_simulate@Input Files@node.csv` file.
 
 covariate.csv
@@ -92,7 +93,8 @@ This csv file has the same description as the simulate
 
 fit_goal.csv
 ============
-If a node is in this file, that node and all it's ancestors will be fit.
+Each node in this file must be a descendant of the root node.
+Each node, and all its ancestors up to the root node, will be fit.
 
 node_name
 ---------
@@ -167,11 +169,11 @@ is a string containing the name for the non-zero rates
 
 age
 ---
-is a float containing the age for this grid point or the empty string.
+is a float containing the age for this grid point.
 
 time
 ----
-is a float containing the time for this grid point or the empty string.
+is a float containing the time for this grid point.
 
 value_prior
 -----------
@@ -181,11 +183,15 @@ If value_prior is empty, const_value must be non-empty.
 dage_prior
 ----------
 is a string containing the name of the dage prior for this grid point.
-The specified prior cannot be censored.
+If dage_prior is empty, there is no prior for the forward age difference
+of this rate at this grid point.
+This prior cannot be censored.
 
 dtime_prior
 -----------
 is a string containing the name of the dtime prior for this grid point.
+If dtime_prior is empty, there is no prior for the forward time difference
+of this rate at this grid point.
 The specified prior cannot be censored.
 
 const_value
@@ -193,7 +199,6 @@ const_value
 is a float specifying a constant value for this grid point or the empty string.
 This is equivalent to the upper and lower limits being equal to this value.
 If const_value is empty, value_prior must be non-empty.
-
 
 {xrst_comment ---------------------------------------------------------------}
 
