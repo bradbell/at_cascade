@@ -40,8 +40,8 @@ Node Tree
       -  :ref:`csv_fit@Input Files@node.csv`
    *  -  csv_file['covariate.csv']
       -  :ref:`csv_fit@Input Files@covariate.csv`
-   *  -  csv_file['option.csv']
-      -  :ref:`csv_fit@Input Files@option.csv`
+   *  -  csv_file['option_in.csv']
+      -  :ref:`csv_fit@Input Files@option_in.csv`
    *  -  csv_file['fit_goal.csv']
       -  :ref:`csv_fit@Input Files@fit_goal.csv`
    *  -  csv_file['predict_integrand.csv']
@@ -58,6 +58,10 @@ Node Tree
       -  :ref:`csv_fit@Input Files@data_in.csv`
    *  -  root_node.db
       -  :ref:`csv_fit@Output Files@root_node.db`
+   *  -  option_out.csv
+      -  :ref:`csv_fit@Output Files@option_out.csv`
+   *  -  all_predict.csv
+      -  :ref:`csv_fit@Output Files@all_predict.csv`
 
 {xrst_literal
    BEGIN_PYTHON
@@ -72,13 +76,12 @@ Node Tree
 # csv_file
 csv_file = dict()
 #
-# option.csv
+# option_in.csv
 random_seed = str( int( time.time() ) )
-csv_file['option.csv'] = \
+csv_file['option_in.csv'] = \
 '''name,value
 root_node_name,n0
 '''
-csv_file['option.csv'] += f'random_seed,{random_seed}\n'
 #
 # node.csv
 csv_file['node.csv'] = \

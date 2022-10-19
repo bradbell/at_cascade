@@ -7,6 +7,7 @@ import dismod_at
 import at_cascade
 import copy
 import os
+import time
 '''
 
 {xrst_begin csv_fit}
@@ -49,15 +50,19 @@ are located.
 Input Files
 ***********
 
-option.csv
-==========
+option_in.csv
+==============
 This csv file has two columns,
 one called ``name`` and the other called ``value``.
+If an option name does not appear, the corresponding
+default value is used for the option.
 The rows are documented below by the name column:
 
 random_seed
 -----------
 This integer is used to seed the random number generator.
+The default value of *random_seed* is chosen
+by the system time in seconds (as an integer).
 
 root_node_name
 --------------
@@ -287,6 +292,11 @@ all_node.db
 ===========
 This is the at_cascade sqlite all node database for the cascade.
 
+option_out.csv
+==============
+This is a copy of :ref:`csv_fit@option_in.csv` with the default
+filled in for missing values.
+
 all_predict.csv
 ===============
 This is the predictions for all of the nodes at the age, time and
@@ -351,8 +361,18 @@ split_reference_table = [
 # ----------------------------------------------------------------------------
 # Returns a dictionary version of option table
 #
+# fit_dir
+# is the directory where the input csv files are located.
+#
 # option_table :
 # is the list of dict corresponding to the option table
+#
+# top_node_name
+# is the name of the top node in the node tree
+#
+# option_out.csv
+# As a side effect, this routine write a copy of the option table
+# with the default values filled in.
 #
 # option_value[name] :
 # is the option value corresponding the specified option name.
@@ -360,29 +380,48 @@ split_reference_table = [
 # has been coverted to its corresponding type.
 #
 # option_value =
-def option_table2dict(fit_dir, option_table) :
+def option_table2dict(fit_dir, option_table, top_node_name) :
    assert type(option_table) == list
    assert type( option_table[0] ) == dict
    #
-   option_type  = {
-      'root_node_name'     : str ,
-      'random_seed'        : int ,
+   # option_default
+   default_seed = int( time.time() )
+   option_default  = {
+      'root_node_name'     : (str,  top_node_name) ,
+      'random_seed'        : (int , default_seed ) ,
    }
+   #
+   # option_value
    line_number  = 0
    option_value = dict()
    for row in option_table :
       line_number += 1
       name         = row['name']
       if name in option_value :
-         msg  = f'csv_fit: Error: line {line_number} in option.csv\n'
+         msg  = f'csv_fit: Error: line {line_number} in option_in.csv\n'
          msg += f'the name {name} appears twice in this table'
          assert False, msg
-      if not name in option_type :
-         msg  = f'csv_fit: Error: line {line_number} in option.csv\n'
+      if not name in option_default :
+         msg  = f'csv_fit: Error: line {line_number} in option_in.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
-      value        = option_type[name]( row['value'] )
-      option_value[name] = value
+      (option_type, defualt) = option_default[name]
+      value                  = option_type( row['value'] )
+      option_value[name]    = value
+   #
+   # option_value
+   for name in option_default :
+      if name not in option_value :
+         (option_type, default) = option_default[name]
+         option_value[name]     = default
+   #
+   # option_out.csv
+   table = list()
+   for name in option_value :
+      row = { 'name' : name , 'value' : option_value[name] }
+      table.append(row)
+   file_name = f'{fit_dir}/option_out.csv'
+   at_cascade.csv.write_table(file_name, table)
    #
    assert type(option_value) == dict
    return option_value
@@ -442,7 +481,7 @@ def create_root_node_database(fit_dir) :
    input_list = [
       'node',
       'covariate',
-      'option',
+      'option_in',
       'predict_integrand',
       'prior',
       'smooth_grid',
@@ -458,8 +497,29 @@ def create_root_node_database(fit_dir) :
    #
    print('being creating root node database' )
    #
+   # node_set, top_node_name
+   node_set       = set()
+   top_node_name  = None
+   for row in input_table['node'] :
+      node_name   = row['node_name']
+      parent_name = row['parent_name']
+      if node_name in node_set :
+         msg = f'node_name {node_name} apprears twice in node.csv'
+         assert False, msg
+      if parent_name == None :
+         if top_node_name != None :
+            msg = 'node.csv: more than one node has no parent node'
+            assert False, msg
+         top_node_name = node_name
+      node_set.add( node_name )
+   if top_node_name == None :
+      msg = 'node.csv: no node has an empty parent_name'
+      assert False, msg
+   #
    # root_node_name, random_seed
-   option_value = option_table2dict(fit_dir, input_table['option'] )
+   option_value = option_table2dict(
+      fit_dir, input_table['option_in'], top_node_name
+   )
    root_node_name = option_value['root_node_name']
    random_seed    = option_value['random_seed']
    #
@@ -481,25 +541,6 @@ def create_root_node_database(fit_dir) :
          'reference':       covariate_average[covariate_name],
          'max_difference' : None
       })
-   #
-   # node_set
-   node_set       = set()
-   top_node_name  = None
-   for row in input_table['node'] :
-      node_name   = row['node_name']
-      parent_name = row['parent_name']
-      if node_name in node_set :
-         msg = f'node_name {node_name} apprears twice in node.csv'
-         assert False, msg
-      if parent_name == None :
-         if top_node_name != None :
-            msg = 'node.csv: more than one node has no parent node'
-            assert False, msg
-         top_node_name = node_name
-      node_set.add( node_name )
-   if top_node_name == None :
-      msg = 'node.csv: no node has an empty parent_name'
-      assert False, msg
    #
    # option_table
    option_table = [
@@ -946,10 +987,8 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
    # root_node_db
    root_node_db = f'{fit_dir}/root_node.db'
    #
-   # root_node_name, random_seed
-   option_table = at_cascade.csv.read_table( f'{fit_dir}/option.csv' )
-   option_value = option_table2dict(fit_dir, option_table )
-   root_node_name = option_value['root_node_name']
+   # root_node_name
+   root_node_name = at_cascade.get_parent_node(root_node_db)
    #
    # node_table
    new             = False
