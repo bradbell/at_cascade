@@ -31,8 +31,11 @@ mm-dd
 
 10-19
 =====
-Add :ref:`csv_fit@Input Files@option_in.csv@max_fit`
-to the csv option table.
+1. Add :ref:`csv_fit@Input Files@option_in.csv@max_fit`
+   to the csv option table.
+2. Change the definition of a
+   :ref:`csv_module@Notation@Rectangular Grid` so that it can be
+   different for each value in the selecion column.
 
 10-18
 =====

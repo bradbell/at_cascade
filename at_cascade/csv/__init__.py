@@ -24,28 +24,22 @@ not the time interval from 1990 to 1991.
 
 Rectangular Grid
 ================
-A csv file is said to have a rectangular grid in columns
-*name_a* , *name_b*, *name_c* if the following holds:
+Define a selection subset of a csv file as those rows with the same
+value in column *select*.
+For each value in *select* ,
+a csv file is said to have a rectangular grid in age and time
+if the following holds:
 
-#. The csv file has columns with the names
-   *name_a*, *name_b*, *name_c*.
+#. Define :math:`( a_1 , \ldots , a_M )`
+   to be the vector of values in the age column for this selection subset.
 
-#. :math:`( a_1 , \ldots , a_L )`
-   is the vector of values in column *name_a* .
+#. Define :math:`( t_1 , \ldots , t_N )`
+   to be the vector of values in the time column for this selection subset.
 
-#. :math:`( b_1 , \ldots , b_M )`
-   is the vector of values in column *name_b* .
-
-#. :math:`( c_1 , \ldots , c_N )`
-   is the vector of values in column *name_c* .
-
-#. For :math:`\ell = 1 , \ldots , L`,
-   :math:`m = 1 , \ldots , M`,
-   :math:`n = 1,  \ldots , N` ,
-   there is one and only one row with
-   *name_a* equal to :math:`a_\ell`,
-   *name_b* equal to :math:`b_m`, and
-   *name_c* equal to :math:`c_n`.
+#. For :math:`m = 1 , \ldots , M`, :math:`n = 1,  \ldots , N` ,
+   there is one and only one row in this selection subset with
+   age equal to :math:`a_m`, and
+   time equal to :math:`t_n`.
 
 Covariates
 ==========

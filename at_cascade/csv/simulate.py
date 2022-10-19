@@ -104,8 +104,8 @@ to child nodes.
 covariate.csv
 =============
 This csv file specifies the value of omega and the covariates.
-It has a :ref:`csv_module@Notation@Rectangular Grid` in the columns
-``node_name``, ``sex``, ``age``, ``time`` .
+For each node_name it has a rectangular grid in age and time.
+In addition, the rectangular grid is the same for nodes.
 
 node_name
 ---------
@@ -147,9 +147,8 @@ All of these covariates are
 no_effect_rate.csv
 ==================
 This csv file specifies the grid points at which each rate is modeled
-during a simulation. It has a
-:ref:`csv_module@Notation@Rectangular Grid` in the columns
-``rate_name``, ``age``, ``time`` .
+during a simulation. For each rate_name it has a
+:ref:`csv_module@Notation@Rectangular Grid` in age and time.
 These are no-effect rates; i.e., the rates without
 the random and covariate effects.
 Covariate multipliers that are constrained to zero during the fitting
