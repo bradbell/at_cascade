@@ -48,10 +48,10 @@ Node Tree
       -  :ref:`csv_fit@Input Files@predict_integrand.csv`
    *  -  csv_file['prior.csv']
       -  :ref:`csv_fit@Input Files@prior.csv`
-   *  -  csv_file['smooth_grid.csv']
-      -  :ref:`csv_fit@Input Files@smooth_grid.csv`
-   *  -  csv_file['rate.csv']
-      -  :ref:`csv_fit@Input Files@rate.csv`
+   *  -  csv_file['parent_rate.csv']
+      -  :ref:`csv_fit@Input Files@parent_rate.csv`
+   *  -  csv_file['child_rate.csv']
+      -  :ref:`csv_fit@Input Files@child_rate.csv`
    *  -  csv_file['mulcov.csv']
       -  :ref:`csv_fit@Input Files@mulcov.csv`
    *  -  csv_file['data_in.csv']
@@ -123,24 +123,22 @@ uniform_eps_1,1e-6,1.0,0.5,1.0,uniform
 gauss_01,,,0.0,1.0,gaussian
 '''
 #
-# smooth_grid.csv
-csv_file['smooth_grid.csv'] = \
-'''name,age,time,value_prior,dage_prior,dtime_prior,const_value
-mulcov_haqi,0.0,0.0,uniform_1_1,,,
-rate_parent,0.0,0.0,uniform_eps_1,,,
-rate_child,0.0,0.0,gauss_01,,,
+# parent_rate.csv
+csv_file['parent_rate.csv'] = \
+'''rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value
+iota,0.0,0.0,uniform_eps_1,,,
 '''
 #
-# rate.csv
-csv_file['rate.csv'] = \
-'''name,parent_smooth,child_smooth
-iota,rate_parent,rate_child
+# child_rate.csv
+csv_file['child_rate.csv'] = \
+'''rate_name,value_prior
+iota,gauss_01
 '''
 #
 # mulcov.csv
 csv_file['mulcov.csv'] = \
-'''covariate,type,effected,smooth
-haqi,rate_value,iota,mulcov_haqi
+'''covariate,type,effected,value_prior
+haqi,rate_value,iota,uniform_1_1
 '''
 #
 # data_in.csv

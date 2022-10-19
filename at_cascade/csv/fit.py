@@ -154,14 +154,16 @@ worry about the log offset or degrees of freedom.)
 
 {xrst_comment ---------------------------------------------------------------}
 
-smooth_grid.csv
+parent_rate.csv
 ===============
-For each value of *smooth_name*,
+This file specifies the prior for the root node parent rates.
+For each value of *rate_name*,
 this file must have a rectangular grid in *age* and *time* .
 
-name
-----
-is a string containing the name for this smoothing.
+rate_name
+---------
+is a string containing the name for the non-zero rates
+(except for omega which is specified by covariate.csv).
 
 age
 ---
@@ -195,23 +197,22 @@ If const_value is empty, value_prior must be non-empty.
 
 {xrst_comment ---------------------------------------------------------------}
 
-rate.csv
-========
-This csv file specifies which rates, besides omega,
-are non-zero and what their prior are.
+child_rate.csv
+==============
+This csv file specifies the prior for the child rates; i.e.,
+the random effects.
 
-name
-----
+rate_name
+---------
 this string is the name of this rate and is one of the following:
 pini, iota, rho, chi (name cannot be omega).
 
-parent_smooth
--------------
-This string is the name of the parent smoothing for this rate.
-
-child_smooth
-------------
-This string is the name of the child smoothing for this rate.
+value_prior
+-----------
+is a string containing the name of the value prior for this child rate.
+Note that the child rates are in log of rate space.
+In addition, they are constant in age and time
+(this is a limitation of the csv_fit).
 
 {xrst_comment ---------------------------------------------------------------}
 
@@ -231,9 +232,12 @@ effected
 --------
 is the name of the integrand or rate affected by this multiplier.
 
-smooth
-------
-is the name of the smoothing for this multiplier.
+value_prior
+-----------
+is a string containing the name of the value prior
+for this covariate multiplier.
+Note that the covariate multipliers are constant in age and time
+(this is a limitation of the csv_fit).
 
 {xrst_comment ---------------------------------------------------------------}
 
@@ -501,8 +505,8 @@ def create_root_node_database(fit_dir) :
       'option_in',
       'predict_integrand',
       'prior',
-      'smooth_grid',
-      'rate',
+      'parent_rate',
+      'child_rate',
       'mulcov',
       'data_in',
    ]
@@ -649,7 +653,7 @@ def create_root_node_database(fit_dir) :
    age_set = set( age_grid )
    age_set.add(min_data_age)
    age_set.add(max_data_age)
-   for row in input_table['smooth_grid'] :
+   for row in input_table['parent_rate'] :
       age_set.add( float( row['age'] ) )
    age_list = sorted( list( age_set ) )
    #
@@ -657,14 +661,14 @@ def create_root_node_database(fit_dir) :
    time_set = set( time_grid )
    time_set.add(min_data_time)
    time_set.add(max_data_time)
-   for row in input_table['smooth_grid'] :
+   for row in input_table['parent_rate'] :
       time_set.add( float( row['time'] ) )
    time_list = sorted( list( time_set ) )
    #
-   # smooth_table
+   # smooth_dict
    smooth_dict = dict()
-   for row in input_table['smooth_grid'] :
-      name = row['name']
+   for row in input_table['parent_rate'] :
+      name = row['rate_name'] + '_parent'
       age  = float( row['age'] )
       time = float( row['time'] )
       if name not in smooth_dict :
@@ -688,6 +692,43 @@ def create_root_node_database(fit_dir) :
          smooth_dict[name]['fun'].set(
             age, time, value_prior, dage_prior, dtime_prior
          )
+   #
+   # smooth_dict
+   for row in input_table['child_rate'] :
+      name = row['rate_name'] + '_child'
+      fun = smoothing_function(name)
+      smooth_dict[name] = {
+         'age_id'  : {0},
+         'time_id' : {0},
+         'fun'     : fun    ,
+      }
+      smooth_dict[name]['fun'].set(
+         age         = age_list[0]            ,
+         time        = time_list[0]           ,
+         value_prior = row['value_prior']     ,
+         dage_prior  = None                   ,
+         dtime_prior = None                   ,
+      )
+   #
+   # smooth_dict
+   for (i_row, row) in enumerate( input_table['mulcov'] ) :
+      name = f'mulcov_{i_row}'
+      fun = smoothing_function(name)
+      smooth_dict[name] = {
+         'age_id'  : {0},
+         'time_id' : {0},
+         'fun'     : fun    ,
+      }
+      smooth_dict[name]['fun'].set(
+         age         = age_list[0]            ,
+         time        = time_list[0]           ,
+         value_prior = row['value_prior']     ,
+         dage_prior  = None                   ,
+         dtime_prior = None                   ,
+      )
+
+   #
+   # smooth_table
    smooth_table = list()
    for name in smooth_dict :
       row = {
@@ -710,8 +751,25 @@ def create_root_node_database(fit_dir) :
    #
    # mulcov_table
    mulcov_table = input_table['mulcov']
-   for row in mulcov_table :
+   for (i_row, row) in enumerate(mulcov_table) :
+      del row['value_prior']
+      row['smooth'] = f'mulcov_{i_row}'
       row['group'] = 'world'
+   #
+   # rate_table
+   rate_table = list()
+   for rate_name in [ 'pini', 'iota', 'rho', 'chi' ] :
+      parent_smooth = rate_name + '_parent'
+      if parent_smooth in smooth_dict :
+         child_smooth  = rate_name + '_child'
+         if child_smooth not in smooth_dict :
+            child_smooth = None
+         row = {
+            'name'          : rate_name      ,
+            'parent_smooth' : parent_smooth  ,
+            'child_smooth'  : child_smooth   ,
+         }
+         rate_table.append( row )
    #
    dismod_at.create_database(
          file_name         = output_file,
@@ -727,7 +785,7 @@ def create_root_node_database(fit_dir) :
          prior_table       = prior_table,
          smooth_table      = smooth_table,
          nslist_table      = dict(),
-         rate_table        = input_table['rate'],
+         rate_table        = rate_table,
          mulcov_table      = mulcov_table,
          option_table      = option_table,
    )

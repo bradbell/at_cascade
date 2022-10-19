@@ -21,6 +21,7 @@ Release Notes for at_cascade
    pyspellchecker
    rst
    spline
+   smoothings
 }
 
 Release Notes for 2022
@@ -35,7 +36,15 @@ mm-dd
    to the csv option table.
 2. Change the definition of a
    :ref:`csv_module@Notation@Rectangular Grid` so that it can be
-   different for each value in the selecion column.
+   different for each value in the selection column.
+3. Use the fact that the child rates (random effects) and the
+   covariate multipliers are constant in age and time to simplify csv_fit.
+   To be specific, use priors instead of smoothings for this functions
+   (which enabled us to remove smoothing names from csv_fit); see
+   :ref:`csv_fit@Input Files@parent_rate.csv`,
+   :ref:`csv_fit@Input Files@child_rate.csv`,
+   :ref:`csv_fit@Input Files@mulcov.csv`.
+
 
 10-18
 =====
