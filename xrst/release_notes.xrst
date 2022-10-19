@@ -29,13 +29,18 @@ Release Notes for 2022
 mm-dd
 *****
 
+10-19
+=====
+Add :ref:`csv_fit@Input Files@option_in.csv@max_fit`
+to the csv option table.
+
 10-18
 =====
 Change fit option.csv to
 :ref:`csv_fit@Input Files@option_in.csv` ,
 add default value for all the fit options,
 and place resulting options in
-:ref:`csv_fit@Input Files@option_out.csv` .
+:ref:`csv_fit@Output Files@option_out.csv` .
 
 10-27
 =====

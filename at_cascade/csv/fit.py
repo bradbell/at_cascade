@@ -51,12 +51,22 @@ Input Files
 ***********
 
 option_in.csv
-==============
+=============
 This csv file has two columns,
 one called ``name`` and the other called ``value``.
 If an option name does not appear, the corresponding
 default value is used for the option.
 The rows are documented below by the name column:
+
+max_fit
+-------
+This is the maximum number of data values to fit per integrand.
+If for a particular fit and integrand has more than this number of
+data values exist, a subset of this size is randomly selected.
+There is once exception to this rule, the female and male fit
+at the root node use twice this number of values per integrand
+(because the covariate multipliers are frozen after these fits).
+The default value for *max_fit* is 250.
 
 random_seed
 -----------
@@ -390,8 +400,9 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
    # option_default
    default_seed = int( time.time() )
    option_default  = {
-      'root_node_name'     : (str,  top_node_name) ,
+      'max_fit'            : (int,  250)           ,
       'random_seed'        : (int , default_seed ) ,
+      'root_node_name'     : (str,  top_node_name) ,
    }
    #
    # csv_option_value
@@ -781,7 +792,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       # 'absolute_covariates'        : None,
       'balance_fit'                  : 'sex -0.5 +0.5' ,
       'max_abs_effect'               : 2.0 ,
-      'max_fit'                      : 250,
+      'max_fit'                      : csv_option_value['max_fit'],
       'max_number_cpu'               : max_number_cpu,
       'perturb_optimization_scale'   : 0.2,
       'perturb_optimization_start'   : 0.2,
