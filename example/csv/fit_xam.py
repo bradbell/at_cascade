@@ -80,7 +80,6 @@ csv_file = dict()
 random_seed = str( int( time.time() ) )
 csv_file['option_in.csv'] = \
 '''name,value
-root_node_name,n0
 '''
 #
 # node.csv

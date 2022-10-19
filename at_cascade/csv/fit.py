@@ -359,30 +359,33 @@ split_reference_table = [
    { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
 ]
 # ----------------------------------------------------------------------------
-# Returns a dictionary version of option table
+# Sets global csv_option_value to dict representation of csv option table.
 #
 # fit_dir
 # is the directory where the input csv files are located.
 #
 # option_table :
-# is the list of dict corresponding to the option table
+# is the list of dict corresponding to the csv option table
 #
 # top_node_name
 # is the name of the top node in the node tree
 #
 # option_out.csv
-# As a side effect, this routine write a copy of the option table
+# As a side effect, this routine write a copy of the csv option table
 # with the default values filled in.
 #
-# option_value[name] :
+# csv_option_value[name] :
 # is the option value corresponding the specified option name.
 # Here name is a string and value
 # has been coverted to its corresponding type.
 #
-# option_value =
-def option_table2dict(fit_dir, option_table, top_node_name) :
+csv_option_value = None
+def set_csv_option_value(fit_dir, option_table, top_node_name) :
+   global csv_option_value
+   assert csv_option_value == None
    assert type(option_table) == list
-   assert type( option_table[0] ) == dict
+   if len(option_table) > 0 :
+      assert type( option_table[0] ) == dict
    #
    # option_default
    default_seed = int( time.time() )
@@ -391,13 +394,13 @@ def option_table2dict(fit_dir, option_table, top_node_name) :
       'random_seed'        : (int , default_seed ) ,
    }
    #
-   # option_value
-   line_number  = 0
-   option_value = dict()
+   # csv_option_value
+   line_number      = 0
+   csv_option_value = dict()
    for row in option_table :
       line_number += 1
       name         = row['name']
-      if name in option_value :
+      if name in csv_option_value :
          msg  = f'csv_fit: Error: line {line_number} in option_in.csv\n'
          msg += f'the name {name} appears twice in this table'
          assert False, msg
@@ -407,24 +410,23 @@ def option_table2dict(fit_dir, option_table, top_node_name) :
          assert False, msg
       (option_type, defualt) = option_default[name]
       value                  = option_type( row['value'] )
-      option_value[name]    = value
+      csv_option_value[name] = value
    #
-   # option_value
+   # csv_option_value
    for name in option_default :
-      if name not in option_value :
+      if name not in csv_option_value :
          (option_type, default) = option_default[name]
-         option_value[name]     = default
+         csv_option_value[name] = default
    #
    # option_out.csv
    table = list()
-   for name in option_value :
-      row = { 'name' : name , 'value' : option_value[name] }
+   for name in csv_option_value :
+      row = { 'name' : name , 'value' : csv_option_value[name] }
       table.append(row)
    file_name = f'{fit_dir}/option_out.csv'
    at_cascade.csv.write_table(file_name, table)
    #
-   assert type(option_value) == dict
-   return option_value
+   assert type(csv_option_value) == dict
 # ----------------------------------------------------------------------------
 # Converts smoothing prioros on a grid to a prior function
 #
@@ -468,6 +470,10 @@ class smoothing_function :
 #
 # covariate_table
 # is the list of dict corresponding to the covariate.csv file
+#
+# csv_option_value
+# As a side effect,
+# this routine sets csv_option_value; see set_csv_option_value.
 #
 # age_grid, time_grid, covariate_table =
 def create_root_node_database(fit_dir) :
@@ -516,12 +522,14 @@ def create_root_node_database(fit_dir) :
       msg = 'node.csv: no node has an empty parent_name'
       assert False, msg
    #
-   # root_node_name, random_seed
-   option_value = option_table2dict(
+   # csv_option_value
+   set_csv_option_value(
       fit_dir, input_table['option_in'], top_node_name
    )
-   root_node_name = option_value['root_node_name']
-   random_seed    = option_value['random_seed']
+   #
+   # root_node_name, random_seed
+   root_node_name = csv_option_value['root_node_name']
+   random_seed    = csv_option_value['random_seed']
    #
    # covariate_average
    covariate_average = at_cascade.csv.covariate_avg(
