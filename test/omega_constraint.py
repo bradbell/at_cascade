@@ -156,11 +156,11 @@ def main() :
    omega_grid['age']  = list( range(n_omega_age) )
    omega_grid['time'] = list( range(n_omega_time) )
    #
-   # mtall_data
+   # omega_data
    # chi is zero so mtall is equal to omega
-   mtall_data = dict()
+   omega_data = dict()
    for node_name in [ 'n0', 'n1', 'n2' ] :
-      mtall_data[node_name] = [ list() ]
+      omega_data[node_name] = [ list() ]
       for i in range(n_omega_age) :
          for j in range(n_omega_time) :
             age_id  = omega_grid['age'][i]
@@ -168,7 +168,7 @@ def main() :
             age     = age_grid[age_id]
             time    = time_grid[time_id]
             omega   = omega_true(age, time, node_name)
-            mtall_data[node_name][0].append( omega )
+            omega_data[node_name][0].append( omega )
    #
    # Create all_node.db
    all_node_database = 'all_node.db'
@@ -182,7 +182,7 @@ def main() :
       split_reference_table  = list(),
       all_option             = all_option,
       omega_grid             = omega_grid,
-      mtall_data             = mtall_data,
+      omega_data             = omega_data,
    )
    #
    # set omega constraints

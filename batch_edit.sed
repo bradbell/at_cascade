@@ -32,4 +32,4 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|mtall_index|omega_index|g
+s|mtall_data|omega_data|g

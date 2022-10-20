@@ -535,12 +535,12 @@ def main() :
    # n_split
    n_split = len( split_reference_list )
    #
-   # mtall_data
-   mtall_data      = dict()
+   # omega_data
+   omega_data      = dict()
    for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
-      mtall_data[node_name] = list()
+      omega_data[node_name] = list()
       for k in range(n_split) :
-         mtall_data[node_name].append( list() )
+         omega_data[node_name].append( list() )
          for age_id in omega_grid['age'] :
             for time_id in omega_grid['time'] :
                age     = age_table[age_id]['age']
@@ -550,7 +550,7 @@ def main() :
                income  = avg_income[node_name][k]
                cov     = [ sex, vaccine, income ]
                omega   = rate_true('omega', None, None, None, cov)
-               mtall_data[node_name][k].append( omega )
+               omega_data[node_name][k].append( omega )
    #
    # Create all_node.db
    all_node_database = f'{result_dir}/all_node.db'
@@ -560,7 +560,7 @@ def main() :
       split_reference_table  = split_reference_table,
       all_option             = all_option,
       omega_grid             = omega_grid,
-      mtall_data             = mtall_data,
+      omega_data             = omega_data,
    )
    #
    # root_fit_dir

@@ -120,16 +120,16 @@ time_id values for the omega_grid.
 These are indices in the root_node_database time table.
 We use the notation *n_omega_time* for the length of the time list.
 
-mtall_data
+omega_data
 **********
 This is a python dictionary with a key for each node name
 for the :ref:`glossary@root_node` and its descendant.
-The value *mtall_data[node_name]* is a list.
-For each *k*, *mtall_data[node_name][k]* is a list.
+The value *omega_data[node_name]* is a list.
+For each *k*, *omega_data[node_name][k]* is a list.
 For *i* equal 0, ..., *n_omega_age*-1
 and *j* equal 0, ..., *n_omega_time*-1,
 
-| |tab| *mtall_data[node_name][k][ i * n_omega_time + j ]*
+| |tab| *omega_data[node_name][k][ i * n_omega_time + j ]*
 
 is the value of *mtall* at the specified node,
 the age corresponding to index *i* in *omega_grid*\ [``age``],
@@ -141,8 +141,8 @@ For *k* equal 0, ... , *n_split*-1, it specifies the value of
 
 default
 =======
-The *mtall_data* argument is ``None`` if and only if *omega_grid* is ``None``.
-If *mtall_data* is ``None`` the
+The *omega_data* argument is ``None`` if and only if *omega_grid* is ``None``.
+If *omega_data* is ``None`` the
 :ref:`all_omega@all_omega Table` and
 :ref:`all_omega@omega_index Table` will be empty.
 
@@ -172,7 +172,7 @@ def create_all_node_db(
    node_split_table          = None,
    mulcov_freeze_table       = None,
    omega_grid                = None,
-   mtall_data                = None,
+   omega_data                = None,
 # )
 # END syntax
 ) :
@@ -195,10 +195,10 @@ def create_all_node_db(
    assert type(all_option)             is dict
    assert type(split_reference_table)  is list
    if omega_grid is None :
-      assert mtall_data is None
+      assert omega_data is None
    else :
       assert type(omega_grid) is dict
-      assert type(mtall_data) is dict
+      assert type(omega_data) is dict
    #
    assert 'root_node_name' in all_option
    assert 'result_dir' in all_option
@@ -315,13 +315,13 @@ def create_all_node_db(
    col_name  = [ 'all_omega_value' ]
    col_type  = [  'real' ]
    row_list  = list()
-   if not mtall_data is None :
-      node_list = mtall_data.keys()
+   if not omega_data is None :
+      node_list = omega_data.keys()
       for node_name in node_list :
          node_id = at_cascade.table_name2id(node_table, 'node', node_name)
-         assert n_split == len( mtall_data[node_name] )
+         assert n_split == len( omega_data[node_name] )
          for k in range(n_split) :
-            mtall_list = mtall_data[node_name][k]
+            mtall_list = omega_data[node_name][k]
             assert len(mtall_list) == n_omega_age * n_omega_time
             for i in range(n_omega_age) :
                for j in range(n_omega_time) :
@@ -337,7 +337,7 @@ def create_all_node_db(
    col_name  = [ 'node_id', 'split_reference_id', 'all_omega_id' ]
    col_type  = [ 'integer', 'integer',             'integer' ]
    row_list  = list()
-   if not mtall_data is None :
+   if not omega_data is None :
       all_omega_id = 0
       for node_name in node_list :
          node_id = at_cascade.table_name2id(node_table, 'node', node_name)

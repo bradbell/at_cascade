@@ -624,9 +624,9 @@ def main() :
    omega_grid['age']  = range( len(age_grid) )
    omega_grid['time'] = [ 0 ]
    #
-   # mtall_data
+   # omega_data
    integrand_name = 'mtall'
-   mtall_data     = dict()
+   omega_data     = dict()
    for node_name in [ 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6' ] :
       mtall_list = list()
       income                = avg_income[node_name]
@@ -635,7 +635,7 @@ def main() :
          time = 2000.0
          mtall = average_integrand(integrand_name, age, node_name, income)
          mtall_list.append(mtall)
-      mtall_data[node_name] = [ mtall_list ]
+      omega_data[node_name] = [ mtall_list ]
    #
    # Create all_node.db
    all_node_database = f'{result_dir}/all_node.db'
@@ -649,7 +649,7 @@ def main() :
       root_node_database      = root_node_database,
       all_option              = all_option,
       omega_grid              = omega_grid,
-      mtall_data              = mtall_data,
+      omega_data              = omega_data,
    )
    #
    # root_node_dir

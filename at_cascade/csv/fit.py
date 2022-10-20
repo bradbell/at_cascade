@@ -905,13 +905,13 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    #
    omega_grid = { 'age' : age_id_grid, 'time' : time_id_grid }
    #
-   # mtall_data
+   # omega_data
    # This is set equal to the value of omega and is only used for the
    # omega constraint.
    n_age      = len( age_grid )
    n_time     = len( time_grid )
    none_list  = (n_age * n_time)  * [ None ]
-   mtall_data = dict()
+   omega_data = dict()
    for row in covariate_table :
       node_name          = row['node_name']
       sex                = row['sex']
@@ -926,27 +926,27 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
          split_reference_table, 'split_reference', sex
       )
       assert split_reference_id != 1
-      if node_name not in mtall_data :
-         mtall_data[node_name] = list()
+      if node_name not in omega_data :
+         omega_data[node_name] = list()
          for k in range( len(split_reference_table) ) :
                row = list()
                for ij in range( n_age * n_time ) :
                   row.append(None)
-               mtall_data[node_name].append(row)
+               omega_data[node_name].append(row)
       #
       k = split_reference_id
       i = age_grid.index(age)
       j = time_grid.index(time)
-      mtall_data[node_name][k][i * n_time + j] = omega
-   for node_name in mtall_data :
+      omega_data[node_name][k][i * n_time + j] = omega
+   for node_name in omega_data :
       for i in range( n_age ) :
          for j in range( n_time ) :
-            female = mtall_data[node_name][0][i * n_time + j]
-            both   = mtall_data[node_name][1][i * n_time + j]
-            male   = mtall_data[node_name][2][i * n_time + j]
+            female = omega_data[node_name][0][i * n_time + j]
+            both   = omega_data[node_name][1][i * n_time + j]
+            male   = omega_data[node_name][2][i * n_time + j]
             assert female != None and both == None and male != None
             both   = (male + female) / 2.0
-            mtall_data[node_name][1][i * n_time + j] = both
+            omega_data[node_name][1][i * n_time + j] = both
    #
    # create_all_node_db
    at_cascade.create_all_node_db(
@@ -957,7 +957,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       node_split_table          = node_split_table          ,
       mulcov_freeze_table       = mulcov_freeze_table       ,
       omega_grid                = omega_grid                ,
-      mtall_data                = mtall_data                ,
+      omega_data                = omega_data                ,
    )
 # ----------------------------------------------------------------------------
 def predict_one(

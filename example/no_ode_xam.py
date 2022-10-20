@@ -786,7 +786,7 @@ def main() :
       root_node_database      = root_node_database,
       all_option              = all_option,
       omega_grid              = omega_grid,
-      mtall_data              = all_omega_data,
+      omega_data              = all_omega_data,
    )
    #
    # root_node_dir
