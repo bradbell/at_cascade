@@ -15,6 +15,8 @@ Release Notes for at_cascade
    cov
    dd
    distutils
+   mtall
+   mtspecific
    mm
    numpy
    optimizer
@@ -31,8 +33,10 @@ Release Notes for 2022
 
 all_omega Branch
 ****************
-Working on changing all_mtall and all_mtspecific tables
-to all_omega table.
+Change all_mtall to `all_omega` and remove all_mtspecific .
+In other words, do the calculation of mtall minus mtspecific
+(to get the omega constraint) outside of at_cascade.
+This completed and removed the mtall wish list entry.
 
 mm-dd
 *****
@@ -95,8 +99,7 @@ Change license notice to SPDX_ format.
 =====
 1. Improve the description of the location of the fit results; see
    :ref:`cascade_root_node@Output dismod.db` .
-2. Add the :ref:`wish_list@mtall_data` and avgint Table
-   wish list entries.
+2. Add the mtall_data and avgint Table wish list entries.
 3. Fix bug in :ref:`csv_simulate` . To be specific, one of the rate functions
    was being used for all the rates. A regression test for this bug was added
    (where is more than one rate in
