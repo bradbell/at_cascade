@@ -15,7 +15,7 @@ def get_file_path(result_dir, csv_file_key) :
 # -----------------------------------------------------------------------------
 #
 # write_node_tables(result_dir)
-# all_omega_table_file, mtall_index_table_file, omega_age_table_file,
+# all_omega_table_file, omega_index_table_file, omega_age_table_file,
 # omega_time_table_file.
 def write_mtall_tables(result_dir) :
    #
@@ -24,7 +24,7 @@ def write_mtall_tables(result_dir) :
    age_group_inp_file      = at_cascade.ihme.age_group_inp_file
    mtall_inp_file          = at_cascade.ihme.mtall_inp_file
    all_omega_table_file    = get_file_path(result_dir, 'all_omega')
-   mtall_index_table_file  = get_file_path(result_dir, 'mtall_index')
+   omega_index_table_file  = get_file_path(result_dir, 'omega_index')
    node_table_file         = get_file_path(result_dir, 'node')
    omega_age_table_file    = get_file_path(result_dir, 'omega_age')
    omega_time_table_file   = get_file_path(result_dir, 'omega_time')
@@ -33,7 +33,7 @@ def write_mtall_tables(result_dir) :
    # output_file_list
    output_file_list = [
       all_omega_table_file,
-      mtall_index_table_file,
+      omega_index_table_file,
       omega_age_table_file,
       omega_time_table_file,
    ]
@@ -186,9 +186,9 @@ def write_mtall_tables(result_dir) :
       del mtall_dict[from_location_id]
    #
    # all_omega_table
-   # mtall_index_table
+   # omega_index_table
    all_omega_table   = list()
-   mtall_index_table = list()
+   omega_index_table = list()
    all_omega_id      = 0
    for location_id in mtall_dict :
       node_id = location_id2node_id[location_id]
@@ -199,7 +199,7 @@ def write_mtall_tables(result_dir) :
             'node_id'            : node_id,
             'split_reference_id' : split_reference_id
          }
-         mtall_index_table.append(row)
+         omega_index_table.append(row)
          for age_group_id in age_group_id_list :
             for year_id in year_id_list :
                all_omega_value = \
@@ -219,8 +219,8 @@ def write_mtall_tables(result_dir) :
    # all_omega_table_file
    at_cascade.csv.write_table(all_omega_table_file, all_omega_table)
    #
-   # mtall_index_table_file
-   at_cascade.csv.write_table(mtall_index_table_file, mtall_index_table)
+   # omega_index_table_file
+   at_cascade.csv.write_table(omega_index_table_file, omega_index_table)
    #
    # omega_age_table_file
    at_cascade.csv.write_table(omega_age_table_file, omega_age_table)

@@ -144,7 +144,7 @@ default
 The *mtall_data* argument is ``None`` if and only if *omega_grid* is ``None``.
 If *mtall_data* is ``None`` the
 :ref:`all_omega@all_omega Table` and
-:ref:`all_omega@mtall_index Table` will be empty.
+:ref:`all_omega@omega_index Table` will be empty.
 
 
 {xrst_end create_all_node_db}
@@ -332,8 +332,8 @@ def create_all_node_db(
       all_connection, tbl_name, col_name, col_type, row_list
    )
    #
-   # mtall_index table
-   tbl_name  = 'mtall_index'
+   # omega_index table
+   tbl_name  = 'omega_index'
    col_name  = [ 'node_id', 'split_reference_id', 'all_omega_id' ]
    col_type  = [ 'integer', 'integer',             'integer' ]
    row_list  = list()

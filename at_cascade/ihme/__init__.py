@@ -15,7 +15,7 @@ csv_file = {
    'all_omega'     : 'all_omega_table.csv',
    'all_option'    : 'all_option_table.csv',
    'data'          : 'data_table.csv',
-   'mtall_index'   : 'mtall_index_table.csv',
+   'omega_index'   : 'omega_index_table.csv',
    'mulcov_freeze' : 'mulcov_freeze_table.csv',
    'node'          : 'node_table.csv',
    'node_split'    : 'node_split_table.csv',

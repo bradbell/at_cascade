@@ -115,7 +115,7 @@ def omega_constraint(
    for name in [
       'all_option',
       'all_omega',
-      'mtall_index',
+      'omega_index',
       'omega_age_grid',
       'omega_time_grid',
       'split_reference',
@@ -126,7 +126,7 @@ def omega_constraint(
    # case where omega constrained to zero
    if len( all_tables['omega_time_grid']) == 0 :
       assert len( all_tables['all_omega'] ) == 0
-      assert len( all_tables['mtall_index'] ) == 0
+      assert len( all_tables['omega_index'] ) == 0
       assert len( all_tables['omega_age_grid'] ) == 0
       return
    #
@@ -203,10 +203,10 @@ def omega_constraint(
    #
    # node_id2all_omega_id
    node_id2all_omega_id = dict()
-   for row in all_tables['mtall_index'] :
+   for row in all_tables['omega_index'] :
       all_omega_id = row['all_omega_id']
       if all_omega_id % (n_omega_age * n_omega_time) != 0 :
-         msg  = 'mtall_index table: Expect all_omega_id to be a multipler '
+         msg  = 'omega_index table: Expect all_omega_id to be a multipler '
          msg += 'of n_omega_age * n_omega_time\n'
          msg += f'all_omega_id = {all_omega_id} '
          msg += f'n_omega_age = {n_omega_age} '

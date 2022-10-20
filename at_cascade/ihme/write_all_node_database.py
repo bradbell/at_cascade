@@ -41,7 +41,7 @@ def write_all_node_database(result_dir, root_node_database) :
    # BEGIN_SORT_THIS_LINE_PLUS_1
    all_omega_table_file     = get_file_path(result_dir, 'all_omega')
    all_option_table_file    = get_file_path(result_dir, 'all_option')
-   mtall_index_table_file   = get_file_path(result_dir, 'mtall_index')
+   omega_index_table_file   = get_file_path(result_dir, 'omega_index')
    mulcov_freeze_table_file = get_file_path(result_dir, 'mulcov_freeze')
    node_split_table_file    = get_file_path(result_dir, 'node_split')
    omega_age_table_file     = get_file_path(result_dir, 'omega_age')
@@ -149,15 +149,15 @@ def write_all_node_database(result_dir, root_node_database) :
    col_list = [ ('time_id', 'integer') ]
    write_table(connection, omega_time_grid_table, tbl_name, col_list)
    #
-   # mtall_index_table
-   mtall_index_table = at_cascade.csv.read_table(mtall_index_table_file)
-   tbl_name = 'mtall_index'
+   # omega_index_table
+   omega_index_table = at_cascade.csv.read_table(omega_index_table_file)
+   tbl_name = 'omega_index'
    col_list = [
       ('node_id', 'integer'),
       ('split_reference_id', 'integer'),
       ('all_omega_id', 'integer'),
    ]
-   write_table(connection, mtall_index_table, tbl_name, col_list)
+   write_table(connection, omega_index_table, tbl_name, col_list)
    #
    # all_omega_table
    all_omega_table   = at_cascade.csv.read_table(all_omega_table_file)

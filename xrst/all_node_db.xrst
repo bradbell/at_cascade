@@ -70,7 +70,7 @@ by their index in the root_node_database time table.
 
 All Node mtall Values
 #####################
-The combination of the all_omega and mtall_index tables specify
+The combination of the all_omega and omega_index tables specify
 the value of :ref:`glossary@mtall` for all the nodes that have mtall data.
 
 all_omega Table
@@ -91,19 +91,19 @@ is the :ref:`all_node_db@Primary Key` for this table.
 all_omega_value
 ===============
 This column has type ``real`` and is the value of mtall
-for a specific node, age, and time; see mtall_index table below.
+for a specific node, age, and time; see omega_index table below.
 Each value in this column is mtall at a specific age and time
 not on an age or time interval. If you only have mtall on age and time
 intervals, use the midpoint age and midpoint time in the omega grid.
 
-mtall_index Table
+omega_index Table
 *****************
 This table specifies the all_omega_id at which the mtall values
 for a particular node and split_reference begin.
 Specifications for which age and time points
 correspond to each all_omega_id are included below.
 
-mtall_index_id
+omega_index_id
 ==============
 is the :ref:`all_node_db@Primary Key` for this table.
 
@@ -138,7 +138,7 @@ for this *node_id*,
 this *split_reference_id*,
 the *i*-th age in the omega_grid,
 and the *j*-th time in the omega_grid.
-Note that each all_omega_id in the mtall_index table
+Note that each all_omega_id in the omega_index table
 should be a multiple of n_omega_age * n_omega_time
 (because there are that many mtall entries for each node and each
 split_reference value).
