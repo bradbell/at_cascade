@@ -176,7 +176,6 @@ def create_all_node_db(
 # )
 # END syntax
 ) :
-   mtspecific_data = None
    #
    # split_reference_list
    if split_reference_table is None :
@@ -197,7 +196,6 @@ def create_all_node_db(
    assert type(split_reference_table)  is list
    if omega_grid is None :
       assert mtall_data is None
-      assert mtspecific_data is None
    else :
       assert type(omega_grid) is dict
       assert type(mtall_data) is dict
@@ -351,49 +349,6 @@ def create_all_node_db(
             row     = [ node_id, split_reference_id, all_mtall_id ]
             row_list.append( row )
             all_mtall_id += n_omega_age * n_omega_time
-   dismod_at.create_table(
-      all_connection, tbl_name, col_name, col_type, row_list
-   )
-   #
-   # all_mtspecific table
-   tbl_name  = 'all_mtspecific'
-   col_name  = [ 'all_mtspecific_value' ]
-   col_type  = [  'real' ]
-   row_list  = list()
-   if not mtspecific_data is None :
-      node_list = mtspecific_data.keys()
-      for node_name in node_list :
-         node_id = at_cascade.table_name2id(node_table, 'node', node_name)
-         assert n_split == len( mtall_data[node_name] )
-         for k in range(n_split) :
-            mtspecific_list = mtspecific_data[node_name][k]
-            assert len(mtspecific_list) == n_omega_age * n_omega_time
-            for i in range(n_omega_age) :
-               for j in range(n_omega_time) :
-                  value   = mtspecific_list[i * n_omega_time + j]
-                  row     = [ value ]
-                  row_list.append( row )
-   dismod_at.create_table(
-      all_connection, tbl_name, col_name, col_type, row_list
-   )
-   #
-   # mtspecific_index table
-   tbl_name  = 'mtspecific_index'
-   col_name  = [ 'node_id', 'split_reference_id', 'all_mtspecific_id' ]
-   col_type  = [ 'integer', 'integer',            'integer' ]
-   row_list  = list()
-   if not mtspecific_data is None :
-      all_mtspecific_id = 0
-      for node_name in node_list :
-         node_id = at_cascade.table_name2id(node_table, 'node', node_name)
-         for k in range(n_split) :
-            if len(split_reference_table) == 0 :
-               split_reference_id = None
-            else :
-               split_reference_id = k
-            row     = [ node_id, split_reference_id, all_mtspecific_id ]
-            row_list.append( row )
-            all_mtspecific_id += n_omega_age * n_omega_time
    dismod_at.create_table(
       all_connection, tbl_name, col_name, col_type, row_list
    )
