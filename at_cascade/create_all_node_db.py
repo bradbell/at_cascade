@@ -131,7 +131,7 @@ and *j* equal 0, ..., *n_omega_time*-1,
 
 | |tab| *omega_data[node_name][k][ i * n_omega_time + j ]*
 
-is the value of *mtall* at the specified node,
+is the value of *omega* at the specified node,
 the age corresponding to index *i* in *omega_grid*\ [``age``],
 and time corresponding to index *j* in *omega_grid*\ [``time``].
 If split_reference table is empty, *k* is zero.

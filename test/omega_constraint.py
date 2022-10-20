@@ -157,7 +157,6 @@ def main() :
    omega_grid['time'] = list( range(n_omega_time) )
    #
    # omega_data
-   # chi is zero so mtall is equal to omega
    omega_data = dict()
    for node_name in [ 'n0', 'n1', 'n2' ] :
       omega_data[node_name] = [ list() ]
