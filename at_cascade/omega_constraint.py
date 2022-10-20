@@ -27,10 +27,10 @@ This argument can't be ``None``.
 Use
 ===
 This routine builds the *omega* constraints using the
-:ref:`glossary@mtall` data in the *all_node_database* .
-If a node does not have *mtall* data,
+:ref:`glossary@omega` data in the *all_node_database* .
+If a node does not have *omega* data,
 the data for the closest ancestor is used.
-If a node does not have an ancestor with *mtall* data,
+If a node does not have an ancestor with *omega* data,
 zero is used for the *omega* constraint for that node.
 
 fit_node_database
@@ -215,23 +215,23 @@ def omega_constraint(
       if row['split_reference_id'] == split_reference_id :
          node_id2all_omega_id[ row['node_id'] ] = all_omega_id
    #
-   # mtall_ancestor_node_id
+   # omega_ancestor_node_id
    node_id = parent_node_id
    while not node_id in node_id2all_omega_id :
       node_id = fit_tables['node'][node_id]['parent']
       if node_id is None :
          msg  = 'omega_constraint: no ancestor of ' + parent_node_name
-         msg += ' has mtall data'
+         msg += ' has omega data'
          assert False, msg
-   mtall_ancestor_node_id = node_id
-   assert not mtall_ancestor_node_id is None
+   omega_ancestor_node_id = node_id
+   assert not omega_ancestor_node_id is None
    #
-   # parent_mtall
-   all_omega_id = node_id2all_omega_id[mtall_ancestor_node_id]
-   parent_mtall   = list()
+   # parent_omega
+   all_omega_id = node_id2all_omega_id[omega_ancestor_node_id]
+   parent_omega   = list()
    for ij in range( n_omega_age * n_omega_time ) :
       row  = all_tables['all_omega'][all_omega_id + ij ]
-      parent_mtall.append( row['all_omega_value'] )
+      parent_omega.append( row['all_omega_value'] )
    #
    # parent_smooth_id
    parent_smooth_id  = len(fit_tables['smooth'])
@@ -249,7 +249,7 @@ def omega_constraint(
          age_id  = all_tables['omega_age_grid'][i]['age_id']
          time_id = all_tables['omega_time_grid'][j]['time_id']
          ij      = i * n_omega_time + j
-         omega   = parent_mtall[ij]
+         omega   = parent_omega[ij]
          row['age_id']      = age_id
          row['time_id']     = time_id
          row['smooth_id']   = parent_smooth_id
@@ -265,38 +265,36 @@ def omega_constraint(
    # child_node_id
    for child_node_id in child_node_list :
       #
-      # child_mtall
+      # child_omega
       if not child_node_id in node_id2all_omega_id :
-         child_mtall = parent_mtall
+         child_omega = parent_omega
       else :
          all_omega_id = node_id2all_omega_id[child_node_id]
-         child_mtall  = list()
+         child_omega  = list()
          for ij in range( n_omega_age * n_omega_time ) :
                row  = all_tables['all_omega'][all_omega_id + ij ]
-               child_mtall.append( row['all_omega_value'] )
+               child_omega.append( row['all_omega_value'] )
       #
       # random_effect
       random_effect = list()
       for ij in range( n_omega_age * n_omega_time ) :
-         parent_omega = parent_mtall[ij]
-         child_omega  = child_mtall[ij]
-         if parent_omega <= 0 :
+         if parent_omega[ij] <= 0 :
             msg  = 'parent_omega <= 0\n'
             msg += f'parent_node_id = {parent_node_id}'
-            msg += f', mtall_ancestor_node_id = {mtall_ancestor_node_id}'
-            msg += f', parent_mtall = {parent_mtall[ij]}'
+            msg += f', omega_ancestor_node_id = {omega_ancestor_node_id}'
+            msg += f', parent_omega = {parent_omega[ij]}'
             assert False, msg
-         if child_omega <= 0 :
+         if child_omega[ij] <= 0 :
             msg  = 'child_omega <= 0'
             msg += f', child_node_id = {child_node_id}'
             if child_node_id in node_id2all_omega_id :
-               msg += f'\nmtall_ancestor_node_id = {child_node_id}'
+               msg += f'\nomega_ancestor_node_id = {child_node_id}'
             else :
-               msg += '\nmtall_ancestor_node_id = '
-               msg += str(mtall_ancestor_node_id)
-            msg += f', child_mtall = {child_mtall[ij]}'
+               msg += '\nomega_ancestor_node_id = '
+               msg += str(omega_ancestor_node_id)
+            msg += f', child_omega = {child_omega[ij]}'
             assert False, msg
-         random_effect.append( log( child_omega / parent_omega ) )
+         random_effect.append( log( child_omega[ij] / parent_omega[ij] ) )
       #
       # smooth_id
       smooth_id = len( fit_tables['smooth'] )
