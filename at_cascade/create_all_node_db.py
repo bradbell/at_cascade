@@ -321,11 +321,11 @@ def create_all_node_db(
          node_id = at_cascade.table_name2id(node_table, 'node', node_name)
          assert n_split == len( omega_data[node_name] )
          for k in range(n_split) :
-            mtall_list = omega_data[node_name][k]
-            assert len(mtall_list) == n_omega_age * n_omega_time
+            omega_list = omega_data[node_name][k]
+            assert len(omega_list) == n_omega_age * n_omega_time
             for i in range(n_omega_age) :
                for j in range(n_omega_time) :
-                  value   = mtall_list[ i * n_omega_time + j]
+                  value   = omega_list[ i * n_omega_time + j]
                   row     = [ value ]
                   row_list.append( row )
    dismod_at.create_table(
