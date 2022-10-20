@@ -23,10 +23,16 @@ Release Notes for at_cascade
    rst
    spline
    smoothings
+   mtspecific
 }
 
 Release Notes for 2022
 ######################
+
+all_omega Branch
+****************
+Working on changing all_mtall and all_mtspecific tables
+to all_omega table.
 
 mm-dd
 *****

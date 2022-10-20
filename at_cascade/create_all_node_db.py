@@ -6,7 +6,6 @@
 {xrst_begin create_all_node_db}
 {xrst_spell
    covariance
-   mtspecific
 }
 
 Create an All Node Database
@@ -147,31 +146,6 @@ If *mtall_data* is ``None`` the
 :ref:`all_mtall@all_mtall Table` and
 :ref:`all_mtall@mtall_index Table` will be empty.
 
-mtspecific_data
-***************
-This is a python dictionary with a key for each node name
-for the :ref:`glossary@root_node` and its descendant.
-The value *mtspecific_data[node_name]* is a list.
-For each *k*, *mtspecific_data[node_name][k]* is a list.
-For *i* equal 0, ..., *n_omega_age*-1
-and *j* equal 0, ..., *n_omega_time*-1,
-
-| |tab| *mtspecific_data[node_name][k][ i * n_omega_time + j ]*
-
-is the value of *mtspecific* at the specified node,
-the age corresponding to index *i* in *omega_grid*\ [``age``],
-and time corresponding to index *j* in *omega_grid*\ [``time``].
-If split_reference table is empty, *k* is zero.
-Otherwise, let *n_split* be the length of the split_reference table.
-For *k* equal 0, ... , *n_split*-1, it specifies the value of
-:ref:`split_reference_table@split_reference_id` for the covariate value.
-
-default
-=======
-If *omega_grid* is ``None``, *mtspecific_data* must also be ``None``.
-If *mtspecific_data* is ``None`` the
-:ref:`all_mtspecific@all_mtspecific Table` and
-:ref:`all_mtspecific@mtspecific_index Table` will be empty.
 
 {xrst_end create_all_node_db}
 '''
@@ -199,10 +173,11 @@ def create_all_node_db(
    mulcov_freeze_table       = None,
    omega_grid                = None,
    mtall_data                = None,
-   mtspecific_data           = None,
 # )
 # END syntax
 ) :
+   mtspecific_data = None
+   #
    # split_reference_list
    if split_reference_table is None :
       split_reference_table = list()

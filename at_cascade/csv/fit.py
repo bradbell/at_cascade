@@ -958,7 +958,6 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       mulcov_freeze_table       = mulcov_freeze_table       ,
       omega_grid                = omega_grid                ,
       mtall_data                = mtall_data                ,
-      mtspecific_data           = None,
    )
 # ----------------------------------------------------------------------------
 def predict_one(
