@@ -143,8 +143,8 @@ default
 =======
 The *mtall_data* argument is ``None`` if and only if *omega_grid* is ``None``.
 If *mtall_data* is ``None`` the
-:ref:`all_mtall@all_mtall Table` and
-:ref:`all_mtall@mtall_index Table` will be empty.
+:ref:`all_omega@all_omega Table` and
+:ref:`all_omega@mtall_index Table` will be empty.
 
 
 {xrst_end create_all_node_db}
@@ -310,9 +310,9 @@ def create_all_node_db(
       all_connection, tbl_name, col_name, col_type, row_list
    )
    #
-   # all_mtall table
-   tbl_name  = 'all_mtall'
-   col_name  = [ 'all_mtall_value' ]
+   # all_omega table
+   tbl_name  = 'all_omega'
+   col_name  = [ 'all_omega_value' ]
    col_type  = [  'real' ]
    row_list  = list()
    if not mtall_data is None :
@@ -334,11 +334,11 @@ def create_all_node_db(
    #
    # mtall_index table
    tbl_name  = 'mtall_index'
-   col_name  = [ 'node_id', 'split_reference_id', 'all_mtall_id' ]
+   col_name  = [ 'node_id', 'split_reference_id', 'all_omega_id' ]
    col_type  = [ 'integer', 'integer',             'integer' ]
    row_list  = list()
    if not mtall_data is None :
-      all_mtall_id = 0
+      all_omega_id = 0
       for node_name in node_list :
          node_id = at_cascade.table_name2id(node_table, 'node', node_name)
          for k in range(n_split) :
@@ -346,9 +346,9 @@ def create_all_node_db(
                split_reference_id = None
             else :
                split_reference_id = k
-            row     = [ node_id, split_reference_id, all_mtall_id ]
+            row     = [ node_id, split_reference_id, all_omega_id ]
             row_list.append( row )
-            all_mtall_id += n_omega_age * n_omega_time
+            all_omega_id += n_omega_age * n_omega_time
    dismod_at.create_table(
       all_connection, tbl_name, col_name, col_type, row_list
    )

@@ -39,7 +39,7 @@ def write_all_node_database(result_dir, root_node_database) :
    #
    # intermediate files
    # BEGIN_SORT_THIS_LINE_PLUS_1
-   all_mtall_table_file     = get_file_path(result_dir, 'all_mtall')
+   all_omega_table_file     = get_file_path(result_dir, 'all_omega')
    all_option_table_file    = get_file_path(result_dir, 'all_option')
    mtall_index_table_file   = get_file_path(result_dir, 'mtall_index')
    mulcov_freeze_table_file = get_file_path(result_dir, 'mulcov_freeze')
@@ -155,15 +155,15 @@ def write_all_node_database(result_dir, root_node_database) :
    col_list = [
       ('node_id', 'integer'),
       ('split_reference_id', 'integer'),
-      ('all_mtall_id', 'integer'),
+      ('all_omega_id', 'integer'),
    ]
    write_table(connection, mtall_index_table, tbl_name, col_list)
    #
-   # all_mtall_table
-   all_mtall_table   = at_cascade.csv.read_table(all_mtall_table_file)
-   tbl_name = 'all_mtall'
-   col_list = [ ('all_mtall_value', 'real') ]
-   write_table(connection, all_mtall_table, tbl_name, col_list)
+   # all_omega_table
+   all_omega_table   = at_cascade.csv.read_table(all_omega_table_file)
+   tbl_name = 'all_omega'
+   col_list = [ ('all_omega_value', 'real') ]
+   write_table(connection, all_omega_table, tbl_name, col_list)
    #
    # mtspecific_index_table
    mtspecific_index_table = list()

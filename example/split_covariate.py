@@ -102,7 +102,7 @@ Simulated Data
 
 mtall
 =====
-The ref:`all_mtall` data for this example is simulated as equal to
+The ref:`all_omega` data for this example is simulated as equal to
 the true value for omega (see rate_true directly below).
 
 rate_true(rate, a, t, n, c)

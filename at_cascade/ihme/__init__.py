@@ -12,7 +12,7 @@ mtall_inp_file     = 'ihme_db/DisMod_AT/mtall/gbd2019_all_cause_mortality.csv'
 # This names are relative to the result_dir in the all_option table.
 # BEGIN_SORT_THIS_LINE_PLUS_2
 csv_file = {
-   'all_mtall'     : 'all_mtall_table.csv',
+   'all_omega'     : 'all_omega_table.csv',
    'all_option'    : 'all_option_table.csv',
    'data'          : 'data_table.csv',
    'mtall_index'   : 'mtall_index_table.csv',

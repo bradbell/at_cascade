@@ -15,7 +15,7 @@ def get_file_path(result_dir, csv_file_key) :
 # -----------------------------------------------------------------------------
 #
 # write_node_tables(result_dir)
-# all_mtall_table_file, mtall_index_table_file, omega_age_table_file,
+# all_omega_table_file, mtall_index_table_file, omega_age_table_file,
 # omega_time_table_file.
 def write_mtall_tables(result_dir) :
    #
@@ -23,7 +23,7 @@ def write_mtall_tables(result_dir) :
    map_location_id         = at_cascade.ihme.map_location_id
    age_group_inp_file      = at_cascade.ihme.age_group_inp_file
    mtall_inp_file          = at_cascade.ihme.mtall_inp_file
-   all_mtall_table_file    = get_file_path(result_dir, 'all_mtall')
+   all_omega_table_file    = get_file_path(result_dir, 'all_omega')
    mtall_index_table_file  = get_file_path(result_dir, 'mtall_index')
    node_table_file         = get_file_path(result_dir, 'node')
    omega_age_table_file    = get_file_path(result_dir, 'omega_age')
@@ -32,7 +32,7 @@ def write_mtall_tables(result_dir) :
    #
    # output_file_list
    output_file_list = [
-      all_mtall_table_file,
+      all_omega_table_file,
       mtall_index_table_file,
       omega_age_table_file,
       omega_time_table_file,
@@ -185,39 +185,39 @@ def write_mtall_tables(result_dir) :
    for from_location_id in map_location_id :
       del mtall_dict[from_location_id]
    #
-   # all_mtall_table
+   # all_omega_table
    # mtall_index_table
-   all_mtall_table   = list()
+   all_omega_table   = list()
    mtall_index_table = list()
-   all_mtall_id      = 0
+   all_omega_id      = 0
    for location_id in mtall_dict :
       node_id = location_id2node_id[location_id]
       for sex_id in mtall_dict[location_id] :
          split_reference_id = sex_id2split_reference_id[sex_id]
          row = {
-            'all_mtall_id'       : all_mtall_id,
+            'all_omega_id'       : all_omega_id,
             'node_id'            : node_id,
             'split_reference_id' : split_reference_id
          }
          mtall_index_table.append(row)
          for age_group_id in age_group_id_list :
             for year_id in year_id_list :
-               all_mtall_value = \
+               all_omega_value = \
                   mtall_dict[location_id][sex_id][year_id][age_group_id]
                row = {
-                  'all_mtall_id'    : all_mtall_id,
+                  'all_omega_id'    : all_omega_id,
                   'location_id'     : location_id,
                   'node_id'         : node_id,
                   'sex_id'          : sex_id,
                   'year_id'         : year_id,
                   'age_group_id'    : age_group_id,
-                  'all_mtall_value' : all_mtall_value ,
+                  'all_omega_value' : all_omega_value ,
                }
-               all_mtall_table.append(row)
-               all_mtall_id += 1
+               all_omega_table.append(row)
+               all_omega_id += 1
    #
-   # all_mtall_table_file
-   at_cascade.csv.write_table(all_mtall_table_file, all_mtall_table)
+   # all_omega_table_file
+   at_cascade.csv.write_table(all_omega_table_file, all_omega_table)
    #
    # mtall_index_table_file
    at_cascade.csv.write_table(mtall_index_table_file, mtall_index_table)
