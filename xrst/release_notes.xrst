@@ -44,7 +44,15 @@ mm-dd
    :ref:`csv_fit@Input Files@parent_rate.csv`,
    :ref:`csv_fit@Input Files@child_rate.csv`,
    :ref:`csv_fit@Input Files@mulcov.csv`.
-
+4. There was an error in the
+   :ref:`csv_fit@Output Files@all_predict.csv` file.
+   To be specific, the samples were not properly limited
+   to the sex value corresponding to the fit.
+   This has been fixed.
+5. The covariate multipliers for sex are now frozen after
+   the both fit at the root node level.
+   The other covariate multipliers are frozen after the female and male
+   split at the root level.
 
 10-18
 =====

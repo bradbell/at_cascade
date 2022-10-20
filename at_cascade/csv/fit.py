@@ -80,7 +80,6 @@ This string is the name of the root node.
 The default for *root_node_name* is the top root of the entire node tree.
 Only the root node and its descendents will be fit.
 
-
 node.csv
 ========
 This file has the same description as the simulate
@@ -323,13 +322,16 @@ covariate values specified in covariate.csv.
 
 avgint_id
 ---------
-This is the index in the avgint table for this sample.
-Each *avgint_id* corresponds to a different value for the same random sample.
+Each avgint_id corresponds to a different value for age, time, or
+integrand in the all_predict file.
+The age and time values comes from the covariate.csv file.
+The integrands come for the predict_integrand.csv file.
 
 s_index
 -------
 This is the sample index. Each such index corresponds to a different
 (independent) sample of the posterior distribution for the model variables.
+For each s_index value, there should be a complete set of avgint_id values.
 
 age_lo, age_up
 --------------
@@ -836,7 +838,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    new          = False
    database     = f'{fit_dir}/root_node.db'
    connection   = dismod_at.create_connection(database, new)
-   for name in [ 'mulcov', 'age', 'time' ] :
+   for name in [ 'mulcov', 'age', 'time', 'covariate' ] :
       root_node_table[name] = dismod_at.get_table_dict(
          connection = connection, tbl_name = name)
    connection.close()
@@ -872,15 +874,27 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    #
    # mulcov_freeze_table
    mulcov_freeze_table = list()
-   for mulcov_id in range( len(root_node_table['mulcov']  ) ) :
-      for split_reference_id in [ 0 , 2 ] :
-         # split_reference_id 0 for female, 2 for male
+   for (mulcov_id, row) in enumerate(root_node_table['mulcov']) :
+      covariate_id    = row['covariate_id']
+      cov_row         = root_node_table['covariate'][covariate_id]
+      covariate_name = cov_row['covariate_name']
+      if covariate_name == 'sex' :
+         assert split_reference_table[1]['split_reference_name'] == 'both'
          row = {
             'fit_node_name'      : root_node_name     ,
-            'split_reference_id' : split_reference_id ,
+            'split_reference_id' : 1                  ,
             'mulcov_id'          : mulcov_id          ,
          }
          mulcov_freeze_table.append(row)
+      else :
+         for split_reference_id in [ 0 , 2 ] :
+            # split_reference_id 0 for female, 2 for male
+            row = {
+               'fit_node_name'      : root_node_name     ,
+               'split_reference_id' : split_reference_id ,
+               'mulcov_id'          : mulcov_id          ,
+            }
+            mulcov_freeze_table.append(row)
    #
    # omega_grid
    age_list     = [ row['age'] for row  in root_node_table['age'] ]
@@ -998,16 +1012,37 @@ def predict_one(
    # sex_value
    row       = split_reference_table[fit_split_reference_id]
    sex_value = row['split_reference_value']
+   sex_name  = row['split_reference_name']
    #
    # avgint_table
    avgint_table = list()
    #
+   # male_index_dict
+   male_index_dict = dict()
+   if sex_name == 'both' :
+      for (i_row, row) in enumerate(all_covariate_table) :
+         if row['node_name'] == fit_node_name :
+            sex  = row['sex']
+            age  = float( row['age'] )
+            time = float( row['time'] )
+            if sex == 'male' :
+               if age not in male_index_dict :
+                  male_index_dict[age] = dict()
+               if time not in male_index_dict[age] :
+                  male_index_dict[age][time] = i_row
+   #
    # cov_row
    for cov_row in all_covariate_table :
       #
-      # node_name
-      node_name = cov_row['node_name']
-      if node_name == fit_node_name :
+      # select
+      if cov_row['sex'] == sex_name :
+         select = True
+      elif cov_row['sex'] == 'female' and sex_name == 'both' :
+         select = True
+      else :
+         select = False
+      select = select and cov_row['node_name'] == fit_node_name
+      if select :
          #
          # avgint_row
          age  = float( cov_row['age'] )
@@ -1032,7 +1067,13 @@ def predict_one(
             if covariate_name == 'sex' :
                covariate_value = sex_value
             else :
-               covariate_value = cov_row[covariate_name]
+               covariate_value = float( cov_row[covariate_name] )
+               if sex_name == 'both' :
+                  male_row  = all_covariate_table[ male_index_dict[age][time] ]
+                  assert male_row['sex'] == 'male'
+                  assert cov_row['sex']  == 'female'
+                  covariate_value += float( male_row[covariate_name] )
+                  covariate_value /= 2.0
             #
             # avgint_row
             key = f'x_{covariate_id}'
