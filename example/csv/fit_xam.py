@@ -60,8 +60,8 @@ Node Tree
       -  :ref:`csv_fit@Output Files@root_node.db`
    *  -  option_out.csv
       -  :ref:`csv_fit@Output Files@option_out.csv`
-   *  -  all_predict.csv
-      -  :ref:`csv_fit@Output Files@all_predict.csv`
+   *  -  sam_predict.csv
+      -  :ref:`csv_fit@Output Files@sam_predict.csv`
 
 {xrst_literal
    BEGIN_PYTHON
@@ -206,7 +206,7 @@ def main() :
    at_cascade.csv.fit(fit_dir)
    #
    # all_predict_table
-   file_name = f'{fit_dir}/all_predict.csv'
+   file_name = f'{fit_dir}/sam_predict.csv'
    all_predict_table = at_cascade.csv.read_table(file_name)
    #
    # node
@@ -226,7 +226,7 @@ def main() :
          if len(sample_list) > 0 :
             sum_avgint = 0.0
             for row in sample_list :
-               sum_avgint   += float( row['avgint'] )
+               sum_avgint   += float( row['avg_integrand'] )
             avgint    = sum_avgint / len(sample_list)
             haqi      = float( row['haqi'] )
             effect    = true_mulcov_haqi * (haqi - haqi_avg)

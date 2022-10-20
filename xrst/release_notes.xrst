@@ -33,10 +33,6 @@ Release Notes for 2022
 
 all_omega Branch
 ****************
-Change all_mtall to `all_omega` and remove all_mtspecific .
-In other words, do the calculation of mtall minus mtspecific
-(to get the omega constraint) outside of at_cascade.
-This completed and removed the mtall wish list entry.
 
 mm-dd
 *****
@@ -47,6 +43,14 @@ mm-dd
    (it was done previously).
 2. Remove default None values for arguments to :ref:`check_cascade_node`
    and include argument type asserts in Syntax.
+3. Change all_mtall to `all_omega` and remove all_mtspecific .
+   In other words, do the calculation of mtall minus mtspecific
+   (to get the omega constraint) outside of at_cascade.
+   This completed and removed the mtall wish list entry.
+4. In csv.fit, change all_predict.csv to
+   :ref:`csv_fit@Output Files@sam_predict.csv`.
+   In addition, make the column names in this file specialized for
+   csv fit predictions.
 
 10-19
 =====

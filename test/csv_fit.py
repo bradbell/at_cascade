@@ -60,8 +60,8 @@ Node Tree
       -  :ref:`csv_fit@Output Files@root_node.db`
    *  -  option_out.csv
       -  :ref:`csv_fit@Output Files@option_out.csv`
-   *  -  all_predict.csv
-      -  :ref:`csv_fit@Output Files@all_predict.csv`
+   *  -  sam_predict.csv
+      -  :ref:`csv_fit@Output Files@sam_predict.csv`
 
 {xrst_literal
    BEGIN_PYTHON
@@ -199,9 +199,9 @@ def main() :
    # csv.fit
    at_cascade.csv.fit(fit_dir)
    #
-   # all_predict_table
-   file_name = f'{fit_dir}/all_predict.csv'
-   all_predict_table = at_cascade.csv.read_table(file_name)
+   # sam_predict_table
+   file_name = f'{fit_dir}/sam_predict.csv'
+   sam_predict_table = at_cascade.csv.read_table(file_name)
    #
    # node
    for node in [ 'n0', 'n1', 'n2' ] :
@@ -210,7 +210,7 @@ def main() :
          #
          # sample
          sample_list = list()
-         for row in all_predict_table :
+         for row in sam_predict_table :
             if row['integrand'] == 'Sincidence' and \
                   row['node'] == node and \
                      row['sex'] == sex_name :
@@ -220,13 +220,15 @@ def main() :
          if len(sample_list) > 0 :
             sum_avgint = 0.0
             for row in sample_list :
-               sum_avgint   += float( row['avgint'] )
+               sum_avgint   += float( row['avg_integrand'] )
             avgint    = sum_avgint / len(sample_list)
             sex_value = sex_name2value[sex_name]
             effect    = true_mulcov_sex * sex_value
             iota      = math.exp(effect) * no_effect_iota
             rel_error = (avgint - iota) / iota
-            assert abs(rel_error) < 0.01
+            if abs(rel_error) > 0.01 :
+               print('rel_error =', rel_error)
+               assert False
 #
 main()
 # END_PYTHON
