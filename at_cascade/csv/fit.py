@@ -103,7 +103,7 @@ Each such node must be an descendant of the root node.
 predict_integrand.csv
 =====================
 This is the list of integrands at which predictions are made
-and stored in :ref:`csv_fit@Output Files@sam_predict.csv` .
+and stored in :ref:`csv_fit@Output Files@fit_predict.csv` .
 
 integrand_name
 --------------
@@ -315,18 +315,11 @@ option_out.csv
 This is a copy of :ref:`csv_fit@Input Files@option_in.csv` with the default
 filled in for missing values.
 
-sam_predict.csv
+fit_predict.csv
 ===============
-This is a sampling of the predictions for all of the nodes at the age, time and
+This is the predictions for all of the nodes at the age, time and
 covariate values specified in covariate.csv.
-The sampling is done using an asymptotic approximation for the
-posterior distribution of the variable in the model.
-
-sample_index
-------------
-This is the sample index. Each such index corresponds to a different
-(independent) sample of the posterior distribution for the model variables.
-For each sample_index value, there should be a complete set of avgint_id values.
+The prediction is done using the optimal variable values.
 
 avgint_id
 ---------
@@ -367,6 +360,21 @@ covariate_names
 ---------------
 The rest of the columns are covariate names and contain the value
 of the corresponding covariate in covariate.csv.
+
+sam_predict.csv
+===============
+This is a sampling of the predictions for all of the nodes at the age, time and
+covariate values specified in covariate.csv.
+It has the same columns as fit_predict.csv (see above) plus
+an extra column named sample_index.
+
+sample_index
+------------
+For each sample_index value, there is a complete set of all the values
+in the fit_predict.csv table.
+A different (independent) sample from of the model variables
+from their posterior distribution is used to do the predictions for
+each sample index.
 
 {xrst_end csv_fit}
 '''
@@ -1091,24 +1099,36 @@ def predict_one(
    index        = fit_node_database.rfind('/')
    fit_node_dir = fit_node_database[: index]
    #
-   # sam_predict_table
-   command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
-   dismod_at.system_command_prc(command, print_command = False )
-   new           = False
-   connection    = dismod_at.create_connection(fit_node_database, new)
-   sam_predict_table = dismod_at.get_table_dict(connection, 'predict')
-   connection.close()
-   for pred_row in sam_predict_table :
-      avgint_id  = pred_row['avgint_id']
-      avgint_row = avgint_table[avgint_id]
-      for key in avgint_row.keys() :
-         pred_row[key] = avgint_row[key]
-      avg_integrand             = float( pred_row['avg_integrand'] )
-      pred_row['avg_integrand'] = format(avg_integrand, '.5g')
-   #
-   # sam_predict.csv
-   file_name    = f'{fit_node_dir}/sam_predict.csv'
-   at_cascade.csv.write_table(file_name, sam_predict_table)
+   # prefix
+   for prefix in [ 'fit' , 'sam' ] :
+      #
+      # command
+      command = [ 'dismod_at', fit_node_database, 'predict' ]
+      if prefix == 'fit' :
+         command.append( 'fit_var' )
+      else :
+         command.append( 'sample' )
+      dismod_at.system_command_prc(command, print_command = False )
+      #
+      # predict_table
+      new           = False
+      connection    = dismod_at.create_connection(fit_node_database, new)
+      predict_table = dismod_at.get_table_dict(connection, 'predict')
+      connection.close()
+      for pred_row in predict_table :
+         avgint_id  = pred_row['avgint_id']
+         avgint_row = avgint_table[avgint_id]
+         for key in avgint_row.keys() :
+            pred_row[key] = avgint_row[key]
+         avg_integrand             = float( pred_row['avg_integrand'] )
+         pred_row['avg_integrand'] = format(avg_integrand, '.5g')
+         if prefix == 'fit' :
+            assert pred_row['sample_index'] == None
+            del pred_row['sample_index']
+      #
+      # prefix_predict.csv
+      file_name    = f'{fit_node_dir}/{prefix}_predict.csv'
+      at_cascade.csv.write_table(file_name, predict_table)
 # ----------------------------------------------------------------------------
 def predict_all(fit_dir, covariate_table, fit_goal_set) :
    assert type(fit_dir) == str
@@ -1218,15 +1238,20 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
          all_covariate_table   = covariate_table   ,
       )
    #
-   # sam_predict_table
-   sam_predict_table = list()
-   #
    # sex_value2name
    sex_value2name = dict()
    for row in split_reference_table :
       name  = row['split_reference_name']
       value = row['split_reference_value']
       sex_value2name[value] = name
+   #
+   # fit_node_dir
+   index = fit_node_database.rindex('/')
+   fit_node_dir           = fit_node_database[: index]
+   #
+   # sam_predict_table, fit_predict_tale
+   sam_predict_table = list()
+   fit_predict_table = list()
    #
    # fit_node_database
    for fit_node_database in fit_node_database_list :
@@ -1238,41 +1263,51 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
       integrand_table     = dismod_at.get_table_dict(connection, 'integrand')
       connection.close()
       #
-      # sam_node_predict_table
-      index = fit_node_database.rindex('/')
-      fit_node_dir           = fit_node_database[: index]
-      file_name              = f'{fit_node_dir}/sam_predict.csv'
-      sam_node_predict_table =  at_cascade.csv.read_table(file_name)
-      #
-      # row_in
-      for row_in in sam_node_predict_table :
+      # prefix
+      for prefix in [ 'fit', 'sam' ] :
          #
-         # row_out
-         row_out = dict()
-         for key in ['sample_index', 'avgint_id', 'avg_integrand' ] :
-            row_out[key] = row_in[key]
-         assert float( row_in['age_lower'] )   == float( row_in['age_upper'] )
-         assert float( row_in['time_lower'] ) == float( row_in['time_upper'] )
-         row_out['age']  = row_in['age_lower']
-         row_out['time'] = row_in['time_lower']
+         # predict_table
+         file_name     = f'{fit_node_dir}/{prefix}_predict.csv'
+         predict_table =  at_cascade.csv.read_table(file_name)
          #
-         node_id         = int( row_in['node_id'] )
-         row_out['node'] = node_table[node_id]['node_name']
-         #
-         integrand_id         = int( row_in['integrand_id'] )
-         row_out['integrand'] = integrand_table[integrand_id]['integrand_name']
-         #
-         # row_out
-         for (i_cov, cov_row) in enumerate( fit_covariate_table ) :
-            covariate_name = cov_row['covariate_name']
-            covariate_key  = f'x_{i_cov}'
-            cov_value      = float( row_in[covariate_key] )
-            if covariate_name == 'sex' :
-               cov_value = sex_value2name[cov_value]
-            row_out[covariate_name] = cov_value
-         #
-         # sam_predict_table
-         sam_predict_table.append( row_out )
+         # row_in
+         for row_in in predict_table :
+            #
+            # row_out
+            row_out = dict()
+            for key in ['avgint_id', 'avg_integrand' ] :
+               row_out[key] = row_in[key]
+            if prefix == 'sam' :
+               row_out['sample_index'] = row_in['sample_index']
+            assert float(row_in['age_lower'])  == float(row_in['age_upper'])
+            assert float(row_in['time_lower']) == float(row_in['time_upper'])
+            row_out['age']  = row_in['age_lower']
+            row_out['time'] = row_in['time_lower']
+            #
+            node_id         = int( row_in['node_id'] )
+            row_out['node'] = node_table[node_id]['node_name']
+            #
+            integrand_id         = int( row_in['integrand_id'] )
+            row_out['integrand'] = integrand_table[integrand_id]['integrand_name']
+            #
+            # row_out
+            for (i_cov, cov_row) in enumerate( fit_covariate_table ) :
+               covariate_name = cov_row['covariate_name']
+               covariate_key  = f'x_{i_cov}'
+               cov_value      = float( row_in[covariate_key] )
+               if covariate_name == 'sex' :
+                  cov_value = sex_value2name[cov_value]
+               row_out[covariate_name] = cov_value
+            #
+            # sam_predict_table, fit_predict_table
+            if prefix == 'fit' :
+               fit_predict_table.append( row_out )
+            else :
+               sam_predict_table.append( row_out )
+   #
+   # fit_predict.csv
+   file_name = f'{fit_dir}/fit_predict.csv'
+   at_cascade.csv.write_table(file_name, fit_predict_table )
    #
    # sam_predict.csv
    file_name = f'{fit_dir}/sam_predict.csv'

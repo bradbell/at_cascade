@@ -49,8 +49,10 @@ mm-dd
    This completed and removed the mtall wish list entry.
 4. In csv.fit, change all_predict.csv to
    :ref:`csv_fit@Output Files@sam_predict.csv`.
-   In addition, make the column names in this file specialized for
+   Make the column names in this file specialized for
    csv fit predictions.
+   In addition, add :ref:`csv_fit@Output Files@fit_predict.csv`
+   to the csv fit predictions.
 
 10-19
 =====
@@ -66,8 +68,7 @@ mm-dd
    :ref:`csv_fit@Input Files@parent_rate.csv`,
    :ref:`csv_fit@Input Files@child_rate.csv`,
    :ref:`csv_fit@Input Files@mulcov.csv`.
-4. There was an error in the
-   :ref:`csv_fit@Output Files@all_predict.csv` file.
+4. There was an error in the all_predict.csv file.
    To be specific, the samples were not properly limited
    to the sex value corresponding to the fit.
    This has been fixed.

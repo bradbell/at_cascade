@@ -60,6 +60,8 @@ Node Tree
       -  :ref:`csv_fit@Output Files@root_node.db`
    *  -  option_out.csv
       -  :ref:`csv_fit@Output Files@option_out.csv`
+   *  -  fit_predict.csv
+      -  :ref:`csv_fit@Output Files@fit_predict.csv`
    *  -  sam_predict.csv
       -  :ref:`csv_fit@Output Files@sam_predict.csv`
 
@@ -205,34 +207,37 @@ def main() :
    # csv.fit
    at_cascade.csv.fit(fit_dir)
    #
-   # all_predict_table
-   file_name = f'{fit_dir}/sam_predict.csv'
-   all_predict_table = at_cascade.csv.read_table(file_name)
-   #
-   # node
-   for node in [ 'n0', 'n1', 'n2' ] :
-      # sex
-      for sex in [ 'female', 'both', 'male' ] :
-         #
-         # sample
-         sample_list = list()
-         for row in all_predict_table :
-            if row['integrand'] == 'Sincidence' and \
-                  row['node'] == node and \
-                     row['sex'] == sex :
-               #
-               sample_list.append(row)
-         #
-         if len(sample_list) > 0 :
-            sum_avgint = 0.0
-            for row in sample_list :
-               sum_avgint   += float( row['avg_integrand'] )
-            avgint    = sum_avgint / len(sample_list)
-            haqi      = float( row['haqi'] )
-            effect    = true_mulcov_haqi * (haqi - haqi_avg)
-            iota      = math.exp(effect) * no_effect_iota
-            rel_error = (avgint - iota) / iota
-            assert abs(rel_error) < 0.01
+   # prefix
+   for prefix in [ 'fit' , 'sam' ] :
+      #
+      # all_predict_table
+      file_name = f'{fit_dir}/{prefix}_predict.csv'
+      predict_table = at_cascade.csv.read_table(file_name)
+      #
+      # node
+      for node in [ 'n0', 'n1', 'n2' ] :
+         # sex
+         for sex in [ 'female', 'both', 'male' ] :
+            #
+            # sample
+            sample_list = list()
+            for row in predict_table :
+               if row['integrand'] == 'Sincidence' and \
+                     row['node'] == node and \
+                        row['sex'] == sex :
+                  #
+                  sample_list.append(row)
+            #
+            if len(sample_list) > 0 :
+               sum_avgint = 0.0
+               for row in sample_list :
+                  sum_avgint   += float( row['avg_integrand'] )
+               avgint    = sum_avgint / len(sample_list)
+               haqi      = float( row['haqi'] )
+               effect    = true_mulcov_haqi * (haqi - haqi_avg)
+               iota      = math.exp(effect) * no_effect_iota
+               rel_error = (avgint - iota) / iota
+               assert abs(rel_error) < 0.01
 #
 main()
 # END_PYTHON
