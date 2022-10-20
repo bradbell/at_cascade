@@ -100,11 +100,6 @@ There are no random effect for this example.
 Simulated Data
 **************
 
-mtall
-=====
-The ref:`all_omega` data for this example is simulated as equal to
-the true value for omega (see rate_true directly below).
-
 rate_true(rate, a, t, n, c)
 ===========================
 For *rate* equal to iota or omega,

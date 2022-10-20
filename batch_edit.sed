@@ -12,8 +12,7 @@
 # The files in bin/devel.sh ignore_files are automatically in this list
 # (see devel.sh for pattern matching convention).
 # ignore_files='
-#  xrst/wish_list.xrst
-#  xrst/release_notes.xrst
+#  xrst/glossary.xrst
 # '
 # list of files and or directories that are moved to new names
 # move_paths='
@@ -32,4 +31,10 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|mtall_list|omega_list|g
+/^mtall$/! b end
+:loop
+N
+/\n *$/! b loop
+d
+#
+: end
