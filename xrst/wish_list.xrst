@@ -13,7 +13,7 @@ Wish List for at_cascade
 
 mtall_data
 **********
-Change :ref:`all_mtall` to `all_omega` and remove :ref:`all_mtspecific`.
+Change :ref:`all_mtall` to `all_omega` and remove all_mtspecific .
 In other words, do the calculation of mtall minus mtspecific outside
 of at_cascade.
 
