@@ -20,22 +20,37 @@ Syntax
 
 rate_true
 *********
-This argument can't be ``None`` and
+This argument
 is a function with the following syntax
 ```
 rate = rate_true(rate_name, a, t, n, c)
 ```
+
+rate_name
+=========
 The argument *rate_name* is one of the following:
 :ref:`glossary@iota`,
 :ref:`glossary@rho`,
 :ref:`glossary@chi`, or
 :ref:`glossary@omega`.
+
+a, t
+====
 The argument *a* ( *t* ) is the age ( time ) at which we
 are evaluating the rate.
+
+n
+=
 The argument *n* is the :ref:`glossary@node_name` for the
 node where we are evaluating the rate.
+
+c
+=
 The argument *c* is a list of covariate values
 in the same order as the covariate table.
+
+rate
+====
 The result *rate* is the corresponding value for the rate.
 
 all_node_database
@@ -43,7 +58,6 @@ all_node_database
 is a python string specifying the location of the
 :ref:`all_node_db`
 relative to the current working directory.
-This argument can't be ``None``.
 
 fit_node_database
 *****************
@@ -53,18 +67,13 @@ It is a :ref:`glossary@fit_node_database` with the
 extra properties listed under
 :ref:`cascade_root_node@Output dismod.db`
 in the cascade_root_node documentation.
-This argument can't be ``None``.
-
-avgint Table
-============
-The avgint table in this database is replaced using the
-*avgint* argument to this routine.
 
 avgint_table
 ************
 This an avgint table specifying the predictions to check.
 The node_id in this table does not matter because the parent node
 in the fit_node_database is used in its place.
+The avgint table in the *fit_node_database* is replaced using this argument.
 
 relative_tolerance
 ******************
@@ -86,19 +95,18 @@ import at_cascade
 def check_cascade_node(
 # BEGIN syntax
 # at_cascade.check_cascade_node(
-         rate_true          = None,
-         all_node_database  = None,
-         fit_node_database  = None,
-         avgint_table       = None,
+         rate_true          ,
+         all_node_database  ,
+         fit_node_database  ,
+         avgint_table       ,
          relative_tolerance = None,
 # )
-# END syntax
 ) :
-   assert not rate_true is None
    assert type(all_node_database) == str
    assert type(fit_node_database) == str
    assert type(avgint_table) == list
-   assert relative_tolerance is None or type(relative_tolerance) == float
+   assert relative_tolerance == None or type(relative_tolerance) == float
+   # END syntax
    #
    # tables
    new        = False
