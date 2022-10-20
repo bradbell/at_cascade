@@ -766,13 +766,10 @@ def main() :
       for age_id in omega_grid['age'] :
          age            = age_grid[age_id]
          time           = 2000.0
-         integrand_name = 'mtall'
-         mtall          = \
+         integrand_name = 'mtother'
+         mtother        = \
             average_integrand(integrand_name, age, node_name, income)
-         integrand_name = 'mtspecific'
-         mtspecific     = \
-            average_integrand(integrand_name, age, node_name, income)
-         omega_list.append(mtall - mtspecific)
+         omega_list.append(mtother)
       all_omega_data[node_name] = [ omega_list ]
    #
    # Create all_node.db
