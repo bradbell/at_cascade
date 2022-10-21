@@ -13,7 +13,7 @@ version = '2022.10.20'
 authors = [
   {name  = 'Bradley M. Bell', email = 'bradbell@seanet.com'},
 ]
-description       = 'Exract Sphinx RST Files'
+description       = 'Cascading dismod_at from parent to child regions'
 license           = 'GPL-3.0-or-later'
 requires-python   = '>=3.8'
 classifiers       = [
