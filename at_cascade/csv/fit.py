@@ -534,8 +534,7 @@ class smoothing_function :
 # is the list of dict corresponding to the covariate.csv file
 #
 # csv_option_value
-# As a side effect,
-# this routine sets csv_option_value; see set_csv_option_value.
+# This routine assues that csv_option_value has been set.
 #
 # age_grid, time_grid, covariate_table =
 def create_root_node_database(fit_dir) :
@@ -549,7 +548,6 @@ def create_root_node_database(fit_dir) :
    input_list = [
       'node',
       'covariate',
-      'option_in',
       'predict_integrand',
       'prior',
       'parent_rate',
@@ -565,29 +563,11 @@ def create_root_node_database(fit_dir) :
    #
    print('being creating root node database' )
    #
-   # node_set, top_node_name
+   # node_set
    node_set       = set()
-   top_node_name  = None
    for row in input_table['node'] :
       node_name   = row['node_name']
-      parent_name = row['parent_name']
-      if node_name in node_set :
-         msg = f'node_name {node_name} apprears twice in node.csv'
-         assert False, msg
-      if parent_name == None :
-         if top_node_name != None :
-            msg = 'node.csv: more than one node has no parent node'
-            assert False, msg
-         top_node_name = node_name
       node_set.add( node_name )
-   if top_node_name == None :
-      msg = 'node.csv: no node has an empty parent_name'
-      assert False, msg
-   #
-   # csv_option_value
-   set_csv_option_value(
-      fit_dir, input_table['option_in'], top_node_name
-   )
    #
    # root_node_name, random_seed
    root_node_name = csv_option_value['root_node_name']
@@ -870,6 +850,9 @@ def create_root_node_database(fit_dir) :
 # covariate_table
 # is the list of dict corresponding to the covariate.csv file.
 #
+# csv_option_value
+# This routine assues that csv_option_value has been set.
+#
 def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    assert type(fit_dir) == str
    assert type(age_grid) == list
@@ -1001,6 +984,44 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       omega_data                = omega_data                ,
    )
 # ----------------------------------------------------------------------------
+# Calculate the predictions for One Fit
+#
+# fit_dir
+# *******
+# This string is the directory name where the input and output csv files
+# are located.
+#
+# fit_node_database
+# This string is the location, relative to fit_dir, of the dismod_at
+# databse for a fit.
+#
+# fit_node_id
+# This int is the node_id in the fit node for this database.
+#
+# all_node_database
+# This string is the all node database for this fit.
+#
+# all_covariate_table
+# The list of dict is the in memory representation of the
+# covariate.csv file
+#
+# fit_predict.csv
+# This file is locatied in the same directory as fit_node_database.
+# It contains the predictions for this fit node at the age and time
+# specified by the covariate.csv file.
+# The predictions are done using the optimal variable values.
+#
+# sam_predict.csv
+# This file is locatied in the same directory as fit_node_database.
+# It contains the predictions for this fit node at the age and time
+# specified by the covariate.csv file.
+# The predictions are done using samples of the asymptotic distribution
+# for the variable values.
+#
+# csv_option_value
+# This routine assues that csv_option_value has been set.
+#
+# fit_predict.csv
 def predict_one(
    fit_dir               ,
    fit_node_database     ,
@@ -1165,6 +1186,23 @@ def predict_one(
       file_name    = f'{fit_node_dir}/{prefix}_predict.csv'
       at_cascade.csv.write_table(file_name, predict_table)
 # ----------------------------------------------------------------------------
+# Calculate the predictions for All the Fits
+#
+# fit_dir
+# *******
+# This string is the directory name where the input and output csv files
+# are located.
+#
+# covariate_table
+# This list of dict is an in memory representation of covariate.csv.
+#
+# fit_goal_set
+# This set contains the node that we are required to fit.
+# Ancestors between these nodes and the root node are also fit.
+#
+# csv_option_value
+# This routine assues that csv_option_value has been set.
+#
 def predict_all(fit_dir, covariate_table, fit_goal_set) :
    assert type(fit_dir) == str
    assert type(covariate_table) == list
@@ -1352,6 +1390,25 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
 def fit(fit_dir) :
    assert type(fit_dir) == str
 # END_FIT
+   #
+   # top_node_name
+   node_table      = at_cascade.csv.read_table(f'{fit_dir}/node.csv')
+   top_node_name = None
+   for row in node_table :
+      if row['parent_name'] == '' :
+         if top_node_name != None :
+            msg = 'node.csv: more than one node has no parent node'
+            assert False, msg
+         top_node_name = row['node_name']
+   if top_node_name == None :
+      msg = 'node.csv: no node has an empty parent_name'
+      assert False, msg
+   #
+   # csv_option_value
+   option_in_table = at_cascade.csv.read_table(f'{fit_dir}/option_in.csv')
+   set_csv_option_value(
+      fit_dir, option_in_table, top_node_name
+   )
    #
    # fit_goal_set
    fit_goal_set   = set()
