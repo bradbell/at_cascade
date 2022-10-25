@@ -39,7 +39,8 @@ mm-dd
 
 10-25
 =====
-Add the :ref:`csv_fit@Input Files@option_in.csv@max_num_iter_fixed`
+Add the :ref:`csv_fit@Input Files@option_in.csv@max_num_iter_fixed`,
+:ref:`csv_fit@Input Files@option_in.csv@tolerance_fixed`,
 and :ref:`csv_fit@Input Files@option_in.csv@max_number_cpu`
 options.
 

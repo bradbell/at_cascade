@@ -103,6 +103,11 @@ This string is the name of the root node.
 The default for *root_node_name* is the top root of the entire node tree.
 Only the root node and its descendents will be fit.
 
+tolerance_fixed
+---------------
+is the tolerance for convergence of the fixed effects optimization problem.
+This is relative to one and its default value is 1e-4.
+
 node.csv
 ========
 This file has the same description as the simulate
@@ -442,11 +447,12 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
    random_seed    = int( time.time() )
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
-      'max_fit'            : (int,  250)                ,
-      'max_num_iter_fixed' : (int,  100)                ,
-      'max_number_cpu'     : (int,  max_number_cpu)     ,
-      'random_seed'        : (int , random_seed )       ,
-      'root_node_name'     : (str,  top_node_name)      ,
+      'max_fit'            : (int,   250)                ,
+      'max_num_iter_fixed' : (int,   100)                ,
+      'max_number_cpu'     : (int,   max_number_cpu)     ,
+      'random_seed'        : (int ,  random_seed )       ,
+      'root_node_name'     : (str,   top_node_name)      ,
+      'tolerance_fixed'    : (float, 1e-4)               ,
    }
    # END_SORT_THIS_LINE_MINUS_2
    #
@@ -608,11 +614,13 @@ def create_root_node_database(fit_dir) :
    #
    # option_table
    max_num_iter_fixed = csv_option_value['max_num_iter_fixed']
+   tolerance_fixed    = csv_option_value['tolerance_fixed']
    option_table = [
       { 'name' : 'max_num_iter_fixed', 'value' : str( max_num_iter_fixed ) },
       { 'name' : 'parent_node_name',   'value' : root_node_name            },
       { 'name' : 'print_level_fixed',  'value' : '5'                       },
       { 'name' : 'random_seed',        'value' : str( random_seed )        },
+      { 'name' : 'tolerance_fixed',    'value' : str( tolerance_fixed)     },
    ]
    #
    # spline_cov
