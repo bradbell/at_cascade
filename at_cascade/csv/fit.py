@@ -15,11 +15,15 @@ import time
    avg
    avgint
    const
+   cpus
    dage
    dir
    dtime
+   ipopt
+   iter
    laplace
    meas
+   multiprocessing
    pini
    rho
    sincidence
@@ -60,7 +64,7 @@ The rows are documented below by the name column:
 
 max_fit
 -------
-This is the maximum number of data values to fit per integrand.
+This integer is the maximum number of data values to fit per integrand.
 If for a particular fit an integrand has more than this number of
 data values, a subset of this size is randomly selected.
 There is once exception to this rule, the female and male fit
@@ -68,11 +72,30 @@ at the root node uses twice this number of values per integrand
 (because the covariate multipliers are frozen after these fits).
 The default value for *max_fit* is 250.
 
+max_num_iter_fixed
+------------------
+This integer is the maximum number of Ipopt iterations to try before
+giving up on fitting the fixed effects.
+The default value for *max_num_iter_fixed* is 100.
+
+max_number_cpu
+--------------
+This integer is the maximum number of cpus (processes) to use
+This must be greater than zero. If it is one, the jobs are run
+sequentially, more output is printed to the screen, and the program
+can be cleanly stopped with a control-C.
+The default value for this option is
+{xrst_code py}
+   max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
+{xrst_code}
+
 random_seed
 -----------
 This integer is used to seed the random number generator.
-The default value of *random_seed* is chosen
-to be the system time in seconds (as an integer).
+The default value for this option is
+{xrst_code py}
+   random_seed = int( time.time() )
+{xrst_code}
 
 root_node_name
 --------------
@@ -415,12 +438,17 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
       assert type( option_table[0] ) == dict
    #
    # option_default
-   default_seed = int( time.time() )
+   max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
+   random_seed    = int( time.time() )
+   # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
-      'max_fit'            : (int,  250)           ,
-      'random_seed'        : (int , default_seed ) ,
-      'root_node_name'     : (str,  top_node_name) ,
+      'max_fit'            : (int,  250)                ,
+      'max_num_iter_fixed' : (int,  100)                ,
+      'max_number_cpu'     : (int,  max_number_cpu)     ,
+      'random_seed'        : (int , random_seed )       ,
+      'root_node_name'     : (str,  top_node_name)      ,
    }
+   # END_SORT_THIS_LINE_MINUS_2
    #
    # csv_option_value
    line_number      = 0
@@ -579,10 +607,12 @@ def create_root_node_database(fit_dir) :
       })
    #
    # option_table
+   max_num_iter_fixed = csv_option_value['max_num_iter_fixed']
    option_table = [
-      { 'name' : 'parent_node_name',  'value' : root_node_name },
-      { 'name' : 'random_seed',       'value' : str( random_seed ) },
-      { 'name' : 'print_level_fixed', 'value' : '5' },
+      { 'name' : 'max_num_iter_fixed', 'value' : str( max_num_iter_fixed ) },
+      { 'name' : 'parent_node_name',   'value' : root_node_name            },
+      { 'name' : 'print_level_fixed',  'value' : '5'                       },
+      { 'name' : 'random_seed',        'value' : str( random_seed )        },
    ]
    #
    # spline_cov
@@ -855,16 +885,13 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    # user
    user  = os.environ.get('USER').replace(' ', '_')
    #
-   # max_number_cpu
-   max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
-   #
    # all_option
    all_option = {
       # 'absolute_covariates'        : None,
       'balance_fit'                  : 'sex -0.5 +0.5' ,
       'max_abs_effect'               : 2.0 ,
       'max_fit'                      : csv_option_value['max_fit'],
-      'max_number_cpu'               : max_number_cpu,
+      'max_number_cpu'               : csv_option_value['max_number_cpu'],
       'perturb_optimization_scale'   : 0.2,
       'perturb_optimization_start'   : 0.2,
       'shared_memory_prefix'         : user,

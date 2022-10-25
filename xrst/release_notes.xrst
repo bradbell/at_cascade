@@ -37,6 +37,12 @@ all_omega Branch
 mm-dd
 *****
 
+10-25
+=====
+Add the :ref:`csv_fit@Input Files@option_in.csv@max_num_iter_fixed`
+and :ref:`csv_fit@Input Files@option_in.csv@max_number_cpu`
+options.
+
 10-20
 =====
 1. Remove the avgint Table item from the wish list
