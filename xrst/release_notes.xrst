@@ -39,10 +39,11 @@ mm-dd
 
 10-25
 =====
-Add the :ref:`csv_fit@Input Files@option_in.csv@max_num_iter_fixed`,
-:ref:`csv_fit@Input Files@option_in.csv@tolerance_fixed`,
-and :ref:`csv_fit@Input Files@option_in.csv@max_number_cpu`
-options.
+1. Add the :ref:`csv_fit@Input Files@option_in.csv@max_num_iter_fixed`,
+   :ref:`csv_fit@Input Files@option_in.csv@tolerance_fixed`,
+   and :ref:`csv_fit@Input Files@option_in.csv@max_number_cpu` options.
+2. Add an error message to csv fit when the root node sub-directory already
+   exists in the :ref:`csv_fit@fit_dir` directory.
 
 10-20
 =====

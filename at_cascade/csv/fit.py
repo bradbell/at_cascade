@@ -1410,6 +1410,13 @@ def fit(fit_dir) :
       fit_dir, option_in_table, top_node_name
    )
    #
+   root_node_name = csv_option_value['root_node_name']
+   file_name      = f'{fit_dir}/{root_node_name}'
+   if os.path.exists( file_name ) :
+      msg  = f'{file_name} already exists.\n'
+      msg == 'you must remove it before running this csv fit'
+      assert False, msg
+   #
    # fit_goal_set
    fit_goal_set   = set()
    file_name      = f'{fit_dir}/fit_goal.csv'
