@@ -102,7 +102,7 @@ add default value for all the fit options,
 and place resulting options in
 :ref:`csv_fit@Output Files@option_out.csv` .
 
-10-27
+10-17
 =====
 First tested version of :ref:`csv_fit` .
 
