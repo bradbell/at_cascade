@@ -141,6 +141,7 @@ iota,gauss_01
 csv_file['mulcov.csv'] = \
 '''covariate,type,effected,value_prior,const_value
 sex,rate_value,iota,uniform_1_1,
+one,meas_noise,Sincidence,,1e-3
 '''
 #
 # data_in.csv

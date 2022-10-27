@@ -839,6 +839,7 @@ def create_root_node_database(fit_dir) :
    mulcov_table = input_table['mulcov']
    for (i_row, row) in enumerate(mulcov_table) :
       del row['value_prior']
+      del row['const_value']
       row['smooth'] = f'mulcov_{i_row}'
       row['group'] = 'world'
    #
