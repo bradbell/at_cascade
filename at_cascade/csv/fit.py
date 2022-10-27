@@ -67,9 +67,11 @@ max_fit
 This integer is the maximum number of data values to fit per integrand.
 If for a particular fit an integrand has more than this number of
 data values, a subset of this size is randomly selected.
-There is once exception to this rule, the female and male fit
-at the root node uses twice this number of values per integrand
-(because the covariate multipliers are frozen after these fits).
+There is an exception to this rule, the three fits for the root node
+(corresponding to sex equal to female, both and male)
+use twice this number of values per integrand.
+This is because the sex covariate multiplier is frozen after the both fit
+and the other covariate multipliers are frozen of the female and male fits.
 The default value for *max_fit* is 250.
 
 max_num_iter_fixed
@@ -219,7 +221,7 @@ dtime_prior
 is a string containing the name of the dtime prior for this grid point.
 If dtime_prior is empty, there is no prior for the forward time difference
 of this rate at this grid point.
-The specified prior cannot be censored.
+This prior cannot be censored.
 
 const_value
 -----------
@@ -255,14 +257,44 @@ This csv file specifies the covariate multipliers.
 covariate
 ---------
 this string is the name of the covariate for this multiplier.
+All the covariates in covariate.csv are
+:ref:`relative covariates<glossary@Relative Covariate>` .
+The average of the covariate, for the current node and sex,
+is subtracted before it is multiplied by a multiplier.
+In addition:
+``one`` is an absolute covariate that is always equal to one and
+``sex`` is the splitting covariate and has the following values:
+{xrst_code py}'''
+sex_name2value = { 'female' : -0.5, 'both' : 0.0, 'male' : 0.5 }
+'''{xrst_code}
 
 type
 ----
 This string is rate_value, meas_value, or meas_noise.
 
+rate_value
+..........
+The multiplier times the covariate affects the rate
+in the effected column; i.e.
+the exponential of the product multiplies the rate.
+
+meas_value
+..........
+The multiplier times the covariate affects the model for the integrand
+in the effected column; i.e.
+the exponential of the product multiplies the model for the integrand.
+
+meas_noise
+..........
+The multiplier times the covariate affects the model for the
+measurement noise for the integrand in the effected column.
+To be more specific, the product is added to the standard deviation for
+measurements for the integrand.
+
 effected
 --------
-is the name of the integrand or rate affected by this multiplier.
+is the name of the integrand or rate affected by this multiplier;
+see type above.
 
 value_prior
 -----------
@@ -270,6 +302,13 @@ is a string containing the name of the value prior
 for this covariate multiplier.
 Note that the covariate multipliers are constant in age and time
 (this is a limitation of the csv_fit).
+If value_prior is empty, const_value must be non-empty.
+
+const_value
+-----------
+is a float specifying a constant value for this grid point or the empty string.
+This is equivalent to the upper and lower limits being equal to this value.
+If const_value is empty, value_prior must be non-empty.
 
 {xrst_comment ---------------------------------------------------------------}
 
@@ -497,17 +536,20 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
 #
 class smoothing_function :
    def __init__(self, name) :
+      assert type(name) == str
       self.name  = name
       self.value = dict()
    def set(self, age, time, value_prior, dage_prior, dtime_prior) :
+      assert type(age) == float
+      assert type(time) == float
       if type( value_prior ) == float :
          assert dage_prior == None
          assert dtime_prior == None
-         self.value[ (age, time) ] = value_prior
+         self.value[ (age, time) ] = ( value_prior, None, None )
       else :
          type(value_prior) == str
-         type(dage_prior) == str
-         type(dtime_prior) == str
+         dage_prior == None or type(dage_prior) == str
+         dtime_prior == None or type(dtime_prior) == str
          self.value[ (age, time) ] = (value_prior, dage_prior, dtime_prior)
    def __call__(self, age, time) :
       if (age, time) not in self.value :
@@ -561,7 +603,7 @@ def create_root_node_database(fit_dir) :
       table             = at_cascade.csv.read_table(file_name)
       input_table[name] = at_cascade.csv.empty_str(table, 'to_none')
    #
-   print('being creating root node database' )
+   print('begin creating root node database' )
    #
    # node_set
    node_set       = set()
@@ -580,11 +622,18 @@ def create_root_node_database(fit_dir) :
    #
    # forbidden_covariate
    forbidden_covariate = set( input_table['data_in'][0].keys() )
+   forbidden_covariate.add( "one" )
+   for covariate_name in covariate_average.keys() :
+      if covariate_name in forbidden_covariate :
+         msg  = f'cannot use the covariate name {covariate_name}\n'
+         msg += 'because it is "one" or a column in the data_in.csv file'
+         assert False, msg
    #
    # covariate_table
-   covariate_table = [{
-      'name': 'sex', 'reference': 0.0, 'max_difference' : 0.5
-   }]
+   covariate_table = [
+      { 'name': 'sex', 'reference': 0.0, 'max_difference' : 0.5 }  ,
+      { 'name': 'one', 'reference': 0.0, 'max_difference' : None } ,
+   ]
    for covariate_name in covariate_average.keys() :
       covariate_table.append({
          'name':            covariate_name,
@@ -601,6 +650,7 @@ def create_root_node_database(fit_dir) :
       { 'name' : 'print_level_fixed',  'value' : '5'                       },
       { 'name' : 'random_seed',        'value' : str( random_seed )        },
       { 'name' : 'tolerance_fixed',    'value' : str( tolerance_fixed)     },
+      { 'name' : 'meas_noise_effect',  'value' : 'add_std_scale_none'      },
    ]
    #
    # spline_cov
@@ -610,7 +660,6 @@ def create_root_node_database(fit_dir) :
    #
    # data_table
    data_table     = input_table['data_in']
-   sex_name2value = { 'female' : -0.5, 'both' : 0.0, 'male' : 0.5 }
    for row in data_table :
       #
       # age_mid
@@ -641,6 +690,7 @@ def create_root_node_database(fit_dir) :
       row['subgroup']   = 'world'
       row['density']    = 'gaussian'
       row['sex']        = sex_name2value[sex]
+      row['one']        = '1.0'
    #
    # integrand_table
    integrand_set = set()
@@ -715,7 +765,9 @@ def create_root_node_database(fit_dir) :
       smooth_dict[name]['time_id'].add( time_id )
       if row['const_value'] != None :
          const_value = float( row['const_value'] )
-         smooth_dict[name]['fun'].set(age, time, const_value)
+         smooth_dict[name]['fun'].set(
+            age, time, const_value, dage_prior = None, dtime_prior = None
+         )
       else :
          value_prior = row['value_prior']
          dage_prior  = row['dage_prior']
@@ -750,14 +802,17 @@ def create_root_node_database(fit_dir) :
          'time_id' : {0},
          'fun'     : fun    ,
       }
+      if row['const_value'] != None :
+         value_prior = float( row['const_value'] )
+      else :
+         value_prior = row['value_prior']
       smooth_dict[name]['fun'].set(
          age         = age_list[0]            ,
          time        = time_list[0]           ,
-         value_prior = row['value_prior']     ,
+         value_prior = value_prior            ,
          dage_prior  = None                   ,
          dtime_prior = None                   ,
       )
-
    #
    # smooth_table
    smooth_table = list()
@@ -878,7 +933,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    #
    # all_option
    all_option = {
-      # 'absolute_covariates'        : None,
+      'absolute_covariates'          : 'one' ,
       'balance_fit'                  : 'sex -0.5 +0.5' ,
       'max_abs_effect'               : 2.0 ,
       'max_fit'                      : csv_option_value['max_fit'],
@@ -1125,7 +1180,9 @@ def predict_one(
             covariate_name = fit_covariate_table[covariate_id]['covariate_name']
             #
             # covariate_value
-            if covariate_name == 'sex' :
+            if covariate_name == 'one' :
+               covariate_value = 1.0
+            elif covariate_name == 'sex' :
                covariate_value = sex_value
             else :
                covariate_value = float( cov_row[covariate_name] )

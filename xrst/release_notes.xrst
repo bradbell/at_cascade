@@ -37,6 +37,15 @@ all_omega Branch
 mm-dd
 *****
 
+10-27
+=====
+1. Add the :ref:`csv_fit@Input Files@mulcov.csv@const_value` column
+   to the mulcov.csv input file.
+2. Add a discussion of the different covariate multiplier
+   :ref:`types <csv_fit@Input Files@mulcov.csv@type>` .
+3. sex and one were added to the possible covariates in csv fit; see
+   :ref:`csv_fit@Input Files@mulcov.csv@covariate` .
+
 10-25
 =====
 1. Add the :ref:`csv_fit@Input Files@option_in.csv@max_num_iter_fixed`,

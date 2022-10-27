@@ -138,9 +138,8 @@ covariate_name
 For each covariate that we are including in this simulation,
 there is a column in the header that contains the *covariate_name*.
 The other values in that column are float representations of the covariate.
-All of these covariates are
-:ref:`glossary@Relative Covariate`; see
-:ref:`csv_module@Notation@Covariates`.
+All of these covariates are :ref:`glossary@Relative Covariate`.
+Note that omega and sex are not referred to as covariates for this simulation.
 
 -----------------------------------------------------------------------------
 

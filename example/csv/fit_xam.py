@@ -139,8 +139,8 @@ iota,gauss_01
 #
 # mulcov.csv
 csv_file['mulcov.csv'] = \
-'''covariate,type,effected,value_prior
-haqi,rate_value,iota,uniform_1_1
+'''covariate,type,effected,value_prior,const_value
+haqi,rate_value,iota,uniform_1_1,
 '''
 #
 # data_in.csv

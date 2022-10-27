@@ -41,16 +41,6 @@ if the following holds:
    age equal to :math:`a_m`, and
    time equal to :math:`t_n`.
 
-Covariates
-==========
-For this csv interface, all the covariates are
-:ref:`glossary@Relative Covariate` (called country covariates at IHME).
-Other cause mortality ``omega`` is referred to as a
-covariate (not as a rate) for this interface.
-Sex is the
-:ref:`all_option_table@split_covariate_name` and is not
-referred to as a covariate.
-
 Data Type
 =========
 The actual data type for each entry in a csv file is a string; i.e.,
@@ -59,7 +49,7 @@ restrictions as described below
 
 1. An integer value is a string represents of an integer.
 2. A float value is a string that represents a floating point number.
-3. A sex value is either ``female`` , ``male`` or ``both`` .
+3. A sex value is either ``female`` , ``both``, or ``male``.
 
 Index Column
 ============
