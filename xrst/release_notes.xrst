@@ -31,11 +31,13 @@ Release Notes for at_cascade
 Release Notes for 2022
 ######################
 
-all_omega Branch
-****************
-
 mm-dd
 *****
+
+10-28
+=====
+1. Remove the packaging wish list item because it was completed.
+2. Add the :ref:`wish_list@Meta Regression` wish list item.
 
 10-27
 =====

@@ -4,11 +4,19 @@
 # ----------------------------------------------------------------------------
 {xrst_begin wish_list}
 {xrst_spell
-   podman
 }
 
 Wish List for at_cascade
 ########################
+
+Meta Regression
+***************
+The extra measurement noise added for the mismatch between the model and the
+data should decrease as one goes down the cascade.
+One reason is, there are fewer levels of random effects
+that are not modeled.
+Another reason is, there is less variation due to covariates
+that are not modeled.
 
 Disk Space
 **********
@@ -18,12 +26,5 @@ for each node and each sex; see
 The data is one of these and can be very large.
 It would be nice of there was an option in dismod_at to read the
 data table from a different database.
-
-Packaging
-*********
-Create a pip package for at_cascade; see
-`python packaging <https://packaging.python.org>`_.
-In addition, create a docker / podman image that includes dismod_at
-and can run the cascade.
 
 {xrst_end wish_list}
