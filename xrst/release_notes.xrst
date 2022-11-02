@@ -34,6 +34,13 @@ Release Notes for 2022
 mm-dd
 *****
 
+11-02
+=====
+Check the csv.simulate :ref:`csv_simulate@Input Files` and
+csv.fit :ref:`csv_simulate@Input Files` to make sure they have
+all the necessary column names
+(if not print an informative error message).
+
 10-28
 =====
 1. Remove the packaging wish list item because it was completed.
@@ -156,7 +163,7 @@ Fix some documentation spelling errors detected by new version of pyspellchecker
    html files from the ``doc/rst`` directory to the ``doc`` directory.
 2. Change the linking text for web pages from the page title to the
    page name. For example, use :ref:`all_node_db` instead of
-   :ref:`all_node_db-0` to link to the all node database documentation.
+   :ref:`all_node_db-title` to link to the all node database documentation.
 
 08-27
 =====

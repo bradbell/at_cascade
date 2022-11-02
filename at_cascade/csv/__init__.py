@@ -83,6 +83,7 @@ Routines
 {xrst_end csv_module}
 '''
 # BEGIN_SORT_THIS_LINE_PLUS_1
+from .check_table      import check_table
 from .covariate_avg    import covariate_avg
 from .covariate_spline import covariate_spline
 from .empty_str        import empty_str

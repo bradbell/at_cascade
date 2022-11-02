@@ -602,6 +602,7 @@ def create_root_node_database(fit_dir) :
       file_name         = f'{fit_dir}/{name}.csv'
       table             = at_cascade.csv.read_table(file_name)
       input_table[name] = at_cascade.csv.empty_str(table, 'to_none')
+      at_cascade.csv.check_table(file_name, input_table[name])
    #
    print('begin creating root node database' )
    #
@@ -1077,7 +1078,6 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
 # csv_option_value
 # This routine assues that csv_option_value has been set.
 #
-# fit_predict.csv
 def predict_one(
    fit_dir               ,
    fit_node_database     ,
