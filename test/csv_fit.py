@@ -223,7 +223,8 @@ def main() :
                   #
                   sample_list.append(row)
             #
-            if len(sample_list) > 0 :
+            if node == 'n0' or sex_name != 'both' :
+               assert len(sample_list) > 0
                sum_avgint = 0.0
                for row in sample_list :
                   sum_avgint   += float( row['avg_integrand'] )

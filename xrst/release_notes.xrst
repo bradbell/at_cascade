@@ -36,10 +36,14 @@ mm-dd
 
 11-02
 =====
-Check the csv.simulate :ref:`csv_simulate@Input Files` and
-csv.fit :ref:`csv_simulate@Input Files` to make sure they have
-all the necessary column names
-(if not print an informative error message).
+1. Check the csv.simulate :ref:`csv_simulate@Input Files` and
+   csv.fit :ref:`csv_simulate@Input Files` to make sure they have
+   all the necessary column names
+   (if not print an informative error message).
+2. The files :ref:`csv_fit@Output Files@fit_predict.csv` and
+   :ref:`csv_fit@Output Files@sam_predict.csv` contained multiple copies
+   of just one node instead of all the nodes that were fit.
+   This has been fixed.
 
 10-28
 =====

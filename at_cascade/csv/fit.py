@@ -1376,16 +1376,16 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
       value = row['split_reference_value']
       sex_value2name[value] = name
    #
-   # fit_node_dir
-   index = fit_node_database.rindex('/')
-   fit_node_dir           = fit_node_database[: index]
-   #
    # sam_predict_table, fit_predict_tale
    sam_predict_table = list()
    fit_predict_table = list()
    #
    # fit_node_database
    for fit_node_database in fit_node_database_list :
+      #
+      # fit_node_dir
+      index = fit_node_database.rindex('/')
+      fit_node_dir           = fit_node_database[: index]
       #
       # fit_covariate_table
       new                 = False
