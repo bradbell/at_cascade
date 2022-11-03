@@ -34,6 +34,10 @@ Release Notes for 2022
 mm-dd
 *****
 
+11-03
+=====
+Add :ref:`all_option_table@number_sample` to the all option table.
+
 11-02
 =====
 1. Check the csv.simulate :ref:`csv_simulate@Input Files` and

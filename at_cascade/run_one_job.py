@@ -314,8 +314,12 @@ def run_one_job(
    system_command(command, file_stdout)
    #
    # sample
+   if 'number_sample' not in all_option_dict :
+      ns = '20'
+   else :
+      ns = all_option_dict['number_sample']
    command = [
-      'dismod_at', fit_node_database, 'sample', 'asymptotic', fit_type, '20'
+      'dismod_at', fit_node_database, 'sample', 'asymptotic', fit_type, ns
    ]
    system_command(command, file_stdout)
    #

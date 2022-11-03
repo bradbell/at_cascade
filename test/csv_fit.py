@@ -202,6 +202,9 @@ def main() :
    # csv.fit
    at_cascade.csv.fit(fit_dir)
    #
+   # number_sample
+   number_sample = 20
+   #
    # prefix
    for prefix in [ 'fit', 'sam' ] :
       #
@@ -224,7 +227,10 @@ def main() :
                   sample_list.append(row)
             #
             if node == 'n0' or sex_name != 'both' :
-               assert len(sample_list) > 0
+               if prefix == 'fit' :
+                  assert len(sample_list) == 1
+               else :
+                  assert len(sample_list) == number_sample
                sum_avgint = 0.0
                for row in sample_list :
                   sum_avgint   += float( row['avg_integrand'] )
@@ -238,4 +244,6 @@ def main() :
                   assert False
 #
 main()
+print('csv_fit: OK')
+sys.exit(0)
 # END_PYTHON

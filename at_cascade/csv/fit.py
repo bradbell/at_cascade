@@ -940,6 +940,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       'max_abs_effect'               : 2.0 ,
       'max_fit'                      : csv_option_value['max_fit'],
       'max_number_cpu'               : csv_option_value['max_number_cpu'],
+      'number_sample'                : '20',
       'perturb_optimization_scale'   : 0.2,
       'perturb_optimization_start'   : 0.2,
       'shared_memory_prefix'         : user,

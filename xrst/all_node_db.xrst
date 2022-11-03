@@ -184,8 +184,7 @@ If this option does not appear, there are no absolute covariates.
 
 balance_fit
 ***********
-If this option appears, the :ref:`all_option_table@max_fit` option
-must also appear. This option specifies how dismod_at should balance
+This option specifies how dismod_at should balance
 the randomly selected samples.
 It is a space separated list with the following values
 in the following order:
@@ -194,6 +193,8 @@ in the following order:
 2. *value_1*  is the lower covariate value that we are balancing.
 3. *value_2*   is the upper covariate values that we are balancing.
 
+If this option appears, the :ref:`all_option_table@max_fit` option
+must also appear.
 
 max_abs_effect
 **************
@@ -224,7 +225,7 @@ If this option does not appear, all of the data for each integrand is included
 
 mulcov_freeze
 =============
-If this the node_id and split_reference_id for this fit appears in the
+If the split_reference_id and the node_id for a fit appears in the
 :ref:`mulcov_freeze_table`, the maximum number of values to fit is doubled.
 This results in a better representation of the covariate multipliers
 before freezing them for the jobs that will use the value determined
@@ -237,11 +238,20 @@ This is the maximum number of cpus (processors) that
 If this is one (more than one) the jobs in the
 :ref:`create_job_table@job_table`
 will be run in sequentially (in parallel).
-If this option does not appear, the value one is used.
 If running sequentially, the command output is printed to the screen.
 Otherwise, it is printed to a file called $code trace.out$ in the
 output directory corresponding to the job being run.
+If this option does not appear, the value one is used.
 
+number_sample
+*************
+This is the number of independent samples of the posterior distribution
+for the fitted variables to generate (for each fit).
+These samples are used by the dismod_at predict command to get
+predictions for the children of the node being fit.
+When splitting, the samples are used to predict for the
+same node at the new split covariate values.
+If this option does not appear, the value 20 is used.
 
 perturb_optimization_scale
 **************************
