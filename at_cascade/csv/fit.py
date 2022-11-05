@@ -207,7 +207,7 @@ is a float containing the time for this grid point.
 value_prior
 -----------
 is a string containing the name of the value prior for this grid point.
-If value_prior is empty, const_value must be non-empty.
+Either *value_prior* or *const_value* must be non-empty but not both.
 
 dage_prior
 ----------
@@ -227,7 +227,7 @@ const_value
 -----------
 is a float specifying a constant value for this grid point or the empty string.
 This is equivalent to the upper and lower limits being equal to this value.
-If const_value is empty, value_prior must be non-empty.
+Either *const_value* or *value_prior* must be non-empty but not both.
 
 {xrst_comment ---------------------------------------------------------------}
 
@@ -302,13 +302,13 @@ is a string containing the name of the value prior
 for this covariate multiplier.
 Note that the covariate multipliers are constant in age and time
 (this is a limitation of the csv_fit).
-If value_prior is empty, const_value must be non-empty.
+Either *value_prior* or *const_value* must be non-empty but not both.
 
 const_value
 -----------
 is a float specifying a constant value for this grid point or the empty string.
 This is equivalent to the upper and lower limits being equal to this value.
-If const_value is empty, value_prior must be non-empty.
+Either *value_prior* or *const_value* must be non-empty but not both.
 
 {xrst_comment ---------------------------------------------------------------}
 
