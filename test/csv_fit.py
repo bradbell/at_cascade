@@ -115,6 +115,8 @@ csv_file['predict_integrand.csv'] = \
 '''integrand_name
 Sincidence
 prevalence
+mulcov_0
+mulcov_1
 '''
 #
 # prior.csv

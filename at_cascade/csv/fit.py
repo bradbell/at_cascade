@@ -138,6 +138,9 @@ and stored in :ref:`csv_fit@Output Files@fit_predict.csv` .
 integrand_name
 --------------
 This string is the name of one of the prediction integrands.
+You can use the integrand name ``mulcov_0`` , ``mulcov_1`` , ...
+which corresponds to the first , second , ...
+covariate multiplier in the mulcov.csv file.
 
 
 {xrst_comment ---------------------------------------------------------------}
@@ -704,7 +707,9 @@ def create_root_node_database(fit_dir) :
       row = { 'name' : integrand }
       integrand_table.append(row)
    for mulcov_id in range( len( input_table['mulcov'] ) ) :
-      integrand_table.append( { 'name': f'mulcov_{mulcov_id}' } )
+      integrand_name = f'mulcov_{mulcov_id}'
+      if integrand_name not in integrand_set :
+         integrand_table.append( { 'name': integrand_name } )
    #
    # subgroup_table
    subgroup_table = [{ 'subgroup' : 'world', 'group' : 'world' }]

@@ -34,6 +34,12 @@ Release Notes for 2022
 mm-dd
 *****
 
+11-08
+=====
+Fix and document using ``mulcov_``\ *id* as an
+:ref:`csv_fit@Input Files@predict_integrand.csv@integrand_name`
+in the predict.csv file.
+
 11-03
 =====
 Add :ref:`all_option_table@number_sample` to the all option table.
