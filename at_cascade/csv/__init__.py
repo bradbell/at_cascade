@@ -48,10 +48,21 @@ The actual data type for each entry in a csv file is a string; i.e.,
 an arbitrary sequence of characters. Certain columns have further
 restrictions as described below
 
-1. An integer value is a string represents of an integer.
-2. A float value is a string that represents a floating point number.
-3. A sex value is either ``female`` , ``both``, or ``male``.
-4. A boolean value is either ``true`` or ``false`` .
+Integer
+-------
+An integer value is a string represents of an integer.
+
+Float
+-----
+A float value is a string that represents a floating point number.
+
+Sex
+---
+A sex value is either ``female`` , ``both``, or ``male``.
+
+Boolean
+-------
+A boolean value is either ``true`` or ``false`` .
 
 Index Column
 ============

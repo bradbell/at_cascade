@@ -36,11 +36,13 @@ mm-dd
 
 11-09
 =====
-1. Add the csv fit :ref:`csv_fit@Input Files@option_in.csv@db2csv` option.
+#. Add :ref:`csv_module@Notation@Data Type@Boolean` to the possible csv file
+   data types.
+#. Add the csv fit :ref:`csv_fit@Input Files@option_in.csv@db2csv` option.
    This required including a description of the
    :ref:`csv_fit@Output Files@dismod.db` files in the csv fit documentation.
-2. Add the csv fit :ref:`csv_fit@Input Files@option_in.csv@plot` option.
-3. Add mention of the fact that the csv fit
+#. Add the csv fit :ref:`csv_fit@Input Files@option_in.csv@plot` option.
+#. Add mention of the fact that the csv fit
    :ref:`csv_fit@Input Files@parent_rate.csv` file corresponds to
    no random or fixed effects.
 
