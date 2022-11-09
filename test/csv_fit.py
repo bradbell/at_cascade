@@ -83,6 +83,7 @@ random_seed = str( int( time.time() ) )
 csv_file['option_in.csv'] = \
 '''name,value
 db2csv,true
+plot,true
 '''
 #
 # node.csv
@@ -273,7 +274,7 @@ def main() :
    # check for db2csv files
    for (node, sex) in subdir_list :
       subdir = subdir_list[(node, sex)]
-      for name in db2csv_name_list :
+      for name in db2csv_name_list + [ 'data_plot.pdf', 'rate_plot.pdf' ] :
          file_path = f'{fit_dir}/{subdir}/{name}'
          assert os.path.exists(file_path)
 #

@@ -103,6 +103,25 @@ The default value for this option is
    max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
 {xrst_code}
 
+plot
+----
+If this boolean option is true,
+a ``data_plot.pdf`` and ``rate_plot.pdf`` file is created for each
+:ref:`csv_fit@Output Files@dismod.db` database.
+The data plot includes a maximum of 1,000 randomly chosen points for each
+integrand in the predict_integrand.csv file.
+The rate plot includes all the non-zero rates.
+
+These are no effect rates; i.e., they are the estimated rate
+for this node an sex without any covariate effects
+If you want to include covariate effects, you will have to make your
+own plots using the
+:ref:`csv_fit@Output Files@fit_predict.csv` and
+:ref:`csv_fit@Output Files@sam_predict.csv` files.
+The dismod_at `plot_curve`_ routine may be helpful in this regard.
+
+.. _plot_curve: https://bradbell.github.io/dismod_at/doc/plot_curve.htm
+
 random_seed
 -----------
 This integer is used to seed the random number generator.
@@ -203,6 +222,8 @@ worry about the log offset or degrees of freedom.)
 parent_rate.csv
 ===============
 This file specifies the prior for the root node parent rates.
+These are no effect rates; i.e., no random or covariate effects are
+included in these rates.
 For each value of *rate_name*,
 this file must have a rectangular grid in *age* and *time* .
 
@@ -522,6 +543,7 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
       'max_fit'            : (int,   250)                ,
       'max_num_iter_fixed' : (int,   100)                ,
       'max_number_cpu'     : (int,   max_number_cpu)     ,
+      'plot'               : (bool,  'false')            ,
       'random_seed'        : (int ,  random_seed )       ,
       'root_node_name'     : (str,   top_node_name)      ,
       'tolerance_fixed'    : (float, 1e-4)               ,
@@ -1092,6 +1114,10 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
 # ----------------------------------------------------------------------------
 # Calculate the predictions for One Fit
 #
+# job_name
+# ********
+# THis string specifies the node and sex correpsonding to this fit.
+#
 # fit_dir
 # *******
 # This string is the directory name where the input and output csv files
@@ -1132,12 +1158,14 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
 #
 #
 def predict_one(
+   job_name              ,
    fit_dir               ,
    fit_node_database     ,
    fit_node_id           ,
    all_node_database     ,
    all_covariate_table   ,
 ) :
+   assert type(job_name) == str
    assert type(fit_dir) == str
    assert type(fit_node_database) == str
    assert type(fit_node_id) == int
@@ -1297,11 +1325,39 @@ def predict_one(
       file_name    = f'{fit_node_dir}/{prefix}_predict.csv'
       at_cascade.csv.write_table(file_name, predict_table)
    #
-   # db2csv output files
    if csv_option_value['db2csv'] :
+      #
+      # db2csv output files
       command = [ 'dismodat.py', fit_node_database, 'db2csv' ]
       dismod_at.system_command_prc(
          command, print_command = False, return_stdout = True
+      )
+   #
+   if csv_option_value['plot'] :
+      #
+      # data_plot.pdf
+      pdf_file       = f'{fit_node_dir}/data_plot.pdf'
+      integrand_list = list()
+      for row in predict_integrand_table :
+         integrand_name = row['integrand_name']
+         if not integrand_name.startswith('mulcov_') :
+            integrand_list.append( integrand_name )
+      dismod_at.plot_data_fit(
+         database       = fit_node_database  ,
+         pdf_file       = pdf_file           ,
+         plot_title     = job_name           ,
+         max_plot       = 1000               ,
+         integrand_list = integrand_list     ,
+      )
+      #
+      # rate_plot.pdf
+      pdf_file = f'{fit_node_dir}/rate_plot.pdf'
+      rate_set = { 'pini', 'iota', 'chi', 'omega' }
+      dismod_at.plot_rate_fit(
+         database       = fit_node_database  ,
+         pdf_file       = pdf_file           ,
+         plot_title     = job_name           ,
+         rate_set       = rate_set           ,
       )
 # ----------------------------------------------------------------------------
 # Calculate the predictions for All the Fits
@@ -1423,13 +1479,15 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
       else :
          msg = f'{job_id_str} Creating sam_predict.csv'
          if csv_option_value['db2csv'] :
-            msg  += f' and db2csv for {job_name}'
-         else :
-            msg  += f' for {job_name}'
+            msg  += f',  db2csv files'
+         if csv_option_value['plot'] :
+            msg  += f',  plots'
+         msg  += f', for {job_name}'
          print( msg )
       #
       # predict_one
       predict_one(
+         job_name              = job_name         ,
          fit_dir               = fit_dir          ,
          fit_node_database     = fit_node_database ,
          fit_node_id           = fit_node_id       ,
