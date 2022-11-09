@@ -34,6 +34,12 @@ Release Notes for 2022
 mm-dd
 *****
 
+11-09
+=====
+Add the csv fit :ref:`csv_fit@Input Files@option_in.csv@db2csv` option.
+This required including a description of the
+:ref:`csv_fit@Output Files@dismod.db` files in the csv fit documentation.
+
 11-08
 =====
 Fix and document using ``mulcov_``\ *id* as an

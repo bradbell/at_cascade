@@ -82,6 +82,7 @@ csv_file = dict()
 random_seed = str( int( time.time() ) )
 csv_file['option_in.csv'] = \
 '''name,value
+db2csv,true
 '''
 #
 # node.csv
@@ -152,12 +153,12 @@ header  = 'data_id,integrand,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,meas_value,meas_std,hold_out'
 csv_file['data_in.csv'] = header + \
 '''
-0,Sincidence,n0,female,0,10,1990,2000,0.00,0.001,0
-0,Sincidence,n0,male,0,10,1990,2000,0.00,0.001,0
-1,Sincidence,n1,female,10,20,2000,2010,0.00,0.001,0
-1,Sincidence,n1,male,10,20,2000,2010,0.00,0.001,0
-2,Sincidence,n2,female,20,30,2010,2020,0.00,0.001,0
-2,Sincidence,n2,male,20,30,2010,2020,0.00,0.001,0
+0,Sincidence,n0,female,0,10,1990,2000,0.00,1e-4,0
+0,Sincidence,n0,male,0,10,1990,2000,0.00,1e-4,0
+1,Sincidence,n1,female,10,20,2000,2010,0.00,1e-4,0
+1,Sincidence,n1,male,10,20,2000,2010,0.00,1e-4,0
+2,Sincidence,n2,female,20,30,2010,2020,0.00,1e-4,0
+2,Sincidence,n2,male,20,30,2010,2020,0.00,1e-4,0
 '''
 
 #
@@ -219,7 +220,7 @@ def main() :
          # sex_name
          for sex_name in [ 'female', 'both', 'male' ] :
             #
-            # sample
+            # sample_list
             sample_list = list()
             for row in predict_table :
                if row['integrand'] == 'Sincidence' and \
@@ -228,6 +229,7 @@ def main() :
                   #
                   sample_list.append(row)
             #
+            # check sample_list
             if node == 'n0' or sex_name != 'both' :
                if prefix == 'fit' :
                   assert len(sample_list) == 1
@@ -244,6 +246,36 @@ def main() :
                if abs(rel_error) > 0.01 :
                   print('rel_error =', rel_error)
                   assert False
+   #
+   # db2csv_file_list
+   db2csv_name_list = [
+      'log.csv',
+      'age_avg.csv',
+      'hes_fixed.csv',
+      'trace_fixed.csv',
+      'mixed_info.csv',
+      'variable.csv',
+      'data.csv',
+      'predict.csv',
+   ]
+   #
+   # subdir_list
+   subdir_list = {
+      ('n0', 'both')   : 'n0' ,
+      ('n0', 'female') : 'n0/female' ,
+      ('n0', 'male')   : 'n0/male' ,
+      ('n1', 'female') : 'n0/female/n1' ,
+      ('n1', 'male')   : 'n0/male/n1' ,
+      ('n2', 'female') : 'n0/female/n2' ,
+      ('n2', 'male')   : 'n0/male/n2' ,
+   }
+   #
+   # check for db2csv files
+   for (node, sex) in subdir_list :
+      subdir = subdir_list[(node, sex)]
+      for name in db2csv_name_list :
+         file_path = f'{fit_dir}/{subdir}/{name}'
+         assert os.path.exists(file_path)
 #
 main()
 print('csv_fit: OK')

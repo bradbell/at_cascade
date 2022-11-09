@@ -14,6 +14,7 @@ import time
 {xrst_spell
    avg
    avgint
+   boolean
    const
    cpus
    dage
@@ -61,6 +62,17 @@ one called ``name`` and the other called ``value``.
 If an option name does not appear, the corresponding
 default value is used for the option.
 The rows are documented below by the name column:
+
+db2csv
+------
+If this boolean option is true,
+the dismod_at `db2csv_command`_ is used to generate the csv files
+corresponding to each :ref:`csv_fit@Output Files@dismod.db` .
+If this option is true, the csv files will make it more difficult
+to see the tree structure corresponding to the ``dismod.db`` files.
+The default value for this option is false .
+
+.. _db2csv_command: https://bradbell.github.io/dismod_at/doc/db2csv_command.htm
 
 max_fit
 -------
@@ -380,6 +392,23 @@ all_node.db
 ===========
 This is the at_cascade sqlite all node database for the cascade.
 
+dismod.db
+=========
+1. There is a subdirectory of the :ref:csv_fit@`fit_dir` with the
+   name of the root node. The ``dismod.db`` file in this directory is
+   the `dismod_at_database`_ corresponding to the fit and predictions for
+   the root node fit for both sexes.
+2. The root node directory has a ``female`` and ``male`` subdirectory.
+   These directories contain ``dismod.db`` database for
+   the root node fit of the corresponding sex.
+3. For each node between the root node and the
+   :ref:`fit_goal nodes <csv_fit@Input Files@fit_goal.csv>` ,
+   and for the ``female`` and ``male`` sex, there is a directory.
+   This is directly below the directory for its parent node and same sex.
+   It contains the ``dismod.db`` data base for the corresponding fit.
+
+.. _dismod_at_database: https://bradbell.github.io/dismod_at/doc/database.htm
+
 option_out.csv
 ==============
 This is a copy of :ref:`csv_fit@Input Files@option_in.csv` with the default
@@ -489,6 +518,7 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
    random_seed    = int( time.time() )
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
+      'db2csv'             : (bool,  'false')            ,
       'max_fit'            : (int,   250)                ,
       'max_num_iter_fixed' : (int,   100)                ,
       'max_number_cpu'     : (int,   max_number_cpu)     ,
@@ -513,8 +543,15 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
          msg += f'{name} is not a valid option name'
          assert False, msg
       (option_type, defualt) = option_default[name]
-      value                  = option_type( row['value'] )
-      csv_option_value[name] = value
+      value                  = row['value']
+      if option_type == bool :
+         if value not in [ 'true', 'false' ] :
+            msg  = f'csv_fit: Error: line {line_number} in option_in.csv\n'
+            msg += f'The value for {name} is not true or false'
+            assert False, msg
+         csv_option_value[name] = value == 'true'
+      else :
+         csv_option_value[name] = option_type( value )
    #
    # csv_option_value
    for name in option_default :
@@ -525,7 +562,13 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
    # option_out.csv
    table = list()
    for name in csv_option_value :
-      row = { 'name' : name , 'value' : csv_option_value[name] }
+      value = csv_option_value[name]
+      if type(value) == bool :
+         if value :
+            value = 'true'
+         else :
+            value = 'false'
+      row = { 'name' : name , 'value' : value }
       table.append(row)
    file_name = f'{fit_dir}/option_out.csv'
    at_cascade.csv.write_table(file_name, table)
@@ -1068,21 +1111,25 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
 # The list of dict is the in memory representation of the
 # covariate.csv file
 #
+# csv_option_value
+# This routine assues that csv_option_value has been set.
+# If csv_option_value['d2b2csv'] is true (false), the csvfiles
+# for this fit node database are (are not) created.
+#
 # fit_predict.csv
-# This file is locatied in the same directory as fit_node_database.
+# This output file is locatied in the same directory as fit_node_database.
 # It contains the predictions for this fit node at the age and time
 # specified by the covariate.csv file.
 # The predictions are done using the optimal variable values.
 #
 # sam_predict.csv
-# This file is locatied in the same directory as fit_node_database.
+# This output file is locatied in the same directory as fit_node_database.
 # It contains the predictions for this fit node at the age and time
 # specified by the covariate.csv file.
 # The predictions are done using samples of the asymptotic distribution
 # for the variable values.
 #
-# csv_option_value
-# This routine assues that csv_option_value has been set.
+#
 #
 def predict_one(
    fit_dir               ,
@@ -1249,6 +1296,13 @@ def predict_one(
       # prefix_predict.csv
       file_name    = f'{fit_node_dir}/{prefix}_predict.csv'
       at_cascade.csv.write_table(file_name, predict_table)
+   #
+   # db2csv output files
+   if csv_option_value['db2csv'] :
+      command = [ 'dismodat.py', fit_node_database, 'db2csv' ]
+      dismod_at.system_command_prc(
+         command, print_command = False, return_stdout = True
+      )
 # ----------------------------------------------------------------------------
 # Calculate the predictions for All the Fits
 #
@@ -1330,6 +1384,9 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
    fit_node_database_list = list()
    for (job_id, job_row) in enumerate(job_table) :
       #
+      # job_id_str
+      job_id_str = f'{job_id + 1}/{n_job}'
+      #
       # job_name, fit_node_id, fit_split_reference_id
       job_name                = job_row['job_name']
       fit_node_id             = job_row['fit_node_id']
@@ -1360,11 +1417,16 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
       if two_errors :
          if os.path.exists( sam_node_predict ) :
             os.remove( sam_node_predict )
-         print( f'{job_id+1}/{n_job} Error in {job_name}' )
+         print( f'{job_id_str} Error in {job_name}' )
       elif not os.path.exists( fit_node_database ) :
-         print( f'{job_id+1}/{n_job} Missing dismod.db for {job_name}' )
+         print( f'{job_id_str} Missing dismod.db for {job_name}' )
       else :
-         print( f'{job_id+1}/{n_job} Creating sam_predict.csv for {job_name}' )
+         msg = f'{job_id_str} Creating sam_predict.csv'
+         if csv_option_value['db2csv'] :
+            msg  += f' and db2csv for {job_name}'
+         else :
+            msg  += f' for {job_name}'
+         print( msg )
       #
       # predict_one
       predict_one(

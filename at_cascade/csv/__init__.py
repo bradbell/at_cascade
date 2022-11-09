@@ -6,6 +6,7 @@
 {xrst_begin csv_module}
 {xrst_spell
    distributions
+   boolean
 }
 
 The at_cascade.csv Python Module
@@ -50,6 +51,7 @@ restrictions as described below
 1. An integer value is a string represents of an integer.
 2. A float value is a string that represents a floating point number.
 3. A sex value is either ``female`` , ``both``, or ``male``.
+4. A boolean value is either ``true`` or ``false`` .
 
 Index Column
 ============
