@@ -45,6 +45,12 @@ mm-dd
 #. Add mention of the fact that the csv fit
    :ref:`csv_fit@Input Files@parent_rate.csv` file corresponds to
    no random or fixed effects.
+#. The following assert checked that the option file was not read twice::
+
+      assert csv_option_value == None
+
+   This has been removed because one python session may fit different cases,
+   which could have different option values.
 
 11-08
 =====

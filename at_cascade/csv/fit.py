@@ -529,7 +529,7 @@ split_reference_table = [
 csv_option_value = None
 def set_csv_option_value(fit_dir, option_table, top_node_name) :
    global csv_option_value
-   assert csv_option_value == None
+   assert type(csv_option_value) == dict or csv_option_value == None
    assert type(option_table) == list
    if len(option_table) > 0 :
       assert type( option_table[0] ) == dict
