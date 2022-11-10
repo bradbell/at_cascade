@@ -53,6 +53,9 @@ option.csv
 This csv file has two columns,
 one called ``name`` and the other called ``value``.
 The rows are documented below by the name column:
+Because these options do not have a default value,
+when new options are added you have to change your old option.csv files
+to include the new option.
 
 absolute_tolerance
 ------------------

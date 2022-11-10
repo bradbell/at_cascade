@@ -31,6 +31,7 @@ import time
    std
    sqlite
    truncation
+   underbars
 }
 
 Fit a Simulated Data Set
@@ -59,9 +60,14 @@ option_in.csv
 =============
 This csv file has two columns,
 one called ``name`` and the other called ``value``.
+The rows of this table are documented below by the name column.
 If an option name does not appear, the corresponding
 default value is used for the option.
-The rows are documented below by the name column:
+The final value for each of the options is reported in the file
+:ref:`csv_fit@Output Files@option_out.csv` .
+Because each option has a default value,
+new option are added in such a way that
+previous option_in.csv files are still valid.
 
 db2csv
 ------
@@ -103,6 +109,7 @@ The default value for this option is
    max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
 {xrst_code}
 
+
 plot
 ----
 If this boolean option is true,
@@ -135,6 +142,16 @@ root_node_name
 This string is the name of the root node.
 The default for *root_node_name* is the top root of the entire node tree.
 Only the root node and its descendents will be fit.
+
+shared_memory_prefix
+--------------------
+This string is used added to the front of the name of the shared
+memory objects used to run the cascade in parallel.
+No two cascades can run at the same time with the same shared memory prefix.
+If a cascade does not terminate cleanly, you may have to clear the
+shared memory before you can run it again; see :ref:`clear_shared` .
+The default value for this option is your user name with spaces
+replaced by underbars.
 
 tolerance_fixed
 ---------------
@@ -535,18 +552,20 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
       assert type( option_table[0] ) == dict
    #
    # option_default
+   user           = os.environ.get('USER').replace(' ', '_')
    max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
    random_seed    = int( time.time() )
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
-      'db2csv'             : (bool,  'false')            ,
-      'max_fit'            : (int,   250)                ,
-      'max_num_iter_fixed' : (int,   100)                ,
-      'max_number_cpu'     : (int,   max_number_cpu)     ,
-      'plot'               : (bool,  'false')            ,
-      'random_seed'        : (int ,  random_seed )       ,
-      'root_node_name'     : (str,   top_node_name)      ,
-      'tolerance_fixed'    : (float, 1e-4)               ,
+      'db2csv'                : (bool,  'false')            ,
+      'max_fit'               : (int,   250)                ,
+      'max_num_iter_fixed'    : (int,   100)                ,
+      'max_number_cpu'        : (int,   max_number_cpu)     ,
+      'plot'                  : (bool,  'false')            ,
+      'random_seed'           : (int ,  random_seed )       ,
+      'root_node_name'        : (str,   top_node_name)      ,
+      'tolerance_fixed'       : (float, 1e-4)               ,
+      'shared_memory_prefix'  : (str,   user)               ,
    }
    # END_SORT_THIS_LINE_MINUS_2
    #
@@ -1000,10 +1019,8 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    # root_node_name
    root_node_name = at_cascade.get_parent_node(database)
    #
-   # user
-   user  = os.environ.get('USER').replace(' ', '_')
-   #
    # all_option
+   shared_memory_prefix = csv_option_value['shared_memory_prefix']
    all_option = {
       'absolute_covariates'          : 'one' ,
       'balance_fit'                  : 'sex -0.5 +0.5' ,
@@ -1013,7 +1030,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       'number_sample'                : '20',
       'perturb_optimization_scale'   : 0.2,
       'perturb_optimization_start'   : 0.2,
-      'shared_memory_prefix'         : user,
+      'shared_memory_prefix'         : shared_memory_prefix,
       'result_dir'                   : fit_dir,
       'root_node_name'               : root_node_name,
       'split_covariate_name'         : 'sex',

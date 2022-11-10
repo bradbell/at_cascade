@@ -36,8 +36,13 @@ mm-dd
 
 11-10
 =====
-Add the :ref:`csv_simulate@Input Files@option.csv@random_depend_sex`
-option to the csv simulation routine.
+1. Add the :ref:`csv_simulate@Input Files@option.csv@random_depend_sex`
+   option to the csv simulation routine. In addition, add a discussion
+   about :ref:`csv_simulate@Input Files@option.csv` not being backward
+   compatible.
+2. Add the :ref:`csv_fit@Input Files@option_in.csv@shared_memory_prefix`
+   option. In addition, add a discussion about
+   :ref:`csv_fit@Input Files@option_in.csv` being backward compatible.
 
 11-09
 =====
