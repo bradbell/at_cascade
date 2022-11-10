@@ -1097,7 +1097,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
             both   = omega_data[node_name][1][i * n_time + j]
             male   = omega_data[node_name][2][i * n_time + j]
             assert female != None and both == None and male != None
-            both   = (male + female) / 2.0
+            both   = (female + male) / 2.0
             omega_data[node_name][1][i * n_time + j] = both
    #
    # create_all_node_db

@@ -537,7 +537,7 @@ def main() :
    )
    #
    # check results
-   for sex in [ 'male', 'female' ] :
+   for sex in [ 'female', 'male' ] :
       for subdir in [ 'n1/n3', 'n1/n4', 'n2/n5', 'n2/n6' ] :
          goal_database = f'{result_dir}/n0/{sex}/{subdir}/dismod.db'
          at_cascade.check_cascade_node(

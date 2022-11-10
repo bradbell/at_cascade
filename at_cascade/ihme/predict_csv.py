@@ -177,7 +177,7 @@ def predict_csv_one_job(
                      val_female = fun(age, time, grid = False)
                   #
                   # value
-                  value = (val_male + val_female) / 2.0
+                  value = (val_female + val_male) / 2.0
             # x
             x.append(value)
          #

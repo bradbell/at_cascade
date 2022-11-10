@@ -155,7 +155,7 @@ def main() :
    eps10 = 10 * 10.0 ** (- float_precision )
    #
    # random_effect.csv
-   for sex in [ 'male', 'female' ] :
+   for sex in [ 'female', 'male' ] :
       sum_random = 0.0
       sum_abs    = 0.0
       for row in csv_table['random_effect.csv'] :

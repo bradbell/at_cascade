@@ -114,7 +114,7 @@ This string identifies the node, in node.csv, corresponding to this row.
 sex
 ---
 This identifies which sex this row corresponds to.
-The sex values ``male`` and ``female`` must appear in this table.
+The sex values ``female`` and ``male`` must appear in this table.
 The sex value ``both`` does not appear.
 
 age
@@ -281,7 +281,7 @@ that this row corresponds to.
 sex
 ---
 This identifies which sex the random effect corresponds to.
-The sex values ``male`` and ``female`` will appear.
+The sex values ``female`` and ``male`` will appear.
 
 rate_name
 ---------
@@ -573,7 +573,7 @@ def get_multiplier_list_rate(multiplier_sim_table) :
 #
 # spline = spline_node_sex_cov[node_name][sex][cov_name] :
 # is a function that evaluates value = spline(age, time) where
-# node_name is a node name, sex is 'male' or 'female' (not 'both'),
+# node_name is a node name, sex is 'female' or 'male' (not 'both'),
 # cov_name is a covariate name or 'sex',
 # age, time, and value are floats
 #
@@ -589,7 +589,7 @@ def get_multiplier_list_rate(multiplier_sim_table) :
 #
 # sex :
 # The sex that rate_fun will compute rates for.
-# This can be male, female or both.
+# This can be female, male or both.
 #
 # rate_fun_dict =
 def get_rate_fun_dict(
@@ -630,7 +630,7 @@ def get_rate_fun_dict(
             difference = sex_covariate_value[sex]
          else :
             covariate_name = covariate_or_sex
-            if sex in [ 'male', 'female' ] :
+            if sex in [ 'female', 'male' ] :
                spline         = \
                   spline_node_sex_cov[node_name][sex][covariate_name]
                covariate      = spline(age, time)
@@ -654,7 +654,7 @@ def get_rate_fun_dict(
    # -----------------------------------------------------------------------
    # omega_fun
    def omega_fun(age, time) :
-      if sex in [ 'male', 'female' ] :
+      if sex in [ 'female', 'male' ] :
          spline = spline_node_sex_cov[node_name][sex]['omega']
          omega  = spline(age, time)
       else :
@@ -817,17 +817,17 @@ def get_random_effect_node_sex_rate (
    random_effect_node_sex_rate  = dict()
    for node_name in parent_node_dict :
       random_effect_node_sex_rate[node_name] = dict()
-      for sex in ['male', 'female'] :
+      for sex in ['female', 'male'] :
          random_effect_node_sex_rate[node_name][sex] = dict()
    #
    # random_effect_node_sex_rate[root_node_name]
-   for sex in [ 'male', 'female' ] :
+   for sex in [ 'female', 'male' ] :
       for rate_name in rate_name_list :
          random_effect_node_sex_rate[root_node_name][sex][rate_name] = 0.0
 
    #
    # random_effect_node_sex_rate
-   for sex in [ 'male', 'female' ] :
+   for sex in [ 'female', 'male' ] :
       for rate_name in rate_name_list :
          recursive_call(
             random_effect_node_sex_rate ,
@@ -985,7 +985,7 @@ def simulate(sim_dir) :
       #
       # sex
       sex = sim_row['sex']
-      if sex not in [ 'male', 'female', 'both' ] :
+      if sex not in [ 'female', 'male', 'both' ] :
          msg  = f'csv_simulate: Error at line {line_number} '
          msg += f' in simulate.csv\n'
          msg += f'sex = ' + sex
@@ -1074,7 +1074,7 @@ def simulate(sim_dir) :
    # random_effect_table
    random_effect_table = list()
    for node_name in parent_node_dict :
-      for sex in [ 'male', 'female' ] :
+      for sex in [ 'female', 'male' ] :
          for rate_name in spline_no_effect_rate :
             #
             # row

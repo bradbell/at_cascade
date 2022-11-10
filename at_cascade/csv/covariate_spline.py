@@ -95,10 +95,10 @@ def covariate_spline(covariate_table , node_set) :
          msg += f'line {line_number} in covariate.csv\n'
          msg += f'node_name {node_name} is not in node.csv'
          assert False, msg
-      if sex not in ['male', 'female'] :
+      if sex not in ['female', 'male'] :
          msg  = f'covariate_spline: Error: '
          msg += f'line {line_number} in covariate.csv\n'
-         msg += f'sex {sex} is not male or female'
+         msg += f'sex {sex} is not female or male'
          assert False, msg
       #
       # covariate_row_list

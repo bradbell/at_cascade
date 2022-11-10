@@ -122,7 +122,7 @@ def run_test() :
       csv_table[name] = at_cascade.csv.read_table( file_name )
    #
    # random_effect.csv
-   for sex in [ 'male', 'female' ] :
+   for sex in [ 'female', 'male' ] :
       sum_random = 0.0
       sum_abs    = 0.0
       for row in csv_table['random_effect.csv'] :

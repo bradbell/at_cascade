@@ -31,10 +31,4 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-/^mtall$/! b end
-:loop
-N
-/\n *$/! b loop
-d
-#
-: end
+s|\([^a-z]\)male\([^a-z].*[^a-z]\)female\([^a-z]\)|\1female\2male\3|
