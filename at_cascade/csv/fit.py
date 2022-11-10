@@ -218,7 +218,7 @@ mean
 ----
 is a float containing the mean for the density
 for this prior (before truncation).
-If density is uniform, this value is only used for a starting
+If density is uniform, this value is only used for starting
 and scaling the optimization.
 
 std

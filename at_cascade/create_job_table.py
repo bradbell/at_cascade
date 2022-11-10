@@ -18,9 +18,9 @@ Syntax
 Purpose
 *******
 This routine returns a list of (fit_node_id, split_reference_id) pairs
-that define a dismod_at fit.
-In addition, it specifies which job needs to run before this job,
-and which jobs can be run after this job.
+that specify all the dismod_at fits that need to be run.
+In addition, for each fit it specifies which job needs to run before,
+and which jobs can be run after.
 
 all_node_database
 *****************
