@@ -75,6 +75,7 @@ csv_file['option.csv'] = \
 absolute_tolerance,1e-5
 float_precision,4
 integrand_step_size,5
+random_depend_sex,true
 std_random_effects,.1
 '''
 csv_file['option.csv'] += f'random_seed,{random_seed}\n'

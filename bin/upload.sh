@@ -19,7 +19,8 @@ then
 fi
 if [ "$PASSWORD" == '' ]
 then
-   echo 'bin/upload.sh: Must set PASSWORD environment variable before running'
+   echo 'bin/upload.sh: Must first set PASSWORD using'
+   echo 'export PASSWORD=<value>'
    exit 1
 fi
 if [ -e dist ]
