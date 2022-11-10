@@ -293,11 +293,11 @@ All of the rates in the no_effect rate table are present in this file.
 random_effect
 -------------
 This float value is the random effect
-for the specified node, sex, and rate.
+for the specified node, rate, and sex.
 
 Discussion
 ----------
-1. For a given parent node, sex, and rate,
+1. For a given parent node, rate, and sex,
    the sum of the random effects with respect to the child nodes is zero.
 2. All the random effects for the root node are set to zero
    (the root node does not have a parent node).
@@ -565,8 +565,8 @@ def get_multiplier_list_rate(multiplier_sim_table) :
 # spline_no_effect_rate[rate_name] :
 # is a spline that evaluates the specified no_effect rate.
 #
-# random_effect_node_sex_rate[node_name][sex][rate_name] :
-# is the random effect for the specified node, sex, and rate.
+# random_effect_node_rate_sex[node_name][rate_name][sex] :
+# is the random effect for the specified node, rate, and sex.
 # Note that to get the difference from the root node, one has to sum
 # the random effect for this node and its ancestors not including the
 # root node in the sum.
@@ -595,7 +595,7 @@ def get_multiplier_list_rate(multiplier_sim_table) :
 def get_rate_fun_dict(
    parent_node_dict            ,
    spline_no_effect_rate       ,
-   random_effect_node_sex_rate ,
+   random_effect_node_rate_sex ,
    spline_node_sex_cov         ,
    root_covariate_avg          ,
    multiplier_list_rate        ,
@@ -617,7 +617,7 @@ def get_rate_fun_dict(
       parent_node    = parent_node_dict[node_name]
       while parent_node != '' :
          effect     += \
-            random_effect_node_sex_rate[node_name][sex][rate_name]
+            random_effect_node_rate_sex[node_name][rate_name][sex]
          parent_node = parent_node_dict[parent_node]
       #
       # effect
@@ -722,10 +722,10 @@ def average_integrand_grid(
    #
    return grid
 # ----------------------------------------------------------------------------
-# random_effect_node_sex_rate[node_name][sex][rate_name] :
+# random_effect_node_rate_sex[node_name][rate_name][sex] :
 # is the simulated random effect for the corresponding node, sex and rate.
 # For a given node_name, sex and rate_name, the sum of
-#  random_effect_node_sex_rate[child_node][sex][rate_name]
+#  random_effect_node_rate_sex[child_node][rate_name][sex]
 # is zero where child_node ranges over values in child_list_node[node_name]
 # All the random effects for the root node are zero
 # (prent_node_dict[root_node_name] == '' )
@@ -744,15 +744,15 @@ def average_integrand_grid(
 # for each node_name in parent_node_dict this is a list of
 # node that have node_name as its parent node.
 #
-# random_effect_node_sex_rate =
-def get_random_effect_node_sex_rate (
+# random_effect_node_rate_sex =
+def get_random_effect_node_rate_sex (
    std_random_effects ,
    rate_name_list     ,
    parent_node_dict   ,
    child_list_node    ,
 ) :
    def recursive_call(
-      random_effect_node_sex_rate ,
+      random_effect_node_rate_sex ,
       node_name                   ,
       sex                         ,
       rate_name                   ,
@@ -788,15 +788,15 @@ def get_random_effect_node_sex_rate (
       for child_name in child_list :
          random_effect_dict[child_name] -= avg_random_effect
       #
-      # random_effect_node_sex_rate
+      # random_effect_node_rate_sex
       for child_name in child_list :
-         random_effect_node_sex_rate[child_name][sex][rate_name] = \
+         random_effect_node_rate_sex[child_name][rate_name][sex] = \
             random_effect_dict[child_name]
       #
-      # random_effect_node_sex_rate
+      # random_effect_node_rate_sex
       for child_name in child_list :
          recursive_call(
-            random_effect_node_sex_rate ,
+            random_effect_node_rate_sex ,
             child_name                  ,
             sex                         ,
             rate_name                   ,
@@ -813,24 +813,24 @@ def get_random_effect_node_sex_rate (
          root_node_name = node_name
    assert root_node_name != None
    #
-   # random_effect_node_sex_rate
-   random_effect_node_sex_rate  = dict()
+   # random_effect_node_rate_sex
+   random_effect_node_rate_sex  = dict()
    for node_name in parent_node_dict :
-      random_effect_node_sex_rate[node_name] = dict()
-      for sex in ['female', 'male'] :
-         random_effect_node_sex_rate[node_name][sex] = dict()
-   #
-   # random_effect_node_sex_rate[root_node_name]
-   for sex in [ 'female', 'male' ] :
+      random_effect_node_rate_sex[node_name] = dict()
       for rate_name in rate_name_list :
-         random_effect_node_sex_rate[root_node_name][sex][rate_name] = 0.0
+         random_effect_node_rate_sex[node_name][rate_name] = dict()
+   #
+   # random_effect_node_rate_sex[root_node_name]
+   for rate_name in rate_name_list :
+      for sex in [ 'female', 'male' ] :
+         random_effect_node_rate_sex[root_node_name][rate_name][sex] = 0.0
 
    #
-   # random_effect_node_sex_rate
-   for sex in [ 'female', 'male' ] :
-      for rate_name in rate_name_list :
+   # random_effect_node_rate_sex
+   for rate_name in rate_name_list :
+      for sex in [ 'female', 'male' ] :
          recursive_call(
-            random_effect_node_sex_rate ,
+            random_effect_node_rate_sex ,
             root_node_name              ,
             sex                         ,
             rate_name                   ,
@@ -839,7 +839,7 @@ def get_random_effect_node_sex_rate (
             child_list_node             ,
          )
    #
-   return random_effect_node_sex_rate
+   return random_effect_node_rate_sex
 # ----------------------------------------------------------------------------
 # BEGIN_SIMULATE
 def simulate(sim_dir) :
@@ -917,10 +917,10 @@ def simulate(sim_dir) :
       input_table['no_effect_rate']
    )
    #
-   # random_effect_node_sex_rate
+   # random_effect_node_rate_sex
    std_random_effects  = option_value['std_random_effects']
    rate_name_list      = spline_no_effect_rate.keys()
-   random_effect_node_sex_rate = get_random_effect_node_sex_rate(
+   random_effect_node_rate_sex = get_random_effect_node_rate_sex(
       std_random_effects ,
       rate_name_list     ,
       parent_node_dict   ,
@@ -1017,7 +1017,7 @@ def simulate(sim_dir) :
       rate_fun_dict = get_rate_fun_dict(
          parent_node_dict            ,
          spline_no_effect_rate       ,
-         random_effect_node_sex_rate ,
+         random_effect_node_rate_sex ,
          spline_node_sex_cov         ,
          root_covariate_avg          ,
          multiplier_list_rate        ,
@@ -1081,7 +1081,7 @@ def simulate(sim_dir) :
             row                  = { 'node_name' : node_name, 'sex' : sex }
             row['rate_name']     = rate_name
             random_effect = \
-               random_effect_node_sex_rate[node_name][sex][rate_name]
+               random_effect_node_rate_sex[node_name][rate_name][sex]
             row['random_effect'] = float_format.format(random_effect)
             #
             # random_effect_table
