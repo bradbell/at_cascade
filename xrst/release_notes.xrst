@@ -34,6 +34,11 @@ Release Notes for 2022
 mm-dd
 *****
 
+11-10
+=====
+Add the :ref:`csv_simulate@Input Files@option.csv@random_depend_sex`
+option to the csv simulation routine.
+
 11-09
 =====
 #. Add :ref:`csv_module@Notation@Data Type@Boolean` to the possible csv file

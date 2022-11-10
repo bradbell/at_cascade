@@ -43,6 +43,7 @@ absolute_tolerance,1e-4
 float_precision,4
 std_random_effects,.1
 integrand_step_size,1.0
+random_depend_sex,false
 '''
 csv_file['option.csv'] += f'random_seed,{random_seed}\n'
 #
@@ -121,30 +122,31 @@ def run_test() :
       file_name       = f'{sim_dir}/{name}'
       csv_table[name] = at_cascade.csv.read_table( file_name )
    #
-   # random_effect.csv
-   for sex in [ 'female', 'male' ] :
-      sum_random = 0.0
-      sum_abs    = 0.0
-      for row in csv_table['random_effect.csv'] :
-         if row['node_name'] == 'n0' :
-            assert float( row['random_effect'] ) == 0.0
-         if row['sex'] == sex :
-            if row['rate_name'] == 'iota' :
-               sum_abs    += abs( float( row['random_effect'] ) )
-               sum_random += float( row['random_effect'] )
-      assert abs( sum_random ) <= eps99 * sum_abs
-   #
-   # random_effect_node_sex
-   random_effect_node_sex = dict()
-   for node_name in [ 'n0', 'n1', 'n2' ] :
-      random_effect_node_sex[node_name] = dict()
+   # random_effect_node_rate
+   random_effect_node_rate = dict()
    for row in csv_table['random_effect.csv'] :
       node_name     = row['node_name']
-      sex           = row['sex']
       rate_name     = row['rate_name']
-      random_effect = row['random_effect']
-      if rate_name == 'iota' :
-         random_effect_node_sex[node_name][sex] = float( random_effect )
+      random_effect = float( row['random_effect'] )
+      if node_name not in random_effect_node_rate :
+         random_effect_node_rate[node_name] = dict()
+      if rate_name not in random_effect_node_rate[node_name] :
+         random_effect_node_rate[node_name][rate_name] = random_effect
+      else :
+         assert random_effect_node_rate[node_name][rate_name] == random_effect
+   #
+   # check zero sum
+   for rate_name in [ 'iota', 'chi' ] :
+      sum_random = 0.0
+      sum_abs    = 0.0
+      for node_name in random_effect_node_rate :
+         random_effect = random_effect_node_rate[node_name][rate_name]
+         if node_name == 'n0' :
+            assert float( random_effect ) == 0.0
+         else :
+            sum_abs    += abs( float( random_effect ) )
+            sum_random += float( random_effect )
+      assert abs( sum_random ) <= eps99 * sum_abs
    #
    # no_effect_iota
    # one row for iota the other for chi
@@ -194,7 +196,7 @@ def run_test() :
       sex            = sim_row['sex']
       #
       # random_effect
-      random_effect = random_effect_node_sex[node_name][sex]
+      random_effect = random_effect_node_rate[node_name]['iota']
       #
       # covariate effect
       haqi             = float( haqi_node_sex[node_name][sex] )

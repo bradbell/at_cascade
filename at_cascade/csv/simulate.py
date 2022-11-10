@@ -12,6 +12,7 @@ import at_cascade
 {xrst_begin csv_simulate}
 {xrst_spell
    bilinear
+   boolean
    cv
    dir
    integrator
@@ -56,6 +57,12 @@ The rows are documented below by the name column:
 absolute_tolerance
 ------------------
 This float is the absolute error tolerance for the integrator.
+It determines the accuracy of
+:ref:`csv_simulate@Output Files@data_sim.csv@meas_mean` for
+:ref:`integrand <csv_simulate@Input Files@simulate.csv@integrand_name>`
+that require the ODE; e.g.,
+prevalence requires the ODE and Sincidence does not.
+
 
 float_precision
 ---------------
@@ -68,6 +75,13 @@ This float is the step size in age and time used to approximate
 integrand averages from age_lower to age_upper
 and time_lower to time_upper (in data_sim.csv).
 It must be greater than zero.
+
+random_depend_sex
+-----------------
+If this boolean is true, the random effects depend on sex.
+Otherwise, for each *node_name* and *rate*, the random effect for
+``female`` and ``male`` will be equal; see
+:ref:`csv_simulate@Output Files@random_effect.csv` .
 
 random_seed
 -----------
@@ -269,19 +283,12 @@ Output Files
 
 random_effect.csv
 =================
-This file reports the random effect for each node and rate.
-It has a :ref:`csv_module@Notation@Rectangular Grid` in the columns
-``node_name`` , ``sex`` and ``rate_name`` .
+This file reports the random effect for each node, rate and sex.
 
 node_name
 ---------
 This string identifies the row in :ref:`csv_simulate@Input Files@node.csv`
 that this row corresponds to.
-
-sex
----
-This identifies which sex the random effect corresponds to.
-The sex values ``female`` and ``male`` will appear.
 
 rate_name
 ---------
@@ -290,10 +297,17 @@ For each :ref:`csv_simulate@Input Files@no_effect_rate.csv@rate_name`
 in the no_effect rate table,
 All of the rates in the no_effect rate table are present in this file.
 
+sex
+---
+This identifies which sex the random effect corresponds to.
+The sex values ``female`` and ``male`` will appear and
+``both`` will not appear.
+
 random_effect
 -------------
-This float value is the random effect
-for the specified node, rate, and sex.
+This float value is the random effect for the specified node, rate, and sex.
+If :ref:`csv_simulate@Input Files@option.csv@random_depend_sex`  is false,
+the value in this column will not depend on the value in the sex column.
 
 Discussion
 ----------
@@ -366,6 +380,7 @@ def option_table2dict(option_table) :
       'absolute_tolerance'     : float   ,
       'float_precision'        : int     ,
       'integrand_step_size'    : float   ,
+      'random_depend_sex'      : bool    ,
       'random_seed'            : int     ,
       'std_random_effects'     : float   ,
    }
@@ -373,18 +388,29 @@ def option_table2dict(option_table) :
    for row in option_table :
       line_number += 1
       name         = row['name']
+      #
       if name in option_value :
          msg  = f'csv_simulate: Error: line {line_number} in option.csv\n'
          msg += f'the name {name} appears twice in this table'
          assert False, msg
+      #
       if not name in option_type :
          msg  = f'csv_simulate: Error: line {line_number} in option.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
-      value        = option_type[name]( row['value'] )
+      #
+      this_type = option_type[name]
+      value     = row['value']
+      if this_type == bool :
+         if value not in [ 'true' , 'false' ] :
+            msg  = f'csv_simulate: Error: line {line_number} in option.csv\n'
+            msg += f'the value for {name} is not true or false'
+            assert False, msg
+         value = value == 'true'
+      else :
+         value = option_type[name]( row['value'] )
       option_value[name] = value
    #
-   # option_value
    for name in option_type :
       if not name in option_value :
          msg  = 'csv_simulate: Error: in option.csv\n'
@@ -730,6 +756,8 @@ def average_integrand_grid(
 # All the random effects for the root node are zero
 # (prent_node_dict[root_node_name] == '' )
 #
+# random_depend_sex:
+# is a bool specifying if the random effects depend on sex.
 #
 # std_random_effects:
 # is a float specifying the standard deviation of the random effects
@@ -746,6 +774,7 @@ def average_integrand_grid(
 #
 # random_effect_node_rate_sex =
 def get_random_effect_node_rate_sex (
+   random_depend_sex  ,
    std_random_effects ,
    rate_name_list     ,
    parent_node_dict   ,
@@ -754,8 +783,8 @@ def get_random_effect_node_rate_sex (
    def recursive_call(
       random_effect_node_rate_sex ,
       node_name                   ,
-      sex                         ,
       rate_name                   ,
+      sex                         ,
       std_random_effects          ,
       parent_node_dict            ,
       child_list_node             ,
@@ -798,8 +827,8 @@ def get_random_effect_node_rate_sex (
          recursive_call(
             random_effect_node_rate_sex ,
             child_name                  ,
-            sex                         ,
             rate_name                   ,
+            sex                         ,
             std_random_effects          ,
             parent_node_dict            ,
             child_list_node             ,
@@ -828,16 +857,31 @@ def get_random_effect_node_rate_sex (
    #
    # random_effect_node_rate_sex
    for rate_name in rate_name_list :
-      for sex in [ 'female', 'male' ] :
+      #
+      # sex_list
+      if random_depend_sex :
+         sex_list = [ 'female', 'male' ]
+      else :
+         sex_list = [ 'female' ]
+      #
+      # random_effects_node_rate_sex
+      for sex in sex_list :
          recursive_call(
             random_effect_node_rate_sex ,
             root_node_name              ,
-            sex                         ,
             rate_name                   ,
+            sex                         ,
             std_random_effects          ,
             parent_node_dict            ,
             child_list_node             ,
          )
+   #
+   # random_effect_node_rate_sex
+   if not random_depend_sex :
+      for node_name in random_effect_node_rate_sex :
+         for rate_name in random_effect_node_rate_sex[node_name]:
+            random_effect_node_rate_sex[node_name][rate_name]['male'] = \
+               random_effect_node_rate_sex[node_name][rate_name]['female']
    #
    return random_effect_node_rate_sex
 # ----------------------------------------------------------------------------
@@ -918,9 +962,11 @@ def simulate(sim_dir) :
    )
    #
    # random_effect_node_rate_sex
+   random_depend_sex   = option_value['random_depend_sex']
    std_random_effects  = option_value['std_random_effects']
    rate_name_list      = spline_no_effect_rate.keys()
    random_effect_node_rate_sex = get_random_effect_node_rate_sex(
+      random_depend_sex  ,
       std_random_effects ,
       rate_name_list     ,
       parent_node_dict   ,
@@ -1074,8 +1120,8 @@ def simulate(sim_dir) :
    # random_effect_table
    random_effect_table = list()
    for node_name in parent_node_dict :
-      for sex in [ 'female', 'male' ] :
-         for rate_name in spline_no_effect_rate :
+      for rate_name in spline_no_effect_rate :
+         for sex in [ 'female', 'male' ] :
             #
             # row
             row                  = { 'node_name' : node_name, 'sex' : sex }
