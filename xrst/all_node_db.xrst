@@ -196,6 +196,18 @@ in the following order:
 If this option appears, the :ref:`all_option_table@max_fit` option
 must also appear.
 
+fit_split
+*********
+If this option appears, it specifies if there should be a fits,
+at the same node that a split occurs at,
+after the split by value of the fitting covariate.
+The possible values for this option are true and false
+and its default value is true.
+If this is true, then the fits after the split will be used
+to get the priors for the child node.
+If it is false, the fit before the split will be used and there
+with be no other fits at the same node.
+
 max_abs_effect
 **************
 If this option appears, it specifies an extra bound on the

@@ -189,12 +189,14 @@ def create_job_table(
    for row in all_table['node_split'] :
       node_split_set.add( row['node_id'] )
    #
-   # root_node_name
-   root_node_name = None
+   # all_option_dict
+   all_option_dict = dict()
    for row in all_table['all_option'] :
-      if row['option_name'] == 'root_node_name' :
-         root_node_name = row['option_value']
-   assert root_node_name is not None
+      all_option_dict[ row['option_name'] ] = row['option_value']
+   #
+   # root_node_name
+   assert 'root_node_name' in all_option_dict
+   root_node_name = all_option_dict['root_node_name']
    #
    # root_node_id
    root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
@@ -205,18 +207,16 @@ def create_job_table(
    )
    #
    # root_split_reference_id
-   root_split_reference_name = None
-   for row in all_table['all_option'] :
-      if row['option_name'] == 'root_split_reference_name' :
-         root_split_reference_name = row['option_value']
-   if root_split_reference_name is None :
-      root_split_reference_id = None
-   else :
-      root_split_reference_id = at_cascade.table_name2id(
+   if 'root_split_reference_name' in all_option_dict :
+      root_split_reference_name = all_option_dict['root_split_reference_name']
+      root_split_reference_id   = at_cascade.table_name2id(
          all_table['split_reference'],
          'split_reference',
          root_split_reference_name
       )
+   else :
+      root_split_reference_name = None
+      root_split_reference_id   = None
    #
    # job_name
    job_name = node_table[start_node_id]['node_name']
