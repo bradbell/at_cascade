@@ -123,6 +123,17 @@ def get_child_job_table(
    fit_children               ,
    node_table                 ,
 ) :
+   assert type(job_id) == int
+   assert type(fit_node_id) == int
+   assert type(fit_split_reference_id) ==int or fit_split_reference_id  == None
+   assert type(root_split_reference_id)==int or root_split_reference_id == None
+   assert type(node_split_set) == set
+   assert type(fit_children) == list
+   if len(fit_children) > 0 :
+      assert type( fit_children[0] ) == set
+   assert type(node_table) == list
+   if len(node_table) > 0 :
+      assert type( node_table[0] ) == dict
    #
    # already_split
    already_split = root_split_reference_id != fit_split_reference_id
@@ -174,6 +185,14 @@ def create_job_table(
 # )
 # END syntax
 ) :
+   assert type(all_node_database) == str
+   assert type(node_table) == list
+   if len(node_table) > 0 :
+      assert type( node_table[0] ) == dict
+   assert type(start_node_id) == int
+   assert type(start_split_reference_id) == int or \
+      start_split_reference_id == None
+   assert type(fit_goal_set) == set
    #
    # all_table
    all_table = dict()
