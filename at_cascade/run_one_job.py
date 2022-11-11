@@ -191,6 +191,14 @@ def run_one_job(
    for row in all_table['all_option'] :
       all_option_dict[ row['option_name']  ] = row['option_value']
    #
+   # refit_split
+   if 'refit_split' in all_option_dict :
+      refit_split = all_option_dict['refit_split']
+      assert refit_split in [ 'true', 'false' ]
+      refit_split = refit_split == 'true'
+   else :
+      refit_split = False
+   #
    # result_dir
    result_dir = all_option_dict['result_dir']
    #
@@ -201,6 +209,7 @@ def run_one_job(
    # root_split_reference_id
    if 'root_split_reference_name' not in all_option_dict :
       root_split_reference_id = None
+      assert refit_split == False
    else :
       name = all_option_dict['root_split_reference_name']
       root_split_reference_id   = at_cascade.table_name2id(
@@ -368,8 +377,18 @@ def run_one_job(
       # shift_node_database
       shift_node_database = f'{shift_database_dir}/dismod.db'
       #
+      # skip_refit
+      if refit_split :
+         skip_refit = False
+      else :
+         skip_refit = fit_split_reference_id != shift_split_reference_id
+      #
       # shift_name
-      shift_name = shift_database_dir.split('/')[-1]
+      dir_list = shift_database_dir.split('/')
+      if skip_refit :
+         shift_name = dir_list[-2] + '/' + dir_list[-1]
+      else :
+         shift_name = dir_list[-1]
       #
       # shfit_databases
       shift_databases[shift_name] = shift_node_database
