@@ -513,31 +513,33 @@ def create_shift_db(
       shift_table['nslist']      = list()
       shift_table['nslist_pair'] = list()
       #
-      # shift_node_name, shift_split_reference_id
-      shift_node_name = None
-      for (row_id, row) in enumerate(all_table['split_reference']) :
-         if row['split_reference_name'] == shift_name :
-            shift_node_name          = fit_node_name
-            shift_split_reference_id = row_id
-      for row in fit_table['node'] :
-         if row['node_name'] == shift_name :
-            if shift_node_name is not None :
-               msg  = f'{shift_name} is both a split_reference_name '
-               msg += 'and a node_name'
-               assert False, msg
-            if row['parent'] == fit_node_id :
-               shift_node_name          = shift_name
-               shift_split_reference_id = fit_split_reference_id
-      if shift_node_name is None :
-         if shift_name != fit_node_name :
-            msg  = f'shift_name = {shift_name}, '
-            msg += f'fit_node_name = {fit_node_name}\n'
-            msg += 'shift_name is not a split_reference_name, '
-            msg += 'or the fit_node_name, or a child of the fit node.'
-            assert False, msg
-         #
-         shift_node_name          = fit_node_name
+      # shift_node_name, shift_split_reference_name
+      shift_node_name            = None
+      shift_split_reference_name = None
+      if shift_name.find('/') < 0 :
+         for row in all_table['split_reference'] :
+            if row['split_reference_name'] == shift_name :
+               if shift_node_name != None :
+                  msg  = f'{shift_name} is both a split_reference_name '
+                  msg += 'and a node_name'
+                  assert False, msg
+               shift_split_reference_name = shift_name
+               shift_node_name            = fit_node_name
+         if shift_split_reference_name == None :
+            shift_node_name = shift_name
+      else :
+         shift_split_reference_name = shift_name.split('/')[0]
+         shift_node_name            = shift_name.split('/')[1]
+      #
+      # shift_split_reference_id
+      if shift_split_reference_name == None :
          shift_split_reference_id = fit_split_reference_id
+      else :
+         shift_split_reference_id = at_cascade.table_name2id(
+            all_table['split_reference'],
+            'split_reference',
+            shift_split_reference_name
+         )
       #
       # shift_node_id
       shift_node_id  = at_cascade.table_name2id(

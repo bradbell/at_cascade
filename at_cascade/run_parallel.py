@@ -2,6 +2,9 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-22 Bradley M. Bell
 # ----------------------------------------------------------------------------
+# Set this to False when debugging an exception during one_job routine
+catch_exceptions_and_continue = True
+# ----------------------------------------------------------------------------
 '''
 {xrst_begin run_parallel}
 {xrst_spell
@@ -211,9 +214,9 @@ def try_one_job(
       current_time    = now.strftime("%H:%M:%S")
       print( f'Begin: fit {fit_type:<5} {current_time}: {job_name}' )
       #
-      try :
-         # run_one_job
-         # the lock should not be aquired during this operation
+      # run_one_job
+      # the lock should not be aquired during this operation
+      if not catch_exceptions_and_continue :
          at_cascade.run_one_job(
             job_table         = job_table,
             run_job_id        = this_job_id ,
@@ -227,10 +230,25 @@ def try_one_job(
          #
          # job_done
          job_done = True
-      except Exception as e:
-         job_done = False
-         #
-         print( f'\nfit {fit_type:<5} {job_name} message:\n' + str(e) )
+      else :
+         try :
+            at_cascade.run_one_job(
+               job_table         = job_table,
+               run_job_id        = this_job_id ,
+               all_node_database = all_node_database,
+               node_table        = node_table,
+               fit_integrand     = fit_integrand,
+               fit_type          = fit_type,
+               first_fit         = fit_type_index == 1,
+               trace_file_obj    = trace_file_obj,
+            )
+            #
+            # job_done
+            job_done = True
+         except Exception as e:
+            job_done = False
+            #
+            print( f'\nfit {fit_type:<5} {job_name} message:\n' + str(e) )
    #
    if job_done :
       #
