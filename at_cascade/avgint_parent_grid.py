@@ -98,8 +98,11 @@ def avgint_parent_grid(
    all_node_database    = None ,
    fit_node_database = None ,
 # )
-# END syntax
 ) :
+   assert type(all_node_database)  == str
+   assert type(fit_node_database) == str
+   # END syntax
+   #
    # all_option_table
    new        = False
    connection = dismod_at.create_connection(all_node_database, new)
