@@ -1031,6 +1031,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       'perturb_optimization_scale'   : 0.2,
       'perturb_optimization_start'   : 0.2,
       'shared_memory_prefix'         : shared_memory_prefix,
+      'refit_split'                  : 'true',
       'result_dir'                   : fit_dir,
       'root_node_name'               : root_node_name,
       'split_covariate_name'         : 'sex',

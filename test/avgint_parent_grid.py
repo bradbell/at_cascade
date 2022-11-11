@@ -228,6 +228,7 @@ def main() :
    # Create all_node.db
    all_node_database = 'all_node.db'
    all_option        = {
+      'refit_split':    'true',
       'result_dir':     '.',
       'root_node_name': 'n0',
    }

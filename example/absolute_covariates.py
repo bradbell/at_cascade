@@ -204,6 +204,7 @@ fit_goal_set = { 'n3', 'n4', 'n2' }
 #
 # BEGIN split_reference_table
 all_option            = {
+   'refit_split':               'true',
    'result_dir':                'build/example',
    'root_node_name':            'n0',
    'root_split_reference_name': 'both',

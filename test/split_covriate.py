@@ -210,6 +210,7 @@ fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 #
 # BEGIN all_option_table
 all_option            = {
+   'refit_split':                'true',
    'result_dir':                 'build/test',
    'root_node_name':             'n0',
    'root_split_reference_name':  'both',

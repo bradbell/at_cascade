@@ -116,6 +116,7 @@ import at_cascade
 def get_child_job_table(
    job_id                     ,
    fit_node_id                ,
+   refit_split                ,
    fit_split_reference_id     ,
    root_split_reference_id    ,
    split_reference_table      ,
@@ -125,6 +126,7 @@ def get_child_job_table(
 ) :
    assert type(job_id) == int
    assert type(fit_node_id) == int
+   assert type(refit_split) == bool
    assert type(fit_split_reference_id) ==int or fit_split_reference_id  == None
    assert type(root_split_reference_id)==int or root_split_reference_id == None
    assert type(node_split_set) == set
@@ -146,7 +148,7 @@ def get_child_job_table(
       shift_reference_set.remove( root_split_reference_id )
    #
    # shift_node_set
-   if fit_node_id in node_split_set and not already_split :
+   if fit_node_id in node_split_set and not already_split and refit_split :
       shift_node_set = { fit_node_id }
    else :
       shift_node_set = fit_children[ fit_node_id ]
@@ -158,8 +160,8 @@ def get_child_job_table(
          #
          # job_name
          job_name = node_table[shift_node_id]['node_name']
-         if shift_split_reference_id is not None :
-            row       = split_reference_table[shift_split_reference_id]
+         if shift_split_reference_id != None :
+            row  = split_reference_table[shift_split_reference_id]
             split_reference_name = row['split_reference_name']
             job_name             = f'{job_name}.{split_reference_name}'
          #
@@ -213,6 +215,14 @@ def create_job_table(
    for row in all_table['all_option'] :
       all_option_dict[ row['option_name'] ] = row['option_value']
    #
+   # refit_split
+   if 'refit_split' in all_option_dict :
+      refit_split = all_option_dict['refit_split']
+      assert refit_split in [ 'true', 'false' ]
+      refit_split = refit_split == 'true'
+   else :
+      refit_split = False
+   #
    # root_node_name
    assert 'root_node_name' in all_option_dict
    root_node_name = all_option_dict['root_node_name']
@@ -236,10 +246,13 @@ def create_job_table(
    else :
       root_split_reference_name = None
       root_split_reference_id   = None
+      if refit_split :
+         msg = 'refit_split is true and the split reference table is empty'
+         assert False, msg
    #
    # job_name
    job_name = node_table[start_node_id]['node_name']
-   if start_split_reference_id is not None :
+   if start_split_reference_id != None :
       row       = all_table['split_reference'][start_split_reference_id]
       split_reference_name = row['split_reference_name']
       job_name             = f'{job_name}.{split_reference_name}'
@@ -263,9 +276,10 @@ def create_job_table(
       split_reference_id = row['split_reference_id']
       #
       # child_job_table
-      child_job_table    = get_child_job_table(
+      child_job_table  = get_child_job_table(
          job_id,
          node_id,
+         refit_split,
          split_reference_id,
          root_split_reference_id,
          all_table['split_reference'],
