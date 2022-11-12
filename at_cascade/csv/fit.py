@@ -118,6 +118,7 @@ a ``data_plot.pdf`` and ``rate_plot.pdf`` file is created for each
 The data plot includes a maximum of 1,000 randomly chosen points for each
 integrand in the predict_integrand.csv file.
 The rate plot includes all the non-zero rates.
+The default value for this option is false .
 
 These are no effect rates; i.e., they are the estimated rate
 for this node an sex without any covariate effects
@@ -136,6 +137,18 @@ The default value for this option is
 {xrst_code py}
    random_seed = int( time.time() )
 {xrst_code}
+
+refit_split
+-----------
+If this boolean is true,
+there is a  female, male, and both fit at the root level.
+The both fit is used for the female and male priors.
+The female and male fits are used to the priors below the root level.
+If *refit_split* is true,
+There is no female or male fit at the root level and
+the both fit is used to the priors below the root level.
+The default value for this option is true.
+
 
 root_node_name
 --------------
@@ -563,6 +576,7 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
       'max_number_cpu'        : (int,   max_number_cpu)     ,
       'plot'                  : (bool,  'false')            ,
       'random_seed'           : (int ,  random_seed )       ,
+      'refit_split'           : (bool,  'true' )            ,
       'root_node_name'        : (str,   top_node_name)      ,
       'tolerance_fixed'       : (float, 1e-4)               ,
       'shared_memory_prefix'  : (str,   user)               ,
@@ -1021,6 +1035,10 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    #
    # all_option
    shared_memory_prefix = csv_option_value['shared_memory_prefix']
+   if csv_option_value['refit_split'] :
+      refit_split = 'true'
+   else :
+      refit_split = 'false'
    all_option = {
       'absolute_covariates'          : 'one' ,
       'balance_fit'                  : 'sex -0.5 +0.5' ,
@@ -1031,7 +1049,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       'perturb_optimization_scale'   : 0.2,
       'perturb_optimization_start'   : 0.2,
       'shared_memory_prefix'         : shared_memory_prefix,
-      'refit_split'                  : 'true',
+      'refit_split'                  : refit_split,
       'result_dir'                   : fit_dir,
       'root_node_name'               : root_node_name,
       'split_covariate_name'         : 'sex',

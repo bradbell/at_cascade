@@ -34,6 +34,14 @@ Release Notes for 2022
 mm-dd
 *****
 
+11-12
+=====
+Add the refit_split option to the
+:ref:`all option table <all_option_table@refit_split>`  and the
+:ref:`csv_fit@Input Files@option_in.csv` file.
+Note that its default value for the all option table is false,
+and for option_in.csv file its default value is true.
+
 11-10
 =====
 1. Add the :ref:`csv_simulate@Input Files@option.csv@random_depend_sex`
