@@ -255,5 +255,5 @@ def main() :
       assert abs( relative_err ) < eps99
 #
 main()
-print('avgint_parent_grid.py: OK')
+print('omega_constraint.py: OK')
 sys.exit(0)

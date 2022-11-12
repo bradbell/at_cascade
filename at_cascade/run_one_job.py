@@ -333,7 +333,12 @@ def run_one_job(
    system_command(command, file_stdout)
    #
    # avgint_parent_grid
-   at_cascade.avgint_parent_grid(all_node_database, fit_node_database)
+   at_cascade.avgint_parent_grid(
+      all_node_database = all_node_database ,
+      fit_node_database = fit_node_database ,
+      job_table         = job_table         ,
+      fit_job_id        = run_job_id        ,
+   )
    at_cascade.add_log_entry(connection, 'avgint_parent_grid')
    #
    # c_shift_predict_fit_var

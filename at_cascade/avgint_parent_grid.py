@@ -40,6 +40,20 @@ the previous avgint table in this database is lost,
 and there are no other changes to the database.
 This argument can't be ``None``.
 
+job_table
+*********
+This is a :ref:`create_job_table@job_table` containing the jobs
+necessary to fit the :ref:`glossary@fit_goal_set`.
+If this is ``None`` , we are doing predictions for the same node and
+split reference id a in *fit_node_database*
+(This is used by :ref:`no_ode_fit` .)
+
+fit_job_id
+**********
+This is the :ref:`create_job_table@job_table@job_id`
+for the job fits the fit_node_database.
+This is not used when *job_table* is ``None`` .
+
 parent_node
 ===========
 We use *parent_node* to refer to the parent node in the
@@ -48,17 +62,18 @@ dismod_at option table in the fit_node_database.
 avgint Table
 ************
 The new avgint table has all the standard dismod_at columns
-plus the columns listed below.
-This avgint table enables the following predictions.
+plus the extra columns ( beginning with c\_ ) listed below.
+This avgint table enables predictions for all the covariate multipliers
+and all the rates. Note that the rates (covariate multipliers) depend
+(do not depend) on the covariate reference value.
 
-1. Predictions can be made for the covariate multipliers
-   mean value (with node_id and split_reference_id null).
-2. For the fit node and each possible child node,
-   predictions can be made for each rate variable at splitting
-   covariate value equal to the reference for the fit.
-3. For each splitting covariate value,
-   predictions can be make for each rate variable at the fit node.
+1. If *job_table* is ``None`` , the avgint table enables predictions
+   at the same covariate reference values as for the parent_node
+   in *fit_node_database* . Otherwise, see the cases below.
 
+2. This avgint table enables predictions at the covariate reference values
+   corresponding to each (node_id, split_reference_id) pair that are
+   children of the fit job.
 
 c_age_id
 ========
@@ -76,14 +91,15 @@ This column identifies a row in the split_reference table of the
 all_node_database that this prediction is for.
 If the split_reference table is empty (non-empty) the value
 wiil be (will not) be ``None``.
+It is also ``None`` for the covariate multiplier predictions.
 
 Rectangular Grid
 ================
 For each covariate multiplier that has non-null group smoothing, all of the
 age time pairs in the smoothing are represented in the new avgint table.
-For the parent node, each child of the parent node, and
-each rate that has non-null parent smoothing, all of the
-age time pairs in the smoothing are represented in the new avgint table.
+For the child job node and each rate that has non-null parent smoothing,
+all of the age time pairs in the smoothing are represented in the
+new avgint table.
 
 {xrst_end avgint_parent_grid}
 '''
@@ -95,12 +111,16 @@ import at_cascade
 def avgint_parent_grid(
 # BEGIN syntax
 # at_cascade.avgint_parent_grid(
-   all_node_database    = None ,
+   all_node_database = None ,
    fit_node_database = None ,
+   job_table         = None ,
+   fit_job_id        = None ,
 # )
 ) :
    assert type(all_node_database)  == str
    assert type(fit_node_database) == str
+   assert type(job_table) == list or job_table == None
+   assert type(fit_job_id) == int or fit_job_id == None
    # END syntax
    #
    # all_option_table
@@ -167,32 +187,47 @@ def avgint_parent_grid(
    #
    # cov_reference_dict
    cov_reference_dict = dict()
-   for (node_id, node_row) in enumerate(fit_tables['node']) :
-      if node_id == parent_node_id or node_row['parent'] == parent_node_id :
+   if job_table == None :
+      #
+      # cov_reference_list
+      cov_reference_list = at_cascade.get_cov_reference(
+         all_node_database  = all_node_database,
+         fit_node_database  = fit_node_database,
+         shift_node_id      = parent_node_id,
+         split_reference_id = fit_split_reference_id,
+      )
+      # cov_reference[ (parent_node_id, fit_split_reference_id) ]
+      key = (parent_node_id, fit_split_reference_id)
+      cov_reference_dict[key] = cov_reference_list
+   else :
+      #
+      # fit_job_row
+      fit_job_row  = job_table[fit_job_id]
+      #
+      # child_job_id
+      start_child_job_id = fit_job_row['start_child_job_id']
+      end_child_job_id   = fit_job_row['end_child_job_id']
+      for child_job_id in range(start_child_job_id, end_child_job_id) :
+         #
+         # child_job_row
+         child_job_row = job_table[child_job_id]
+         #
+         # shift_node_id, shift_split_reference_id
+         shift_job_row            = job_table[child_job_id]
+         shift_node_id            = child_job_row['fit_node_id']
+         shift_split_reference_id = child_job_row['split_reference_id']
          #
          # cov_reference_list
          cov_reference_list = at_cascade.get_cov_reference(
             all_node_database  = all_node_database,
             fit_node_database  = fit_node_database,
-            shift_node_id      = node_id,
-            split_reference_id = fit_split_reference_id,
+            shift_node_id      = shift_node_id,
+            split_reference_id = shift_split_reference_id,
          )
          #
-         # cov_reference[ (node_id, fit_split_reference_id) ]
-         key = (node_id, fit_split_reference_id)
+         # cov_reference[ (shift_node_id, shift_split_reference_id) ]
+         key = (shift_node_id, shift_split_reference_id)
          cov_reference_dict[key] = cov_reference_list
-         #
-         if split_covariate_id is not None and node_id == parent_node_id :
-            for split_reference_id in range( len(split_reference_list) ) :
-               if split_reference_id != fit_split_reference_id :
-                  cov_reference_list = at_cascade.get_cov_reference(
-                     all_node_database  = all_node_database,
-                     fit_node_database  = fit_node_database,
-                     shift_node_id      = node_id,
-                     split_reference_id = split_reference_id,
-                  )
-                  key = (node_id, split_reference_id)
-                  cov_reference_dict[key] = cov_reference_list
    #
    # tbl_name
    tbl_name = 'avgint'

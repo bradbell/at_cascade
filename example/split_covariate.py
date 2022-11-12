@@ -628,7 +628,10 @@ def main(refit_split) :
          fit_reference_income = row['reference']
    #
    # shift_mean, shift_reference_income
-   shift_database    = f'{result_dir}/n0/female/dismod.db'
+   if refit_split :
+      shift_database    = f'{result_dir}/n0/female/dismod.db'
+   else :
+      shift_database    = f'{result_dir}/n0/female/n1/dismod.db'
    new               = False
    connection        = dismod_at.create_connection(shift_database, new)
    rate_table        = dismod_at.get_table_dict(connection, 'rate')
@@ -652,7 +655,7 @@ def main(refit_split) :
    check = fit_iota * exp( fit_alpha * income_difference )
    assert abs(1.0 - shift_mean/check) < 1e-12
 #
-# main(False) This case is not yet working.
+main(False)
 main(True)
 print('split_covariate: OK')
 sys.exit(0)

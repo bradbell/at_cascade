@@ -228,7 +228,6 @@ def main() :
    # Create all_node.db
    all_node_database = 'all_node.db'
    all_option        = {
-      'refit_split':    'true',
       'result_dir':     '.',
       'root_node_name': 'n0',
    }
@@ -239,8 +238,28 @@ def main() :
       all_option              = all_option,
    )
    #
+   # node_table
+   new        = False
+   connection = dismod_at.create_connection(root_node_database, new)
+   node_table = dismod_at.get_table_dict(connection, 'node')
+   connection.close()
+   #
+   # job_table
+   job_table = at_cascade.create_job_table(
+      all_node_database          = all_node_database    ,
+      node_table                 = node_table           ,
+      start_node_id              = 0                    ,
+      start_split_reference_id   = None                 ,
+      fit_goal_set               = { 'n0', 'n1', 'n2' } ,
+   )
+   #
    # replace avgint table
-   at_cascade.avgint_parent_grid(all_node_database, root_node_database)
+   at_cascade.avgint_parent_grid(
+      all_node_database = all_node_database  ,
+      fit_node_database = root_node_database ,
+      job_table         = job_table          ,
+      fit_job_id        = 0                  ,
+   )
    #
    # init
    dismod_at.system_command_prc( [ 'dismod_at', root_node_database, 'init' ] )
@@ -267,6 +286,7 @@ def main() :
       'rate',
    ] :
       table[table_name] = dismod_at.get_table_dict(connection, table_name)
+   connection.close()
    #
    # predict_row
    for predict_row in table['predict'] :
