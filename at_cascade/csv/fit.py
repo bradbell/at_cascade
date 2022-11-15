@@ -14,8 +14,10 @@ import time
 {xrst_spell
    avg
    avgint
+   bnd
    boolean
    const
+   cov
    cpus
    dage
    dir
@@ -24,6 +26,7 @@ import time
    iter
    laplace
    meas
+   mul
    multiprocessing
    pini
    rho
@@ -79,6 +82,23 @@ to see the tree structure corresponding to the ``dismod.db`` files.
 The default value for this option is false .
 
 .. _db2csv_command: https://bradbell.github.io/dismod_at/doc/db2csv_command.htm
+
+max_abs_effect
+--------------
+This float option specifies an extra bound on the
+absolute value of the covariate multipliers,
+except for the measurement noise multipliers.
+To be specific, the bound on the covariate multiplier is as large as possible
+under the condition
+
+   *max_abs_effect* <= | *mul_bnd* * ( *cov_value* - *cov_ref* ) |
+
+where *mul_bnd* is the non-negative covariate multiplier bound,
+*cov_value* is a data table value of the covariate,
+and *cov_ref* is the reference value for the covariate.
+It is an extra bound because it is in addition to the priors for a
+covariate multiplier.
+The default value for this option is 2.
 
 max_fit
 -------
@@ -571,6 +591,7 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
       'db2csv'                : (bool,  'false')            ,
+      'max_abs_effect'        : (float, 2.0)                ,
       'max_fit'               : (int,   250)                ,
       'max_num_iter_fixed'    : (int,   100)                ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
@@ -1042,7 +1063,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    all_option = {
       'absolute_covariates'          : 'one' ,
       'balance_fit'                  : 'sex -0.5 +0.5' ,
-      'max_abs_effect'               : 2.0 ,
+      'max_abs_effect'               : csv_option_value['max_abs_effect'],
       'max_fit'                      : csv_option_value['max_fit'],
       'max_number_cpu'               : csv_option_value['max_number_cpu'],
       'number_sample'                : '20',

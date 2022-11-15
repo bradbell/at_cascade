@@ -12,6 +12,7 @@ current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
+import dismod_at
 """
 {xrst_begin csv_fit_xam}
 {xrst_spell
@@ -84,6 +85,7 @@ csv_file['option_in.csv'] = \
 '''name,value
 db2csv,true
 plot,true
+max_abs_effect,3.0
 '''
 #
 # node.csv
@@ -277,6 +279,18 @@ def main() :
       for name in db2csv_name_list + [ 'data_plot.pdf', 'rate_plot.pdf' ] :
          file_path = f'{fit_dir}/{subdir}/{name}'
          assert os.path.exists(file_path)
+   #
+   new      = False
+   file_name = f'{fit_dir}/n0/dismod.db'
+   connection = dismod_at.create_connection(file_name, new)
+   tbl_name   = 'bnd_mulcov'
+   bnd_mulcov_table = dismod_at.get_table_dict(connection, tbl_name)
+   connection.close()
+   max_mulcov     = bnd_mulcov_table[0]['max_mulcov']
+   max_cov_diff   = bnd_mulcov_table[0]['max_cov_diff']
+   max_abs_effect = 3.0
+   assert max_cov_diff == 0.5
+   assert max_mulcov == max_abs_effect / max_cov_diff
 #
 main()
 print('csv_fit: OK')

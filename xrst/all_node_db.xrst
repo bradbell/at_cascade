@@ -151,6 +151,7 @@ split_reference value).
    cov
    cpus
    dir
+   mul
    perturb
    std
 }
@@ -204,9 +205,9 @@ except for measurement noise multipliers.
 To be specific, the bound on the covariate multiplier is as large as possible
 under the condition
 
-| |tab| *max_abs_effect* <= | *cov_bnd* * ( *cov_value* - *cov_ref* ) |
+   *max_abs_effect* <= | *mul_bnd* * ( *cov_value* - *cov_ref* ) |
 
-where *cov_bnd* is the non-negative covariate multiplier bound,
+where *mul_bnd* is the non-negative covariate multiplier bound,
 *cov_value* is a data table value of the covariate,
 and *cov_ref* is the reference value for the covariate.
 It is an extra bound because it is in addition to the priors for a
