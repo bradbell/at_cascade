@@ -1,0 +1,91 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
+# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# ----------------------------------------------------------------------------
+#
+[project_name]
+data = 'at_cascade'
+
+[root_file]
+default = 'at_cascade.xrst'
+
+[preamble]
+data = '''
+.. |space| unicode:: 0xA0
+.. |tab| replace:: |space| |space| |space| |space|
+
+.. comment BEGIN_LATEX_MACROS
+   These latex macros must also be defined in latex_elements in conf.py
+
+.. rst-class:: hidden
+
+   :math:`\newcommand{\B}[1]{ {\bf #1} }`
+   :math:`\newcommand{\R}[1]{ {\rm #1} }`
+
+.. comment END_LATEX_MACROS
+'''
+
+[project_dictionary]
+data = [
+   '''
+      csv
+      db
+      dict
+      dismod
+      mulcov
+      multiplier
+      str
+      th
+   '''
+]
+
+[not_in_index]
+data = [
+   # Exclude articles and prepositions
+   '''
+      a
+      and
+      by
+      for
+      of
+      the
+      that
+      this
+      to
+      using
+   ''',
+   # Exclude rate_true(rate, a, t, n, c)
+   '''
+      rate_true\(rate,
+      a,
+      t,
+      n,
+      c\)
+   ''',
+   # Exclude words that are used in many sections of the documentation.
+   '''
+      code
+      covariate
+      data
+      fit
+      n
+      n_i
+      node
+      nodes
+      parent
+      prior
+      python
+      random
+      rate
+      simulated
+      smoothing
+      source
+      syntax
+      table
+      value
+      y_i
+   ''',
+   #
+   # Exclude the mm-dd headings used by the xrst release notes.
+   '[0-9][0-9]-[0-9][0-9]',
+]

@@ -15,8 +15,8 @@
 # ------------------------
 # used to build documentation
 /build/
-/sphinx/rst/
-/sphinx/label.sed
+/html/
+/rst/
 #
 # used to store ihme databases
 /ihme_db/

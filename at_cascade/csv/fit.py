@@ -1628,6 +1628,7 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
    at_cascade.csv.write_table(file_name, sam_predict_table )
 # ----------------------------------------------------------------------------
 # BEGIN_FIT
+# at_cascadde.csv.fit(fit_dir)
 def fit(fit_dir) :
    assert type(fit_dir) == str
 # END_FIT

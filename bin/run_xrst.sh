@@ -17,25 +17,23 @@ fi
 ok='yes'
 if [ "$1" != 'html' ] && [ "$1" != 'pdf' ]
 then
-   echo 'usage: bin/run_xrst.sh target [ rst_line ]'
+   echo 'usage: bin/run_xrst.sh target [ --rst_line_numbers ]'
+   echo 'target is html or pdf'
+   exit 1
+fi
+if [ "$2" != '' ] && [ "$2" != '--rst_line_numbers' ]
+then
+   echo 'usage: bin/run_xrst.sh target [ --rst_line_numbers ]'
    echo 'target is html or pdf'
    exit 1
 fi
 target="$1"
-rst_line="$2"
-if [ "$rst_line" != '' ]
-then
-   rst_line="-rst $rst_line"
-fi
+rst_line_numbers="$2"
 # -----------------------------------------------------------------------------
-cmd="xrst at_cascade.xrst --target $target --output doc"
-if [ "$rst_line" != '' ]
-then
-   cmd="$cmd --rst $rst_line"
-fi
+cmd="xrst --target $target $rst_line_numbers"
 if [ "$target" == 'html' ]
 then
-   cmd="$cmd --html sphinx_rtd_theme"
+   cmd="$cmd --html_theme sphinx_rtd_theme"
 fi
 echo "$cmd"
 if ! $cmd >& >( tee run_sphinx.$$ )

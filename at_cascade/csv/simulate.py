@@ -889,6 +889,7 @@ def get_random_effect_node_rate_sex (
    return random_effect_node_rate_sex
 # ----------------------------------------------------------------------------
 # BEGIN_SIMULATE
+# at_cascade.csv.simulate(sim_dir)
 def simulate(sim_dir) :
    assert type(sim_dir) == str
 # END_SIMULATE
