@@ -1171,9 +1171,11 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
 # ----------------------------------------------------------------------------
 # Calculate the predictions for One Fit
 #
-# job_name
-# ********
-# THis string specifies the node and sex correpsonding to this fit.
+# fit_title
+# *********
+# This string specifies the node and sex correpsonding to this fit.
+# In the special case of a no_ode fit, 'no_ode' should be included
+# in the fit_title.
 #
 # fit_dir
 # *******
@@ -1212,17 +1214,15 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
 # The predictions are done using samples of the asymptotic distribution
 # for the variable values.
 #
-#
-#
 def predict_one(
-   job_name              ,
+   fit_title             ,
    fit_dir               ,
    fit_node_database     ,
    fit_node_id           ,
    all_node_database     ,
    all_covariate_table   ,
 ) :
-   assert type(job_name) == str
+   assert type(fit_title) == str
    assert type(fit_dir) == str
    assert type(fit_node_database) == str
    assert type(fit_node_id) == int
@@ -1341,10 +1341,19 @@ def predict_one(
             avgint_row['integrand_id'] = integrand_id
             avgint_table.append( copy.copy( avgint_row ) )
    #
-   # avgint_table
+   # connection
    new        = False
    connection = dismod_at.create_connection(fit_node_database, new)
+   #
+   # avgint table
    dismod_at.replace_table(connection, 'avgint', avgint_table)
+   #
+   # prefix_list
+   prefix_list = list()
+   if at_cascade.table_exists(connection, 'fit_var') :
+      prefix_list.append( 'fit' )
+   if at_cascade.table_exists(connection, 'sample') :
+      prefix_list.append( 'sam' )
    connection.close()
    #
    # fit_node_dir
@@ -1352,7 +1361,7 @@ def predict_one(
    fit_node_dir = fit_node_database[: index]
    #
    # prefix
-   for prefix in [ 'fit' , 'sam' ] :
+   for prefix in prefix_list :
       #
       # command
       command = [ 'dismod_at', fit_node_database, 'predict' ]
@@ -1402,7 +1411,7 @@ def predict_one(
       dismod_at.plot_data_fit(
          database       = fit_node_database  ,
          pdf_file       = pdf_file           ,
-         plot_title     = job_name           ,
+         plot_title     = fit_title          ,
          max_plot       = 1000               ,
          integrand_list = integrand_list     ,
       )
@@ -1413,7 +1422,7 @@ def predict_one(
       dismod_at.plot_rate_fit(
          database       = fit_node_database  ,
          pdf_file       = pdf_file           ,
-         plot_title     = job_name           ,
+         plot_title     = fit_title          ,
          rate_set       = rate_set           ,
       )
 # ----------------------------------------------------------------------------
@@ -1495,7 +1504,13 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
    #
    # job_id, job_row, fit_node_database_list
    fit_node_database_list = list()
-   for (job_id, job_row) in enumerate(job_table) :
+   for job_id in range(-1, n_job) :
+      #
+      if job_id == -1 :
+         # no_ode is for same node and sex as row zero in the job table
+         job_row = job_table[0]
+      else :
+         job_row = job_table[job_id]
       #
       # job_id_str
       job_id_str = f'{job_id + 1}/{n_job}'
@@ -1516,12 +1531,25 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
          fit_split_reference_id  = fit_split_reference_id   ,
       )
       #
-      # fit_node_database, fit_node_database_list
+      # fit_database_dir
+      if job_id == -1 :
+         fit_database_dir += '/no_ode'
+      #
+      # fit_node_database
       fit_node_database = f'{fit_dir}/{fit_database_dir}/dismod.db'
-      fit_node_database_list.append( fit_node_database )
+      #
+      # fit_node_database_list
+      if 0 <= job_id :
+         fit_node_database_list.append( fit_node_database )
       #
       # sam_node_predict
       sam_node_predict = f'{fit_dir}/{fit_database_dir}/sam_predict.csv'
+      #
+      # fit_title
+      if job_id == -1 :
+         fit_title = job_name + '.no_ode'
+      else :
+         fit_title = job_name
       #
       # check for an error during fit both and fit fixed
       two_errors = False
@@ -1539,12 +1567,12 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
             msg  += f',  db2csv files'
          if csv_option_value['plot'] :
             msg  += f',  plots'
-         msg  += f', for {job_name}'
+         msg  += f', for {fit_title}'
          print( msg )
       #
       # predict_one
       predict_one(
-         job_name              = job_name         ,
+         fit_title             = fit_title        ,
          fit_dir               = fit_dir          ,
          fit_node_database     = fit_node_database ,
          fit_node_id           = fit_node_id       ,

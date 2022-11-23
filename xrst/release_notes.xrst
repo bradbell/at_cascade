@@ -34,6 +34,12 @@ Release Notes for 2022
 mm-dd
 *****
 
+11-22
+=====
+Include the no_ode fit in the csv fit optional
+:ref:`csv_fit@Input Files@option_in.csv@db2csv` and
+:ref:`csv_fit@Input Files@option_in.csv@plot` operations.
+
 11-14
 =====
 Add :ref:`csv_fit@Input Files@option_in.csv@max_abs_effect` to the
