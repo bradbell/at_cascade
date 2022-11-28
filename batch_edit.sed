@@ -31,4 +31,10 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|\([^a-z]\)male\([^a-z].*[^a-z]\)female\([^a-z]\)|\1female\2male\3|
+s|:ref:`\([._A-Za-z0-9][._A-Za-z0-9]*\)`|:ref:`\1-name`|g
+s|:ref:`\([^`<]*\)<\([._A-Za-z0-9][._A-Za-z0-9]*\)>`|:ref:`\1<\2-name>`|g
+#
+s|:ref:`genindex-name`|:ref:`genindex`|g
+s|:ref:`\([^`<]*\)<genindex-name>`|:ref:`\1<genindex>`|g
+#
+s|^[.][.] _\([._A-Za-z0-9][._A-Za-z0-9]*\):$|.. _\1-name:|

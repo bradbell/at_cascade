@@ -49,7 +49,7 @@ Prototype
 
 Example
 *******
-:ref:`csv_fit_xam` .
+:ref:`csv_fit_xam-name` .
 
 fit_dir
 *******
@@ -182,7 +182,7 @@ This string is used added to the front of the name of the shared
 memory objects used to run the cascade in parallel.
 No two cascades can run at the same time with the same shared memory prefix.
 If a cascade does not terminate cleanly, you may have to clear the
-shared memory before you can run it again; see :ref:`clear_shared` .
+shared memory before you can run it again; see :ref:`clear_shared-name` .
 The default value for this option is your user name with spaces
 replaced by underbars.
 

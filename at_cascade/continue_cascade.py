@@ -25,7 +25,7 @@ This routine enables you to continue the cascade from such a node.
 all_node_database
 *****************
 is a python string specifying the location of the
-:ref:`all_node_db`
+:ref:`all_node_db-name`
 relative to the current working directory.
 This argument can't be ``None``.
 
@@ -34,7 +34,7 @@ fit_node_database
 is a python string specifying the location of a dismod_at database
 relative to the current working directory.
 This is a :ref:`glossary@fit_node_database` with the
-final state after running :ref:`cascade_root_node` on this database.
+final state after running :ref:`cascade_root_node-name` on this database.
 The necessary state of *fit_node_database* is reached before
 cascade_root_node starts runs on any of its child nodes.
 

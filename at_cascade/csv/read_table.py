@@ -36,7 +36,7 @@ and each column name *key* , a string,
 
 Example
 *******
-:ref:`csv_table`
+:ref:`csv_table-name`
 
 {xrst_end csv_read_table}
 """

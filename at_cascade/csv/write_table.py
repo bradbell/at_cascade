@@ -57,7 +57,7 @@ Upon return, this file has ``len(`` *table* ``)`` + 1 lines,
 
 Example
 *******
-:ref:`csv_table`
+:ref:`csv_table-name`
 
 
 {xrst_end csv_write_table}

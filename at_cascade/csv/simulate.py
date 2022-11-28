@@ -42,7 +42,7 @@ are located.
 
 Example
 *******
-:ref:`csv_simulate_xam`
+:ref:`csv_simulate_xam-name`
 
 
 Input Files

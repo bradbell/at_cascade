@@ -76,9 +76,9 @@ the value of :ref:`glossary@omega` for all the nodes that have omega data.
 all_omega Table
 ***************
 This table specifies the value of :ref:`glossary@omega` for each
-age, time point in the :ref:`omega_grid`, every node, and each reference
-in the :ref:`split_reference_table`.
-This data is used to compute the :ref:`omega_constraint` for each node.
+age, time point in the :ref:`omega_grid-name`, every node, and each reference
+in the :ref:`split_reference_table-name`.
+This data is used to compute the :ref:`omega_constraint-name` for each node.
 If omega is not specified for a node, it will use the same *omega*
 values as its nearest ancestor node.
 It is an error if there is no ancestor of a
@@ -116,7 +116,7 @@ split_reference_id
 ==================
 This column has type ``integer`` and it specifies the
 index of a value in
-:ref:`split_reference_table`.
+:ref:`split_reference_table-name`.
 If split_reference_table is empty (is not empty),
 the values in this column must be (must not be) null.
 
@@ -227,7 +227,7 @@ If this option does not appear, all of the data for each integrand is included
 mulcov_freeze
 =============
 If the split_reference_id and the node_id for a fit appears in the
-:ref:`mulcov_freeze_table`, the maximum number of values to fit is doubled.
+:ref:`mulcov_freeze_table-name`, the maximum number of values to fit is doubled.
 This results in a better representation of the covariate multipliers
 before freezing them for the jobs that will use the value determined
 by this fit.
@@ -235,7 +235,7 @@ by this fit.
 max_number_cpu
 **************
 This is the maximum number of cpus (processors) that
-:ref:`cascade_root_node` or :ref:`continue_cascade` can use.
+:ref:`cascade_root_node-name` or :ref:`continue_cascade-name` can use.
 If this is one (more than one) the jobs in the
 :ref:`create_job_table@job_table`
 will be run in sequentially (in parallel).
@@ -288,7 +288,7 @@ If this is true, then the fits after the split will be used
 to get the priors for the child node.
 If it is false, the fit before the split will be used and there
 with be no other fits at the same node.
-If :ref:`split_reference_table` is empty, this option must be false.
+If :ref:`split_reference_table-name` is empty, this option must be false.
 
 result_dir
 **********
@@ -306,14 +306,14 @@ split_covariate_name
 ********************
 is the name, in the root_node_database covariate table, of the splitting
 covariate.
-If :ref:`split_reference_table` is empty (is not empty)
+If :ref:`split_reference_table-name` is empty (is not empty)
 this option must not (must) appear.
 
 root_split_reference_name
 *************************
 This is the `split_reference_table.split_reference_name`
 corresponding to the root_node_database.
-If :ref:`split_reference_table` is empty (is not empty)
+If :ref:`split_reference_table-name` is empty (is not empty)
 this option must not (must) appear.
 
 shift_prior_std_factor
@@ -362,7 +362,7 @@ by the value of the splitting covariate.
 If this table is not empty,
 the :ref:`all_option_table@split_covariate_name`
 must appear and the
-:ref:`split_reference_table` must not be empty.
+:ref:`split_reference_table-name` must not be empty.
 
 node_split_id
 *************
@@ -403,7 +403,7 @@ split_reference_id
 is the :ref:`create_job_table@job_table@split_reference_id` for the job
 that will freeze the multiplier.
 This value is null if and only if the
-:ref:`split_reference_table` is empty.
+:ref:`split_reference_table-name` is empty.
 
 mulcov_id
 *********

@@ -25,14 +25,14 @@ It can't be ``None``.
 
 split_reference_table
 *********************
-is the :ref:`split_reference_table` as a ``list`` of ``dict``.
+is the :ref:`split_reference_table-name` as a ``list`` of ``dict``.
 It can't be ``None``.
 If the list has length zero,
 we say that the table is empty.
 
 node_split_set
 **************
-If :ref:`split_reference_table` is empty,
+If :ref:`split_reference_table-name` is empty,
 this argument must be None.
 Otherwise it is a ``set`` of ``int`` containing the
 :ref:`node_split_table@node_id` values that appear in the
@@ -44,7 +44,7 @@ is the node_id for the :ref:`glossary@root_node`.
 
 root_split_reference_id
 ***********************
-If :ref:`split_reference_table` is empty,
+If :ref:`split_reference_table-name` is empty,
 this argument must be None.
 Otherwise it is an ``int`` specifying the
 :ref:`split_reference_table@split_reference_id`
@@ -57,7 +57,7 @@ It can't be ``None``.
 
 fit_split_reference_id
 **********************
-If :ref:`split_reference_table` is empty,
+If :ref:`split_reference_table-name` is empty,
 this argument must be None.
 Otherwise it is an ``int`` specifying the
 :ref:`split_reference_table@split_reference_id`

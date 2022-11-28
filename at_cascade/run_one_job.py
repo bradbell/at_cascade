@@ -37,7 +37,7 @@ for the job that is run.
 all_node_database
 *****************
 is a python string specifying the location of the
-:ref:`all_node_db`
+:ref:`all_node_db-name`
 relative to the current working directory.
 
 node_table
@@ -47,7 +47,7 @@ is a ``list`` of ``dict`` containing the node table for this cascade.
 fit_integrand
 *************
 is a ``set`` of integrand_id values that occur in the data table; see
-:ref:`get_fit_integrand`.
+:ref:`get_fit_integrand-name`.
 
 fit_type
 ********

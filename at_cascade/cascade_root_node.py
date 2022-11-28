@@ -22,7 +22,7 @@ Syntax
 all_node_database
 *****************
 is a python string specifying the location of the
-:ref:`all_node_db`
+:ref:`all_node_db-name`
 relative to the current working directory.
 This argument can't be ``None``.
 
@@ -40,7 +40,7 @@ This argument can't be ``None``.
 
 no_ode_fit
 **********
-if ``True`` ( ``False`` ) the :ref:`no_ode_fit` routine
+if ``True`` ( ``False`` ) the :ref:`no_ode_fit-name` routine
 will (will not) be used to modify the mean of the parent value
 and difference priors.
 
@@ -84,7 +84,7 @@ there will be a sub-directory for the fit of each
 Otherwise there will be a sub-directory for the fit of each child of the
 node corresponding to the current fit.
 You can determine the directory, relative to *result_dir*
-corresponding to a fit using the :ref:`get_database_dir` function.
+corresponding to a fit using the :ref:`get_database_dir-name` function.
 
 
 fit_var

@@ -21,7 +21,7 @@ Syntax
 all_node_database
 *****************
 is a python string containing the name of the
-:ref:`all_node_db` that is created by this call.
+:ref:`all_node_db-name` that is created by this call.
 This argument can't be ``None``.
 
 root_node_database
@@ -56,7 +56,7 @@ split_reference_table
 *********************
 This specifies the possible reference values for the splitting covariate.
 It must be a ``list`` of ``dict`` representation of the
-:ref:`split_reference_table`.
+:ref:`split_reference_table-name`.
 If this argument is ``None``, the split_reference table is empty.
 
 node_split_table
@@ -64,7 +64,7 @@ node_split_table
 This specifies the node at which the cascade will split by the value
 of the splitting covariate.
 It must be a ``list`` of ``dict`` representation of the
-:ref:`node_split_table` with one key for each ``dict``.
+:ref:`node_split_table-name` with one key for each ``dict``.
 If the key is node_id (node_name) the corresponding value is
 the ``int`` ( ``str`` ) representation of the node.
 If this argument is ``None``, the node_split table is empty.
@@ -75,7 +75,7 @@ This specifies the jobs at which the cascade will freeze specific
 covariate multipliers.
 If this argument is ``None``, the node_split table is empty.
 Otherwise, it must be a ``list`` of ``dict`` representation of the
-:ref:`mulcov_freeze_table` with the following keys for each ``dict``:
+:ref:`mulcov_freeze_table-name` with the following keys for each ``dict``:
 
 fit_node_id, fit_node_name
 ==========================
@@ -84,7 +84,7 @@ The value *mulcov_freeze_table*\ ``["fit_node_id"]`` is an
 *mulcov_freeze_table*\ ``["fit_node_name"]`` is a
 ``str`` representation of the corresponding node name.
 This value is ``None`` if and only if the
-:ref:`split_reference_table` is empty.
+:ref:`split_reference_table-name` is empty.
 
 split_reference_id
 ==================

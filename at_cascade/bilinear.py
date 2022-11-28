@@ -77,7 +77,7 @@ where the values x, y, and z are ``float`` ,
 
 Example
 *******
-:ref:`example_bilinear`
+:ref:`example_bilinear-name`
 
 {xrst_end bilinear}
 """

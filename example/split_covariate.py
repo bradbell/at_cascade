@@ -43,7 +43,7 @@ Splitting Covariate
 *******************
 This cascade is set up to split by the sex covariate at level zero.
 Both the *refit_split* true and false cases are run.
-The :ref:`all_option_table` for this example is:
+The :ref:`all_option_table-name` for this example is:
 {xrst_literal
    # BEGIN all_option_table
    # END all_option_table
@@ -52,18 +52,18 @@ The :ref:`all_option_table` for this example is:
    # BEGIN refit_split
    # END refit_split
 }
-The :ref:`split_reference_table` for this example is:
+The :ref:`split_reference_table-name` for this example is:
 {xrst_literal
    # BEGIN split_reference_table
    # END split_reference_table
 }
-The :ref:`node_split_table` for this example is
+The :ref:`node_split_table-name` for this example is
 {xrst_literal
    # BEGIN node_split_table
    # END node_split_table
 }
 Note that we have used node_name (instead of node_id) here and let
-:ref:`create_all_node_db` do the conversion to node_id.
+:ref:`create_all_node_db-name` do the conversion to node_id.
 The cascade computation tree is::
 
             /-------------n0-------------\
@@ -151,7 +151,7 @@ The following is the value prior used for the root_node
    # END parent_value_prior
 }
 The mean and standard deviation are only used for the root_node.
-The :ref:`create_shift_db`
+The :ref:`create_shift_db-name`
 routine replaces them for other nodes.
 
 Alpha Smoothing

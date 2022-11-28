@@ -15,7 +15,7 @@
 
 Example Using no_ode_fit To Initialize Optimization
 ###################################################
-This example uses :ref:`glossary@mtexcess` data during a :ref:`no_ode_fit`
+This example uses :ref:`glossary@mtexcess` data during a :ref:`no_ode_fit-name`
 and then holds it out during the actual estimation.
 This is meant to simulate the case where mtexcess is obtain
 form other data to help initialize the optimization
@@ -164,7 +164,7 @@ expects much more accuracy when the income grid is not chosen randomly.
 
 Omega Constraints
 *****************
-The :ref:`omega_constraint` routine is used
+The :ref:`omega_constraint-name` routine is used
 to set the value of omega in the parent and child nodes.
 
 Parent Rate Smoothing
@@ -198,7 +198,7 @@ The following is the value prior used for the root_node
    # END parent_chi_value_prior
 }
 The mean and standard deviation are only used for the root_node.
-The :ref:`create_shift_db`
+The :ref:`create_shift_db-name`
 routine replaces them for other nodes.
 
 dage Prior

@@ -41,7 +41,7 @@ The only non-zero dismod_at rates for this example are
 Splitting Covariate
 ===================
 This cascade is set up to split by sex reference value; see
-:ref:`split_reference_table`
+:ref:`split_reference_table-name`
 {xrst_literal
    # BEGIN split_reference_table
    # END split_reference_table
@@ -133,7 +133,7 @@ The following is the value prior used for the root_node
    # END parent_value_prior
 }
 The mean and standard deviation are only used for the root_node.
-The :ref:`create_shift_db`
+The :ref:`create_shift_db-name`
 routine replaces them for other nodes.
 
 Alpha Smoothing

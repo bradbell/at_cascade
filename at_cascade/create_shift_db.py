@@ -23,7 +23,7 @@ Syntax
 
 all_node_database
 *****************
-is a python string containing the name of the :ref:`all_node_db`.
+is a python string containing the name of the :ref:`all_node_db-name`.
 This argument can't be ``None``.
 
 fit_node_database
@@ -47,7 +47,7 @@ for both the fixed and random effects.
 
 c_shift_avgint Table
 ====================
-This is the :ref:`avgint_parent_grid` table corresponding
+This is the :ref:`avgint_parent_grid-name` table corresponding
 to this fit_node_database.
 
 c_shift_predict_sample Table
@@ -90,7 +90,7 @@ Fit Node
 ========
 If *shift_name* is the name of the *fit_node*,
 the node corresponding to this shift database is the fit_node.
-This case is used by :ref:`no_ode_fit` to create priors without shifting
+This case is used by :ref:`no_ode_fit-name` to create priors without shifting
 the covariate references.
 
 Value Priors

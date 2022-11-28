@@ -26,12 +26,12 @@ to run the cascade:
    FileExistsError: [Errno 17] File exists: *name*
 
 where *name* ends with ``_number_cpu_inuse`` or ``_job_status``.
-This may happen if the previous :ref:`run_parallel`
+This may happen if the previous :ref:`run_parallel-name`
 did not terminate cleanly; e.g., if the system crashed.
 
 all_node_database
 *****************
-is a ``str`` containing a path to the :ref:`all_node_db`.
+is a ``str`` containing a path to the :ref:`all_node_db-name`.
 This is used to determine the
 :ref:`all_option_table@shared_memory_prefix`.
 

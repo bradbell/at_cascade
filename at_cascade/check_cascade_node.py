@@ -56,7 +56,7 @@ The result *rate* is the corresponding value for the rate.
 all_node_database
 *****************
 is a python string specifying the location of the
-:ref:`all_node_db`
+:ref:`all_node_db-name`
 relative to the current working directory.
 
 fit_node_database

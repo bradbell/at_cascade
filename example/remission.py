@@ -111,7 +111,7 @@ For each leaf node, data is generated on the following *age_grid*:
 
 Omega Constraints
 *****************
-The :ref:`omega_constraint` routine is used
+The :ref:`omega_constraint-name` routine is used
 to set the value of omega in the parent and child nodes.
 
 Parent Rate Smoothing
@@ -132,7 +132,7 @@ The following is the value and dage priors used for the root_node
    # END parent_prior
 }
 The mean and standard deviation are only used for the root_node.
-The :ref:`create_shift_db`
+The :ref:`create_shift_db-name`
 routine replaces them for other nodes.
 
 Child Rate Smoothing

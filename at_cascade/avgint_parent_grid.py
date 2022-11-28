@@ -29,7 +29,7 @@ split reference values.
 
 all_node_database
 *****************
-is a python string containing the name of the :ref:`all_node_db`.
+is a python string containing the name of the :ref:`all_node_db-name`.
 This argument can't be ``None``.
 
 fit_node_database
@@ -46,7 +46,7 @@ This is a :ref:`create_job_table@job_table` containing the jobs
 necessary to fit the :ref:`glossary@fit_goal_set`.
 If this is ``None`` , we are doing predictions for the same node and
 split reference id a in *fit_node_database*
-(This is used by :ref:`no_ode_fit` .)
+(This is used by :ref:`no_ode_fit-name` .)
 
 fit_job_id
 **********

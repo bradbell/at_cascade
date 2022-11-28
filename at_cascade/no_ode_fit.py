@@ -26,7 +26,7 @@ Syntax
 
 all_node_database
 *****************
-is a python string containing the name of the :ref:`all_node_db`.
+is a python string containing the name of the :ref:`all_node_db-name`.
 This argument can't be ``None``.
 
 root_node_database
@@ -69,7 +69,7 @@ It also include relrisk which measures
 1. These integrands are included even if they are held out in the
    *root_fit_database* using the hold_out_integrand option.
 2. The integrand mtother is excluded because omega is constrained using
-   :ref:`omega_constraint`.
+   :ref:`omega_constraint-name`.
 3. The data likelihoods are fit as Gaussian using the dismod_at data_density
    command.
 4. The results of fitting this data base can be converted to

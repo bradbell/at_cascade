@@ -176,7 +176,7 @@ The following is the value prior used for the root_node
    # END parent_value_prior
 }
 The mean and standard deviation are only used for the root_node.
-The :ref:`create_shift_db`
+The :ref:`create_shift_db-name`
 routine replaces them for other nodes.
 
 dage Prior

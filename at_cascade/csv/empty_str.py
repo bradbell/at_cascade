@@ -52,7 +52,7 @@ Is a copy of *table_in* after doing the conversion.
 
 Example
 *******
-:ref:`csv_table`
+:ref:`csv_table-name`
 
 {xrst_end csv_empty_str}
 """
