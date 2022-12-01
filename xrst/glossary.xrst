@@ -93,7 +93,7 @@ Covariate Table
 ===============
 For each :ref:`glossary@Relative Covariate`,
 the covariate table reference value is the average returned by
-:ref:`get_cov_reference` for this node and split_reference_id.
+:ref:`get_cov_reference-name` for this node and split_reference_id.
 The split covariate reference value is one of the
 :ref:`split_reference_table@split_reference_value`
 in the split_reference table.
