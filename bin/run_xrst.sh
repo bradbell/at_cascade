@@ -33,7 +33,7 @@ rst_line_numbers="$2"
 cmd="xrst --target $target $rst_line_numbers"
 if [ "$target" == 'html' ]
 then
-   cmd="$cmd --html_theme sphinx_rtd_theme"
+   cmd="$cmd --local_toc --html_theme sphinx_rtd_theme"
 fi
 echo "$cmd"
 if ! $cmd >& >( tee run_sphinx.$$ )

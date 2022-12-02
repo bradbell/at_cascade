@@ -15,6 +15,7 @@ The at_cascade Examples
    example/continue_cascade.py
    example/csv/csv_table.py
    example/csv/fit_xam.py
+   example/csv/join_file_xam.py
    example/csv/simulate_xam.py
    example/max_fit_option.py
    example/mulcov_freeze.py

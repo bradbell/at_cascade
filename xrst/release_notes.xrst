@@ -34,6 +34,10 @@ Release Notes for 2022
 mm-dd
 *****
 
+12-02
+=====
+Add the :ref:`csv_join_file-name` utility.
+
 11-28
 =====
 Adapt to xrst-2022.11.28.
