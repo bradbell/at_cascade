@@ -1086,6 +1086,8 @@ def simulate(sim_dir) :
       avg_integrand = dismod_at.average_integrand(
          rate_fun_dict, integrand_name, grid, abs_tol,
       )
+      # numpy uses its own type for floats
+      avg_integrand = float( avg_integrand )
       #
       # data_row['meas_mean']
       meas_mean             = avg_integrand

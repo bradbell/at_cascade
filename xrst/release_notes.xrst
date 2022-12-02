@@ -36,7 +36,11 @@ mm-dd
 
 12-02
 =====
-Add the :ref:`csv_join_file-name` utility.
+#. Add the :ref:`csv_join_file-name` utility.
+#. The :ref:`csv_simulate@Output Files@data_sim.csv@meas_mean` was not
+   using the :ref:`csv_simulate@Input Files@option.csv@float_precision`
+   (because the corresponding value was a numpy.float64 instead of a float).
+   This has been fixed.
 
 11-28
 =====
