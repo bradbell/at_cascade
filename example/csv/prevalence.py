@@ -15,6 +15,8 @@ import at_cascade
 """
 {xrst_begin csv_prevalence}
 {xrst_spell
+   Sincidence
+   dtime
 }
 
 Example Fitting iota From Just Prevalence Data
@@ -31,34 +33,105 @@ To be specific, iota is constant and equal to 0.01
 except for ages between 40 and 60 and times between 1990 and 2000.
 During that special age time period, iota is equal to 0.1.
 
-True Rates
+Covariates
 **********
-For this example, the true value for other case mortality (omega) is 0.01
-and for excess mortality (chi) is 0.1.
-The true value for incidence (iota) as a function of age (a) and time (t) is
+These are no covariates in this example.
 
-.. math::
+#. The covariate.csv file does not have any
+   :ref:`csv_simulate@Input Files@covariate.csv@covariate_name` columns
+   and is only used to set the value of omega and the covariate
+   age time grid.
 
-   \iota(a, t) = \begin{cases}
-      0.1   & \R{if} \; a \in (40, 60) \; t \in (1990, 2000) \\
-      0.01  & \R{otherwise}
-   \end{cases}
+#. The :ref:`csv_simulate@Input Files@multiplier_sim.csv` file is empty; i.e.,
+   it only has a header row.
 
+Age Time Grid
+*************
+This example uses the age-time grid below for the
+covariates, the data, and the iota rate.
+The omega and chi rates are constant and hence they
+are only specified at one age, time point.
+
+age-grid
+   0, 20, 35, 40, 45, 50, 55, 60, 65, 80, 100:
+   Note that this is the union to two grids, one at a 20 year
+   spacing and the other at 5 year spacing.
+   The standard deviations priors are the same all grid points so a closer
+   spacing allows for more change per year.
+
+time-grid
+   1980, 1988, 1990, 1992, 1994, 1996, 1998, 2000, 2002, 2010, 2020
+   Note that this is the union to two grids, one at a 10 year
+   spacing and the other at 2 year spacing.
+   The dtime standard deviations are the same all time points so a closer
+   spacing allows for more change per year.
 
 
 Node Tree
 *********
+The node tree set by  ref:`csv_simulate@Input File@node.csv` is
+
 ::
 
                 n0
           /-----/\-----\
         n1              n2
 
+True Rates
+**********
+The true rates are the rate values used to simulate the data.
+For this example, the true value for other case mortality (omega) is 0.01
+and for excess mortality (chi) is 0.1.
+
+n0
+==
+The incidence rate (iota) depends on the node.
+The true value for node n0 as a function of age (a) and time (t) is
+
+.. math::
+
+   \iota_0 (a, t) = \begin{cases}
+      0.1   & \R{if} \; a \in (40, 60) \; t \in (1990, 2000) \\
+      0.01  & \R{otherwise}
+   \end{cases}
+
+There are no covariates and n0 is the root node,
+hence this is the same as the rates in the
+:ref:`csv_simulate@Input Files@no_effect_rate.csv` file.
+
+Random Effects
+==============
+The random effect (e) depends on the node and sex.
+Given a node and sex,
+the true value of iota at age (a) and time (t) is
+
+.. math::
+
+      \exp( e ) \iota_0 (a, t)
+
+The value :ref:`csv_simulate@Input Files@option.csv@std_random_effects`
+specifies the corresponding standard deviation.
+The simulated random effects are reported in
+:ref:`csv_simulate@Output Files@random_effect.csv`.
+Note that there are no random effects for node n0 (the root node).
+
+Simulated Data
+**************
+There is a simulated data point for each of the following cases:
+see the setting of :ref:`csv_simulate@Input Files@simulate.csv`:
+
+#. For integrand_name equal to Sincidence and prevalence.
+#. For node_name equal to n0, n1, and n2.
+#. For sec equal to female and male.
+#. For each age in the age-grid and each time in the time-grid.
+
+
+Source Code
+***********
 {xrst_literal
    BEGIN_PYTHON
    END_PYTHON
 }
-
 
 {xrst_end csv_prevalence}
 """
@@ -74,7 +147,7 @@ time_set  = set( range(1980, 2030, 10) ) | set( range(1988, 2004, 2) )
 age_grid  = sorted( list( age_set ) )
 time_grid = sorted( list( time_set) )
 #
-# BEGIN_RATE_TRUTH
+# rate_truth
 def rate_truth(rate_name, age, time) :
    if rate_name == 'omega' :
       return 0.01
@@ -84,7 +157,7 @@ def rate_truth(rate_name, age, time) :
       return 0.1
    else :
       return 0.01
-# END_RATE_TRUTH
+#
 # ----------------------------------------------------------------------------
 # simulation files
 # ----------------------------------------------------------------------------
@@ -115,7 +188,6 @@ n2,n0
 # covariate.csv
 omega = rate_truth('omega', 0, 0)
 sim_file['covariate.csv'] = 'node_name,sex,age,time,omega\n'
-omega_truth = 0.01
 for node_name in [ 'n0', 'n1', 'n2' ] :
    for sex in [ 'female', 'male' ] :
       for age in age_grid :
