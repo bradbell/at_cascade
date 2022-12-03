@@ -150,6 +150,16 @@ The dismod_at `plot_curve`_ routine may be helpful in this regard.
 
 .. _plot_curve: https://bradbell.github.io/dismod_at/doc/plot_curve.htm
 
+quasi_fixed
+-----------
+If this boolean option is true,
+a quasi-Newton method is used to optimize the fixed effects.
+Otherwise a Newton method is used
+The Newton method uses second derivatives of the objective
+and hence requires more work per iteration but it can often attain
+much more accuracy in the final solution.
+The default value *quasi_fixed* is true.
+
 random_seed
 -----------
 This integer is used to seed the random number generator.
@@ -235,17 +245,14 @@ name
 is a string contain the name of this prior.
 No two priors can have the same name.
 
-lower
------
-is a float containing the lower limit for the truncated density
-for this prior.
-If this value is empty, there is no lower bound.
-
-upper
------
-is a float containing the upper limit for the truncated density
-for this prior.
-If this value is empty, there is no upper bound.
+density
+-------
+is one of the following strings:
+uniform,
+gaussian, cen_gaussian, log_gaussian
+laplace, cen_laplace, log_laplace.
+(Only these densities are included, so far, so that we do not have to
+worry about the degrees of freedom.)
 
 mean
 ----
@@ -253,19 +260,37 @@ is a float containing the mean for the density
 for this prior (before truncation).
 If density is uniform, this value is only used for starting
 and scaling the optimization.
+This column must appear and its value cannot be empty.
 
 std
 ---
 is a float containing the standard deviation for the density
 for this prior (before truncation).
 If density is uniform, this value is not used and can be empty.
+If all the densities are uniform, this column is optional.
 
-density
--------
-is one of the following strings:
-uniform, gaussian, cen_gaussian, laplace, cen_laplace.
-(Only these densities are included, so far, so that we do not have to
-worry about the log offset or degrees of freedom.)
+eta
+---
+is a float specifying the offset for
+the log_gaussian, and log_laplace densities.
+If the density is not log_gaussian or log_laplace,
+this value is not used and can be empty.
+If none of the densities are log_gaussian or log_laplace,
+this column is optional.
+
+lower
+-----
+is a float containing the lower limit for the truncated density
+for this prior.
+This column is optional,
+if it does not appear or its value is empty, there is no lower bound.
+
+upper
+-----
+is a float containing the upper limit for the truncated density
+for this prior.
+This column is optional,
+if it does not appear or its value is empty, there is no upper bound.
 
 {xrst_comment ---------------------------------------------------------------}
 
@@ -596,6 +621,7 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
       'max_num_iter_fixed'    : (int,   100)                ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
       'plot'                  : (bool,  'false')            ,
+      'quasi_fixed'           : (bool,  'true' )            ,
       'random_seed'           : (int ,  random_seed )       ,
       'refit_split'           : (bool,  'true' )            ,
       'root_node_name'        : (str,   top_node_name)      ,
@@ -775,6 +801,10 @@ def create_root_node_database(fit_dir) :
    # option_table
    max_num_iter_fixed = csv_option_value['max_num_iter_fixed']
    tolerance_fixed    = csv_option_value['tolerance_fixed']
+   if csv_option_value['quasi_fixed'] :
+      quasi_fixed = 'true'
+   else :
+      quasi_fixed = 'false'
    option_table = [
       { 'name' : 'max_num_iter_fixed', 'value' : str( max_num_iter_fixed ) },
       { 'name' : 'parent_node_name',   'value' : root_node_name            },
@@ -782,6 +812,7 @@ def create_root_node_database(fit_dir) :
       { 'name' : 'random_seed',        'value' : str( random_seed )        },
       { 'name' : 'tolerance_fixed',    'value' : str( tolerance_fixed)     },
       { 'name' : 'meas_noise_effect',  'value' : 'add_std_scale_none'      },
+      { 'name' : 'quasi_fixed',        'value' : quasi_fixed               },
    ]
    #
    # spline_cov
@@ -846,12 +877,10 @@ def create_root_node_database(fit_dir) :
    # prior_table
    prior_table = copy.copy( input_table['prior'] )
    for row in prior_table :
-      if row['lower'] != None :
-         row['lower'] = float( row['lower'] )
-      if row['upper'] != None :
-         row['upper'] = float( row['upper'] )
-      if row['std'] != None :
-         row['std']   = float( row['std'] )
+      for key in [ 'lower', 'upper', 'std', 'eta' ] :
+         if key in row :
+            if row[key] != None :
+               row[key] = float( row[key] )
    #
    # min_data_age,  max_data_age
    # min_data_time, max_data_time

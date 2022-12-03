@@ -15,14 +15,36 @@ import at_cascade
 """
 {xrst_begin csv_prevalence}
 {xrst_spell
-   dir
 }
 
-Example Fitting iota From Just Prevalnce Data
-#############################################
+Example Fitting iota From Just Prevalence Data
+##############################################
 
 Under Construction
 ******************
+
+Shock in Incidence
+******************
+This example demonstrates inverting for a shock in true incidence (iota)
+from just prevalence measurements.
+To be specific, iota is constant and equal to 0.01
+except for ages between 40 and 60 and times between 1990 and 2000.
+During that special age time period, iota is equal to 0.1.
+
+True Rates
+**********
+For this example, the true value for other case mortality (omega) is 0.01
+and for excess mortality (chi) is 0.1.
+The true value for incidence (iota) as a function of age (a) and time (t) is
+
+.. math::
+
+   \iota(a, t) = \begin{cases}
+      0.1   & \R{if} \; a \in (40, 60) \; t \in (1990, 2000) \\
+      0.01  & \R{otherwise}
+   \end{cases}
+
+
 
 Node Tree
 *********
@@ -47,11 +69,13 @@ Node Tree
 random_seed = str( int( time.time() ) )
 #
 # age_grid, time_grid
-age_grid  = [ 0.0, 20.0, 40.0, 41.0, 50.0, 59.0, 60.0, 80.0, 100.0 ]
-time_grid = [ 1980, 1990, 1991, 1995, 1999, 2000, 2010, 2020 ]
+age_set   = set( range(0, 120, 20) )     | set( range(35, 70, 5) )
+time_set  = set( range(1980, 2030, 10) ) | set( range(1988, 2004, 2) )
+age_grid  = sorted( list( age_set ) )
+time_grid = sorted( list( time_set) )
 #
-# rate_truth
-def rate_truth(rate_name, time) :
+# BEGIN_RATE_TRUTH
+def rate_truth(rate_name, age, time) :
    if rate_name == 'omega' :
       return 0.01
    if rate_name == 'chi' :
@@ -60,6 +84,7 @@ def rate_truth(rate_name, time) :
       return 0.1
    else :
       return 0.01
+# END_RATE_TRUTH
 # ----------------------------------------------------------------------------
 # simulation files
 # ----------------------------------------------------------------------------
@@ -88,7 +113,7 @@ n2,n0
 '''
 #
 # covariate.csv
-omega = rate_truth('omega', 0)
+omega = rate_truth('omega', 0, 0)
 sim_file['covariate.csv'] = 'node_name,sex,age,time,omega\n'
 omega_truth = 0.01
 for node_name in [ 'n0', 'n1', 'n2' ] :
@@ -99,12 +124,12 @@ for node_name in [ 'n0', 'n1', 'n2' ] :
             sim_file['covariate.csv'] += row
 #
 # no_effect_rate.csv
-chi = rate_truth('chi', 0)
+chi = rate_truth('chi', 0, 0)
 sim_file['no_effect_rate.csv'] = 'rate_name,age,time,rate_truth\n'
 sim_file['no_effect_rate.csv'] += f'chi,0,0,{chi}\n'
 for age in age_grid :
    for time in time_grid :
-      iota = rate_truth('iota', time)
+      iota = rate_truth('iota', age, time)
       sim_file['no_effect_rate.csv'] += f'iota,{age},{time},{iota}\n'
 #
 # multiplier_sim.csv
@@ -137,13 +162,16 @@ fit_file = dict()
 fit_file['option_in.csv']  =  \
 '''name,value
 refit_split,false
+quasi_fixed,true
+max_num_iter_fixed,300
 '''
 fit_file['option_in.csv'] += f'random_seed,{random_seed}\n'
 #
 # fit_goal.csv
 fit_file['fit_goal.csv'] = \
 '''node_name
-n0
+n1
+n2
 '''
 #
 # predict_integrand.csv
@@ -155,9 +183,9 @@ prevalence
 #
 # prior.csv
 fit_file['prior.csv'] = \
-'''name,lower,upper,mean,std,density
-uniform_eps_1,1e-6,1.0,0.01,,uniform
-delta_prior,,,0.0,0.1,gaussian
+'''name,density,mean,std,eta,lower,upper
+uniform_eps_1,uniform,0.01,,,1e-6,1.0
+delta_prior,log_gaussian,0.0,0.1,1e-4,,
 '''
 #
 # child_rate.csv
@@ -202,7 +230,7 @@ def fit(sim_dir, fit_dir) :
       )
    #
    # fit_file['parent_rate.csv']
-   chi   = rate_truth('chi', 0.0)
+   chi   = rate_truth('chi', 0, 0)
    data  = 'rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value\n'
    data  += f'chi,0.0,0.0,,,,{chi}\n'
    for age in age_grid :
@@ -236,7 +264,7 @@ def fit(sim_dir, fit_dir) :
       for key in copy_list :
          row_in[key] = row_join[key]
       row_in['meas_value'] = row_join['meas_mean']
-      row_in['meas_std']   = 0.1
+      row_in['meas_std']   = 0.01
       if row_join['integrand_name'] == 'Sincidence' :
          row_in['hold_out'] = '1'
       else :
@@ -278,4 +306,4 @@ if __name__ == '__main__' :
    #
    print('csv_prevalence: Under Construction')
    sys.exit(0)
-# END_SOURCE
+# END_PYTHON

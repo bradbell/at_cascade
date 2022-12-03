@@ -26,6 +26,7 @@ Release Notes for at_cascade
    spline
    smoothings
    mtspecific
+   laplace
 }
 
 Release Notes for 2022
@@ -33,6 +34,17 @@ Release Notes for 2022
 
 mm-dd
 *****
+
+12-03
+=====
+#. In the csv fit, extend the prior
+   :ref:`csv_fit@Input Files@prior.csv@density` to
+   include the log_gaussian and log_laplace cases.
+   This required adding the optional
+   :ref:`csv_fit@Input Files@prior.csv@eta` column to the prior.csv file.
+   In addition, some of the other columns was make options.
+#. Add the csv fit :ref:`csv_fit@Input Files@option_in.csv@quasi_fixed`
+   option.
 
 12-02
 =====
