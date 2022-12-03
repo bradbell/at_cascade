@@ -185,7 +185,7 @@ prevalence
 fit_file['prior.csv'] = \
 '''name,density,mean,std,eta,lower,upper
 uniform_eps_1,uniform,0.01,,,1e-6,1.0
-delta_prior,log_gaussian,0.0,0.1,1e-4,,
+delta_prior,log_gaussian,0.0,0.05,1e-4,,
 '''
 #
 # child_rate.csv
@@ -264,7 +264,7 @@ def fit(sim_dir, fit_dir) :
       for key in copy_list :
          row_in[key] = row_join[key]
       row_in['meas_value'] = row_join['meas_mean']
-      row_in['meas_std']   = 0.01
+      row_in['meas_std']   = 1e-3
       if row_join['integrand_name'] == 'Sincidence' :
          row_in['hold_out'] = '1'
       else :
