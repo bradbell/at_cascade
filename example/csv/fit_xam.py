@@ -80,9 +80,8 @@ csv_file = dict()
 #
 # option_in.csv
 random_seed = str( int( time.time() ) )
-csv_file['option_in.csv'] = \
-'''name,value
-'''
+csv_file['option_in.csv']  = 'name,value\n'
+csv_file['option_in.csv'] += f'random_seed,{random_seed}\n'
 #
 # node.csv
 csv_file['node.csv'] = \

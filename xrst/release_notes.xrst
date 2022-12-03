@@ -41,6 +41,9 @@ mm-dd
    using the :ref:`csv_simulate@Input Files@option.csv@float_precision`
    (because the corresponding value was a numpy.float64 instead of a float).
    This has been fixed.
+#. Start a wish list for :ref:`wish_list@csv_fit` .
+#. Fix bug in :ref:`csv_fit-name` where integrand names could be missing
+   during prediction step.
 
 11-28
 =====

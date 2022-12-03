@@ -704,6 +704,14 @@ class smoothing_function :
 def create_root_node_database(fit_dir) :
    assert type(fit_dir) == str
    #
+   # name_rate2integrand
+   name_rate2integrand = {
+      'pini':   'prevalence',
+      'iota':   'Sincidence',
+      'rho':    'remission',
+      'chi':    'mtexcess',
+   }
+   #
    # output_file
    output_file = f'{fit_dir}/root_node.db'
    #
@@ -821,6 +829,8 @@ def create_root_node_database(fit_dir) :
       integrand_set.add( row['integrand'] )
    for row in input_table['predict_integrand'] :
       integrand_set.add( row['integrand_name'] )
+   for rate_name in name_rate2integrand :
+      integrand_set.add( name_rate2integrand[rate_name] )
    integrand_table = list()
    for integrand in integrand_set :
       row = { 'name' : integrand }
