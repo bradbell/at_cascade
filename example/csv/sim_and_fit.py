@@ -5,7 +5,6 @@
 import os
 import sys
 import time
-import math
 import shutil
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
@@ -13,17 +12,18 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 """
-{xrst_begin csv_prevalence}
+{xrst_begin csv_sim_and_fit}
 {xrst_spell
    Sincidence
+   dage
    dtime
+   iter
+   meas
+   std
 }
 
-Example Fitting iota From Just Prevalence Data
-##############################################
-
-Under Construction
-******************
+Example Simulating and Fitting Incidence From Prevalence Data
+#############################################################
 
 Shock in Incidence
 ******************
@@ -56,15 +56,15 @@ age-grid
    0, 20, 35, 40, 45, 50, 55, 60, 65, 80, 100:
    Note that this is the union to two grids, one at a 20 year
    spacing and the other at 5 year spacing.
-   The standard deviations priors are the same all grid points so a closer
-   spacing allows for more change per year.
+   The dage standard deviations priors are the same all grid points
+   so a closer spacing allows for more change per year.
 
 time-grid
    1980, 1988, 1990, 1992, 1994, 1996, 1998, 2000, 2002, 2010, 2020
    Note that this is the union to two grids, one at a 10 year
    spacing and the other at 2 year spacing.
-   The dtime standard deviations are the same all time points so a closer
-   spacing allows for more change per year.
+   The dtime standard deviations priors are the same all time points
+   so a closer spacing allows for more change per year.
 
 
 Node Tree
@@ -101,8 +101,8 @@ hence this is the same as the rates in the
 
 Random Effects
 ==============
-The random effect (e) depends on the node and sex.
-Given a node and sex,
+The random effect (e) depends on the node (but not sex).
+Given a node,
 the true value of iota at age (a) and time (t) is
 
 .. math::
@@ -125,6 +125,76 @@ see the setting of :ref:`csv_simulate@Input Files@simulate.csv`:
 #. For sec equal to female and male.
 #. For each age in the age-grid and each time in the time-grid.
 
+Fit
+***
+
+option_in.csv
+=============
+#. *refit_split* is set to false because the model does not
+   depend on sex.
+#. It seems that *quasi_fixed* runs to a better solution and faster
+   when it is true.  A larger value for *max_num_iter_fixed*
+   to is required for to converge for *quasi_fixed* true.
+   (This calls for more investigation.)
+
+fit_goal.csv
+============
+This was set to n1 and n2 so that all the nodes, n0, n1, and n2 are fit.
+Fitting n0 takes most of the time because it has random effects.
+The four cases n1, n2 for female, male fit in parallel and are
+very fast because there are not random effects at that level.
+
+parent_rate.csv
+===============
+#. The rate chi is constrained to be constant and equal to its true value.
+   Note that omega is constrained to its ture value by its value
+   in the covariate.csv file.
+#. The prior for iota is specified on the age-time grid.
+   At each grid point it has a uniform prior with a small positive
+   lower limit and upper limit of one.
+   The mean is 0.02 which is its true value except during the spike.
+   This mean is only used to initialize the optimization.
+
+data_in.csv
+===========
+The data used during the fit is the same as the simulated data
+with the following exceptions:
+
+#. The :ref:`csv_simulate@Output Files@data_sim.csv@meas_mean`
+   is used for the measurement value during the fit
+   :ref:`csv_fit@Input Files@data_in.csv@meas_value` .
+   In addition, :ref:`csv_fit@Input Files@data_in.csv@meas_std`
+   is set to a small value.
+   Not having any noise in the measurement yields the effect of
+   a much larger data without have slow running times.
+
+#. The Sincidence data is held out, so only prevalence is included
+   during the fit. Since both Sincidence and prevalence are using the
+   true value, the fit residuals are difference from truth, not data.
+   The meas_std used for Sincidence is one, so its residuals are
+   actual residuals, not weighted residuals.
+   The residuals for prevalence should be multiplier by the corresponding
+   meas_std to get the actual residuals.
+
+
+Checking Result
+***************
+We define inside_shock (outside_shock) to be when a grid point is not a
+neighbor of the shock boundary and is inside (outside) the shock.
+THe shock boundary is the square formed by the following four (age, time)
+pairs::
+
+   -------------------------
+   |(60, 1990)   (60, 2000) |
+   |                        |
+   |                        |
+   |(40, 1990)   (40, 2000) |
+   --------------------------
+
+The test checks the min, max and average value for the
+inside_shock and outside_shock grid points.
+Note that the smoothing prior causes the height of the shock
+to be underestimated (the prior is for there to be no shock).
 
 Source Code
 ***********
@@ -133,7 +203,7 @@ Source Code
    END_PYTHON
 }
 
-{xrst_end csv_prevalence}
+{xrst_end csv_sim_and_fit}
 """
 # BEGIN_PYTHON
 # --------------------------------------------------------------------------
@@ -172,7 +242,7 @@ sim_file['option.csv'] = \
 absolute_tolerance,1e-5
 float_precision,4
 integrand_step_size,5
-random_depend_sex,true
+random_depend_sex,false
 std_random_effects,.2
 '''
 sim_file['option.csv'] += f'random_seed,{random_seed}\n'
@@ -256,7 +326,7 @@ prevalence
 # prior.csv
 fit_file['prior.csv'] = \
 '''name,density,mean,std,eta,lower,upper
-uniform_eps_1,uniform,0.01,,,1e-6,1.0
+uniform_eps_1,uniform,0.02,,,1e-6,1.0
 delta_prior,log_gaussian,0.0,0.05,1e-4,,
 '''
 #
@@ -343,9 +413,7 @@ def fit(sim_dir, fit_dir) :
          row_join['integrand_name'] == 'prevalence'
          row_in['hold_out'] = '0'
       #
-      if float( row_in['meas_std'] ) != 0.0 :
-         table.append( row_in )
-   #
+      table.append( row_in )
    at_cascade.csv.write_table(
          file_name = f'{fit_dir}/data_in.csv' ,
          table     = table ,
@@ -354,7 +422,50 @@ def fit(sim_dir, fit_dir) :
    # fit
    at_cascade.csv.fit(fit_dir)
    #
-   # data
+   # fit_predict_table
+   fit_predict_table = at_cascade.csv.read_table(
+      file_name = f'{fit_dir}/fit_predict.csv'
+   )
+   #
+   # inside_shock, outside_shock
+   inside_shock  = list()
+   outside_shock = list()
+   for row in fit_predict_table :
+      match = True
+      match = match and row['node'] == 'n0'
+      match = match and row['sex'] == 'both'
+      match = match and row['integrand'] == 'Sincidence'
+      if match :
+         #
+         # age, time, iota
+         age   = float( row['age'] )
+         time  = float( row['time'] )
+         iota  = float( row['avg_integrand'] )
+         #
+         # inside_shock
+         inside = 1992 <= time and time <= 1998
+         inside = inside and 45 <= age and age <= 55
+         if inside :
+            inside_shock.append(iota)
+         #
+         # outside_shock
+         outside = time < 1990 <= time and time <= 1998
+         outside = outside or age < 40 or 60 < age
+         if outside :
+            outside_shock.append(iota)
+   #
+   # check inside_shock
+   assert 0.03 < min(inside_shock)
+   assert max(inside_shock) < 0.14
+   avg =  sum(inside_shock) / len(inside_shock)
+   assert 0.08 < avg and avg < 0.1
+   #
+   # check outside_shock
+   assert 0.001 < min(outside_shock)
+   assert max(outside_shock) < 0.02
+   avg =  sum(outside_shock) / len(outside_shock)
+   assert 0.009 < avg and avg < 0.011
+
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :
@@ -373,9 +484,12 @@ if __name__ == '__main__' :
    if not os.path.exists(fit_dir) :
       os.mkdir(fit_dir)
    #
+   # sim
    sim(sim_dir)
+   #
+   # fit
    fit(sim_dir, fit_dir)
    #
-   print('csv_prevalence: Under Construction')
+   print('csv_sim_and_fit: OK')
    sys.exit(0)
 # END_PYTHON

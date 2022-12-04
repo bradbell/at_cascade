@@ -37,6 +37,7 @@ mm-dd
 
 12-03
 =====
+#. Add the :ref:`csv_sim_and_fit-name` example.
 #. In the csv fit, extend the prior
    :ref:`csv_fit@Input Files@prior.csv@density` to
    include the log_gaussian and log_laplace cases.
