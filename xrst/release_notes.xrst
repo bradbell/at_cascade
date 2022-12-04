@@ -43,7 +43,7 @@ mm-dd
    include the log_gaussian and log_laplace cases.
    This required adding the optional
    :ref:`csv_fit@Input Files@prior.csv@eta` column to the prior.csv file.
-   In addition, some of the other columns was make options.
+   In addition, some of the other columns were made optional.
 #. Add the csv fit :ref:`csv_fit@Input Files@option_in.csv@quasi_fixed`
    option.
 

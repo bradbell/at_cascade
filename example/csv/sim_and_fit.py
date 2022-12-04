@@ -35,7 +35,7 @@ During that special age time period, iota is equal to 0.1.
 
 Covariates
 **********
-These are no covariates in this example.
+There are no covariates in this example.
 
 #. The covariate.csv file does not have any
    :ref:`csv_simulate@Input Files@covariate.csv@covariate_name` columns
@@ -69,7 +69,7 @@ time-grid
 
 Node Tree
 *********
-The node tree set by  ref:`csv_simulate@Input File@node.csv` is
+The node tree set by  :ref:`csv_simulate@Input Files@node.csv` is
 
 ::
 
@@ -122,7 +122,7 @@ see the setting of :ref:`csv_simulate@Input Files@simulate.csv`:
 
 #. For integrand_name equal to Sincidence and prevalence.
 #. For node_name equal to n0, n1, and n2.
-#. For sec equal to female and male.
+#. For sex equal to female and male.
 #. For each age in the age-grid and each time in the time-grid.
 
 Fit
@@ -152,7 +152,8 @@ parent_rate.csv
 #. The prior for iota is specified on the age-time grid.
    At each grid point it has a uniform prior with a small positive
    lower limit and upper limit of one.
-   The mean is 0.02 which is its true value except during the spike.
+   The mean is constant and equal to 0.02 which
+   is between its true inside the spike (0.1) and outside the spike (0.01).
    This mean is only used to initialize the optimization.
 
 data_in.csv
@@ -161,37 +162,38 @@ The data used during the fit is the same as the simulated data
 with the following exceptions:
 
 #. The :ref:`csv_simulate@Output Files@data_sim.csv@meas_mean`
-   is used for the measurement value during the fit
+   is used for the measurement value during the fit; i.e.,
    :ref:`csv_fit@Input Files@data_in.csv@meas_value` .
    In addition, :ref:`csv_fit@Input Files@data_in.csv@meas_std`
    is set to a small value.
-   Not having any noise in the measurement yields the effect of
-   a much larger data without have slow running times.
+   Not having any noise in the measurement, and a small standard deviation,
+   yields the effect of a much larger data set without long running times.
 
 #. The Sincidence data is held out, so only prevalence is included
    during the fit. Since both Sincidence and prevalence are using the
    true value, the fit residuals are difference from truth, not data.
-   The meas_std used for Sincidence is one, so its residuals are
-   actual residuals, not weighted residuals.
-   The residuals for prevalence should be multiplier by the corresponding
+   The weighted residuals can be multiplied by the
    meas_std to get the actual residuals.
 
 
-Checking Result
-***************
+Automated Correctness Test
+**************************
 We define inside_shock (outside_shock) to be when a grid point is not a
 neighbor of the shock boundary and is inside (outside) the shock.
-THe shock boundary is the square formed by the following four (age, time)
+The shock boundary is the square formed by the following four (age, time)
 pairs::
 
-   -------------------------
-   |(60, 1990)   (60, 2000) |
-   |                        |
-   |                        |
-   |(40, 1990)   (40, 2000) |
-   --------------------------
+   (60, 1990)            (60, 2000)
+      -----------------------
+      |a                    |
+      |g                    |
+      |e                    |
+      |        time         |
+      -----------------------
+   (40, 1990)            (40, 2000)
 
-The test checks the min, max and average value for the
+The automated correctness test checks the
+minimum, maximum and average value for the
 inside_shock and outside_shock grid points.
 Note that the smoothing prior causes the height of the shock
 to be underestimated (the prior is for there to be no shock).
