@@ -48,6 +48,10 @@ mm-dd
    Diagnostic information has been added (when the test fails)
    and the limits have been widened (to reduce the chance tha the
    test fails).
+#. The following csv_fit options were added:
+   :ref:`csv_fit@Input Files@option_in.csv@age_avg_split`,
+   :ref:`csv_fit@Input Files@option_in.csv@ode_step_size`.
+
 
 12-03
 =====

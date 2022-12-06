@@ -73,6 +73,16 @@ Because each option has a default value,
 new option are added in such a way that
 previous option_in.csv files are still valid.
 
+age_avg_split
+-------------
+This string contains a space separated list of float values
+(there is one or more spaces between each float value).
+Each float value is age at which to split the integration of both the
+ODE and the average of an integrand over an interval.
+The default for this value is the empty string; i.e.,
+no extra age splitting over the uniformly spaced grid specified by
+:ref:`csv_fit@Input Files@option_in.csv@ode_step_size`.
+
 db2csv
 ------
 If this boolean option is true,
@@ -130,6 +140,17 @@ The default value for this option is
    max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
 {xrst_code}
 
+ode_step_size
+-------------
+This float post be positive (greater than zero).
+It specifies the step size in age and time to use when solving the ODE.
+It is also used as the step size for approximating average integrands
+over age-time intervals.
+The smaller *ode_step_size*, the more computation is required to
+approximation the ODE solution and the average integrands.
+Finer resolution for specific ages can be achieved using the
+:ref:`csv_fit@Input Files@option_in.csv@age_avg_split` option.
+The default value for this option is 10.0.
 
 plot
 ----
@@ -616,11 +637,13 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
    random_seed    = int( time.time() )
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
+      'age_avg_split'         : (str,   None)               ,
       'db2csv'                : (bool,  'false')            ,
       'max_abs_effect'        : (float, 2.0)                ,
       'max_fit'               : (int,   250)                ,
       'max_num_iter_fixed'    : (int,   100)                ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
+      'ode_step_size'         : (float, 10.0)               ,
       'plot'                  : (bool,  'false')            ,
       'quasi_fixed'           : (bool,  'true' )            ,
       'random_seed'           : (int ,  random_seed )       ,
@@ -647,7 +670,9 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
          assert False, msg
       (option_type, defualt) = option_default[name]
       value                  = row['value']
-      if option_type == bool :
+      if value == '' :
+         option_value[name] = None
+      elif option_type == bool :
          if value not in [ 'true', 'false' ] :
             msg  = f'csv_fit: Error: line {line_number} in option_in.csv\n'
             msg += f'The value for {name} is not true or false'
@@ -795,14 +820,18 @@ def create_root_node_database(fit_dir) :
       })
    #
    # option_table
+   age_avg_split      = csv_option_value['age_avg_split']
    max_num_iter_fixed = csv_option_value['max_num_iter_fixed']
+   ode_step_size      = csv_option_value['ode_step_size']
    tolerance_fixed    = csv_option_value['tolerance_fixed']
    if csv_option_value['quasi_fixed'] :
       quasi_fixed = 'true'
    else :
       quasi_fixed = 'false'
    option_table = [
+      { 'name' : 'age_avg_split',      'value' : age_avg_split             },
       { 'name' : 'max_num_iter_fixed', 'value' : str( max_num_iter_fixed ) },
+      { 'name' : 'ode_step_size',      'value' : str( ode_step_size)       },
       { 'name' : 'parent_node_name',   'value' : root_node_name            },
       { 'name' : 'print_level_fixed',  'value' : '5'                       },
       { 'name' : 'random_seed',        'value' : str( random_seed )        },
