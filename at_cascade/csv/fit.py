@@ -142,7 +142,7 @@ The default value for this option is
 
 ode_step_size
 -------------
-This float post be positive (greater than zero).
+This float must be positive (greater than zero).
 It specifies the step size in age and time to use when solving the ODE.
 It is also used as the step size for approximating average integrands
 over age-time intervals.
