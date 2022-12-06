@@ -28,6 +28,7 @@ import time
    meas
    mul
    multiprocessing
+   pdf
    pini
    rho
    sincidence
@@ -688,17 +689,12 @@ class smoothing_function :
       self.name  = name
       self.value = dict()
    def set(self, age, time, value_prior, dage_prior, dtime_prior) :
-      assert type(age) == float
-      assert type(time) == float
-      if type( value_prior ) == float :
-         assert dage_prior == None
-         assert dtime_prior == None
-         self.value[ (age, time) ] = ( value_prior, None, None )
-      else :
-         type(value_prior) == str
-         dage_prior == None or type(dage_prior) == str
-         dtime_prior == None or type(dtime_prior) == str
-         self.value[ (age, time) ] = (value_prior, dage_prior, dtime_prior)
+      assert type(age)         == float
+      assert type(time)        == float
+      assert type(value_prior) == str or type(value_prior) == float
+      assert type(dage_prior)  == str or dage_prior  == None
+      assert type(dtime_prior) == str or dtime_prior == None
+      self.value[ (age, time) ] = (value_prior, dage_prior, dtime_prior)
    def __call__(self, age, time) :
       if (age, time) not in self.value :
          msg = f'The grid for smoothing {self.name} is not rectangular'
@@ -910,7 +906,7 @@ def create_root_node_database(fit_dir) :
       time_set.add( float( row['time'] ) )
    time_list = sorted( list( time_set ) )
    #
-   # smooth_dict
+   # smooth_dict, age_list, time_list
    smooth_dict = dict()
    for row in input_table['parent_rate'] :
       name = row['rate_name'] + '_parent'
@@ -927,15 +923,16 @@ def create_root_node_database(fit_dir) :
       time_id = time_list.index( time )
       smooth_dict[name]['age_id'].add( age_id )
       smooth_dict[name]['time_id'].add( time_id )
+      value_prior = row['value_prior']
+      dage_prior  = row['dage_prior']
+      dtime_prior = row['dtime_prior']
       if row['const_value'] != None :
+         assert row['value_prior'] == None
          const_value = float( row['const_value'] )
          smooth_dict[name]['fun'].set(
-            age, time, const_value, dage_prior = None, dtime_prior = None
+            age, time, const_value, dage_prior, dtime_prior
          )
       else :
-         value_prior = row['value_prior']
-         dage_prior  = row['dage_prior']
-         dtime_prior = row['dtime_prior']
          smooth_dict[name]['fun'].set(
             age, time, value_prior, dage_prior, dtime_prior
          )

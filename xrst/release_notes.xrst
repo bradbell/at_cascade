@@ -27,6 +27,8 @@ Release Notes for at_cascade
    smoothings
    mtspecific
    laplace
+   dage
+   dtime
 }
 
 Release Notes for 2022
@@ -34,6 +36,18 @@ Release Notes for 2022
 
 mm-dd
 *****
+
+12-06
+=====
+#. If the csv_fit parent_rate
+   :ref:`csv_fit@Input Files@parent_rate.csv@const_value` was non-empty,
+   the dage and dtime priors were treated as if they were empty.
+   This has been fixed (even though a rate is fixed for one age and time,
+   it might not be fixed for the next age and time).
+#. The :ref:`csv_sim_and_fit-name` test would randomly fail.
+   Diagnostic information has been added (when the test fails)
+   and the limits have been widened (to reduce the chance tha the
+   test fails).
 
 12-03
 =====

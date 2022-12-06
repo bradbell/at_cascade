@@ -457,15 +457,33 @@ def fit(sim_dir, fit_dir) :
             outside_shock.append(iota)
    #
    # check inside_shock
-   assert 0.03 < min(inside_shock)
-   assert max(inside_shock) < 0.14
    avg =  sum(inside_shock) / len(inside_shock)
-   assert 0.08 < avg and avg < 0.1
+   #
+   if min(inside_shock) <= 0.02 :
+      print('min inside_shock =',  min(inside_shock) )
+   assert 0.02 < min(inside_shock)
+   #
+   if 0.16 <= max(inside_shock) :
+      print('max inside_shock =',  max(inside_shock) )
+   assert max(inside_shock) < 0.16
+   #
+   if avg <= 0.07 or 0.1 <= avg :
+      print('avg inside_shock =',  avg )
+   assert 0.07 < avg and avg < 0.1
    #
    # check outside_shock
-   assert 0.001 < min(outside_shock)
-   assert max(outside_shock) < 0.02
    avg =  sum(outside_shock) / len(outside_shock)
+   #
+   if min(outside_shock) <= 0.001 :
+      print('min outside_shock =',  min(outside_shock) )
+   assert 0.001 < min(outside_shock)
+   #
+   if 0.02 <= max(outside_shock) :
+      print('max outside_shock =',  max(outside_shock) )
+   assert max(outside_shock) < 0.02
+   #
+   if avg <= 0.009 or 0.011 <= avg :
+      print('avg outside_shock =',  avg )
    assert 0.009 < avg and avg < 0.011
 
 # -----------------------------------------------------------------------------

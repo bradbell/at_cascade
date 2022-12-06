@@ -10,7 +10,7 @@ data = 'at_cascade'
 project_directory = '.'
 html_directory    = 'build/html'
 rst_directory     = 'build/rst'
-pdf_directory     = 'build/pdf'
+tex_directory     = 'build/tex'
 
 [root_file]
 default = 'at_cascade.xrst'
