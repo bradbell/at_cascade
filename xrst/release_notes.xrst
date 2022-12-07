@@ -46,6 +46,8 @@ mm-dd
    option.csv (option_in.csv) to
    :ref:`csv_simulate@Input Files@option_sim.csv`
    ( :ref:`csv_fit@Input Files@option_fit.csv` ) .
+#. Change the csv fit option_out.csv file to
+   :ref:`csv_fit@Output Files@option_fit_out.csv` .
 
 
 12-06

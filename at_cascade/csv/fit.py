@@ -68,7 +68,7 @@ The rows of this table are documented below by the name column.
 If an option name does not appear, the corresponding
 default value is used for the option.
 The final value for each of the options is reported in the file
-:ref:`csv_fit@Output Files@option_out.csv` .
+:ref:`csv_fit@Output Files@option_fit_out.csv` .
 Because each option has a default value,
 new option are added in such a way that
 previous option_fit.csv files are still valid.
@@ -527,8 +527,8 @@ dismod.db
 
 .. _dismod_at_database: https://bradbell.github.io/dismod_at/doc/database.htm
 
-option_out.csv
-==============
+option_fit_out.csv
+==================
 This is a copy of :ref:`csv_fit@Input Files@option_fit.csv` with the default
 filled in for missing values.
 
@@ -614,7 +614,7 @@ split_reference_table = [
 # top_node_name
 # is the name of the top node in the node tree
 #
-# option_out.csv
+# option_fit_out.csv
 # As a side effect, this routine write a copy of the csv option table
 # with the default values filled in.
 #
@@ -687,7 +687,7 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
          (option_type, default) = option_default[name]
          csv_option_value[name] = default
    #
-   # option_out.csv
+   # option_fit_out.csv
    table = list()
    for name in csv_option_value :
       value = csv_option_value[name]
@@ -698,7 +698,7 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
             value = 'false'
       row = { 'name' : name , 'value' : value }
       table.append(row)
-   file_name = f'{fit_dir}/option_out.csv'
+   file_name = f'{fit_dir}/option_fit_out.csv'
    at_cascade.csv.write_table(file_name, table)
    #
    assert type(csv_option_value) == dict
