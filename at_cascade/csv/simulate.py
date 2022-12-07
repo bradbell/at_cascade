@@ -52,10 +52,14 @@ option_sim.csv
 ==============
 This csv file has two columns,
 one called ``name`` and the other called ``value``.
-The rows are documented below by the name column:
-Because these options do not have a default value,
-when new options are added you have to change your old option_sim.csv files
-to include the new option.
+The rows of this table are documented below by the name column.
+If an option name does not appear, the corresponding
+default value is used for the option.
+The final value for each of the options is reported in the file
+:ref:`csv_simulate@Output Files@option_sim_out.csv` .
+Because each option has a default value,
+new option are added in such a way that
+previous option_sim.csv files are still valid.
 
 absolute_tolerance
 ------------------
@@ -65,12 +69,15 @@ It determines the accuracy of
 :ref:`integrand <csv_simulate@Input Files@simulate.csv@integrand_name>`
 that require the ODE; e.g.,
 prevalence requires the ODE and Sincidence does not.
+The default value for this option is 1e-5.
 
 
 float_precision
 ---------------
 This integer is the number of decimal digits of precision to
 include for float values in the output csv files.
+The default value for this option is 4.
+
 
 integrand_step_size
 -------------------
@@ -78,6 +85,7 @@ This float is the step size in age and time used to approximate
 integrand averages from age_lower to age_upper
 and time_lower to time_upper (in data_sim.csv).
 It must be greater than zero.
+The default value for this option is 5.0.
 
 random_depend_sex
 -----------------
@@ -85,16 +93,23 @@ If this boolean is true, the random effects depend on sex.
 Otherwise, for each *node_name* and *rate*, the random effect for
 ``female`` and ``male`` will be equal; see
 :ref:`csv_simulate@Output Files@random_effect.csv` .
+The default value for this option is false.
 
 random_seed
 -----------
 This integer is used to seed the random number generator.
+The default value for this option is
+{xrst_code py}
+   random_seed = int( time.time() )
+{xrst_code}
+
 
 std_random_effects
 ------------------
 This float is the standard deviation of the random effects.
 All fo the effects are in log of rate space, so this standard deviation
 is also in log of rate space.
+The default value for this option is 2.0.
 
 -----------------------------------------------------------------------------
 
@@ -284,6 +299,11 @@ a censored normal is used to simulate the data.
 Output Files
 ************
 
+option_sim_out.csv
+==================
+This is a copy of :ref:`csv_simulate@Input Files@option_sim.csv`
+with the default filled in for missing values.
+
 random_effect.csv
 =================
 This file reports the random effect for each node, rate and sex.
@@ -361,83 +381,94 @@ outside the age rage (time range) in the covariate.csv file.
 
 {xrst_end csv_simulate}
 """
-# -----------------------------------------------------------------------------
-# Returns a dictionary verison of option_table.
+# ----------------------------------------------------------------------------
+# Sets global global_option_value to dict representation of option_sim.csv
 #
-# option_value[name] :
-# is the option value corresponding the the specified option name.
+# sim_dir
+# is the directory where the input csv files are located.
+#
+# option_table :
+# is the list of dict corresponding to option_sim.csv
+#
+# option_sim_out.csv
+# As a side effect, this routine write a copy of the option table
+# with the default values filled in.
+#
+# global_option_value[name] :
+# is the option value corresponding the specified option name.
 # Here name is a string and value
-# has been coverted to its corresponding type; e.g.
-# option_value['random_seed'] is an ``int``.
+# has been coverted to its corresponding type.
 #
-# Side Effects:
-# The random.seed fucntion is called with the seed value
-# option_value['random_seed']
-#
-# option_value =
-def option_table2dict(option_table) :
+global_option_value = None
+def set_global_option_value(sim_dir, option_table) :
+   global global_option_value
+   assert type(global_option_value) == dict or global_option_value == None
+   assert type(option_table) == list
+   if len(option_table) > 0 :
+      assert type( option_table[0] ) == dict
    #
-   # option_value
-   option_value = dict()
-   option_type  = {
-      'absolute_tolerance'     : float   ,
-      'float_precision'        : int     ,
-      'integrand_step_size'    : float   ,
-      'random_depend_sex'      : bool    ,
-      'random_seed'            : int     ,
-      'std_random_effects'     : float   ,
+   # option_default
+   random_seed = int( time.time() )
+   # BEGIN_SORT_THIS_LINE_PLUS_2
+   option_default  = {
+      'absolute_tolerance'    : (float, 1e-5)               ,
+      'float_precision'       : (int,   4)                  ,
+      'integrand_step_size'   : (float, 5.0)                ,
+      'random_depend_sex'     : (bool,  False)              ,
+      'random_seed'           : (int, random_seed)          ,
+      'std_random_effects'    : (float, 0.2)                ,
    }
-   line_number = 0
+   # END_SORT_THIS_LINE_MINUS_2
+   #
+   # global_option_value
+   line_number      = 0
+   global_option_value = dict()
    for row in option_table :
       line_number += 1
       name         = row['name']
-      #
-      if name in option_value :
+      if name in global_option_value :
          msg  = f'csv_simulate: Error: line {line_number} in option_sim.csv\n'
          msg += f'the name {name} appears twice in this table'
          assert False, msg
-      #
-      if not name in option_type :
+      if not name in option_default :
          msg  = f'csv_simulate: Error: line {line_number} in option_sim.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
-      #
-      this_type = option_type[name]
-      value     = row['value']
-      if this_type == bool :
-         if value not in [ 'true' , 'false' ] :
-            msg = f'csv_simulate: Error: line {line_number} in option_sim.csv'
-            msg += f'\nthe value for {name} is not true or false'
+      (option_type, defualt) = option_default[name]
+      value                  = row['value']
+      if value == '' :
+         option_value[name] = None
+      elif option_type == bool :
+         if value not in [ 'true', 'false' ] :
+            msg  = f'csv_simulate: Error: line {line_number} in '
+            msg += 'option_sim.csv\n'
+            msg += f'The value for {name} is not true or false'
             assert False, msg
-         value = value == 'true'
+         global_option_value[name] = value == 'true'
       else :
-         value = option_type[name]( row['value'] )
-      option_value[name] = value
+         global_option_value[name] = option_type( value )
    #
-   for name in option_type :
-      if not name in option_value :
-         msg  = 'csv_simulate: Error: in option_sim.csv\n'
-         msg += f'the name {name} does not apper'
-         assert False, msg
+   # global_option_value
+   for name in option_default :
+      if name not in global_option_value :
+         (option_type, default) = option_default[name]
+         global_option_value[name] = default
    #
-   # options that must be greater than zero
-   for name in [
-      'absolute_tolerance',
-      'integrand_step_size',
-      'float_precision',
-      'std_random_effects',
-   ] :
-      value = option_value[name]
-      if value <= 0 :
-         msg  = 'csv_simulate: Error: in option_sim.csv\n'
-         msg += f'{name} = {value} <= 0'
-         assert False, msg
-      option_value[name] = value
+   # option_sim.csv
+   table = list()
+   for name in global_option_value :
+      value = global_option_value[name]
+      if type(value) == bool :
+         if value :
+            value = 'true'
+         else :
+            value = 'false'
+      row = { 'name' : name , 'value' : value }
+      table.append(row)
+   file_name = f'{sim_dir}/option_sim.csv'
+   at_cascade.csv.write_table(file_name, table)
    #
-   # random_seed
-   random.seed( option_value['random_seed'] )
-   #
-   return option_value
+   assert type(global_option_value) == dict
 # ----------------------------------------------------------------------------
 # parent_node_dict[node_name]:
 # The is the name of the node that is the parent of node_node.
@@ -927,8 +958,9 @@ def simulate(sim_dir) :
    #
    print('being creating data structures' )
    #
-   # option_value
-   option_value = option_table2dict(input_table['option_sim'] )
+   # global_option_value
+   option_table = input_table['option_sim']
+   set_global_option_value( sim_dir, option_table )
    #
    # parent_node_dict, child_list_node
    parent_node_dict, child_list_node = \
@@ -966,8 +998,8 @@ def simulate(sim_dir) :
    )
    #
    # random_effect_node_rate_sex
-   random_depend_sex   = option_value['random_depend_sex']
-   std_random_effects  = option_value['std_random_effects']
+   random_depend_sex   = global_option_value['random_depend_sex']
+   std_random_effects  = global_option_value['std_random_effects']
    rate_name_list      = spline_no_effect_rate.keys()
    random_effect_node_rate_sex = get_random_effect_node_rate_sex(
       random_depend_sex  ,
@@ -989,7 +1021,7 @@ def simulate(sim_dir) :
    s_start = s_last
    #
    # float_format
-   n_digits = str( option_value['float_precision'] )
+   n_digits = str( global_option_value['float_precision'] )
    float_format = '{0:.' + n_digits + 'g}'
    #
    # data_sim_table
@@ -1076,13 +1108,13 @@ def simulate(sim_dir) :
       )
       #
       # grid
-      integrand_step_size = option_value['integrand_step_size']
+      integrand_step_size = global_option_value['integrand_step_size']
       grid = average_integrand_grid(
          integrand_step_size, age_lower, age_upper, time_lower, time_upper
       )
       #
       # avg_integrand
-      abs_tol = option_value['absolute_tolerance']
+      abs_tol = global_option_value['absolute_tolerance']
       avg_integrand = dismod_at.average_integrand(
          rate_fun_dict, integrand_name, grid, abs_tol,
       )

@@ -603,19 +603,19 @@ split_reference_table = [
    { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
 ]
 # ----------------------------------------------------------------------------
-# Sets global global_option_value to dict representation of csv option table.
+# Sets global global_option_value to dict representation of option_fit.csv
 #
 # fit_dir
 # is the directory where the input csv files are located.
 #
 # option_table :
-# is the list of dict corresponding to the csv option table
+# is the list of dict corresponding to option_fit.csv
 #
 # top_node_name
 # is the name of the top node in the node tree
 #
 # option_fit_out.csv
-# As a side effect, this routine write a copy of the csv option table
+# As a side effect, this routine write a copy of the option table
 # with the default values filled in.
 #
 # global_option_value[name] :
@@ -1740,9 +1740,9 @@ def fit(fit_dir) :
       assert False, msg
    #
    # global_option_value
-   option_in_table = at_cascade.csv.read_table(f'{fit_dir}/option_fit.csv')
+   option_table = at_cascade.csv.read_table(f'{fit_dir}/option_fit.csv')
    set_global_option_value(
-      fit_dir, option_in_table, top_node_name
+      fit_dir, option_table, top_node_name
    )
    #
    root_node_name = global_option_value['root_node_name']
