@@ -229,7 +229,7 @@ Change fit option.csv to
 :ref:`csv_fit@Input Files@option_fit.csv` ,
 add default value for all the fit options,
 and place resulting options in
-:ref:`csv_fit@Output Files@option_out.csv` .
+:ref:`csv_fit@Output Files@option_fit_out.csv` .
 
 10-17
 =====

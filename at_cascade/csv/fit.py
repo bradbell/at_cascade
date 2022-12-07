@@ -603,7 +603,7 @@ split_reference_table = [
    { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
 ]
 # ----------------------------------------------------------------------------
-# Sets global csv_option_value to dict representation of csv option table.
+# Sets global global_option_value to dict representation of csv option table.
 #
 # fit_dir
 # is the directory where the input csv files are located.
@@ -618,15 +618,15 @@ split_reference_table = [
 # As a side effect, this routine write a copy of the csv option table
 # with the default values filled in.
 #
-# csv_option_value[name] :
+# global_option_value[name] :
 # is the option value corresponding the specified option name.
 # Here name is a string and value
 # has been coverted to its corresponding type.
 #
-csv_option_value = None
-def set_csv_option_value(fit_dir, option_table, top_node_name) :
-   global csv_option_value
-   assert type(csv_option_value) == dict or csv_option_value == None
+global_option_value = None
+def set_global_option_value(fit_dir, option_table, top_node_name) :
+   global global_option_value
+   assert type(global_option_value) == dict or global_option_value == None
    assert type(option_table) == list
    if len(option_table) > 0 :
       assert type( option_table[0] ) == dict
@@ -654,13 +654,13 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
    }
    # END_SORT_THIS_LINE_MINUS_2
    #
-   # csv_option_value
+   # global_option_value
    line_number      = 0
-   csv_option_value = dict()
+   global_option_value = dict()
    for row in option_table :
       line_number += 1
       name         = row['name']
-      if name in csv_option_value :
+      if name in global_option_value :
          msg  = f'csv_fit: Error: line {line_number} in option_fit.csv\n'
          msg += f'the name {name} appears twice in this table'
          assert False, msg
@@ -677,20 +677,20 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
             msg  = f'csv_fit: Error: line {line_number} in option_fit.csv\n'
             msg += f'The value for {name} is not true or false'
             assert False, msg
-         csv_option_value[name] = value == 'true'
+         global_option_value[name] = value == 'true'
       else :
-         csv_option_value[name] = option_type( value )
+         global_option_value[name] = option_type( value )
    #
-   # csv_option_value
+   # global_option_value
    for name in option_default :
-      if name not in csv_option_value :
+      if name not in global_option_value :
          (option_type, default) = option_default[name]
-         csv_option_value[name] = default
+         global_option_value[name] = default
    #
    # option_fit_out.csv
    table = list()
-   for name in csv_option_value :
-      value = csv_option_value[name]
+   for name in global_option_value :
+      value = global_option_value[name]
       if type(value) == bool :
          if value :
             value = 'true'
@@ -701,7 +701,7 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
    file_name = f'{fit_dir}/option_fit_out.csv'
    at_cascade.csv.write_table(file_name, table)
    #
-   assert type(csv_option_value) == dict
+   assert type(global_option_value) == dict
 # ----------------------------------------------------------------------------
 # Converts smoothing prioros on a grid to a prior function
 #
@@ -744,8 +744,8 @@ class smoothing_function :
 # covariate_table
 # is the list of dict corresponding to the covariate.csv file
 #
-# csv_option_value
-# This routine assues that csv_option_value has been set.
+# global_option_value
+# This routine assues that global_option_value has been set.
 #
 # age_grid, time_grid, covariate_table =
 def create_root_node_database(fit_dir) :
@@ -790,8 +790,8 @@ def create_root_node_database(fit_dir) :
       node_set.add( node_name )
    #
    # root_node_name, random_seed
-   root_node_name = csv_option_value['root_node_name']
-   random_seed    = csv_option_value['random_seed']
+   root_node_name = global_option_value['root_node_name']
+   random_seed    = global_option_value['random_seed']
    #
    # covariate_average
    covariate_average = at_cascade.csv.covariate_avg(
@@ -820,11 +820,11 @@ def create_root_node_database(fit_dir) :
       })
    #
    # option_table
-   age_avg_split      = csv_option_value['age_avg_split']
-   max_num_iter_fixed = csv_option_value['max_num_iter_fixed']
-   ode_step_size      = csv_option_value['ode_step_size']
-   tolerance_fixed    = csv_option_value['tolerance_fixed']
-   if csv_option_value['quasi_fixed'] :
+   age_avg_split      = global_option_value['age_avg_split']
+   max_num_iter_fixed = global_option_value['max_num_iter_fixed']
+   ode_step_size      = global_option_value['ode_step_size']
+   tolerance_fixed    = global_option_value['tolerance_fixed']
+   if global_option_value['quasi_fixed'] :
       quasi_fixed = 'true'
    else :
       quasi_fixed = 'false'
@@ -1096,8 +1096,8 @@ def create_root_node_database(fit_dir) :
 # covariate_table
 # is the list of dict corresponding to the covariate.csv file.
 #
-# csv_option_value
-# This routine assues that csv_option_value has been set.
+# global_option_value
+# This routine assues that global_option_value has been set.
 #
 def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    assert type(fit_dir) == str
@@ -1120,17 +1120,17 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    root_node_name = at_cascade.get_parent_node(database)
    #
    # all_option
-   shared_memory_prefix = csv_option_value['shared_memory_prefix']
-   if csv_option_value['refit_split'] :
+   shared_memory_prefix = global_option_value['shared_memory_prefix']
+   if global_option_value['refit_split'] :
       refit_split = 'true'
    else :
       refit_split = 'false'
    all_option = {
       'absolute_covariates'          : 'one' ,
       'balance_fit'                  : 'sex -0.5 +0.5' ,
-      'max_abs_effect'               : csv_option_value['max_abs_effect'],
-      'max_fit'                      : csv_option_value['max_fit'],
-      'max_number_cpu'               : csv_option_value['max_number_cpu'],
+      'max_abs_effect'               : global_option_value['max_abs_effect'],
+      'max_fit'                      : global_option_value['max_fit'],
+      'max_number_cpu'               : global_option_value['max_number_cpu'],
       'number_sample'                : '20',
       'perturb_optimization_scale'   : 0.2,
       'perturb_optimization_start'   : 0.2,
@@ -1261,9 +1261,9 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
 # The list of dict is the in memory representation of the
 # covariate.csv file
 #
-# csv_option_value
-# This routine assues that csv_option_value has been set.
-# If csv_option_value['d2b2csv'] is true (false), the csvfiles
+# global_option_value
+# This routine assues that global_option_value has been set.
+# If global_option_value['d2b2csv'] is true (false), the csvfiles
 # for this fit node database are (are not) created.
 #
 # fit_predict.csv
@@ -1456,7 +1456,7 @@ def predict_one(
       file_name    = f'{fit_node_dir}/{prefix}_predict.csv'
       at_cascade.csv.write_table(file_name, predict_table)
    #
-   if csv_option_value['db2csv'] :
+   if global_option_value['db2csv'] :
       #
       # db2csv output files
       command = [ 'dismodat.py', fit_node_database, 'db2csv' ]
@@ -1464,7 +1464,7 @@ def predict_one(
          command, print_command = False, return_stdout = True
       )
    #
-   if csv_option_value['plot'] :
+   if global_option_value['plot'] :
       #
       # data_plot.pdf
       pdf_file       = f'{fit_node_dir}/data_plot.pdf'
@@ -1505,8 +1505,8 @@ def predict_one(
 # This set contains the node that we are required to fit.
 # Ancestors between these nodes and the root node are also fit.
 #
-# csv_option_value
-# This routine assues that csv_option_value has been set.
+# global_option_value
+# This routine assues that global_option_value has been set.
 #
 def predict_all(fit_dir, covariate_table, fit_goal_set) :
    assert type(fit_dir) == str
@@ -1628,9 +1628,9 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
          print( f'{job_id_str} Missing dismod.db for {job_name}' )
       else :
          msg = f'{job_id_str} Creating sam_predict.csv'
-         if csv_option_value['db2csv'] :
+         if global_option_value['db2csv'] :
             msg  += f',  db2csv files'
-         if csv_option_value['plot'] :
+         if global_option_value['plot'] :
             msg  += f',  plots'
          msg  += f', for {fit_title}'
          print( msg )
@@ -1739,13 +1739,13 @@ def fit(fit_dir) :
       msg = 'node.csv: no node has an empty parent_name'
       assert False, msg
    #
-   # csv_option_value
+   # global_option_value
    option_in_table = at_cascade.csv.read_table(f'{fit_dir}/option_fit.csv')
-   set_csv_option_value(
+   set_global_option_value(
       fit_dir, option_in_table, top_node_name
    )
    #
-   root_node_name = csv_option_value['root_node_name']
+   root_node_name = global_option_value['root_node_name']
    file_name      = f'{fit_dir}/{root_node_name}'
    if os.path.exists( file_name ) :
       msg  = f'{file_name} already exists.\n'
