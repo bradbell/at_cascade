@@ -638,13 +638,13 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
       'age_avg_split'         : (str,   None)               ,
-      'db2csv'                : (bool,  'false')            ,
+      'db2csv'                : (bool,  False)              ,
       'max_abs_effect'        : (float, 2.0)                ,
       'max_fit'               : (int,   250)                ,
       'max_num_iter_fixed'    : (int,   100)                ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
       'ode_step_size'         : (float, 10.0)               ,
-      'plot'                  : (bool,  'false')            ,
+      'plot'                  : (bool,  False)              ,
       'quasi_fixed'           : (bool,  'true' )            ,
       'random_seed'           : (int ,  random_seed )       ,
       'refit_split'           : (bool,  'true' )            ,

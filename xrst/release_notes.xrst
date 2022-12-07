@@ -37,6 +37,12 @@ Release Notes for 2022
 mm-dd
 *****
 
+12-07
+=====
+#. The default value for :ref:`csv_fit@Input Files@option_in.csv@db2csv`
+   and :ref:`csv_fit@Input Files@option_in.csv@plot` was true
+   and should have been false. This has been fixed.
+
 12-06
 =====
 #. If the csv_fit parent_rate
