@@ -40,8 +40,8 @@ Node Tree
       -  :ref:`csv_fit@Input Files@node.csv`
    *  -  csv_file['covariate.csv']
       -  :ref:`csv_fit@Input Files@covariate.csv`
-   *  -  csv_file['option_in.csv']
-      -  :ref:`csv_fit@Input Files@option_in.csv`
+   *  -  csv_file['option_fit.csv']
+      -  :ref:`csv_fit@Input Files@option_fit.csv`
    *  -  csv_file['fit_goal.csv']
       -  :ref:`csv_fit@Input Files@fit_goal.csv`
    *  -  csv_file['predict_integrand.csv']
@@ -78,10 +78,10 @@ Node Tree
 # csv_file
 csv_file = dict()
 #
-# option_in.csv
+# option_fit.csv
 random_seed = str( int( time.time() ) )
-csv_file['option_in.csv']  = 'name,value\n'
-csv_file['option_in.csv'] += f'random_seed,{random_seed}\n'
+csv_file['option_fit.csv']  = 'name,value\n'
+csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 #
 # node.csv
 csv_file['node.csv'] = \

@@ -54,7 +54,7 @@ def check_table(file_name, table) :
    table2keys = {
       #
       # simulate tables
-      'option'         : [ 'name', 'value' ],
+      'option_sim'     : [ 'name', 'value' ],
       'node'           : [ 'node_name', 'parent_name' ],
       'no_effect_rate' : [ 'rate_name', 'age', 'time', 'rate_truth' ],
       'covariate' : [
@@ -83,7 +83,7 @@ def check_table(file_name, table) :
       ],
       #
       # fit table that are not simulate tables
-      'option_in'         : [ 'name', 'value' ],
+      'option_fit'        : [ 'name', 'value' ],
       'fit_goal'          : [ 'node_name' ],
       'predict_integrand' : [ 'integrand_name' ],
       'child_rate'        : [ 'rate_name', 'value_prior' ],

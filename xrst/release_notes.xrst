@@ -39,9 +39,14 @@ mm-dd
 
 12-07
 =====
-#. The default value for :ref:`csv_fit@Input Files@option_in.csv@db2csv`
-   and :ref:`csv_fit@Input Files@option_in.csv@plot` was true
+#. The default value for :ref:`csv_fit@Input Files@option_fit.csv@db2csv`
+   and :ref:`csv_fit@Input Files@option_fit.csv@plot` was true
    and should have been false. This has been fixed.
+#. The csv simulate (csv fit) option file name was changed from
+   option.csv (option_in.csv) to
+   :ref:`csv_simulate@Input Files@option_sim.csv`
+   ( :ref:`csv_fit@Input Files@option_fit.csv` ) .
+
 
 12-06
 =====
@@ -55,8 +60,8 @@ mm-dd
    and the limits have been widened (to reduce the chance tha the
    test fails).
 #. The following csv_fit options were added:
-   :ref:`csv_fit@Input Files@option_in.csv@age_avg_split`,
-   :ref:`csv_fit@Input Files@option_in.csv@ode_step_size`.
+   :ref:`csv_fit@Input Files@option_fit.csv@age_avg_split`,
+   :ref:`csv_fit@Input Files@option_fit.csv@ode_step_size`.
 
 
 12-03
@@ -68,14 +73,14 @@ mm-dd
    This required adding the optional
    :ref:`csv_fit@Input Files@prior.csv@eta` column to the prior.csv file.
    In addition, some of the other columns were made optional.
-#. Add the csv fit :ref:`csv_fit@Input Files@option_in.csv@quasi_fixed`
+#. Add the csv fit :ref:`csv_fit@Input Files@option_fit.csv@quasi_fixed`
    option.
 
 12-02
 =====
 #. Add the :ref:`csv_join_file-name` utility.
 #. The :ref:`csv_simulate@Output Files@data_sim.csv@meas_mean` was not
-   using the :ref:`csv_simulate@Input Files@option.csv@float_precision`
+   using the :ref:`csv_simulate@Input Files@option_sim.csv@float_precision`
    (because the corresponding value was a numpy.float64 instead of a float).
    This has been fixed.
 #. Start a wish list for :ref:`wish_list@csv_fit` .
@@ -89,40 +94,40 @@ Adapt to xrst-2022.11.28.
 11-22
 =====
 Include the no_ode fit in the csv fit optional
-:ref:`csv_fit@Input Files@option_in.csv@db2csv` and
-:ref:`csv_fit@Input Files@option_in.csv@plot` operations.
+:ref:`csv_fit@Input Files@option_fit.csv@db2csv` and
+:ref:`csv_fit@Input Files@option_fit.csv@plot` operations.
 
 11-14
 =====
-Add :ref:`csv_fit@Input Files@option_in.csv@max_abs_effect` to the
+Add :ref:`csv_fit@Input Files@option_fit.csv@max_abs_effect` to the
 csv fit option_in.csv file.
 
 11-12
 =====
 Add the refit_split option to the
 :ref:`all option table <all_option_table@refit_split>`  and the
-:ref:`csv_fit@Input Files@option_in.csv` file.
+:ref:`csv_fit@Input Files@option_fit.csv` file.
 Note that its default value for the all option table is false,
 and for option_in.csv file its default value is true.
 
 11-10
 =====
-1. Add the :ref:`csv_simulate@Input Files@option.csv@random_depend_sex`
+1. Add the :ref:`csv_simulate@Input Files@option_sim.csv@random_depend_sex`
    option to the csv simulation routine. In addition, add a discussion
-   about :ref:`csv_simulate@Input Files@option.csv` not being backward
+   about :ref:`csv_simulate@Input Files@option_sim.csv` not being backward
    compatible.
-2. Add the :ref:`csv_fit@Input Files@option_in.csv@shared_memory_prefix`
+2. Add the :ref:`csv_fit@Input Files@option_fit.csv@shared_memory_prefix`
    option. In addition, add a discussion about
-   :ref:`csv_fit@Input Files@option_in.csv` being backward compatible.
+   :ref:`csv_fit@Input Files@option_fit.csv` being backward compatible.
 
 11-09
 =====
 #. Add :ref:`csv_module@Notation@Data Type@Boolean` to the possible csv file
    data types.
-#. Add the csv fit :ref:`csv_fit@Input Files@option_in.csv@db2csv` option.
+#. Add the csv fit :ref:`csv_fit@Input Files@option_fit.csv@db2csv` option.
    This required including a description of the
    :ref:`csv_fit@Output Files@dismod.db` files in the csv fit documentation.
-#. Add the csv fit :ref:`csv_fit@Input Files@option_in.csv@plot` option.
+#. Add the csv fit :ref:`csv_fit@Input Files@option_fit.csv@plot` option.
 #. Add mention of the fact that the csv fit
    :ref:`csv_fit@Input Files@parent_rate.csv` file corresponds to
    no random or fixed effects.
@@ -170,9 +175,9 @@ Add :ref:`all_option_table@number_sample` to the all option table.
 
 10-25
 =====
-1. Add the :ref:`csv_fit@Input Files@option_in.csv@max_num_iter_fixed`,
-   :ref:`csv_fit@Input Files@option_in.csv@tolerance_fixed`,
-   and :ref:`csv_fit@Input Files@option_in.csv@max_number_cpu` options.
+1. Add the :ref:`csv_fit@Input Files@option_fit.csv@max_num_iter_fixed`,
+   :ref:`csv_fit@Input Files@option_fit.csv@tolerance_fixed`,
+   and :ref:`csv_fit@Input Files@option_fit.csv@max_number_cpu` options.
 2. Add an error message to csv fit when the root node sub-directory already
    exists in the :ref:`csv_fit@fit_dir` directory.
 
@@ -195,7 +200,7 @@ Add :ref:`all_option_table@number_sample` to the all option table.
 
 10-19
 =====
-1. Add :ref:`csv_fit@Input Files@option_in.csv@max_fit`
+1. Add :ref:`csv_fit@Input Files@option_fit.csv@max_fit`
    to the csv option table.
 2. Change the definition of a
    :ref:`csv_module@Notation@Rectangular Grid` so that it can be
@@ -219,7 +224,7 @@ Add :ref:`all_option_table@number_sample` to the all option table.
 10-18
 =====
 Change fit option.csv to
-:ref:`csv_fit@Input Files@option_in.csv` ,
+:ref:`csv_fit@Input Files@option_fit.csv` ,
 add default value for all the fit options,
 and place resulting options in
 :ref:`csv_fit@Output Files@option_out.csv` .
@@ -290,7 +295,7 @@ Fix some documentation spelling errors detected by new version of pyspellchecker
 08-25
 =====
 Add the absolute_tolerance, relative_tolerance, and float_precision
-columns to the :ref:`csv_simulate@Input Files@option.csv` file.
+columns to the :ref:`csv_simulate@Input Files@option_sim.csv` file.
 
 08-23
 =====

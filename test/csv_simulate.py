@@ -35,9 +35,9 @@ import at_cascade
 # csv_file
 csv_file = dict()
 #
-# option.csv
+# option_sim.csv
 random_seed = str( int( time.time() ) )
-csv_file['option.csv'] = \
+csv_file['option_sim.csv'] = \
 '''name,value
 absolute_tolerance,1e-4
 float_precision,4
@@ -45,7 +45,7 @@ std_random_effects,.1
 integrand_step_size,1.0
 random_depend_sex,false
 '''
-csv_file['option.csv'] += f'random_seed,{random_seed}\n'
+csv_file['option_sim.csv'] += f'random_seed,{random_seed}\n'
 #
 # node.csv
 csv_file['node.csv'] = \
@@ -97,7 +97,7 @@ def run_test() :
    eps99 = 99.0 * numpy.finfo(float).eps
    #
    # sim_dir
-   sim_dir = 'build/csv'
+   sim_dir = 'build/test'
    if not os.path.exists(sim_dir) :
       os.mkdir(sim_dir)
    #

@@ -48,13 +48,13 @@ Example
 Input Files
 ***********
 
-option.csv
-==========
+option_sim.csv
+==============
 This csv file has two columns,
 one called ``name`` and the other called ``value``.
 The rows are documented below by the name column:
 Because these options do not have a default value,
-when new options are added you have to change your old option.csv files
+when new options are added you have to change your old option_sim.csv files
 to include the new option.
 
 absolute_tolerance
@@ -309,7 +309,7 @@ The sex values ``female`` and ``male`` will appear and
 random_effect
 -------------
 This float value is the random effect for the specified node, rate, and sex.
-If :ref:`csv_simulate@Input Files@option.csv@random_depend_sex`  is false,
+If :ref:`csv_simulate@Input Files@option_sim.csv@random_depend_sex`  is false,
 the value in this column will not depend on the value in the sex column.
 
 Discussion
@@ -393,12 +393,12 @@ def option_table2dict(option_table) :
       name         = row['name']
       #
       if name in option_value :
-         msg  = f'csv_simulate: Error: line {line_number} in option.csv\n'
+         msg  = f'csv_simulate: Error: line {line_number} in option_sim.csv\n'
          msg += f'the name {name} appears twice in this table'
          assert False, msg
       #
       if not name in option_type :
-         msg  = f'csv_simulate: Error: line {line_number} in option.csv\n'
+         msg  = f'csv_simulate: Error: line {line_number} in option_sim.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
       #
@@ -406,8 +406,8 @@ def option_table2dict(option_table) :
       value     = row['value']
       if this_type == bool :
          if value not in [ 'true' , 'false' ] :
-            msg  = f'csv_simulate: Error: line {line_number} in option.csv\n'
-            msg += f'the value for {name} is not true or false'
+            msg = f'csv_simulate: Error: line {line_number} in option_sim.csv'
+            msg += f'\nthe value for {name} is not true or false'
             assert False, msg
          value = value == 'true'
       else :
@@ -416,7 +416,7 @@ def option_table2dict(option_table) :
    #
    for name in option_type :
       if not name in option_value :
-         msg  = 'csv_simulate: Error: in option.csv\n'
+         msg  = 'csv_simulate: Error: in option_sim.csv\n'
          msg += f'the name {name} does not apper'
          assert False, msg
    #
@@ -429,7 +429,7 @@ def option_table2dict(option_table) :
    ] :
       value = option_value[name]
       if value <= 0 :
-         msg  = 'csv_simulate: Error: in option.csv\n'
+         msg  = 'csv_simulate: Error: in option_sim.csv\n'
          msg += f'{name} = {value} <= 0'
          assert False, msg
       option_value[name] = value
@@ -912,7 +912,7 @@ def simulate(sim_dir) :
    # input_table
    input_table = dict()
    input_list  = [
-      'option',
+      'option_sim',
       'node',
       'covariate',
       'multiplier_sim',
@@ -928,7 +928,7 @@ def simulate(sim_dir) :
    print('being creating data structures' )
    #
    # option_value
-   option_value = option_table2dict(input_table['option'] )
+   option_value = option_table2dict(input_table['option_sim'] )
    #
    # parent_node_dict, child_list_node
    parent_node_dict, child_list_node = \

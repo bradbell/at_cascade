@@ -37,8 +37,8 @@ Node Tree
       -  Documentation
    *  -  sim_dir
       -  :ref:`csv_simulate@sim_dir`
-   *  -  csv_file['option.csv']
-      -  :ref:`csv_simulate@Input Files@option.csv`
+   *  -  csv_file['option_sim.csv']
+      -  :ref:`csv_simulate@Input Files@option_sim.csv`
    *  -  csv_file['node.csv']
       -  :ref:`csv_simulate@Input Files@node.csv`
    *  -  csv_file['covariate.csv']
@@ -68,9 +68,9 @@ Node Tree
 # csv_file
 csv_file = dict()
 #
-# option.csv
+# option_sim.csv
 random_seed = str( int( time.time() ) )
-csv_file['option.csv'] = \
+csv_file['option_sim.csv'] = \
 '''name,value
 absolute_tolerance,1e-5
 float_precision,4
@@ -78,7 +78,7 @@ integrand_step_size,5
 random_depend_sex,true
 std_random_effects,.1
 '''
-csv_file['option.csv'] += f'random_seed,{random_seed}\n'
+csv_file['option_sim.csv'] += f'random_seed,{random_seed}\n'
 #
 # node.csv
 csv_file['node.csv'] = \
@@ -150,7 +150,7 @@ def main() :
    #
    # float_precision
    float_precision = None
-   for row in csv_table['option.csv'] :
+   for row in csv_table['option_sim.csv'] :
       if row['name'] == 'float_precision' :
          float_precision = int( row['value'] )
    eps10 = 10 * 10.0 ** (- float_precision )

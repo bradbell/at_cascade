@@ -13,75 +13,14 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 import dismod_at
-"""
-{xrst_begin csv_fit_xam}
-{xrst_spell
-   dir
-}
-
-Example Using csv.fit
-#####################
-
-Node Tree
-*********
-::
-
-                n0
-          /-----/\-----\
-        n1              n2
-
-.. list-table::
-   :header-rows: 1
-
-   *  -  Symbol
-      -  Documentation
-   *  -  fit_dir
-      -  :ref:`csv_fit@fit_dir`
-   *  -  csv_file['node.csv']
-      -  :ref:`csv_fit@Input Files@node.csv`
-   *  -  csv_file['covariate.csv']
-      -  :ref:`csv_fit@Input Files@covariate.csv`
-   *  -  csv_file['option_in.csv']
-      -  :ref:`csv_fit@Input Files@option_in.csv`
-   *  -  csv_file['fit_goal.csv']
-      -  :ref:`csv_fit@Input Files@fit_goal.csv`
-   *  -  csv_file['predict_integrand.csv']
-      -  :ref:`csv_fit@Input Files@predict_integrand.csv`
-   *  -  csv_file['prior.csv']
-      -  :ref:`csv_fit@Input Files@prior.csv`
-   *  -  csv_file['parent_rate.csv']
-      -  :ref:`csv_fit@Input Files@parent_rate.csv`
-   *  -  csv_file['child_rate.csv']
-      -  :ref:`csv_fit@Input Files@child_rate.csv`
-   *  -  csv_file['mulcov.csv']
-      -  :ref:`csv_fit@Input Files@mulcov.csv`
-   *  -  csv_file['data_in.csv']
-      -  :ref:`csv_fit@Input Files@data_in.csv`
-   *  -  root_node.db
-      -  :ref:`csv_fit@Output Files@root_node.db`
-   *  -  option_out.csv
-      -  :ref:`csv_fit@Output Files@option_out.csv`
-   *  -  fit_predict.csv
-      -  :ref:`csv_fit@Output Files@fit_predict.csv`
-   *  -  sam_predict.csv
-      -  :ref:`csv_fit@Output Files@sam_predict.csv`
-
-{xrst_literal
-   BEGIN_PYTHON
-   END_PYTHON
-}
-
-
-{xrst_end csv_fit_xam}
-"""
 # BEGIN_PYTHON
 #
 # csv_file
 csv_file = dict()
 #
-# option_in.csv
+# option_fit.csv
 random_seed = str( int( time.time() ) )
-csv_file['option_in.csv'] = \
+csv_file['option_fit.csv'] = \
 '''name,value
 db2csv,true
 plot,true
@@ -169,7 +108,7 @@ csv_file['data_in.csv'] = header + \
 def main() :
    #
    # fit_dir
-   fit_dir = 'build/csv'
+   fit_dir = 'build/test'
    if not os.path.exists(fit_dir) :
       os.makedirs(fit_dir)
    root_node_name = 'n0'

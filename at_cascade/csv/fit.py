@@ -60,8 +60,8 @@ are located.
 Input Files
 ***********
 
-option_in.csv
-=============
+option_fit.csv
+==============
 This csv file has two columns,
 one called ``name`` and the other called ``value``.
 The rows of this table are documented below by the name column.
@@ -71,7 +71,7 @@ The final value for each of the options is reported in the file
 :ref:`csv_fit@Output Files@option_out.csv` .
 Because each option has a default value,
 new option are added in such a way that
-previous option_in.csv files are still valid.
+previous option_fit.csv files are still valid.
 
 age_avg_split
 -------------
@@ -81,7 +81,7 @@ Each float value is age at which to split the integration of both the
 ODE and the average of an integrand over an interval.
 The default for this value is the empty string; i.e.,
 no extra age splitting over the uniformly spaced grid specified by
-:ref:`csv_fit@Input Files@option_in.csv@ode_step_size`.
+:ref:`csv_fit@Input Files@option_fit.csv@ode_step_size`.
 
 db2csv
 ------
@@ -149,7 +149,7 @@ over age-time intervals.
 The smaller *ode_step_size*, the more computation is required to
 approximation the ODE solution and the average integrands.
 Finer resolution for specific ages can be achieved using the
-:ref:`csv_fit@Input Files@option_in.csv@age_avg_split` option.
+:ref:`csv_fit@Input Files@option_fit.csv@age_avg_split` option.
 The default value for this option is 10.0.
 
 plot
@@ -529,7 +529,7 @@ dismod.db
 
 option_out.csv
 ==============
-This is a copy of :ref:`csv_fit@Input Files@option_in.csv` with the default
+This is a copy of :ref:`csv_fit@Input Files@option_fit.csv` with the default
 filled in for missing values.
 
 fit_predict.csv
@@ -661,11 +661,11 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
       line_number += 1
       name         = row['name']
       if name in csv_option_value :
-         msg  = f'csv_fit: Error: line {line_number} in option_in.csv\n'
+         msg  = f'csv_fit: Error: line {line_number} in option_fit.csv\n'
          msg += f'the name {name} appears twice in this table'
          assert False, msg
       if not name in option_default :
-         msg  = f'csv_fit: Error: line {line_number} in option_in.csv\n'
+         msg  = f'csv_fit: Error: line {line_number} in option_fit.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
       (option_type, defualt) = option_default[name]
@@ -674,7 +674,7 @@ def set_csv_option_value(fit_dir, option_table, top_node_name) :
          option_value[name] = None
       elif option_type == bool :
          if value not in [ 'true', 'false' ] :
-            msg  = f'csv_fit: Error: line {line_number} in option_in.csv\n'
+            msg  = f'csv_fit: Error: line {line_number} in option_fit.csv\n'
             msg += f'The value for {name} is not true or false'
             assert False, msg
          csv_option_value[name] = value == 'true'
@@ -1740,7 +1740,7 @@ def fit(fit_dir) :
       assert False, msg
    #
    # csv_option_value
-   option_in_table = at_cascade.csv.read_table(f'{fit_dir}/option_in.csv')
+   option_in_table = at_cascade.csv.read_table(f'{fit_dir}/option_fit.csv')
    set_csv_option_value(
       fit_dir, option_in_table, top_node_name
    )

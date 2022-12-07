@@ -109,7 +109,7 @@ the true value of iota at age (a) and time (t) is
 
       \exp( e ) \iota_0 (a, t)
 
-The value :ref:`csv_simulate@Input Files@option.csv@std_random_effects`
+The value :ref:`csv_simulate@Input Files@option_sim.csv@std_random_effects`
 specifies the corresponding standard deviation.
 The simulated random effects are reported in
 :ref:`csv_simulate@Output Files@random_effect.csv`.
@@ -128,8 +128,8 @@ see the setting of :ref:`csv_simulate@Input Files@simulate.csv`:
 Fit
 ***
 
-option_in.csv
-=============
+option_fit.csv
+==============
 #. *refit_split* is set to false because the model does not
    depend on sex.
 #. It seems that *quasi_fixed* runs to a better solution and faster
@@ -237,9 +237,9 @@ def rate_truth(rate_name, age, time) :
 # sim_file
 sim_file = dict()
 #
-# option.csv
+# option_sim.csv
 random_seed = str( int( time.time() ) )
-sim_file['option.csv'] = \
+sim_file['option_sim.csv'] = \
 '''name,value
 absolute_tolerance,1e-5
 float_precision,4
@@ -247,7 +247,7 @@ integrand_step_size,5
 random_depend_sex,false
 std_random_effects,.2
 '''
-sim_file['option.csv'] += f'random_seed,{random_seed}\n'
+sim_file['option_sim.csv'] += f'random_seed,{random_seed}\n'
 #
 # node.csv
 sim_file['node.csv'] = \
@@ -302,14 +302,14 @@ for integrand_name in [ 'Sincidence', 'prevalence' ] :
 # fit_file
 fit_file = dict()
 #
-# option_in.csv
-fit_file['option_in.csv']  =  \
+# option_fit.csv
+fit_file['option_fit.csv']  =  \
 '''name,value
 refit_split,false
 quasi_fixed,true
 max_num_iter_fixed,300
 '''
-fit_file['option_in.csv'] += f'random_seed,{random_seed}\n'
+fit_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 #
 # fit_goal.csv
 fit_file['fit_goal.csv'] = \
