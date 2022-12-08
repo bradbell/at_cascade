@@ -434,7 +434,7 @@ def fit(sim_dir, fit_dir) :
    outside_shock = list()
    for row in fit_predict_table :
       match = True
-      match = match and row['node'] == 'n0'
+      match = match and row['node_name'] == 'n0'
       match = match and row['sex'] == 'both'
       match = match and row['integrand'] == 'Sincidence'
       if match :

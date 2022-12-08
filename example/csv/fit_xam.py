@@ -58,8 +58,8 @@ Node Tree
       -  :ref:`csv_fit@Input Files@data_in.csv`
    *  -  root_node.db
       -  :ref:`csv_fit@Output Files@root_node.db`
-   *  -  option_out.csv
-      -  :ref:`csv_fit@Output Files@option_out.csv`
+   *  -  option_fit_out.csv
+      -  :ref:`csv_fit@Output Files@option_fit_out.csv`
    *  -  fit_predict.csv
       -  :ref:`csv_fit@Output Files@fit_predict.csv`
    *  -  sam_predict.csv
@@ -222,7 +222,7 @@ def main() :
             sample_list = list()
             for row in predict_table :
                if row['integrand'] == 'Sincidence' and \
-                     row['node'] == node and \
+                     row['node_name'] == node and \
                         row['sex'] == sex :
                   #
                   sample_list.append(row)

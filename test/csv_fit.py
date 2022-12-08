@@ -166,7 +166,7 @@ def main() :
             sample_list = list()
             for row in predict_table :
                if row['integrand'] == 'Sincidence' and \
-                     row['node'] == node and \
+                     row['node_name'] == node and \
                         row['sex'] == sex_name :
                   #
                   sample_list.append(row)

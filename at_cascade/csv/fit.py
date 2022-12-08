@@ -555,9 +555,10 @@ avg_integrand
 This float is the mode value for the average of the integrand,
 with covariate and other effects but without measurement noise.
 
-node
-----
-is the node for this sample and is equal to the nodes in covariate.csv.
+node_name
+---------
+is the node name for this sample and
+cycles through the nodes in covariate.csv.
 
 age
 ---
@@ -1691,8 +1692,8 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
             row_out['age']  = row_in['age_lower']
             row_out['time'] = row_in['time_lower']
             #
-            node_id         = int( row_in['node_id'] )
-            row_out['node'] = node_table[node_id]['node_name']
+            node_id              = int( row_in['node_id'] )
+            row_out['node_name'] = node_table[node_id]['node_name']
             #
             integrand_id         = int( row_in['integrand_id'] )
             row_out['integrand'] = integrand_table[integrand_id]['integrand_name']
