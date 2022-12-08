@@ -50,6 +50,8 @@ mm-dd
    :ref:`csv_absolute_covariate-name` example.
    This can be used to help understand the covariate_effect_depend_age_sex
    option (as well as absolute covariates).
+#. Remove the csv_fit wish list item. It was completed by the changes
+   of integrand to integrand_name (see below).
 
 12-07
 =====
@@ -107,7 +109,7 @@ mm-dd
    using the :ref:`csv_simulate@Input Files@option_sim.csv@float_precision`
    (because the corresponding value was a numpy.float64 instead of a float).
    This has been fixed.
-#. Start a wish list for :ref:`wish_list@csv_fit` .
+#. Add a wish list item for csv_fit.
 #. Fix bug in :ref:`csv_fit-name` where integrand names could be missing
    during prediction step.
 

@@ -9,10 +9,6 @@
 Wish List for at_cascade
 ########################
 
-csv_fit
-*******
-#. Change :ref:`csv_fit@Input Files@data_in.csv@integrand` to integrand_name.
-
 Meta Regression
 ***************
 The extra measurement noise added for the mismatch between the model and the
