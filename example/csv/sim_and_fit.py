@@ -481,9 +481,9 @@ def fit(sim_dir, fit_dir) :
       print('max outside_shock =',  max(outside_shock) )
    assert max(outside_shock) < 0.02
    #
-   if avg <= 0.009 or 0.011 <= avg :
+   if avg <= 0.009 or 0.012 <= avg :
       print('avg outside_shock =',  avg )
-   assert 0.009 < avg and avg < 0.011
+   assert 0.009 < avg and avg < 0.012
 
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
