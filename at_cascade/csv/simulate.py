@@ -61,6 +61,15 @@ Because each option has a default value,
 new option are added in such a way that
 previous option_sim.csv files are still valid.
 
+absolute_covariates
+-------------------
+This is a space separated list of the names of the absolute covariates.
+The reference value for an absolute covariate is always zero.
+(The reference value for a relative covariate is its average for the
+location that is being fit.)
+The default value for *absolute_covariates* is the empty string; i.e.,
+there are no absolute covariates.
+
 absolute_tolerance
 ------------------
 This float is the absolute error tolerance for the integrator.
@@ -167,10 +176,15 @@ omega does not appear in :ref:`csv_simulate@Input Files@no_effect_rate.csv`,
 
 covariate_name
 --------------
-For each covariate that we are including in this simulation,
-there is a column in the header that contains the *covariate_name*.
-The other values in that column are float representations of the covariate.
-All of these covariates are :ref:`glossary@Relative Covariate`.
+Except for node_name, sex, age. time, and omega,
+the columns of this file are covariates.
+The header row specifies the *covariate_name*
+and the other rows are floats containing the corresponding
+covariate value.
+The option_sim.csv
+:ref:`csv_simulate@Input Files@option_sim.csv@absolute_covariates`
+specifies which covariates are absolute.
+All the others are :ref:`relative covariates<glossary@Relative Covariate>`.
 Note that omega and sex are not referred to as covariates for this simulation.
 
 -----------------------------------------------------------------------------
@@ -411,6 +425,7 @@ def set_global_option_value(sim_dir, option_table) :
    random_seed = int( time.time() )
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
+      'absolute_covariates'   : (str, None)                 ,
       'absolute_tolerance'    : (float, 1e-5)               ,
       'float_precision'       : (int,   4)                  ,
       'integrand_step_size'   : (float, 5.0)                ,
@@ -637,8 +652,8 @@ def get_multiplier_list_rate(multiplier_sim_table) :
 # cov_name is a covariate name or 'sex',
 # age, time, and value are floats
 #
-# root_covariate_avg[covariate_name] :
-# is the average, restricted to the root node, of the specified covariate.
+# root_covariate_ref[covariate_name] :
+# is the reference for the specified covariate when fitting the root node.
 #
 # multiplier_list_rate[rate_name] :
 # is the list of rows, in the multiplier_sim table, that have rate_name
@@ -657,7 +672,7 @@ def get_rate_fun_dict(
    spline_no_effect_rate       ,
    random_effect_node_rate_sex ,
    spline_node_sex_cov         ,
-   root_covariate_avg          ,
+   root_covariate_ref          ,
    multiplier_list_rate        ,
    node_name                   ,
    sex                         ,
@@ -694,7 +709,7 @@ def get_rate_fun_dict(
                spline         = \
                   spline_node_sex_cov[node_name][sex][covariate_name]
                covariate      = spline(age, time)
-               reference      = root_covariate_avg[covariate_name]
+               reference      = root_covariate_ref[covariate_name]
                difference     = covariate - reference
             else :
                assert sex == 'both'
@@ -704,7 +719,7 @@ def get_rate_fun_dict(
                spline         = \
                   spline_node_sex_cov[node_name]['male'][covariate_name]
                male           = spline(age, time)
-               reference      = root_covariate_avg[covariate_name]
+               reference      = root_covariate_ref[covariate_name]
                difference     = (female + male) / 2.0  - reference
          effect    += float( row['multiplier_truth'] ) * difference
       #
@@ -984,13 +999,17 @@ def simulate(sim_dir) :
       msg = 'node.csv every node has a parent node; i.e, no root node'
       assert False, msg
    #
-   # root_covariate_avg
-   root_covariate_avg = at_cascade.csv.covariate_avg(
+   # root_covariate_ref
+   root_covariate_ref = at_cascade.csv.covariate_avg(
       input_table['covariate'] , root_node_name
    )
+   absolute_covariates = global_option_value['absolute_covariates']
+   if absolute_covariates != None :
+      for covariate_name in absolute_covariates.split() :
+         root_covariate_ref[covariate_name] = 0.0
    #
    # covariate_name_list
-   covariate_name_list = root_covariate_avg.keys()
+   covariate_name_list = root_covariate_ref.keys()
    #
    # spline_no_effect_rate
    spline_no_effect_rate = get_spline_no_effect_rate(
@@ -1101,7 +1120,7 @@ def simulate(sim_dir) :
          spline_no_effect_rate       ,
          random_effect_node_rate_sex ,
          spline_node_sex_cov         ,
-         root_covariate_avg          ,
+         root_covariate_ref          ,
          multiplier_list_rate        ,
          node_name                   ,
          sex

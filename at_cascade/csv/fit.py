@@ -73,6 +73,16 @@ Because each option has a default value,
 new option are added in such a way that
 previous option_fit.csv files are still valid.
 
+absolute_covariates
+-------------------
+This is a space separated list of the names of the absolute covariates.
+The reference value for an absolute covariate is always zero.
+(The reference value for a relative covariate is its average for the
+location that is being fit.)
+The default value for *absolute_covariates* is the empty string; i.e.,
+there are no absolute covariates.
+
+
 age_avg_split
 -------------
 This string contains a space separated list of float values
@@ -638,6 +648,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
    random_seed    = int( time.time() )
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
+      'absolute_covariates'   : (str,   None)               ,
       'age_avg_split'         : (str,   None)               ,
       'db2csv'                : (bool,  False)              ,
       'max_abs_effect'        : (float, 2.0)                ,
@@ -794,15 +805,19 @@ def create_root_node_database(fit_dir) :
    root_node_name = global_option_value['root_node_name']
    random_seed    = global_option_value['random_seed']
    #
-   # covariate_average
-   covariate_average = at_cascade.csv.covariate_avg(
+   # root_covariate_ref
+   root_covariate_ref = at_cascade.csv.covariate_avg(
       input_table['covariate'], root_node_name
    )
+   absolute_covariates = global_option_value['absolute_covariates']
+   if absolute_covariates != None :
+      for covariate_name in absolute_covariates.split() :
+         root_covariate_ref[covariate_name] = 0.0
    #
    # forbidden_covariate
    forbidden_covariate = set( input_table['data_in'][0].keys() )
    forbidden_covariate.add( "one" )
-   for covariate_name in covariate_average.keys() :
+   for covariate_name in root_covariate_ref.keys() :
       if covariate_name in forbidden_covariate :
          msg  = f'cannot use the covariate name {covariate_name}\n'
          msg += 'because it is "one" or a column in the data_in.csv file'
@@ -813,10 +828,10 @@ def create_root_node_database(fit_dir) :
       { 'name': 'sex', 'reference': 0.0, 'max_difference' : 0.5 }  ,
       { 'name': 'one', 'reference': 0.0, 'max_difference' : None } ,
    ]
-   for covariate_name in covariate_average.keys() :
+   for covariate_name in root_covariate_ref.keys() :
       covariate_table.append({
          'name':            covariate_name,
-         'reference':       covariate_average[covariate_name],
+         'reference':       root_covariate_ref[covariate_name],
          'max_difference' : None
       })
    #
@@ -863,7 +878,7 @@ def create_root_node_database(fit_dir) :
       # row[c_j] for j = 0, ..., n_covariate - 1
       node_name = row['node_name']
       sex       = row['sex']
-      for index, covariate_name in enumerate( covariate_average.keys() ) :
+      for index, covariate_name in enumerate( root_covariate_ref.keys() ) :
          spline              = spline_cov[node_name][sex][covariate_name]
          covariate_value     = spline(age_mid, time_mid)
          row[covariate_name] = covariate_value
@@ -1123,12 +1138,17 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    #
    # all_option
    shared_memory_prefix = global_option_value['shared_memory_prefix']
+   absolute_covariates  = global_option_value['absolute_covariates']
+   if absolute_covariates == None :
+      absolute_covariates = 'one'
+   else :
+      absolute_covariates += ' one'
    if global_option_value['refit_split'] :
       refit_split = 'true'
    else :
       refit_split = 'false'
    all_option = {
-      'absolute_covariates'          : 'one' ,
+      'absolute_covariates'          : absolute_covariates ,
       'balance_fit'                  : 'sex -0.5 +0.5' ,
       'max_abs_effect'               : global_option_value['max_abs_effect'],
       'max_fit'                      : global_option_value['max_fit'],

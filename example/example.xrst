@@ -13,6 +13,7 @@ The at_cascade Examples
    example/absolute_covariates.py
    example/bilinear.py
    example/continue_cascade.py
+   example/csv/absolute_covariate.py
    example/csv/csv_table.py
    example/csv/fit_xam.py
    example/csv/join_file_xam.py
