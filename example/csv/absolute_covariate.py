@@ -37,7 +37,11 @@ All of the rates are zero except for iota which is
 
 .. math::
 
-      iota(age, time) = 0.01 \cdot \exp[ 2 * shock(age, time) ]
+      \iota(a, t) = 0.01 \cdot \exp[ 2 * \R{shock}(a, t) ]
+
+where :math:`\iota` is iota,
+:math:`a` is age, and
+:math:`t` is time.
 
 grid
 ====
@@ -97,11 +101,11 @@ Fit
 option_fit.csv
 ==============
 The option_fit.csv defaults are used except for
-:ref:csv_fit@Input Files@option_fit.csv@absolute_covariates`
+:ref:`csv_fit@Input Files@option_fit.csv@absolute_covariates`
 which is set to shock,
-:ref:csv_fit@Input Files@option_fit.csv@refit_split`
+:ref:`csv_fit@Input Files@option_fit.csv@refit_split`
 which is set to false, and
-:ref:csv_fit@Input Files@option_fit.csv@db2csv`
+:ref:`csv_fit@Input Files@option_fit.csv@db2csv`
 which is set to true.
 
 fit_goal.csv
