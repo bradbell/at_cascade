@@ -454,9 +454,9 @@ data_id
 -------
 is an :ref:`csv_module@Notation@Index Column` for data.csv.
 
-integrand
----------
-This string is a dismod_at integrand; e.g. ``Sincidence``.
+integrand_name
+--------------
+This string is a dismod_at integrand name; e.g. ``Sincidence``.
 
 node_name
 ---------
@@ -545,8 +545,8 @@ integrand in the sam_predict file.
 The age and time values comes from the covariate.csv file.
 The integrands come for the predict_integrand.csv file.
 
-integrand
----------
+integrand_name
+--------------
 is the integrand for this sample is equal to the integrand names
 in predict_integrand.csv
 
@@ -870,6 +870,7 @@ def create_root_node_database(fit_dir) :
       #
       # row
       row['node']       = row['node_name']
+      row['integrand']  = row['integrand_name']
       row['age_lower']  = age_lower
       row['age_upper']  = age_lower
       row['time_lower'] = time_lower
@@ -883,7 +884,7 @@ def create_root_node_database(fit_dir) :
    # integrand_table
    integrand_set = set()
    for row in data_table :
-      integrand_set.add( row['integrand'] )
+      integrand_set.add( row['integrand_name'] )
    for row in input_table['predict_integrand'] :
       integrand_set.add( row['integrand_name'] )
    for rate_name in name_rate2integrand :
@@ -1695,8 +1696,9 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
             node_id              = int( row_in['node_id'] )
             row_out['node_name'] = node_table[node_id]['node_name']
             #
-            integrand_id         = int( row_in['integrand_id'] )
-            row_out['integrand'] = integrand_table[integrand_id]['integrand_name']
+            integrand_id  = int( row_in['integrand_id'] )
+            row_out['integrand_name'] = \
+               integrand_table[integrand_id]['integrand_name']
             #
             # row_out
             for (i_cov, cov_row) in enumerate( fit_covariate_table ) :

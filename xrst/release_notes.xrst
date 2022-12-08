@@ -50,9 +50,12 @@ mm-dd
    :ref:`csv_fit@Output Files@option_fit_out.csv` .
 #. Add defaults for all the options in
    :ref:`csv_simulate@Input Files@option_sim.csv` .
-#. Change the node to node_name in
+#. Change the column node to node_name in
    :ref:`csv_fit@Output Files@fit_predict.csv` and
    :ref:`csv_fit@Output Files@sam_predict.csv` .
+#. Change the column integrand to integrand_name in
+   fit_predict.csv, sam_predict.csv and
+   :ref:`csv_fit@Input Files@data_in.csv` .
 
 
 12-06

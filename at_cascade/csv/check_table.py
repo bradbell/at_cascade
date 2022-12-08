@@ -113,7 +113,7 @@ def check_table(file_name, table) :
       ],
       'data_in' : [
          'data_id',
-         'integrand',
+         'integrand_name',
          'node_name',
          'sex',
          'age_lower',

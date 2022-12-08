@@ -91,7 +91,7 @@ one,meas_noise,Sincidence,,1e-3
 #
 # data_in.csv
 # The 0.00 meas_value in this table gets replaced
-header  = 'data_id,integrand,node_name,sex,age_lower,age_upper,'
+header  = 'data_id,integrand_name,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,meas_value,meas_std,hold_out'
 csv_file['data_in.csv'] = header + \
 '''
@@ -134,9 +134,9 @@ def main() :
    file_name         = f'{fit_dir}/data_in.csv'
    table             = at_cascade.csv.read_table( file_name )
    for row in table :
-      sex_name = row['sex']
-      integrand = row['integrand']
-      assert integrand == 'Sincidence'
+      sex_name       = row['sex']
+      integrand_name = row['integrand_name']
+      assert integrand_name == 'Sincidence'
       #
       sex_name  = row['sex']
       effect    = true_mulcov_sex * sex_name2value[sex_name]
@@ -165,7 +165,7 @@ def main() :
             # sample_list
             sample_list = list()
             for row in predict_table :
-               if row['integrand'] == 'Sincidence' and \
+               if row['integrand_name'] == 'Sincidence' and \
                      row['node_name'] == node and \
                         row['sex'] == sex_name :
                   #

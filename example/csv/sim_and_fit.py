@@ -404,7 +404,6 @@ def fit(sim_dir, fit_dir) :
       copy_list  = [ 'integrand_name', 'node_name', 'sex' ]
       copy_list += [ 'age_lower', 'age_upper', 'time_lower', 'time_upper' ]
       row_in['data_id']   = row_join['simulate_id']
-      row_in['integrand'] = row_join['integrand_name']
       for key in copy_list :
          row_in[key] = row_join[key]
       row_in['meas_value'] = row_join['meas_mean']
@@ -436,7 +435,7 @@ def fit(sim_dir, fit_dir) :
       match = True
       match = match and row['node_name'] == 'n0'
       match = match and row['sex'] == 'both'
-      match = match and row['integrand'] == 'Sincidence'
+      match = match and row['integrand_name'] == 'Sincidence'
       if match :
          #
          # age, time, iota

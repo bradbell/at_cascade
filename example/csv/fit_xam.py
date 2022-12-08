@@ -143,7 +143,7 @@ haqi,rate_value,iota,uniform_1_1,
 '''
 #
 # data_in.csv
-header  = 'data_id,integrand,node_name,sex,age_lower,age_upper,'
+header  = 'data_id,integrand_name,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,meas_value,meas_std,hold_out'
 csv_file['data_in.csv'] = header + \
 '''
@@ -193,9 +193,9 @@ def main() :
    file_name         = f'{fit_dir}/data_in.csv'
    table             = at_cascade.csv.read_table( file_name )
    for row in table :
-      node_name = row['node_name']
-      integrand = row['integrand']
-      assert integrand == 'Sincidence'
+      node_name      = row['node_name']
+      integrand_name = row['integrand_name']
+      assert integrand_name == 'Sincidence'
       #
       haqi      = node2haqi[node_name]
       effect    = true_mulcov_haqi * (haqi - haqi_avg)
@@ -221,7 +221,7 @@ def main() :
             # sample
             sample_list = list()
             for row in predict_table :
-               if row['integrand'] == 'Sincidence' and \
+               if row['integrand_name'] == 'Sincidence' and \
                      row['node_name'] == node and \
                         row['sex'] == sex :
                   #
@@ -238,6 +238,7 @@ def main() :
                iota      = math.exp(effect) * no_effect_iota
                rel_error = (avgint - iota) / iota
                assert abs(rel_error) < 0.01
+   print('fit_xam.py: OK')
 #
 main()
 # END_PYTHON
