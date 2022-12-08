@@ -458,13 +458,13 @@ def fit(sim_dir, fit_dir) :
    # check inside_shock
    avg =  sum(inside_shock) / len(inside_shock)
    #
-   if min(inside_shock) <= 0.02 :
+   if min(inside_shock) <= 0.03 :
       print('min inside_shock =',  min(inside_shock) )
-   assert 0.02 < min(inside_shock)
+   assert 0.03 < min(inside_shock)
    #
-   if 0.16 <= max(inside_shock) :
+   if 0.18 <= max(inside_shock) :
       print('max inside_shock =',  max(inside_shock) )
-   assert max(inside_shock) < 0.16
+   assert max(inside_shock) < 0.18
    #
    if avg <= 0.07 or 0.1 <= avg :
       print('avg inside_shock =',  avg )

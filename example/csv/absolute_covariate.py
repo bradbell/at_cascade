@@ -8,6 +8,9 @@ import sys
 import time
 import shutil
 # import at_cascade with a preference current directory version
+current_directory = os.getcwd()
+if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
+   sys.path.insert(0, current_directory)
 import at_cascade
 # --------------------------------------------------------------------------
 '''
@@ -45,6 +48,18 @@ option_sim.csv
 The option_sim.csv defaults are used except for
 :ref:`csv_simulate@Input Files@option_sim.csv@absolute_covariates`
 which is set to the shock column in the covariate.csv file.
+Note that
+:ref:`csv_simulate@Input Files@option_sim.csv@covariate_effect_depend_age_time`
+is false. This means that the measurement of prevalence at age and time
+of the sock (age 50 and time 2000) use shock covariate value one.
+This affects the value of iota (used to fit that prevalence point)
+for all previous times.
+One might like the effect on iota to use the shock covariate
+previous values for previous times; i.e. to have the
+*covariate_effect_depend_age_time* true, but this
+would not agree with how dismod_at interprets the covariate value
+(try it).
+
 
 node.csv
 ========
@@ -71,7 +86,8 @@ see :ref:`csv_simulate@Input Files@multiplier_sim.csv`  .
 
 simulate.csv
 ============
-Sincidence is simulated for each sex and each age and time in the grid;
+Sincidence and prevalence are simulated for each sex and each age and time
+in the grid;
 see :ref:`csv_simulate@Input Files@simulate.csv`  .
 
 
@@ -111,6 +127,16 @@ The only covariate multiplier in the fit uses the shock covariate,
 affects the rate iota,
 and has the prior distribution mentioned above;
 see :ref:`csv_fit@Input Files@mulcov.csv`  .
+
+data_in.csv
+===========
+The measurements with out noise
+:ref:`csv_simulate@Output Files@data_sim.csv@meas_mean` are used for the
+simulated data.
+Both Sincidence and prevalence are included, but the Sincidence data is
+held out.
+Thus the Sincidence residuals are a measure of how well iota was
+estimated from prevalence.
 
 Example Source Code
 *******************
@@ -164,6 +190,7 @@ random_seed = str( int( time.time() ) )
 sim_file['option_sim.csv'] = \
 '''name,value
 absolute_covariates,shock
+covariate_effect_depend_age_time,false
 '''
 sim_file['option_sim.csv'] += f'random_seed,{random_seed}\n'
 #
@@ -201,15 +228,15 @@ header += 'time_lower,time_upper,percent_cv\n'
 sim_file['simulate.csv'] = header
 simulate_id     = -1
 percent_cv      = 5.0
-integrand_name  = 'Sincidence'
 node_name       = 'n0'
-for sex in [ 'female', 'male' ] :
-   for age in age_grid :
-      for time in time_grid :
-         simulate_id += 1
-         row  = f'{simulate_id},{integrand_name},{node_name},{sex},'
-         row += f'{age},{age},{time},{time},{percent_cv}\n'
-         sim_file['simulate.csv'] += row
+for integrand_name  in [ 'Sincidence' , 'prevalence' ] :
+   for sex in [ 'female', 'male' ] :
+      for age in age_grid :
+         for time in time_grid :
+            simulate_id += 1
+            row  = f'{simulate_id},{integrand_name},{node_name},{sex},'
+            row += f'{age},{age},{time},{time},{percent_cv}\n'
+            sim_file['simulate.csv'] += row
 # ----------------------------------------------------------------------------
 # fit files
 # ----------------------------------------------------------------------------
@@ -321,7 +348,11 @@ def fit(sim_dir, fit_dir) :
          row_in[key] = row_join[key]
       row_in['meas_value'] = row_join['meas_mean']
       row_in['meas_std']   = 1e-3
-      row_in['hold_out']   = '0'
+      if row_join['integrand_name'] == 'Sincidence' :
+         row_in['hold_out']   = '1'
+      else :
+         assert row_join['integrand_name'] == 'prevalence'
+         row_in['hold_out']   = '0'
       #
       table.append( row_in )
    at_cascade.csv.write_table(
@@ -333,23 +364,21 @@ def fit(sim_dir, fit_dir) :
    at_cascade.csv.fit(fit_dir)
    #
    # fit_predict.csv
-   # check predictions for the multiplier and iota
+   # check predictions for the multiplier
    fit_predict_table = at_cascade.csv.read_table(
       file_name = f'{fit_dir}/fit_predict.csv'
    )
    for row in fit_predict_table :
       integrand_name = row['integrand_name']
       avg_integrand  = float( row['avg_integrand'] )
-      age            = float( row['age'] )
-      time           = float( row['time'] )
       if integrand_name == 'mulcov_0' :
          truth = shock_multiplier
-      else :
-         assert integrand_name == 'Sincidence'
-         truth = rate_truth('iota', age, time)
-      assert abs(truth / truth - 1.0) < 0.01
+         relative_error  = avg_integrand / shock_multiplier - 1.0
+         if abs(relative_error) >= 1e-2 :
+            print('relative_error = ', relative_error)
+         assert abs(relative_error) < 1e-2
    #
-   # data_table.csv
+   # dismod_at data_table.csv
    # check that shock is an absolute covariate (reference has not changed).
    data_table = at_cascade.csv.read_table(
       file_name = f'{fit_dir}/n0/data.csv'
@@ -367,16 +396,16 @@ def fit(sim_dir, fit_dir) :
 if __name__ == '__main__' :
    #
    # sim_dir
-   sim_dir = 'build/sim'
+   sim_dir = 'build/example/csv/sim'
    if not os.path.exists(sim_dir) :
       os.makedirs(sim_dir)
    #
    # clear out a previous run
-   if os.path.exists( 'build/fit/n0' ) :
-      shutil.rmtree( 'build/fit/n0' )
+   if os.path.exists( 'build/example/csv/fit/n0' ) :
+      shutil.rmtree( 'build/example/csv/fit/n0' )
    #
    # fit_dir
-   fit_dir = 'build/fit'
+   fit_dir = 'build/example/csv/fit'
    if not os.path.exists(fit_dir) :
       os.mkdir(fit_dir)
    #

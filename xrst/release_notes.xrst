@@ -40,13 +40,16 @@ mm-dd
 
 12-08
 =====
-Add the option_sim.csv
-:ref:`csv_simulate@Input Files@option_sim.csv@absolute_covariates` option,
-and the option_fit.csv
-:ref:`csv_fit@Input Files@option_fit.csv@absolute_covariates` option.
-Also add the
-:ref:`csv_absolute_covariate-name` example.
-
+#. Add the
+   :ref:`csv_simulate@Input Files@option_sim.csv@covariate_effect_depend_age_time`  option.
+#. Add the option_sim.csv
+   :ref:`csv_simulate@Input Files@option_sim.csv@absolute_covariates` option,
+   and the option_fit.csv
+   :ref:`csv_fit@Input Files@option_fit.csv@absolute_covariates` option.
+#. Also add the
+   :ref:`csv_absolute_covariate-name` example.
+   This can be used to help understand the covariate_effect_depend_age_sex
+   option (as well as absolute covariates).
 
 12-07
 =====

@@ -23,6 +23,7 @@ import at_cascade
    sim
    sincidence
    std
+   midpoints
 }
 
 Simulate A Cascade Data Set
@@ -80,6 +81,18 @@ that require the ODE; e.g.,
 prevalence requires the ODE and Sincidence does not.
 The default value for this option is 1e-5.
 
+covariate_effect_depend_age_time
+--------------------------------
+If this boolean is false,
+each data value will be simulated using the covariate value corresponding
+to the age and time midpoints for the data.
+The current version of dismod_at uses this type of covariate effect.
+If *covariate_effect_depend_age_time* is true,
+the covariate effects for one data point may vary with age and time.
+The is important for integrands like prevalence
+which depends or rates at ages and time that are different from when
+the prevalence measurement is made.
+The default value for this option is false
 
 float_precision
 ---------------
@@ -425,13 +438,14 @@ def set_global_option_value(sim_dir, option_table) :
    random_seed = int( time.time() )
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
-      'absolute_covariates'   : (str, None)                 ,
-      'absolute_tolerance'    : (float, 1e-5)               ,
-      'float_precision'       : (int,   4)                  ,
-      'integrand_step_size'   : (float, 5.0)                ,
-      'random_depend_sex'     : (bool,  False)              ,
-      'random_seed'           : (int, random_seed)          ,
-      'std_random_effects'    : (float, 0.2)                ,
+      'covariate_effect_depend_age_time' : (bool, False)       ,
+      'absolute_covariates'              : (str, None)         ,
+      'absolute_tolerance'               : (float, 1e-5)       ,
+      'float_precision'                  : (int,   4)          ,
+      'integrand_step_size'              : (float, 5.0)        ,
+      'random_depend_sex'                : (bool,  False)      ,
+      'random_seed'                      : (int, random_seed)  ,
+      'std_random_effects'               : (float, 0.2)        ,
    }
    # END_SORT_THIS_LINE_MINUS_2
    #
@@ -646,12 +660,6 @@ def get_multiplier_list_rate(multiplier_sim_table) :
 # the random effect for this node and its ancestors not including the
 # root node in the sum.
 #
-# spline = spline_node_sex_cov[node_name][sex][cov_name] :
-# is a function that evaluates value = spline(age, time) where
-# node_name is a node name, sex is 'female' or 'male' (not 'both'),
-# cov_name is a covariate name or 'sex',
-# age, time, and value are floats
-#
 # root_covariate_ref[covariate_name] :
 # is the reference for the specified covariate when fitting the root node.
 #
@@ -666,16 +674,30 @@ def get_multiplier_list_rate(multiplier_sim_table) :
 # The sex that rate_fun will compute rates for.
 # This can be female, male or both.
 #
+# spline = spline_node_sex_cov[node_name][sex][cov_name] :
+# is a function that evaluates value = spline(age, time) where
+# node_name is a node name, sex is 'female' or 'male' (not 'both'),
+# cov_name is a covariate name or 'sex',
+# age, time, and value are floats
+# This is used for the covariate values when the global option
+# covariate_effect_depend_age_time is true.
+#
+# covariate_value_dict
+# For each covariate_name, covariate_value_dict[covariate_name]
+# is the value to use for the corresponding covariate to use when
+# the global option ovariate_effect_depend_age_time is false.
+#
 # rate_fun_dict =
 def get_rate_fun_dict(
    parent_node_dict            ,
    spline_no_effect_rate       ,
    random_effect_node_rate_sex ,
-   spline_node_sex_cov         ,
    root_covariate_ref          ,
    multiplier_list_rate        ,
    node_name                   ,
    sex                         ,
+   spline_node_sex_cov         ,
+   covariate_value_dict        ,
 ) :
    assert sex in { 'female', 'male', 'both' }
    # -----------------------------------------------------------------------
@@ -705,11 +727,14 @@ def get_rate_fun_dict(
             difference = sex_covariate_value[sex]
          else :
             covariate_name = covariate_or_sex
-            if sex in [ 'female', 'male' ] :
+            reference      = root_covariate_ref[covariate_name]
+            if not global_option_value['covariate_effect_depend_age_time'] :
+               covariate   = covariate_value_dict[covariate_name]
+               difference  = covariate - reference
+            elif sex in [ 'female', 'male' ] :
                spline         = \
                   spline_node_sex_cov[node_name][sex][covariate_name]
                covariate      = spline(age, time)
-               reference      = root_covariate_ref[covariate_name]
                difference     = covariate - reference
             else :
                assert sex == 'both'
@@ -719,7 +744,6 @@ def get_rate_fun_dict(
                spline         = \
                   spline_node_sex_cov[node_name]['male'][covariate_name]
                male           = spline(age, time)
-               reference      = root_covariate_ref[covariate_name]
                difference     = (female + male) / 2.0  - reference
          effect    += float( row['multiplier_truth'] ) * difference
       #
@@ -1008,9 +1032,6 @@ def simulate(sim_dir) :
       for covariate_name in absolute_covariates.split() :
          root_covariate_ref[covariate_name] = 0.0
    #
-   # covariate_name_list
-   covariate_name_list = root_covariate_ref.keys()
-   #
    # spline_no_effect_rate
    spline_no_effect_rate = get_spline_no_effect_rate(
       input_table['no_effect_rate']
@@ -1103,28 +1124,30 @@ def simulate(sim_dir) :
       age_mid  = ( age_lower  + age_upper )  / 2.0
       time_mid = ( time_lower + time_upper ) / 2.0
       #
-      # covariate_value_list
-      covariate_value_list = list()
-      for (index, covariate_name) in enumerate( covariate_name_list ) :
+      # covariate_value_dict
+      covariate_value_dict = dict()
+      for covariate_name in root_covariate_ref.keys() :
          spline = spline_node_sex_cov[node_name][sex][covariate_name]
          value  =  spline(age_mid, time_mid)
-         covariate_value_list.append(value )
-      #
-      # data_row
-      data_row = dict( zip(covariate_name_list, covariate_value_list) )
-      data_row['simulate_id'] = simulate_id
+         covariate_value_dict[covariate_name] = value
       #
       # rate_fun_dict
       rate_fun_dict = get_rate_fun_dict(
          parent_node_dict            ,
          spline_no_effect_rate       ,
          random_effect_node_rate_sex ,
-         spline_node_sex_cov         ,
          root_covariate_ref          ,
          multiplier_list_rate        ,
          node_name                   ,
-         sex
+         sex                         ,
+         spline_node_sex_cov         ,
+         covariate_value_dict        ,
       )
+      #
+      # data_row
+      # Note that changes to data_row will also change covariate_value_dict
+      data_row = covariate_value_dict
+      data_row['simulate_id'] = simulate_id
       #
       # grid
       integrand_step_size = global_option_value['integrand_step_size']
