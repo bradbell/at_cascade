@@ -3,7 +3,7 @@
 # SPDX-FileContributor: 2021-22 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
-{xrst_begin_parent split_covariate}
+@xrst_begin_parent split_covariate@
 {xrst_spell
    dage
    dtime
@@ -21,7 +21,7 @@ The :ref:`glossary@root_node` is n0,
 the :ref:`glossary@fit_goal_set`
 and the leaf nodes are {n3, n4, n5, n6}::
 
-            n0
+                n0
           /-----/\-----\
       n1              n2
        /  \            /  \
@@ -169,7 +169,7 @@ routine uses these tables to check that fit against the truth.
 
 {xrst_end split_covariate}
 ------------------------------------------------------------------------------
-{xrst_begin split_covariate.py}
+@xrst_begin split_covariate.py@
 
 split_covariate: Python Source Code
 ###################################

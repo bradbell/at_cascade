@@ -83,6 +83,7 @@ Routines
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
 {xrst_toc_table
+   at_cascade/csv/check_table.py
    at_cascade/csv/covariate_avg.py
    at_cascade/csv/covariate_spline.py
    at_cascade/csv/empty_str.py

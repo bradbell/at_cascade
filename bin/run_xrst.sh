@@ -15,7 +15,7 @@ then
    exit 1
 fi
 ok='yes'
-if [ "$1" != 'html' ] && [ "$1" != 'pdf' ]
+if [ "$1" != 'html' ] && [ "$1" != 'tex' ]
 then
    echo 'usage: bin/run_xrst.sh target [ --rst_line_numbers ]'
    echo 'target is html or pdf'
@@ -47,6 +47,10 @@ then
    echo 'bin/run_sphinx: aboring due to xrst warnings above'
    rm run_sphinx.$$
    exit 1
+fi
+if [ "$target" == 'pdf' ]
+then
+   make -C build/tex at_cascade.pdf
 fi
 # -----------------------------------------------------------------------------
 rm run_sphinx.$$
