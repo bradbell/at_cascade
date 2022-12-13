@@ -12,6 +12,7 @@ Release Notes for at_cascade
 {xrst_begin 2022}
 {xrst_spell
    avgint
+   const
    cov
    dd
    distutils
@@ -37,6 +38,12 @@ Release Notes for 2022
 
 mm-dd
 *****
+
+12-12
+=====
+Improve the error messaging when both
+const_value and value_prior are empty in
+:ref:`csv_fit@Input Files@mulcov.csv` .
 
 12-08
 =====

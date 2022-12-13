@@ -1013,6 +1013,11 @@ def create_root_node_database(fit_dir) :
          value_prior = float( row['const_value'] )
       else :
          value_prior = row['value_prior']
+         if value_prior == None :
+            line = i_row + 2
+            msg  = f'In line {line} of mulcov.csv\n'
+            msg += 'const_value and value_prior are both empty'
+            assert False, msg
       smooth_dict[name]['fun'].set(
          age         = age_list[0]            ,
          time        = time_list[0]           ,
