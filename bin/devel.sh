@@ -25,7 +25,7 @@ ignore_files='
    /.gitignore
    /batch_edit.sed
    /bin/devel.sh
-   /readme.rst
+   /readme.md
    /sphinx/
 '
 # ----------------------------------------------------------------------------
