@@ -46,6 +46,8 @@ mm-dd
 #. Fix the value prior for iota in the :ref:`csv_sim_and_fit-name`
    example. To be specific, it was log Gaussian by mistake and has been
    changed to Gaussian.
+#. You should advance to dismod_at-20221218 to avoid a crash when all of the
+   fixed effects have their lower and upper limits equal.
 
 12-12
 =====
