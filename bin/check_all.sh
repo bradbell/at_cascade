@@ -22,7 +22,7 @@ echo_eval bin/run_xrst.sh html
 list=$(ls example/*.py example/csv/*.py test/*.py)
 for script in $list
 do
-   echo_eval python3 $script
+   echo_eval bin/run_test.sh $script
 done
 # -----------------------------------------------------------------------------
 echo 'check_all.sh: OK'

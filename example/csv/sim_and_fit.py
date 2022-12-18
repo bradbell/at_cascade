@@ -308,6 +308,8 @@ fit_file['option_fit.csv']  =  \
 refit_split,false
 quasi_fixed,true
 max_num_iter_fixed,300
+plot,true
+db2csv,true
 '''
 fit_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 #
@@ -330,12 +332,13 @@ fit_file['prior.csv'] = \
 '''name,density,mean,std,eta,lower,upper
 uniform_eps_1,uniform,0.02,,,1e-6,1.0
 delta_prior,log_gaussian,0.0,0.05,1e-4,,
+random_prior,gaussian,0.0,0.2,,,,
 '''
 #
 # child_rate.csv
 fit_file['child_rate.csv'] = \
 '''rate_name,value_prior
-iota,delta_prior
+iota,random_prior
 '''
 #
 # mulcov.csv
@@ -455,22 +458,22 @@ def fit(sim_dir, fit_dir) :
          if outside :
             outside_shock.append(iota)
    #
-   # check inside_shock
+   # inside_shock
    avg =  sum(inside_shock) / len(inside_shock)
    #
    if min(inside_shock) <= 0.03 :
       print('min inside_shock =',  min(inside_shock) )
    assert 0.03 < min(inside_shock)
    #
-   if 0.18 <= max(inside_shock) :
+   if 0.15 <= max(inside_shock) :
       print('max inside_shock =',  max(inside_shock) )
-   assert max(inside_shock) < 0.18
+   assert max(inside_shock) < 0.15
    #
    if avg <= 0.07 or 0.1 <= avg :
       print('avg inside_shock =',  avg )
    assert 0.07 < avg and avg < 0.1
    #
-   # check outside_shock
+   # outside_shock
    avg =  sum(outside_shock) / len(outside_shock)
    #
    if min(outside_shock) <= 0.001 :

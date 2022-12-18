@@ -10,6 +10,8 @@
 /git_commit.sh
 # log of run_xrst.sh
 /xrst.log
+# bin/run_test.sh temporary file
+/run_test.tmp
 # ------------------------
 # directories at top level
 # ------------------------

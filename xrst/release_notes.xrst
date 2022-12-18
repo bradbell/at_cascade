@@ -39,6 +39,14 @@ Release Notes for 2022
 mm-dd
 *****
 
+12-18
+=====
+#. If a test fails, run it a second time with a different random seed.
+   As the number of tests increases this helps avoid a by chance test failure.
+#. Fix the value prior for iota in the :ref:`csv_sim_and_fit-name`
+   example. To be specific, it was log Gaussian by mistake and has been
+   changed to Gaussian.
+
 12-12
 =====
 Improve the error messaging when both
