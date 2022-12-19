@@ -41,9 +41,11 @@ mm-dd
 
 12.19
 =====
-In :ref:`csv_join_file-name` use the dictionary ``update`` method
-instead of the ``|`` operator because python 3.8 does not support
-the ``|`` operator.
+#. In :ref:`csv_join_file-name` use the dictionary ``update`` method
+   instead of the ``|`` operator because python 3.8 does not support
+   the ``|`` operator.
+#. :ref:`csv_fit-name` was failing when the USER environment variable
+   was not defined. This has been fixed (``none`` is the default user).
 
 12-18
 =====

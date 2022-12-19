@@ -1,4 +1,3 @@
-# SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-22 Bradley M. Bell
 # ----------------------------------------------------------------------------
@@ -225,8 +224,10 @@ memory objects used to run the cascade in parallel.
 No two cascades can run at the same time with the same shared memory prefix.
 If a cascade does not terminate cleanly, you may have to clear the
 shared memory before you can run it again; see :ref:`clear_shared-name` .
-The default value for this option is your user name with spaces
+The default value for this option is your user name ($USER) with spaces
 replaced by underbars.
+If the USER environment variable is not defined,
+the value ``none`` is used for this default.
 
 tolerance_fixed
 ---------------
@@ -642,8 +643,14 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
    if len(option_table) > 0 :
       assert type( option_table[0] ) == dict
    #
+   # user
+   user = os.environ.get('USER')
+   if user == None :
+      user = 'none'
+   else :
+      user = user.replace(' ', '_')
+   #
    # option_default
-   user           = os.environ.get('USER').replace(' ', '_')
    max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
    random_seed    = int( time.time() )
    # BEGIN_SORT_THIS_LINE_PLUS_2
