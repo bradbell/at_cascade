@@ -39,6 +39,12 @@ Release Notes for 2022
 mm-dd
 *****
 
+12.19
+=====
+In :ref:`csv_join_file-name` use the dictionary ``update`` method
+instead of the ``|`` operator because python 3.8 does not support
+the ``|`` operator.
+
 12-18
 =====
 #. If a test fails, run it a second time with a different random seed.

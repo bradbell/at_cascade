@@ -77,10 +77,9 @@ def join_file(
    # result_table
    result_table = list()
    for index in range( len(left_table) ) :
-      left_row   = left_table[index]
-      right_row  = right_table[index]
-      result_row = left_row | right_row
-      result_table.append( result_row )
+      row  = left_table[index]
+      row.update( right_table[index] )
+      result_table.append( row )
    #
    # result_file
    at_cascade.csv.write_table(
