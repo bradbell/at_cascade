@@ -340,7 +340,7 @@ def root_node_db(file_name) :
 def main() :
    # -------------------------------------------------------------------------
    # wrok_dir
-   work_dir = 'build/example'
+   work_dir = 'build/test'
    if not os.path.exists(work_dir) :
       os.makedirs(work_dir)
    os.chdir(work_dir)
