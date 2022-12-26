@@ -124,7 +124,7 @@ csv_file['simulate.csv'] = header + \
 def main() :
    #
    # sim_dir
-   sim_dir = 'build/csv'
+   sim_dir = 'build/example/csv'
    if not os.path.exists(sim_dir) :
       os.makedirs(sim_dir)
    #

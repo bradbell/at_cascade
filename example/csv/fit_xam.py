@@ -160,7 +160,7 @@ csv_file['data_in.csv'] = header + \
 def main() :
    #
    # fit_dir
-   fit_dir = 'build/csv'
+   fit_dir = 'build/example/csv'
    if not os.path.exists(fit_dir) :
       os.makedirs(fit_dir)
    root_node_name = 'n0'

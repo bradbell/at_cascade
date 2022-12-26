@@ -30,7 +30,7 @@ import at_cascade
 def main() :
    #
    # left_file
-   left_file = 'build/csv/left_file.csv'
+   left_file = 'build/example/csv/left_file.csv'
    left_table = [
       { 'age' : '40',  'time' : '2000', 'sex' : 'female' },
       { 'age' : '50',  'time' : '2000', 'sex' : 'female' },
@@ -39,7 +39,7 @@ def main() :
    at_cascade.csv.write_table(left_file, left_table)
    #
    # right_file
-   right_file = 'build/csv/right_file.csv'
+   right_file = 'build/example/csv/right_file.csv'
    right_table = [
       { 'meas_value' : '1.0', 'sex' : 'female' },
       { 'meas_value' : '2.0', 'sex' : 'both' },
@@ -48,7 +48,7 @@ def main() :
    at_cascade.csv.write_table(right_file, right_table)
    #
    # result_file
-   result_file = 'build/csv/result_file.csv'
+   result_file = 'build/example/csv/result_file.csv'
    at_cascade.csv.join_file(left_file, right_file, result_file)
    #
    # result_table

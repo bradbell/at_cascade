@@ -37,7 +37,7 @@ def main() :
    ]
    #
    # file_name
-   file_name = 'build/file.csv'
+   file_name = 'build/example/csv/file.csv'
    #
    # csv_write_table
    at_cascade.csv.write_table(file_name, write_table)
