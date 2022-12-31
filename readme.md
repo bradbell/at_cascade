@@ -1,3 +1,3 @@
 Documentation
 =============
-https://bradbell.github.io/at_cascade
+https://at-cascade.readthedocs.io/en/latest/at_cascade.html
