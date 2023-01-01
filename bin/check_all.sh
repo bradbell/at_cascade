@@ -1,7 +1,7 @@
 #! /bin/bash -e
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
@@ -16,8 +16,7 @@ then
 fi
 # -----------------------------------------------------------------------------
 echo_eval bin/check_tab.sh
-# -----------------------------------------------------------------------------
-echo_eval bin/run_xrst.sh html
+echo_eval bin/check_xrst.sh
 # -----------------------------------------------------------------------------
 list=$(ls example/*.py example/csv/*.py test/*.py)
 for script in $list
