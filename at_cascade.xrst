@@ -22,6 +22,7 @@ Children
    xrst/all_node_db.xrst
    example/example.xrst
    at_cascade/__init__.py
+   at_cascade/csv/__init__.py
    xrst/wish_list.xrst
    xrst/release_notes.xrst
    xrst/math.xrst

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin module}
@@ -21,7 +21,6 @@ The at_cascade Python Module
    at_cascade/create_all_node_db.py
    at_cascade/create_job_table.py
    at_cascade/create_shift_db.py
-   at_cascade/csv/__init__.py
    at_cascade/empty_avgint_table.py
    at_cascade/get_cov_info.py
    at_cascade/get_cov_reference.py
@@ -42,6 +41,9 @@ The at_cascade Python Module
 
 {xrst_end module}
 '''
+
+# The file at_cascade/csv/__init__.py should be a sibling (not child)
+# of this file in the xrst table of contents.
 
 # BEGIN_SORT_THIS_LINE_PLUS_1
 from .                      import csv
