@@ -745,6 +745,27 @@ class smoothing_function :
          assert False, msg
       return self.value[ (age, time) ]
 # ----------------------------------------------------------------------------
+# Converts weighting on a grid to a function
+#
+# set:      set the function value at one of the grid points
+# __call__: get the function value at one of the grid points
+#
+class weighting_function :
+   def __init__(self, index) :
+      assert type(index) == int
+      self.index  = index
+      self.value  = dict()
+   def set(self, age, time, weight) :
+      assert type(age)         == float
+      assert type(time)        == float
+      assert type(weight)      == float
+      self.value[ (age, time) ] = weight
+   def __call__(self, age, time) :
+      if (age, time) not in self.value :
+         msg = f'The grid for weighting {self.name} is not rectangular'
+         assert False, msg
+      return self.value[ (age, time) ]
+# ----------------------------------------------------------------------------
 # Writes the root node data base
 #
 # root_node.db
@@ -859,20 +880,27 @@ def create_root_node_database(fit_dir) :
    max_num_iter_fixed = global_option_value['max_num_iter_fixed']
    ode_step_size      = global_option_value['ode_step_size']
    tolerance_fixed    = global_option_value['tolerance_fixed']
+   #
    if global_option_value['quasi_fixed'] :
       quasi_fixed = 'true'
    else :
       quasi_fixed = 'false'
+   #
+   if len(covariate_list) == 0 :
+      splitting_covariate = None
+   else :
+      splitting_covariate = 'sex'
    option_table = [
-      { 'name' : 'age_avg_split',      'value' : age_avg_split             },
-      { 'name' : 'max_num_iter_fixed', 'value' : str( max_num_iter_fixed ) },
-      { 'name' : 'ode_step_size',      'value' : str( ode_step_size)       },
-      { 'name' : 'parent_node_name',   'value' : root_node_name            },
-      { 'name' : 'print_level_fixed',  'value' : '5'                       },
-      { 'name' : 'random_seed',        'value' : str( random_seed )        },
-      { 'name' : 'tolerance_fixed',    'value' : str( tolerance_fixed)     },
-      { 'name' : 'meas_noise_effect',  'value' : 'add_std_scale_none'      },
-      { 'name' : 'quasi_fixed',        'value' : quasi_fixed               },
+      { 'name' : 'age_avg_split',       'value' : age_avg_split             },
+      { 'name' : 'max_num_iter_fixed',  'value' : str( max_num_iter_fixed ) },
+      { 'name' : 'ode_step_size',       'value' : str( ode_step_size)       },
+      { 'name' : 'parent_node_name',    'value' : root_node_name            },
+      { 'name' : 'print_level_fixed',   'value' : '5'                       },
+      { 'name' : 'random_seed',         'value' : str( random_seed )        },
+      { 'name' : 'tolerance_fixed',     'value' : str( tolerance_fixed)     },
+      { 'name' : 'meas_noise_effect',   'value' : 'add_std_scale_none'      },
+      { 'name' : 'quasi_fixed',         'value' : quasi_fixed               },
+      { 'name' : 'splitting_covariate', 'value' : splitting_covariate       },
    ]
    #
    # spline_cov
@@ -971,7 +999,107 @@ def create_root_node_database(fit_dir) :
       time_set.add( float( row['time'] ) )
    time_list = sorted( list( time_set ) )
    #
-   # smooth_dict, age_list, time_list
+   # node_table, node_set
+   node_table = list()
+   for row_in in input_table['node'] :
+      row_out = { 'name' : row_in['node_name'] }
+      if row_in['parent_name'] == None :
+         row_out['parent'] = ''
+      else :
+         row_out['parent'] = row_in['parent_name']
+      node_table.append( row_out )
+   #
+   # weight_dict, weight_index
+   weight_dict    = dict()
+   weight_index   = 0
+   check_node_set = set()
+   check_sex_set  = set()
+   for row in covariate_table :
+      age  = float( row['age'] )
+      time = float( row['time'] )
+      #
+      node_name = row['node_name']
+      sex_name  = row['sex']
+      #
+      check_node_set.add(node_name)
+      check_sex_set.add(sex_name)
+      #
+      for covariate_name in covariate_list :
+         key = (node_name, sex_name, covariate_name)
+         if key not in weight_dict :
+            fun           = weighting_function(weight_index)
+            weight_index += 1
+            weight_dict[key] = fun
+         weight = float( row[covariate_name] )
+         weight_dict[key].set(age, time, weight)
+   if check_sex_set != { 'female', 'male' } :
+      print(check_sex_set)
+      msg  = 'The sexes above are in covariate.csv '
+      msg += 'but it should be female and male'
+      assert False, msg
+   if len(node_set - check_node_set) > 0 :
+      difference = node_set - check_node_set
+      print(difference)
+      msg = 'The nodes above are in node.csv but not in covariate.csv'
+      assert False, msg
+   if len(check_node_set - node_set) > 0 :
+      difference = check_node_set - node_set
+      print(difference)
+      msg = 'The nodes above are in covariate.csv but not in node.csv'
+   #
+   # weight_dict
+   for node_name in node_set :
+      for covariate_name in covariate_list :
+         key        = (node_name, 'female', covariate_name)
+         fun_female = weight_dict[key]
+         key        = (node_name, 'male', covariate_name)
+         fun_male   = weight_dict[key]
+         #
+         fun_both      = weighting_function(weight_index)
+         weight_index += 1
+         for age  in age_grid :
+            for time in time_grid :
+               weight = ( fun_female(age, time) + fun_male(age, time) ) / 2.0
+               fun_both.set(age, time, weight)
+         key              = (node_name, 'both', covariate_name)
+         weight_dict[key] = fun_both
+   #
+   # weight_table
+   weight_table = list()
+   age_id_list  = [ age_list.index(age) for age in age_grid ]
+   time_id_list = [ time_list.index(time) for time in time_grid ]
+   for key in weight_dict :
+      fun   = weight_dict[key]
+      index = fun.index
+      name  = f'weight_{index}'
+      row = {
+         'name'     : f'weight_{index}'   ,
+         'age_id'   : age_id_list         ,
+         'time_id'  : time_id_list        ,
+         'fun'      : fun                 ,
+      }
+      weight_table.append(row)
+   #
+   # rate_eff_cov_table
+   rate_eff_cov_table = list()
+   for key in weight_dict :
+      #
+      fun         = weight_dict[key]
+      index       = fun.index
+      weight_name = f'weight_{index}'
+      #
+      (node_name, sex_name, covariate_name) = key
+      sex_value = sex_name2value[sex_name]
+      #
+      row = {
+         'node_name'      : node_name       ,
+         'covariate_name' : covariate_name  ,
+         'split_value'    : sex_value       ,
+         'weight_name'    : weight_name     ,
+      }
+      rate_eff_cov_table.append(row)
+   #
+   # smooth_dict
    smooth_dict = dict()
    for row in input_table['parent_rate'] :
       name = row['rate_name'] + '_parent'
@@ -1056,16 +1184,6 @@ def create_root_node_database(fit_dir) :
       }
       smooth_table.append( row )
    #
-   # node_table
-   node_table = list()
-   for row_in in input_table['node'] :
-      row_out = { 'name' : row_in['node_name'] }
-      if row_in['parent_name'] == None :
-         row_out['parent'] = ''
-      else :
-         row_out['parent'] = row_in['parent_name']
-      node_table.append( row_out )
-   #
    # mulcov_table
    mulcov_table = input_table['mulcov']
    for (i_row, row) in enumerate(mulcov_table) :
@@ -1090,20 +1208,22 @@ def create_root_node_database(fit_dir) :
          rate_table.append( row )
    #
    dismod_at.create_database(
-         file_name         = output_file,
-         age_list          = age_list,
-         time_list         = time_list,
-         integrand_table   = integrand_table,
-         node_table        = node_table,
-         subgroup_table    = subgroup_table,
-         covariate_table   = dismod_at_covariate_table,
-         avgint_table      = list(),
-         data_table        = data_table,
-         prior_table       = prior_table,
-         smooth_table      = smooth_table,
-         rate_table        = rate_table,
-         mulcov_table      = mulcov_table,
-         option_table      = option_table,
+         file_name           = output_file,
+         age_list            = age_list,
+         time_list           = time_list,
+         integrand_table     = integrand_table,
+         node_table          = node_table,
+         subgroup_table      = subgroup_table,
+         weight_table        = weight_table,
+         covariate_table     = dismod_at_covariate_table,
+         avgint_table        = list(),
+         data_table          = data_table,
+         prior_table         = prior_table,
+         smooth_table        = smooth_table,
+         rate_table          = rate_table,
+         mulcov_table        = mulcov_table,
+         option_table        = option_table,
+         rate_eff_cov_table  = rate_eff_cov_table,
    )
    #
    assert type(age_grid) == list
