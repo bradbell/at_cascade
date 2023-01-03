@@ -799,8 +799,11 @@ def create_root_node_database(fit_dir) :
       table             = at_cascade.csv.read_table(file_name)
       input_table[name] = at_cascade.csv.empty_str(table, 'to_none')
       at_cascade.csv.check_table(file_name, input_table[name])
-   #
    print('begin creating root node database' )
+   #
+   # covariate_table
+   # This is different from dismod_at_covariate table created below
+   covariate_table = input_table['covariate']
    #
    # node_set
    node_set       = set()
@@ -814,7 +817,7 @@ def create_root_node_database(fit_dir) :
    #
    # root_covariate_ref
    root_covariate_ref = at_cascade.csv.covariate_avg(
-      input_table['covariate'], root_node_name
+      covariate_table, root_node_name
    )
    absolute_covariates = global_option_value['absolute_covariates']
    if absolute_covariates != None :
@@ -865,7 +868,7 @@ def create_root_node_database(fit_dir) :
    #
    # spline_cov
    age_grid, time_grid, spline_cov = at_cascade.csv.covariate_spline(
-      input_table['covariate'], node_set
+      covariate_table, node_set
    )
    #
    # data_table
@@ -1094,7 +1097,6 @@ def create_root_node_database(fit_dir) :
          option_table      = option_table,
    )
    #
-   covariate_table = input_table['covariate']
    assert type(age_grid) == list
    assert type(time_grid) == list
    assert type(covariate_table) == list
