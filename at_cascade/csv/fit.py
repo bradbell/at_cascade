@@ -722,10 +722,10 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
    #
    assert type(global_option_value) == dict
 # ----------------------------------------------------------------------------
-# Converts smoothing prioros on a grid to a prior function
+# Converts smoothing priors on a grid to a prior function
 #
-# set:      sets the function value at one of the grid points
-# __call__: gets the function value at one of the grid points
+# set:      set the function value at one of the grid points
+# __call__: get the function value at one of the grid points
 #
 class smoothing_function :
    def __init__(self, name) :
@@ -819,15 +819,24 @@ def create_root_node_database(fit_dir) :
    root_covariate_ref = at_cascade.csv.covariate_avg(
       covariate_table, root_node_name
    )
+   #
+   # covariate_list
+   covariate_list = list( root_covariate_ref.keys() )
+   #
+   # root_covariate_ref
    absolute_covariates = global_option_value['absolute_covariates']
    if absolute_covariates != None :
       for covariate_name in absolute_covariates.split() :
+         if covariate_name not in covariate_list :
+            msg  = f'{covariate_name} is in option_fit absolute_covariates '
+            msg += 'but it is not in covariate.csv'
+            assert False, msg
          root_covariate_ref[covariate_name] = 0.0
    #
    # forbidden_covariate
    forbidden_covariate = set( input_table['data_in'][0].keys() )
    forbidden_covariate.add( "one" )
-   for covariate_name in root_covariate_ref.keys() :
+   for covariate_name in covariate_list :
       if covariate_name in forbidden_covariate :
          msg  = f'cannot use the covariate name {covariate_name}\n'
          msg += 'because it is "one" or a column in the data_in.csv file'
@@ -838,7 +847,7 @@ def create_root_node_database(fit_dir) :
       { 'name': 'sex', 'reference': 0.0, 'max_difference' : 0.5 }  ,
       { 'name': 'one', 'reference': 0.0, 'max_difference' : None } ,
    ]
-   for covariate_name in root_covariate_ref.keys() :
+   for covariate_name in covariate_list :
       dismod_at_covariate_table.append({
          'name':            covariate_name,
          'reference':       root_covariate_ref[covariate_name],
