@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import multiprocessing
 import dismod_at
@@ -830,13 +830,13 @@ def create_root_node_database(fit_dir) :
          msg += 'because it is "one" or a column in the data_in.csv file'
          assert False, msg
    #
-   # covariate_table
-   covariate_table = [
+   # dismod_at_covariate_table
+   dismod_at_covariate_table = [
       { 'name': 'sex', 'reference': 0.0, 'max_difference' : 0.5 }  ,
       { 'name': 'one', 'reference': 0.0, 'max_difference' : None } ,
    ]
    for covariate_name in root_covariate_ref.keys() :
-      covariate_table.append({
+      dismod_at_covariate_table.append({
          'name':            covariate_name,
          'reference':       root_covariate_ref[covariate_name],
          'max_difference' : None
@@ -1084,7 +1084,7 @@ def create_root_node_database(fit_dir) :
          integrand_table   = integrand_table,
          node_table        = node_table,
          subgroup_table    = subgroup_table,
-         covariate_table   = covariate_table,
+         covariate_table   = dismod_at_covariate_table,
          avgint_table      = list(),
          data_table        = data_table,
          prior_table       = prior_table,
@@ -1093,13 +1093,13 @@ def create_root_node_database(fit_dir) :
          mulcov_table      = mulcov_table,
          option_table      = option_table,
    )
-   covariate_table = input_table['covariate']
    #
+   covariate_table = input_table['covariate']
    assert type(age_grid) == list
    assert type(time_grid) == list
    assert type(covariate_table) == list
    assert type( covariate_table[0] ) == dict
-   return age_grid, time_grid, input_table['covariate']
+   return age_grid, time_grid, covariate_table
 # ----------------------------------------------------------------------------
 # Writes the all node data base.
 #
