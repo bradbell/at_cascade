@@ -18,12 +18,12 @@ import at_cascade
 random_seed = str( int( time.time() ) )
 #
 # age_grid, time_grid
-age_grid   = list( range(0, 150, 50) )
-time_grid  = list( range(1980, 2040, 20) )
+age_grid   = [0.0, 25.0, 50.0, 75.0, 100.0]
+time_grid  = [1980.0, 2000.0, 2020.0]
 #
 # shock_covariate
 def shock_covariate(age, time) :
-   if age == 50 and time == 2000 :
+   if age == 50.0 and time == 2000.0 :
       assert age in age_grid
       assert time in time_grid
       return 1.0
@@ -144,7 +144,7 @@ fit_file['prior.csv'] = \
 '''name,density,mean,std,eta,lower,upper
 uniform_-1_1,uniform,0.0,,,-1.0,1.0
 uniform_eps_1,uniform,0.02,,,1e-6,1.0
-delta_prior,log_gaussian,0.0,0.1,1e-4,,
+delta_prior,log_gaussian,0.0,0.01,1e-5,,
 random_prior,gaussian,0.0,0.2,,,,
 '''
 #
@@ -235,6 +235,11 @@ def fit(sim_dir, fit_dir) :
    #
    # fit
    at_cascade.csv.fit(fit_dir)
+   #
+   # fit_predict_table
+   fit_predict_table = at_cascade.csv.read_table(
+      file_name = f'{fit_dir}/fit_predict.csv'
+   )
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :

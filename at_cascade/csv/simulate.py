@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import time
 import math
@@ -92,7 +92,7 @@ the covariate effects for one data point may vary with age and time.
 The is important for integrands like prevalence
 which depends or rates at ages and time that are different from when
 the prevalence measurement is made.
-The default value for this option is false
+The default value for this option is true.
 
 float_precision
 ---------------
@@ -438,7 +438,7 @@ def set_global_option_value(sim_dir, option_table) :
    random_seed = int( time.time() )
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
-      'covariate_effect_depend_age_time' : (bool, False)       ,
+      'covariate_effect_depend_age_time' : (bool, True)        ,
       'absolute_covariates'              : (str, None)         ,
       'absolute_tolerance'               : (float, 1e-5)       ,
       'float_precision'                  : (int,   4)          ,
