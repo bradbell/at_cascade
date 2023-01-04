@@ -34,7 +34,7 @@ See the dismod_at documentation for the rate_eff_cov table for more details.
 #. Add the csv fit
    :ref:`csv_fit@Input Files@option_fit.csv@absolute_covariates` option.
 #. Change the csv_simulate default value for
-   :ref:`csv_sim@Input Files@option_fit@covariate_effect_depend_age_time`
+   :ref:`csv_simulate@Input Files@option_sim.csv@covariate_effect_depend_age_time`
    from false to true because csv_fit was changed on 01-03 to fit that way.
 
 {xrst_end 2023}

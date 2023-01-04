@@ -5,6 +5,7 @@
 import os
 import sys
 import time
+import math
 import shutil
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
@@ -29,19 +30,11 @@ def shock_covariate(age, time) :
       return 1.0
    return 0.0
 #
-# rate_truth
+# truth
+omega_truth      = 0.01
 multiplier_truth = 1.0
 no_effect_chi    = 0.03
 no_effect_iota   = 0.02
-def rate_truth(rate_name, age, time) :
-   if rate_name == 'omega' :
-      return 0.01
-   if rate_name == 'chi' :
-      return no_effect_chi
-   assert rate_name == 'iota'
-   effect = covarite_multiplier * shock_covariate(age, time)
-   return no_effect_iota * math.exp( effect )
-#
 # ----------------------------------------------------------------------------
 # simulation files
 # ----------------------------------------------------------------------------
@@ -53,7 +46,7 @@ sim_file = dict()
 random_seed = str( int( time.time() ) )
 sim_file['option_sim.csv'] = \
 '''name,value
-absolute_tolerance,1e-5
+absolute_tolerance,1e-7
 float_precision,4
 integrand_step_size,5
 random_depend_sex,false
@@ -75,9 +68,8 @@ for node_name in [ 'n0', 'n1', 'n2' ] :
    for sex in [ 'female', 'male' ] :
       for age in age_grid :
          for time in time_grid :
-            omega = rate_truth('omega', age, time)
             shock = shock_covariate(age, time)
-            row   = f'{node_name},{sex},{age},{time},{omega},{shock}\n'
+            row   = f'{node_name},{sex},{age},{time},{omega_truth},{shock}\n'
             sim_file['covariate.csv'] += row
 #
 # no_effect_rate.csv
@@ -115,6 +107,7 @@ fit_file = dict()
 # option_fit.csv
 fit_file['option_fit.csv']  =  \
 '''name,value
+ode_step_size,1
 absolute_covariates,shock
 hold_out_integrand,Sincidence
 refit_split,false
@@ -137,6 +130,7 @@ fit_file['predict_integrand.csv'] = \
 '''integrand_name
 Sincidence
 prevalence
+mulcov_0
 '''
 #
 # prior.csv
@@ -191,9 +185,8 @@ def fit(sim_dir, fit_dir) :
       )
    #
    # fit_file['parent_rate.csv']
-   chi  = rate_truth('chi', 0, 0)
    data = 'rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value\n'
-   data += f'chi,0.0,0.0,,,,{chi}\n'
+   data += f'chi,0.0,0.0,,,,{no_effect_chi}\n'
    for age in age_grid :
       for time in time_grid :
          data += f'iota,{age},{time},uniform_eps_1,delta_prior,delta_prior,\n'
@@ -236,10 +229,59 @@ def fit(sim_dir, fit_dir) :
    # fit
    at_cascade.csv.fit(fit_dir)
    #
-   # fit_predict_table
+   # fit_predict_dict
    fit_predict_table = at_cascade.csv.read_table(
       file_name = f'{fit_dir}/fit_predict.csv'
    )
+   #
+   # random_effect_dict
+   random_effect_table = at_cascade.csv.read_table(
+      file_name = f'{sim_dir}/random_effect.csv'
+   )
+   random_effect_dict = { 'n0' : dict(), 'n1' : dict(), 'n2' : dict() }
+   for node_name in random_effect_dict :
+      for sex in [ 'female', 'male' ] :
+         random_effect_dict[node_name][sex] = dict()
+   for row in random_effect_table :
+      node_name     = row['node_name']
+      sex           = row['sex']
+      rate_name     = row['rate_name']
+      random_effect = float( row['random_effect'] )
+      random_effect_dict[node_name][sex][rate_name] = random_effect
+   #
+   # row
+   max_mul_error  = 0.0
+   max_iota_error = 0.0
+   for row in fit_predict_table :
+      found = set()
+      if row['integrand_name'] == 'mulcov_0' :
+         node_name     = row['node_name']
+         if node_name not in found :
+            found.add(node_name)
+            avg_integrand = float( row['avg_integrand'] )
+            rel_error     = (1.0 - avg_integrand / multiplier_truth)
+            # print( f'{multiplier_truth}, {avg_integrand}, {rel_error}')
+            max_mul_error = max(max_mul_error, abs(rel_error) )
+      if row['integrand_name'] == 'Sincidence' :
+         node_name     = row['node_name']
+         sex           = row['sex']
+         age           = float( row['age'] )
+         time          = float( row['time'] )
+         avg_integrand = float( row['avg_integrand'] )
+         if sex == 'both' :
+            random_male   = random_effect_dict[node_name]['male']['iota']
+            random_female = random_effect_dict[node_name]['female']['iota']
+            random_effect = (random_male + random_female) / 2.0
+         else :
+            random_effect = random_effect_dict[node_name][sex]['iota']
+         cov_effect    = multiplier_truth * shock_covariate(age, time)
+         total_effect  = random_effect + cov_effect
+         iota          = math.exp(total_effect) * no_effect_iota
+         rel_error     = (1.0 - avg_integrand / iota )
+         # print( f'{age}, {time}, {iota}, {avg_integrand}, {rel_error}' )
+         max_iota_error = max(max_iota_error, abs(rel_error) )
+   # print( f'max_mul_error  = {max_mul_error}' )
+   # print( f'max_iota_error = {max_iota_error}' )
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :
