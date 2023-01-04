@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -377,8 +377,8 @@ def fit(sim_dir, fit_dir) :
       )
    #
    # fit_file['parent_rate.csv']
-   chi   = rate_truth('chi', 0, 0)
-   data  = 'rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value\n'
+   chi  = rate_truth('chi', 0, 0)
+   data = 'rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value\n'
    data  += f'chi,0.0,0.0,,,,{chi}\n'
    for age in age_grid :
       for time in time_grid :

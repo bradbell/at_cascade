@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 {xrst_begin_parent release_notes}
 
@@ -8,6 +8,34 @@ Release Notes for at_cascade
 ############################
 
 {xrst_end release_notes}
+-----------------------------------------------------------------------------
+{xrst_begin 2023}
+{xrst_spell
+   mm
+   dd
+   cov
+}
+
+Release Notes for 2023
+######################
+
+mm-dd
+*****
+
+01-03
+=====
+Fix a bug in covariate multipliers that affect rate values.
+For example, the model for a prevalence measurement needs to compute rate
+values at ages and time that are previous to the prevalence measurement time.
+See the dismod_at documentation for the rate_eff_cov table for more details.
+
+01-04
+=====
+Add the csv fit
+:ref:`csv_fit@Input Files@option_fit.csv@absolute_covariates` option.
+
+
+{xrst_end 2023}
 -----------------------------------------------------------------------------
 {xrst_begin 2022}
 {xrst_spell

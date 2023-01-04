@@ -35,6 +35,7 @@ import time
    sqlite
    truncation
    underbars
+   mtexcess
 }
 
 Fit a Simulated Data Set
@@ -102,6 +103,30 @@ to see the tree structure corresponding to the ``dismod.db`` files.
 The default value for this option is false .
 
 .. _db2csv_command: https://bradbell.github.io/dismod_at/doc/db2csv_command.htm
+
+hold_out_integrand
+------------------
+This string contains a space separate list of integrand names.
+These integrands are held out from all the fits except for the
+:ref:`no_ode_fit-name` .
+The no_ode_fit is used to initialize the rates.
+You can use this option to hold out direct measurements of the
+rates that are only intended to help with the initialization
+(are not real data).
+The following is a list of the rates and corresponding integrand
+that is a direct measurement of the rate:
+
+.. csv-table::
+   :widths: auto
+   :header-rows: 1
+
+   Rate,Integrand
+   iota,Sincidence
+   rho,remission
+   chi,mtexcess
+
+The default value for *hold_out_integrand* is the empty string; i.e.,
+all of the data is real data and is included in the fits.
 
 max_abs_effect
 --------------
@@ -658,6 +683,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'absolute_covariates'   : (str,   None)               ,
       'age_avg_split'         : (str,   None)               ,
       'db2csv'                : (bool,  False)              ,
+      'hold_out_integrand'    : (str,   None)               ,
       'max_abs_effect'        : (float, 2.0)                ,
       'max_fit'               : (int,   250)                ,
       'max_num_iter_fixed'    : (int,   100)                ,
@@ -877,6 +903,7 @@ def create_root_node_database(fit_dir) :
    #
    # option_table
    age_avg_split      = global_option_value['age_avg_split']
+   hold_out_integrand = global_option_value['hold_out_integrand']
    max_num_iter_fixed = global_option_value['max_num_iter_fixed']
    ode_step_size      = global_option_value['ode_step_size']
    tolerance_fixed    = global_option_value['tolerance_fixed']
@@ -892,6 +919,7 @@ def create_root_node_database(fit_dir) :
       splitting_covariate = 'sex'
    option_table = [
       { 'name' : 'age_avg_split',       'value' : age_avg_split             },
+      { 'name' : 'hold_out_integrand',  'value' : hold_out_integrand        },
       { 'name' : 'max_num_iter_fixed',  'value' : str( max_num_iter_fixed ) },
       { 'name' : 'ode_step_size',       'value' : str( ode_step_size)       },
       { 'name' : 'parent_node_name',    'value' : root_node_name            },
@@ -1120,12 +1148,23 @@ def create_root_node_database(fit_dir) :
       dage_prior  = row['dage_prior']
       dtime_prior = row['dtime_prior']
       if row['const_value'] != None :
-         assert row['value_prior'] == None
+         if row['value_prior'] != None :
+            rate_name = row['rate_name']
+            msg  = f'parent_rate.csv: '
+            msg += f'rate = {rate_name}, age = {age}, time = {time}\n'
+            msg += 'both const_value and value_prior are non-empty'
+            assert False, msg
          const_value = float( row['const_value'] )
          smooth_dict[name]['fun'].set(
             age, time, const_value, dage_prior, dtime_prior
          )
       else :
+         if row['value_prior'] == None :
+            rate_name = row['rate_name']
+            msg  = f'parent_rate.csv: '
+            msg += f'rate = {rate_name}, age = {age}, time = {time}\n'
+            msg += 'both const_value and value_prior are empty'
+            assert False, msg
          smooth_dict[name]['fun'].set(
             age, time, value_prior, dage_prior, dtime_prior
          )
