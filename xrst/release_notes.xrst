@@ -14,6 +14,9 @@ Release Notes for at_cascade
    mm
    dd
    cov
+   std
+   sim
+   rho
 }
 
 Release Notes for 2023
@@ -33,9 +36,15 @@ See the dismod_at documentation for the rate_eff_cov table for more details.
 =====
 #. Add the csv fit
    :ref:`csv_fit@Input Files@option_fit.csv@absolute_covariates` option.
-#. Change the csv_simulate default value for
-   :ref:`csv_simulate@Input Files@option_sim.csv@covariate_effect_depend_age_time`
-   from false to true because csv_fit was changed on 01-03 to fit that way.
+#. Remove covariate_effect_depend_age_time from
+   :ref:`csv_simulate@Input Files@option_sim.csv` .
+   Now the bug in the covariate multipliers has been fixed,
+   all simulations should be done with full age time variation in the
+   covariate values.
+#. Split the std_random_effects option_sim.csv option into
+   std_random_effects_iota, std_random_effects_chi, std_random_effects_rho .
+#. Remove the csv_absolute_covariate example (it will be replaced by
+   the csv_cov_shock example)
 
 {xrst_end 2023}
 -----------------------------------------------------------------------------
@@ -96,13 +105,12 @@ const_value and value_prior are empty in
 12-08
 =====
 #. Add the
-   :ref:`csv_simulate@Input Files@option_sim.csv@covariate_effect_depend_age_time`  option.
+   covariate_effect_depend_age_time  option.
 #. Add the option_sim.csv
    :ref:`csv_simulate@Input Files@option_sim.csv@absolute_covariates` option,
    and the option_fit.csv
    :ref:`csv_fit@Input Files@option_fit.csv@absolute_covariates` option.
-#. Also add the
-   :ref:`csv_absolute_covariate-name` example.
+#. Also add the csv_absolute_covariate example.
    This can be used to help understand the covariate_effect_depend_age_sex
    option (as well as absolute covariates).
 #. Remove the csv_fit wish list item. It was completed by the changes

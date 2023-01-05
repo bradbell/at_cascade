@@ -20,6 +20,7 @@ import at_cascade
    iter
    meas
    std
+   sim
 }
 
 Example Simulating and Fitting Incidence From Prevalence Data
@@ -109,8 +110,9 @@ the true value of iota at age (a) and time (t) is
 
       \exp( e ) \iota_0 (a, t)
 
-The value :ref:`csv_simulate@Input Files@option_sim.csv@std_random_effects`
-specifies the corresponding standard deviation.
+The value std_random_effects_iota
+specifies the corresponding standard deviation; see
+:ref:`csv_simulate@Input Files@option_sim.csv@std_random_effects_rate`
 The simulated random effects are reported in
 :ref:`csv_simulate@Output Files@random_effect.csv`.
 Note that there are no random effects for node n0 (the root node).
@@ -149,6 +151,8 @@ parent_rate.csv
 #. The rate chi is constrained to be constant and equal to its true value.
    Note that omega is constrained to its ture value by its value
    in the covariate.csv file.
+   (Note that std_random_effect_chi is zero because it does not appear in
+   the option_sim table.)
 #. The prior for iota is specified on the age-time grid.
    At each grid point it has a uniform prior with a small positive
    lower limit and upper limit of one.
@@ -245,7 +249,7 @@ absolute_tolerance,1e-5
 float_precision,4
 integrand_step_size,5
 random_depend_sex,false
-std_random_effects,.2
+std_random_effects_iota,.2
 '''
 sim_file['option_sim.csv'] += f'random_seed,{random_seed}\n'
 #

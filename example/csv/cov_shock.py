@@ -50,7 +50,7 @@ absolute_tolerance,1e-7
 float_precision,4
 integrand_step_size,5
 random_depend_sex,false
-std_random_effects,.2
+std_random_effects_iota,.2
 '''
 sim_file['option_sim.csv'] += f'random_seed,{random_seed}\n'
 #
@@ -260,7 +260,6 @@ def fit(sim_dir, fit_dir) :
             found.add(node_name)
             avg_integrand = float( row['avg_integrand'] )
             rel_error     = (1.0 - avg_integrand / multiplier_truth)
-            # print( f'{multiplier_truth}, {avg_integrand}, {rel_error}')
             max_mul_error = max(max_mul_error, abs(rel_error) )
       if row['integrand_name'] == 'Sincidence' :
          node_name     = row['node_name']
@@ -278,10 +277,12 @@ def fit(sim_dir, fit_dir) :
          total_effect  = random_effect + cov_effect
          iota          = math.exp(total_effect) * no_effect_iota
          rel_error     = (1.0 - avg_integrand / iota )
-         # print( f'{age}, {time}, {iota}, {avg_integrand}, {rel_error}' )
          max_iota_error = max(max_iota_error, abs(rel_error) )
-   # print( f'max_mul_error  = {max_mul_error}' )
-   # print( f'max_iota_error = {max_iota_error}' )
+   if max_mul_error > 0.1 or max_iota_error > 0.1 :
+      print( f'max_mul_error  = {max_mul_error}' )
+      print( f'max_iota_error = {max_iota_error}' )
+      msg = 'cov_shock.py: Relative error is to large (see above)'
+      assert False, msg
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :

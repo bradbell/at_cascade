@@ -23,7 +23,6 @@ import at_cascade
    sim
    sincidence
    std
-   midpoints
 }
 
 Simulate A Cascade Data Set
@@ -81,19 +80,6 @@ that require the ODE; e.g.,
 prevalence requires the ODE and Sincidence does not.
 The default value for this option is 1e-5.
 
-covariate_effect_depend_age_time
---------------------------------
-If this boolean is false,
-each data value will be simulated using the covariate value corresponding
-to the age and time midpoints for the data.
-The current version of dismod_at uses this type of covariate effect.
-If *covariate_effect_depend_age_time* is true,
-the covariate effects for one data point may vary with age and time.
-The is important for integrands like prevalence
-which depends or rates at ages and time that are different from when
-the prevalence measurement is made.
-The default value for this option is true.
-
 float_precision
 ---------------
 This integer is the number of decimal digits of precision to
@@ -126,12 +112,14 @@ The default value for this option is
 {xrst_code}
 
 
-std_random_effects
-------------------
-This float is the standard deviation of the random effects.
-All fo the effects are in log of rate space, so this standard deviation
+std_random_effects_rate
+-----------------------
+This float is the standard deviation of the random effects
+for the corresponding *rate* where *rate* is iota, rho, or chi.
+The effects are in log of rate space, so this standard deviation
 is also in log of rate space.
-The default value for this option is 2.0.
+The default value for this option is 0.0; i.e.,
+there are random effects for the corresponding rate.
 
 -----------------------------------------------------------------------------
 
@@ -438,14 +426,15 @@ def set_global_option_value(sim_dir, option_table) :
    random_seed = int( time.time() )
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
-      'covariate_effect_depend_age_time' : (bool, True)        ,
       'absolute_covariates'              : (str, None)         ,
       'absolute_tolerance'               : (float, 1e-5)       ,
       'float_precision'                  : (int,   4)          ,
       'integrand_step_size'              : (float, 5.0)        ,
       'random_depend_sex'                : (bool,  False)      ,
       'random_seed'                      : (int, random_seed)  ,
-      'std_random_effects'               : (float, 0.2)        ,
+      'std_random_effects_iota'          : (float, 0.0)        ,
+      'std_random_effects_rho'           : (float, 0.0)        ,
+      'std_random_effects_chi'           : (float, 0.0)        ,
    }
    # END_SORT_THIS_LINE_MINUS_2
    #
@@ -679,13 +668,7 @@ def get_multiplier_list_rate(multiplier_sim_table) :
 # node_name is a node name, sex is 'female' or 'male' (not 'both'),
 # cov_name is a covariate name or 'sex',
 # age, time, and value are floats
-# This is used for the covariate values when the global option
-# covariate_effect_depend_age_time is true.
-#
-# covariate_value_dict
-# For each covariate_name, covariate_value_dict[covariate_name]
-# is the value to use for the corresponding covariate to use when
-# the global option ovariate_effect_depend_age_time is false.
+# This is used to compute  covariate values.
 #
 # rate_fun_dict =
 def get_rate_fun_dict(
@@ -697,7 +680,6 @@ def get_rate_fun_dict(
    node_name                   ,
    sex                         ,
    spline_node_sex_cov         ,
-   covariate_value_dict        ,
 ) :
    assert sex in { 'female', 'male', 'both' }
    # -----------------------------------------------------------------------
@@ -728,10 +710,7 @@ def get_rate_fun_dict(
          else :
             covariate_name = covariate_or_sex
             reference      = root_covariate_ref[covariate_name]
-            if not global_option_value['covariate_effect_depend_age_time'] :
-               covariate   = covariate_value_dict[covariate_name]
-               difference  = covariate - reference
-            elif sex in [ 'female', 'male' ] :
+            if sex in [ 'female', 'male' ] :
                spline         = \
                   spline_node_sex_cov[node_name][sex][covariate_name]
                covariate      = spline(age, time)
@@ -833,7 +812,9 @@ def average_integrand_grid(
 # is a bool specifying if the random effects depend on sex.
 #
 # std_random_effects:
+# the value std_random_effects[rate]
 # is a float specifying the standard deviation of the random effects
+# for rate where rate is iota, chi, or rho.
 #
 # rate_name_list:
 # is the list of rate_names the the random effects are simulated for
@@ -881,7 +862,8 @@ def get_random_effect_node_rate_sex (
       random_effect_dict = dict()
       sum_random_effect  = 0.0
       for child_name in child_list :
-         random_effect = random.gauss(0.0, factor * std_random_effects)
+         std           = std_random_effects[rate_name]
+         random_effect = random.gauss(0.0, factor * std)
          sum_random_effect += random_effect
          random_effect_dict[child_name] = random_effect
       #
@@ -1039,8 +1021,13 @@ def simulate(sim_dir) :
    #
    # random_effect_node_rate_sex
    random_depend_sex   = global_option_value['random_depend_sex']
-   std_random_effects  = global_option_value['std_random_effects']
    rate_name_list      = spline_no_effect_rate.keys()
+   std_random_effects  = {
+      'iota' : global_option_value['std_random_effects_iota'] ,
+      'rho'  : global_option_value['std_random_effects_rho']  ,
+      'chi'  : global_option_value['std_random_effects_chi']  ,
+   }
+   #
    random_effect_node_rate_sex = get_random_effect_node_rate_sex(
       random_depend_sex  ,
       std_random_effects ,
@@ -1124,7 +1111,6 @@ def simulate(sim_dir) :
       age_mid  = ( age_lower  + age_upper )  / 2.0
       time_mid = ( time_lower + time_upper ) / 2.0
       #
-      # covariate_value_dict
       covariate_value_dict = dict()
       for covariate_name in root_covariate_ref.keys() :
          spline = spline_node_sex_cov[node_name][sex][covariate_name]
@@ -1141,7 +1127,6 @@ def simulate(sim_dir) :
          node_name                   ,
          sex                         ,
          spline_node_sex_cov         ,
-         covariate_value_dict        ,
       )
       #
       # data_row

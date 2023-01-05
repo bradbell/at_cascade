@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # Test the following:
 # 1. if omega is not in no_effect_rate,
@@ -41,7 +41,8 @@ csv_file['option_sim.csv'] = \
 '''name,value
 absolute_tolerance,1e-4
 float_precision,4
-std_random_effects,.1
+std_random_effects_iota,.1
+std_random_effects_chi,.1
 integrand_step_size,1.0
 random_depend_sex,false
 '''

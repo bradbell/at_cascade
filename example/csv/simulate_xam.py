@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -76,7 +76,7 @@ absolute_tolerance,1e-5
 float_precision,4
 integrand_step_size,5
 random_depend_sex,true
-std_random_effects,.1
+std_random_effects_iota,.1
 '''
 csv_file['option_sim.csv'] += f'random_seed,{random_seed}\n'
 #
