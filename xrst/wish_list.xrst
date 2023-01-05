@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 {xrst_begin wish_list}
 {xrst_spell
@@ -8,6 +8,17 @@
 
 Wish List for at_cascade
 ########################
+
+covariate.csv
+*************
+The covariate quick fix in dismod_at that attaches
+covariate functions to locations,
+instead of covariate values to data points, may use a lot of memory
+and take a while to set up.
+One partial solution would be to not put all the nodes in the
+:ref:`csv_simulate@Input Files@covariate.csv` file.
+We could use the closest ancestor's covariate and omega values
+when a node is not in covariate.csv.
 
 Meta Regression
 ***************
