@@ -25,6 +25,14 @@ Release Notes for 2023
 mm-dd
 *****
 
+01-05
+=====
+Create the :ref:`csv_shock_cov-name` example which simulates and fits an
+incidence shock using prevalence data.
+The shock is modeled as a covariate that affects the rate iota.
+This is a good test of the covariate multiplier bug fix mentioned
+directly below.
+
 01-03
 =====
 Fix a bug in covariate multipliers that affect rate values.

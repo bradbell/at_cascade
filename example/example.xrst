@@ -16,6 +16,7 @@ The at_cascade Examples
    example/csv/csv_table.py
    example/csv/fit_xam.py
    example/csv/join_file_xam.py
+   example/csv/shock_cov.py
    example/csv/sim_and_fit.py
    example/csv/simulate_xam.py
    example/max_fit_option.py
