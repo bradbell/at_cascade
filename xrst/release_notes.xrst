@@ -25,6 +25,13 @@ Release Notes for 2023
 mm-dd
 *****
 
+01-13
+=====
+If refit_split was false,
+the covariates were not frozen after the root level fit.
+This has been fixed; see
+:ref:`csv_fit@Input Files@option_fit.csv@refit_split@Multiplier Freeze`.
+
 01-05
 =====
 #. Create the :ref:`csv_shock_cov-name` example which simulates and fits an

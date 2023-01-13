@@ -226,15 +226,22 @@ The default value for this option is
 
 refit_split
 -----------
-If this boolean is true,
-there is a  female, male, and both fit at the root level.
-The both fit is used for the female and male priors.
-The female and male fits are used to the priors below the root level.
-If *refit_split* is true,
-There is no female or male fit at the root level and
-the both fit is used to the priors below the root level.
-The default value for this option is true.
+#. If this boolean is true,
+   there is a  female, male, and both fit at the root level.
+   The both fit is used for the female and male priors.
+   The female and male fits are used for the priors below the root level.
+#. If *refit_split* is false,
+   There is no female or male fit at the root level and
+   the both fit is used for the priors below the root level.
+#. The default value for this option is true.
 
+Multiplier Freeze
+.................
+If *refit_split* is true,
+the covariate multipliers are frozen after the sex split; i.e.,
+after the separate female, male fits at the root level.
+If *refit_split* is false,
+the covariate multipliers are frozen after the both fit at the root level.
 
 root_node_name
 --------------
@@ -1363,8 +1370,12 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
          }
          mulcov_freeze_table.append(row)
       else :
-         for split_reference_id in [ 0 , 2 ] :
-            # split_reference_id 0 for female, 2 for male
+         if global_option_value['refit_split'] :
+            split_reference_id_list = [ 0 , 2 ]
+         else :
+            split_reference_id_list = [ 0 , 1, 2 ]
+         for split_reference_id in split_reference_id_list :
+            # split_reference_id 0 for female, 1 for both, 2 for male
             row = {
                'fit_node_name'      : root_node_name     ,
                'split_reference_id' : split_reference_id ,
