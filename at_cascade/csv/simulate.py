@@ -297,17 +297,18 @@ time_upper
 ----------
 This float is the upper time limit for this data row.
 
-percent_cv
-----------
-This float is the coefficient of variation as a percent of the corresponding
-average integrand; i.e., the model for the integrand
-without any measurement noise.
-The noise will be generated with a normal distribution
-that has mean equal to the average integrand and
-standard deviation equal to the mean times percent_cv / 100.
-If the resulting measurement value would be less than zero,
-the value zero is be used; i.e.,
-a censored normal is used to simulate the data.
+meas_std_cv
+-----------
+This float is the coefficient of variation for the measurement noise
+for this data row;
+see :ref:`csv_simulate@Output Files@data_sim.csv@meas_std` .
+
+meas_std_min
+------------
+This float is the minimum value for the standard deviation
+of the measurement noise for this data row;
+see :ref:`csv_simulate@Output Files@data_sim.csv@meas_std` .
+
 
 ------------------------------------------------------------------------------
 
@@ -374,14 +375,28 @@ meas_mean
 This float is the mean value for the measurement.
 This is the model value without any measurement noise.
 
-meas_value
-----------
-This float is the simulated measured value.
-
 meas_std
 --------
 This float is the measurement standard deviation for the simulated
-data point. This standard deviation is before censoring.
+data point. This standard deviation is before censoring and given by
+
+|  *meas_std* = max ( *meas_std_min* , *meas_std_cv* * *meas_mean* )
+
+where
+:ref:`csv_simulate@Input Files@simulate.csv@meas_std_min`
+is the minimum measure standard deviation,
+and :ref:`csv_simulate@Input Files@simulate.csv@meas_std_cv`
+is the coefficient of variation for the measurement noise.
+
+meas_value
+----------
+This float is the simulated measured value.
+The data will be generated with a normal distribution
+that has mean *mean_mean* and standard deviation *meas_std* .
+If the resulting measurement value would be less than zero,
+the value zero is used; i.e.,
+a censored normal is used to simulate the data.
+
 
 covariate_name
 --------------
@@ -1153,8 +1168,9 @@ def simulate(sim_dir) :
       data_row['meas_mean'] = meas_mean
       #
       # data_row['meas_std']
-      percent_cv           = float( sim_row['percent_cv'] )
-      meas_std             = percent_cv * meas_mean / 100.0
+      meas_std_cv          = float( sim_row['meas_std_cv'] )
+      meas_std_min         = float( sim_row['meas_std_min'] )
+      meas_std             = max(meas_std_min, meas_std_cv * meas_mean )
       data_row['meas_std'] = meas_std
       #
       # data_row['meas_value']

@@ -83,12 +83,12 @@ csv_file['multiplier_sim.csv'] = \
 #
 # simulate.csv
 header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
-header += 'time_lower,time_upper,percent_cv'
+header += 'time_lower,time_upper,meas_std_cv,meas_std_min'
 csv_file['simulate.csv'] = header + \
 '''
-0,withC,n0,female,20,30,1990,2000,0.2
-1,withC,n1,male,30,40,2000,2010,0.2
-2,withC,n2,female,10,50,2010,2020,0.2
+0,withC,n0,female,20,30,1990,2000,0.2,0.0
+1,withC,n1,male,30,40,2000,2010,0.2,0.0
+2,withC,n2,female,10,50,2010,2020,0.2,0.0
 '''
 #
 def run_test() :

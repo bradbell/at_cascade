@@ -141,21 +141,25 @@ simulate.csv
 #. The prevalence integrand is intended for fitting the data.
 #. The Sincidence integrand is intended to be held out so its
    residuals can be used to check the accuracy of the fit.
-#. The *percent_cv* is the coefficient of variation used for the
+#. The *meas_std_cv* is the coefficient of variation used for the
    simulated data noise.
+#. The *meas_std_min* is the minimum value used for the
+   standard deviation of the simulated data noise.
 {xrst_code py}'''
 header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
-header += 'time_lower,time_upper,percent_cv\n'
+header += 'time_lower,time_upper,meas_std_cv,meas_std_min\n'
 sim_file['simulate.csv'] = header
 simulate_id     = 0
-percent_cv      = 5.0
+meas_std_cv     = 0.2
+meas_std_min    = 0.0
 for integrand_name in [ 'Sincidence', 'prevalence' ] :
    for node_name in [ 'n0', 'n1', 'n2' ] :
       for sex in [ 'female', 'male' ] :
          for age in age_grid :
             for time in time_grid :
                row  = f'{simulate_id},{integrand_name},{node_name},{sex},'
-               row += f'{age},{age},{time},{time},{percent_cv}\n'
+               row += f'{age},{age},{time},{time},'
+               row += f'{meas_std_cv},{meas_std_min}\n'
                sim_file['simulate.csv'] += row
                simulate_id += 1
 '''{xrst_code}
@@ -501,5 +505,6 @@ if __name__ == '__main__' :
    # fit
    fit(sim_dir, fit_dir)
    #
+   print('shock_cov.py: OK')
    sys.exit(0)
 # END_SOURCE_CODE

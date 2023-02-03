@@ -17,6 +17,7 @@ Release Notes for at_cascade
    std
    sim
    rho
+   cv
 }
 
 Release Notes for 2023
@@ -24,6 +25,15 @@ Release Notes for 2023
 
 mm-dd
 *****
+
+02-03
+=====
+Change the simulated data *percent_cv* data column to
+:ref:`csv_simulate@Input Files@simulate.csv@meas_std_cv`
+(which is now a ratio and not a percent),
+and add the
+:ref:`csv_simulate@Input Files@simulate.csv@meas_std_min` column.
+
 
 01-13
 =====

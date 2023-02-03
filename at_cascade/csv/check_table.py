@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin csv_check_table}
@@ -79,7 +79,8 @@ def check_table(file_name, table) :
          'age_upper',
          'time_lower',
          'time_upper',
-         'percent_cv',
+         'meas_std_min',
+         'meas_std_cv',
       ],
       #
       # fit table that are not simulate tables

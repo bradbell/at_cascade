@@ -533,6 +533,9 @@ meas_std
 --------
 This float is the standard deviation of the measurement noise
 for this data point.
+All the data points are modeled using a
+censored Gaussian distribution and the standard deviation is before
+the censoring.
 
 hold_out
 --------
@@ -974,7 +977,7 @@ def create_root_node_database(fit_dir) :
       row['time_upper'] = time_lower
       row['weight']     = ''
       row['subgroup']   = 'world'
-      row['density']    = 'gaussian'
+      row['density']    = 'cen_gaussian'
       row['sex']        = sex_name2value[sex]
       row['one']        = '1.0'
    #

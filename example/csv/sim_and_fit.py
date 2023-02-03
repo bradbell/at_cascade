@@ -286,10 +286,11 @@ sim_file['multiplier_sim.csv'] = \
 #
 # simulate.csv
 header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
-header += 'time_lower,time_upper,percent_cv\n'
+header += 'time_lower,time_upper,meas_std_cv,meas_std_min\n'
 sim_file['simulate.csv'] = header
 simulate_id     = -1
-percent_cv      = 5.0
+meas_std_cv     = 0.2
+meas_std_min    = 0.0
 for integrand_name in [ 'Sincidence', 'prevalence' ] :
    for node_name in [ 'n0', 'n1', 'n2' ] :
       for sex in [ 'female', 'male' ] :
@@ -297,7 +298,8 @@ for integrand_name in [ 'Sincidence', 'prevalence' ] :
             for time in time_grid :
                simulate_id += 1
                row  = f'{simulate_id},{integrand_name},{node_name},{sex},'
-               row += f'{age},{age},{time},{time},{percent_cv}\n'
+               row += f'{age},{age},{time},{time},'
+               row += f'{meas_std_cv},{meas_std_min}\n'
                sim_file['simulate.csv'] += row
 # ----------------------------------------------------------------------------
 # fit files
