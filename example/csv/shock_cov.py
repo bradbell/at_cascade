@@ -64,7 +64,7 @@ Putting an age point close to zero increases the probability that some of the
 data points near zero will be censored and hence tests fitting censored data.
 {xrst_code py}'''
 age_grid   = [0.0, 1.0, 25.0, 50.0, 75.0, 100.0]
-time_grid  = [1980.0, 1990.0, 2000.0, 2010.0, 2020.0]
+time_grid  = [1980.0, 2000.0, 2020.0]
 '''{xrst_code}
 
 shock_covariate
@@ -160,10 +160,10 @@ simulate.csv
 header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,meas_std_cv,meas_std_min\n'
 sim_file['simulate.csv'] = header
-n_repeat        = 1
+n_repeat        = 10
 simulate_id     = 0
 meas_std_cv     = 0.01
-meas_std_min    = 0.001
+meas_std_min    = 0.02
 for integrand_name in [ 'Sincidence', 'prevalence' ] :
    for node_name in [ 'n0', 'n1', 'n2' ] :
       for sex in [ 'female', 'male' ] :
@@ -237,7 +237,7 @@ fit_file['option_fit.csv']  =  \
 absolute_covariates,shock
 hold_out_integrand,Sincidence
 refit_split,true
-ode_step_size,3.0
+ode_step_size,5.0
 quasi_fixed,false
 max_num_iter_fixed,50
 plot,true
