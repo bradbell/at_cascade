@@ -16,6 +16,7 @@ import at_cascade
 '''
 {xrst_begin csv_shock_cov}
 {xrst_spell
+   avg
    sim
    bilinear
    std
@@ -56,9 +57,14 @@ simulate random effects and data.
 
 age_grid, time_grid
 ===================
+We use the same age-time grid for the model and the data in order to keep
+the example simple. We are recovering iota (more incidence) from prevalence
+measurements. The model for prevalence always has zero for prevalence at age zero.
+Putting an age point close to zero increases the probability that some of the
+data points near zero will be censored and hence tests fitting censored data.
 {xrst_code py}'''
-age_grid   = [0.0, 25.0, 50.0, 75.0, 100.0]
-time_grid  = [1980.0, 2000.0, 2020.0]
+age_grid   = [0.0, 1.0, 25.0, 50.0, 75.0, 100.0]
+time_grid  = [1980.0, 1990.0, 2000.0, 2010.0, 2020.0]
 '''{xrst_code}
 
 shock_covariate
@@ -85,6 +91,7 @@ option_sim.csv
 {xrst_code py}'''
 sim_file['option_sim.csv'] = \
 '''name,value
+absolute_covariates,shock
 float_precision,4
 random_depend_sex,true
 std_random_effects_iota,.2
@@ -135,33 +142,39 @@ f'0,iota,shock,{multiplier_truth}\n'
 
 simulate.csv
 ============
-#. A data point is simulated for each combination of
+#. n_repeat data points are simulated for each combination of
    integrand_name, node_name, sex, age and time below.
-#. The mean and simulated data value will be reported for each data point.
+#. The mean (meas_meas) and simulated data value (meas_value) are
+   be reported for each data point.
 #. The prevalence integrand is intended for fitting the data.
 #. The Sincidence integrand is intended to be held out so its
    residuals can be used to check the accuracy of the fit.
-#. The *meas_std_cv* is the coefficient of variation used for the
+#. The meas_std_cv is the coefficient of variation used for the
    simulated data noise.
-#. The *meas_std_min* is the minimum value used for the
+#. The meas_std_min is the minimum value used for the
    standard deviation of the simulated data noise.
+#. A larger value for meas_std_cv or meas_std_min will result in a larger
+   percent of the simulated data having the value zero.
+   This will require a larger value of n_repeat to get a good fit.
 {xrst_code py}'''
 header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,meas_std_cv,meas_std_min\n'
 sim_file['simulate.csv'] = header
+n_repeat        = 1
 simulate_id     = 0
-meas_std_cv     = 0.2
-meas_std_min    = 0.0
+meas_std_cv     = 0.01
+meas_std_min    = 0.001
 for integrand_name in [ 'Sincidence', 'prevalence' ] :
    for node_name in [ 'n0', 'n1', 'n2' ] :
       for sex in [ 'female', 'male' ] :
          for age in age_grid :
             for time in time_grid :
-               row  = f'{simulate_id},{integrand_name},{node_name},{sex},'
-               row += f'{age},{age},{time},{time},'
-               row += f'{meas_std_cv},{meas_std_min}\n'
-               sim_file['simulate.csv'] += row
-               simulate_id += 1
+               for i in range(n_repeat) :
+                  row  = f'{simulate_id},{integrand_name},{node_name},{sex},'
+                  row += f'{age},{age},{time},{time},'
+                  row += f'{meas_std_cv},{meas_std_min}\n'
+                  sim_file['simulate.csv'] += row
+                  simulate_id += 1
 '''{xrst_code}
 
 no_effect_rate.csv
@@ -211,21 +224,26 @@ option_fit.csv
    value for ode_step_size.
 #. This example seems to fit well using the quasi-Newton and Newton methods;
    i.e., quasi_fixed true and false.
-#. A larger (than the default) value of max_num_iter_fixed is sometimes
-   required when quasi_fixed is true.
+#. A smaller (larger) value of max_num_iter_fixed is
+   required when quasi_fixed is true (false).
 #. Both the csv files and plot files (pdf files) are generated for
    each fit.
+#. The shock, as a function of age, is not smooth at ages 25.0, 50.0, and 75.0.
+   The :ref:`csv_fit@Input Files@option_fit.csv@age_avg_split`
+   below instructs at_cascade not to integrate across these points.
 {xrst_code py}'''
 fit_file['option_fit.csv']  =  \
 '''name,value
 absolute_covariates,shock
 hold_out_integrand,Sincidence
 refit_split,true
-ode_step_size,2.0
-quasi_fixed,true
-max_num_iter_fixed,200
+ode_step_size,3.0
+quasi_fixed,false
+max_num_iter_fixed,50
 plot,true
 db2csv,true
+tolerance_fixed,1e-8
+age_avg_split, 23 24 25 26 27    48 49 50 51 52   73 74 75 76 77
 '''
 fit_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 '''{xrst_code}
@@ -256,7 +274,7 @@ The file prior.csv defines the following densities:
    Name,Description
    uniform\_-1_1,"a uniform density on the interval [-1,1]"
    uniform\_eps_1,"a uniform density on the interval [1e-6,1]"
-   delta_prior,a log Gaussian density with mean 0 std 1e-5 and eta 1e-5
+   delta_prior,a log Gaussian density with mean 0 std 0.1 and eta 1e-5
    random_prior,a Gaussian density with mean 0 and std 0.2
 
 {xrst_code py}'''
@@ -265,6 +283,7 @@ fit_file['prior.csv'] = \
 uniform_-1_1,uniform,0.0,,,-1.0,1.0
 uniform_eps_1,uniform,0.02,,,1e-6,1.0
 delta_prior,log_gaussian,0.0,0.01,1e-5,,
+age_0_delta,log_gaussian,0.0,0.001,1e-5,,
 random_prior,gaussian,0.0,0.2,,,,
 '''
 '''{xrst_code}
@@ -287,7 +306,11 @@ data = 'rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value\n'
 data += f'chi,0.0,0.0,,,,{no_effect_chi}\n'
 for age in age_grid :
    for time in time_grid :
-      data += f'iota,{age},{time},uniform_eps_1,delta_prior,delta_prior,\n'
+      data += f'iota,{age},{time},uniform_eps_1,'
+      if age == 0.0 :
+         data += 'age_0_delta,delta_prior,\n'
+      else :
+         data += 'delta_prior,delta_prior,\n'
 fit_file['parent_rate.csv'] = data
 '''{xrst_code}
 
@@ -340,13 +363,8 @@ are a direct copy of the corresponding columns in the simulation files
 :ref:`csv_simulate@Output Files@data_sim.csv` .
 The exceptions to this are listed below:
 
-#. The meas_value in data_in.csv corresponds to the model value without noise;
-   i.e., meas_mean data_sim.csv.
 #. The data_id in data_in.csv is equal to the simulate_id in
    simulate.csv and data_sim.csv.
-#. The meas_std in data_sim.csv is set to 1e-3. It is very small so that
-   a small amount of noiseless data can be used instead of a large
-   amount of noisy data. This makes the automated tests run faster.
 
 Source Code
 ===========
@@ -397,6 +415,16 @@ def fit(sim_dir, fit_dir) :
       file_ptr.write( fit_file[name] )
       file_ptr.close()
    #
+   # fit_goal_set
+   fit_goal_table = at_cascade.csv.read_table(
+      file_name = f'{fit_dir}/fit_goal.csv'
+   )
+   fit_goal_set = set()
+   for row in fit_goal_table :
+      node_name = row['node_name']
+      for sex in [ 'female', 'male' ] :
+         fit_goal_set.add( (node_name, sex) )
+   #
    # data_join_table
    # This is a join of simulate.csv and dats_sim.csv
    data_join_table = at_cascade.csv.read_table(
@@ -414,8 +442,8 @@ def fit(sim_dir, fit_dir) :
       row_in['data_id']   = row_join['simulate_id']
       for key in copy_list :
          row_in[key] = row_join[key]
-      row_in['meas_value'] = row_join['meas_mean']
-      row_in['meas_std']   = 1e-3
+      row_in['meas_value'] = row_join['meas_value']
+      row_in['meas_std']   = row_join['meas_std']
       row_in['hold_out']   = 0
       #
       table.append( row_in )
@@ -448,38 +476,51 @@ def fit(sim_dir, fit_dir) :
       random_effect_dict[node_name][sex][rate_name] = random_effect
    #
    # row
-   max_mul_error  = 0.0
-   max_iota_error = 0.0
+   max_mul_error    = 0.0
+   max_iota_error   = 0.0
+   max_iota_age     = 0.0
+   predict_node_set = set()
    for row in fit_predict_table :
-      found = set()
-      if row['integrand_name'] == 'mulcov_0' :
-         node_name     = row['node_name']
-         if node_name not in found :
-            found.add(node_name)
+      node_name = row['node_name']
+      sex       = row['sex']
+      age       = float( row['age'] )
+      if (node_name,sex) in fit_goal_set :
+         predict_node_set.add( (node_name, sex) )
+         if row['integrand_name'] == 'mulcov_0' :
             avg_integrand = float( row['avg_integrand'] )
             rel_error     = (1.0 - avg_integrand / multiplier_truth)
             max_mul_error = max(max_mul_error, abs(rel_error) )
-      if row['integrand_name'] == 'Sincidence' :
-         node_name     = row['node_name']
-         sex           = row['sex']
-         age           = float( row['age'] )
-         time          = float( row['time'] )
-         avg_integrand = float( row['avg_integrand'] )
-         if sex == 'both' :
-            random_male   = random_effect_dict[node_name]['male']['iota']
-            random_female = random_effect_dict[node_name]['female']['iota']
-            random_effect = (random_male + random_female) / 2.0
-         else :
-            random_effect = random_effect_dict[node_name][sex]['iota']
-         cov_effect    = multiplier_truth * shock_covariate(age, time)
-         total_effect  = random_effect + cov_effect
-         iota          = math.exp(total_effect) * no_effect_iota
-         rel_error     = (1.0 - avg_integrand / iota )
-         max_iota_error = max(max_iota_error, abs(rel_error) )
+         if row['integrand_name'] == 'Sincidence' and age != age_grid[-1]:
+            # exclude last age because it has very little effect on prealence
+            node_name     = row['node_name']
+            time          = float( row['time'] )
+            avg_integrand = float( row['avg_integrand'] )
+            if sex == 'both' :
+               random_male   = random_effect_dict[node_name]['male']['iota']
+               random_female = random_effect_dict[node_name]['female']['iota']
+               random_effect = (random_male + random_female) / 2.0
+            else :
+               random_effect = random_effect_dict[node_name][sex]['iota']
+            cov_effect    = multiplier_truth * shock_covariate(age, time)
+            total_effect  = random_effect + cov_effect
+            iota          = math.exp(total_effect) * no_effect_iota
+            rel_error     = (1.0 - avg_integrand / iota )
+            if abs(rel_error) > max_iota_error :
+               max_iota_error = abs(rel_error)
+               max_iota_age   = age
+   print(f'max_mul_error = {max_mul_error}')
+   print(f'max_iota_error = {max_iota_error}')
+   print(f'max_iota_age = {max_iota_age}')
    if max_mul_error > 0.1 or max_iota_error > 0.1 :
       print( f'max_mul_error  = {max_mul_error}' )
       print( f'max_iota_error = {max_iota_error}' )
       msg = 'cov_shock.py: Relative error is to large (see above)'
+      assert False, msg
+   if fit_goal_set != predict_node_set :
+      difference  = list( fit_goal_set.difference(predict_node_set) )
+      (node, sex) = difference[0]
+      msg  = f'cov_shock.py: the file {fit_dir}/predict.csv\n'
+      msg += f'missing resutls for the fit gloal node.sex = {node}.{sex}'
       assert False, msg
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.

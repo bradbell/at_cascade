@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # Set this to False when debugging an exception during one_job routine
 catch_exceptions_and_continue = True
@@ -645,7 +645,7 @@ def run_parallel(
    )
    #
    # shared_number_cpu_inuse
-   assert shared_number_cpu_inuse == 1
+   assert shared_number_cpu_inuse[0] == 1
    #
    # shared_job_status
    for job_id in range(0, len(job_table) ):

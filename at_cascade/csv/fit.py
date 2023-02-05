@@ -533,9 +533,8 @@ meas_std
 --------
 This float is the standard deviation of the measurement noise
 for this data point.
-All the data points are modeled using a
-censored Gaussian distribution and the standard deviation is before
-the censoring.
+All the data points are modeled using a censored Gaussian distribution.
+The standard deviation is before the censoring.
 
 hold_out
 --------
@@ -1819,10 +1818,6 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
       # fit_node_database
       fit_node_database = f'{fit_dir}/{fit_database_dir}/dismod.db'
       #
-      # fit_node_database_list
-      if 0 <= job_id :
-         fit_node_database_list.append( fit_node_database )
-      #
       # sam_node_predict
       sam_node_predict = f'{fit_dir}/{fit_database_dir}/sam_predict.csv'
       #
@@ -1850,16 +1845,20 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
             msg  += f',  plots'
          msg  += f', for {fit_title}'
          print( msg )
-      #
-      # predict_one
-      predict_one(
-         fit_title             = fit_title        ,
-         fit_dir               = fit_dir          ,
-         fit_node_database     = fit_node_database ,
-         fit_node_id           = fit_node_id       ,
-         all_node_database     = all_node_db       ,
-         all_covariate_table   = covariate_table   ,
-      )
+         #
+         # predict_one
+         predict_one(
+            fit_title             = fit_title        ,
+            fit_dir               = fit_dir          ,
+            fit_node_database     = fit_node_database ,
+            fit_node_id           = fit_node_id       ,
+            all_node_database     = all_node_db       ,
+            all_covariate_table   = covariate_table   ,
+         )
+         #
+         # fit_node_database_list
+         if 0 <= job_id :
+            fit_node_database_list.append( fit_node_database )
    #
    # sex_value2name
    sex_value2name = dict()

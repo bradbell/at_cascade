@@ -26,14 +26,27 @@ Release Notes for 2023
 mm-dd
 *****
 
+02-04
+=====
+#. Change the :ref:`csv_shock_cov-name` example to use the simulated data,
+   instead of its mean, during fitting.
+   This results in zero data values for prevalence at non-zero ages
+   and hence is a good test of the censored gaussian density for the data
+   (true prevalence is zero at age zero).
+#. If a job failed, csv_fit would crash at the end when gathering the
+   :ref:`csv_fit@Output Files@fit_predict.csv` results.
+   This has been fixed and the failed results are skipped when building
+   fit_predict.csv (and sim_predict.csv).
+
 02-03
 =====
-Change the simulated data *percent_cv* data column to
-:ref:`csv_simulate@Input Files@simulate.csv@meas_std_cv`
-(which is now a ratio and not a percent),
-and add the
-:ref:`csv_simulate@Input Files@simulate.csv@meas_std_min` column.
-
+#. Change the simulated data *percent_cv* data column to
+   :ref:`csv_simulate@Input Files@simulate.csv@meas_std_cv`
+   (which is now a ratio and not a percent),
+   and add the
+   :ref:`csv_simulate@Input Files@simulate.csv@meas_std_min` column.
+#. Change the density used for the data from Gaussian to censored Gaussian;
+   see :ref:`csv_fit@Input Files@data_in.csv@meas_std` .
 
 01-13
 =====
