@@ -26,6 +26,11 @@ Release Notes for 2023
 mm-dd
 *****
 
+03-08
+=====
+Add the :ref:`csv_fit@Input Files@option_fit.csv@minimum_meas_cv`
+to the option_fit table.
+
 02-04
 =====
 #. Change the :ref:`csv_shock_cov-name` example to use the simulated data,

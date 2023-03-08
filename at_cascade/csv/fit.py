@@ -18,6 +18,7 @@ import time
    const
    cov
    cpus
+   cv
    dage
    dir
    dtime
@@ -173,6 +174,13 @@ The default value for this option is
 {xrst_code py}
    max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
 {xrst_code}
+
+minimum_meas_cv
+---------------
+This float must be non-negative (greater than or equal zero).
+It specifies a lower bound on the standard deviation for each measured data
+value as a fraction of the measurement value.
+The default value for *minimum_meas_cv* is zero.
 
 ode_step_size
 -------------
@@ -697,6 +705,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'max_fit'               : (int,   250)                ,
       'max_num_iter_fixed'    : (int,   100)                ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
+      'minimum_meas_cv'       : (float, 0.0)                ,
       'ode_step_size'         : (float, 10.0)               ,
       'plot'                  : (bool,  False)              ,
       'quasi_fixed'           : (bool,  'true' )            ,
@@ -916,6 +925,7 @@ def create_root_node_database(fit_dir) :
    max_num_iter_fixed = global_option_value['max_num_iter_fixed']
    ode_step_size      = global_option_value['ode_step_size']
    tolerance_fixed    = global_option_value['tolerance_fixed']
+   minimum_meas_cv    = global_option_value['minimum_meas_cv']
    #
    if global_option_value['quasi_fixed'] :
       quasi_fixed = 'true'
@@ -990,7 +1000,7 @@ def create_root_node_database(fit_dir) :
       integrand_set.add( name_rate2integrand[rate_name] )
    integrand_table = list()
    for integrand in integrand_set :
-      row = { 'name' : integrand }
+      row = { 'name' : integrand , 'minimum_meas_cv'  : minimum_meas_cv }
       integrand_table.append(row)
    for mulcov_id in range( len( input_table['mulcov'] ) ) :
       integrand_name = f'mulcov_{mulcov_id}'
