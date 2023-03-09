@@ -11,6 +11,7 @@ Release Notes for at_cascade
 -----------------------------------------------------------------------------
 {xrst_begin 2023}
 {xrst_spell
+   py
    mm
    dd
    cov
@@ -25,6 +26,12 @@ Release Notes for 2023
 
 mm-dd
 *****
+
+03-09
+=====
+Add the ``test/one_cov.py`` test
+which fails unless the version of dismod_at is greater than or equal
+dismod_at-20230309.
 
 03-08
 =====

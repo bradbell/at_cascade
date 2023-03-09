@@ -36,7 +36,6 @@ def the_covariate(age, time) :
 # option_sim.csv
 sim_file['option_sim.csv'] = \
 '''name,value
-absolute_covariates,the_cov
 float_precision,4
 random_depend_sex,false
 std_random_effects_iota,.2
@@ -49,17 +48,21 @@ sim_file['node.csv'] = \
 n0,
 '''
 #
-# covariate.csv
+# covariate.csv, cov_reference
+cov_reference    = 0.0
+count            = 0
 omega_truth      = 0.01
 sim_file['covariate.csv'] = 'node_name,sex,age,time,omega,the_cov\n'
 for node_name in [ 'n0' ] :
    for sex in [ 'female', 'male' ] :
       for age in age_grid :
          for time in time_grid :
-            cov = the_covariate(age, time)
+            cov            = the_covariate(age, time)
+            cov_reference += cov
+            count         += 1
             row   = f'{node_name},{sex},{age},{time},{omega_truth},{cov}\n'
             sim_file['covariate.csv'] += row
-
+cov_reference = cov_reference / count
 #
 # multiplier_truth, multiplier_sim.csv
 multiplier_truth = 0.5
@@ -97,7 +100,7 @@ sim_file['no_effect_rate.csv'] += f'chi,0,0,{no_effect_chi}\n'
 # option_fit.csv
 fit_file['option_fit.csv']  =  \
 '''name,value
-absolute_covariates,the_cov
+hold_out_integrand,Sincidence
 refit_split,false
 ode_step_size,5.0
 quasi_fixed,false
@@ -193,15 +196,6 @@ def fit(sim_dir, fit_dir) :
       file_ptr.write( fit_file[name] )
       file_ptr.close()
    #
-   # fit_goal_set
-   fit_goal_table = at_cascade.csv.read_table(
-      file_name = f'{fit_dir}/fit_goal.csv'
-   )
-   fit_goal_set = set()
-   for row in fit_goal_table :
-      node_name = row['node_name']
-      fit_goal_set.add( (node_name, 'both') )
-   #
    # data_join_table
    # This is a join of simulate.csv and dats_sim.csv
    data_join_table = at_cascade.csv.read_table(
@@ -253,55 +247,42 @@ def fit(sim_dir, fit_dir) :
       random_effect_dict[node_name][sex][rate_name] = random_effect
    #
    # row
-   max_mul_error    = 0.0
-   max_iota_error   = 0.0
-   max_iota_age     = 0.0
+   max_error  = { 'mulcov': 0.0, 'iota' : 0.0}
    predict_node_set = set()
    for row in fit_predict_table :
       node_name = row['node_name']
-      sex       = row['sex']
-      age       = float( row['age'] )
-      if (node_name,sex) in fit_goal_set :
-         predict_node_set.add( (node_name, sex) )
-         if row['integrand_name'] == 'mulcov_0' :
-            avg_integrand = float( row['avg_integrand'] )
-            if multiplier_truth == 0.0 :
-               max_mul_error = max(max_mul_error, abs(avg_integrand) )
-            else :
-               rel_error     = (1.0 - avg_integrand / multiplier_truth)
-               max_mul_error = max(max_mul_error, abs(rel_error) )
-         if row['integrand_name'] == 'Sincidence' and age != age_grid[-1]:
-            # exclude last age because it has very little effect on prealence
-            node_name     = row['node_name']
-            time          = float( row['time'] )
-            avg_integrand = float( row['avg_integrand'] )
-            if sex == 'both' :
-               random_male   = random_effect_dict[node_name]['male']['iota']
-               random_female = random_effect_dict[node_name]['female']['iota']
-               random_effect = (random_male + random_female) / 2.0
-            else :
-               random_effect = random_effect_dict[node_name][sex]['iota']
-            cov_effect    = multiplier_truth * the_covariate(age, time)
-            total_effect  = random_effect + cov_effect
-            iota          = math.exp(total_effect) * no_effect_iota
-            rel_error     = (1.0 - avg_integrand / iota )
-            if abs(rel_error) > max_iota_error :
-               max_iota_error = abs(rel_error)
-               max_iota_age   = age
-   print(f'max_mul_error = {max_mul_error}')
-   print(f'max_iota_error = {max_iota_error}')
-   print(f'max_iota_age = {max_iota_age}')
-   if max_mul_error > 0.1 or max_iota_error > 0.1 :
-      print( f'max_mul_error  = {max_mul_error}' )
-      print( f'max_iota_error = {max_iota_error}' )
-      msg = 'one_cov.py: Relative error is to large (see above)'
-      assert False, msg
-   if fit_goal_set != predict_node_set :
-      difference  = list( fit_goal_set.difference(predict_node_set) )
-      (node, sex) = difference[0]
-      msg  = f'one_cov.py: the file {fit_dir}/predict.csv\n'
-      msg += f'missing resutls for the fit gloal node.sex = {node}.{sex}'
-      assert False, msg
+      assert node_name == 'n0'
+      sex            = row['sex']
+      age            = float( row['age'] )
+      integrand_name = row['integrand_name']
+      if integrand_name == 'mulcov' :
+         avg_integrand = float( row['avg_integrand'] )
+         if multiplier_truth == 0.0 :
+            max_error['mulcov'] = max(max_error['mulcov'], abs(avg_integrand) )
+         else :
+            rel_error     = (1.0 - avg_integrand / multiplier_truth)
+            max_error['mulcov'] = max(max_error['mulcov'], abs(rel_error) )
+      if integrand_name == 'Sincidence' :
+         node_name     = row['node_name']
+         time          = float( row['time'] )
+         avg_integrand = float( row['avg_integrand'] )
+         if sex == 'both' :
+            random_male   = random_effect_dict[node_name]['male']['iota']
+            random_female = random_effect_dict[node_name]['female']['iota']
+            random_effect = (random_male + random_female) / 2.0
+         else :
+            random_effect = random_effect_dict[node_name][sex]['iota']
+         cov_diff          = the_covariate(age, time) - cov_reference
+         cov_effect        = multiplier_truth * cov_diff
+         total_effect      = random_effect + cov_effect
+         iota              = math.exp(total_effect) * no_effect_iota
+         rel_error         = (1.0 - avg_integrand / iota )
+         max_error['iota'] = max(max_error['iota'], abs(rel_error) )
+   for name in max_error :
+      if max_error[name] > 5e-3 :
+         msg  = f'max_error = {max_error}\n'
+         msg += 'one_cov.py: Relative error is to large (see above)'
+         assert False, msg
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :
