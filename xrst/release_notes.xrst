@@ -27,6 +27,17 @@ Release Notes for 2023
 mm-dd
 *****
 
+03-14
+=====
+The
+:ref:`csv_fit@Output Files@fit_predict.csv` and
+:ref:`csv_fit@Output Files@sam_predict.csv` files are created after
+all the fits.
+We are predicting for all the nodes (we could predict for just the next fit
+we want to inspect the results for).
+This computation was changed from sequential to in parallel
+because it was slow when there are large number fits.
+
 03-09
 =====
 Add the ``test/one_cov.py`` test

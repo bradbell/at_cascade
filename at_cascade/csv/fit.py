@@ -1739,6 +1739,9 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
    assert type( covariate_table[0] ) == dict
    assert type(fit_goal_set) == set
    #
+   # max_number_cpu
+   max_number_cpu = global_option_value['max_number_cpu']
+   #
    # all_node_db
    all_node_db = f'{fit_dir}/all_node.db'
    #
@@ -1791,6 +1794,9 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
    #
    # n_job
    n_job = len( job_table )
+   #
+   # process_list
+   process_list = list()
    #
    # job_id, job_row, fit_node_database_list
    fit_node_database_list = list()
@@ -1848,7 +1854,7 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
       elif not os.path.exists( fit_node_database ) :
          print( f'{job_id_str} Missing dismod.db for {job_name}' )
       else :
-         msg = f'{job_id_str} Creating sam_predict.csv'
+         msg = f'{job_id_str} Creating fit_predict.csv, sam_predict.csv'
          if global_option_value['db2csv'] :
             msg  += f',  db2csv files'
          if global_option_value['plot'] :
@@ -1856,19 +1862,57 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
          msg  += f', for {fit_title}'
          print( msg )
          #
-         # predict_one
-         predict_one(
-            fit_title             = fit_title        ,
-            fit_dir               = fit_dir          ,
-            fit_node_database     = fit_node_database ,
-            fit_node_id           = fit_node_id       ,
-            all_node_database     = all_node_db       ,
-            all_covariate_table   = covariate_table   ,
-         )
+         if max_number_cpu == 1 :
+            #
+            # predict_one
+            predict_one(
+               fit_title             = fit_title        ,
+               fit_dir               = fit_dir          ,
+               fit_node_database     = fit_node_database ,
+               fit_node_id           = fit_node_id       ,
+               all_node_database     = all_node_db       ,
+               all_covariate_table   = covariate_table   ,
+            )
+         else :
+            # Matplotlib leaks memrory, so use a separate proccess
+            # for this call to predict_csv_one_job so the memory will be
+            # freed when it is no longer needed
+            #
+            # args
+            args = (
+               fit_title         ,
+               fit_dir           ,
+               fit_node_database ,
+               fit_node_id       ,
+               all_node_db       ,
+               covariate_table   ,
+            )
+            #
+            # target
+            target = predict_one
+            #
+            # process_list
+            assert len(process_list) < max_number_cpu
+            if len(process_list) + 1 == max_number_cpu :
+               for p in process_list :
+                  p.join()
+               process_list = list()
+            #
+            # p
+            p = multiprocessing.Process(target = target, args = args)
+            p.start()
+            #
+            # process_list
+            process_list.append(p)
          #
          # fit_node_database_list
+         # skip the no_ode fit (job_id == -1 and not in job_table)
          if 0 <= job_id :
             fit_node_database_list.append( fit_node_database )
+   #
+   assert job_id == len(job_table) - 1
+   for p in process_list :
+      p.join()
    #
    # sex_value2name
    sex_value2name = dict()
