@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin create_shift_db}
@@ -41,8 +41,9 @@ dismod_at option table in the *fit_node_database*.
 
 sample Table
 ============
-This table is not used if *predict_sample* is false.
-Otherwise it  contains the results of a dismod_at sample command
+This table is not used if *no_ode_fit* is true.
+If *no_ode_fit* is false,
+it  contains the results of a dismod_at sample command
 for both the fixed and random effects.
 
 c_shift_avgint Table
@@ -52,8 +53,8 @@ to this fit_node_database.
 
 c_shift_predict_sample Table
 ============================
-This table is not used if *predict_sample* is false.
-Otherwise it contains the predict table corresponding to a
+This table is not used if *no_ode_fit* is true.
+If *no_ode_fit* is false, it contains the predict table corresponding to a
 predict sample command using the c_shift_avgint table.
 Note that the predict_id column name was changed to c_shift_predict_sample_id
 (which is not the same as sample_id).
@@ -101,8 +102,8 @@ are effectively the same.
 Otherwise the mean in the value priors
 are replaced using the corresponding values in the
 predict tables in the *fit_node_database*.
-If *predict_sample* is true,
-the standard deviations in the value priors are also replaced.
+If *no_ode_fit* is true (false),
+the standard deviations in the value priors are not replaced (are replaced).
 Note that if the value prior is uniform,
 the standard deviation is not used and the mean is only used to
 initialize the optimization.
@@ -113,14 +114,16 @@ The mean of the dage and dtime priors
 are replaced using the corresponding difference in the
 predict tables in the *fit_node_database*.
 
-predict_sample
-**************
-If this argument is ``True`` the sample table and the c_shift_predict_sample
+no_ode_fit
+**********
+If this argument is ture (false) if the *fit_node_database*
+is (is not) the result of a :ref:`no_ode_fit-name` .
+If *no_ode_fit* is false,
+the sample table and the c_shift_predict_sample
 table must be in the *fit_node_database*.
 In this case both the means and standard deviations in the value priors
 are replaced using the results of the fit.
 Otherwise, only the means are replaced.
-
 
 {xrst_end create_shift_db}
 '''
@@ -293,7 +296,7 @@ def add_shift_grid_row(
          mean                     = max(mean, lower)
          shift_prior_row['mean']  = mean
          #
-         # if predict_sample
+         # if not no_ode_fit
          if len(fit_sample) > 0 :
             #
             # std
@@ -368,11 +371,14 @@ def create_shift_db(
    all_node_database    = None ,
    fit_node_database    = None ,
    shift_databases      = None ,
-   predict_sample       = True ,
+   no_ode_fit           = False,
 # )
 # END syntax
 ) :
    # ------------------------------------------------------------------------
+   #
+   # predict_sample
+   predict_sample = not no_ode_fit
    #
    # all_table
    new        = False
@@ -618,7 +624,10 @@ def create_shift_db(
             shift_mulcov_row['group_smooth_id'] = shift_smooth_id
             #
             # freeze
-            freeze = mulcov_id in mulcov_freeze_set
+            if no_ode_fit :
+               freeze = False
+            else :
+               freeze = mulcov_id in mulcov_freeze_set
             #
             # shift_table['smooth_grid']
             # add rows for this smoothing

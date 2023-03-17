@@ -27,6 +27,15 @@ Release Notes for 2023
 mm-dd
 *****
 
+03-17
+=====
+If a covariate multiplier was frozen at the root level,
+and for the split reference id corresponding to the
+:ref:`no_ode_fit-name` ,
+the covariate was frozen after the no_ode fit.
+This has been fixed so that the covariate is frozen after
+the full root level fit.
+
 03-14
 =====
 The

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin no_ode_fit}
@@ -86,7 +86,7 @@ This is an input_node_database similar to *root_node_database*.
 The difference is that the mean value in the priors for the fixed effects
 have been replace by the optimal estimate for fitting with out the integrands
 that use the ODE.
-The last operation on this table is a dismod_at init command.
+The last operation on this database is a dismod_at init command.
 
 {xrst_end no_ode_fit}
 '''
@@ -342,7 +342,7 @@ def no_ode_fit(
       all_node_database = all_node_database ,
       fit_node_database = no_ode_database   ,
       shift_databases   = shift_databases   ,
-      predict_sample    = False             ,
+      no_ode_fit        = True              ,
    )
    #
    # move c_root_avgint -> avgint

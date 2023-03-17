@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin_parent no_ode_xam}
@@ -430,9 +430,10 @@ def root_node_db(file_name) :
    prior_table.append(
       # BEGIN alpha_value_prior
       {   'name':    'alpha_value_prior',
-         'density': 'uniform',
+         'density': 'gaussian',
          'lower':   - 10 * alpha_true_max_abs,
          'upper':   + 10 * alpha_true_max_abs,
+         'std'  :   10 * alpha_true_max_abs,
          'mean':    0.0,
       }
       # END alpha_value_prior
@@ -758,6 +759,12 @@ def main() :
    omega_grid['age']  = range( len(age_grid) )
    omega_grid['time'] = [ 0 ]
    #
+   # mulcov_freeze_table
+   mulcov_freeze_table =  [
+      { 'fit_node_name' : 'n0', 'split_reference_id' : None, 'mulcov_id' : 0 },
+      { 'fit_node_name' : 'n0', 'split_reference_id' : None, 'mulcov_id' : 1 },
+   ]
+   #
    # all_omega_data
    all_omega_data     = dict()
    for node_name in [ 'n0', 'n1', 'n2' ] :
@@ -784,6 +791,7 @@ def main() :
       all_option              = all_option,
       omega_grid              = omega_grid,
       omega_data              = all_omega_data,
+      mulcov_freeze_table     = mulcov_freeze_table,
    )
    #
    # root_node_dir
@@ -830,6 +838,38 @@ def main() :
          avgint_table       = avgint_table,
          relative_tolerance = 1e-2,
       )
+   #
+   # var_table, rate_table, smooth_grid_table
+   fit_node_database = f'{result_dir}/n0/dismod.db'
+   new               = False
+   connection        = dismod_at.create_connection(fit_node_database, new)
+   var_table         = dismod_at.get_table_dict(connection, 'var')
+   rate_table        = dismod_at.get_table_dict(connection, 'rate')
+   prior_table       = dismod_at.get_table_dict(connection, 'prior')
+   smooth_grid_table = dismod_at.get_table_dict(connection, 'smooth_grid')
+   #
+   # smooth_id
+   smooth_id = None
+   assert rate_table[1]['rate_name'] == 'iota'
+   for row in var_table :
+      if row['var_type'] == 'mulcov_rate_value' and row['rate_id'] == 1 :
+         assert smooth_id == None
+         smooth_id = row['smooth_id']
+   assert smooth_id != None
+   #
+   # prior_id
+   value_prior_id = None
+   for row in smooth_grid_table :
+      if row['smooth_id'] == smooth_id :
+         assert value_prior_id == None
+         value_prior_id = row['value_prior_id']
+   #
+   # check that lower, upper, and std are the same and mean is different
+   row = prior_table[value_prior_id]
+   assert float(row['lower']) == -10 * alpha_true_max_abs
+   assert float(row['upper']) == +10 * alpha_true_max_abs
+   assert float(row['std'])   == 10 * alpha_true_max_abs
+   assert float(row['mean'])  != 0.0
 #
 main()
 print('no_ode_xam: OK')

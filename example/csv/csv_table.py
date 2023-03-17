@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -28,6 +28,11 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
 import at_cascade
 #
 def main() :
+   #
+   # result_dir
+   result_dir = 'build/example/csv'
+   if not os.path.exists(result_dir) :
+      os.makedirs(result_dir)
    #
    # write_table
    write_table = [
