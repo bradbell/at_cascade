@@ -27,6 +27,11 @@ Release Notes for 2023
 mm-dd
 *****
 
+03-20
+=====
+This documentation :ref:`at_cascade@Version` number was not updating
+since 2023..1. This has been fixed.
+
 03-17
 =====
 If a covariate multiplier was frozen at the root level,
