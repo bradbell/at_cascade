@@ -441,16 +441,23 @@ This csv file specifies the covariate multipliers.
 covariate
 ---------
 this string is the name of the covariate for this multiplier.
-All the covariates in covariate.csv are
-:ref:`relative covariates<glossary@Relative Covariate>` .
-The average of the covariate, for the current node and sex,
-is subtracted before it is multiplied by a multiplier.
-In addition:
+The covariate
 ``one`` is an absolute covariate that is always equal to one and
 ``sex`` is the splitting covariate and has the following values:
 {xrst_code py}'''
 sex_name2value = { 'female' : -0.5, 'both' : 0.0, 'male' : 0.5 }
 '''{xrst_code}
+All the other covariates are specified by
+:ref:`csv_fit@Input Files@covariate.csv`.
+If one of these covariates appears in the
+:ref:`csv_fit@Input Files@option_fit.csv@absolute_covariates` list it is an
+absolute covariate.
+The other covariates in covariate.csv are
+:ref:`relative covariates<glossary@Relative Covariate>` .
+For relative covariates,
+the average of the covariate
+(for the current node and sex being fit)
+is subtracted before it is multiplied by a multiplier.
 
 type
 ----

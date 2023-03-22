@@ -27,6 +27,12 @@ Release Notes for 2023
 mm-dd
 *****
 
+03-22
+=====
+Fix discussion of relative covariates under the
+:ref:`csv_fit@Input Files@mulcov.csv@covariate` heading,
+under multiplier.csv for the csv fit routine.
+
 03-20
 =====
 This documentation :ref:`at_cascade@Version` number was not updating
