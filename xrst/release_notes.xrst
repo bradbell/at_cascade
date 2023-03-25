@@ -27,6 +27,13 @@ Release Notes for 2023
 mm-dd
 *****
 
+03-25
+=====
+Add :ref:`csv_fit@Input Files@option_fit.csv@child_prior_std_factor`
+to the option_fit table.
+This is called :ref:`all_option_table@shift_prior_std_factor`
+in the all_option table.
+
 03-22
 =====
 Fix discussion of relative covariates under the

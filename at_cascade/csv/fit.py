@@ -269,6 +269,14 @@ replaced by underbars.
 If the USER environment variable is not defined,
 the value ``none`` is used for this default.
 
+child_prior_std_factor
+----------------------
+This factor multiplies the parent fit posterior standard deviation for the
+value priors in the during a child fit.
+If it is greater (less) than one, the child priors are larger (smaller)
+than indicated by the posterior corresponding to the parent fit.
+The default value for this option is 2.0.
+
 tolerance_fixed
 ---------------
 is the tolerance for convergence of the fixed effects optimization problem.
@@ -721,6 +729,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'root_node_name'        : (str,   top_node_name)      ,
       'tolerance_fixed'       : (float, 1e-4)               ,
       'shared_memory_prefix'  : (str,   user)               ,
+      'child_prior_std_factor': (float,  2.0)               ,
    }
    # END_SORT_THIS_LINE_MINUS_2
    #
@@ -1343,8 +1352,9 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    root_node_name = at_cascade.get_parent_node(database)
    #
    # all_option
-   shared_memory_prefix = global_option_value['shared_memory_prefix']
-   absolute_covariates  = global_option_value['absolute_covariates']
+   child_prior_std_factor = global_option_value['child_prior_std_factor']
+   shared_memory_prefix   = global_option_value['shared_memory_prefix']
+   absolute_covariates    = global_option_value['absolute_covariates']
    if absolute_covariates == None :
       absolute_covariates = 'one'
    else :
@@ -1368,7 +1378,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       'root_node_name'               : root_node_name,
       'split_covariate_name'         : 'sex',
       'root_split_reference_name'    : 'both',
-      'shift_prior_std_factor'       : 2.0,
+      'shift_prior_std_factor'       : child_prior_std_factor,
    }
    #
    # node_split_table
