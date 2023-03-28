@@ -29,7 +29,9 @@ mm-dd
 
 03-28
 =====
-Add some new :ref:`wish_list-name` items.
+#. Add some new :ref:`wish_list-name` items.
+#. Add the :ref:`csv_fit@Input Files@option_fit.csv@ode_method`
+   csv fit option.
 
 03-25
 =====

@@ -37,6 +37,11 @@ import time
    truncation
    underbars
    mtexcess
+   mtother
+   mtwith
+   relrisk
+   trapezoidal
+   eigen
 }
 
 Fit a Simulated Data Set
@@ -231,6 +236,61 @@ The default value for this option is
 {xrst_code py}
    random_seed = int( time.time() )
 {xrst_code}
+
+ode_method
+----------
+This default for this option is ``iota_pos_rho_zero`` (see below).
+
+no_ode
+......
+The *rate_case* value does not matter for the following integrands:
+``Sincidence`` ,
+``remission`` ,
+``mtexcess`` ,
+``mtother`` ,
+``mtwith`` ,
+``relrisk`` ,
+``mulcov_`` *mulcov_id* .
+If all of your integrands are in the set above, you can use
+``no_ode`` as the rate case and avoid having to worry about
+constraining certain rates to be positive or zero.
+
+trapezoidal
+...........
+If *option_name* = ``rate_case`` and
+*option_value* = ``trapezoidal`` ,
+a trapezoidal method is used to approximation the ODE solution.
+
+iota_zero_rho_zero
+..................
+If *ode_method* is ``iota_zero_rho_zero`` ,
+the smoothing for
+*iota* and *rho* must always have lower and upper limit zero.
+In this case an eigen vector method is used to approximate the ODE solution.
+
+iota_pos_rho_zero
+.................
+If *ode_method* is ``iota_pos_rho_zero`` ,
+the smoothing for
+*iota* must always have lower limit greater than zero and for
+*rho* lower and upper limit zero.
+In this case an eigen vector method is used to approximate the ODE solution.
+
+iota_zero_rho_pos
+.................
+If *ode_method* is ``iota_zero_rho_pos`` ,
+the smoothing for
+*rho* must always have lower limit greater than zero and for
+*iota* lower and upper limit zero.
+In this case an eigen vector method is used to approximate the ODE solution.
+
+iota_pos_rho_pos
+................
+If *ode_method* is `iota_zero_rho_pos`` ,
+the smoothing for
+*iota* and *rho*
+must always have lower limit greater than zero.
+In this case an eigen vector method is used to approximate the ODE solution.
 
 refit_split
 -----------
@@ -721,6 +781,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'max_num_iter_fixed'    : (int,   100)                ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
       'minimum_meas_cv'       : (float, 0.0)                ,
+      'ode_method'            : (str,   'iota_pos_rho_zero'),
       'ode_step_size'         : (float, 10.0)               ,
       'plot'                  : (bool,  False)              ,
       'quasi_fixed'           : (bool,  'true' )            ,
@@ -942,6 +1003,7 @@ def create_root_node_database(fit_dir) :
    ode_step_size      = global_option_value['ode_step_size']
    tolerance_fixed    = global_option_value['tolerance_fixed']
    minimum_meas_cv    = global_option_value['minimum_meas_cv']
+   ode_method         = global_option_value['ode_method']
    #
    if global_option_value['quasi_fixed'] :
       quasi_fixed = 'true'
@@ -964,6 +1026,7 @@ def create_root_node_database(fit_dir) :
       { 'name' : 'meas_noise_effect',   'value' : 'add_std_scale_none'      },
       { 'name' : 'quasi_fixed',         'value' : quasi_fixed               },
       { 'name' : 'splitting_covariate', 'value' : splitting_covariate       },
+      { 'name' : 'rate_case'          , 'value' : ode_method                },
    ]
    #
    # spline_cov

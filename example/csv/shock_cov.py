@@ -16,7 +16,6 @@ import at_cascade
 '''
 {xrst_begin csv_shock_cov}
 {xrst_spell
-   avg
    sim
    bilinear
    std
@@ -29,6 +28,7 @@ import at_cascade
    dtime
    const
    meas
+   trapezoidal
 }
 
 Simulate and Fit Incidence Using Prevalence Data and a Shock Covariate
@@ -243,7 +243,7 @@ max_num_iter_fixed,50
 plot,true
 db2csv,true
 tolerance_fixed,1e-8
-age_avg_split, 23 24 25 26 27    48 49 50 51 52   73 74 75 76 77
+ode_method,trapezoidal
 '''
 fit_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 '''{xrst_code}
