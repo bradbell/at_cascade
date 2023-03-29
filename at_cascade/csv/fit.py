@@ -239,11 +239,11 @@ The default value for this option is
 
 ode_method
 ----------
-This default for this option is ``iota_pos_rho_zero`` (see below).
+This default for *ode_method* is ``iota_pos_rho_zero`` (see below).
 
 no_ode
 ......
-The *rate_case* value does not matter for the following integrands:
+The *ode_method* value does not matter for the following integrands:
 ``Sincidence`` ,
 ``remission`` ,
 ``mtexcess`` ,
@@ -252,14 +252,15 @@ The *rate_case* value does not matter for the following integrands:
 ``relrisk`` ,
 ``mulcov_`` *mulcov_id* .
 If all of your integrands are in the set above, you can use
-``no_ode`` as the rate case and avoid having to worry about
+``no_ode`` as the *ode_method* and avoid having to worry about
 constraining certain rates to be positive or zero.
 
 trapezoidal
 ...........
-If *option_name* = ``rate_case`` and
-*option_value* = ``trapezoidal`` ,
+If *ode_method* is ``trapezoidal`` ,
 a trapezoidal method is used to approximation the ODE solution.
+Like ``no_ode``, you do not have to worry about constraining
+certain rates to be positive or zero when using the trapezoidal method.
 
 iota_zero_rho_zero
 ..................
