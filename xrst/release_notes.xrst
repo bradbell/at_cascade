@@ -32,6 +32,9 @@ mm-dd
 #. Add some new :ref:`wish_list-name` items.
 #. Add the :ref:`csv_fit@Input Files@option_fit.csv@ode_method`
    csv fit option.
+#. Change :ref:`csv_shock_cov-name` to use
+   :ref:`csv_fit@Input Files@option_fit.csv@ode_method@trapezoidal`
+   *ode_method* .
 
 03-25
 =====

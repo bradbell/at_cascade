@@ -508,9 +508,6 @@ def fit(sim_dir, fit_dir) :
             if abs(rel_error) > max_iota_error :
                max_iota_error = abs(rel_error)
                max_iota_age   = age
-   print(f'max_mul_error = {max_mul_error}')
-   print(f'max_iota_error = {max_iota_error}')
-   print(f'max_iota_age = {max_iota_age}')
    if max_mul_error > 0.1 or max_iota_error > 0.1 :
       print( f'max_mul_error  = {max_mul_error}' )
       print( f'max_iota_error = {max_iota_error}' )
