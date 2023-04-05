@@ -13,11 +13,26 @@ Wish List for at_cascade
 csv.fit
 *******
 
-Prediction Grid
-===============
-We want to specify a prediction grid that may be different for the
-covariate age-time grid.
+Continue Cascade
+================
+There should be a separate program that continues a cascade from a
+goal node of a previous fit.
 
+Prediction Program
+==================
+#. The predictions should be done by a separate program.
+   This should allow one to predict for a subset of the fits
+   (even while the cascade is still running).
+#. It would be good to specify a prediction grid that may be different for
+   the covariate age-time grid.
+
+No Ode Fit
+==========
+Sometimes when there is no data for a rate, the :ref:`no_ode_fit-name`
+changes the prior because there is so much data elsewhere that the
+prior residual is int significant.
+It would be good to have an option to not include certain rates in the
+no ode fit  (just use the original prior means).
 
 Retry Fit
 =========
