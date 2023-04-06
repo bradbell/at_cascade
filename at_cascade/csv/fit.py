@@ -2,6 +2,7 @@
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import multiprocessing
+import queue
 import dismod_at
 import at_cascade
 import copy
@@ -44,8 +45,8 @@ import time
    eigen
 }
 
-Fit a Simulated Data Set
-########################
+Fit a CSV Specified Cascade
+###########################
 
 Prototype
 *********
@@ -1879,6 +1880,10 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
    # process_list
    process_list = list()
    #
+   # job_queue, n_job_queue
+   job_queue   = multiprocessing.Queue()
+   n_job_queue = 0
+   #
    # job_id, job_row, fit_node_database_list
    fit_node_database_list = list()
    for job_id in range(-1, n_job) :
@@ -1889,8 +1894,8 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
       else :
          job_row = job_table[job_id]
       #
-      # job_id_str
-      job_id_str = f'{job_id + 1}/{n_job}'
+      # job_description
+      job_description = f'{job_id + 1}/{n_job}'
       #
       # job_name, fit_node_id, fit_split_reference_id
       job_name                = job_row['job_name']
@@ -1924,6 +1929,7 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
       else :
          fit_title = job_name
       #
+      # job_description
       # check for an error during fit both and fit fixed
       two_errors = False
       if job_name in error_message_dict :
@@ -1931,67 +1937,74 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
       if two_errors :
          if os.path.exists( sam_node_predict ) :
             os.remove( sam_node_predict )
-         print( f'{job_id_str} Error in {job_name}' )
+         print( f'{job_description} Error in {job_name}' )
       elif not os.path.exists( fit_node_database ) :
-         print( f'{job_id_str} Missing dismod.db for {job_name}' )
+         print( f'{job_description} Missing dismod.db for {job_name}' )
       else :
-         msg = f'{job_id_str} Creating fit_predict.csv, sam_predict.csv'
+         job_description += ' Creating fit_predict.csv, sam_predict.csv'
          if global_option_value['db2csv'] :
-            msg  += f',  db2csv files'
+            job_description  += f',  db2csv files'
          if global_option_value['plot'] :
-            msg  += f',  plots'
-         msg  += f', for {fit_title}'
-         print( msg )
+            job_description  += f',  plots'
+         job_description  += f', for {fit_title}'
          #
-         if max_number_cpu == 1 :
-            #
-            # predict_one
-            predict_one(
-               fit_title             = fit_title        ,
-               fit_dir               = fit_dir          ,
-               fit_node_database     = fit_node_database ,
-               fit_node_id           = fit_node_id       ,
-               all_node_database     = all_node_db       ,
-               all_covariate_table   = covariate_table   ,
-            )
-         else :
-            # Matplotlib leaks memrory, so use a separate proccess
-            # for this call to predict_csv_one_job so the memory will be
-            # freed when it is no longer needed
-            #
-            # args
-            args = (
-               fit_title         ,
-               fit_dir           ,
-               fit_node_database ,
-               fit_node_id       ,
-               all_node_db       ,
-               covariate_table   ,
-            )
-            #
-            # target
-            target = predict_one
-            #
-            # process_list
-            assert len(process_list) < max_number_cpu
-            if len(process_list) + 1 == max_number_cpu :
-               for p in process_list :
-                  p.join()
-               process_list = list()
-            #
-            # p
-            p = multiprocessing.Process(target = target, args = args)
-            p.start()
-            #
-            # process_list
-            process_list.append(p)
+         # ????
+         # Matplotlib leaks memrory, so use a separate proccess
+         # for this call to predict_csv_one_job so the memory will be
+         # freed when it is no longer needed
+         # ????
+         #
+         # job_queue
+         args = (
+            fit_title         ,
+            fit_dir           ,
+            fit_node_database ,
+            fit_node_id       ,
+            all_node_db       ,
+            covariate_table   ,
+         )
+         job_queue.put( (job_description, args) )
+         n_job_queue += 1
+         #
          #
          # fit_node_database_list
          # skip the no_ode fit (job_id == -1 and not in job_table)
          if 0 <= job_id :
             fit_node_database_list.append( fit_node_database )
    #
-   assert job_id == len(job_table) - 1
+   # process_target
+   def process_target(job_queue) :
+      try :
+         while True :
+            (job_description, args)  = job_queue.get(block = False)
+            print(job_description)
+            # predict_one
+            predict_one(
+               fit_title             = args[0]          ,
+               fit_dir               = args[1]          ,
+               fit_node_database     = args[2]           ,
+               fit_node_id           = args[3]           ,
+               all_node_database     = args[4]           ,
+               all_covariate_table   = args[5]           ,
+            )
+      except queue.Empty :
+         pass
+   #
+   # process_list
+   # execute process_target for each process in process_list
+   n_spawn      = min(n_job_queue - 1, max_number_cpu - 1)
+   process_list = list()
+   for i in range(n_spawn) :
+      p = multiprocessing.Process( target = process_target, args=(job_queue,) )
+      p.start()
+      process_list.append(p)
+   #
+   # process_target
+   # use this process as well to execute proess_target
+   process_target(job_queue)
+   #
+   # join
+   # wait for all the processes to finish (detect an empty queue).
    for p in process_list :
       p.join()
    #

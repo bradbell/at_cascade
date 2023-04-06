@@ -19,6 +19,7 @@ Release Notes for at_cascade
    sim
    rho
    cv
+   parallelized
 }
 
 Release Notes for 2023
@@ -26,6 +27,14 @@ Release Notes for 2023
 
 mm-dd
 *****
+
+04-06
+=====
+Improve the way the calculation of the
+:ref:`csv_fit@Output Files@fit_predict.csv` and
+:ref:`csv_fit@Output Files@sam_predict.csv` calculations
+are parallelized.
+(The old method did not seem to work well on some systems.)
 
 04-05
 =====
