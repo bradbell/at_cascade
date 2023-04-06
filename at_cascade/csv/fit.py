@@ -776,7 +776,6 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
    option_default  = {
       'absolute_covariates'   : (str,   None)               ,
       'age_avg_split'         : (str,   None)               ,
-      'db2csv'                : (bool,  False)              ,
       'hold_out_integrand'    : (str,   None)               ,
       'max_abs_effect'        : (float, 2.0)                ,
       'max_fit'               : (int,   250)                ,
@@ -785,7 +784,6 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'minimum_meas_cv'       : (float, 0.0)                ,
       'ode_method'            : (str,   'iota_pos_rho_zero'),
       'ode_step_size'         : (float, 10.0)               ,
-      'plot'                  : (bool,  False)              ,
       'quasi_fixed'           : (bool,  'true' )            ,
       'random_seed'           : (int ,  random_seed )       ,
       'refit_split'           : (bool,  'true' )            ,

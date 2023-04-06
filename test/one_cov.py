@@ -105,11 +105,16 @@ refit_split,false
 ode_step_size,5.0
 quasi_fixed,false
 max_num_iter_fixed,50
-plot,true
-db2csv,true
 tolerance_fixed,1e-8
 '''
 fit_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
+#
+# option_predict.csv
+fit_file['option_predict.csv']  =  \
+'''name,value
+plot,true
+db2csv,true
+'''
 #
 # fit_goal.csv
 fit_file['fit_goal.csv'] = \

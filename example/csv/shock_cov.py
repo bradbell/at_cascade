@@ -226,8 +226,6 @@ option_fit.csv
    i.e., quasi_fixed true and false.
 #. A smaller (larger) value of max_num_iter_fixed is
    required when quasi_fixed is true (false).
-#. Both the csv files and plot files (pdf files) are generated for
-   each fit.
 #. The shock, as a function of age, is not smooth at ages 25.0, 50.0, and 75.0.
    The :ref:`csv_fit@Input Files@option_fit.csv@age_avg_split`
    below instructs at_cascade not to integrate across these points.
@@ -240,12 +238,21 @@ refit_split,true
 ode_step_size,5.0
 quasi_fixed,false
 max_num_iter_fixed,50
-plot,true
-db2csv,true
 tolerance_fixed,1e-8
 ode_method,trapezoidal
 '''
 fit_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
+'''{xrst_code}
+
+option_predict.csv
+==================
+Both the csv files and plot files (pdf files) are generated for each fit.
+{xrst_code py}'''
+fit_file['option_predict.csv']  =  \
+'''name,value
+plot,true
+db2csv,true
+'''
 '''{xrst_code}
 
 fit_goal.csv

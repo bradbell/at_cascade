@@ -54,7 +54,7 @@ The final value for each of the options is reported in the file
 :ref:`csv_predict@Output Files@option_predict_out.csv` .
 Because each option has a default value,
 new option are added in such a way that
-previous option_fit.csv files are still valid.
+previous option_predict.csv files are still valid.
 
 db2csv
 ------
@@ -206,18 +206,18 @@ split_reference_table = [
    { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
 ]
 # ----------------------------------------------------------------------------
-# Sets global global_option_value to dict representation of option_fit.csv
+# Sets global global_option_value to dict representation of option_predict.csv
 #
 # fit_dir
 # is the directory where the input csv files are located.
 #
 # option_table :
-# is the list of dict corresponding to option_fit.csv
+# is the list of dict corresponding to option_predict.csv
 #
 # top_node_name
 # is the name of the top node in the node tree
 #
-# option_fit_out.csv
+# option_predict_out.csv
 # As a side effect, this routine write a copy of the option table
 # with the default values filled in.
 #
@@ -246,25 +246,9 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
    random_seed    = int( time.time() )
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
-      'absolute_covariates'   : (str,   None)               ,
-      'age_avg_split'         : (str,   None)               ,
       'db2csv'                : (bool,  False)              ,
-      'hold_out_integrand'    : (str,   None)               ,
-      'max_abs_effect'        : (float, 2.0)                ,
-      'max_fit'               : (int,   250)                ,
-      'max_num_iter_fixed'    : (int,   100)                ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
-      'minimum_meas_cv'       : (float, 0.0)                ,
-      'ode_method'            : (str,   'iota_pos_rho_zero'),
-      'ode_step_size'         : (float, 10.0)               ,
       'plot'                  : (bool,  False)              ,
-      'quasi_fixed'           : (bool,  'true' )            ,
-      'random_seed'           : (int ,  random_seed )       ,
-      'refit_split'           : (bool,  'true' )            ,
-      'root_node_name'        : (str,   top_node_name)      ,
-      'tolerance_fixed'       : (float, 1e-4)               ,
-      'shared_memory_prefix'  : (str,   user)               ,
-      'child_prior_std_factor': (float,  2.0)               ,
    }
    # END_SORT_THIS_LINE_MINUS_2
    #
@@ -275,11 +259,13 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       line_number += 1
       name         = row['name']
       if name in global_option_value :
-         msg  = f'csv_fit: Error: line {line_number} in option_fit.csv\n'
+         msg  = f'csv_predict: Error: line {line_number}'
+         msg += ' in option_predict.csv\n'
          msg += f'the name {name} appears twice in this table'
          assert False, msg
       if not name in option_default :
-         msg  = f'csv_fit: Error: line {line_number} in option_fit.csv\n'
+         msg  = f'csv_predict: Error: line {line_number}'
+         msg += ' in option_predict.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
       (option_type, defualt) = option_default[name]
@@ -288,7 +274,8 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
          option_value[name] = None
       elif option_type == bool :
          if value not in [ 'true', 'false' ] :
-            msg  = f'csv_fit: Error: line {line_number} in option_fit.csv\n'
+            msg  = f'csv_predict: Error: line {line_number}'
+            msg += ' in option_predict.csv\n'
             msg += f'The value for {name} is not true or false'
             assert False, msg
          global_option_value[name] = value == 'true'
@@ -301,7 +288,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
          (option_type, default) = option_default[name]
          global_option_value[name] = default
    #
-   # option_fit_out.csv
+   # option_predict_out.csv
    table = list()
    for name in global_option_value :
       value = global_option_value[name]
@@ -312,7 +299,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
             value = 'false'
       row = { 'name' : name , 'value' : value }
       table.append(row)
-   file_name = f'{fit_dir}/option_fit_out.csv'
+   file_name = f'{fit_dir}/option_predict_out.csv'
    at_cascade.csv.write_table(file_name, table)
    #
    assert type(global_option_value) == dict
@@ -880,7 +867,7 @@ def predict(fit_dir) :
       assert False, msg
    #
    # global_option_value
-   option_table = at_cascade.csv.read_table(f'{fit_dir}/option_fit.csv')
+   option_table = at_cascade.csv.read_table(f'{fit_dir}/option_predict.csv')
    set_global_option_value(
       fit_dir, option_table, top_node_name
    )

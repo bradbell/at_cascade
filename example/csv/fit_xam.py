@@ -83,6 +83,9 @@ random_seed = str( int( time.time() ) )
 csv_file['option_fit.csv']  = 'name,value\n'
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 #
+# option_predict.csv
+csv_file['option_predict.csv']  = 'name,value\n'
+#
 # node.csv
 csv_file['node.csv'] = \
 '''node_name,parent_name

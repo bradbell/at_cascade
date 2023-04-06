@@ -22,9 +22,15 @@ csv_file = dict()
 random_seed = str( int( time.time() ) )
 csv_file['option_fit.csv'] = \
 '''name,value
+max_abs_effect,3.0
+'''
+#
+# option_predict.csv
+random_seed = str( int( time.time() ) )
+csv_file['option_predict.csv'] = \
+'''name,value
 db2csv,true
 plot,true
-max_abs_effect,3.0
 '''
 #
 # node.csv

@@ -21,6 +21,7 @@ import at_cascade
    meas
    std
    sim
+   pdf
 }
 
 Example Simulating and Fitting Incidence From Prevalence Data
@@ -138,6 +139,10 @@ option_fit.csv
    when it is true.  A larger value for *max_num_iter_fixed*
    to is required for to converge for *quasi_fixed* true.
    (This calls for more investigation.)
+
+option_predict.csv
+==================
+Both the csv files and plot files (pdf files) are generated for each fit.
 
 fit_goal.csv
 ============
@@ -314,10 +319,15 @@ fit_file['option_fit.csv']  =  \
 refit_split,false
 quasi_fixed,true
 max_num_iter_fixed,300
+'''
+fit_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
+#
+# option_predict.csv
+fit_file['option_predict.csv']  =  \
+'''name,value
 plot,true
 db2csv,true
 '''
-fit_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 #
 # fit_goal.csv
 fit_file['fit_goal.csv'] = \
