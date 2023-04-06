@@ -10,7 +10,7 @@ import os
 import time
 '''
 
-{xrst_begin csv_fit}
+{xrst_BEGIN csv_fit}
 {xrst_spell
    avg
    avgint
@@ -724,7 +724,7 @@ A different (independent) sample from of the model variables
 from their posterior distribution is used to do the predictions for
 each sample index.
 
-{xrst_end csv_fit}
+{xrst_END csv_fit}
 '''
 #-----------------------------------------------------------------------------
 # split_reference_table
@@ -2085,8 +2085,8 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
    at_cascade.csv.write_table(file_name, sam_predict_table )
 # ----------------------------------------------------------------------------
 # BEGIN_FIT
-# at_cascadde.csv.predict(fit_dir)
-def fit(fit_dir) :
+# at_cascadde.csv.fit(fit_dir)
+def predict(fit_dir) :
    assert type(fit_dir) == str
 # END_FIT
    #
@@ -2109,13 +2109,6 @@ def fit(fit_dir) :
       fit_dir, option_table, top_node_name
    )
    #
-   root_node_name = global_option_value['root_node_name']
-   file_name      = f'{fit_dir}/{root_node_name}'
-   if os.path.exists( file_name ) :
-      msg  = f'{file_name} already exists.\n'
-      msg == 'you must remove it before running this csv fit'
-      assert False, msg
-   #
    # fit_goal_set
    fit_goal_set   = set()
    file_name      = f'{fit_dir}/fit_goal.csv'
@@ -2123,17 +2116,9 @@ def fit(fit_dir) :
    for row in fit_goal_table :
       fit_goal_set.add( row['node_name'] )
    #
-   # root_node.db
-   age_grid, time_grid, covariate_table = create_root_node_database(fit_dir)
+   # covariate_table
+   file_name       = f'{fit_dir}/covariate.csv'
+   covariate_table = at_cascade.csv.read_table(file_name)
    #
-   # all_node.db
-   create_all_node_database(fit_dir, age_grid, time_grid, covariate_table)
-   #
-   # cascade_root_node
-   at_cascade.cascade_root_node(
-      all_node_database  = f'{fit_dir}/all_node.db'  ,
-      root_node_database = f'{fit_dir}/root_node.db' ,
-      fit_goal_set       = fit_goal_set              ,
-      no_ode_fit         = True                      ,
-      fit_type_list      = [ 'both', 'fixed']        ,
-   )
+   # predict
+   predict_all(fit_dir, covariate_table, fit_goal_set)

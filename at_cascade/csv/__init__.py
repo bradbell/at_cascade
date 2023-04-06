@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin csv_module}
@@ -103,6 +103,7 @@ from .covariate_avg    import covariate_avg
 from .covariate_spline import covariate_spline
 from .empty_str        import empty_str
 from .fit              import fit
+from .predict          import predict
 from .join_file        import join_file
 from .read_table       import read_table
 from .simulate         import simulate

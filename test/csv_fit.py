@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -144,8 +144,9 @@ def main() :
       row['meas_value'] = float_format.format( iota )
    at_cascade.csv.write_table(file_name, table)
    #
-   # csv.fit
+   # csv.fit, csv.predict
    at_cascade.csv.fit(fit_dir)
+   at_cascade.csv.predict(fit_dir)
    #
    # number_sample
    number_sample = 20

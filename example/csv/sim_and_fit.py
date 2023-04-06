@@ -429,8 +429,9 @@ def fit(sim_dir, fit_dir) :
          table     = table ,
    )
    #
-   # fit
+   # fit, predict
    at_cascade.csv.fit(fit_dir)
+   at_cascade.csv.predict(fit_dir)
    #
    # fit_predict_table
    fit_predict_table = at_cascade.csv.read_table(
