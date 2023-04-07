@@ -208,7 +208,22 @@ def main() :
    #
    # csv.fit, csv.predict
    at_cascade.csv.fit(fit_dir)
-   at_cascade.csv.predict(fit_dir)
+   #
+   # predict.cv
+   # at_cascade.csv.predict(fit_dir) would do this all at once.
+   at_cascade.csv.predict(
+      fit_dir, start_job_name = 'n0.both', max_job_depth = 0
+   )
+   at_cascade.csv.predict(fit_dir, start_job_name = 'n0.female')
+   at_cascade.csv.predict(fit_dir, start_job_name = 'n0.male')
+   for prefix in [ 'fit' , 'sam' ] :
+      file_name = f'{fit_dir}/{prefix}_predict.csv'
+      destination = open(file_name, 'wb')
+      for start_job_name in [ 'n0.both', 'n0.female', 'n0.male' ] :
+         file_name = f'{fit_dir}/{prefix}_predict.{start_job_name}.csv'
+         source   = open(file_name, 'rb')
+         shutil.copyfileobj(source, destination)
+      destination.close()
    #
    # prefix
    for prefix in [ 'fit' , 'sam' ] :

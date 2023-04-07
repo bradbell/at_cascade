@@ -28,6 +28,20 @@ Release Notes for 2023
 mm-dd
 *****
 
+predict Branch
+==============
+This is an API change because you must run both the csv fit and predict
+routines to get what the fit routine used to produce.
+
+#. Split the csv fit routine into a fit and predict steps; see
+   :ref:`csv_fit-name` , :ref:`csv_predict-name`.
+#. Add the :ref:`csv_predict@Input Files@option_predict.csv` file.
+#. Remove db2csv and plot from the :ref:`csv_fit@Input Files@option_fit.csv`
+   file (they have been moved to option_predict.csv).
+#. Add the :ref:`csv_predict@start_job_name` and
+   :ref:`csv_predict@max_job_depth` arguments to csv.predict.
+   Include use of these arguments in the :ref:`csv_fit_xam-name` example.
+
 04-06
 =====
 Improve the way the calculation of the
