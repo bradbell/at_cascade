@@ -143,9 +143,18 @@ filled in for missing values.
 
 fit_predict.csv
 ===============
-This is the predictions for all of the nodes at the age, time and
+If :ref:`csv_predict@start_job_name` is None,
+this file contains the predictions for all the fits.
+These predictions for all of the nodes at the age, time and
 covariate values specified in covariate.csv.
 The prediction is done using the optimal variable values.
+If *start_job_name* is not None,
+the predictions are only for jobs at or below the starting job.
+In addition, the predictions are stored in the file
+
+   ``fit_prediction.``\ *start_job_name*\ ``.csv``
+
+and not in ``fit_predict.csv`` .
 
 avgint_id
 ---------
@@ -190,10 +199,16 @@ of the corresponding covariate in covariate.csv.
 
 sam_predict.csv
 ===============
-This is a sampling of the predictions for all of the nodes at the age, time and
-covariate values specified in covariate.csv.
+This is a sampling of the predictions.
 It has the same columns as fit_predict.csv (see above) plus
 an extra column named sample_index.
+If *start_job_name* is not None,
+the samples are only for jobs at or below the starting job.
+In addition, the samples are stored in the file
+
+   ``sam_prediction.``\ *start_job_name*\ ``.csv``
+
+and not in ``sam_predict.csv`` .
 
 sample_index
 ------------
@@ -354,13 +369,6 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
 # It contains the predictions for this fit node at the age and time
 # specified by the covariate.csv file.
 # The predictions are done using the optimal variable values.
-#
-# sam_predict.csv
-# This output file is locatied in the same directory as fit_node_database.
-# It contains the predictions for this fit node at the age and time
-# specified by the covariate.csv file.
-# The predictions are done using samples of the asymptotic distribution
-# for the variable values.
 #
 def predict_one(
    fit_title             ,
@@ -886,11 +894,17 @@ def predict_all(fit_dir, covariate_table, fit_goal_set, start_job_name) :
                sam_predict_table.append( row_out )
    #
    # fit_predict.csv
-   file_name = f'{fit_dir}/fit_predict.csv'
+   file_name    = f'{fit_dir}/fit_predict'
+   if start_job_name != None :
+      file_name += '.' + start_job_name
+   file_name    += '.csv'
    at_cascade.csv.write_table(file_name, fit_predict_table )
    #
    # sam_predict.csv
-   file_name = f'{fit_dir}/sam_predict.csv'
+   file_name = f'{fit_dir}/sam_predict'
+   if start_job_name != None :
+      file_name += '.' + start_job_name
+   file_name    += '.csv'
    at_cascade.csv.write_table(file_name, sam_predict_table )
 # ----------------------------------------------------------------------------
 # BEGIN_PREDICT
