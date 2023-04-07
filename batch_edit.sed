@@ -31,10 +31,7 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|:ref:`\([._A-Za-z0-9][._A-Za-z0-9]*\)`|:ref:`\1-name`|g
-s|:ref:`\([^`<]*\)<\([._A-Za-z0-9][._A-Za-z0-9]*\)>`|:ref:`\1<\2-name>`|g
-#
-s|:ref:`genindex-name`|:ref:`genindex`|g
-s|:ref:`\([^`<]*\)<genindex-name>`|:ref:`\1<genindex>`|g
-#
-s|^[.][.] _\([._A-Za-z0-9][._A-Za-z0-9]*\):$|.. _\1-name:|
+s|csv_fit@Output Files@fit_predict.csv|csv_predict@Output Files@fit_predict.csv|
+s|csv_fit@Output Files@sam_predict.csv|csv_predict@Output Files@sam_predict.csv|
+s|csv_fit@Input Files@option_fit.csv@db2csv|csv_predict@Input Files@option_predict.csv@db2csv|
+s|csv_fit@Input Files@option_fit.csv@plot|csv_predict@Input Files@option_predict.csv@plot|

@@ -61,9 +61,9 @@ Node Tree
    *  -  option_fit_out.csv
       -  :ref:`csv_fit@Output Files@option_fit_out.csv`
    *  -  fit_predict.csv
-      -  :ref:`csv_fit@Output Files@fit_predict.csv`
+      -  :ref:`csv_predict@Output Files@fit_predict.csv`
    *  -  sam_predict.csv
-      -  :ref:`csv_fit@Output Files@sam_predict.csv`
+      -  :ref:`csv_predict@Output Files@sam_predict.csv`
 
 {xrst_literal
    BEGIN_PYTHON

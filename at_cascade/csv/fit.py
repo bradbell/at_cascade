@@ -29,7 +29,6 @@ import time
    meas
    mul
    multiprocessing
-   pdf
    pini
    rho
    sincidence
@@ -99,17 +98,6 @@ ODE and the average of an integrand over an interval.
 The default for this value is the empty string; i.e.,
 no extra age splitting over the uniformly spaced grid specified by
 :ref:`csv_fit@Input Files@option_fit.csv@ode_step_size`.
-
-db2csv
-------
-If this boolean option is true,
-the dismod_at `db2csv_command`_ is used to generate the csv files
-corresponding to each :ref:`csv_fit@Output Files@dismod.db` .
-If this option is true, the csv files will make it more difficult
-to see the tree structure corresponding to the ``dismod.db`` files.
-The default value for this option is false .
-
-.. _db2csv_command: https://bradbell.github.io/dismod_at/doc/db2csv_command.htm
 
 hold_out_integrand
 ------------------
@@ -199,26 +187,6 @@ approximation the ODE solution and the average integrands.
 Finer resolution for specific ages can be achieved using the
 :ref:`csv_fit@Input Files@option_fit.csv@age_avg_split` option.
 The default value for this option is 10.0.
-
-plot
-----
-If this boolean option is true,
-a ``data_plot.pdf`` and ``rate_plot.pdf`` file is created for each
-:ref:`csv_fit@Output Files@dismod.db` database.
-The data plot includes a maximum of 1,000 randomly chosen points for each
-integrand in the predict_integrand.csv file.
-The rate plot includes all the non-zero rates.
-The default value for this option is false .
-
-These are no effect rates; i.e., they are the estimated rate
-for this node an sex without any covariate effects
-If you want to include covariate effects, you will have to make your
-own plots using the
-:ref:`csv_fit@Output Files@fit_predict.csv` and
-:ref:`csv_fit@Output Files@sam_predict.csv` files.
-The dismod_at `plot_curve`_ routine may be helpful in this regard.
-
-.. _plot_curve: https://bradbell.github.io/dismod_at/doc/plot_curve.htm
 
 quasi_fixed
 -----------
@@ -367,7 +335,7 @@ Each such node must be an descendant of the root node.
 predict_integrand.csv
 =====================
 This is the list of integrands at which predictions are made
-and stored in :ref:`csv_fit@Output Files@fit_predict.csv` .
+and stored in :ref:`csv_predict@Output Files@fit_predict.csv` .
 
 integrand_name
 --------------

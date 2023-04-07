@@ -92,8 +92,8 @@ These are no effect rates; i.e., they are the estimated rate
 for this node an sex without any covariate effects
 If you want to include covariate effects, you will have to make your
 own plots using the
-:ref:`csv_fit@Output Files@fit_predict.csv` and
-:ref:`csv_fit@Output Files@sam_predict.csv` files.
+:ref:`csv_predict@Output Files@fit_predict.csv` and
+:ref:`csv_predict@Output Files@sam_predict.csv` files.
 The dismod_at `plot_curve`_ routine may be helpful in this regard.
 
 .. _plot_curve: https://bradbell.github.io/dismod_at/doc/plot_curve.htm
