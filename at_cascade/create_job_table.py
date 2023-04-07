@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin create_job_table}
@@ -91,6 +91,8 @@ This is an ``int`` containing the job_id corresponding to the parent job
 which must be greater than the job_id for this row of the job table.
 The parent job (and only the parent job)
 must have completed before this job can be run.
+This first row of the job table has *parent_job_id* equal to None; i.e.,
+there is not parent for the first job.
 
 start_child_job_id
 ==================

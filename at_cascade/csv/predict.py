@@ -37,8 +37,15 @@ Example
 
 fit_dir
 *******
-This string is the directory name where the csv files
-are located.
+Same as the csv fit
+:ref:`csv_fit@fit_dir` .
+
+start_job_name
+**************
+Is the name of the job (fit) that the predictions should start at.
+This is a node name, followed by a period, followed by a sex.
+Only this fit, and its descendents, will be included in the predictions.
+If this argument is None, all of the jobs (fits) will be included.
 
 Input Files
 ***********
@@ -210,6 +217,12 @@ split_reference_table = [
 #
 # fit_dir
 # is the directory where the input csv files are located.
+#
+# start_job_name
+# Is the name of the job (fit) that the predictions should start at.
+# This is a node name, followed by a period, followed by a sex.
+# Only this fit, and its descendents, will be included in the predictions.
+# If this argument is None, all of the jobs (fits) will be included.
 #
 # option_table :
 # is the list of dict corresponding to option_predict.csv
@@ -578,7 +591,7 @@ def predict_one(
 # global_option_value
 # This routine assues that global_option_value has been set.
 #
-def predict_all(fit_dir, covariate_table, fit_goal_set) :
+def predict_all(fit_dir, covariate_table, fit_goal_set, start_job_name) :
    assert type(fit_dir) == str
    assert type(covariate_table) == list
    assert type( covariate_table[0] ) == dict
@@ -629,6 +642,21 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
       fit_goal_set               = fit_goal_set             ,
    )
    #
+   # start_job_id
+   if start_job_name == None :
+      start_job_id = 0
+   else :
+      start_job_id = None
+   for (job_id, row) in enumerate(job_table) :
+      if row['job_name'] == start_job_name :
+         start_job_id = job_id
+   if start_job_id == None :
+      root_job_name = job_table[0]['job_name']
+      msg  = 'start_job_name = {start_job_name} is not a valid job name '
+      msg += ' for this cascade\n'
+      msg += f'The root job name for this cascade is {root_job_name}.'
+      assert False, msg
+   #
    # error_message_dict
    error_message_dict = at_cascade.check_log(
       message_type = 'error',
@@ -639,6 +667,7 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
    #
    # n_job
    n_job = len( job_table )
+   assert job_table[0]['parent_job_id'] == None
    #
    # process_list
    process_list = list()
@@ -657,80 +686,91 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
       else :
          job_row = job_table[job_id]
       #
-      # job_name, fit_node_id, fit_split_reference_id
-      job_name                = job_row['job_name']
-      fit_node_id             = job_row['fit_node_id']
-      fit_split_reference_id  = job_row['split_reference_id']
-      #
-      # fit_database_dir
-      fit_database_dir = at_cascade.get_database_dir(
-         node_table              = node_table               ,
-         split_reference_table   = split_reference_table    ,
-         node_split_set          = node_split_set           ,
-         root_node_id            = root_node_id             ,
-         root_split_reference_id = root_split_reference_id  ,
-         fit_node_id             = fit_node_id              ,
-         fit_split_reference_id  = fit_split_reference_id   ,
-      )
-      #
-      # fit_database_dir
-      if job_id == -1 :
-         fit_database_dir += '/no_ode'
-      #
-      # fit_node_database
-      fit_node_database = f'{fit_dir}/{fit_database_dir}/dismod.db'
-      #
-      # sam_node_predict
-      sam_node_predict = f'{fit_dir}/{fit_database_dir}/sam_predict.csv'
-      #
-      # fit_title
-      if job_id == -1 :
-         fit_title = job_name + '.no_ode'
+      # start_job_descendant
+      if job_id == -1 or job_id == 0 :
+         start_job_descendant = start_job_id == 0
       else :
-         fit_title = job_name
-      #
-      # job_description
-      # check for an error during fit both and fit fixed
-      two_errors = False
-      if job_name in error_message_dict :
-            two_errors = len( error_message_dict[job_name] ) > 1
-      if two_errors :
-         if os.path.exists( sam_node_predict ) :
-            os.remove( sam_node_predict )
-         print( f'Error in {job_name}' )
-      elif not os.path.exists( fit_node_database ) :
-         print( f'Missing dismod.db for {job_name}' )
-      else :
-         job_description = 'Done: fit_predict.csv, sam_predict.csv'
-         if global_option_value['db2csv'] :
-            job_description  += f',  db2csv files'
-         if global_option_value['plot'] :
-            job_description  += f',  plots'
-         job_description  += f', for {fit_title}'
+         start_job_descendant = start_job_id == job_id
+         ancestor             = job_table[job_id]['parent_job_id']
+         while ancestor != None and not start_job_descendant :
+            start_job_descendant = ancestor == start_job_id
+            ancestor             = job_table[ancestor]['parent_job_id']
+      if start_job_descendant :
          #
-         # ????
-         # Matplotlib leaks memrory, so use a separate proccess
-         # for this call to predict_csv_one_job so the memory will be
-         # freed when it is no longer needed
-         # ????
+         # job_name, fit_node_id, fit_split_reference_id
+         job_name                = job_row['job_name']
+         fit_node_id             = job_row['fit_node_id']
+         fit_split_reference_id  = job_row['split_reference_id']
          #
-         # job_queue
-         args = (
-            fit_title         ,
-            fit_dir           ,
-            fit_node_database ,
-            fit_node_id       ,
-            all_node_db       ,
-            covariate_table   ,
+         # fit_database_dir
+         fit_database_dir = at_cascade.get_database_dir(
+            node_table              = node_table               ,
+            split_reference_table   = split_reference_table    ,
+            node_split_set          = node_split_set           ,
+            root_node_id            = root_node_id             ,
+            root_split_reference_id = root_split_reference_id  ,
+            fit_node_id             = fit_node_id              ,
+            fit_split_reference_id  = fit_split_reference_id   ,
          )
-         job_queue.put( (job_description, args) )
-         n_job_queue += 1
          #
+         # fit_database_dir
+         if job_id == -1 :
+            fit_database_dir += '/no_ode'
          #
-         # fit_node_database_list
-         # skip the no_ode fit (job_id == -1 and not in job_table)
-         if 0 <= job_id :
-            fit_node_database_list.append( fit_node_database )
+         # fit_node_database
+         fit_node_database = f'{fit_dir}/{fit_database_dir}/dismod.db'
+         #
+         # sam_node_predict
+         sam_node_predict = f'{fit_dir}/{fit_database_dir}/sam_predict.csv'
+         #
+         # fit_title
+         if job_id == -1 :
+            fit_title = job_name + '.no_ode'
+         else :
+            fit_title = job_name
+         #
+         # job_description
+         # check for an error during fit both and fit fixed
+         two_errors = False
+         if job_name in error_message_dict :
+               two_errors = len( error_message_dict[job_name] ) > 1
+         if two_errors :
+            if os.path.exists( sam_node_predict ) :
+               os.remove( sam_node_predict )
+            print( f'Error in {job_name}' )
+         elif not os.path.exists( fit_node_database ) :
+            print( f'Missing dismod.db for {job_name}' )
+         else :
+            job_description = 'Done: fit_predict.csv, sam_predict.csv'
+            if global_option_value['db2csv'] :
+               job_description  += f',  db2csv files'
+            if global_option_value['plot'] :
+               job_description  += f',  plots'
+            job_description  += f', for {fit_title}'
+            #
+            # ????
+            # Matplotlib leaks memrory, so use a separate proccess
+            # for this call to predict_csv_one_job so the memory will be
+            # freed when it is no longer needed
+            # ????
+            #
+            # job_queue
+            args = (
+               fit_title         ,
+               fit_dir           ,
+               fit_node_database ,
+               fit_node_id       ,
+               all_node_db       ,
+               covariate_table   ,
+            )
+            job_queue.put( (job_description, args) )
+            n_job_queue += 1
+            #
+            #
+            # fit_node_database_list
+            # skip the no_ode fit (job_id == -1 and not in job_table)
+            if 0 <= job_id :
+               fit_node_database_list.append( fit_node_database )
    #
    # n_done_queue
    # The number of job_queue entries that have been completed
@@ -854,9 +894,10 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
    at_cascade.csv.write_table(file_name, sam_predict_table )
 # ----------------------------------------------------------------------------
 # BEGIN_PREDICT
-# at_cascadde.csv.fit(fit_dir)
-def predict(fit_dir) :
+# at_cascadde.csv.fit(fit_dir, start_job_name)
+def predict(fit_dir, start_job_name = None) :
    assert type(fit_dir) == str
+   assert start_job_name == None or type(start_job_name) == str
 # END_PREDICT
    #
    # top_node_name
@@ -890,4 +931,4 @@ def predict(fit_dir) :
    covariate_table = at_cascade.csv.read_table(file_name)
    #
    # predict
-   predict_all(fit_dir, covariate_table, fit_goal_set)
+   predict_all(fit_dir, covariate_table, fit_goal_set, start_job_name)
