@@ -657,9 +657,6 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
       else :
          job_row = job_table[job_id]
       #
-      # job_description
-      job_description = f'{job_id + 1}/{n_job}'
-      #
       # job_name, fit_node_id, fit_split_reference_id
       job_name                = job_row['job_name']
       fit_node_id             = job_row['fit_node_id']
@@ -700,11 +697,11 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
       if two_errors :
          if os.path.exists( sam_node_predict ) :
             os.remove( sam_node_predict )
-         print( f'{job_description} Error in {job_name}' )
+         print( f'Error in {job_name}' )
       elif not os.path.exists( fit_node_database ) :
-         print( f'{job_description} Missing dismod.db for {job_name}' )
+         print( f'Missing dismod.db for {job_name}' )
       else :
-         job_description += ' Creating fit_predict.csv, sam_predict.csv'
+         job_description = 'Done: fit_predict.csv, sam_predict.csv'
          if global_option_value['db2csv'] :
             job_description  += f',  db2csv files'
          if global_option_value['plot'] :
@@ -735,12 +732,16 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
          if 0 <= job_id :
             fit_node_database_list.append( fit_node_database )
    #
+   # n_done_queue
+   # The number of job_queue entries that have been completed
+   n_done_queue   = multiprocessing.Queue()
+   n_done_queue.put(0)
+   #
    # process_target
-   def process_target(job_queue) :
+   def process_target(job_queue, n_done_queue) :
       try :
          while True :
             (job_description, args)  = job_queue.get(block = False)
-            print(job_description)
             # predict_one
             predict_one(
                fit_title             = args[0]          ,
@@ -750,6 +751,9 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
                all_node_database     = args[4]           ,
                all_covariate_table   = args[5]           ,
             )
+            n_done = n_done_queue.get(block = True) + 1
+            print( f'{n_done}/{n_job_queue} {job_description}' )
+            n_done_queue.put(n_done)
       except queue.Empty :
          pass
    #
@@ -758,13 +762,15 @@ def predict_all(fit_dir, covariate_table, fit_goal_set) :
    n_spawn      = min(n_job_queue - 1, max_number_cpu - 1)
    process_list = list()
    for i in range(n_spawn) :
-      p = multiprocessing.Process( target = process_target, args=(job_queue,) )
+      p = multiprocessing.Process(
+         target = process_target, args=(job_queue, n_done_queue,)
+      )
       p.start()
       process_list.append(p)
    #
    # process_target
    # use this process as well to execute proess_target
-   process_target(job_queue)
+   process_target(job_queue, n_done_queue)
    #
    # join
    # wait for all the processes to finish (detect an empty queue).
