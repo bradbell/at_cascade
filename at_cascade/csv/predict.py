@@ -47,6 +47,12 @@ This is a node name, followed by a period, followed by a sex.
 Only this fit, and its descendents, will be included in the predictions.
 If this argument is None, all of the jobs (fits) will be included.
 
+max_job_depth
+*************
+This is the number of generations below start_job_name are.
+If max_job_depth is zero,  only the start job will be included.
+If max_job_depth is None,  start job and all its descendants are included.
+
 Input Files
 ***********
 
@@ -232,12 +238,6 @@ split_reference_table = [
 #
 # fit_dir
 # is the directory where the input csv files are located.
-#
-# start_job_name
-# Is the name of the job (fit) that the predictions should start at.
-# This is a node name, followed by a period, followed by a sex.
-# Only this fit, and its descendents, will be included in the predictions.
-# If this argument is None, all of the jobs (fits) will be included.
 #
 # option_table :
 # is the list of dict corresponding to option_predict.csv
@@ -596,10 +596,23 @@ def predict_one(
 # This set contains the node that we are required to fit.
 # Ancestors between these nodes and the root node are also fit.
 #
+# start_job_name
+# Is the name of the job (fit) that the predictions should start at.
+# This is a node name, followed by a period, followed by a sex.
+# Only this fit, and its descendents, will be included in the predictions.
+# If this argument is None, all of the jobs (fits) will be included.
+#
+# max_job_depth
+# This is the number of generations below start_job_name are.
+# If max_job_depth is zero,  only the start job will be included.
+# If max_job_depth is None,  start job and all its descendants are included.
+#
 # global_option_value
 # This routine assues that global_option_value has been set.
 #
-def predict_all(fit_dir, covariate_table, fit_goal_set, start_job_name) :
+def predict_all(
+   fit_dir, covariate_table, fit_goal_set, start_job_name, max_job_depth
+) :
    assert type(fit_dir) == str
    assert type(covariate_table) == list
    assert type( covariate_table[0] ) == dict
@@ -694,16 +707,24 @@ def predict_all(fit_dir, covariate_table, fit_goal_set, start_job_name) :
       else :
          job_row = job_table[job_id]
       #
-      # start_job_descendant
+      # start_job_descendant, job_depth
+      job_depth = 0
       if job_id == -1 or job_id == 0 :
          start_job_descendant = start_job_id == 0
       else :
          start_job_descendant = start_job_id == job_id
          ancestor             = job_table[job_id]['parent_job_id']
          while ancestor != None and not start_job_descendant :
+            job_depth           += 1
             start_job_descendant = ancestor == start_job_id
             ancestor             = job_table[ancestor]['parent_job_id']
+      include_this_job = False
       if start_job_descendant :
+         if max_job_depth == None :
+            include_this_job = True
+         else :
+            include_this_job = job_depth <= max_job_depth
+      if include_this_job :
          #
          # job_name, fit_node_id, fit_split_reference_id
          job_name                = job_row['job_name']
@@ -908,10 +929,11 @@ def predict_all(fit_dir, covariate_table, fit_goal_set, start_job_name) :
    at_cascade.csv.write_table(file_name, sam_predict_table )
 # ----------------------------------------------------------------------------
 # BEGIN_PREDICT
-# at_cascadde.csv.fit(fit_dir, start_job_name)
-def predict(fit_dir, start_job_name = None) :
+# at_cascadde.csv.fit(fit_dir, start_job_name, max_job_depth)
+def predict(fit_dir, start_job_name = None, max_job_depth = None) :
    assert type(fit_dir) == str
    assert start_job_name == None or type(start_job_name) == str
+   assert max_job_depth == None or type(max_job_depth) == int
 # END_PREDICT
    #
    # top_node_name
@@ -945,4 +967,6 @@ def predict(fit_dir, start_job_name = None) :
    covariate_table = at_cascade.csv.read_table(file_name)
    #
    # predict
-   predict_all(fit_dir, covariate_table, fit_goal_set, start_job_name)
+   predict_all(
+      fit_dir, covariate_table, fit_goal_set, start_job_name, max_job_depth
+   )
