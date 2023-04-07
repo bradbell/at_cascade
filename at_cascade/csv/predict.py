@@ -652,8 +652,8 @@ def predict_all(fit_dir, covariate_table, fit_goal_set, start_job_name) :
          start_job_id = job_id
    if start_job_id == None :
       root_job_name = job_table[0]['job_name']
-      msg  = 'start_job_name = {start_job_name} is not a valid job name '
-      msg += ' for this cascade\n'
+      msg  = f'start_job_name = {start_job_name} is not a valid job name '
+      msg += 'for this cascade.\n'
       msg += f'The root job name for this cascade is {root_job_name}.'
       assert False, msg
    #
