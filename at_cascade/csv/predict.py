@@ -49,7 +49,7 @@ If this argument is None, all of the jobs (fits) will be included.
 
 max_job_depth
 *************
-This is the number of generations below start_job_name are.
+This is the number of generations below start_job_name that are included.
 If max_job_depth is zero,  only the start job will be included.
 If max_job_depth is None,  start job and all its descendants are included.
 

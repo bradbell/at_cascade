@@ -63,6 +63,13 @@ fit_dir
 This string is the directory name where the csv files
 are located.
 
+max_node_depth
+**************
+This is the number of generations below root node that are included.
+If max_node_depth is zero,  only the root node will be included.
+If max_node_depth is None,  the root node and all its descendants are included.
+
+
 Input Files
 ***********
 
@@ -1508,9 +1515,10 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    )
 # ----------------------------------------------------------------------------
 # BEGIN_FIT
-# at_cascadde.csv.predict(fit_dir)
-def fit(fit_dir) :
+# at_cascadde.csv.fit(fit_dir, max_node_depth)
+def fit(fit_dir, max_node_depth = None) :
    assert type(fit_dir) == str
+   assert max_node_depth == None or type(max_node_depth) == int
 # END_FIT
    #
    # top_node_name
@@ -1552,11 +1560,40 @@ def fit(fit_dir) :
    # all_node.db
    create_all_node_database(fit_dir, age_grid, time_grid, covariate_table)
    #
+   # node_table
+   new          = False
+   database     = f'{fit_dir}/root_node.db'
+   connection   = dismod_at.create_connection(database, new)
+   node_table  = dismod_at.get_table_dict(connection, 'node')
+   connection.close()
+   #
+   # root_node_id
+   root_node_name = at_cascade.get_parent_node(database)
+   root_node_id   = at_cascade.table_name2id(node_table, 'node', root_node_name)
+   #
+   # fit_goal_max_depth
+   if max_node_depth == None :
+      fit_goal_max_depth = fit_goal_set
+   else :
+      fit_goal_max_depth = set()
+      for node_name in fit_goal_set :
+         node_list = list()
+         node_id   = at_cascade.table_name2id(node_table, 'node', node_name)
+         node_list.append(node_id)
+         while node_id != root_node_id and node_id != None :
+            node_id = node_table[node_id]['parent']
+            node_list.append(node_id)
+         assert node_id != None
+         if len(node_list) <= max_node_depth + 1 :
+            fit_goal_max_depth.add( node_list[0] )
+         else :
+            fit_goal_max_depth.add( node_list[ -max_node_depth - 1] )
+   #
    # cascade_root_node
    at_cascade.cascade_root_node(
       all_node_database  = f'{fit_dir}/all_node.db'  ,
       root_node_database = f'{fit_dir}/root_node.db' ,
-      fit_goal_set       = fit_goal_set              ,
+      fit_goal_set       = fit_goal_max_depth        ,
       no_ode_fit         = True                      ,
       fit_type_list      = [ 'both', 'fixed']        ,
    )

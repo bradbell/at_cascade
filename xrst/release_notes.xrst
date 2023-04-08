@@ -41,6 +41,7 @@ routines to get what the fit routine used to produce.
 #. Add the :ref:`csv_predict@start_job_name` and
    :ref:`csv_predict@max_job_depth` arguments to csv.predict.
    Include use of these arguments in the :ref:`csv_fit_xam-name` example.
+#. Add the :ref:`csv_fit@max_node_depth` argument to csv.fit.
 
 04-06
 =====
