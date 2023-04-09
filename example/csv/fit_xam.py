@@ -210,13 +210,14 @@ breakup_computation
 *******************
 Sometimes it is useful to fit some nodes, look at the results,
 and if they are good, continue the computation to the entire
-fit goal set. This will be done during if breakup_computation is true:
+fit goal set. This will be done during if breakup_computation is true
+(see source code below):
 {xrst_code py}"""
 breakup_computation = True
 """{xrst_code}
 
-Program
-*******
+Source Code
+***********
 {xrst_literal
    BEGIN_PROGRAM
    END_PROGRAM
@@ -237,8 +238,14 @@ def computation(fit_dir) :
       # csv.fit: Just fit the root node
       at_cascade.csv.fit(fit_dir, max_node_depth = 0)
       #
+      # predict
+      # predict/fit_n0.both.csv, predict/sam_n0.both.csv
+      at_cascade.csv.predict(
+         fit_dir, start_job_name = 'n0.both', max_job_depth = 0
+      )
+      #
       # continue_cascade:
-      # These two continue cascades could be done in parallel
+      # These calls to continue_cascade could be done in parallel
       at_cascade.continue_cascade(
          all_node_database = f'{fit_dir}/all_node.db'         ,
          fit_node_database = f'{fit_dir}/n0/female/dismod.db' ,
@@ -250,16 +257,15 @@ def computation(fit_dir) :
          fit_goal_set      = { 'n1', 'n2' }                   ,
       )
       #
-      # csv.*.predict
-      # These predictions could be done in parallel.
-      at_cascade.csv.predict(
-         fit_dir, start_job_name = 'n0.both', max_job_depth = 0
-      )
+      # predict
+      # These two calls to predict could be done in parallel
+      # predict/fit_n0.female.csv, predict/sam_n0.female.csv
       at_cascade.csv.predict(fit_dir, start_job_name = 'n0.female')
+      # predict/fit_n0.male.csv, predict/sam_n0.male.csv
       at_cascade.csv.predict(fit_dir, start_job_name = 'n0.male')
       #
-      # csv.predict
-      # combine the prediction files
+      # predict
+      # fit_predict.csv, sam_predict.csv
       for prefix in [ 'fit' , 'sam' ] :
          file_name = f'{fit_dir}/{prefix}_predict.csv'
          destination = open(file_name, 'wb')
