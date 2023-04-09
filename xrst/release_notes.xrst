@@ -42,6 +42,9 @@ routines to get what the fit routine used to produce.
    :ref:`csv_predict@max_job_depth` arguments to csv.predict.
    Include use of these arguments in the :ref:`csv_fit_xam-name` example.
 #. Add the :ref:`csv_fit@max_node_depth` argument to csv.fit.
+#. Change :ref:`avgint_parent_grid-name` to predict for all children,
+   so continue_cascade works for any change of the
+   :ref:`continue_cascade@fit_goal_set`.
 
 04-06
 =====

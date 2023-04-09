@@ -246,10 +246,10 @@ def create_job_table(
          root_split_reference_name
       )
    else :
-      root_split_reference_name = None
       root_split_reference_id   = None
       if refit_split :
-         msg = 'refit_split is true and the split reference table is empty'
+         msg  = 'all_option_table: refit_split is true and '
+         msg += ' root_split_reference_name does not appear'
          assert False, msg
    #
    # job_name

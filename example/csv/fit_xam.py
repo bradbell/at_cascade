@@ -57,7 +57,6 @@ except for the random seed which is chosen using the python time package:
 {xrst_code py}"""
 random_seed = str( int( time.time() ) )
 csv_file['option_fit.csv']  = 'name,value\n'
-csv_file['option_fit.csv'] += 'max_number_cpu,6\n'
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 """{xrst_code}
 
@@ -213,7 +212,7 @@ Sometimes it is useful to fit some nodes, look at the results,
 and if they are good, continue the computation to the entire
 fit goal set. This will be done during if breakup_computation is true:
 {xrst_code py}"""
-breakup_computation = False
+breakup_computation = True
 """{xrst_code}
 
 Program
@@ -238,12 +237,6 @@ def computation(fit_dir) :
       # csv.fit: Just fit the root node
       at_cascade.csv.fit(fit_dir, max_node_depth = 0)
       #
-      # csv.predict: Predict for n0.both
-      at_cascade.csv.predict(
-         fit_dir, start_job_name = 'n0.both', max_job_depth = 0
-      )
-   if False :
-      #
       # continue_cascade:
       # These two continue cascades could be done in parallel
       at_cascade.continue_cascade(
@@ -257,11 +250,15 @@ def computation(fit_dir) :
          fit_goal_set      = { 'n1', 'n2' }                   ,
       )
       #
-      # csv.predict
-      # These two predictions could be done in parallel.
+      # csv.*.predict
+      # These predictions could be done in parallel.
+      at_cascade.csv.predict(
+         fit_dir, start_job_name = 'n0.both', max_job_depth = 0
+      )
       at_cascade.csv.predict(fit_dir, start_job_name = 'n0.female')
       at_cascade.csv.predict(fit_dir, start_job_name = 'n0.male')
       #
+      # csv.predict
       # combine the prediction files
       for prefix in [ 'fit' , 'sam' ] :
          file_name = f'{fit_dir}/{prefix}_predict.csv'
@@ -270,7 +267,7 @@ def computation(fit_dir) :
             file_name = f'{fit_dir}/{prefix}_predict.{start_job_name}.csv'
             source   = open(file_name, 'rb')
             shutil.copyfileobj(source, destination)
-            destination.close()
+         destination.close()
    return
 #
 # main

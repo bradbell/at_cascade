@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin avgint_parent_grid}
@@ -108,6 +108,121 @@ import copy
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
+# This routine is very similar to get_child_job_table in create_job_table.
+# Perhaps there is a good way to combine these two routines.
+#
+# child_job_list =
+def possible_child_job_list(
+   # all node database tables
+   all_option_table      ,
+   node_split_table      ,
+   split_reference_table ,
+   # fit node database tables
+   fit_node_id           ,
+   node_table            ,
+   covariate_table       ,
+) :
+   assert type(fit_node_id) == int
+   tables = (
+      all_option_table      ,
+      node_split_table      ,
+      split_reference_table ,
+      node_table            ,
+      covariate_table       ,
+   )
+   for table in tables :
+      assert type(table) == list
+      if len(table) > 0 :
+         assert type( table[0] == dict )
+   #
+   # all_option_dict
+   all_option_dict = dict()
+   for row in all_option_table :
+      all_option_dict[ row['option_name'] ] = row['option_value']
+   #
+   # fit_node_children
+   fit_node_children = list()
+   for (node_id, row) in enumerate(node_table) :
+      if row['parent'] == fit_node_id :
+         fit_node_children.append(node_id)
+   #
+   # refit_split
+   if 'refit_split' in all_option_dict :
+      refit_split = all_option_dict['refit_split']
+      assert refit_split in [ 'true', 'false' ]
+      refit_split = refit_split == 'true'
+   else :
+      refit_split = False
+   #
+   # root_node_name
+   assert 'root_node_name' in all_option_dict
+   root_node_name = all_option_dict['root_node_name']
+   #
+   # root_node_id
+   root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
+   #
+   # root_split_reference_id
+   if 'root_split_reference_name' in all_option_dict :
+      root_split_reference_name = all_option_dict['root_split_reference_name']
+      root_split_reference_id   = at_cascade.table_name2id(
+         split_reference_table,
+         'split_reference',
+         root_split_reference_name
+      )
+   else :
+      root_split_reference_id   = None
+      if refit_split :
+         msg  = 'all_option_table: refit_split is true and '
+         msg += ' root_split_reference_name does not appear'
+         assert False, msg
+   #
+   # fit_split_reference_id
+   cov_info = at_cascade.get_cov_info(
+      all_option_table, covariate_table, split_reference_table
+   )
+   if 'split_reference_id' not in cov_info :
+      fit_split_reference_id = None
+   else :
+      fit_split_reference_id = cov_info['split_reference_id']
+   #
+   # Special case where there is no splitting covariate
+   if fit_split_reference_id == None :
+      child_job_list = list()
+      for shift_node_id in fit_node_children :
+         child_job = (shift_node_id, None)
+         child_job_list.append(child_job)
+      return child_job_list
+   #
+   # already_split
+   already_split = root_split_reference_id != fit_split_reference_id
+   #
+   # node_split_set
+   node_split_set = set()
+   for row in node_split_table :
+      node_split_set.add( row['node_id'] )
+   #
+   # shift_reference_set
+   if already_split or fit_node_id not in node_split_set :
+      shift_reference_set = { fit_split_reference_id }
+   else :
+      shift_reference_set = set( range( len(split_reference_table) ) )
+      shift_reference_set.remove( root_split_reference_id )
+   #
+   #
+   # child_job_list
+   child_job_list = list()
+   if fit_node_id in node_split_set and not already_split and refit_split :
+      for shift_split_reference_id in shift_reference_set :
+         child_job = (fit_node_id, shift_split_reference_id)
+         child_job_list.append(child_job)
+   else :
+      for shift_split_reference_id in shift_reference_set :
+         for shift_node_id in fit_node_children :
+            child_job = (shift_node_id, shift_split_reference_id)
+            child_job_list.append(child_job)
+   #
+   return child_job_list
+# ----------------------------------------------------------------------------
 def avgint_parent_grid(
 # BEGIN syntax
 # at_cascade.avgint_parent_grid(
@@ -126,8 +241,9 @@ def avgint_parent_grid(
    # all_option_table
    new        = False
    connection = dismod_at.create_connection(all_node_database, new)
-   all_option_table        = dismod_at.get_table_dict(connection, 'all_option')
-   split_reference_table   = dismod_at.get_table_dict(
+   all_option_table       = dismod_at.get_table_dict(connection, 'all_option')
+   node_split_table       = dismod_at.get_table_dict(connection, 'node_split')
+   split_reference_table  = dismod_at.get_table_dict(
       connection, 'split_reference'
    )
    connection.close()
@@ -185,6 +301,16 @@ def avgint_parent_grid(
       fit_tables['node'], 'node', parent_node_name
    )
    #
+   # child_job_list
+   child_job_list = possible_child_job_list(
+      all_option_table       = all_option_table,
+      node_split_table       = node_split_table ,
+      split_reference_table  = split_reference_table ,
+      fit_node_id            = parent_node_id,
+      node_table             = fit_tables['node'],
+      covariate_table        = fit_tables['covariate'],
+   )
+   #
    # cov_reference_dict
    cov_reference_dict = dict()
    if job_table == None :
@@ -197,25 +323,13 @@ def avgint_parent_grid(
          split_reference_id = fit_split_reference_id,
       )
       # cov_reference[ (parent_node_id, fit_split_reference_id) ]
-      key = (parent_node_id, fit_split_reference_id)
+      key                     = (parent_node_id, fit_split_reference_id)
       cov_reference_dict[key] = cov_reference_list
    else :
       #
-      # fit_job_row
-      fit_job_row  = job_table[fit_job_id]
-      #
-      # child_job_id
-      start_child_job_id = fit_job_row['start_child_job_id']
-      end_child_job_id   = fit_job_row['end_child_job_id']
-      for child_job_id in range(start_child_job_id, end_child_job_id) :
-         #
-         # child_job_row
-         child_job_row = job_table[child_job_id]
-         #
-         # shift_node_id, shift_split_reference_id
-         shift_job_row            = job_table[child_job_id]
-         shift_node_id            = child_job_row['fit_node_id']
-         shift_split_reference_id = child_job_row['split_reference_id']
+      # (shift_node_id, shift_split_reference_id)
+      for child_job in child_job_list :
+         (shift_node_id, shift_split_reference_id) = child_job
          #
          # cov_reference_list
          cov_reference_list = at_cascade.get_cov_reference(
@@ -226,7 +340,7 @@ def avgint_parent_grid(
          )
          #
          # cov_reference[ (shift_node_id, shift_split_reference_id) ]
-         key = (shift_node_id, shift_split_reference_id)
+         key                     = child_job
          cov_reference_dict[key] = cov_reference_list
    #
    # tbl_name
