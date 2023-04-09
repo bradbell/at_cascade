@@ -154,11 +154,14 @@ this file contains the predictions for all the fits.
 These predictions for all of the nodes at the age, time and
 covariate values specified in covariate.csv.
 The prediction is done using the optimal variable values.
+
+start_job_name
+--------------
 If *start_job_name* is not None,
 the predictions are only for jobs at or below the starting job.
-In addition, the predictions are stored in the file
+In addition, the predictions are stored below *fit_dir* in the file
 
-   ``fit_prediction.``\ *start_job_name*\ ``.csv``
+   ``predict/fit_``\ *start_job_name*\ ``.csv``
 
 and not in ``fit_predict.csv`` .
 
@@ -208,11 +211,14 @@ sam_predict.csv
 This is a sampling of the predictions.
 It has the same columns as fit_predict.csv (see above) plus
 an extra column named sample_index.
-If *start_job_name* is not None,
-the samples are only for jobs at or below the starting job.
-In addition, the samples are stored in the file
 
-   ``sam_prediction.``\ *start_job_name*\ ``.csv``
+start_job_name
+--------------
+If *start_job_name* is not None,
+the predictions are only for jobs at or below the starting job.
+In addition, the predictions are stored below *fit_dir* in the file
+
+   ``predict/sam_``\ *start_job_name*\ ``.csv``
 
 and not in ``sam_predict.csv`` .
 
@@ -915,17 +921,18 @@ def predict_all(
                sam_predict_table.append( row_out )
    #
    # fit_predict.csv
-   file_name    = f'{fit_dir}/fit_predict'
-   if start_job_name != None :
-      file_name += '.' + start_job_name
-   file_name    += '.csv'
+   if start_job_name == None :
+      file_name    = f'{fit_dir}/fit_predict.csv'
+   else :
+      os.makedirs( f'{fit_dir}/predict', exist_ok = True )
+      file_name    = f'{fit_dir}/predict/fit_{start_job_name}.csv'
    at_cascade.csv.write_table(file_name, fit_predict_table )
    #
    # sam_predict.csv
-   file_name = f'{fit_dir}/sam_predict'
-   if start_job_name != None :
-      file_name += '.' + start_job_name
-   file_name    += '.csv'
+   if start_job_name == None :
+      file_name    = f'{fit_dir}/sam_predict.csv'
+   else :
+      file_name    = f'{fit_dir}/predict/sam_{start_job_name}.csv'
    at_cascade.csv.write_table(file_name, sam_predict_table )
 # ----------------------------------------------------------------------------
 # BEGIN_PREDICT

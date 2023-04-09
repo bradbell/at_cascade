@@ -264,7 +264,7 @@ def computation(fit_dir) :
          file_name = f'{fit_dir}/{prefix}_predict.csv'
          destination = open(file_name, 'wb')
          for start_job_name in [ 'n0.both', 'n0.female', 'n0.male' ] :
-            file_name = f'{fit_dir}/{prefix}_predict.{start_job_name}.csv'
+            file_name = f'{fit_dir}/predict/{prefix}_{start_job_name}.csv'
             source   = open(file_name, 'rb')
             shutil.copyfileobj(source, destination)
          destination.close()
