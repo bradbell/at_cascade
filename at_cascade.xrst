@@ -6,6 +6,11 @@
 
 Cascading Dismod_at Analysis From Parent To Child Regions
 =========================================================
+{xrst_spell
+   pypi
+   dependencies
+   uninstall
+}
 
 Version
 *******
@@ -14,6 +19,22 @@ at_cascade-2023.4.9
 Git Repository
 **************
 `<https://github.com/bradbell/at_cascade>`_
+
+Install
+*******
+This package is currently under heavy development and
+it is suggest that you use the testing repository version.
+Search for ``at_cascade`` on `test.pypi <https://test.pypi.org>`_
+to determine the date corresponding to this version.
+The commands below install the at_cascade dependencies and then replace
+at_cascade using its most recent test version::
+
+   pip install at_cascade
+   pip uninstall -y at_cascade
+   pip install --index-url https://test.pypi.org/simple/ at_cascade
+
+On some systems you may need to replace ``pip`` by ``pip3`` .
+
 
 Children
 ********
