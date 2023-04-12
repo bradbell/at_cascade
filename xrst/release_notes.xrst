@@ -30,7 +30,10 @@ mm-dd
 
 04-12
 =====
-Add :ref:`at_cascade@Install` instructions.
+#. Add :ref:`at_cascade@Install` instructions.
+#. Add the :ref:`wish_list@csv.fit@Data Density` wish list item.
+#. Remove separating the predictions form the fits because this
+   wish list item has been completed.
 
 04-09
 =====

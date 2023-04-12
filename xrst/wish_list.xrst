@@ -13,6 +13,15 @@ Wish List for at_cascade
 csv.fit
 *******
 
+Data Density
+============
+Extend both csv_simulate and csv_fit so that
+any dismod_at data density can be specified for each data point in
+:ref:`csv_simulate@Input Files@simulate.csv` and
+:ref:`csv_fit@Input Files@data_in.csv` .
+In addition, make this backward compatible when the data density
+is not in these input files.
+
 Continue Cascade
 ================
 There should be a separate program that continues a cascade from a
@@ -20,11 +29,8 @@ goal node of a previous fit.
 
 Prediction Program
 ==================
-#. The predictions should be done by a separate program.
-   This should allow one to predict for a subset of the fits
-   (even while the cascade is still running).
-#. It would be good to specify a prediction grid that may be different for
-   the covariate age-time grid.
+It would be good to specify a prediction grid that may be different for
+the covariate age-time grid.
 
 No Ode Fit
 ==========
