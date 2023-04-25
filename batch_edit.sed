@@ -31,7 +31,26 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
-s|csv_fit@Output Files@fit_predict.csv|csv_predict@Output Files@fit_predict.csv|
-s|csv_fit@Output Files@sam_predict.csv|csv_predict@Output Files@sam_predict.csv|
-s|csv_fit@Input Files@option_fit.csv@db2csv|csv_predict@Input Files@option_predict.csv@db2csv|
-s|csv_fit@Input Files@option_fit.csv@plot|csv_predict@Input Files@option_predict.csv@plot|
+# ...........................................................................
+s|new\( *\)= *False;|new\1= False| 
+/^ *new *= *True$/b one
+/^ *new *= *False$/b one
+ b skip
+:one
+N
+/create_connection/b skip
+s|\(.*\)\n\(.*\)|\2\n\1|
+#
+: skip
+# ...........................................................................
+## /^ *new *= *True$/b one
+## /^ *new *= *False$/b one
+## b skip
+## :one
+## N
+## #                 \1           \2    \3        \4
+## s|^ *new *= *\([TF][a-z]*\)\n\( *\)\([^(]*\)(\([^,]*\), *new)|\2\3(\
+## \2   \4, new = \1\
+## \2)|
+## #
+## : skip

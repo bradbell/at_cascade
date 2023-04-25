@@ -222,7 +222,7 @@ def check_fit(result_dir, fit_node_name) :
    fit_node_id = int( fit_node_name[-1] )
    #
    # age, var_table, fit_var_table
-   new           = False;
+   new           = False
    connection    = dismod_at.create_connection(fit_node_database, new)
    age_table     = dismod_at.get_table_dict(connection, 'age')
    var_table     = dismod_at.get_table_dict(connection, 'var')

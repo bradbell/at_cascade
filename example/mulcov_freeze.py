@@ -608,8 +608,8 @@ def main() :
       )
    #
    # alpha_n1
-   new            = False
    database       = f'{result_dir}/n0/n1/dismod.db'
+   new            = False
    connection     = dismod_at.create_connection(database, new)
    var_table      = dismod_at.get_table_dict(connection, 'var')
    fit_var_table  = dismod_at.get_table_dict(connection, 'fit_var')
@@ -624,8 +624,8 @@ def main() :
    ] :
       #
       # alpha
-      new            = False
       database       = f'{result_dir}/{fit_dir}/dismod.db'
+      new            = False
       connection     = dismod_at.create_connection(database, new)
       var_table      = dismod_at.get_table_dict(connection, 'var')
       fit_var_table  = dismod_at.get_table_dict(connection, 'fit_var')

@@ -226,8 +226,8 @@ def main() :
          file_path = f'{fit_dir}/{subdir}/{name}'
          assert os.path.exists(file_path)
    #
-   new      = False
    file_name = f'{fit_dir}/n0/dismod.db'
+   new      = False
    connection = dismod_at.create_connection(file_name, new)
    tbl_name   = 'bnd_mulcov'
    bnd_mulcov_table = dismod_at.get_table_dict(connection, tbl_name)

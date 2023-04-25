@@ -1378,8 +1378,8 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    #
    # root_node_table
    root_node_table = dict()
-   new          = False
    database     = f'{fit_dir}/root_node.db'
+   new          = False
    connection   = dismod_at.create_connection(database, new)
    for name in [ 'mulcov', 'age', 'time', 'covariate' ] :
       root_node_table[name] = dismod_at.get_table_dict(
@@ -1561,8 +1561,8 @@ def fit(fit_dir, max_node_depth = None) :
    create_all_node_database(fit_dir, age_grid, time_grid, covariate_table)
    #
    # node_table
-   new          = False
    database     = f'{fit_dir}/root_node.db'
+   new          = False
    connection   = dismod_at.create_connection(database, new)
    node_table  = dismod_at.get_table_dict(connection, 'node')
    connection.close()
