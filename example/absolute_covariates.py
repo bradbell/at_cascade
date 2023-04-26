@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin_parent absolute_covariates}
@@ -509,8 +509,9 @@ def main() :
    root_node_db(root_node_database)
    #
    # connection
-   new          = False
-   connection   = dismod_at.create_connection(root_node_database, new)
+   connection   = dismod_at.create_connection(
+      root_node_database, new = False, readonly = False
+   )
    #
    # avgint_table
    # also erase table in root node database
@@ -527,6 +528,9 @@ def main() :
    age_id_list  = list( range( len(age_table) ) )
    time_id_list = list( range( len(age_table) ) )
    omega_grid   = { 'age': age_id_list, 'time' : time_id_list }
+   #
+   # connection
+   connection.close()
    #
    # n_split
    n_split = len( split_reference_list )

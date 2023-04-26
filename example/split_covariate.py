@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin_parent split_covariate}
@@ -525,13 +525,15 @@ def main(refit_split) :
    root_node_db(root_node_database)
    #
    # omega_grid
-   new          = False
-   connection   = dismod_at.create_connection(root_node_database, new)
+   connection   = dismod_at.create_connection(
+      root_node_database, new = False, readonly = True
+   )
    age_table    = dismod_at.get_table_dict(connection, 'age')
    time_table   = dismod_at.get_table_dict(connection, 'time')
    age_id_list  = list( range( len(age_table) ) )
    time_id_list = list( range( len(age_table) ) )
    omega_grid   = { 'age': age_id_list, 'time' : time_id_list }
+   connection.close()
    #
    # n_split
    n_split  = len( split_reference_list )
@@ -574,8 +576,9 @@ def main(refit_split) :
    #
    # avgint_table
    # also erase avgint table in root node database
-   new             = False
-   connection      = dismod_at.create_connection(root_node_database, new)
+   connection      = dismod_at.create_connection(
+      root_node_database, new = False, readonly = False
+   )
    avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
    empty_table     = list()
    message         = 'erase avgint table'
@@ -606,8 +609,9 @@ def main(refit_split) :
    #
    # fit_iota, fit_alpha, fit_reference_income
    fit_node_database = f'{result_dir}/n0/dismod.db'
-   new               = False
-   connection        = dismod_at.create_connection(fit_node_database, new)
+   connection        = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = True
+   )
    var_table         = dismod_at.get_table_dict(connection, 'var')
    fit_var_table     = dismod_at.get_table_dict(connection, 'fit_var')
    rate_table        = dismod_at.get_table_dict(connection, 'rate')
@@ -632,8 +636,9 @@ def main(refit_split) :
       shift_database    = f'{result_dir}/n0/female/dismod.db'
    else :
       shift_database    = f'{result_dir}/n0/female/n1/dismod.db'
-   new               = False
-   connection        = dismod_at.create_connection(shift_database, new)
+   connection        = dismod_at.create_connection(
+      shift_database, new = False, readonly = True
+   )
    rate_table        = dismod_at.get_table_dict(connection, 'rate')
    smooth_grid_table = dismod_at.get_table_dict(connection, 'smooth_grid')
    prior_table       = dismod_at.get_table_dict(connection, 'prior')

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin_parent max_fit_option}
@@ -420,8 +420,9 @@ def main() :
    #
    # avgint_table
    # also erase avgint table in root node database
-   new             = False
-   connection      = dismod_at.create_connection(root_node_database, new)
+   connection      = dismod_at.create_connection(
+      root_node_database, new = False, readonly = False
+   )
    avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
    empty_table     = list()
    message         = 'erase avgint table'
@@ -454,9 +455,11 @@ def main() :
       #
       # data_subset
       fit_database = f'{result_dir}/{fit_dir}/dismod.db'
-      new          = False
-      connection   = dismod_at.create_connection(fit_database, new)
+      connection   = dismod_at.create_connection(
+            fit_database, new = False, readonly = True
+      )
       data_subset  = dismod_at.get_table_dict(connection, 'data_subset')
+      connection.close()
       if fit_dir == 'n0' :
          assert len(data_subset) == 4 * max_fit_option
       elif fit_dir in [ 'n0/n1', 'n0/n2' ] :

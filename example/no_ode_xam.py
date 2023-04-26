@@ -672,8 +672,9 @@ def check_no_ode_fit(root_node_dir) :
    ] )
    #
    # connection
-   new        = False
-   connection = dismod_at.create_connection(no_ode_database, new)
+   connection = dismod_at.create_connection(
+      no_ode_database, new = False, readonly = True
+   )
    #
    # table
    table = dict()
@@ -804,8 +805,9 @@ def main() :
    #
    # avgint_table
    # also erase avgint table in root node database
-   new             = False
-   connection      = dismod_at.create_connection(root_node_database, new)
+   connection      = dismod_at.create_connection(
+      root_node_database, new = False, readonly = False
+   )
    avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
    empty_table     = list()
    message         = 'erase avgint table'
@@ -841,12 +843,14 @@ def main() :
    #
    # var_table, rate_table, smooth_grid_table
    fit_node_database = f'{result_dir}/n0/dismod.db'
-   new               = False
-   connection        = dismod_at.create_connection(fit_node_database, new)
+   connection        = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = True
+   )
    var_table         = dismod_at.get_table_dict(connection, 'var')
    rate_table        = dismod_at.get_table_dict(connection, 'rate')
    prior_table       = dismod_at.get_table_dict(connection, 'prior')
    smooth_grid_table = dismod_at.get_table_dict(connection, 'smooth_grid')
+   connection.close()
    #
    # smooth_id
    smooth_id = None

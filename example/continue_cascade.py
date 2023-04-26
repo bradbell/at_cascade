@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin_parent continue_cascade_xam}
@@ -377,8 +377,9 @@ def two_fit_goal_set_example(result_dir) :
    #
    # avgint_table
    # also erase avgint table in root node database
-   new             = False
-   connection      = dismod_at.create_connection(root_node_database, new)
+   connection      = dismod_at.create_connection(
+      root_node_database, new = False, readonly = False
+   )
    avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
    empty_table     = list()
    message         = 'erase avgint table'
@@ -432,8 +433,9 @@ def one_fit_goal_set_example(result_dir ) :
    #
    # avgint_table
    # also erase avgint table in root node database
-   new             = False
-   connection      = dismod_at.create_connection(root_node_database, new)
+   connection      = dismod_at.create_connection(
+      root_node_database, new = False, readonly = False
+   )
    avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
    empty_table     = list()
    message         = 'erase avgint table'

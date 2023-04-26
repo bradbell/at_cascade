@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin_parent mulcov_freeze}
@@ -579,8 +579,9 @@ def main() :
    #
    # avgint_table
    # also erase avgint table in root node database
-   new             = False
-   connection      = dismod_at.create_connection(root_node_database, new)
+   connection      = dismod_at.create_connection(
+      root_node_database, new = False, readonly = False
+   )
    avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
    empty_table     = list()
    message         = 'erase avgint table'
@@ -609,8 +610,9 @@ def main() :
    #
    # alpha_n1
    database       = f'{result_dir}/n0/n1/dismod.db'
-   new            = False
-   connection     = dismod_at.create_connection(database, new)
+   connection     = dismod_at.create_connection(
+      database, new = False, readonly = True
+   )
    var_table      = dismod_at.get_table_dict(connection, 'var')
    fit_var_table  = dismod_at.get_table_dict(connection, 'fit_var')
    connection.close()
@@ -625,8 +627,9 @@ def main() :
       #
       # alpha
       database       = f'{result_dir}/{fit_dir}/dismod.db'
-      new            = False
-      connection     = dismod_at.create_connection(database, new)
+      connection     = dismod_at.create_connection(
+            database, new = False, readonly = True
+      )
       var_table      = dismod_at.get_table_dict(connection, 'var')
       fit_var_table  = dismod_at.get_table_dict(connection, 'fit_var')
       connection.close()
