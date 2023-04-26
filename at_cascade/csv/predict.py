@@ -393,14 +393,16 @@ def predict_one(
    assert type( all_covariate_table[0] ) == dict
    #
    # all_option_table
-   new               = False
-   connection       = dismod_at.create_connection(all_node_database, new)
+   connection       = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
    connection.close()
    #
    # fit_covariate_table, integrand_table, node_table
-   new                 = False
-   connection          = dismod_at.create_connection(fit_node_database, new)
+   connection          = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = True
+   )
    fit_covariate_table = dismod_at.get_table_dict(connection, 'covariate')
    integrand_table     = dismod_at.get_table_dict(connection, 'integrand')
    node_table          = dismod_at.get_table_dict(connection, 'node')
@@ -504,8 +506,9 @@ def predict_one(
             avgint_table.append( copy.copy( avgint_row ) )
    #
    # connection
-   new        = False
-   connection = dismod_at.create_connection(fit_node_database, new)
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = False
+   )
    #
    # avgint table
    dismod_at.replace_table(connection, 'avgint', avgint_table)
@@ -534,8 +537,9 @@ def predict_one(
       dismod_at.system_command_prc(command, print_command = False )
       #
       # predict_table
-      new           = False
-      connection    = dismod_at.create_connection(fit_node_database, new)
+      connection    = dismod_at.create_connection(
+            fit_node_database, new = False, readonly = True
+      )
       predict_table = dismod_at.get_table_dict(connection, 'predict')
       connection.close()
       for pred_row in predict_table :
@@ -637,8 +641,9 @@ def predict_all(
    root_node_name = at_cascade.get_parent_node(root_node_db)
    #
    # node_table
-   new             = False
-   connection      = dismod_at.create_connection(root_node_db, new)
+   connection      = dismod_at.create_connection(
+      root_node_db, new = False, readonly = True
+   )
    node_table      = dismod_at.get_table_dict(connection, 'node')
    connection.close()
    #
@@ -651,10 +656,12 @@ def predict_all(
    node_split_set = { root_node_id }
    #
    # split_reference_table
-   new             = False
-   connection      = dismod_at.create_connection(all_node_db, new)
+   connection      = dismod_at.create_connection(
+      all_node_db, new = False, readonly = True
+   )
    split_reference_table = \
       dismod_at.get_table_dict(connection, 'split_reference')
+   connection.close()
    #
    # root_split_reference_id
    root_split_reference_id = 1
@@ -871,8 +878,9 @@ def predict_all(
       fit_node_dir           = fit_node_database[: index]
       #
       # fit_covariate_table
-      new                 = False
-      connection          = dismod_at.create_connection(fit_node_database, new)
+      connection          = dismod_at.create_connection(
+            fit_node_database, new = False, readonly = True
+      )
       fit_covariate_table = dismod_at.get_table_dict(connection, 'covariate')
       integrand_table     = dismod_at.get_table_dict(connection, 'integrand')
       connection.close()
