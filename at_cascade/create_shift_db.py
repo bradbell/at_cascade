@@ -381,8 +381,9 @@ def create_shift_db(
    predict_sample = not no_ode_fit
    #
    # all_table
-   new        = False
-   connection = dismod_at.create_connection(all_node_database, new)
+   connection = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
    all_table  = dict()
    for name in [
       'all_option',
@@ -399,8 +400,9 @@ def create_shift_db(
          shift_prior_std_factor = float( row['option_value'] )
    #
    # fit_table
-   new           = False
-   connection    = dismod_at.create_connection(fit_node_database, new)
+   connection    = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = True
+   )
    fit_table  = dict()
    for name in [
       'age',

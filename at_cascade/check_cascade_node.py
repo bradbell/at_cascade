@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin check_cascade_node}
@@ -109,8 +109,9 @@ def check_cascade_node(
    # END syntax
    #
    # tables
-   new        = False
-   connection = dismod_at.create_connection(fit_node_database, new)
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = True
+   )
    tables = dict()
    for name in [
       'age',
@@ -129,8 +130,9 @@ def check_cascade_node(
    )
    #
    # avgint table
-   new        = False
-   connection = dismod_at.create_connection(fit_node_database, new)
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = False
+   )
    message         = 'check_cascade_node: replace avgint table'
    tbl_name        = 'avgint'
    avgint_copy     = copy.copy( avgint_table )
@@ -143,16 +145,18 @@ def check_cascade_node(
    # predict_fit_var_table
    command = [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
    dismod_at.system_command_prc(command)
-   new        = False
-   connection = dismod_at.create_connection(fit_node_database, new)
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = True
+   )
    predict_fit_var_table = dismod_at.get_table_dict(connection, 'predict')
    connection.close()
    #
    # predict_sample_table
    command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
    dismod_at.system_command_prc(command)
-   new        = False
-   connection = dismod_at.create_connection(fit_node_database, new)
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = True
+   )
    predict_sample_table = dismod_at.get_table_dict(connection, 'predict')
    connection.close()
    #

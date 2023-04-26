@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_cov_reference}}
@@ -102,8 +102,9 @@ def get_cov_reference(
    assert type(shift_node_id) == int
    #
    # all_table
-   new              = False
-   connection       = dismod_at.create_connection(all_node_database, new)
+   connection       = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
    all_table        = dict()
    for tbl_name in [ 'all_option', 'split_reference' ] :
       all_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
@@ -116,8 +117,9 @@ def get_cov_reference(
       assert type(split_reference_id) == int
    #
    # fit_table
-   new        = False
-   connection = dismod_at.create_connection(fit_node_database, new)
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = True
+   )
    fit_table = dict()
    for tbl_name in [ 'option', 'data', 'node', 'covariate', ] :
       fit_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)

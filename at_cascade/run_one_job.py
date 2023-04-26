@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin run_one_job}
@@ -167,8 +167,9 @@ def run_one_job(
    end_child_job_id = job_table[run_job_id]['end_child_job_id']
    #
    # all_table
-   new         = False
-   connection  = dismod_at.create_connection(all_node_database, new)
+   connection  = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
    all_table = dict()
    for tbl_name in [
       'all_option',
@@ -267,8 +268,9 @@ def run_one_job(
    assert parent_node_name == node_table[fit_node_id]['node_name']
    #
    # connection
-   new        = False
-   connection = dismod_at.create_connection(fit_node_database, new)
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = False
+   )
    #
    # integrand_table
    integrand_table = dismod_at.get_table_dict(connection, 'integrand')

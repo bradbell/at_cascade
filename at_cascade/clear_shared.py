@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin clear_shared}
@@ -44,9 +44,11 @@ from multiprocessing import shared_memory
 def clear_shared(all_node_database) :
    #
    # shared_memory_prefix
-   new                  = False
-   connection           = dismod_at.create_connection(all_node_database, new)
+   connection           = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
    all_option_table     = dismod_at.get_table_dict(connection, 'all_option')
+   connection.close()
    shared_memory_prefix = ""
    for row in all_option_table :
       if row['option_name'] == 'shared_memory_prefix' :

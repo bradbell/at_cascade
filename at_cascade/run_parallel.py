@@ -98,9 +98,11 @@ job_status_abort = 5 # job is a descendant of a job that had an exception
 job_status_name  = [ 'wait', 'ready', 'run', 'done', 'error', 'abort' ]
 # ----------------------------------------------------------------------------
 def get_shared_memory_prefix(all_node_database) :
-   new                  = False
-   connection           = dismod_at.create_connection(all_node_database, new)
+   connection           = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
    all_option_table     = dismod_at.get_table_dict(connection, 'all_option')
+   connection.close()
    shared_memory_prefix = ""
    for row in all_option_table :
       if row['option_name'] == 'shared_memory_prefix' :
@@ -112,8 +114,9 @@ def get_result_database_dir(
 ) :
    #
    # all_option, node_split_table, split_reference_table
-   new              = False
-   connection       = dismod_at.create_connection(all_node_database, new)
+   connection       = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
    node_split_table = dismod_at.get_table_dict(connection, 'node_split')
    split_reference_table = \

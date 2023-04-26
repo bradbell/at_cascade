@@ -239,8 +239,9 @@ def avgint_parent_grid(
    # END syntax
    #
    # all_option_table
-   new        = False
-   connection = dismod_at.create_connection(all_node_database, new)
+   connection = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
    all_option_table       = dismod_at.get_table_dict(connection, 'all_option')
    node_split_table       = dismod_at.get_table_dict(connection, 'node_split')
    split_reference_table  = dismod_at.get_table_dict(
@@ -249,8 +250,9 @@ def avgint_parent_grid(
    connection.close()
    #
    # fit_tables
-   new           = False
-   connection    = dismod_at.create_connection(fit_node_database, new)
+   connection    = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = True
+   )
    fit_tables = dict()
    for name in [
       'age',
@@ -506,8 +508,9 @@ def avgint_parent_grid(
                   row_list.append( row )
    #
    # put new avgint table in fit_node_database
-   new           = False
-   connection    = dismod_at.create_connection(fit_node_database, new)
+   connection    = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = False
+   )
    command       = 'DROP TABLE IF EXISTS ' + tbl_name
    dismod_at.sql_command(connection, command)
    dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)

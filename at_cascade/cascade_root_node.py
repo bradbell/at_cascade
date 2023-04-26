@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin cascade_root_node}
@@ -132,8 +132,9 @@ def cascade_root_node(
    assert type(fit_type_list)      == list
    #
    # split_reference_table, all_option_table
-   new         = False
-   connection  = dismod_at.create_connection(all_node_database, new)
+   connection  = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
    split_reference_table = dismod_at.get_table_dict(
       connection, 'split_reference'
    )
@@ -172,8 +173,9 @@ def cascade_root_node(
       )
    #
    # node_table, covariate_table
-   new             = False
-   connection      = dismod_at.create_connection(root_fit_database, new)
+   connection      = dismod_at.create_connection(
+      root_fit_database, new = False, readonly = True
+   )
    node_table      = dismod_at.get_table_dict(connection, 'node')
    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
    avgint_table    = dismod_at.get_table_dict(connection, 'avgint')

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_fit_integrand}
@@ -47,8 +47,9 @@ def get_fit_integrand(
 ) :
    #
    # data_table
-   new  = False
-   connection = dismod_at.create_connection(fit_node_database, new)
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = True
+   )
    data_table = dismod_at.get_table_dict(connection, 'data')
    connection.close()
    #

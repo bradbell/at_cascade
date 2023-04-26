@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin omega_constraint}
@@ -109,8 +109,9 @@ def omega_constraint(
    # END syntax
    #
    # all_tables
-   new               = False
-   connection        = dismod_at.create_connection(all_node_database, new)
+   connection        = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
    all_tables = dict()
    for name in [
       'all_option',
@@ -135,8 +136,9 @@ def omega_constraint(
    n_omega_time = len( all_tables['omega_time_grid'] )
    #
    # connection
-   new           = False
-   connection    = dismod_at.create_connection(fit_node_database, new)
+   connection    = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = False
+   )
    #
    # fit_tables
    fit_tables   = dict()

@@ -200,8 +200,9 @@ def create_job_table(
    #
    # all_table
    all_table = dict()
-   new        = False
-   connection = dismod_at.create_connection(all_node_database, new)
+   connection = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
    tbl_list   =  [ 'all_option', 'split_reference', 'node_split' ]
    for name in tbl_list :
       all_table[name] = dismod_at.get_table_dict(connection, name)

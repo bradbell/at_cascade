@@ -189,8 +189,9 @@ def no_ode_fit(
    }
    #
    # root_table
-   new        = False
-   connection = dismod_at.create_connection(root_node_database, new)
+   connection = dismod_at.create_connection(
+      root_node_database, new = False, readonly = True
+   )
    root_table = dict()
    for name in [
       'avgint',
@@ -219,14 +220,16 @@ def no_ode_fit(
    )
    #
    # root_split_reference_id
-   new               = False
-   connection        = dismod_at.create_connection(all_node_database, new)
+   connection        = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
    all_option_table  = dismod_at.get_table_dict(connection, 'all_option')
    split_reference_table = \
       dismod_at.get_table_dict(connection, 'split_reference')
    cov_info = at_cascade.get_cov_info(
       all_option_table, root_table['covariate'], split_reference_table
    )
+   connection.close()
    root_split_reference_id = None
    if 'split_reference_id' in cov_info :
       root_split_reference_id = cov_info['split_reference_id']
@@ -257,8 +260,9 @@ def no_ode_fit(
    shutil.copyfile(root_node_database, no_ode_database)
    #
    # connection
-   new        = False
-   connection = dismod_at.create_connection(no_ode_database, new)
+   connection = dismod_at.create_connection(
+      no_ode_database, new = False, readonly = False
+   )
    #
    # log table
    create_empty_log_table(connection)
@@ -347,6 +351,9 @@ def no_ode_fit(
    #
    # move c_root_avgint -> avgint
    at_cascade.move_table(connection, 'c_root_avgint', 'avgint')
+   #
+   # connection
+   connection.close()
    #
    # hold_out_integrand
    # restore to original values in option table

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin continue_cascade}
@@ -79,15 +79,17 @@ def continue_cascade(
    assert type(fit_type_list)     == list
    #
    # node_table, covariate_table
-   new             = False
-   connection      = dismod_at.create_connection(fit_node_database, new)
+   connection      = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = True
+   )
    node_table      = dismod_at.get_table_dict(connection, 'node')
    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
    connection.close()
    #
    # split_reference_table, all_option, node_split_table
-   new              = False
-   connection       = dismod_at.create_connection(all_node_database, new)
+   connection       = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
    node_split_table = dismod_at.get_table_dict(connection, 'node_split')
    split_reference_table = \
@@ -156,8 +158,9 @@ def continue_cascade(
    end_child_job_id   = job_table[0]['end_child_job_id']
    #
    # connection
-   new        = False
-   connection = dismod_at.create_connection(fit_node_database, new)
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = False
+   )
    #
    # move avgint -> c_root_avgint
    at_cascade.move_table(connection, 'avgint', 'c_root_avgint')

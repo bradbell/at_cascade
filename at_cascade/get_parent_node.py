@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_parent_node}
@@ -39,8 +39,9 @@ def get_parent_node(
 # END syntax
 ) :
    # option_table
-   new              = False
-   connection       = dismod_at.create_connection(database, new)
+   connection       = dismod_at.create_connection(
+      database, new = False, readonly = True
+   )
    option_table     = dismod_at.get_table_dict(connection, 'option')
    connection.close()
    #
