@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
@@ -67,7 +67,6 @@ def main() :
    root_node_database  = 'root_node.db'
    #
    # connection
-   connection.close()
    new        = True
    connection = dismod_at.create_connection(root_node_database, new)
    #
@@ -172,6 +171,9 @@ def main() :
          avg = sum( bmi_list ) / len(bmi_list)
          #
          assert cov_reference_list[bmi_covariate_id] == avg
+   #
+   # connection
+   connection.close()
 main()
 print('get_cov_rererence: OK')
 sys.exit(0)

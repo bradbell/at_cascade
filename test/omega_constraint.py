@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
@@ -213,6 +213,7 @@ def main() :
       'rate',
    ] :
       table[table_name] = dismod_at.get_table_dict(connection, table_name)
+   connection.close()
    #
    # predict_row
    for predict_row in table['predict'] :

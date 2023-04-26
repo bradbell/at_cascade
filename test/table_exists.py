@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ---------------------------------------------------------------------------
 import os
 import sys
@@ -22,8 +22,9 @@ def main() :
    #
    # example.db
    file_name = 'example.db'
-   new       = True
-   connection     = dismod_at.create_connection(file_name, new)
+   connection     = dismod_at.create_connection(
+      file_name, new = True, readonly = False
+   )
    cursor         = connection.cursor()
    #
    # create table
