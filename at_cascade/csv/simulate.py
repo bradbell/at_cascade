@@ -392,7 +392,7 @@ meas_value
 ----------
 This float is the simulated measured value.
 The data will be generated with a normal distribution
-that has mean *mean_mean* and standard deviation *meas_std* .
+that has mean *meas_mean* and standard deviation *meas_std* .
 If the resulting measurement value would be less than zero,
 the value zero is used; i.e.,
 a censored normal is used to simulate the data.

@@ -561,6 +561,17 @@ integrand_name
 --------------
 This string is a dismod_at integrand name; e.g. ``Sincidence``.
 
+density_name
+------------
+This string is one of the following dismod_at density names:
+
+.. csv-table::
+
+   gaussian, cen_gaussian, log_gaussian, cen_log_gaussian
+   laplace,  cen_laplace,  log_laplace,  cen_log_laplace
+   students,            ,  log_students,
+
+
 node_name
 ---------
 This string identifies the node corresponding to this data point.
@@ -595,6 +606,16 @@ This float is the standard deviation of the measurement noise
 for this data point.
 All the data points are modeled using a censored Gaussian distribution.
 The standard deviation is before the censoring.
+
+eta
+---
+This float is the offset in the log transformation for the log densities
+(it can be empty if this is not a log density).
+
+nu
+--
+This float is the degrees of freedom for the students densities
+(it can be empty if this is not a students density).
 
 hold_out
 --------
@@ -1034,13 +1055,17 @@ def create_root_node_database(fit_dir) :
       # row
       row['node']       = row['node_name']
       row['integrand']  = row['integrand_name']
+      row['density']    = row['density_name']
+      if row['eta'] != None :
+         row['eta'] = float( row['eta'] )
+      if row['nu'] != None :
+         row['nu']  = float( row['eta'] )
       row['age_lower']  = age_lower
       row['age_upper']  = age_lower
       row['time_lower'] = time_lower
       row['time_upper'] = time_lower
       row['weight']     = ''
       row['subgroup']   = 'world'
-      row['density']    = 'cen_gaussian'
       row['sex']        = sex_name2value[sex]
       row['one']        = '1.0'
    #

@@ -29,6 +29,20 @@ Release Notes for 2023
 mm-dd
 *****
 
+05-03
+=====
+#. Add the following columns to the csv_fit data_in.csv table:
+   :ref:`csv_fit@Input Files@data_in.csv@density_name` ,
+   :ref:`csv_fit@Input Files@data_in.csv@eta` ,
+   :ref:`csv_fit@Input Files@data_in.csv@nu` .
+   **Warning** This is an API change because these columns must appear
+   in data.csv.
+   To get the same effect as before this change, add
+   ``,density,eta,nu`` to the end of the first line in data.csv and
+   ``,cen_gaussian,,`` to the end of the other lines in data.csv.
+
+#. The Data Density wish list item was removed.
+
 04-26
 =====
 In the examples, move the assignment to ``new`` from just before a call to
@@ -48,7 +62,7 @@ was changed to ::
 04-12
 =====
 #. Add :ref:`at_cascade@Install` instructions.
-#. Add the :ref:`wish_list@csv.fit@Data Density` wish list item.
+#. Add the Data Density wish list item.
 #. Remove separating the predictions form the fits because this
    wish list item has been completed.
 

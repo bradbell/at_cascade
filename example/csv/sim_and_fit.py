@@ -184,6 +184,9 @@ with the following exceptions:
    The weighted residuals can be multiplied by the
    meas_std to get the actual residuals.
 
+#. The :ref:`csv_fit@Input Files@data_in.csv@density_name` is set
+   to gaussian and eta, nu are set to the empty string; i.e., null.
+
 
 Automated Correctness Test
 **************************
@@ -432,6 +435,9 @@ def fit(sim_dir, fit_dir) :
       else :
          row_join['integrand_name'] == 'prevalence'
          row_in['hold_out'] = '0'
+      row_in[ 'density_name' ] = 'gaussian'
+      row_in[ 'eta' ]          = ''
+      row_in[ 'nu' ]           = ''
       #
       table.append( row_in )
    at_cascade.csv.write_table(

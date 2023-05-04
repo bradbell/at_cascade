@@ -98,15 +98,16 @@ one,meas_noise,Sincidence,,1e-3
 # data_in.csv
 # The 0.00 meas_value in this table gets replaced
 header  = 'data_id,integrand_name,node_name,sex,age_lower,age_upper,'
-header += 'time_lower,time_upper,meas_value,meas_std,hold_out'
+header += 'time_lower,time_upper,meas_value,meas_std,hold_out,'
+header += 'density_name,eta,nu'
 csv_file['data_in.csv'] = header + \
 '''
-0,Sincidence,n0,female,0,10,1990,2000,0.00,1e-4,0
-0,Sincidence,n0,male,0,10,1990,2000,0.00,1e-4,0
-1,Sincidence,n1,female,10,20,2000,2010,0.00,1e-4,0
-1,Sincidence,n1,male,10,20,2000,2010,0.00,1e-4,0
-2,Sincidence,n2,female,20,30,2010,2020,0.00,1e-4,0
-2,Sincidence,n2,male,20,30,2010,2020,0.00,1e-4,0
+0,Sincidence,n0,female,0,10,1990,2000,0.00,1e-4,0,gaussian,,
+0,Sincidence,n0,male,0,10,1990,2000,0.00,1e-4,0,gaussian,,
+1,Sincidence,n1,female,10,20,2000,2010,0.00,1e-4,0,gaussian,,
+1,Sincidence,n1,male,10,20,2000,2010,0.00,1e-4,0,gaussian,,
+2,Sincidence,n2,female,20,30,2010,2020,0.00,1e-4,0,gaussian,,
+2,Sincidence,n2,male,20,30,2010,2020,0.00,1e-4,0,gaussian,,
 '''
 
 #

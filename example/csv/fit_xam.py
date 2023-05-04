@@ -187,15 +187,16 @@ The measurement standard deviation is 0.001 (during the fitting) and
 none of the data is held out.
 {xrst_code py}"""
 header  = 'data_id, integrand_name, node_name, sex, age_lower, age_upper, '
-header += 'time_lower, time_upper, meas_value, meas_std, hold_out'
+header += 'time_lower, time_upper, meas_value, meas_std, hold_out, '
+header += 'density_name, eta, nu'
 csv_file['data_in.csv'] = header + \
 '''
-0, Sincidence, n0, female, 0,  10, 1990, 2000, 0.0000, 0.001, 0
-1, Sincidence, n0, male,   0,  10, 1990, 2000, 0.0000, 0.001, 0
-2, Sincidence, n1, female, 10, 20, 2000, 2010, 0.0000, 0.001, 0
-3, Sincidence, n1, male,   10, 20, 2000, 2010, 0.0000, 0.001, 0
-4, Sincidence, n2, female, 20, 30, 2010, 2020, 0.0000, 0.001, 0
-5, Sincidence, n2, male,   20, 30, 2010, 2020, 0.0000, 0.001, 0
+0, Sincidence, n0, female, 0,  10, 1990, 2000, 0.0000, 0.001, 0, gaussian, ,
+1, Sincidence, n0, male,   0,  10, 1990, 2000, 0.0000, 0.001, 0, gaussian, ,
+2, Sincidence, n1, female, 10, 20, 2000, 2010, 0.0000, 0.001, 0, gaussian, ,
+3, Sincidence, n1, male,   10, 20, 2000, 2010, 0.0000, 0.001, 0, gaussian, ,
+4, Sincidence, n2, female, 20, 30, 2010, 2020, 0.0000, 0.001, 0, gaussian, ,
+5, Sincidence, n2, male,   20, 30, 2010, 2020, 0.0000, 0.001, 0, gaussian, ,
 '''
 csv_file['data_in.csv'] = csv_file['data_in.csv'].replace(' ', '')
 """{xrst_code}
