@@ -11,6 +11,9 @@ Release Notes for at_cascade
 -----------------------------------------------------------------------------
 {xrst_begin 2023}
 {xrst_spell
+   xam
+   shutil
+   copyfileobj
    py
    mm
    dd
@@ -28,6 +31,17 @@ Release Notes for 2023
 
 mm-dd
 *****
+
+05-10
+=====
+There was a problem with the csv fit_xam  when
+:ref:`csv_fit_xam@breakup_computation` was true.
+To be specific, multiple copies of the header appeared in the
+:ref:`csv_predict@Output Files@fit_predict.csv` and
+:ref:`csv_predict@Output Files@sam_predict.csv` files.
+This has been fixed by using the csv DictReader and DictWriter routines
+instead of the shutil copyfileobj routine.
+
 
 05-03
 =====

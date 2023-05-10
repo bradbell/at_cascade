@@ -7,6 +7,7 @@ import sys
 import time
 import math
 import shutil
+import csv
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
@@ -269,12 +270,18 @@ def computation(fit_dir) :
       # fit_predict.csv, sam_predict.csv
       for prefix in [ 'fit' , 'sam' ] :
          file_name = f'{fit_dir}/{prefix}_predict.csv'
-         destination = open(file_name, 'wb')
+         file_out  = open(file_name, 'w')
+         writer    = None
          for start_job_name in [ 'n0.both', 'n0.female', 'n0.male' ] :
             file_name = f'{fit_dir}/predict/{prefix}_{start_job_name}.csv'
-            source   = open(file_name, 'rb')
-            shutil.copyfileobj(source, destination)
-         destination.close()
+            file_in   = open(file_name, 'r')
+            reader    = csv.DictReader(file_in)
+            for row in reader :
+               if writer == None :
+                  writer = csv.DictWriter(file_out, fieldnames = row.keys() )
+                  writer.writeheader()
+               writer.writerow(row)
+         file_out.close()
    return
 #
 # main
