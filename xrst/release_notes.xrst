@@ -34,7 +34,8 @@ mm-dd
 
 05-11
 =====
-Improve the :ref:`get_parent_node-name` documentation.
+#. Improve the :ref:`get_parent_node-name` documentation.
+#. Define :ref:`csv_module@sex_name2value` in the at_cascade.csv name space.
 
 05-10
 =====

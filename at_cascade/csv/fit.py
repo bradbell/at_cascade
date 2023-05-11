@@ -488,10 +488,8 @@ covariate
 this string is the name of the covariate for this multiplier.
 The covariate
 ``one`` is an absolute covariate that is always equal to one and
-``sex`` is the splitting covariate and has the following values:
-{xrst_code py}'''
-sex_name2value = { 'female' : -0.5, 'both' : 0.0, 'male' : 0.5 }
-'''{xrst_code}
+``sex`` is the splitting covariate
+( ``sex`` is sex name in :ref:`csv_module@sex_name2value` ).
 All the other covariates are specified by
 :ref:`csv_fit@Input Files@covariate.csv`.
 If one of these covariates appears in the
@@ -578,7 +576,7 @@ This string identifies the node corresponding to this data point.
 
 sex
 ---
-This string is the sex for this data point.
+This string is the sex name for this data point.
 
 age_lower
 ---------
@@ -698,7 +696,7 @@ the times in covariate.csv.
 
 sex
 ---
-is female, both, or male.
+is the sex name for this data point; i.e., female, both, or male.
 
 covariate_names
 ---------------
@@ -1066,7 +1064,7 @@ def create_root_node_database(fit_dir) :
       row['time_upper'] = time_lower
       row['weight']     = ''
       row['subgroup']   = 'world'
-      row['sex']        = sex_name2value[sex]
+      row['sex']        = at_cascade.csv.sex_name2value[sex]
       row['one']        = '1.0'
    #
    # integrand_table
@@ -1215,7 +1213,7 @@ def create_root_node_database(fit_dir) :
       weight_name = f'weight_{index}'
       #
       (node_name, sex_name, covariate_name) = key
-      sex_value = sex_name2value[sex_name]
+      sex_value = at_cascade.csv.sex_name2value[sex_name]
       #
       row = {
          'node_name'      : node_name       ,

@@ -58,7 +58,8 @@ A float value is a string that represents a floating point number.
 
 Sex
 ---
-A sex value is either ``female`` , ``both``, or ``male``.
+A sex, or sex_name, is one of the following:
+``female`` , ``both``, or ``male``.
 
 Boolean
 -------
@@ -77,6 +78,13 @@ Distributions
 =============
 Unless other wise specified, the mean and standard deviations that
 simulate refers to are for a normal distribution.
+
+sex_name2value
+**************
+The following dictionary maps each sex name to the corresponding sex value
+{xrst_code py}'''
+sex_name2value = { 'female' : -0.5, 'both' : 0.0, 'male' : 0.5 }
+'''{xrst_code}
 
 Routines
 ********
