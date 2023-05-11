@@ -8,11 +8,15 @@
 Get Parent Node Name From Option Table
 ######################################
 
-Syntax
-******
+PROTOTYPE
+*********
 {xrst_literal
-   # BEGIN syntax
-   # END syntax
+   # BEGIN_PROTOTYPE
+   # END_PROTOTYPE
+}
+{xrst_literal
+   # BEGIN_RETURN
+   # END_RETURN
 }
 
 database
@@ -21,7 +25,7 @@ This is a dismod_at database.
 
 parent_node_name
 ****************
-The return value *parent_node_name* is the *database* option table
+is the *database* option table
 *option_value* for the row where *option_name* is ``parent_node_name``.
 An assert will be generated if no such *option_name* is found in the
 option table.
@@ -31,13 +35,11 @@ option table.
 '''
 import dismod_at
 # ----------------------------------------------------------------------------
-def get_parent_node(
-# BEGIN syntax
-# parent_node_name = at_cascade.get_parent_node(
-   database = None
-# )
-# END syntax
-) :
+# BEGIN_PROTOTYPE
+def get_parent_node(database = None) :
+   assert type(database) == str
+# END_PROTOTYPE
+   #
    # option_table
    connection       = dismod_at.create_connection(
       database, new = False, readonly = True
@@ -53,4 +55,7 @@ def get_parent_node(
    msg = 'Cannot find parent_node_name row in option table in ' + database
    assert not parent_node_name is None, msg
    #
+   # BEGIN_RETURN
+   assert type(parent_node_name) == str
    return parent_node_name
+   # END_RETURN

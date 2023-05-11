@@ -32,6 +32,10 @@ Release Notes for 2023
 mm-dd
 *****
 
+05-11
+=====
+Improve the :ref:`get_parent_node-name` documentation.
+
 05-10
 =====
 There was a problem with the csv fit_xam  when
