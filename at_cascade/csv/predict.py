@@ -379,6 +379,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
 def predict_one(
    fit_title             ,
    fit_dir               ,
+   sim_dir               ,
    fit_node_database     ,
    fit_node_id           ,
    all_node_database     ,
@@ -386,11 +387,17 @@ def predict_one(
 ) :
    assert type(fit_title) == str
    assert type(fit_dir) == str
+   assert sim_dir == None or type(sim_dir) == str
    assert type(fit_node_database) == str
    assert type(fit_node_id) == int
    assert type(all_node_database) == str
    assert type(all_covariate_table) == list
    assert type( all_covariate_table[0] ) == dict
+   #
+   # fit_node_database
+   # add the truth_var table to this database
+   if type(sim_dir) == str :
+      set_truth(sim_dir, fit_node_database)
    #
    # all_option_table
    connection       = dismod_at.create_connection(
@@ -519,6 +526,8 @@ def predict_one(
       prefix_list.append( 'fit' )
    if at_cascade.table_exists(connection, 'sample') :
       prefix_list.append( 'sam' )
+   if sim_dir != None :
+      prefix_list.append( 'tru' )
    connection.close()
    #
    # fit_node_dir
@@ -532,7 +541,10 @@ def predict_one(
       command = [ 'dismod_at', fit_node_database, 'predict' ]
       if prefix == 'fit' :
          command.append( 'fit_var' )
+      elif prefix == 'tru' :
+         command.append( 'truth_var' )
       else :
+         assert prefix == 'sam'
          command.append( 'sample' )
       dismod_at.system_command_prc(command, print_command = False )
       #
@@ -621,12 +633,14 @@ def predict_one(
 # This routine assues that global_option_value has been set.
 #
 def predict_all(
-   fit_dir, covariate_table, fit_goal_set, start_job_name, max_job_depth
+   fit_dir, sim_dir,
+   covariate_table, fit_goal_set, start_job_name, max_job_depth
 ) :
-   assert type(fit_dir) == str
-   assert type(covariate_table) == list
-   assert type( covariate_table[0] ) == dict
-   assert type(fit_goal_set) == set
+   assert type(fit_dir)                    == str
+   assert sim_dir == None or type(sim_dir) == str
+   assert type(covariate_table)            == list
+   assert type( covariate_table[0] )       == dict
+   assert type(fit_goal_set)               == set
    #
    # max_number_cpu
    max_number_cpu = global_option_value['max_number_cpu']
@@ -800,6 +814,7 @@ def predict_all(
             args = (
                fit_title         ,
                fit_dir           ,
+               sim_dir           ,
                fit_node_database ,
                fit_node_id       ,
                all_node_db       ,
@@ -828,10 +843,11 @@ def predict_all(
             predict_one(
                fit_title             = args[0]          ,
                fit_dir               = args[1]          ,
-               fit_node_database     = args[2]           ,
-               fit_node_id           = args[3]           ,
-               all_node_database     = args[4]           ,
-               all_covariate_table   = args[5]           ,
+               sim_dir               = args[2]          ,
+               fit_node_database     = args[3]           ,
+               fit_node_id           = args[4]           ,
+               all_node_database     = args[5]           ,
+               all_covariate_table   = args[6]           ,
             )
             n_done = n_done_queue.get(block = True) + 1
             print( f'{n_done}/{n_job_queue} {job_description}' )
@@ -866,9 +882,10 @@ def predict_all(
       value = row['split_reference_value']
       sex_value2name[value] = name
    #
-   # sam_predict_table, fit_predict_tale
+   # sam_predict_table, fit_predict_tale, tru_predict
    sam_predict_table = list()
    fit_predict_table = list()
+   tru_predict_table = list()
    #
    # fit_node_database
    for fit_node_database in fit_node_database_list :
@@ -886,7 +903,11 @@ def predict_all(
       connection.close()
       #
       # prefix
-      for prefix in [ 'fit', 'sam' ] :
+      if sim_dir == None :
+         prefix_list = [ 'fit', 'sam' ]
+      else :
+         prefix_list = [ 'tru', 'fit', 'sam' ]
+      for prefix in prefix_list :
          #
          # predict_table
          file_name     = f'{fit_node_dir}/{prefix}_predict.csv'
@@ -944,11 +965,12 @@ def predict_all(
    at_cascade.csv.write_table(file_name, sam_predict_table )
 # ----------------------------------------------------------------------------
 # BEGIN_PREDICT
-# at_cascadde.csv.fit(fit_dir, start_job_name, max_job_depth)
-def predict(fit_dir, start_job_name = None, max_job_depth = None) :
-   assert type(fit_dir) == str
+# at_cascadde.csv.fit(fit_dir, sim_dir, start_job_name, max_job_depth)
+def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
+   assert type(fit_dir)  == str
+   assert sim_dir        == None or type(sim_dir) == str
    assert start_job_name == None or type(start_job_name) == str
-   assert max_job_depth == None or type(max_job_depth) == int
+   assert max_job_depth  == None or type(max_job_depth) == int
 # END_PREDICT
    #
    # top_node_name
@@ -982,6 +1004,6 @@ def predict(fit_dir, start_job_name = None, max_job_depth = None) :
    covariate_table = at_cascade.csv.read_table(file_name)
    #
    # predict
-   predict_all(
-      fit_dir, covariate_table, fit_goal_set, start_job_name, max_job_depth
+   predict_all(fit_dir, sim_dir,
+      covariate_table, fit_goal_set, start_job_name, max_job_depth
    )

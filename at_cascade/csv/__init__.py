@@ -115,6 +115,7 @@ from .fit              import fit
 from .join_file        import join_file
 from .predict          import predict
 from .read_table       import read_table
+from .set_truth        import set_truth
 from .simulate         import simulate
 from .write_table      import write_table
 # END_SORT_THIS_LINE_MINUS_1
