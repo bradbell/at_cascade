@@ -32,6 +32,18 @@ Release Notes for 2023
 mm-dd
 *****
 
+05-12
+=====
+#. The random effects were not being used properly in the
+   :ref:`csv_simulate-name` routine.
+   To be specific, the random effect for the node being fit,
+   was used for all the levels above the node being fit.
+   This has been fixed.
+#. The :ref:`csv_predict-name` routine was running parallel code
+   when :ref:`csv_predict@Input Files@option_predict.csv@max_number_cpu`
+   was one. This has been changed so that the execution stream simpler
+   when only one processor is used.
+
 05-11
 =====
 #. Improve the :ref:`get_parent_node-name` documentation.

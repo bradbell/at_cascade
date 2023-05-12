@@ -708,11 +708,17 @@ def get_rate_fun_dict(
       # effect
       # random effects
       effect         = 0.0
-      parent_node    = parent_node_dict[node_name]
-      while parent_node != '' :
-         effect     += \
-            random_effect_node_rate_sex[node_name][rate_name][sex]
-         parent_node = parent_node_dict[parent_node]
+      ancestor_node  = node_name
+      while ancestor_node != '' :
+         if sex == 'both' :
+            temp = random_effect_node_rate_sex[ancestor_node][rate_name]
+            term = ( temp['female'] + temp['male'] ) / 2.0
+         else :
+            term = random_effect_node_rate_sex[ancestor_node][rate_name][sex]
+         effect += term
+         ancestor_node = parent_node_dict[ancestor_node]
+         if ancestor_node == '' :
+            assert term == 0.0
       #
       # effect
       # covariate and sex effects
