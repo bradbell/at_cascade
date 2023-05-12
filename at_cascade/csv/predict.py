@@ -882,10 +882,14 @@ def predict_all(
       value = row['split_reference_value']
       sex_value2name[value] = name
    #
-   # sam_predict_table, fit_predict_tale, tru_predict
-   sam_predict_table = list()
-   fit_predict_table = list()
-   tru_predict_table = list()
+   # prefix_predict_table
+   prefix_predict_table = { 'tru':list(), 'fit':list(), 'sam':list() }
+   #
+   # prefix_list
+   if sim_dir == None :
+      prefix_list = [ 'fit', 'sam' ]
+   else :
+      prefix_list = [ 'tru', 'fit', 'sam' ]
    #
    # fit_node_database
    for fit_node_database in fit_node_database_list :
@@ -903,10 +907,6 @@ def predict_all(
       connection.close()
       #
       # prefix
-      if sim_dir == None :
-         prefix_list = [ 'fit', 'sam' ]
-      else :
-         prefix_list = [ 'tru', 'fit', 'sam' ]
       for prefix in prefix_list :
          #
          # predict_table
@@ -943,40 +943,20 @@ def predict_all(
                   cov_value = sex_value2name[cov_value]
                row_out[covariate_name] = cov_value
             #
-            # sam_predict_table, fit_predict_table
-            if prefix == 'tru' :
-               tru_predict_table.append( row_out )
-            elif prefix == 'fit' :
-               fit_predict_table.append( row_out )
-            else :
-               assert prefix == 'sam'
-               sam_predict_table.append( row_out )
+            # prefix_predict_table
+            prefix_predict_table[prefix].append( row_out )
    #
    # fit_dir/predict
    if start_job_name != None :
       os.makedirs( f'{fit_dir}/predict', exist_ok = True )
    #
-   # tru_predict.csv
-   if sim_dir != None :
+   # prefix_predict.csv
+   for prefix in prefix_list :
       if start_job_name == None :
-         file_name    = f'{fit_dir}/tru_predict.csv'
+         file_name    = f'{fit_dir}/{prefix}_predict.csv'
       else :
-         file_name    = f'{fit_dir}/predict/tru_{start_job_name}.csv'
-      at_cascade.csv.write_table(file_name, tru_predict_table )
-   #
-   # fit_predict.csv
-   if start_job_name == None :
-      file_name    = f'{fit_dir}/fit_predict.csv'
-   else :
-      file_name    = f'{fit_dir}/predict/fit_{start_job_name}.csv'
-   at_cascade.csv.write_table(file_name, fit_predict_table )
-   #
-   # sam_predict.csv
-   if start_job_name == None :
-      file_name    = f'{fit_dir}/sam_predict.csv'
-   else :
-      file_name    = f'{fit_dir}/predict/sam_{start_job_name}.csv'
-   at_cascade.csv.write_table(file_name, sam_predict_table )
+         file_name    = f'{fit_dir}/predict/{prefix}_{start_job_name}.csv'
+      at_cascade.csv.write_table(file_name, prefix_predict_table[prefix] )
 # ----------------------------------------------------------------------------
 # BEGIN_PREDICT
 # at_cascadde.csv.fit(fit_dir, sim_dir, start_job_name, max_job_depth)
