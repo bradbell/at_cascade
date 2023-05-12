@@ -1,6 +1,10 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
+import os
+import at_cascade
+import dismod_at
+#
 def set_truth(sim_dir, fit_node_database) :
    assert type(sim_dir) == str
    assert type(fit_node_database) == str
@@ -47,10 +51,10 @@ def set_truth(sim_dir, fit_node_database) :
       'omega' : 'mtother'    ,
    }
    #
-   # simulation_table, var_id2simulation_id
-   simulation_table        = list()
-   var_id2simulation_id    = list()
-   simulation_id           = -1
+   # simulate_table, var_id2simulate_id
+   simulate_table        = list()
+   var_id2simulate_id    = list()
+   simulate_id           = -1
    for var_row in fit_table['var'] :
       #
       # var_type
@@ -59,12 +63,12 @@ def set_truth(sim_dir, fit_node_database) :
       assert not var_type.startswith('mulcov_meas_')
       #
       if var_type != 'rate' :
-         var_id2simulation_id.append( 'None' )
+         var_id2simulate_id.append( None )
       else :
          # node_name
          node_name      = fit_table['node'][ var_row['node_id'] ]['node_name']
          if node_name != fit_node_name :
-            var_id2simulation_id.append( 'None' )
+            var_id2simulate_id.append( None )
          else :
             #
             # age, time, rate_name
@@ -78,10 +82,10 @@ def set_truth(sim_dir, fit_node_database) :
                # This is really OK, just want a heads up in this case
                assert age == 0.0
             #
-            simulation_id += 1
-            integrand_name = rate2integrand[ 'rate_name']
+            simulate_id += 1
+            integrand_name = rate2integrand[ rate_name]
             sim_row = {
-               'simulation_id'  : simulation_id  ,
+               'simulate_id'    : simulate_id  ,
                'integrand_name' : integrand_name ,
                'node_name'      : node_name      ,
                'sex'            : sex_name       ,
@@ -92,23 +96,23 @@ def set_truth(sim_dir, fit_node_database) :
                'meas_std_cv'    : 0.0            ,
                'meas_std_min'   : 1.0            ,
             }
-            simulation_table.append( sim_row )
-            var_id2simulation_id.append( simulation_id )
-   assert len( fit_table['var'] ) == len( var_id2simulation_id )
+            simulate_table.append( sim_row )
+            var_id2simulate_id.append( simulate_id )
+   assert len( fit_table['var'] ) == len( var_id2simulate_id )
    #
    # save_list
-   save_list = [ 'simulation', 'option_sim_out', 'random_effects', 'data_sim' ]
+   save_list = [ 'simulate', 'option_sim_out', 'random_effect', 'data_sim' ]
    #
    # save files
    for name in save_list :
-         src = f'{sim_dir}/{name}.csv'
-         dst = f'{sim_dir}/save.{name}.csv'
-         os.rename(src, dst)
+      src = f'{sim_dir}/{name}.csv'
+      dst = f'{sim_dir}/save.{name}.csv'
+      os.rename(src, dst)
    #
-   # simulation.csv
+   # simulate.csv
    at_cascade.csv.write_table(
-      file_name = f'{sim_dir}/simulation.csv' ,
-      table     = simulation_table
+      file_name = f'{sim_dir}/simulate.csv' ,
+      table     = simulate_table
    )
    at_cascade.csv.simulate(sim_dir)
    #
@@ -125,35 +129,43 @@ def set_truth(sim_dir, fit_node_database) :
       # truth_var_value
       truth_var_value = None
       #
-      # simulation_id
-      simulation_id = var_id2simulation_id[var_id]
-      if simulation_id != None :
+      # simulate_id, covariate_set
+      simulate_id   = var_id2simulate_id[var_id]
+      covariate_set = dict()
+      if simulate_id != None :
          # this is a fixed effect rate value
-         truth_var_value = sim_table['data_sim'][simulation_id]['meas_mean']
+         truth_var_value = sim_table['data_sim'][simulate_id]['meas_mean']
       else :
          #
          # var_type, age_id, time_id
          var_type     = var_row['var_type']
          age_id       = var_row['age_id']
          time_id      = var_row['time_id']
-         integrand_id = var_row['integrand_id']
          covariate_id = var_row['covariate_id']
-         assert age_id == 0
-         assert time_id == 0
          #
          if var_type == 'rate' :
             # this is a random effect rate value
             truth_var_value = 0.0
          elif var_type == 'mulcov_rate_value' :
+            #
+            # rate_name, covariate_name
             rate_name      = fit_table['rate'][rate_id]['rate_name']
             covariate_name = \
                fit_table['covariate'][covariate_id]['covariate_name']
+            #
+            # truth_var_value
             for row in sim_table['multiplier_sim'] :
                if row['rate_name'] == rate_name :
                   if row['covariate_or_sex'] == covariate_name :
                      truth_var_value = row['multiplier_truth']
+            #
+            # covariate_set
+            if rate_name not in covariate_set :
+               covariate_set[rate_name] = set()
+            assert covariate_name not in covariate_set[rate_name]
+            covariate_set[rate_name].add( covariate_name )
       assert truth_var_value != None
-      truth_var_table.append(truth_var_value)
+      truth_var_table.append( { 'truth_var_value' : truth_var_value} )
    #
    # restore files
    for name in save_list :
@@ -167,6 +179,18 @@ def set_truth(sim_dir, fit_node_database) :
    connection = dismod_at.create_connection(
       fit_node_database, new = False, readonly = False
    )
-   dismod_at.replace_table(
-         connection, table_name = 'truth_var', table_dict = truth_var_table
-   )
+   if at_cascade.table_exists(connection, table_name='truth_var') :
+      dismod_at.replace_table(
+         connection, tbl_name = 'truth_var', table_dict = truth_var_table
+      )
+   else :
+      row_list = list()
+      for row in truth_var_table :
+         row_list.append( [ row['truth_var_value'] ] )
+      dismod_at.create_table(
+         connection,
+         tbl_name = 'truth_var',
+         col_name = [ 'truth_var_value' ],
+         col_type = [ 'real' ],
+         row_list = row_list,
+      )

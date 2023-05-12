@@ -330,6 +330,7 @@ fit_file['option_predict.csv']  =  \
 '''name,value
 plot,true
 db2csv,true
+max_number_cpu,1
 '''
 #
 # fit_goal.csv
@@ -447,7 +448,7 @@ def fit(sim_dir, fit_dir) :
    #
    # fit, predict
    at_cascade.csv.fit(fit_dir)
-   at_cascade.csv.predict(fit_dir)
+   at_cascade.csv.predict(fit_dir, sim_dir)
    #
    # fit_predict_table
    fit_predict_table = at_cascade.csv.read_table(

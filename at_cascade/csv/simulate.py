@@ -487,7 +487,7 @@ def set_global_option_value(sim_dir, option_table) :
          (option_type, default) = option_default[name]
          global_option_value[name] = default
    #
-   # option_sim.csv
+   # option_sim_out.csv
    table = list()
    for name in global_option_value :
       value = global_option_value[name]
@@ -498,7 +498,7 @@ def set_global_option_value(sim_dir, option_table) :
             value = 'false'
       row = { 'name' : name , 'value' : value }
       table.append(row)
-   file_name = f'{sim_dir}/option_sim.csv'
+   file_name = f'{sim_dir}/option_sim_out.csv'
    at_cascade.csv.write_table(file_name, table)
    #
    assert type(global_option_value) == dict

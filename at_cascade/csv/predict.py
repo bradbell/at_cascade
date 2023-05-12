@@ -397,7 +397,7 @@ def predict_one(
    # fit_node_database
    # add the truth_var table to this database
    if type(sim_dir) == str :
-      set_truth(sim_dir, fit_node_database)
+      at_cascade.csv.set_truth(sim_dir, fit_node_database)
    #
    # all_option_table
    connection       = dismod_at.create_connection(
@@ -892,10 +892,10 @@ def predict_all(
       #
       # fit_node_dir
       index = fit_node_database.rindex('/')
-      fit_node_dir           = fit_node_database[: index]
+      fit_node_dir  = fit_node_database[: index]
       #
-      # fit_covariate_table
-      connection          = dismod_at.create_connection(
+      # fit_covariate_table, integrand_table
+      connection    = dismod_at.create_connection(
             fit_node_database, new = False, readonly = True
       )
       fit_covariate_table = dismod_at.get_table_dict(connection, 'covariate')
@@ -913,7 +913,7 @@ def predict_all(
          file_name     = f'{fit_node_dir}/{prefix}_predict.csv'
          predict_table =  at_cascade.csv.read_table(file_name)
          #
-         # row_in
+         # prefix_predict_table
          for row_in in predict_table :
             #
             # row_out
@@ -944,16 +944,30 @@ def predict_all(
                row_out[covariate_name] = cov_value
             #
             # sam_predict_table, fit_predict_table
-            if prefix == 'fit' :
+            if prefix == 'tru' :
+               tru_predict_table.append( row_out )
+            elif prefix == 'fit' :
                fit_predict_table.append( row_out )
             else :
+               assert prefix == 'sam'
                sam_predict_table.append( row_out )
+   #
+   # fit_dir/predict
+   if start_job_name != None :
+      os.makedirs( f'{fit_dir}/predict', exist_ok = True )
+   #
+   # tru_predict.csv
+   if sim_dir != None :
+      if start_job_name == None :
+         file_name    = f'{fit_dir}/tru_predict.csv'
+      else :
+         file_name    = f'{fit_dir}/predict/tru_{start_job_name}.csv'
+      at_cascade.csv.write_table(file_name, tru_predict_table )
    #
    # fit_predict.csv
    if start_job_name == None :
       file_name    = f'{fit_dir}/fit_predict.csv'
    else :
-      os.makedirs( f'{fit_dir}/predict', exist_ok = True )
       file_name    = f'{fit_dir}/predict/fit_{start_job_name}.csv'
    at_cascade.csv.write_table(file_name, fit_predict_table )
    #
