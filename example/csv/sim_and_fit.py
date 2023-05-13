@@ -6,6 +6,7 @@ import os
 import sys
 import time
 import shutil
+import math
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
@@ -15,25 +16,14 @@ import at_cascade
 {xrst_begin csv_sim_and_fit}
 {xrst_spell
    Sincidence
-   dage
-   dtime
    iter
-   meas
    std
-   sim
    pdf
+   exp
 }
 
 Example Simulating and Fitting Incidence From Prevalence Data
 #############################################################
-
-Shock in Incidence
-******************
-This example demonstrates inverting for a shock in true incidence (iota)
-from just prevalence measurements.
-To be specific, iota is constant and equal to 0.01
-except for ages between 40 and 60 and times between 1990 and 2000.
-During that special age time period, iota is equal to 0.1.
 
 Covariates
 **********
@@ -49,73 +39,56 @@ There are no covariates in this example.
 
 Age Time Grid
 *************
-This example uses the age-time grid below for the
-covariates, the data, and the iota rate.
-The omega and chi rates are constant and hence they
-are only specified at one age, time point.
-
-age-grid
-   0, 20, 35, 40, 45, 50, 55, 60, 65, 80, 100:
-   Note that this is the union to two grids, one at a 20 year
-   spacing and the other at 5 year spacing.
-   The dage standard deviations priors are the same all grid points
-   so a closer spacing allows for more change per year.
-
-time-grid
-   1980, 1988, 1990, 1992, 1994, 1996, 1998, 2000, 2002, 2010, 2020
-   Note that this is the union to two grids, one at a 10 year
-   spacing and the other at 2 year spacing.
-   The dtime standard deviations priors are the same all time points
-   so a closer spacing allows for more change per year.
-
+{xrst_code py}"""
+age_grid   = [ 0.0,  20.0, 50.0, 80.0, 100.0]
+time_grid  = [ 1980, 2000, 2020]
+"""{xrst_code}
 
 Node Tree
 *********
-The node tree set by  :ref:`csv_simulate@Input Files@node.csv` is
-
-::
-
-                n0
-          /-----/\-----\
-        n1              n2
+{xrst_literal
+   # BEGIN_NODE_FILE
+   # END_NODE_FILE
+}
 
 True Rates
 **********
-The true rates are the rate values used to simulate the data.
-For this example, the true value for other case mortality (omega) is 0.01
-and for excess mortality (chi) is 0.1.
+The only non-zero rates in this example are omega and iota.
+The true values for iota at node n0 and omega for all nodes are:
+{xrst_code py}"""
+true_iota_n0   = 0.01
+true_omega_all = 0.02
+"""{xrst_code}
 
-n0
-==
-The incidence rate (iota) depends on the node.
-The true value for node n0 as a function of age (a) and time (t) is
+True Prevalence
+***************
+Note that iota does not depend on age or time,
+and prevalence does not depend on omega.
+If *true_iota* is the true iota for a node, the corresponding
+true prevalence is the following funciton of age:
 
-.. math::
+   1 - exp( - *iota* * *age* )
 
-   \iota_0 (a, t) = \begin{cases}
-      0.1   & \R{if} \; a \in (40, 60) \; t \in (1990, 2000) \\
-      0.01  & \R{otherwise}
-   \end{cases}
-
-There are no covariates and n0 is the root node,
-hence this is the same as the rates in the
-:ref:`csv_simulate@Input Files@no_effect_rate.csv` file.
+random_seed
+***********
+{xrst_code py}"""
+random_seed = str( int( time.time() ) )
+"""{xrst_code}
 
 Random Effects
 ==============
-The random effect (e) depends on the node (but not sex).
-Given a node,
-the true value of iota at age (a) and time (t) is
+The random effect depends on the node (but not sex).
+Given an node and its random_effect,
+the true value of iota for that node is
+::
 
-.. math::
-
-      \exp( e ) \iota_0 (a, t)
+   exp( random_effect ) * true_iota_n0
 
 The value std_random_effects_iota
 specifies the corresponding standard deviation; see
 :ref:`csv_simulate@Input Files@option_sim.csv@std_random_effects_rate`
 The simulated random effects are reported in
-:ref:`csv_simulate@Output Files@random_effect.csv`.
+:ref:`csv_simulate@random_effect.csv`.
 Note that there are no random effects for node n0 (the root node).
 
 Simulated Data
@@ -126,19 +99,18 @@ see the setting of :ref:`csv_simulate@Input Files@simulate.csv`:
 #. For integrand_name equal to Sincidence and prevalence.
 #. For node_name equal to n0, n1, and n2.
 #. For sex equal to female and male.
-#. For each age in the age-grid and each time in the time-grid.
+#. For each age in the age grid and each time in the time grid.
 
 Fit
 ***
 
 option_fit.csv
 ==============
-#. *refit_split* is set to false because the model does not
-   depend on sex.
-#. It seems that *quasi_fixed* runs to a better solution and faster
-   when it is true.  A larger value for *max_num_iter_fixed*
-   to is required for to converge for *quasi_fixed* true.
-   (This calls for more investigation.)
+#. *refit_split* is set to false because the model does not depend on sex.
+#. *quasi_fixed* is false which means a full Newton method is used.
+#. *tolerance_fixed* is 1e-8 because the Newton method gets more accuracy.
+#. *max_num_iter_fixed* is 50 because the Newton method requires fewer
+   iterations (but more work for each iteration).
 
 option_predict.csv
 ==================
@@ -153,17 +125,8 @@ very fast because there are not random effects at that level.
 
 parent_rate.csv
 ===============
-#. The rate chi is constrained to be constant and equal to its true value.
-   Note that omega is constrained to its ture value by its value
-   in the covariate.csv file.
-   (Note that std_random_effect_chi is zero because it does not appear in
-   the option_sim table.)
-#. The prior for iota is specified on the age-time grid.
-   At each grid point it has a uniform prior with a small positive
-   lower limit and upper limit of one.
-   The mean is constant and equal to 0.02 which
-   is between its true inside the spike (0.1) and outside the spike (0.01).
-   This mean is only used to initialize the optimization.
+The rate iota in constant w.r.t age and time
+(because there is only one prior for it in this file).
 
 data_in.csv
 ===========
@@ -178,37 +141,17 @@ with the following exceptions:
    Not having any noise in the measurement, and a small standard deviation,
    yields the effect of a much larger data set without long running times.
 
-#. The Sincidence data is held out, so only prevalence is included
-   during the fit. Since both Sincidence and prevalence are using the
-   true value, the fit residuals are difference from truth, not data.
-   The weighted residuals can be multiplied by the
-   meas_std to get the actual residuals.
-
 #. The :ref:`csv_fit@Input Files@data_in.csv@density_name` is set
    to gaussian and eta, nu are set to the empty string; i.e., null.
 
 
-Automated Correctness Test
-**************************
-We define inside_shock (outside_shock) to be when a grid point is not a
-neighbor of the shock boundary and is inside (outside) the shock.
-The shock boundary is the square formed by the following four (age, time)
-pairs::
-
-   (60, 1990)            (60, 2000)
-      -----------------------
-      |a                    |
-      |g                    |
-      |e                    |
-      |        time         |
-      -----------------------
-   (40, 1990)            (40, 2000)
-
-The automated correctness test checks the
-minimum, maximum and average value for the
-inside_shock and outside_shock grid points.
-Note that the smoothing prior causes the height of the shock
-to be underestimated (the prior is for there to be no shock).
+Prediction Files
+****************
+The files
+:ref:`csv_predict@Output Files@fit_predict.csv` ,
+:ref:`csv_predict@Output Files@tru_predict.csv` , and
+:ref:`csv_predict@Output Files@sam_predict.csv`
+are created by this example.
 
 Source Code
 ***********
@@ -220,23 +163,6 @@ Source Code
 {xrst_end csv_sim_and_fit}
 """
 # BEGIN_PYTHON
-# --------------------------------------------------------------------------
-#
-# random_seed
-random_seed = str( int( time.time() ) )
-#
-# age_grid, time_grid
-age_grid   = range(0, 110, 10)
-time_grid  = range(1980, 2030, 10)
-#
-# rate_truth
-def rate_truth(rate_name, age, time) :
-   if rate_name == 'omega' :
-      return 0.01
-   if rate_name == 'chi' :
-      return 0.1
-   assert rate_name == 'iota'
-   return 0.01
 #
 # ----------------------------------------------------------------------------
 # simulation files
@@ -257,28 +183,27 @@ std_random_effects_iota,.2
 '''
 sim_file['option_sim.csv'] += f'random_seed,{random_seed}\n'
 #
-# node.csv
+# BEGIN_NODE_FILE
 sim_file['node.csv'] = \
 '''node_name,parent_name
 n0,
 n1,n0
 n2,n0
 '''
+# END_NODE_FILE
 #
 # covariate.csv
-omega_truth = 0.01
 sim_file['covariate.csv'] = 'node_name,sex,age,time,omega\n'
 for node_name in [ 'n0', 'n1', 'n2' ] :
    for sex in [ 'female', 'male' ] :
       for age in age_grid :
          for time in time_grid :
-            row = f'{node_name},{sex},{age},{time},{omega_truth}\n'
+            row = f'{node_name},{sex},{age},{time},{true_omega_all}\n'
             sim_file['covariate.csv'] += row
 #
-# no_effect_rate.csv
+# true_iota_n0, no_effect_rate.csv
 sim_file['no_effect_rate.csv'] = 'rate_name,age,time,rate_truth\n'
-iota = rate_truth('iota', 0.0, 1980.0)
-sim_file['no_effect_rate.csv'] += f'iota,0.0,1980.0,{iota}\n'
+sim_file['no_effect_rate.csv'] += f'iota,0.0,1980.0,{true_iota_n0}\n'
 #
 # multiplier_sim.csv
 sim_file['multiplier_sim.csv'] = \
@@ -312,8 +237,9 @@ fit_file = dict()
 fit_file['option_fit.csv']  =  \
 '''name,value
 refit_split,false
-quasi_fixed,true
-max_num_iter_fixed,300
+quasi_fixed,false
+tolerance_fixed,1e-8
+max_num_iter_fixed,50
 '''
 fit_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 #
@@ -373,7 +299,7 @@ def sim(sim_dir) :
    at_cascade.csv.join_file(
       left_file   = f'{sim_dir}/simulate.csv' ,
       right_file  = f'{sim_dir}/data_sim.csv' ,
-      result_file = f'{sim_dir}/data_join.csv'     ,
+      result_file = f'{sim_dir}/data_join.csv',
    )
 # -----------------------------------------------------------------------------
 # fit
@@ -416,7 +342,7 @@ def fit(sim_dir, fit_dir) :
       for key in copy_list :
          row_in[key] = row_join[key]
       row_in['meas_value'] = row_join['meas_mean']
-      row_in['meas_std']   = 1e-3
+      row_in['meas_std']   = 1e-4
       if row_join['integrand_name'] == 'Sincidence' :
          row_in['hold_out'] = '1'
       else :
@@ -436,51 +362,51 @@ def fit(sim_dir, fit_dir) :
    at_cascade.csv.fit(fit_dir)
    at_cascade.csv.predict(fit_dir, sim_dir)
    #
+   # random_effect_node
+   random_effect_table = at_cascade.csv.read_table(
+      file_name = f'{sim_dir}/random_effect.csv'
+   )
+   random_effect_node = dict()
+   for row in random_effect_table :
+      random_effect = float( row['random_effect'] )
+      node_name     = row['node_name']
+      if node_name not in random_effect_node :
+         random_effect_node[node_name] = random_effect
+      else :
+         assert  random_effect_node[node_name] == random_effect
+   #
    # tru_avg_integrand, max_integrand
    tru_predict_table = at_cascade.csv.read_table(
       file_name = f'{fit_dir}/tru_predict.csv'
    )
-   temp = dict()
-   max_integrand = { 'prevalence':0.0, 'Sincidence':0.0 }
-   for row in tru_predict_table :
-      node          = row['node_name']
-      integrand     = row['integrand_name']
-      sex           = row['sex']
-      age           = float( row['age'] )
-      time          = float( row['time'] )
-      avg_integrand = float( row['avg_integrand'] )
-      if node not in temp :
-         temp[node] = dict()
-      if integrand not in temp[node] :
-         temp[node][integrand] = dict()
-      if sex not in temp[node][integrand] :
-         temp[node][integrand][sex] = dict()
-      if age not in temp[node][integrand][sex] :
-         temp[node][integrand][sex][age] = dict()
-      assert time not in temp[node][integrand][sex][age]
-      temp[node][integrand][sex][age][time] = avg_integrand
-      max_integrand[integrand] = max( max_integrand[integrand], avg_integrand)
-   tru_avg_integrand = temp
    #
    # fit_predict_table
    fit_predict_table = at_cascade.csv.read_table(
       file_name = f'{fit_dir}/fit_predict.csv'
    )
    #
-   max_error = 0.0
-   for row in fit_predict_table :
-      node      = row['node_name']
-      integrand = row['integrand_name']
-      sex       = row['sex']
-      age       = float( row['age'] )
-      time      = float( row['time'] )
-      estimate  = float( row['avg_integrand'] )
-      truth     = tru_avg_integrand[node][integrand][sex][age][time]
-      error     = (truth - estimate) / max_integrand[integrand]
-      max_error = max(max_error, abs(error) )
-   if max_error >= 1e-3 :
-      print(max_error)
-      assert False
+   for table in [ tru_predict_table, fit_predict_table ] :
+      #
+      # check table
+      max_error     = { 'n0':0.0, 'n1':0.0, 'n2':0.0 }
+      for row in table :
+         node      = row['node_name']
+         integrand = row['integrand_name']
+         sex       = row['sex']
+         age       = float( row['age'] )
+         time      = float( row['time'] )
+         estimate  = float( row['avg_integrand'] )
+         effect    = random_effect_node[node]
+         true_iota = math.exp(effect) * true_iota_n0
+         true_p    = 1.0 - math.exp( - true_iota * age )
+         if integrand == 'Sincidence' :
+            error = (true_iota - estimate) / true_iota
+         else :
+            error = (true_p - estimate) / 1.0
+         max_error[node] = max(max_error[node], abs(error) )
+      assert max_error['n0'] <= 1e-2
+      assert max_error['n1'] <= 1e-3
+      assert max_error['n2'] <= 1e-3
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :

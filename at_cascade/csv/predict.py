@@ -12,6 +12,7 @@ import time
 
 {xrst_begin csv_predict}
 {xrst_spell
+   sim
    dir
    boolean
    pdf
@@ -37,8 +38,15 @@ Example
 
 fit_dir
 *******
-Same as the csv fit
-:ref:`csv_fit@fit_dir` .
+Same as the csv fit :ref:`csv_fit@fit_dir` .
+
+sim_dir
+*******
+This is either None, the file
+:ref:`csv_predict@Output Files@tru_predict.csv` is not created.
+Otherwise, :ref:`csv_simulate@sim_dir` is the directory
+used to simulate the data for this fit and the file
+tru_predict.csv is created..
 
 start_job_name
 **************
@@ -206,6 +214,13 @@ covariate_names
 The rest of the columns are covariate names and contain the value
 of the corresponding covariate in covariate.csv.
 
+tru_predict.csv
+===============
+If :ref:`csv_predict@sim_dir` is None, this file is not created.
+Otherwise, this is a version of fit_predict.csv with the
+*avg_integrand* corresponding to the true value of the variables
+(used during simulation).
+
 sam_predict.csv
 ===============
 This is a sampling of the predictions.
@@ -350,6 +365,10 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
 # *******
 # This string is the directory name where the input and output csv files
 # are located.
+#
+# sim_dir
+# *******
+# is the directory name where the csv simulation files are located.
 #
 # fit_node_database
 # This string is the location, relative to fit_dir, of the dismod_at
@@ -610,6 +629,10 @@ def predict_one(
 # *******
 # This string is the directory name where the input and output csv files
 # are located.
+#
+# sim_dir
+# *******
+# is the directory name where the csv simulation files are located.
 #
 # covariate_table
 # This list of dict is an in memory representation of covariate.csv.
