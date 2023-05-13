@@ -115,7 +115,7 @@ The value std_random_effects_iota
 specifies the corresponding standard deviation; see
 :ref:`csv_simulate@Input Files@option_sim.csv@std_random_effects_rate`
 The simulated random effects are reported in
-:ref:`csv_simulate@random_effect.csv`.
+:ref:`csv_simulate@Output Files@random_effect.csv`.
 Note that there are no random effects for node n0 (the root node).
 
 Simulated Data
@@ -226,10 +226,8 @@ Source Code
 random_seed = str( int( time.time() ) )
 #
 # age_grid, time_grid
-age_set   = set( range(0, 120, 20) )     | set( range(35, 70, 5) )
-time_set  = set( range(1980, 2030, 10) ) | set( range(1988, 2004, 2) )
-age_grid  = sorted( list( age_set ) )
-time_grid = sorted( list( time_set) )
+age_grid   = range(0, 110, 10)
+time_grid  = range(1980, 2030, 10)
 #
 # rate_truth
 def rate_truth(rate_name, age, time) :
@@ -237,10 +235,8 @@ def rate_truth(rate_name, age, time) :
       return 0.01
    if rate_name == 'chi' :
       return 0.1
-   if 40.0 < age and age < 60.0 and  1990 < time  and time < 2000 :
-      return 0.1
-   else :
-      return 0.01
+   assert rate_name == 'iota'
+   return 0.01
 #
 # ----------------------------------------------------------------------------
 # simulation files
@@ -270,23 +266,19 @@ n2,n0
 '''
 #
 # covariate.csv
-omega = rate_truth('omega', 0, 0)
+omega_truth = 0.01
 sim_file['covariate.csv'] = 'node_name,sex,age,time,omega\n'
 for node_name in [ 'n0', 'n1', 'n2' ] :
    for sex in [ 'female', 'male' ] :
       for age in age_grid :
          for time in time_grid :
-            row = f'{node_name},{sex},{age},{time},{omega}\n'
+            row = f'{node_name},{sex},{age},{time},{omega_truth}\n'
             sim_file['covariate.csv'] += row
 #
 # no_effect_rate.csv
-chi = rate_truth('chi', 0, 0)
 sim_file['no_effect_rate.csv'] = 'rate_name,age,time,rate_truth\n'
-sim_file['no_effect_rate.csv'] += f'chi,0,0,{chi}\n'
-for age in age_grid :
-   for time in time_grid :
-      iota = rate_truth('iota', age, time)
-      sim_file['no_effect_rate.csv'] += f'iota,{age},{time},{iota}\n'
+iota = rate_truth('iota', 0.0, 1980.0)
+sim_file['no_effect_rate.csv'] += f'iota,0.0,1980.0,{iota}\n'
 #
 # multiplier_sim.csv
 sim_file['multiplier_sim.csv'] = \
@@ -350,7 +342,6 @@ prevalence
 fit_file['prior.csv'] = \
 '''name,density,mean,std,eta,lower,upper
 uniform_eps_1,uniform,0.02,,,1e-6,1.0
-delta_prior,log_gaussian,0.0,0.05,1e-4,,
 random_prior,gaussian,0.0,0.2,,,,
 '''
 #
@@ -396,12 +387,8 @@ def fit(sim_dir, fit_dir) :
       )
    #
    # fit_file['parent_rate.csv']
-   chi  = rate_truth('chi', 0, 0)
    data = 'rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value\n'
-   data  += f'chi,0.0,0.0,,,,{chi}\n'
-   for age in age_grid :
-      for time in time_grid :
-         data  += f'iota,{age},{time},uniform_eps_1,delta_prior,delta_prior,\n'
+   data  += f'iota,50.0,2000.0,uniform_eps_1,,,\n'
    fit_file['parent_rate.csv'] = data
    #
    # csv files in fit_file
@@ -447,70 +434,53 @@ def fit(sim_dir, fit_dir) :
    #
    # fit, predict
    at_cascade.csv.fit(fit_dir)
-   at_cascade.csv.predict(fit_dir)
+   at_cascade.csv.predict(fit_dir, sim_dir)
+   #
+   # tru_avg_integrand, max_integrand
+   tru_predict_table = at_cascade.csv.read_table(
+      file_name = f'{fit_dir}/tru_predict.csv'
+   )
+   temp = dict()
+   max_integrand = { 'prevalence':0.0, 'Sincidence':0.0 }
+   for row in tru_predict_table :
+      node          = row['node_name']
+      integrand     = row['integrand_name']
+      sex           = row['sex']
+      age           = float( row['age'] )
+      time          = float( row['time'] )
+      avg_integrand = float( row['avg_integrand'] )
+      if node not in temp :
+         temp[node] = dict()
+      if integrand not in temp[node] :
+         temp[node][integrand] = dict()
+      if sex not in temp[node][integrand] :
+         temp[node][integrand][sex] = dict()
+      if age not in temp[node][integrand][sex] :
+         temp[node][integrand][sex][age] = dict()
+      assert time not in temp[node][integrand][sex][age]
+      temp[node][integrand][sex][age][time] = avg_integrand
+      max_integrand[integrand] = max( max_integrand[integrand], avg_integrand)
+   tru_avg_integrand = temp
    #
    # fit_predict_table
    fit_predict_table = at_cascade.csv.read_table(
       file_name = f'{fit_dir}/fit_predict.csv'
    )
    #
-   # inside_shock, outside_shock
-   inside_shock  = list()
-   outside_shock = list()
+   max_error = 0.0
    for row in fit_predict_table :
-      match = True
-      match = match and row['node_name'] == 'n0'
-      match = match and row['sex'] == 'both'
-      match = match and row['integrand_name'] == 'Sincidence'
-      if match :
-         #
-         # age, time, iota
-         age   = float( row['age'] )
-         time  = float( row['time'] )
-         iota  = float( row['avg_integrand'] )
-         #
-         # inside_shock
-         inside = 1992 <= time and time <= 1998
-         inside = inside and 45 <= age and age <= 55
-         if inside :
-            inside_shock.append(iota)
-         #
-         # outside_shock
-         outside = time < 1990 <= time and time <= 1998
-         outside = outside or age < 40 or 60 < age
-         if outside :
-            outside_shock.append(iota)
-   #
-   # inside_shock
-   avg =  sum(inside_shock) / len(inside_shock)
-   #
-   if min(inside_shock) <= 0.03 :
-      print('min inside_shock =',  min(inside_shock) )
-   assert 0.03 < min(inside_shock)
-   #
-   if 0.15 <= max(inside_shock) :
-      print('max inside_shock =',  max(inside_shock) )
-   assert max(inside_shock) < 0.15
-   #
-   if avg <= 0.07 or 0.1 <= avg :
-      print('avg inside_shock =',  avg )
-   assert 0.07 < avg and avg < 0.1
-   #
-   # outside_shock
-   avg =  sum(outside_shock) / len(outside_shock)
-   #
-   if min(outside_shock) <= 0.001 :
-      print('min outside_shock =',  min(outside_shock) )
-   assert 0.001 < min(outside_shock)
-   #
-   if 0.02 <= max(outside_shock) :
-      print('max outside_shock =',  max(outside_shock) )
-   assert max(outside_shock) < 0.02
-   #
-   if avg <= 0.009 or 0.012 <= avg :
-      print('avg outside_shock =',  avg )
-   assert 0.009 < avg and avg < 0.012
-
+      node      = row['node_name']
+      integrand = row['integrand_name']
+      sex       = row['sex']
+      age       = float( row['age'] )
+      time      = float( row['time'] )
+      estimate  = float( row['avg_integrand'] )
+      truth     = tru_avg_integrand[node][integrand][sex][age][time]
+      error     = (truth - estimate) / max_integrand[integrand]
+      max_error = max(max_error, abs(error) )
+   if max_error >= 1e-3 :
+      print(max_error)
+      assert False
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :

@@ -2,12 +2,17 @@
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
+import shutil
 import at_cascade
 import dismod_at
 #
 def set_truth(sim_dir, fit_node_database) :
    assert type(sim_dir) == str
    assert type(fit_node_database) == str
+   #
+   # fit_node_dir
+   index        = fit_node_database.rfind('/')
+   fit_node_dir = fit_node_database[: index]
    #
    # fit_table
    connection = dismod_at.create_connection(
@@ -100,27 +105,51 @@ def set_truth(sim_dir, fit_node_database) :
             var_id2simulate_id.append( simulate_id )
    assert len( fit_table['var'] ) == len( var_id2simulate_id )
    #
-   # save_list
-   save_list = [ 'simulate', 'option_sim_out', 'random_effect', 'data_sim' ]
+   # copy_list
+   # must copy these files becasue simulate may be run in parallel.
+   copy_list = [
+      'node', 'covariate', 'no_effect_rate', 'multiplier_sim', 'random_effect'
+   ]
    #
-   # save files
-   for name in save_list :
+   # copy files
+   for name in copy_list :
       src = f'{sim_dir}/{name}.csv'
-      dst = f'{sim_dir}/save.{name}.csv'
-      os.rename(src, dst)
+      dst = f'{fit_node_dir}/{name}.csv'
+      shutil.copyfile(src, dst)
+   #
+   # option_sim.csv
+   file_name        = f'{sim_dir}/option_sim.csv'
+   option_sim_table = at_cascade.csv.read_table(file_name)
+   found            = False
+   for row in option_sim_table :
+      if row['name'] == 'new_random_effects' :
+         found = True
+         row['value'] = 'false'
+   if not found :
+      row = { 'name' : 'new_random_effects' , 'value' : 'false' }
+      option_sim_table.append( row )
+   file_name  = f'{fit_node_dir}/option_sim.csv'
+   at_cascade.csv.write_table(file_name, option_sim_table)
    #
    # simulate.csv
    at_cascade.csv.write_table(
-      file_name = f'{sim_dir}/simulate.csv' ,
+      file_name = f'{fit_node_dir}/simulate.csv' ,
       table     = simulate_table
    )
-   at_cascade.csv.simulate(sim_dir)
+   #
+   # data_sim.csv, multiplier_sim.csv
+   at_cascade.csv.simulate(fit_node_dir)
    #
    # sim_table
    sim_table = dict()
    for table_name in [ 'data_sim', 'multiplier_sim' ] :
-      file_name             = f'{sim_dir}/{table_name}.csv'
+      file_name             = f'{fit_node_dir}/{table_name}.csv'
       sim_table[table_name] = at_cascade.csv.read_table(file_name)
+   #
+   # remove copies
+   for name in copy_list :
+      file_copy = f'{fit_node_dir}/{name}.csv'
+      os.remove(file_copy)
    #
    # turth_var_table
    truth_var_table = list()
@@ -166,13 +195,6 @@ def set_truth(sim_dir, fit_node_database) :
             covariate_set[rate_name].add( covariate_name )
       assert truth_var_value != None
       truth_var_table.append( { 'truth_var_value' : truth_var_value} )
-   #
-   # restore files
-   for name in save_list :
-         src = f'{sim_dir}/save.{name}.csv'
-         dst = f'{sim_dir}/{name}.csv'
-         os.remove(dst)
-         os.rename(src, dst)
    #
    # fit_node_database
    # add the truth_var table

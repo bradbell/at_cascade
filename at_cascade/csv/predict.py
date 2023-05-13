@@ -813,26 +813,25 @@ def predict_all(
             # ????
             #
             # job_queue
-            args = (
-               fit_title         ,
-               fit_dir           ,
-               sim_dir           ,
-               fit_node_database ,
-               fit_node_id       ,
-               all_node_db       ,
-               covariate_table   ,
-            )
-            if max_number_cpu == 1 :
-               print(job_description)
-               predict_one(*args)
-            else :
-               job_queue.put( (job_description, args) )
-               n_job_queue += 1
-            #
-            #
-            # fit_node_database_list
-            # skip the no_ode fit (job_id == -1 and not in job_table)
+            # skip predict for no_ode fit (job_id == -1 and not in job_table)
             if 0 <= job_id :
+               args = (
+                  fit_title         ,
+                  fit_dir           ,
+                  sim_dir           ,
+                  fit_node_database ,
+                  fit_node_id       ,
+                  all_node_db       ,
+                  covariate_table   ,
+               )
+               if max_number_cpu == 1 :
+                  print(job_description)
+                  predict_one(*args)
+               else :
+                  job_queue.put( (job_description, args) )
+                  n_job_queue += 1
+               #
+               # fit_node_database_list
                fit_node_database_list.append( fit_node_database )
    #
    # max_number_cpu > 1
