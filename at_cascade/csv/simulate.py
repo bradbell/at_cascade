@@ -86,7 +86,6 @@ This integer is the number of decimal digits of precision to
 include for float values in the output csv files.
 The default value for this option is 4.
 
-
 integrand_step_size
 -------------------
 This float is the step size in age and time used to approximate
@@ -97,11 +96,20 @@ The default value for this option is 5.0.
 
 random_depend_sex
 -----------------
-If this boolean is true, the random effects depend on sex.
-Otherwise, for each *node_name* and *rate*, the random effect for
+If :ref:`csv_simulate@Input Files@option_sim.csv@new_random_effects` is
+false, this option is not used.
+Otherwise if this boolean is true, the random effects depend on sex.
+if it is false, for each *node_name* and *rate*, the random effect for
 ``female`` and ``male`` will be equal; see
-:ref:`csv_simulate@Output Files@random_effect.csv` .
+:ref:`csv_simulate@random_effect.csv` .
 The default value for this option is false.
+
+new_random_effects
+------------------
+If this boolean is true, a new set of random effects is generated and
+:ref:`csv_simulate@random_effect.csv` is an output file.
+Otherwise random_effect.csv is an input file.
+The default value for this boolean is true.
 
 random_seed
 -----------
@@ -111,10 +119,11 @@ The default value for this option is
    random_seed = int( time.time() )
 {xrst_code}
 
-
 std_random_effects_rate
 -----------------------
-This float is the standard deviation of the random effects
+If :ref:`csv_simulate@Input Files@option_sim.csv@new_random_effects` is
+false, this option is not used.
+Otherwise, this float is the standard deviation of the random effects
 for the corresponding *rate* where *rate* is iota, rho, or chi.
 The effects are in log of rate space, so this standard deviation
 is also in log of rate space.
@@ -309,8 +318,48 @@ This float is the minimum value for the standard deviation
 of the measurement noise for this data row;
 see :ref:`csv_simulate@Output Files@data_sim.csv@meas_std` .
 
-
 ------------------------------------------------------------------------------
+
+random_effect.csv
+*****************
+This file reports the random effect for each node, rate and sex.
+If :ref:`csv_simulate@Input Files@option_sim.csv@new_random_effects`
+is true (false) , this an input (output) file.
+
+node_name
+=========
+This string identifies the row in :ref:`csv_simulate@Input Files@node.csv`
+that this row corresponds to.
+All of the nodes in the node table are present in this file.
+
+rate_name
+=========
+This is a string and is one of the
+For each :ref:`csv_simulate@Input Files@no_effect_rate.csv@rate_name`
+in the no_effect rate table,
+All of the rates in the no_effect rate table are present in this file.
+
+sex
+===
+This identifies which sex the random effect corresponds to.
+The sex values ``female`` and ``male`` will appear and
+``both`` will not appear.
+
+random_effect
+=============
+This float value is the random effect for the specified node, rate, and sex.
+If new_random_effects is true and
+:ref:`csv_simulate@Input Files@option_sim.csv@random_depend_sex`  is false,
+the value in this column will not depend on the value in the sex column.
+
+Discussion
+==========
+1. For a given parent node, rate, and sex,
+   the sum of the random effects with respect to the child nodes is zero.
+2. All the random effects for the root node are set to zero
+   (the root node does not have a parent node).
+
+-----------------------------------------------------------------------------
 
 Output Files
 ************
@@ -319,43 +368,6 @@ option_sim_out.csv
 ==================
 This is a copy of :ref:`csv_simulate@Input Files@option_sim.csv`
 with the default filled in for missing values.
-
-random_effect.csv
-=================
-This file reports the random effect for each node, rate and sex.
-
-node_name
----------
-This string identifies the row in :ref:`csv_simulate@Input Files@node.csv`
-that this row corresponds to.
-
-rate_name
----------
-This is a string and is one of the
-For each :ref:`csv_simulate@Input Files@no_effect_rate.csv@rate_name`
-in the no_effect rate table,
-All of the rates in the no_effect rate table are present in this file.
-
-sex
----
-This identifies which sex the random effect corresponds to.
-The sex values ``female`` and ``male`` will appear and
-``both`` will not appear.
-
-random_effect
--------------
-This float value is the random effect for the specified node, rate, and sex.
-If :ref:`csv_simulate@Input Files@option_sim.csv@random_depend_sex`  is false,
-the value in this column will not depend on the value in the sex column.
-
-Discussion
-----------
-1. For a given parent node, rate, and sex,
-   the sum of the random effects with respect to the child nodes is zero.
-2. All the random effects for the root node are set to zero
-   (the root node does not have a parent node).
-
------------------------------------------------------------------------------
 
 data_sim.csv
 ============
@@ -445,6 +457,7 @@ def set_global_option_value(sim_dir, option_table) :
       'absolute_tolerance'               : (float, 1e-5)       ,
       'float_precision'                  : (int,   4)          ,
       'integrand_step_size'              : (float, 5.0)        ,
+      'new_random_effects'               : (bool,  True)       ,
       'random_depend_sex'                : (bool,  False)      ,
       'random_seed'                      : (int, random_seed)  ,
       'std_random_effects_iota'          : (float, 0.0)        ,
@@ -829,6 +842,42 @@ def average_integrand_grid(
 # All the random effects for the root node are zero
 # (prent_node_dict[root_node_name] == '' )
 #
+# sim_dir
+# is the directory where the input csv files are located.
+#
+# random_effect_node_rate_sex =
+def read_random_effect_node_rate_sex(sim_dir) :
+   assert type(sim_dir) == str
+   #
+   file_name            = f'{sim_dir}/random_effect.csv'
+   random_effect_table  = at_cascade.csv.read_table(file_name)
+   result               = dict()
+   for row in random_effect_table :
+      node_name = row['node_name']
+      rate_name = row['rate_name']
+      sex       = row['sex']
+      if node_name not in result :
+         result[node_name] = dict()
+      if rate_name not in result[node_name] :
+         result[node_name][rate_name] = dict()
+      if sex in result[node_name][rate_name] :
+         msg  = 'simulate.py: {file_name}\n'
+         msg += f'node_name = {node_name},'
+         msg += f'rate_name = {rate_name},'
+         msg += f'sex = {sex} appears twice'
+         sys.exit(msg)
+      result[node_name][rate_name][sex] = float( row['random_effect'] )
+   return result
+#
+# ----------------------------------------------------------------------------
+# random_effect_node_rate_sex[node_name][rate_name][sex] :
+# is the simulated random effect for the corresponding node, sex and rate.
+# For a given node_name, sex and rate_name, the sum of
+#  random_effect_node_rate_sex[child_node][rate_name][sex]
+# is zero where child_node ranges over values in child_list_node[node_name]
+# All the random effects for the root node are zero
+# (prent_node_dict[root_node_name] == '' )
+#
 # random_depend_sex:
 # is a bool specifying if the random effects depend on sex.
 #
@@ -848,7 +897,7 @@ def average_integrand_grid(
 # node that have node_name as its parent node.
 #
 # random_effect_node_rate_sex =
-def get_random_effect_node_rate_sex (
+def sim_random_effect_node_rate_sex (
    random_depend_sex  ,
    std_random_effects ,
    rate_name_list     ,
@@ -1049,13 +1098,16 @@ def simulate(sim_dir) :
       'chi'  : global_option_value['std_random_effects_chi']  ,
    }
    #
-   random_effect_node_rate_sex = get_random_effect_node_rate_sex(
-      random_depend_sex  ,
-      std_random_effects ,
-      rate_name_list     ,
-      parent_node_dict   ,
-      child_list_node    ,
-   )
+   if global_option_value['new_random_effects'] :
+      random_effect_node_rate_sex = sim_random_effect_node_rate_sex(
+         random_depend_sex  ,
+         std_random_effects ,
+         rate_name_list     ,
+         parent_node_dict   ,
+         child_list_node    ,
+      )
+   else :
+      random_effect_node_rate_sex = read_random_effect_node_rate_sex(sim_dir)
    #
    # multiplier_list_rate
    multiplier_list_rate = get_multiplier_list_rate(

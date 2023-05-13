@@ -115,7 +115,7 @@ The value std_random_effects_iota
 specifies the corresponding standard deviation; see
 :ref:`csv_simulate@Input Files@option_sim.csv@std_random_effects_rate`
 The simulated random effects are reported in
-:ref:`csv_simulate@Output Files@random_effect.csv`.
+:ref:`csv_simulate@random_effect.csv`.
 Note that there are no random effects for node n0 (the root node).
 
 Simulated Data
@@ -330,7 +330,6 @@ fit_file['option_predict.csv']  =  \
 '''name,value
 plot,true
 db2csv,true
-max_number_cpu,1
 '''
 #
 # fit_goal.csv
@@ -448,7 +447,7 @@ def fit(sim_dir, fit_dir) :
    #
    # fit, predict
    at_cascade.csv.fit(fit_dir)
-   at_cascade.csv.predict(fit_dir, sim_dir)
+   at_cascade.csv.predict(fit_dir)
    #
    # fit_predict_table
    fit_predict_table = at_cascade.csv.read_table(

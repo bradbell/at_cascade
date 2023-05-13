@@ -50,7 +50,7 @@ Node Tree
    *  -  csv_file['simulate.csv']
       -  :ref:`csv_simulate@Input Files@simulate.csv`
    *  -  csv_file['random_effect.csv']
-      -  :ref:`csv_simulate@Output Files@random_effect.csv`
+      -  :ref:`csv_simulate@random_effect.csv`
    *  -  csv_file['data_sim.csv']
       -  :ref:`csv_simulate@Output Files@data_sim.csv`
 

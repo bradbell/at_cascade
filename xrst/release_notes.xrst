@@ -32,6 +32,11 @@ Release Notes for 2023
 mm-dd
 *****
 
+05-13
+=====
+Add the :ref:`csv_simulate@Input Files@option_sim.csv@new_random_effects`
+option to the csv simulate routine.
+
 05-12
 =====
 #. The random effects were not being used properly in the
