@@ -46,7 +46,7 @@ This is either None, the file
 :ref:`csv_predict@Output Files@tru_predict.csv` is not created.
 Otherwise, :ref:`csv_simulate@sim_dir` is the directory
 used to simulate the data for this fit and the file
-tru_predict.csv is created..
+tru_predict.csv is created.
 
 start_job_name
 **************

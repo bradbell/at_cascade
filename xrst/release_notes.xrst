@@ -32,6 +32,11 @@ Release Notes for 2023
 mm-dd
 *****
 
+05-14
+=====
+Add the optional
+:ref:`csv_predict@Output Files@tru_predict.csv` output file to csv_predict.
+
 05-13
 =====
 Add the :ref:`csv_simulate@Input Files@option_sim.csv@new_random_effects`
