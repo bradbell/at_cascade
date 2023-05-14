@@ -65,7 +65,7 @@ True Prevalence
 Note that iota does not depend on age or time,
 and prevalence does not depend on omega.
 If *true_iota* is the true iota for a node, the corresponding
-true prevalence is the following funciton of age:
+true prevalence is the following function of age:
 
    1 - exp( - *iota* * *age* )
 
@@ -176,7 +176,7 @@ random_seed = str( int( time.time() ) )
 sim_file['option_sim.csv'] = \
 '''name,value
 absolute_tolerance,1e-5
-float_precision,4
+float_precision,7
 integrand_step_size,5
 random_depend_sex,false
 std_random_effects_iota,.2
@@ -385,10 +385,13 @@ def fit(sim_dir, fit_dir) :
       file_name = f'{fit_dir}/fit_predict.csv'
    )
    #
-   for table in [ tru_predict_table, fit_predict_table ] :
+   # check_table
+   check_table   = [ tru_predict_table, fit_predict_table ]
+   check_epsilon = [ 1e-4, 1e-2 ]
+   for (i_table, table) in enumerate(check_table) :
       #
       # check table
-      max_error     = { 'n0':0.0, 'n1':0.0, 'n2':0.0 }
+      max_error     = 0.0
       for row in table :
          node      = row['node_name']
          integrand = row['integrand_name']
@@ -403,10 +406,8 @@ def fit(sim_dir, fit_dir) :
             error = (true_iota - estimate) / true_iota
          else :
             error = (true_p - estimate) / 1.0
-         max_error[node] = max(max_error[node], abs(error) )
-      assert max_error['n0'] <= 1e-2
-      assert max_error['n1'] <= 1e-3
-      assert max_error['n2'] <= 1e-3
+         max_error = max(max_error, abs(error) )
+      assert max_error < check_epsilon[i_table]
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :

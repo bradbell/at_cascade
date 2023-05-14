@@ -2,13 +2,52 @@
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
+import copy
+import math
 import shutil
 import at_cascade
 import dismod_at
 #
+"""
+{xrst_begin csv_set_truth}
+{xrst_spell
+   sim
+   dir
+   var
+}
+
+Set the Truth Table for a Fitted Database
+#########################################
+
+Prototype
+*********
+{xrst_literal
+   # BEGIN_SET_TRUTH
+   # END_SET_TRUTH
+}
+
+sim_dir
+*******
+Is the :ref:`csv_simulate@sim_dir` for the simulation
+of this cascade data set.
+
+fit_node_database
+*****************
+Is the name of a database, relative to the current directory,
+that corresponds to a fit.
+A new ``truth_var`` table is written to this database
+containing the dismod_at variable values corresponding to truth
+during the simulation.
+Note that the rate random effects are in log space and relative
+to the fixed effect rate at the same age and time.
+
+{xrst_end csv_set_truth}
+"""
+# BEGIN_SET_TRUTH
 def set_truth(sim_dir, fit_node_database) :
    assert type(sim_dir) == str
    assert type(fit_node_database) == str
+# END_SET_TRUTH
    #
    # fit_node_dir
    index        = fit_node_database.rfind('/')
@@ -70,39 +109,45 @@ def set_truth(sim_dir, fit_node_database) :
       if var_type != 'rate' :
          var_id2simulate_id.append( None )
       else :
-         # node_name
-         node_name      = fit_table['node'][ var_row['node_id'] ]['node_name']
+         # node_name, age, time, rate_name
+         node_name  = fit_table['node'][  var_row['node_id'] ]['node_name']
+         age        = fit_table['age'][  var_row['age_id']  ]['age']
+         time       = fit_table['time'][ var_row['time_id'] ]['time']
+         rate_name  = fit_table['rate'][ var_row['rate_id'] ]['rate_name']
+         #
+         # age
+         if rate_name == 'pini' :
+            age = fit_table['age'][0]['age']
+            # This is really OK, just want a heads up in this case
+            assert age == 0.0
+         #
+         # simulate_id, simulate_table, var_id2simulate_id
+         simulate_id += 1
+         integrand_name = rate2integrand[ rate_name]
+         sim_row = {
+            'simulate_id'    : simulate_id  ,
+            'integrand_name' : integrand_name ,
+            'node_name'      : fit_node_name  ,
+            'sex'            : sex_name       ,
+            'age_lower'      : age            ,
+            'age_upper'      : age            ,
+            'time_lower'     : time           ,
+            'time_upper'     : time           ,
+            'meas_std_cv'    : 0.0            ,
+            'meas_std_min'   : 1.0            ,
+         }
+         simulate_table.append( copy.copy(sim_row ) )
+         var_id2simulate_id.append( simulate_id )
+         #
          if node_name != fit_node_name :
-            var_id2simulate_id.append( None )
-         else :
-            #
-            # age, time, rate_name
-            age       = fit_table['age'][  var_row['age_id']  ]['age']
-            time      = fit_table['time'][ var_row['time_id'] ]['time']
-            rate_name = fit_table['rate'][ var_row['rate_id'] ]['rate_name']
-            #
-            # age
-            if rate_name == 'pini' :
-               age = fit_table['age'][0]['age']
-               # This is really OK, just want a heads up in this case
-               assert age == 0.0
-            #
-            simulate_id += 1
-            integrand_name = rate2integrand[ rate_name]
-            sim_row = {
-               'simulate_id'    : simulate_id  ,
-               'integrand_name' : integrand_name ,
-               'node_name'      : node_name      ,
-               'sex'            : sex_name       ,
-               'age_lower'      : age            ,
-               'age_upper'      : age            ,
-               'time_lower'     : time           ,
-               'time_upper'     : time           ,
-               'meas_std_cv'    : 0.0            ,
-               'meas_std_min'   : 1.0            ,
-            }
-            simulate_table.append( sim_row )
-            var_id2simulate_id.append( simulate_id )
+            # simulate_table
+            # This is a random effects hence its rate value is in log space
+            # and is relative to the corresponding fixed effect.
+            simulate_id         += 1
+            sim_row['simulate_id'] = simulate_id
+            sim_row['node_name']   = node_name
+            simulate_table.append( copy.copy(sim_row ) )
+   #
    assert len( fit_table['var'] ) == len( var_id2simulate_id )
    #
    # copy_list
@@ -153,29 +198,37 @@ def set_truth(sim_dir, fit_node_database) :
    #
    # turth_var_table
    truth_var_table = list()
+   covariate_set   = dict()
    for (var_id, var_row) in enumerate( fit_table['var'] ) :
       #
       # truth_var_value
       truth_var_value = None
       #
-      # simulate_id, covariate_set
+      # var_type
+      var_type     = var_row['var_type']
+      #
+      # simulate_id
       simulate_id   = var_id2simulate_id[var_id]
-      covariate_set = dict()
       if simulate_id != None :
-         # this is a fixed effect rate value
-         truth_var_value = sim_table['data_sim'][simulate_id]['meas_mean']
+         assert var_type == 'rate'
+         node_name   = fit_table['node'][  var_row['node_id'] ]['node_name']
+         fixed_value = float( sim_table['data_sim'][simulate_id]['meas_mean'] )
+         if node_name == fit_node_name :
+            truth_var_value = fixed_value
+         elif fixed_value == 0.0 :
+            truth_var_value = 0.0
+         else :
+            random_value = \
+               float( sim_table['data_sim'][simulate_id + 1]['meas_mean'] )
+            truth_var_value = math.log( random_value / fixed_value )
       else :
          #
-         # var_type, age_id, time_id
-         var_type     = var_row['var_type']
+         # age_id, time_id
          age_id       = var_row['age_id']
          time_id      = var_row['time_id']
          covariate_id = var_row['covariate_id']
          #
-         if var_type == 'rate' :
-            # this is a random effect rate value
-            truth_var_value = 0.0
-         elif var_type == 'mulcov_rate_value' :
+         if var_type == 'mulcov_rate_value' :
             #
             # rate_name, covariate_name
             rate_name      = fit_table['rate'][rate_id]['rate_name']
@@ -187,12 +240,16 @@ def set_truth(sim_dir, fit_node_database) :
                if row['rate_name'] == rate_name :
                   if row['covariate_or_sex'] == covariate_name :
                      truth_var_value = row['multiplier_truth']
+            assert truth_var_value != None
             #
             # covariate_set
             if rate_name not in covariate_set :
                covariate_set[rate_name] = set()
             assert covariate_name not in covariate_set[rate_name]
             covariate_set[rate_name].add( covariate_name )
+         else :
+            # This var_type not yet implemented
+            assert False
       assert truth_var_value != None
       truth_var_table.append( { 'truth_var_value' : truth_var_value} )
    #
