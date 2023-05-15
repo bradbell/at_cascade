@@ -165,13 +165,14 @@ def set_truth(sim_dir, fit_node_database) :
    # option_sim.csv
    file_name        = f'{sim_dir}/option_sim.csv'
    option_sim_table = at_cascade.csv.read_table(file_name)
-   found            = False
-   for row in option_sim_table :
-      if row['name'] == 'new_random_effects' :
-         found = True
-         row['value'] = 'false'
-   if not found :
-      row = { 'name' : 'new_random_effects' , 'value' : 'false' }
+   for name in [ 'new_random_effects', 'trace' ] :
+      found            = False
+      for row in option_sim_table :
+         if row['name'] == name :
+            found = True
+            row['value'] = 'false'
+      if not found :
+         row = { 'name' : name , 'value' : 'false' }
       option_sim_table.append( row )
    file_name  = f'{fit_node_dir}/option_sim.csv'
    at_cascade.csv.write_table(file_name, option_sim_table)

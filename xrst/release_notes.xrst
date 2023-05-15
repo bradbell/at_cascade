@@ -34,9 +34,11 @@ mm-dd
 
 05-15
 =====
-Improve documentation of correspondence between
-:ref:`csv_predict@Output Files@fit_predict.csv` ,
-tru_predict.csv and sam_predict.csv.
+#. Improve documentation of correspondence between
+   :ref:`csv_predict@Output Files@fit_predict.csv` ,
+   tru_predict.csv and sam_predict.csv.
+#. Add :ref:`csv_simulate@Input Files@option_sim.csv@trace` to the
+   option_sim.csv file.
 
 05-14
 =====

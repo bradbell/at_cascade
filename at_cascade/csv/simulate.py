@@ -130,6 +130,13 @@ is also in log of rate space.
 The default value for this option is 0.0; i.e.,
 there are random effects for the corresponding rate.
 
+trace
+-----
+If this boolean is true, a trace will be printed during the simulation.
+This will show that the simulation is making progress and is useful
+for cases where there is a lot of data to simulate.
+The default value for this boolean is true.
+
 -----------------------------------------------------------------------------
 
 node.csv
@@ -463,6 +470,7 @@ def set_global_option_value(sim_dir, option_table) :
       'std_random_effects_iota'          : (float, 0.0)        ,
       'std_random_effects_rho'           : (float, 0.0)        ,
       'std_random_effects_chi'           : (float, 0.0)        ,
+      'trace'                            : (bool,  True)       ,
    }
    # END_SORT_THIS_LINE_MINUS_2
    #
@@ -1033,25 +1041,29 @@ def simulate(sim_dir) :
    #
    # input_table
    input_table = dict()
+   file_name   = f'{sim_dir}/option_sim.csv'
+   input_table['option_sim'] = at_cascade.csv.read_table(file_name)
+   #
+   # global_option_value
+   set_global_option_value( sim_dir, input_table['option_sim'] )
+   #
+   #
+   if global_option_value['trace'] :
+      print('Reading csv files:')
    input_list  = [
-      'option_sim',
       'node',
       'covariate',
       'multiplier_sim',
       'no_effect_rate',
       'simulate',
    ]
-   print('begin reading csv files')
    for name in input_list :
       file_name         = f'{sim_dir}/{name}.csv'
       input_table[name] = at_cascade.csv.read_table(file_name)
       at_cascade.csv.check_table(file_name, input_table[name])
    #
-   print('being creating data structures' )
-   #
-   # global_option_value
-   option_table = input_table['option_sim']
-   set_global_option_value( sim_dir, option_table )
+   if global_option_value['trace'] :
+      print('Creating data structures:' )
    #
    # parent_node_dict, child_list_node
    parent_node_dict, child_list_node = \
@@ -1115,8 +1127,9 @@ def simulate(sim_dir) :
    )
    #
    # s_last, s_start
-   simulate_id = len( input_table['simulate'] )
-   print( f'begin simulation: total id = {simulate_id:,}' )
+   if global_option_value['trace'] :
+      simulate_id = len( input_table['simulate'] )
+      print( f'Simulation: total id = {simulate_id:,}' )
    s_last  = time.time()
    s_start = s_last
    #
@@ -1131,7 +1144,7 @@ def simulate(sim_dir) :
       #
       # s_current
       s_current = time.time()
-      if s_current - s_last > 30.0 :
+      if s_current - s_last > 30.0 and global_option_value['trace'] :
             #
             # seconds, s_last
             seconds = s_current - s_start
@@ -1248,9 +1261,9 @@ def simulate(sim_dir) :
    # seconds, simulate_id
    seconds = s_current - s_start
    simulate_id = len( input_table['simulate'] )
-   print( f'end simulation: total seconds = {seconds:.0f}' )
-   #
-   print( 'write files' )
+   if global_option_value['trace'] :
+      print( f'End simulation: total seconds = {seconds:.0f}' )
+      print( 'Write files' )
    #
    # data.csv
    file_name = f'{sim_dir}/data_sim.csv'
@@ -1276,4 +1289,5 @@ def simulate(sim_dir) :
    file_name = f'{sim_dir}/random_effect.csv'
    at_cascade.csv.write_table(file_name, random_effect_table)
    #
-   print( 'csv_simulate done' )
+   if global_option_value['trace'] :
+      print( 'csv_simulate done' )
