@@ -32,6 +32,12 @@ Release Notes for 2023
 mm-dd
 *****
 
+05-15
+=====
+Improve documentation of correspondence between
+:ref:`csv_predict@Output Files@fit_predict.csv` ,
+tru_predict.csv and sam_predict.csv.
+
 05-14
 =====
 Add the optional

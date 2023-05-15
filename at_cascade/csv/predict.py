@@ -34,7 +34,7 @@ Prototype
 
 Example
 *******
-:ref:`csv_fit_xam-name` .
+:ref:`csv_sim_and_fit-name` .
 
 fit_dir
 *******
@@ -175,10 +175,10 @@ and not in ``fit_predict.csv`` .
 
 avgint_id
 ---------
-Each avgint_id corresponds to a different value for age, time, or
-integrand in the sam_predict file.
+Each avgint_id corresponds to a different value for age, time,
+and integrand in the fit_predict file.
 The age and time values comes from the covariate.csv file.
-The integrands come for the predict_integrand.csv file.
+The integrands values come from the predict_integrand.csv file.
 
 integrand_name
 --------------
@@ -217,15 +217,29 @@ of the corresponding covariate in covariate.csv.
 tru_predict.csv
 ===============
 If :ref:`csv_predict@sim_dir` is None, this file is not created.
-Otherwise, this is a version of fit_predict.csv with the
-*avg_integrand* corresponding to the true value of the variables
-(used during simulation).
+Otherwise, this file contains the predictions for the model variables
+corresponding to the simulation.
+
+#. The first line (header line) is the same in this file and
+   fit_predict.csv.
+#. If the other lines, in both files, are sorted by
+   ( *node_name* , *avgint_id* ) ,
+   the other lines are the same except for the value in the
+   *avg_integrand* column.
 
 sam_predict.csv
 ===============
-This is a sampling of the predictions.
-It has the same columns as fit_predict.csv (see above) plus
-an extra column named sample_index.
+This is a sampling of the predictions,
+using the posterior distribution of the model variables:
+
+#. The first line (header line) is the same in this file and
+   fit_predict.csv.
+#. Let *n_sample* be the number of other lines in this file divided by
+   the number of other lines in fit_predict.csv.
+#. For each line in fit_predict.csv (not counting the header line),
+   there are *n_sample* lines in sam_predict.csv,
+   that are the same as the line in fit_predict.csv except for the value in the
+   *avg_integrand* column.
 
 start_job_name
 --------------
@@ -580,7 +594,7 @@ def predict_one(
             pred_row[key] = avgint_row[key]
          avg_integrand             = float( pred_row['avg_integrand'] )
          pred_row['avg_integrand'] = format(avg_integrand, '.5g')
-         if prefix == 'fit' :
+         if prefix in [ 'fit', 'tru' ] :
             assert pred_row['sample_index'] == None
             del pred_row['sample_index']
       #

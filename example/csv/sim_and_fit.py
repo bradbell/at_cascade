@@ -7,6 +7,7 @@ import sys
 import time
 import shutil
 import math
+import copy
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
@@ -342,7 +343,7 @@ def fit(sim_dir, fit_dir) :
       for key in copy_list :
          row_in[key] = row_join[key]
       row_in['meas_value'] = row_join['meas_mean']
-      row_in['meas_std']   = 1e-4
+      row_in['meas_std']   = 1e-3
       if row_join['integrand_name'] == 'Sincidence' :
          row_in['hold_out'] = '1'
       else :
@@ -375,24 +376,22 @@ def fit(sim_dir, fit_dir) :
       else :
          assert  random_effect_node[node_name] == random_effect
    #
-   # tru_avg_integrand, max_integrand
-   tru_predict_table = at_cascade.csv.read_table(
-      file_name = f'{fit_dir}/tru_predict.csv'
-   )
+   # predict_table
+   predict_table = dict()
+   for prefix in [ 'tru', 'fit', 'sam' ] :
+      table = at_cascade.csv.read_table(
+         file_name = f'{fit_dir}/{prefix}_predict.csv'
+      )
+      key = lambda row : ( row['node_name'] , row['avgint_id'] )
+      predict_table[prefix] = sorted(table, key = key )
    #
-   # fit_predict_table
-   fit_predict_table = at_cascade.csv.read_table(
-      file_name = f'{fit_dir}/fit_predict.csv'
-   )
-   #
-   # check_table
-   check_table   = [ tru_predict_table, fit_predict_table ]
-   check_epsilon = [ 1e-4, 1e-2 ]
-   for (i_table, table) in enumerate(check_table) :
+   # max_error
+   check_epsilon = { 'tru':1e-4, 'fit':1e-2 }
+   for prefix in [ 'tru', 'fit' ] :
       #
       # check table
       max_error     = 0.0
-      for row in table :
+      for row in predict_table[prefix] :
          node      = row['node_name']
          integrand = row['integrand_name']
          sex       = row['sex']
@@ -407,7 +406,52 @@ def fit(sim_dir, fit_dir) :
          else :
             error = (true_p - estimate) / 1.0
          max_error = max(max_error, abs(error) )
-      assert max_error < check_epsilon[i_table]
+      if max_error > check_epsilon[prefix] :
+         print(max_error)
+         assert False
+   #
+   #
+   # n_predict, n_sample
+   n_predict = len(predict_table['tru'])
+   n_sample  = int( len(predict_table['sam']) / n_predict )
+   assert len(predict_table['sam']) == n_predict * n_sample
+   #
+   # Check correspondence between prediction files
+   for i_predict in range(n_predict) :
+      fit_row = copy.copy( predict_table['fit'][i_predict] )
+      tru_row = copy.copy( predict_table['tru'][i_predict] )
+      #
+      del fit_row['avg_integrand']
+      del tru_row['avg_integrand']
+      assert fit_row == tru_row
+      #
+      for i_sample in range(n_sample) :
+         j_sample = i_predict * n_sample + i_sample
+         sam_row  = copy.copy( predict_table['sam'][j_sample] )
+         del sam_row['avg_integrand']
+         del sam_row['sample_index']
+         assert sam_row == fit_row
+   #
+   # Check coverage
+   covered = 0
+   for i_predict in range(n_predict) :
+      fit_value = float( predict_table['fit'][i_predict]['avg_integrand'] )
+      tru_value = float( predict_table['tru'][i_predict]['avg_integrand'] )
+      #
+      std       = 0.0
+      for i_sample in range(n_sample) :
+         j_sample  = i_predict * n_sample + i_sample
+         sam_value = float( predict_table['sam'][j_sample]['avg_integrand'] )
+         std      += (sam_value - fit_value)**2
+      std = math.sqrt(std / n_sample)
+      #
+      lower = fit_value - 2.0 * std
+      upper = fit_value + 2.0 * std
+      if lower <= tru_value and tru_value <= upper :
+         covered += 1
+   #
+   # using meas_mean for meas_value so covered should equal n_predict
+   assert covered == n_predict
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :
