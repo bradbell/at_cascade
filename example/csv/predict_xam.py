@@ -14,7 +14,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 """
-{xrst_begin csv_sim_and_fit}
+{xrst_begin csv_predict_xam}
 {xrst_spell
    Sincidence
    iter
@@ -161,7 +161,7 @@ Source Code
    END_PYTHON
 }
 
-{xrst_end csv_sim_and_fit}
+{xrst_end csv_predict_xam}
 """
 # BEGIN_PYTHON
 #
@@ -476,6 +476,6 @@ if __name__ == '__main__' :
    # fit
    fit(sim_dir, fit_dir)
    #
-   print('csv_sim_and_fit: OK')
+   print('csv_predict_xam: OK')
    sys.exit(0)
 # END_PYTHON

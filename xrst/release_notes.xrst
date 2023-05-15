@@ -39,6 +39,7 @@ mm-dd
    tru_predict.csv and sam_predict.csv.
 #. Add :ref:`csv_simulate@Input Files@option_sim.csv@trace` to the
    option_sim.csv file.
+#. Change the csv_sim_and_fit example to :ref:`csv_predict_xam-name` .
 
 05-14
 =====
@@ -309,7 +310,7 @@ mm-dd
 =====
 #. If a test fails, run it a second time with a different random seed.
    As the number of tests increases this helps avoid a by chance test failure.
-#. Fix the value prior for iota in the :ref:`csv_sim_and_fit-name`
+#. Fix the value prior for iota in the sim_and_fit
    example. To be specific, it was log Gaussian by mistake and has been
    changed to Gaussian.
 #. You should advance to dismod_at-20221218 to avoid a crash when all of the
@@ -363,7 +364,7 @@ const_value and value_prior are empty in
    the dage and dtime priors were treated as if they were empty.
    This has been fixed (even though a rate is fixed for one age and time,
    it might not be fixed for the next age and time).
-#. The :ref:`csv_sim_and_fit-name` test would randomly fail.
+#. The sim_and_fit test would randomly fail.
    Diagnostic information has been added (when the test fails)
    and the limits have been widened (to reduce the chance tha the
    test fails).
@@ -374,7 +375,7 @@ const_value and value_prior are empty in
 
 12-03
 =====
-#. Add the :ref:`csv_sim_and_fit-name` example.
+#. Add the sim_and_fit example.
 #. In the csv fit, extend the prior
    :ref:`csv_fit@Input Files@prior.csv@density` to
    include the log_gaussian and log_laplace cases.

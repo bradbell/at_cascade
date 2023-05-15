@@ -34,7 +34,7 @@ Prototype
 
 Example
 *******
-:ref:`csv_sim_and_fit-name` .
+:ref:`csv_predict_xam-name` .
 
 fit_dir
 *******
