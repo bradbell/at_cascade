@@ -36,7 +36,7 @@ mm-dd
 =====
 #. Add the :ref:`csv_predict@Input Files@option_predict.csv@float_precision`
    to control the accuracy of the prediction files.
-#. Change the ref:`csv_predict_xam-name` example to check for
+#. Change the :ref:`csv_predict_xam-name` example to check for
    extremely high accuracy in the corresponding
    :ref:`csv_predict@Output Files@tru_predict.csv` file.
 
