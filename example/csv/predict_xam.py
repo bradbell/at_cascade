@@ -21,6 +21,7 @@ import at_cascade
    std
    pdf
    exp
+   sim
 }
 
 Example Simulating and Fitting Incidence From Prevalence Data
@@ -115,7 +116,12 @@ option_fit.csv
 
 option_predict.csv
 ==================
-Both the csv files and plot files (pdf files) are generated for each fit.
+#. *plot* is true, so the plot files (pdf files) are generated for each fit.
+#. *db2csv* is true, so the csv files are generated for each fit.
+#. *float_precision* is 12 so that tru_predict.csv is very close to the truth.
+   Note that we use the same value for *float_precision* , and a small value
+   for *absolute_tolerance* in option_sim.csv ,
+   so that the simulated values are accurate.
 
 fit_goal.csv
 ============
@@ -176,8 +182,8 @@ sim_file = dict()
 random_seed = str( int( time.time() ) )
 sim_file['option_sim.csv'] = \
 '''name,value
-absolute_tolerance,1e-5
-float_precision,7
+absolute_tolerance,1e-10
+float_precision,12
 integrand_step_size,5
 random_depend_sex,false
 std_random_effects_iota,.2
@@ -249,6 +255,7 @@ fit_file['option_predict.csv']  =  \
 '''name,value
 plot,true
 db2csv,true
+float_precision,12
 '''
 #
 # fit_goal.csv
@@ -386,7 +393,7 @@ def fit(sim_dir, fit_dir) :
       predict_table[prefix] = sorted(table, key = key )
    #
    # max_error
-   check_epsilon = { 'tru':1e-4, 'fit':1e-2 }
+   check_epsilon = { 'tru':1e-10, 'fit':1e-4 }
    for prefix in [ 'tru', 'fit' ] :
       #
       # check table
@@ -406,9 +413,9 @@ def fit(sim_dir, fit_dir) :
          else :
             error = (true_p - estimate) / 1.0
          max_error = max(max_error, abs(error) )
-      if max_error > check_epsilon[prefix] :
-         print(max_error)
-         assert False
+         if max_error > check_epsilon[prefix] :
+            print(prefix, max_error, check_epsilon[prefix])
+            assert False
    #
    #
    # n_predict, n_sample

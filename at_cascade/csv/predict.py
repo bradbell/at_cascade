@@ -109,6 +109,12 @@ integrand in the predict_integrand.csv file.
 The rate plot includes all the non-zero rates.
 The default value for this option is false .
 
+float_precision
+---------------
+This integer is the number of decimal digits of precision to
+include for float values in the output csv files.
+The default value for this option is 5.
+
 These are no effect rates; i.e., they are the estimated rate
 for this node an sex without any covariate effects
 If you want to include covariate effects, you will have to make your
@@ -310,6 +316,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
       'db2csv'                : (bool,  False)              ,
+      'float_precision'       : (int,   5)                  ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
       'plot'                  : (bool,  False)              ,
    }
@@ -567,6 +574,10 @@ def predict_one(
    index        = fit_node_database.rfind('/')
    fit_node_dir = fit_node_database[: index]
    #
+   # float_format
+   n_digits = str( global_option_value['float_precision'] )
+   float_format = '{0:.' + n_digits + 'g}'
+   #
    # prefix
    for prefix in prefix_list :
       #
@@ -592,8 +603,8 @@ def predict_one(
          avgint_row = avgint_table[avgint_id]
          for key in avgint_row.keys() :
             pred_row[key] = avgint_row[key]
-         avg_integrand             = float( pred_row['avg_integrand'] )
-         pred_row['avg_integrand'] = format(avg_integrand, '.5g')
+         avg_integrand             = pred_row['avg_integrand']
+         pred_row['avg_integrand'] = float_format.format(avg_integrand)
          if prefix in [ 'fit', 'tru' ] :
             assert pred_row['sample_index'] == None
             del pred_row['sample_index']
