@@ -231,7 +231,7 @@ corresponding to the simulation.
 #. If the other lines, in both files, are sorted by
    ( *node_name* , *avgint_id* ) ,
    the other lines are the same except for the value in the
-   *avg_integrand* column.
+   avg_integrand column.
 
 sam_predict.csv
 ===============
@@ -239,13 +239,17 @@ This is a sampling of the predictions,
 using the posterior distribution of the model variables:
 
 #. The first line (header line) is the same in this file and
-   fit_predict.csv.
-#. Let *n_sample* be the number of other lines in this file divided by
+   fit_predict.csv except that sam_predict.csv has an extra column
+   named sample_index.
+#. Suppose that the other lines in sam_predict.csv and fit_predict.csv
+   are sorted by ( *node_name* , *avgint_id* ) .
+#. Let *n_sample* be the number of other lines in sam_predict.csv divided by
    the number of other lines in fit_predict.csv.
 #. For each line in fit_predict.csv (not counting the header line),
    there are *n_sample* lines in sam_predict.csv,
    that are the same as the line in fit_predict.csv except for the value in the
-   *avg_integrand* column.
+   avg_integrand column and the extra sample_index column in
+   sam_predict.csv.
 
 start_job_name
 --------------
