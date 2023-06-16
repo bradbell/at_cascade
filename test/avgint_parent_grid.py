@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
@@ -230,10 +230,10 @@ def main() :
    all_option        = {
       'result_dir':     '.',
       'root_node_name': 'n0',
+      'root_node_database': root_node_database,
    }
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
-      root_node_database      = root_node_database,
       split_reference_table   = list(),
       all_option              = all_option,
    )

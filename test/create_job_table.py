@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
                          (n0,s1)
@@ -75,6 +75,7 @@ all_option            = {
    'split_covariate_name':        'sex',
    'shift_prior_std_factor':       1e3,
 }
+all_option['root_node_database'] = all_option['result_dir'] + '/root_node.db'
 # END all_option_table
 #
 #
@@ -346,7 +347,7 @@ def main() :
    os.chdir(work_dir)
    #
    # Create root_node.db
-   root_node_database  = 'root_node.db'
+   root_node_database  = all_option['root_node_database']
    root_node_db(root_node_database)
    #
    # node_table, age_table, time_table
@@ -395,7 +396,6 @@ def main() :
    all_node_database = 'all_node.db'
    at_cascade.create_all_node_db(
       all_node_database      = all_node_database,
-      root_node_database     = root_node_database,
       split_reference_table  = split_reference_table,
       node_split_table       = node_split_table,
       all_option             = all_option,

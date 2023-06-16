@@ -1414,6 +1414,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    root_node_name = at_cascade.get_parent_node(database)
    #
    # all_option
+   root_node_database     = f'{fit_dir}/root_node.db'
    child_prior_std_factor = global_option_value['child_prior_std_factor']
    shared_memory_prefix   = global_option_value['shared_memory_prefix']
    absolute_covariates    = global_option_value['absolute_covariates']
@@ -1437,6 +1438,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       'shared_memory_prefix'         : shared_memory_prefix,
       'refit_split'                  : refit_split,
       'result_dir'                   : fit_dir,
+      'root_node_database'           : root_node_database,
       'root_node_name'               : root_node_name,
       'split_covariate_name'         : 'sex',
       'root_split_reference_name'    : 'both',
@@ -1529,7 +1531,6 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    # create_all_node_db
    at_cascade.create_all_node_db(
       all_node_database         = f'{fit_dir}/all_node.db'  ,
-      root_node_database        = f'{fit_dir}/root_node.db' ,
       all_option                = all_option                ,
       split_reference_table     = split_reference_table     ,
       node_split_table          = node_split_table          ,
@@ -1617,7 +1618,6 @@ def fit(fit_dir, max_node_depth = None) :
    # cascade_root_node
    at_cascade.cascade_root_node(
       all_node_database  = f'{fit_dir}/all_node.db'  ,
-      root_node_database = f'{fit_dir}/root_node.db' ,
       fit_goal_set       = fit_goal_max_depth        ,
       no_ode_fit         = True                      ,
       fit_type_list      = [ 'both', 'fixed']        ,

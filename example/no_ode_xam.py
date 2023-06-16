@@ -785,10 +785,10 @@ def main() :
    all_option        = {
       'result_dir'         : result_dir,
       'root_node_name'     : 'n0',
+      'root_node_database' : root_node_database,
    }
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
-      root_node_database      = root_node_database,
       all_option              = all_option,
       omega_grid              = omega_grid,
       omega_data              = all_omega_data,
@@ -819,7 +819,6 @@ def main() :
    # cascade starting at root node
    at_cascade.cascade_root_node(
       all_node_database  = all_node_database ,
-      root_node_database = root_node_database,
       fit_goal_set       = fit_goal_set,
       no_ode_fit         = True,
    )

@@ -4,9 +4,37 @@
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin module}
+{xrst_spell
+   cov
+   subgroup
+   refactoring
+}
 
 The at_cascade Python Module
 ############################
+
+constant_table_list
+*******************
+Some of the dismod_at input tables are the same for every fit of a cascade.
+The :ref:`fit node databases <glossary@fit_node_database>` use
+the :ref:`glossary@root_node_database` to get the value for these tables:
+{xrst_code py} '''
+constant_table_list = [
+   'age',
+   'covariate',
+   'data',
+   'density',
+   'integrand',
+   'node',
+   'rate_eff_cov',
+   'subgroup',
+   'time',
+   'weight',
+   'weight_grid',
+]
+# Temporary setting while refactoring
+constant_table_list = list()
+'''{xrst_code}
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
 {xrst_toc_table
@@ -18,6 +46,7 @@ The at_cascade Python Module
    at_cascade/check_log.py
    at_cascade/clear_shared.py
    at_cascade/continue_cascade.py
+   at_cascade/copy_root_db.py
    at_cascade/create_all_node_db.py
    at_cascade/create_job_table.py
    at_cascade/create_shift_db.py
@@ -55,6 +84,7 @@ from .check_cascade_node    import check_cascade_node
 from .check_log             import check_log
 from .clear_shared          import clear_shared
 from .continue_cascade      import continue_cascade
+from .copy_root_db          import copy_root_db
 from .create_all_node_db    import create_all_node_db
 from .create_job_table      import create_job_table
 from .create_shift_db       import create_shift_db

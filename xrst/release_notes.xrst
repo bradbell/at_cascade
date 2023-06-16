@@ -32,6 +32,14 @@ Release Notes for 2023
 mm-dd
 *****
 
+06-16
+=====
+**API Change** :
+The :ref:`all_option_table@root_node_database` was added to the
+all_option table.
+In addition it was removed as an argument to
+:ref:`cascade_root_node-name` and :ref:`create_all_node_db-name` .
+
 05-16
 =====
 #. Add the :ref:`csv_predict@Input Files@option_predict.csv@float_precision`
@@ -856,7 +864,7 @@ below a certain point.
 
 2. Move cascade_fit_node to :ref:`cascade_root_node-name` (better name now that
    the routine is not recursive. In addition, change the fit_node_database
-   argument name to :ref:`cascade_root_node@root_node_database`.
+   argument name to root_node_database.
 
 12-01
 =====

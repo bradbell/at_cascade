@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin create_all_node_db}
@@ -22,12 +22,6 @@ all_node_database
 *****************
 is a python string containing the name of the
 :ref:`all_node_db-name` that is created by this call.
-This argument can't be ``None``.
-
-root_node_database
-******************
-is a python string containing the name of the name of the
-:ref:`glossary@root_node_database`.
 This argument can't be ``None``.
 
 List
@@ -110,14 +104,15 @@ age
 ===
 The value *omega*\ [``age``] is a list containing the
 age_id values for the omega_grid.
-These are indices in the root_node_database age table.
+These are indices in the
+:ref:`glossary@root_node_database` age table.
 We use the notation *n_omega_age* for the length of the age list.
 
 time
 ====
 The value *omega*\ [``time``] is a list containing the
 time_id values for the omega_grid.
-These are indices in the root_node_database time table.
+These are indices in the *root_node_database* time table.
 We use the notation *n_omega_time* for the length of the time list.
 
 omega_data
@@ -166,7 +161,6 @@ def create_all_node_db(
 # BEGIN syntax
 # at_cascade.create_all_node_db(
    all_node_database         = None,
-   root_node_database        = None,
    all_option                = None,
    split_reference_table     = None,
    node_split_table          = None,
@@ -174,34 +168,31 @@ def create_all_node_db(
    omega_grid                = None,
    omega_data                = None,
 # )
-# END syntax
 ) :
-   #
-   # split_reference_list
    if split_reference_table is None :
       split_reference_table = list()
-   #
-   # node_split_table
    if node_split_table is None :
       node_split_table = list()
-   #
-   # mulcov_freeze_table
    if mulcov_freeze_table is None :
       mulcov_freeze_table = list()
    #
+   assert type(all_node_database)      == str
+   assert type(all_option)             == dict
+   assert type(split_reference_table)  == list
+   assert type(node_split_table)       == list
+   assert type(mulcov_freeze_table)    == list
+# END syntax
+   #
    # some asserts
-   assert type(all_node_database)      is str
-   assert type(root_node_database)     is str
-   assert type(all_option)             is dict
-   assert type(split_reference_table)  is list
    if omega_grid is None :
       assert omega_data is None
    else :
       assert type(omega_grid) is dict
       assert type(omega_data) is dict
    #
-   assert 'root_node_name' in all_option
-   assert 'result_dir' in all_option
+   assert 'root_node_database' in all_option
+   assert 'root_node_name'     in all_option
+   assert 'result_dir'         in all_option
    #
    # n_split
    n_split = 1
@@ -212,8 +203,9 @@ def create_all_node_db(
    # Read root node database
    # -------------------------------------------------------------------------
    # root_connection
-   new             = False
-   root_connection = dismod_at.create_connection(root_node_database, new)
+   new                = False
+   root_node_database = all_option['root_node_database']
+   root_connection    = dismod_at.create_connection(root_node_database, new)
    #
    # age_table
    tbl_name  = 'age'

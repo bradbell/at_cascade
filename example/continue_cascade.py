@@ -177,6 +177,7 @@ all_option  = {
    'root_node_name': 'n0',
    'max_number_cpu':  '2',
 }
+all_option['root_node_database'] = all_option['result_dir'] + '/root_node.db'
 # END all_option
 # ----------------------------------------------------------------------------
 # functions
@@ -362,7 +363,7 @@ def two_fit_goal_set_example(result_dir) :
    # -------------------------------------------------------------------------
    #
    # root_node_database
-   root_node_database  = f'{result_dir}/root_node.db'
+   root_node_database  = all_option['root_node_database']
    #
    # all_node_database
    all_node_database = f'{result_dir}/all_node.db'
@@ -391,7 +392,6 @@ def two_fit_goal_set_example(result_dir) :
    # cascade starting at n0
    at_cascade.cascade_root_node(
       all_node_database  = all_node_database  ,
-      root_node_database = root_node_database  ,
       fit_goal_set       = first_fit_goal_set ,
    )
    #
@@ -418,7 +418,7 @@ def two_fit_goal_set_example(result_dir) :
 def one_fit_goal_set_example(result_dir ) :
    #
    # root_node_database
-   root_node_database  = f'{result_dir}/root_node.db'
+   root_node_database  = all_option['root_node_database']
    #
    # all_node_database
    all_node_database = f'{result_dir}/all_node.db'
@@ -448,7 +448,6 @@ def one_fit_goal_set_example(result_dir ) :
    fit_goal_set = first_fit_goal_set | second_fit_goal_set
    at_cascade.cascade_root_node(
       all_node_database  = all_node_database  ,
-      root_node_database = root_node_database  ,
       fit_goal_set       = fit_goal_set ,
    )
    #
@@ -475,14 +474,13 @@ def main() :
       os.makedirs(result_dir)
    #
    # root_node_database
-   root_node_database  = f'{result_dir}/root_node.db'
+   root_node_database  = all_option['root_node_database']
    root_node_db(root_node_database)
    #
    # all_node_database
    all_node_database = f'{result_dir}/all_node.db'
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
-      root_node_database      = root_node_database,
       all_option              = all_option,
    )
    #

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 
 {xrst_begin glossary}
@@ -75,12 +75,7 @@ This is a dismod_at database with the following properties:
 
 Constant Tables
 ===============
-The following tables are the same as in the
-:ref:`glossary@root_node_database`:
-age, covariate, data, density, integrand, node, subgroup, time,
-weight, weight grid.
-The subgroup table must have one row; i.e., there is one subgroup,
-one group and they correspond to all the nodes.
+see :ref:`module@constant_table_list`.
 
 Option Table
 ============
@@ -252,8 +247,13 @@ root_node_database
 ******************
 This is a dismod_at database where the *root_node* is the
 parent node in the dismod_at option table.
-This must satisfy all the conditions for an
-:ref:`glossary@input_node_database`.
+It must satisfy all the conditions for an
+:ref:`glossary@input_node_database` plus the following:
+
+#. The subgroup table must have one row; i.e., there is one subgroup,
+   one group and they correspond to all the nodes.
+#. The option table must not have an
+   *other_database* or *other_input_table* entry.
 
 Sincidence
 **********

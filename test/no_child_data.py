@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
@@ -320,13 +320,13 @@ def main() :
    all_option        = {
       'result_dir':     result_dir,
       'root_node_name': 'n0',
+      'root_node_database': root_node_database,
    }
    #
    # all_node.db
    all_node_database = f'{result_dir}/all_node.db'
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
-      root_node_database      = root_node_database,
       split_reference_table   = list(),
       all_option              = all_option,
       mulcov_freeze_table     = mulcov_freeze_table,
@@ -345,7 +345,6 @@ def main() :
    # cascade starting at root node
    at_cascade.cascade_root_node(
       all_node_database  = all_node_database ,
-      root_node_database = root_node_database,
       fit_goal_set       = fit_goal_set      ,
    )
    #

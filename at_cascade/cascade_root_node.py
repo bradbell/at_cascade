@@ -26,11 +26,6 @@ is a python string specifying the location of the
 relative to the current working directory.
 This argument can't be ``None``.
 
-root_node_database
-******************
-is a python string specifying the location of the dismod_at
-:ref:`glossary@root_node_database`.
-
 fit_goal_set
 ************
 This is a ``set`` with elements of type ``int`` (``str``)
@@ -54,7 +49,8 @@ see :ref:`all_option_table@result_dir`
 and :ref:`all_option_table@root_node_name`.
 If *no_ode_fit* is ``True`` ( ``False`` ) the priors in the
 *root_node_database* are modified (are not modified)
-before the root node is fit.
+before the root node is fit;
+see :ref:`all_option_table@root_node_database` .
 Upon return, this is a :ref:`glossary@fit_node_database` with the
 extra properties listed below:
 
@@ -118,7 +114,6 @@ def cascade_root_node(
 # BEGIN syntax
 # at_cascade.cascade_root_node(
    all_node_database       = None,
-   root_node_database      = None,
    fit_goal_set            = None,
    no_ode_fit              = False,
    fit_type_list           = [ 'both', 'fixed' ]
@@ -126,7 +121,6 @@ def cascade_root_node(
 # END syntax
 ) :
    assert type(all_node_database)  == str
-   assert type(root_node_database) == str
    assert type(fit_goal_set)       == set
    assert type(no_ode_fit)         == bool
    assert type(fit_type_list)      == list
@@ -146,10 +140,11 @@ def cascade_root_node(
    for row in all_option_table :
       all_option_dict[ row['option_name'] ] = row['option_value']
    #
-   # root_node_name, max_number_cpu, result_dir
-   result_dir     = all_option_dict['result_dir']
-   root_node_name = all_option_dict['root_node_name']
-   max_number_cpu = 1
+   # root_node_name, root_node_database, max_number_cpu, result_dir
+   root_node_name     = all_option_dict['root_node_name']
+   root_node_database = all_option_dict['root_node_database']
+   result_dir         = all_option_dict['result_dir']
+   max_number_cpu     = 1
    if 'max_number_cpu' in all_option_dict :
       max_number_cpu = int( all_option_dict['max_number_cpu'] )
    #

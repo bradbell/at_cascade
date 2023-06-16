@@ -217,6 +217,7 @@ all_option            = {
    'split_covariate_name':       'sex',
    'shift_prior_std_factor':      1e3,
 }
+all_option['root_node_database'] = all_option['result_dir'] + '/root_node.db'
 # END all_option_table
 #
 #
@@ -468,7 +469,7 @@ def main() :
       os.makedirs(result_dir)
    #
    # Create root_node.db
-   root_node_database  = f'{result_dir}/root_node.db'
+   root_node_database  = all_option['root_node_database']
    root_node_db(root_node_database)
    #
    # omega_grid
@@ -504,7 +505,6 @@ def main() :
    all_node_database = f'{result_dir}/all_node.db'
    at_cascade.create_all_node_db(
       all_node_database      = all_node_database,
-      root_node_database     = root_node_database,
       split_reference_table  = split_reference_table,
       node_split_table       = node_split_table,
       all_option             = all_option,
@@ -536,7 +536,6 @@ def main() :
    # cascade starting at root node
    at_cascade.cascade_root_node(
       all_node_database  = all_node_database ,
-      root_node_database = root_node_database,
       fit_goal_set       = fit_goal_set      ,
    )
    #

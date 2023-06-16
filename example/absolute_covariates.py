@@ -210,6 +210,7 @@ all_option            = {
    'root_split_reference_name': 'both',
    'split_covariate_name':      'sex',
 }
+all_option['root_node_database'] = all_option['result_dir'] + '/root_node.db'
 split_reference_table = [
    {'split_reference_name': 'female', 'split_reference_value': 1.0},
    {'split_reference_name': 'both',   'split_reference_value': 2.0},
@@ -505,7 +506,7 @@ def main() :
       os.makedirs(result_dir)
    #
    # Create root_node.db
-   root_node_database  = f'{result_dir}/root_node.db'
+   root_node_database  = all_option['root_node_database']
    root_node_db(root_node_database)
    #
    # connection
@@ -556,7 +557,6 @@ def main() :
    all_node_database = f'{result_dir}/all_node.db'
    at_cascade.create_all_node_db(
       all_node_database      = all_node_database,
-      root_node_database     = root_node_database,
       split_reference_table  = split_reference_table,
       all_option             = all_option,
       omega_grid             = omega_grid,
@@ -574,7 +574,6 @@ def main() :
    # cascade starting at root node
    at_cascade.cascade_root_node(
       all_node_database  = all_node_database ,
-      root_node_database = root_node_database ,
       fit_goal_set       = fit_goal_set      ,
    )
    #
