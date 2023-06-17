@@ -78,14 +78,6 @@ def continue_cascade(
    assert type(fit_goal_set)      == set
    assert type(fit_type_list)     == list
    #
-   # node_table, covariate_table
-   connection      = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
-   )
-   node_table      = dismod_at.get_table_dict(connection, 'node')
-   covariate_table = dismod_at.get_table_dict(connection, 'covariate')
-   connection.close()
-   #
    # split_reference_table, all_option, node_split_table
    connection       = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
@@ -96,19 +88,32 @@ def continue_cascade(
       dismod_at.get_table_dict(connection, 'split_reference')
    connection.close()
    #
-   # result_dir, root_node_name, max_number_cpu
-   result_dir     = None
-   root_node_name = None
+   # result_dir, root_node_name, root_node_database, max_number_cpu
+   result_dir         = None
+   root_node_name     = None
+   root_node_database = None
    max_number_cpu = 1
    for row in all_option_table :
       if row['option_name'] == 'result_dir' :
          result_dir = row['option_value']
       if row['option_name'] == 'root_node_name' :
          root_node_name = row['option_value']
+      if row['option_name'] == 'root_node_database' :
+         root_node_database = row['option_value']
       if row['option_name'] == 'max_number_cpu' :
          max_number_cpu = int( row['option_value'] )
    assert result_dir is not None
    assert root_node_name is not None
+   assert root_node_database is not None
+   #
+   # node_table, covariate_table, fit_integrand
+   fit_or_root = at_cascade.fit_or_root_class(
+      fit_node_database, root_node_database
+   )
+   node_table      = fit_or_root.get_table('node')
+   covariate_table = fit_or_root.get_table('covariate')
+   fit_integrand   = at_cascade.get_fit_integrand(fit_or_root)
+   fit_or_root.close()
    #
    # root_node_id
    root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
@@ -123,9 +128,6 @@ def continue_cascade(
             'split_reference',
             root_split_reference_name
          )
-   #
-   # fit_integrand
-   fit_integrand = at_cascade.get_fit_integrand(fit_node_database)
    #
    # fit_node_id
    fit_node_name = at_cascade.get_parent_node(fit_node_database)

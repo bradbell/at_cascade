@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 #
 import os
@@ -107,7 +107,9 @@ def main() :
    connection.close()
    #
    # fit_integrand
-   fit_integrand = at_cascade.get_fit_integrand(database)
+   fit_or_root   = at_cascade.fit_or_root_class(database, database)
+   fit_integrand = at_cascade.get_fit_integrand(fit_or_root)
+   fit_or_root.close()
    #
    # check fit_integrand
    check = { 0, 1, 2, 4 }

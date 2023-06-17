@@ -166,20 +166,19 @@ def cascade_root_node(
          fit_type           = fit_type_list[0],
       )
    #
-   # node_table, covariate_table
-   connection      = dismod_at.create_connection(
-      root_fit_database, new = False, readonly = True
+   # node_table, covariate_table, fit_integrand
+   fit_or_root = at_cascade.fit_or_root_class(
+      root_fit_database, root_node_database
    )
-   node_table      = dismod_at.get_table_dict(connection, 'node')
-   covariate_table = dismod_at.get_table_dict(connection, 'covariate')
-   avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
-   connection.close()
+   node_table      = fit_or_root.get_table('node')
+   covariate_table = fit_or_root.get_table('covariate')
+   avgint_table    = fit_or_root.get_table('avgint')
    if len(avgint_table) != 0 :
       msg = 'cascade_root_node: avgint table is not empty'
       assert False, msg
+   fit_integrand = at_cascade.get_fit_integrand(fit_or_root)
+   fit_or_root.close()
    #
-   # fit_integrand
-   fit_integrand = at_cascade.get_fit_integrand(root_fit_database)
    #
    # root_node_id
    root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)

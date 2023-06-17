@@ -32,13 +32,17 @@ Release Notes for 2023
 mm-dd
 *****
 
-06-16
-=====
-**API Change** :
-The :ref:`all_option_table@root_node_database` was added to the
-all_option table.
-In addition it was removed as an argument to
-:ref:`cascade_root_node-name` and :ref:`create_all_node_db-name` .
+other_database Branch
+=====================
+#. **API Change** :
+   The :ref:`all_option_table@root_node_database` was added to the
+   all_option table.
+   In addition it was removed as an argument to
+   :ref:`cascade_root_node-name` and :ref:`create_all_node_db-name` .
+#. Change the :ref:`get_fit_integrand-name` argument from the name
+   of the fit node database to a :ref:`fit_or_root_class-name` object.
+#. Use :ref:`copy_root_db-name` to remove the constant tables from the
+   :ref:`fit node databases <glossary@fit_node_database>` .
 
 05-16
 =====

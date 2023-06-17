@@ -51,7 +51,7 @@ constant_table_list = list()
    at_cascade/create_job_table.py
    at_cascade/create_shift_db.py
    at_cascade/empty_avgint_table.py
-   at_cascade/fit_or_root.py
+   at_cascade/fit_or_root_class.py
    at_cascade/get_cov_info.py
    at_cascade/get_cov_reference.py
    at_cascade/get_database_dir.py
@@ -90,7 +90,7 @@ from .create_all_node_db    import create_all_node_db
 from .create_job_table      import create_job_table
 from .create_shift_db       import create_shift_db
 from .empty_avgint_table    import empty_avgint_table
-from .fit_or_root           import fit_or_root
+from .fit_or_root_class     import fit_or_root_class
 from .get_cov_info          import get_cov_info
 from .get_cov_reference     import get_cov_reference
 from .get_database_dir      import get_database_dir

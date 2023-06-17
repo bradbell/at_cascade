@@ -309,7 +309,11 @@ def no_ode_fit(
    # enforce max_fit
    fit_integrand = set()
    if not max_fit is None :
-      fit_integrand = at_cascade.get_fit_integrand(root_node_database)
+      fit_or_root   = at_cascade.fit_or_root_class(
+         root_node_database, root_node_database
+      )
+      fit_integrand = at_cascade.get_fit_integrand(fit_or_root)
+      fit_or_root.close()
    for integrand_id in fit_integrand :
       row            = root_table['integrand'][integrand_id]
       integrand_name = row['integrand_name']
