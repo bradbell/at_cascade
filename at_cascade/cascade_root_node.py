@@ -103,7 +103,6 @@ between it's input and output state.
 {xrst_end cascade_root_node}
 '''
 # ----------------------------------------------------------------------------
-import shutil
 import time
 import os
 import multiprocessing
@@ -158,7 +157,7 @@ def cascade_root_node(
    # root_fit_database
    root_fit_database = f'{result_dir}/{root_node_name}/dismod.db'
    if not no_ode_fit :
-      shutil.copyfile(root_node_database, root_fit_database)
+      at_cascade.copy_root_db(root_node_database, root_fit_database)
    else :
       at_cascade.no_ode_fit(
          all_node_database  = all_node_database,

@@ -95,7 +95,6 @@ import time
 import math
 import sys
 import os
-import shutil
 import copy
 import dismod_at
 import at_cascade
@@ -257,7 +256,7 @@ def no_ode_fit(
    # ------------------------------------------------------------------------
    # no_ode_database
    # ------------------------------------------------------------------------
-   shutil.copyfile(root_node_database, no_ode_database)
+   at_cascade.copy_root_db(root_node_database, no_ode_database)
    #
    # connection
    connection = dismod_at.create_connection(
