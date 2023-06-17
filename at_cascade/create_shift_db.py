@@ -393,6 +393,13 @@ def create_shift_db(
       all_table[name] =  dismod_at.get_table_dict(connection, name)
    connection.close()
    #
+   # root_node_database
+   root_node_database = None
+   for row in all_table['all_option'] :
+      if row['option_name'] == 'root_node_database' :
+         root_node_database = row['option_value']
+   assert root_node_database != None
+   #
    # shift_prior_std_factor
    shift_prior_std_factor = 1.0
    for row in all_table['all_option'] :
@@ -400,8 +407,8 @@ def create_shift_db(
          shift_prior_std_factor = float( row['option_value'] )
    #
    # fit_table
-   connection    = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+   fit_or_root = at_cascade.fit_or_root_class(
+      fit_node_database, root_node_database
    )
    fit_table  = dict()
    for name in [
@@ -422,11 +429,11 @@ def create_shift_db(
       'time',
       'var',
    ] :
-      fit_table[name] = dismod_at.get_table_dict(connection, name)
+      fit_table[name] = fit_or_root.get_table(name)
    if predict_sample :
       for name in [ 'c_shift_predict_sample', 'sample' ] :
-         fit_table[name] = dismod_at.get_table_dict(connection, name)
-   connection.close()
+         fit_table[name] = fit_or_root.get_table(name)
+   fit_or_root.close()
    #
    # age_id_next_list
    age_id_next_list = get_age_id_next_list(
@@ -514,7 +521,8 @@ def create_shift_db(
          'option',
          'rate',
       ] :
-         shift_table[name] = copy.deepcopy(fit_table[name])
+         if name not in at_cascade.constant_table_list :
+            shift_table[name] = copy.deepcopy(fit_table[name])
       shift_table['prior']       = list()
       shift_table['smooth']      = list()
       shift_table['smooth_grid'] = list()

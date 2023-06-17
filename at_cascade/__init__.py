@@ -21,7 +21,6 @@ the :ref:`glossary@root_node_database` to get the value for these tables:
 {xrst_code py} '''
 constant_table_list = [
    'age',
-   'covariate',
    'data',
    'density',
    'integrand',

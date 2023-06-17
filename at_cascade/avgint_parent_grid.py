@@ -249,9 +249,16 @@ def avgint_parent_grid(
    )
    connection.close()
    #
+   # root_node_database
+   root_node_database = None
+   for row in all_option_table :
+      if row['option_name'] == 'root_node_database' :
+         root_node_database = row['option_value']
+   assert root_node_database != None
+   #
    # fit_tables
-   connection    = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+   fit_or_root = at_cascade.fit_or_root_class(
+      fit_node_database, root_node_database
    )
    fit_tables = dict()
    for name in [
@@ -265,8 +272,8 @@ def avgint_parent_grid(
       'smooth_grid',
       'time',
    ] :
-      fit_tables[name] = dismod_at.get_table_dict(connection, name)
-   connection.close()
+      fit_tables[name] = fit_or_root.get_table(name)
+   fit_or_root.close()
    #
    # split_covariate_id, fit_split_reference_id, fit_split_reference
    split_covariate_id     = None

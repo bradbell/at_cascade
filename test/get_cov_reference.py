@@ -27,6 +27,9 @@ def main() :
    # all_node_database
    all_node_database = 'all_node.db'
    #
+   # root_node_database
+   root_node_database  = 'root_node.db'
+   #
    # connection
    new        = True
    connection = dismod_at.create_connection(all_node_database, new)
@@ -45,6 +48,7 @@ def main() :
    row_list = [
       [ 'result_dir',           '.'  ],
       [ 'root_node_name',       'n0' ],
+      [ 'root_node_database',   root_node_database ],
       [ 'split_covariate_name', split_covariate_name ],
       [ 'absolute_covariates',  absolute_covariates ],
    ]
@@ -63,8 +67,6 @@ def main() :
    connection.close()
    #
    # ------------------------------------------------------------------------
-   # root_node_database
-   root_node_database  = 'root_node.db'
    #
    # connection
    new        = True
