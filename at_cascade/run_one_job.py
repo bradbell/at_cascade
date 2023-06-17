@@ -273,7 +273,12 @@ def run_one_job(
    )
    #
    # integrand_table
-   integrand_table = dismod_at.get_table_dict(connection, 'integrand')
+   root_node_database = all_option_dict['root_node_database']
+   fit_or_root        = at_cascade.fit_or_root_class(
+      fit_node_database, root_node_database
+   )
+   integrand_table = fit_or_root.get_table('integrand')
+   fit_or_root.close()
    #
    # log table
    if first_fit :

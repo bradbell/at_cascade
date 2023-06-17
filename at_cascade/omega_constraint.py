@@ -83,13 +83,6 @@ import dismod_at
 import at_cascade
 from math import log
 # ----------------------------------------------------------------------------
-def null_row(connection, tbl_name) :
-   (col_name, col_type) = dismod_at.get_name_type(connection, tbl_name)
-   row = dict()
-   for key in col_name :
-      row[key] = None
-   return row
-# ----------------------------------------------------------------------------
 def child_node_id_list(node_table, parent_node_id) :
    result = list()
    for (node_id, row) in enumerate(node_table) :
@@ -135,12 +128,17 @@ def omega_constraint(
    n_omega_age  = len( all_tables['omega_age_grid'] )
    n_omega_time = len( all_tables['omega_time_grid'] )
    #
-   # connection
-   connection    = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
-   )
+   # root_node_database
+   root_node_database = None
+   for row in all_tables['all_option'] :
+      if row['option_name'] == 'root_node_database' :
+         root_node_database = row['option_value']
+   assert root_node_database != None
    #
    # fit_tables
+   fit_or_root = at_cascade.fit_or_root_class(
+      fit_node_database, root_node_database
+   )
    fit_tables   = dict()
    fit_null_row = dict()
    for name in [
@@ -155,8 +153,9 @@ def omega_constraint(
       'smooth',
       'smooth_grid',
    ] :
-      fit_tables[name]   = dismod_at.get_table_dict(connection, name)
-      fit_null_row[name] = null_row(connection, name)
+      fit_tables[name]   = fit_or_root.get_table(name)
+      fit_null_row[name] = fit_or_root.null_row(name)
+   fit_or_root.close()
    #
    # check some fit_node_database assumptions
    assert len( fit_tables['nslist'] ) == 0
@@ -338,6 +337,10 @@ def omega_constraint(
          row['child_nslist_id']  = nslist_id
    #
    # replace these fit tables
+   connection    = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = False
+   )
+   #
    for name in [
       'nslist',
       'nslist_pair',
