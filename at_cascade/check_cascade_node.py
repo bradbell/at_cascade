@@ -108,9 +108,20 @@ def check_cascade_node(
    assert relative_tolerance == None or type(relative_tolerance) == float
    # END syntax
    #
-   # tables
+   # root_node_database
    connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+      all_node_database, new = False, readonly = True
+   )
+   all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+   root_node_database = None
+   for row in all_option_table :
+      if row['option_name'] == 'root_node_database' :
+         root_node_database = row['option_value']
+   assert root_node_database != None
+   #
+   # tables
+   fit_or_root = at_cascade.fit_or_root_class(
+      fit_node_database, root_node_database
    )
    tables = dict()
    for name in [
@@ -120,8 +131,8 @@ def check_cascade_node(
       'integrand',
       'node',
    ] :
-      tables[name] = dismod_at.get_table_dict(connection, name)
-   connection.close()
+      tables[name] = fit_or_root.get_table(name)
+   fit_or_root.close()
    #
    # fit_node_id
    fit_node_name = at_cascade.get_parent_node( fit_node_database )

@@ -234,9 +234,7 @@ def try_one_job(
          # job_done
          job_done = True
       else :
-         #
-         # Set True for running with python -m pdb
-         if False :
+         try :
             at_cascade.run_one_job(
                job_table         = job_table,
                run_job_id        = this_job_id ,
@@ -250,25 +248,10 @@ def try_one_job(
             #
             # job_done
             job_done = True
-         else :
-            try :
-               at_cascade.run_one_job(
-                  job_table         = job_table,
-                  run_job_id        = this_job_id ,
-                  all_node_database = all_node_database,
-                  node_table        = node_table,
-                  fit_integrand     = fit_integrand,
-                  fit_type          = fit_type,
-                  first_fit         = fit_type_index == 1,
-                  trace_file_obj    = trace_file_obj,
-               )
-               #
-               # job_done
-               job_done = True
-            except Exception as e:
-               job_done = False
-               #
-               print( f'\nfit {fit_type:<5} {job_name} message:\n' + str(e) )
+         except Exception as e:
+            job_done = False
+            #
+            print( f'\nfit {fit_type:<5} {job_name} message:\n' + str(e) )
    #
    if job_done :
       #

@@ -661,7 +661,13 @@ def display_no_ode_fit(root_node_dir) :
    # db2csv
    dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
 # ----------------------------------------------------------------------------
-def check_no_ode_fit(root_node_dir) :
+def check_no_ode_fit(root_node_database) :
+   #
+   # root_node_dir
+   root_node_dir = 'n0'
+   index         = root_node_database.rfind('/')
+   if 0 <= index :
+      root_node_dir = root_node_database[0 : index] + '/n0'
    #
    # no_ode_database
    no_ode_database = root_node_dir + '/no_ode/dismod.db'
@@ -671,22 +677,18 @@ def check_no_ode_fit(root_node_dir) :
       'dismod_at', no_ode_database, 'predict', 'fit_var'
    ] )
    #
-   # connection
-   connection = dismod_at.create_connection(
-      no_ode_database, new = False, readonly = True
-   )
-   #
    # table
+   fit_or_root = at_cascade.fit_or_root_class(
+      no_ode_database, root_node_database
+   )
    table = dict()
    for tbl_name in [
       'age', 'time', 'var', 'rate', 'node', 'fit_var', 'avgint',
       'integrand', 'predict'
 
    ] :
-      table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
-   #
-   # connection
-   connection.close()
+      table[tbl_name] = fit_or_root.get_table(tbl_name)
+   fit_or_root.close()
    #
    # check variable values
    for (var_id, var_row) in enumerate( table['var'] ) :
@@ -824,7 +826,7 @@ def main() :
    )
    #
    # check_no_ode_fit
-   check_no_ode_fit(root_node_dir)
+   check_no_ode_fit(root_node_database)
    #
    # display_no_ode_fit
    display_no_ode_fit(root_node_dir)

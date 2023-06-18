@@ -41,12 +41,17 @@ during the simulation.
 Note that the rate random effects are in log space and relative
 to the fixed effect rate at the same age and time.
 
+root_node_database
+******************
+is the :ref:`glossary@root_node_database` .
+
 {xrst_end csv_set_truth}
 """
 # BEGIN_SET_TRUTH
-def set_truth(sim_dir, fit_node_database) :
+def set_truth(sim_dir, fit_node_database, root_node_database) :
    assert type(sim_dir) == str
    assert type(fit_node_database) == str
+   assert type(root_node_database) == str
 # END_SET_TRUTH
    #
    # fit_node_dir
@@ -54,15 +59,15 @@ def set_truth(sim_dir, fit_node_database) :
    fit_node_dir = fit_node_database[: index]
    #
    # fit_table
-   connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+   fit_or_root = at_cascade.fit_or_root_class(
+      fit_node_database, root_node_database
    )
    fit_table = dict()
    for table_name in [
       'age', 'covariate', 'integrand', 'node', 'rate', 'time', 'var'
    ] :
-      fit_table[table_name] = dismod_at.get_table_dict(connection, table_name)
-   connection.close()
+      fit_table[table_name] = fit_or_root.get_table(table_name)
+   fit_or_root.close()
    #
    # fit_node_name
    fit_node_name = at_cascade.get_parent_node(fit_node_database)

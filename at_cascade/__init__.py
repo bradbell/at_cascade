@@ -5,7 +5,6 @@
 '''
 {xrst_begin module}
 {xrst_spell
-   cov
    subgroup
    refactoring
 }
@@ -25,14 +24,11 @@ constant_table_list = [
    'density',
    'integrand',
    'node',
-   'rate_eff_cov',
    'subgroup',
    'time',
-   'weight',
-   'weight_grid',
 ]
 # Temporary setting while refactoring
-constant_table_list = list()
+# constant_table_list = list()
 '''{xrst_code}
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2

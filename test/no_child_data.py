@@ -218,16 +218,21 @@ def check_fit(result_dir, fit_node_name) :
    else :
       fit_node_database = f'{result_dir}/n0/{fit_node_name}/dismod.db'
    #
+   # root_node_database
+   root_node_database  = f'{result_dir}/root_node.db'
+   #
    # fit_node_id
    fit_node_id = int( fit_node_name[-1] )
    #
    # age, var_table, fit_var_table
    new           = False
-   connection    = dismod_at.create_connection(fit_node_database, new)
-   age_table     = dismod_at.get_table_dict(connection, 'age')
-   var_table     = dismod_at.get_table_dict(connection, 'var')
-   fit_var_table = dismod_at.get_table_dict(connection, 'fit_var')
-   connection.close()
+   fit_or_root   = at_cascade.fit_or_root_class(
+      fit_node_database, root_node_database
+   )
+   age_table     = fit_or_root.get_table('age')
+   var_table     = fit_or_root.get_table('var')
+   fit_var_table = fit_or_root.get_table('fit_var')
+   fit_or_root.close()
    #
    for (var_id, row) in enumerate( var_table ) :
       fit_var_value = fit_var_table[var_id]['fit_var_value']

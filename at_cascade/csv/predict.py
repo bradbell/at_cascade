@@ -438,11 +438,6 @@ def predict_one(
    assert type(all_covariate_table) == list
    assert type( all_covariate_table[0] ) == dict
    #
-   # fit_node_database
-   # add the truth_var table to this database
-   if type(sim_dir) == str :
-      at_cascade.csv.set_truth(sim_dir, fit_node_database)
-   #
    # all_option_table
    connection       = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
@@ -450,14 +445,28 @@ def predict_one(
    all_option_table = dismod_at.get_table_dict(connection, 'all_option')
    connection.close()
    #
+   # root_node_database
+   root_node_database = None
+   for row in all_option_table :
+      if row['option_name'] == 'root_node_database' :
+         root_node_database = row['option_value']
+   assert root_node_database != None
+   #
    # fit_covariate_table, integrand_table, node_table
-   connection          = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+   fit_or_root = at_cascade.fit_or_root_class(
+      fit_node_database, root_node_database
    )
-   fit_covariate_table = dismod_at.get_table_dict(connection, 'covariate')
-   integrand_table     = dismod_at.get_table_dict(connection, 'integrand')
-   node_table          = dismod_at.get_table_dict(connection, 'node')
-   connection.close()
+   fit_covariate_table = fit_or_root.get_table('covariate')
+   integrand_table     = fit_or_root.get_table('integrand')
+   node_table          = fit_or_root.get_table('node')
+   fit_or_root.close()
+   #
+   # fit_node_database
+   # add the truth_var table to this database
+   if type(sim_dir) == str :
+      at_cascade.csv.set_truth(sim_dir, fit_node_database, root_node_database)
+   #
+   # fit_or_root
    #
    # integrand_id_list
    predict_integrand_table = at_cascade.csv.read_table(
@@ -700,15 +709,15 @@ def predict_all(
    # all_node_db
    all_node_db = f'{fit_dir}/all_node.db'
    #
-   # root_node_db
-   root_node_db = f'{fit_dir}/root_node.db'
+   # root_node_database
+   root_node_database = f'{fit_dir}/root_node.db'
    #
    # root_node_name
-   root_node_name = at_cascade.get_parent_node(root_node_db)
+   root_node_name = at_cascade.get_parent_node(root_node_database)
    #
    # node_table
    connection      = dismod_at.create_connection(
-      root_node_db, new = False, readonly = True
+      root_node_database, new = False, readonly = True
    )
    node_table      = dismod_at.get_table_dict(connection, 'node')
    connection.close()
@@ -760,9 +769,9 @@ def predict_all(
    # error_message_dict
    error_message_dict = at_cascade.check_log(
       message_type = 'error',
-      all_node_database  = all_node_db    ,
-      root_node_database = root_node_db   ,
-      fit_goal_set       = fit_goal_set   ,
+      all_node_database  = all_node_db          ,
+      root_node_database = root_node_database   ,
+      fit_goal_set       = fit_goal_set         ,
    )
    #
    # n_job
@@ -959,12 +968,12 @@ def predict_all(
       fit_node_dir  = fit_node_database[: index]
       #
       # fit_covariate_table, integrand_table
-      connection    = dismod_at.create_connection(
-            fit_node_database, new = False, readonly = True
+      fit_or_root   = at_cascade.fit_or_root_class(
+         fit_node_database, root_node_database
       )
-      fit_covariate_table = dismod_at.get_table_dict(connection, 'covariate')
-      integrand_table     = dismod_at.get_table_dict(connection, 'integrand')
-      connection.close()
+      fit_covariate_table = fit_or_root.get_table('covariate')
+      integrand_table     = fit_or_root.get_table('integrand')
+      fit_or_root.close()
       #
       # prefix
       for prefix in prefix_list :
