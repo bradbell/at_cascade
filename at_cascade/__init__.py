@@ -6,7 +6,6 @@
 {xrst_begin module}
 {xrst_spell
    subgroup
-   refactoring
 }
 
 The at_cascade Python Module
@@ -26,9 +25,9 @@ constant_table_list = [
    'node',
    'subgroup',
    'time',
+   'weight',
+   'weight_grid',
 ]
-# Temporary setting while refactoring
-# constant_table_list = list()
 '''{xrst_code}
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
