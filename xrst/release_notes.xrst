@@ -41,8 +41,10 @@ other_database Branch
    :ref:`cascade_root_node-name` and :ref:`create_all_node_db-name` .
 #. Change the :ref:`get_fit_integrand-name` argument from the name
    of the fit node database to a :ref:`fit_or_root_class-name` object.
-#. Use :ref:`copy_root_db-name` to remove the constant tables from the
+#. Use :ref:`copy_root_db-name` to remove the
+   :ref:`constant tables <module@constant_table_list>` from the
    :ref:`fit node databases <glossary@fit_node_database>` .
+   (Use the :ref:`glossary@root_node_database` for constant tables.)
 
 05-16
 =====

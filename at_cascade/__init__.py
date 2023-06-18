@@ -6,6 +6,7 @@
 {xrst_begin module}
 {xrst_spell
    subgroup
+   cov
 }
 
 The at_cascade Python Module
@@ -14,8 +15,8 @@ The at_cascade Python Module
 constant_table_list
 *******************
 Some of the dismod_at input tables are the same for every fit of a cascade.
-The :ref:`fit node databases <glossary@fit_node_database>` use
-the :ref:`glossary@root_node_database` to get the value for these tables:
+The :ref:`fit_or_root_class-name` uses the
+:ref:`glossary@root_node_database` to get the value for these tables:
 {xrst_code py} '''
 constant_table_list = [
    'age',
@@ -23,6 +24,7 @@ constant_table_list = [
    'density',
    'integrand',
    'node',
+   'rate_eff_cov',
    'subgroup',
    'time',
    'weight',
