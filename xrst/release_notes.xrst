@@ -24,6 +24,7 @@ Release Notes for at_cascade
    cv
    parallelized
    readonly
+   pini
 }
 
 Release Notes for 2023
@@ -31,6 +32,16 @@ Release Notes for 2023
 
 mm-dd
 *****
+
+06-19
+=====
+Add pini to the
+:ref:`csv_simulate@Input Files@option_sim.csv@std_random_effects_rate`
+in option_sim.csv.
+Also add discussion about the connection between
+the standard deviation of the random effects,
+:ref:`csv_simulate@Input Files@no_effect_rate.csv` and
+:ref:`csv_simulate@random_effect.csv` .
 
 06-18
 =====

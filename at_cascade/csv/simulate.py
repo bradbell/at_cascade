@@ -124,9 +124,12 @@ std_random_effects_rate
 If :ref:`csv_simulate@Input Files@option_sim.csv@new_random_effects` is
 false, this option is not used.
 Otherwise, this float is the standard deviation of the random effects
-for the corresponding *rate* where *rate* is iota, rho, or chi.
+for the corresponding *rate* where *rate* is pint,iota, rho, or chi.
 The effects are in log of rate space, so this standard deviation
 is also in log of rate space.
+Hence only the rates that appear in
+:ref:`csv_simulate@Input Files@no_effect_rate.csv`
+have an effect (the other random effects multiply zero).
 The default value for this option is 0.0; i.e.,
 there are random effects for the corresponding rate.
 
@@ -332,6 +335,10 @@ random_effect.csv
 This file reports the random effect for each node, rate and sex.
 If :ref:`csv_simulate@Input Files@option_sim.csv@new_random_effects`
 is true (false) , this an input (output) file.
+Only the rate names that appear in
+:ref:`csv_simulate@Input Files@no_effect_rate.csv@rate_name`
+are included in random_effect.csv .
+(Random effect for rates not in no_effect_rate.csv have no effect.)
 
 node_name
 =========
@@ -467,6 +474,7 @@ def set_global_option_value(sim_dir, option_table) :
       'new_random_effects'               : (bool,  True)       ,
       'random_depend_sex'                : (bool,  False)      ,
       'random_seed'                      : (int, random_seed)  ,
+      'std_random_effects_pini'          : (float, 0.0)        ,
       'std_random_effects_iota'          : (float, 0.0)        ,
       'std_random_effects_rho'           : (float, 0.0)        ,
       'std_random_effects_chi'           : (float, 0.0)        ,
@@ -892,7 +900,7 @@ def read_random_effect_node_rate_sex(sim_dir) :
 # std_random_effects:
 # the value std_random_effects[rate]
 # is a float specifying the standard deviation of the random effects
-# for rate where rate is iota, chi, or rho.
+# for rate where rate is pini, iota, chi, or rho.
 #
 # rate_name_list:
 # is the list of rate_names the the random effects are simulated for
@@ -1105,6 +1113,7 @@ def simulate(sim_dir) :
    random_depend_sex   = global_option_value['random_depend_sex']
    rate_name_list      = spline_no_effect_rate.keys()
    std_random_effects  = {
+      'pini' : global_option_value['std_random_effects_pini'] ,
       'iota' : global_option_value['std_random_effects_iota'] ,
       'rho'  : global_option_value['std_random_effects_rho']  ,
       'chi'  : global_option_value['std_random_effects_chi']  ,

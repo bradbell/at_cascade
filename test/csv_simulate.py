@@ -6,6 +6,7 @@
 # 1. if omega is not in no_effect_rate,
 #    values for omega in covariate.csv do not matter
 # 2. Prevalence data requires solving the ODE.
+# 3. std_random_effect_pini works.
 #
 # For this test, rho and chi are zero, iota and omega are constant, and
 # the dismod ODE is S(0) = 1, C(0) = 0,
@@ -41,6 +42,7 @@ csv_file['option_sim.csv'] = \
 '''name,value
 absolute_tolerance,1e-4
 float_precision,4
+std_random_effects_pini,.1
 std_random_effects_iota,.1
 std_random_effects_chi,.1
 integrand_step_size,1.0
@@ -68,11 +70,12 @@ n2,male,50,2000,.03,1.5
 '''
 #
 # no_effect_rate.csv
-# Add chi, but set it to zero.
+# Add chi, and pini, but set them to zero.
 csv_file['no_effect_rate.csv'] = \
 '''rate_name,age,time,rate_truth
 iota,0.0,1980.0,0.01
 chi,0.0,1980.0,0.00
+pini,0.0,1980.0,0.00
 '''
 #
 # multiplier_sim.csv
@@ -137,7 +140,7 @@ def run_test() :
          assert random_effect_node_rate[node_name][rate_name] == random_effect
    #
    # check zero sum
-   for rate_name in [ 'iota', 'chi' ] :
+   for rate_name in [ 'iota', 'chi', 'pini' ] :
       sum_random = 0.0
       sum_abs    = 0.0
       for node_name in random_effect_node_rate :
@@ -150,8 +153,8 @@ def run_test() :
       assert abs( sum_random ) <= eps99 * sum_abs
    #
    # no_effect_iota
-   # one row for iota the other for chi
-   assert len( csv_table['no_effect_rate.csv'] ) == 2
+   # one row for iota, chi, pini.
+   assert len( csv_table['no_effect_rate.csv'] ) == 3
    for row in csv_table['no_effect_rate.csv'] :
       if row['rate_name'] == 'iota' :
          no_effect_iota = float( row['rate_truth'] )
