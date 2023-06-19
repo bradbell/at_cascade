@@ -124,7 +124,7 @@ std_random_effects_rate
 If :ref:`csv_simulate@Input Files@option_sim.csv@new_random_effects` is
 false, this option is not used.
 Otherwise, this float is the standard deviation of the random effects
-for the corresponding *rate* where *rate* is pint,iota, rho, or chi.
+for the corresponding *rate* where *rate* is pini, iota, rho, or chi.
 The effects are in log of rate space, so this standard deviation
 is also in log of rate space.
 Hence only the rates that appear in
