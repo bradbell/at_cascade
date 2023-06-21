@@ -15,11 +15,12 @@ csv.fit
 
 Continue Cascade
 ================
-There should be a separate program that continues a cascade from a
-goal node of a previous fit.
+There should be a separate csv routine that continues a cascade from a
+goal node of a previous :ref:`csv_fit-name`; i.e.
+a special version of :ref:`continue_cascade-name` for csv.fit.
 
-Prediction Program
-==================
+Prediction Grid
+===============
 It would be good to specify a prediction grid that may be different for
 the covariate age-time grid.
 
@@ -27,7 +28,7 @@ No Ode Fit
 ==========
 Sometimes when there is no data for a rate, the :ref:`no_ode_fit-name`
 changes the prior because there is so much data elsewhere that the
-prior residual is int significant.
+prior residual is not significant.
 It would be good to have an option to not include certain rates in the
 no ode fit  (just use the original prior means).
 
@@ -56,8 +57,8 @@ covariate.csv
 *************
 The covariate quick fix in dismod_at that attaches
 covariate functions to locations,
-instead of covariate values to data points, may use a lot of memory
-and take a while to set up.
+instead of covariate values to data points.
+This may use a lot of memory and take a while to set up.
 One partial solution would be to not put all the nodes in the
 :ref:`csv_simulate@Input Files@covariate.csv` file.
 We could use the closest ancestor's covariate and omega values
@@ -71,14 +72,5 @@ One reason is, there are fewer levels of random effects
 that are not modeled.
 Another reason is, there is less variation due to covariates
 that are not modeled.
-
-Disk Space
-**********
-Certain tables are the same in every dismod_at database; i.e.
-for each node and each sex; see
-:ref:`glossary@fit_node_database@Constant Tables`.
-The data is one of these and can be very large.
-It would be nice of there was an option in dismod_at to read the
-data table from a different database.
 
 {xrst_end wish_list}
