@@ -33,6 +33,14 @@ Release Notes for 2023
 mm-dd
 *****
 
+06-23
+=====
+There was a bug in csv_fit that caused a crash when data_in.csv had
+:ref:`csv_fit@Input Files@data_in.csv@sex` had sex equal to `both` and
+there was a covariate, other than sex, in the
+:ref:`csv_fit@Input Files@covariate.csv` file.
+This has been fixed.
+
 06-20
 =====
 Remove the Disk Space entry from the wish list

@@ -1046,9 +1046,16 @@ def create_root_node_database(fit_dir) :
       node_name = row['node_name']
       sex       = row['sex']
       for index, covariate_name in enumerate( root_covariate_ref.keys() ) :
-         spline              = spline_cov[node_name][sex][covariate_name]
-         covariate_value     = spline(age_mid, time_mid)
-         row[covariate_name] = covariate_value
+         if sex != 'both' :
+            spline              = spline_cov[node_name][sex][covariate_name]
+            covariate_value     = spline(age_mid, time_mid)
+            row[covariate_name] = covariate_value
+         else :
+            row[covariate_name] = 0.0
+            for sex in [ 'female', 'male' ] :
+               spline              = spline_cov[node_name][sex][covariate_name]
+               covariate_value     = spline(age_mid, time_mid)
+               row[covariate_name] += covariate_value / 2.0
       #
       # row
       row['node']       = row['node_name']
