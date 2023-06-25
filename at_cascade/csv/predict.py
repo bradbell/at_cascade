@@ -781,8 +781,12 @@ def predict_all(
    # process_list
    process_list = list()
    #
+   # manager
+   manager = multiprocessing.Manager()
+   #
    # job_queue, n_job_queue
-   job_queue   = multiprocessing.Queue()
+   # Need Manager; see https://bugs.python.org/issue18277
+   job_queue   = manager.Queue()
    n_job_queue = 0
    #
    # job_id, job_row, fit_node_database_list
@@ -886,8 +890,8 @@ def predict_all(
                   covariate_table   ,
                )
                if max_number_cpu == 1 :
-                  print(job_description)
                   predict_one(*args)
+                  print(job_description)
                else :
                   job_queue.put( (job_description, args) )
                   n_job_queue += 1
@@ -900,7 +904,7 @@ def predict_all(
       #
       # n_done_queue
       # The number of job_queue entries that have been completed
-      n_done_queue   = multiprocessing.Queue()
+      n_done_queue   = manager.Queue()
       n_done_queue.put(0)
       #
       # process_target
@@ -980,6 +984,8 @@ def predict_all(
          #
          # predict_table
          file_name     = f'{fit_node_dir}/{prefix}_predict.csv'
+         if not os.path.isfile(file_name) :
+            breakpoint()
          predict_table =  at_cascade.csv.read_table(file_name)
          #
          # prefix_predict_table

@@ -25,6 +25,8 @@ Release Notes for at_cascade
    parallelized
    readonly
    pini
+   ptr
+   errno
 }
 
 Release Notes for 2023
@@ -32,6 +34,24 @@ Release Notes for 2023
 
 mm-dd
 *****
+
+06-25
+=====
+
+#. There was a bug in :ref:`csv_predict-name` that would cause it to crash
+   at unpredictable times with a message like::
+
+      ... /at_cascade/csv/read_table.py", line 49, in read_table
+      file_ptr   = open(file_name)
+                 ^^^^^^^^^^^^^^^
+      FileNotFoundError: [Errno 2] No such file ... /fit_predict.csv
+
+   This has been fixed.
+
+#. Sometime it takes a while for the trace.out file corresponding to a fit
+   to have any information in it. The dismod_at initialization trace was
+   included in trace.out so that one has more feedback that the program
+   is making progress.
 
 06-23
 =====

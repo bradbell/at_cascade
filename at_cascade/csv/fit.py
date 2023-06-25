@@ -1015,6 +1015,7 @@ def create_root_node_database(fit_dir) :
       { 'name' : 'ode_step_size',       'value' : str( ode_step_size)       },
       { 'name' : 'parent_node_name',    'value' : root_node_name            },
       { 'name' : 'print_level_fixed',   'value' : '5'                       },
+      { 'name' : 'trace_init_fit_model','value' : 'true'                    },
       { 'name' : 'random_seed',         'value' : str( random_seed )        },
       { 'name' : 'tolerance_fixed',     'value' : str( tolerance_fixed)     },
       { 'name' : 'meas_noise_effect',   'value' : 'add_std_scale_none'      },
