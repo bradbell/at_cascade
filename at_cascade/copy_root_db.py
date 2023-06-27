@@ -29,6 +29,7 @@ This routine does the following:
 
 {xrst_end copy_root_db}
 '''
+import os
 import shutil
 import at_cascade
 import dismod_at
@@ -67,7 +68,12 @@ def copy_root_db(root_node_database, fit_node_database) :
       assert row['option_name'] != 'other_input_table'
    row = dict()
    row['option_name']  = 'other_database'
-   row['option_value'] = root_node_database
+   if os.path.isabs( root_node_database ) :
+      row['option_value'] = root_node_database
+   else :
+      fit_node_dirname = os.path.dirname( fit_node_database )
+      relative_path    = os.path.relpath(root_node_database, fit_node_dirname)
+      row['option_value'] = str( relative_path )
    option_table.append(row)
    row = dict()
    row['option_name']  = 'other_input_table'

@@ -35,6 +35,12 @@ Release Notes for 2023
 mm-dd
 *****
 
+06-26
+=====
+The :ref:`csv_fit-name` routine was changed to adapt to version 20230626
+of dismod_at. To be more specific, the *other_database* is now relative
+to the directory where the primary database is located.
+
 06-25
 =====
 

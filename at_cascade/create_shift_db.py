@@ -128,6 +128,7 @@ Otherwise, only the means are replaced.
 {xrst_end create_shift_db}
 '''
 # ----------------------------------------------------------------------------
+import os
 import math
 import copy
 import shutil
@@ -574,11 +575,18 @@ def create_shift_db(
       shutil.copyfile(fit_node_database, shift_database)
       #
       # shift_table['option']
-      # set parent_node_name to shift_node_name
+      # Set value for parent_node_name and other_database
       for row in shift_table['option'] :
          if row['option_name'] == 'parent_node_name' :
             row['option_value'] = shift_node_name
-      #
+         if row['option_name'] == 'other_database' :
+            if os.path.isabs( root_node_database ) :
+               row['option_value'] = root_node_database
+            else :
+               dirname       = os.path.dirname( shift_database )
+               relative_path = os.path.relpath( root_node_database, dirname)
+               row['option_value'] = str( relative_path )
+         #
       # cov_reference_list
       cov_reference_list = at_cascade.get_cov_reference(
          all_node_database   = all_node_database,

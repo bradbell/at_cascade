@@ -984,8 +984,7 @@ def predict_all(
          #
          # predict_table
          file_name     = f'{fit_node_dir}/{prefix}_predict.csv'
-         if not os.path.isfile(file_name) :
-            breakpoint()
+         assert os.path.isfile(file_name)
          predict_table =  at_cascade.csv.read_table(file_name)
          #
          # prefix_predict_table
