@@ -853,6 +853,11 @@ class smoothing_function :
       assert type(value_prior) == str or type(value_prior) == float
       assert type(dage_prior)  == str or dage_prior  == None
       assert type(dtime_prior) == str or dtime_prior == None
+      if (age, time) in self.value :
+         msg  = f'name = {self.name}: '
+         msg += f'grid point with age = {age}, time = {time} '
+         msg += 'appears more than once'
+         assert False, msg
       self.value[ (age, time) ] = (value_prior, dage_prior, dtime_prior)
    def __call__(self, age, time) :
       if (age, time) not in self.value :

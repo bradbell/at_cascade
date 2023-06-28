@@ -55,6 +55,8 @@ def copy_root_db(root_node_database, fit_node_database) :
       else :
          command = f'DROP TABLE {table_name}'
       dismod_at.sql_command(connection, command)
+   command = 'VACUUM;'
+   dismod_at.sql_command(connection, command)
    #
    # other_input_table
    other_input_table = ' '.join(at_cascade.constant_table_list)

@@ -35,6 +35,12 @@ Release Notes for 2023
 mm-dd
 *****
 
+06-28
+=====
+The csv.fit routine now reports (and exits) when a grid point appears
+more than once in
+:ref:`csv_fit@Input Files@parent_rate.csv` , or any of its other input files.
+
 06-26
 =====
 The :ref:`csv_fit-name` routine was changed to adapt to version 20230626
