@@ -35,6 +35,13 @@ Release Notes for 2023
 mm-dd
 *****
 
+006-30
+======
+The ``csv.simulate`` routine ignored ``pini`` entries in the
+:ref:`csv_simulate@Input Files@no_effect_rate.csv` file; i.e.,
+the initial prevalence was always zero.
+This has been fixed.
+
 06-28
 =====
 The csv.fit routine now reports (and exits) when a grid point appears

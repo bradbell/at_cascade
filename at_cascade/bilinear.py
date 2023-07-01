@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import numpy
 import scipy.interpolate
@@ -85,6 +85,10 @@ class spline_wrapper :
    def __init__(self, spline) :
       self.spline = spline
    def __call__(self, x, y) :
+      if type(x) == int :
+         x = float(x)
+      if type(y) == int :
+         y = float(y)
       assert type(x) == float
       assert type(y) == float
       result = self.spline(x, y)
