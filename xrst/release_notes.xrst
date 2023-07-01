@@ -35,8 +35,8 @@ Release Notes for 2023
 mm-dd
 *****
 
-006-30
-======
+06-30
+=====
 The ``csv.simulate`` routine ignored ``pini`` entries in the
 :ref:`csv_simulate@Input Files@no_effect_rate.csv` file; i.e.,
 the initial prevalence was always zero.
