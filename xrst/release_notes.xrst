@@ -287,7 +287,7 @@ because it was slow when there are large number fits.
 
 03-09
 =====
-Add the ``test/one_cov.py`` test
+Add the ``test/csv_one_cov.py`` test
 which fails unless the version of dismod_at is greater than or equal
 dismod_at-20230309.
 

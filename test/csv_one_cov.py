@@ -202,7 +202,7 @@ def fit(sim_dir, fit_dir) :
       file_ptr.close()
    #
    # data_join_table
-   # This is a join of simulate.csv and dats_sim.csv
+   # This is a join of simulate.csv and data_sim.csv
    data_join_table = at_cascade.csv.read_table(
       file_name = f'{sim_dir}/data_join.csv'
    )
@@ -290,7 +290,7 @@ def fit(sim_dir, fit_dir) :
    for name in max_error :
       if max_error[name] > 5e-3 :
          msg  = f'max_error = {max_error}\n'
-         msg += 'one_cov.py: Relative error is to large (see above)'
+         msg += 'csv_one_cov.py: Relative error is to large (see above)'
          assert False, msg
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
@@ -316,6 +316,6 @@ if __name__ == '__main__' :
    # fit
    fit(sim_dir, fit_dir)
    #
-   print('one_cov.py: OK')
+   print('csv_one_cov.py: OK')
    sys.exit(0)
 # END_SOURCE_CODE
