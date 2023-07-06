@@ -37,8 +37,7 @@ mm-dd
 
 07-06
 =====
-#. **API Change** :
-   Add :ref:`csv_fit@Input Files@data_in.csv@sample_size`
+#. Add :ref:`csv_fit@Input Files@data_in.csv@sample_size`
    to the csv_fit data_in.csv file.
    This is used when modeling the data with a binomial distribution.
 #. Make certain columns in data_in.csv
