@@ -632,8 +632,8 @@ Otherwise, it the sample size for a binomial distribution
 
    y,is the meas_value for this data
    n,is the sample size
-   k,is the counts in the binomial distribution, k = y * n .
-   p,is the success rate, p is the mean of y
+   k,is the counts in the binomial distribution; k = y * n .
+   p,is the success rate; p is the mean of y
 
 The log of the binomial density function is:
 
@@ -646,7 +646,7 @@ is greater than 5.
 This approximation will be faster and less likely to have evaluation issues
 during the optimization.
 If you do not have a good idea as to the value of p,
-uses a gaussian when y is greater than 5.
+uses a gaussian when k = y * n is greater than 5.
 
 hold_out
 --------
