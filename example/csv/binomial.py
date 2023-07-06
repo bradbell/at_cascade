@@ -276,7 +276,7 @@ if __name__ == '__main__' :
    # fit_dir
    fit_dir = 'build/test/fit'
    if not os.path.exists(fit_dir) :
-      os.mkdir(fit_dir)
+      os.makedirs(fit_dir)
    if os.path.exists( 'build/test/fit/n0' ) :
       shutil.rmtree( 'build/test/fit/n0' )
    #
