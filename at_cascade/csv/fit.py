@@ -551,6 +551,12 @@ data_in.csv
 This csv file specifies the data set
 with each row corresponding to one data point.
 
+Optional Columns
+----------------
+The following columns are optional and the empty string is used
+for all the rows of a column that does not appear:
+meas_std, eta, nu, sample_size.
+
 data_id
 -------
 is an :ref:`csv_module@Notation@Index Column` for data.csv.
@@ -568,6 +574,7 @@ This string is one of the following dismod_at density names:
    gaussian, cen_gaussian, log_gaussian, cen_log_gaussian
    laplace,  cen_laplace,  log_laplace,  cen_log_laplace
    students,            ,  log_students,
+   binomial,,,
 
 
 node_name
@@ -602,8 +609,7 @@ meas_std
 --------
 This float is the standard deviation of the measurement noise
 for this data point.
-All the data points are modeled using a censored Gaussian distribution.
-The standard deviation is before the censoring.
+This must be empty when the density is binomial.
 
 eta
 ---
@@ -614,6 +620,33 @@ nu
 --
 This float is the degrees of freedom for the students densities
 (it can be empty if this is not a students density).
+
+sample_size
+-----------
+This float should be empty if the density is not binomial.
+Otherwise, it the sample size for a binomial distribution
+(see :ref:`csv_binomial-name` for an example):
+
+.. csv-table::
+   :widths: auto
+
+   y,is the meas_value for this data
+   n,is the sample size
+   k,is the counts in the binomial distribution, k = y * n .
+   p,is the success rate, p is the mean of y
+
+The log of the binomial density function is:
+
+.. math::
+
+   \log {n \choose k} + k \log(p) + (n-k) \log(1 - p)
+
+We suggest using gaussian approximation of the binomial when p * n
+is greater than 5.
+This approximation will be faster and less likely to have evaluation issues
+during the optimization.
+If you do not have a good idea as to the value of p,
+uses a gaussian when y is greater than 5.
 
 hold_out
 --------
