@@ -65,7 +65,9 @@ are located.
 
 max_node_depth
 **************
-This is the number of generations below root node that are included.
+This is the number of generations below root node that are included;
+see :ref:`job_descendent@Node Depth Versus Job Depth`
+and note that sex is the :ref:`all_option_table@split_covariate_name` .
 If max_node_depth is zero,  only the root node will be included.
 If max_node_depth is None,  the root node and all its descendants are included.
 

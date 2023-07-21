@@ -57,9 +57,11 @@ If this argument is None, all of the jobs (fits) will be included.
 
 max_job_depth
 *************
-This is the number of generations below start_job_name that are included.
+This is the number of generations below start_job_name that are included;
+see :ref:`job_descendent@Node Depth Versus Job Depth`
+and note that sex is the :ref:`all_option_table@split_covariate_name` .
 If max_job_depth is zero,  only the start job will be included.
-If max_job_depth is None,  start job and all its descendants are included.
+If max_job_depth is None,  start job and all its descendants are included;
 
 Input Files
 ***********
@@ -772,6 +774,8 @@ def predict_all(
       all_node_database  = all_node_db          ,
       root_node_database = root_node_database   ,
       fit_goal_set       = fit_goal_set         ,
+      start_job_id       = start_job_id         ,
+      max_job_depth      = max_job_depth        ,
    )
    #
    # n_job
@@ -793,6 +797,7 @@ def predict_all(
    fit_node_database_list = list()
    for job_id in range(-1, n_job) :
       #
+      # include_this_job, job_row
       if job_id == -1 :
          job_tmp = 0
       else :

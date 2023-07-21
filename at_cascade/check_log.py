@@ -8,11 +8,11 @@
 Checks Logs For Warnings and Errors
 ###################################
 
-Syntax
-******
-{xrst_literal
-   # BEGIN syntax
-   # END syntax
+Prototype
+*********
+{xrst_literal ,
+   # BEGIN DEF, # END DEF
+   # BEGIN RETURN, # END RETURN
 }
 
 Purpose
@@ -21,37 +21,51 @@ Read all the logs for a cascade and return any warning or error messages.
 
 message_type
 ************
-is an ``str`` equal to ``error`` or ``warning``.
+is  equal to ``error`` or ``warning``.
 The corresponding messages are returned.
 
 all_node_database
 *****************
-is a python string specifying the location of the
+specifies the location of the
 :ref:`all_node_db-name`
 relative to the current working directory.
 This argument can't be ``None``.
 
 root_node_database
 ******************
-is a python string specifying the location of the dismod_at
+specifies the location of the dismod_at
 :ref:`glossary@root_node_database`.
 
 fit_goal_set
 ************
-This is a ``set`` with elements of type ``int`` (``str``)
+the elements of this set are of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
 :ref:`glossary@fit_goal_set` .
 This argument can't be ``None``.
 
+start_job_id
+************
+This is the job that the log messages should start at.
+If this is None, the first job in the job table is the start job.
+Jobs before this job in the :ref:`create_job_table@job_table`
+are not included.
+
+max_job_depth
+*************
+This is the number of generations below the start job that are included;
+see :ref:`job_descendent@Node Depth Versus Job Depth` .
+If *max_job_depth* is None, all the jobs below the start job are included.
+If *max_job_depth* is zero, only the start job is included.
+
 message_dict
 ************
-the return value is a ``dict``.
-For each :ref:`create_job_table@job_table@job_name` that is a key in
-*message_dict* the corresponding value
-*message_dict[job_name]* is a non-empty ``list`` of ``str``
+For each :ref:`create_job_table@job_table@job_name` there is a key in
+*message_dict*.
+The corresponding value *message_dict[job_name]*
+is a non-empty ``list`` of ``str``
 containing the messages for that job.
 If an *job_name* is not a *key* is in *message_dict*,
-there were not messages of the specified type for that job.
+there were no messages of the specified type for that job.
 
 {xrst_end check_log}
 '''
@@ -63,19 +77,24 @@ import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
 def check_log(
-# BEGIN syntax
+# BEGIN DEF
 # message_dict = at_cascade.check_log(
-   message_type            = None,
-   all_node_database       = None,
-   root_node_database      = None,
-   fit_goal_set            = None,
+   message_type                  ,
+   all_node_database             ,
+   root_node_database            ,
+   fit_goal_set                  ,
+   start_job_id           = None ,
+   max_job_depth          = None ,
 # )
-# END syntax
 ) :
-   assert type(message_type)        is str
-   assert type(all_node_database)   is str
-   assert type(root_node_database)  is str
-   assert type(fit_goal_set)        is set
+   assert type(message_type)        == str
+   assert type(all_node_database)   == str
+   assert type(root_node_database)  == str
+   assert type(fit_goal_set)        == set
+   if start_job_id == None :
+      start_job_id = 0
+   assert max_job_depth == None or type(max_job_depth) == int
+   # END DEF
    #
    assert message_type in [ 'error', 'warning' ]
    #
@@ -148,46 +167,57 @@ def check_log(
    # job_id
    for job_id in range( len(job_table) ) :
       #
-      # job_name
-      job_name = job_table[job_id]['job_name']
-      #
-      # fit_node_id
-      fit_node_id = job_table[job_id]['fit_node_id']
-      #
-      # fit_split_reference_id
-      fit_split_reference_id = job_table[job_id]['split_reference_id']
-      #
-      # fit_node_database
-      database_dir = at_cascade.get_database_dir(
-         node_table              = node_table,
-         split_reference_table   = split_reference_table,
-         node_split_set          = node_split_set,
-         root_node_id            = root_node_id,
-         root_split_reference_id = root_split_reference_id,
-         fit_node_id             = fit_node_id ,
-         fit_split_reference_id  = fit_split_reference_id,
-      )
-      fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
-      #
-      # log_table
-      if not os.path.exists(fit_node_database) :
-         message = f'Missing fit_node_database {fit_node_database}'
-         message_dict[job_name] = [ message ]
+      # include_this_job
+      job_depth = at_cascade.job_descendent(job_table, start_job_id, job_id)
+      if max_job_depth == None :
+         include_this_job = job_depth != None
       else :
-         connection = dismod_at.create_connection(
-                  fit_node_database, new = False, readonly = True
-         )
-         log_table  = dismod_at.get_table_dict(connection, 'log')
-         connection.close()
+         include_this_job = job_depth <= max_job_depth
+      if include_this_job :
          #
-         # row
-         for row in log_table :
+         # job_name
+         job_name = job_table[job_id]['job_name']
+         #
+         # fit_node_id
+         fit_node_id = job_table[job_id]['fit_node_id']
+         #
+         # fit_split_reference_id
+         fit_split_reference_id = job_table[job_id]['split_reference_id']
+         #
+         # fit_node_database
+         database_dir = at_cascade.get_database_dir(
+            node_table              = node_table,
+            split_reference_table   = split_reference_table,
+            node_split_set          = node_split_set,
+            root_node_id            = root_node_id,
+            root_split_reference_id = root_split_reference_id,
+            fit_node_id             = fit_node_id ,
+            fit_split_reference_id  = fit_split_reference_id,
+         )
+         fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
+         #
+         # log_table
+         if not os.path.exists(fit_node_database) :
+            message = f'Missing fit_node_database {fit_node_database}'
+            message_dict[job_name] = [ message ]
+         else :
+            connection = dismod_at.create_connection(
+                     fit_node_database, new = False, readonly = True
+            )
+            log_table  = dismod_at.get_table_dict(connection, 'log')
+            connection.close()
             #
-            if row['message_type'] == message_type :
+            # row
+            for row in log_table :
                #
-               # message_dict
-               if job_name not in message_dict :
-                  message_dict[job_name] = list()
-               message_dict[job_name].append( row['message'] )
+               if row['message_type'] == message_type :
+                  #
+                  # message_dict
+                  if job_name not in message_dict :
+                     message_dict[job_name] = list()
+                  message_dict[job_name].append( row['message'] )
    #
+   # BEGIN RETURN
+   assert type(message_dict) == dict
    return message_dict
+   # END RETURN

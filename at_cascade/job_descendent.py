@@ -11,7 +11,7 @@ Check if A Job is a Descendant of Another
 Prototype
 *********
 {xrst_literal ,
-   # BEGIN PROTOTYPE, # END PROTOTYPE
+   # BEGIN DEF, # END DEF
    # BEGIN RETURN, # END RETURN
 }
 
@@ -35,16 +35,37 @@ If the two job ids are the same, *generation* is zero.
 If the job *descendent* is not a descendant of job *ancestor_id* ,
 the return value is None.
 
+Node Depth Versus Job Depth
+***************************
+We use ancestor and descendent node to denote the nodes
+corresponding to:
+
+   |  *job_table* [ *ancestor_id*] ['fit_node_id']
+   |  *job_table* [ *descendent*] ['fit_node_id']
+
+We use ancestor and descendent reference to denote the split reference
+values corresponding to:
+
+   |  *job_table* [ *ancestor_id*] ['split_reference_id']
+   |  *job_table* [ *descendent*] ['split_reference_id']
+
+If the ancestor reference is equal to the descendent reference,
+or if :ref:`all_option_table@refit_split` is false,
+*generation* is equal to the number of nodes between the
+ancestor and descendent nodes.
+Otherwise, *generation* is one more than the number of nodes between the
+ancestor and descendent nodes.
+(There can be at most one split between any two nodes.
 
 {xrst_end job_descendent}
 '''
 # -----------------------------------------------------------------------------
-# BEGIN PROTOTYPE
+# BEGIN DEF
 def job_descendent(job_table, ancestor_id, descendent_id) :
    assert type(job_table)   == list
    assert type(ancestor_id)   == int
    assert type(descendent_id) == int
-   # END PROTOTYPE
+   # END DEF
    #
    # generation
    generation = 0

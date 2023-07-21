@@ -37,7 +37,12 @@ mm-dd
 
 07-21
 =====
-Add :ref:`job_descendent-name` to the at_cascade :ref:`module-name` .
+#. Add :ref:`job_descendent-name` to the at_cascade :ref:`module-name` .
+#. Add the :ref:`check_log@start_job_id` and :ref:`check_log@max_job_depth`
+   arguments to the check_log routine.
+#. Fix bug in :ref:`csv_predict-name`. To be specific, only check
+   logs for jobs that we are predicting for. Checking logs for other jobs
+   might try to read a log that was changing (when running in parallel).
 
 07-20
 =====
