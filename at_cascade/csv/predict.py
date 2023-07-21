@@ -794,29 +794,18 @@ def predict_all(
    for job_id in range(-1, n_job) :
       #
       if job_id == -1 :
-         # no_ode is for same node and sex as row zero in the job table
-         job_row = job_table[0]
+         job_tmp = 0
       else :
-         job_row = job_table[job_id]
-      #
-      # start_job_descendant, job_depth
-      job_depth = 0
-      if job_id == -1 or job_id == 0 :
-         start_job_descendant = start_job_id == 0
-      else :
-         start_job_descendant = start_job_id == job_id
-         ancestor             = job_table[job_id]['parent_job_id']
-         while ancestor != None and not start_job_descendant :
-            job_depth           += 1
-            start_job_descendant = ancestor == start_job_id
-            ancestor             = job_table[ancestor]['parent_job_id']
+         job_tmp = job_id
+      job_depth = at_cascade.job_descendent(job_table, start_job_id, job_tmp)
       include_this_job = False
-      if start_job_descendant :
+      if job_depth != None :
          if max_job_depth == None :
             include_this_job = True
          else :
             include_this_job = job_depth <= max_job_depth
       if include_this_job :
+         job_row = job_table[job_tmp]
          #
          # job_name, fit_node_id, fit_split_reference_id
          job_name                = job_row['job_name']

@@ -35,6 +35,10 @@ Release Notes for 2023
 mm-dd
 *****
 
+07-21
+=====
+Add :ref:`job_descendent-name` to the at_cascade :ref:`module-name` .
+
 07-20
 =====
 The ``eta`` and ``nu`` columns were not actually
