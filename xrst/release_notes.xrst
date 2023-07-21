@@ -35,6 +35,12 @@ Release Notes for 2023
 mm-dd
 *****
 
+07-20
+=====
+The ``eta`` and ``nu`` columns were not actually
+:ref:`csv_fit@Input Files@data_in.csv@Optional Columns`
+in data_in.csv.  This has been fixed.
+
 07-06
 =====
 #. Add :ref:`csv_fit@Input Files@data_in.csv@sample_size`

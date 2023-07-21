@@ -222,8 +222,6 @@ def fit(sim_dir, fit_dir) :
       row_in['meas_std']     = row_join['meas_std']
       row_in['hold_out']     = 0
       row_in['density_name'] = 'gaussian'
-      row_in['eta']          = ''
-      row_in['nu']           = ''
       #
       table.append( row_in )
    at_cascade.csv.write_table(

@@ -1100,10 +1100,10 @@ def create_root_node_database(fit_dir) :
       row['node']       = row['node_name']
       row['integrand']  = row['integrand_name']
       row['density']    = row['density_name']
-      if row['eta'] != None :
-         row['eta'] = float( row['eta'] )
-      if row['nu'] != None :
-         row['nu']  = float( row['eta'] )
+      for key in [ 'eta', 'nu' ] :
+         if key in row :
+            if row[key] != None :
+               row[key] = float( row[key] )
       row['age_lower']  = age_lower
       row['age_upper']  = age_lower
       row['time_lower'] = time_lower
