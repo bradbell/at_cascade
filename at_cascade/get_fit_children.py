@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_fit_children}
@@ -10,9 +10,9 @@ Determine the Set of Nodes to Fit
 
 Syntax
 ******
-{xrst_literal
-   # BEGIN syntax
-   # END syntax
+{xrst_literal ,
+   # BEGIN DEF, # END DEF
+   # BEGIN RETURN, # END RETURN
 }
 
 root_node_id
@@ -47,18 +47,17 @@ a fit for the :ref:`glossary@fit_goal_set`.
 import sys
 import at_cascade
 # ----------------------------------------------------------------------------
+# BEGIN DEF
+# at_cascade.get_fit_children
 def get_fit_children(
-# BEGIN syntax
-# fit_children = at_cascade.get_fit_children(
    root_node_id  = None ,
    fit_goal_set  = None ,
    node_table    = None ,
-# )
-# END syntax
 ) :
    assert type( root_node_id ) == int
    assert type( fit_goal_set ) == set
    assert type( node_table ) == list
+   # END DEF
    #
    # number of nodes
    n_node       = len( node_table )
@@ -96,4 +95,8 @@ def get_fit_children(
          node_id   = parent_id
          parent_id = node_table[node_id]['parent']
    #
+   # BEGIN RETURN
+   # ...
+   assert type(fit_children) == list
    return fit_children
+   # END RETURN

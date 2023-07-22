@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_database_dir}
@@ -13,9 +13,9 @@ Get Database Directory Corresponding To a Fit
 
 Syntax
 ******
-{xrst_literal
-   # BEGIN syntax
-   # END syntax
+{xrst_literal ,
+   # BEGIN DEF, # END DEF
+   # BEGIN RETURN, # END RETURN
 }
 
 node_table
@@ -53,7 +53,6 @@ that the root node corresponds to.
 fit_node_id
 ***********
 This argument is an ``int`` is the node_id for the  :ref:`glossary@fit_node`.
-It can't be ``None``.
 
 fit_split_reference_id
 **********************
@@ -77,19 +76,25 @@ In other words, the fit database has the following path:
 '''
 import dismod_at
 # ----------------------------------------------------------------------------
+# BEGIN DEF
+# at_cascade.get_database_dir
 def get_database_dir(
-# BEGIN syntax
-# database_dir = at_cascade.get_database_dir(
-   node_table              = None,
-   split_reference_table   = None,
+   node_table                    ,
+   split_reference_table         ,
    node_split_set          = None,
    root_node_id            = None,
    root_split_reference_id = None,
    fit_node_id             = None,
    fit_split_reference_id  = None,
-# )
-# END syntax
 ) :
+   assert type(node_table) == list
+   assert type(split_reference_table) == list
+   assert node_split_set == None or type(node_split_set) == set
+   assert type(root_node_id) == int
+   assert root_split_reference_id==None or type(root_split_reference_id)==int
+   assert type(fit_node_id) == int
+   assert fit_split_reference_id==None or type(fit_split_reference_id)==int
+   # END DEF
    #
    # fit_split_reference_name
    if 0 < len(split_reference_table) :
@@ -146,4 +151,9 @@ def get_database_dir(
    #
    # database_dir
    database_dir = database_dir[:-1]
+   #
+   # BEGIN RETURN
+   #  ...
+   assert type(database_dir) == str
    return database_dir
+   # END RETURN

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin table_name2id}
@@ -13,9 +13,9 @@ Map a Table Row Name to The Row Index
 
 Syntax
 ******
-{xrst_literal
-   # BEGIN syntax
-   # END syntax
+{xrst_literal ,
+   # BEGIN DEF, END DEF
+   # BEGIN RETURN, END RETURN
 }
 
 table
@@ -41,17 +41,27 @@ This is the index of the row in the table where
 {xrst_end table_name2id}
 '''
 # -----------------------------------------------------------------------------
+# BEGIN DEF
+# at_cascade.table_name2id
 def table_name2id(
-# BEGIN syntax
-# row_id = at_cascade.table_name2id(
    table, tbl_name, row_name
 # )
-# END syntax
 ) :
+   assert type(table) == list
+   assert type(tbl_name) == str
+   # END DEF
    col_name = tbl_name + '_name'
-   for (row_id, row) in enumerate(table) :
+   row_id   = None
+   for (index, row) in enumerate(table) :
       if row[col_name] == row_name :
-         return row_id
-   msg  = f'table_name2id: "{row_name}" '
-   msg += f'is not presnet in column "{col_name}" of "{tbl_name}" table.'
-   assert False, msg
+         row_id = index
+   if row_id == None :
+      msg  = f'table_name2id: "{row_name}" '
+      msg += f'is not presnet in column "{col_name}" of "{tbl_name}" table.'
+      assert False, msg
+   #
+   # BEGIN RETURN
+   # ...
+   assert type(row_id) == int
+   return row_id
+   # END RETURN

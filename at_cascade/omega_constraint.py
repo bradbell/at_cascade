@@ -15,14 +15,13 @@ Set Omega Constraints in a Fit Node Database
 Syntax
 ******
 {xrst_literal
-   # BEGIN syntax
-   # END syntax
+   # BEGIN DEF
+   # END DEF
 }
 
 all_node_database
 *****************
 is a python string containing the name of the :ref:`all_node_db-name`.
-This argument can't be ``None``.
 
 Use
 ===
@@ -36,7 +35,6 @@ zero is used for the *omega* constraint for that node.
 fit_node_database
 *****************
 is a python string containing the name of a :ref:`glossary@fit_node_database`.
-This argument can't be ``None``.
 
 parent_node
 ===========
@@ -90,16 +88,17 @@ def child_node_id_list(node_table, parent_node_id) :
          result.append(node_id)
    return result
 # ----------------------------------------------------------------------------
+# BEGIN DEF
+# at_cascade.omega_constraint
 def omega_constraint(
-# BEGIN syntax
 # at_cascade.omega_constraint(
-   all_node_database = None ,
-   fit_node_database = None ,
+   all_node_database ,
+   fit_node_database ,
 # )
 ) :
    assert type(all_node_database) == str
    assert type(fit_node_database) == str
-   # END syntax
+   # END DEF
    #
    # all_tables
    connection        = dismod_at.create_connection(

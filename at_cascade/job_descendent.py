@@ -61,6 +61,7 @@ ancestor and descendent nodes.
 '''
 # -----------------------------------------------------------------------------
 # BEGIN DEF
+# at_cascade.job_descendent
 def job_descendent(job_table, ancestor_id, descendent_id) :
    assert type(job_table)   == list
    assert type(ancestor_id)   == int

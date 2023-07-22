@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin empty_avgint_table}
@@ -43,6 +43,7 @@ import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
 # BEGIN syntax
+# at_cascade.empty_avgint_table
 def empty_avgint_table(connection) :
 # END syntax
 # ----------------------------------------------------------------------------

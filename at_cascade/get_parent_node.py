@@ -10,13 +10,9 @@ Get Parent Node Name From Option Table
 
 PROTOTYPE
 *********
-{xrst_literal
-   # BEGIN_PROTOTYPE
-   # END_PROTOTYPE
-}
-{xrst_literal
-   # BEGIN_RETURN
-   # END_RETURN
+{xrst_literal ,
+   # BEGIN_PROTOTYPE, # END_PROTOTYPE
+   # BEGIN_RETURN,  # END_RETURN
 }
 
 database
@@ -38,7 +34,7 @@ import dismod_at
 # BEGIN_PROTOTYPE
 def get_parent_node(database = None) :
    assert type(database) == str
-# END_PROTOTYPE
+   # END_PROTOTYPE
    #
    # option_table
    connection       = dismod_at.create_connection(
@@ -56,6 +52,7 @@ def get_parent_node(database = None) :
    assert not parent_node_name is None, msg
    #
    # BEGIN_RETURN
+   # ..
    assert type(parent_node_name) == str
    return parent_node_name
    # END_RETURN

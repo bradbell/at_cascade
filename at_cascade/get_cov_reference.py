@@ -13,14 +13,13 @@ Get Covariate Reference Values
 
 Syntax
 ******
-{xrst_literal
-   # BEGIN syntax
-   # END syntax
+{xrst_literal ,
+   # BEGIN DEF, # END DEF
+   # BEGIN RETURN, # END RETURN
 }
 
 fit_node_database
 *****************
-This argument can't be ``None`` and
 is an :ref:`glossary@input_node_database`.
 Only the following tables in this database are used:
 option, data, node, and covariate.
@@ -41,7 +40,7 @@ where n is the number of covariates minus one.
 
 all_node_database
 *****************
-This argument can't be ``None`` and is the :ref:all_node_db`.
+is the :ref:all_node_db`.
 Only the :ref:`all_option_table-name` and :ref:`split_reference_table-name` are used.
 
 all_option Table
@@ -86,20 +85,19 @@ import at_cascade
 import dismod_at
 import math
 #
-# get_cov_reference(
+# BEGIN DEF
+# at_cascade.get_cov_reference
 def get_cov_reference(
-# BEGIN syntax
-# cov_reference_list = at_cascade.get_cov_reference
-   all_node_database  = None,
-   fit_node_database  = None,
-   shift_node_id     = None,
+   all_node_database  ,
+   fit_node_database  ,
+   shift_node_id      ,
    split_reference_id = None,
 # )
-# END syntax
 ) :
    assert type(all_node_database) == str
    assert type(fit_node_database) == str
    assert type(shift_node_id) == int
+   # END DEF
    #
    # all_table
    connection       = dismod_at.create_connection(
@@ -264,4 +262,8 @@ def get_cov_reference(
       # cov_reference_list
       cov_reference_list.append(reference)
    # -------------------------------------------------------------------------
+   # BEGIN RETURN
+   # ...
+   assert type(cov_reference_list) == list
    return cov_reference_list
+   # END RETURN

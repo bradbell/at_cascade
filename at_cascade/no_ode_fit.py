@@ -19,21 +19,19 @@ Do A No Ode Fit For One Node
 
 Syntax
 ******
-{xrst_literal
-   # BEGIN syntax
-   # END syntax
+{xrst_literal ,
+   # BEGIN DEF, # END DEF
+   # BEGIN RETURN, # END RETURN
 }
 
 all_node_database
 *****************
 is a python string containing the name of the :ref:`all_node_db-name`.
-This argument can't be ``None``.
 
 root_node_database
 ******************
 is a python string specifying the location of the
 :ref:`glossary@root_node_database`.
-This argument can't be ``None``.
 
 all_option_dict
 ***************
@@ -146,20 +144,19 @@ def add_index_to_name(table, name_col) :
       name = name[: -1]
    row[name_col] = name + '_' + str( len(table) )
 # ----------------------------------------------------------------------------
+# BEGIN DEF
+# at_cascade.no_ode_fit
 def no_ode_fit(
-# BEGIN syntax
-# root_fit_database = at_cascade.no_ode_fit(
-   all_node_database   = None,
-   root_node_database  = None,
-   all_option_dict     = None,
-   fit_type            = None,
-# )
-# END syntax
+   all_node_database   ,
+   root_node_database  ,
+   all_option_dict     ,
+   fit_type            ,
 ) :
    assert type(all_node_database) == str
    assert type(root_node_database) == str
    assert type(all_option_dict) == dict
    assert fit_type == 'fixed' or fit_type == 'both'
+   # END DEF
    #
    # result_dir, max_fit, max_abs_effect, max_number_cpu
    result_dir     = None
@@ -375,4 +372,8 @@ def no_ode_fit(
       current_time   = now.strftime("%H:%M:%S")
       print( f'End:   {current_time}: no_ode' )
    #
+   # BEGIN RETURN
+   # ...
+   assert type(root_fit_database) == str
    return root_fit_database
+   # END RETURN

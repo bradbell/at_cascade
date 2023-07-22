@@ -127,19 +127,18 @@ def system_command(command, file_stdout) :
          write_command = True,
       )
 # ----------------------------------------------------------------------------
-def run_one_job(
 # BEGIN syntax
-# run_one_job(
-   job_table         = None,
-   run_job_id        = None,
-   all_node_database = None,
-   node_table        = None,
-   fit_integrand     = None,
-   fit_type          = None,
-   first_fit         = None,
+# at_cascade.run_one_job
+def run_one_job(
+   job_table               ,
+   run_job_id              ,
+   all_node_database       ,
+   node_table              ,
+   fit_integrand           ,
+   fit_type                ,
+   first_fit               ,
    trace_file_obj    = None,
 # )
-# END syntax
 ) :
    assert type(job_table) == list
    assert type(run_job_id) == int
@@ -148,6 +147,7 @@ def run_one_job(
    assert type(fit_integrand) == set
    assert fit_type in [ 'both', 'fixed' ]
    assert type(first_fit) == bool
+   # END syntax
    #
    # file_stdout
    if trace_file_obj is not None :

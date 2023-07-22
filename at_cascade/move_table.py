@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin move_table}
@@ -57,7 +57,9 @@ import at_cascade
 def move_table(
    connection, src_name, dst_name
 ) :
-# END syntax
+   assert type(src_name) == str
+   assert type(dst_name) == str
+   # END syntax
    #
    command     = 'DROP TABLE IF EXISTS ' + dst_name
    dismod_at.sql_command(connection, command)

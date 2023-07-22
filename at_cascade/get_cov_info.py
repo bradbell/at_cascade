@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_cov_info}
@@ -14,9 +14,9 @@ Get Covariate Information
 
 Syntax
 ******
-{xrst_literal
-   # BEGIN syntax
-   # END syntax
+{xrst_literal ,
+   # BEGIN DEF, # END DEF
+   # BEGIN RETURN, # END RETURN
 }
 
 all_option_table
@@ -83,19 +83,18 @@ the reference value for split_covariate_name in the covariate table.
 {xrst_end get_cov_info}
 '''
 import at_cascade
-#
+# BEGIN DEF
+# at_cascade.get_cov_info(
 def get_cov_info(
-# BEGIN syntax
-# cov_info = at_cascade.get_cov_info(
-   all_option_table      = None ,
-   covariate_table       = None ,
-   split_reference_table = None,
+   all_option_table      ,
+   covariate_table       ,
+   split_reference_table ,
 # )
-# END syntax
 ) :
-   assert not all_option_table      is None
-   assert not covariate_table       is None
-   assert not split_reference_table is None
+   assert type(all_option_table) == list
+   assert type(covariate_table) == list
+   assert type(split_reference_table) == list
+   # END DEF
    #
    # all_option
    all_option = dict()
@@ -168,5 +167,8 @@ def get_cov_info(
       'split_reference_list':  split_reference_list,
       'split_reference_id':    split_reference_id,
    }
-   #
+   # BEGIN RETURN
+   # ...
+   assert type(cov_info) == dict
    return cov_info
+   # END RETURN
