@@ -9,32 +9,32 @@ catch_exceptions_and_continue = False
 {xrst_begin run_parallel}
 {xrst_spell
    cpus
+   multiprocessing
 }
 
 Run With Specified Maximum Number of Processes
 ##############################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   # BEGIN syntax
-   # END syntax
+   # BEGIN DEF
+   # END DEF
 }
-
-Default Value
-*************
-None of the arguments to this routine can be ``None``.
 
 job_table
 *********
-:ref:`run_one_job@job_table`
+This is a :ref:`create_job_table@job_table` containing all the jobs
+necessary to fit the :ref:`glossary@fit_goal_set` .
 
 start_job_id
 ************
 This is the :ref:`create_job_table@job_table@job_id`
 for the starting job.
 The run_parallel routine will not return until this job,
-and all it descendants in the job table, have been run.
+and all it descendants in the job table, have been run,
+or an error occurs that prevents a job from completing..
+
 
 all_node_database
 *****************
@@ -57,7 +57,7 @@ skip_start_job
 If this is true (false) the job corresponding to *start_job_id*
 will be skipped (will not be skipped).
 If this argument is true, the start job must have already been run.
-This is useful when continuing a cascade.
+This is useful when using :ref:`continue_cascade-name` .
 
 max_number_cpu
 **************
@@ -78,6 +78,18 @@ trace.out
 If the *max_number_cpu* is one, standard output is not redirected.
 Otherwise, standard output for each job is written to a file called
 ``trace.out`` in the same directory as the database for the job.
+
+Shared Memory
+*************
+All of these jobs us the following two python multiprocessing
+shared memory names:
+
+|  *shared_memory_prefix*\ ``_``\ *job_name*\ ``_number_cpu_in_use``
+|  *shared_memory_prefix*\ ``_``\ *job_name*\ ``_job_status``
+
+where *job_name* is *job_table* [ *start_job_id* ] [ ``"job_name"`` ]
+and :ref:`all_option_table@shared_memory_prefix` is specified
+in the all option table.
 
 {xrst_end run_parallel}
 '''
@@ -344,6 +356,7 @@ def try_one_job(
    return
 # ----------------------------------------------------------------------------
 def run_parallel_job(
+   shared_memory_prefix_plus,
    job_table,
    this_job_id,
    all_node_database,
@@ -356,6 +369,7 @@ def run_parallel_job(
    lock,
    event,
 ) :
+   assert type(shared_memory_prefix_plus)  == str
    assert type(job_table)         == list
    assert type(this_job_id)       == int
    assert type(all_node_database) == str
@@ -366,12 +380,9 @@ def run_parallel_job(
    assert type(master_process)    == bool
    assert type(fit_type_list)     == list
    # ----------------------------------------------------------------------
-   # shared_memory_prefix
-   shared_memory_prefix = get_shared_memory_prefix(all_node_database)
-   # ----------------------------------------------------------------------
    # shared_number_cpu_inuse
    tmp  = numpy.empty(1, dtype = int )
-   name = shared_memory_prefix + '_number_cpu_inuse'
+   name = shared_memory_prefix_plus + '_number_cpu_inuse'
    shm_number_cpu_inuse = shared_memory.SharedMemory(
       create = False, name = name
    )
@@ -381,7 +392,7 @@ def run_parallel_job(
    # ----------------------------------------------------------------------
    # shared_job_status
    tmp  = numpy.empty(len(job_table), dtype = int )
-   name = shared_memory_prefix + '_job_status'
+   name = shared_memory_prefix_plus + '_job_status'
    shm_job_status = shared_memory.SharedMemory(
       create = False, name = name
    )
@@ -512,6 +523,7 @@ def run_parallel_job(
             #
             # p
             args = (
+               shared_memory_prefix_plus,
                job_table,
                job_id,
                all_node_database,
@@ -550,19 +562,17 @@ def run_parallel_job(
             shared_job_status,
          )
 # ----------------------------------------------------------------------------
+# BEGIN DEF
 def run_parallel(
-# BEGIN syntax
-# at_cascade.run_parallel(
-   job_table         = None,
-   start_job_id      = None,
-   all_node_database = None,
-   node_table        = None,
-   fit_integrand     = None,
-   skip_start_job    = None,
-   max_number_cpu    = None,
-   fit_type_list     = None,
+   job_table         ,
+   start_job_id      ,
+   all_node_database ,
+   node_table        ,
+   fit_integrand     ,
+   skip_start_job    ,
+   max_number_cpu    ,
+   fit_type_list     ,
 # )
-# END syntax
 ) :
    #
    assert type(job_table)         == list
@@ -573,13 +583,17 @@ def run_parallel(
    assert type(skip_start_job)    == bool
    assert type(max_number_cpu)    == int
    assert type(fit_type_list)     == list
+   # END DEF
    # ----------------------------------------------------------------------
    # shared_memory_prefix
    shared_memory_prefix = get_shared_memory_prefix(all_node_database)
+   start_name           = job_table[start_job_id]['job_name']
+   shared_memory_prefix_plus = shared_memory_prefix + f'_{start_name}'
+   print(f'create: {shared_memory_prefix_plus} shared memory')
    # -------------------------------------------------------------------------
    # shared_number_cpu_inuse
    tmp  = numpy.empty(1, dtype = int )
-   name = shared_memory_prefix + '_number_cpu_inuse'
+   name = shared_memory_prefix_plus + '_number_cpu_inuse'
    shm_number_cpu_inuse = shared_memory.SharedMemory(
       create = True, size = tmp.nbytes, name = name
    )
@@ -589,7 +603,7 @@ def run_parallel(
    # -------------------------------------------------------------------------
    # shared_job_status
    tmp  = numpy.empty(len(job_table), dtype = int )
-   name = shared_memory_prefix + '_job_status'
+   name = shared_memory_prefix_plus + '_job_status'
    shm_job_status = shared_memory.SharedMemory(
       create = True, size = tmp.nbytes, name = name
    )
@@ -634,6 +648,7 @@ def run_parallel(
    #
    # run_parallel_job
    run_parallel_job(
+      shared_memory_prefix_plus,
       job_table,
       start_job_id,
       all_node_database,
@@ -648,7 +663,10 @@ def run_parallel(
    )
    #
    # shared_number_cpu_inuse
-   assert shared_number_cpu_inuse[0] == 1
+   if shared_number_cpu_inuse[0] != 1 :
+      n_inuse = shared_number_cpu_inuse[0]
+      msg =f'{shared_memory_prefix_plus}_number_cpu_inuse[0] = {n_inuse}'
+      assert msg, False
    #
    # shared_job_status
    for job_id in range(0, len(job_table) ):
@@ -656,6 +674,7 @@ def run_parallel(
       assert status in [ job_status_done, job_status_error, job_status_abort ]
    #
    # free shared memory objects
+   print(f'remove: {shared_memory_prefix_plus} shared memory')
    for shm in shm_list :
       shm.close()
       shm.unlink()

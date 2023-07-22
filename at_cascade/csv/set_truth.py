@@ -162,6 +162,8 @@ def set_truth(sim_dir, fit_node_database, root_node_database) :
    ]
    #
    # copy files
+   print( f'set_truth: sim_dir = {sim_dir}')
+   print( f'set_truth: fit_node_dir = {fit_node_dir}')
    for name in copy_list :
       src = f'{sim_dir}/{name}.csv'
       dst = f'{fit_node_dir}/{name}.csv'

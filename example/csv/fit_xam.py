@@ -8,6 +8,7 @@ import time
 import math
 import shutil
 import csv
+import multiprocessing
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
@@ -54,11 +55,15 @@ n2,n0
 option_fit.csv
 **************
 This example uses the default value for all the options in option_fit.csv
-except for the random seed which is chosen using the python time package:
+except for the random seed which is chosen using the python time package,
+max_number_cpu should be either 1 or None.
 {xrst_code py}"""
-random_seed = str( int( time.time() ) )
+max_number_cpu = None
+random_seed    = str( int( time.time() ) )
 csv_file['option_fit.csv']  = 'name,value\n'
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
+if max_number_cpu == 1 :
+   csv_file['option_fit.csv'] += f'max_number_cpu,1\n'
 """{xrst_code}
 
 option_predict.csv
@@ -240,31 +245,61 @@ def computation(fit_dir) :
       # csv.fit: Just fit the root node
       at_cascade.csv.fit(fit_dir, max_node_depth = 0)
       #
-      # predict
-      # predict/fit_n0.both.csv, predict/sam_n0.both.csv
-      at_cascade.csv.predict(
-         fit_dir, start_job_name = 'n0.both', max_job_depth = 0
-      )
+      # all_node_database, fit_goal_set
+      all_node_database = f'{fit_dir}/all_node.db'
+      fit_goal_set      = { 'n1', 'n2' }
       #
-      # continue_cascade:
-      # These calls to continue_cascade could be done in parallel
-      at_cascade.continue_cascade(
-         all_node_database = f'{fit_dir}/all_node.db'         ,
-         fit_node_database = f'{fit_dir}/n0/female/dismod.db' ,
-         fit_goal_set      = { 'n1', 'n2' }                   ,
-      )
-      at_cascade.continue_cascade(
-         all_node_database = f'{fit_dir}/all_node.db'         ,
-         fit_node_database = f'{fit_dir}/n0/male/dismod.db' ,
-         fit_goal_set      = { 'n1', 'n2' }                   ,
-      )
+      # run prediict for n0, and fit for female, male in parallel
       #
-      # predict
-      # These two calls to predict could be done in parallel
-      # predict/fit_n0.female.csv, predict/sam_n0.female.csv
-      at_cascade.csv.predict(fit_dir, start_job_name = 'n0.female')
-      # predict/fit_n0.male.csv, predict/sam_n0.male.csv
-      at_cascade.csv.predict(fit_dir, start_job_name = 'n0.male')
+      # p_fit
+      p_fit = dict()
+      for sex in [ 'female' , 'male' ] :
+         fit_node_database = f'{fit_dir}/n0/{sex}/dismod.db'
+         args   = (all_node_database, fit_node_database, fit_goal_set)
+         if max_number_cpu == 1 :
+            at_cascade.continue_cascade( *args )
+         else :
+            p_fit[sex] = multiprocessing.Process(
+               target = at_cascade.continue_cascade , args = args ,
+            )
+            p_fit[sex].start()
+      #
+      # p_predict
+      p_predict      = dict()
+      sim_dir        = None
+      start_job_name = 'n0.both'
+      max_job_depth  = 0
+      args            = (fit_dir, sim_dir, start_job_name, max_job_depth)
+      if max_number_cpu == 1 :
+         at_cascade.csv.predict( *args )
+      else :
+         p_predict['both'] = multiprocessing.Process(
+            target = at_cascade.csv.predict , args = args
+         )
+         p_predict['both'].start()
+      #
+      # wait for the fit jobs to complete
+      for sex in p_fit :
+         p_fit[sex].join()
+      #
+      #
+      # p_predict
+      sim_dir       = None
+      max_job_depth = None
+      for sex in [ 'female', 'male' ] :
+         start_job_name = f'n0.{sex}'
+         args           = (fit_dir, sim_dir, start_job_name, max_job_depth)
+         if max_number_cpu == 1 :
+            at_cascade.csv.predict(*args)
+         else :
+            p_predict[sex] = multiprocessing.Process(
+               target = at_cascade.csv.predict, args = args                   ,
+            )
+            p_predict[sex].start()
+      #
+      # wait for the predict jobs to complete
+      for sex in p_predict :
+         p_predict[sex].join()
       #
       # predict
       # fit_predict.csv, sam_predict.csv

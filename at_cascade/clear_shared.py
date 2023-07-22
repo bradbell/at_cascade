@@ -12,9 +12,12 @@
 Clear at_cascade Shared Memory
 ##############################
 
-Syntax
-******
-clear_shared(all_node_database)
+Prototype
+i********
+{xrst_literal
+   # BEGIN DEF
+   # END DEF
+}
 
 Purpose
 *******
@@ -31,17 +34,24 @@ did not terminate cleanly; e.g., if the system crashed.
 
 all_node_database
 *****************
-is a ``str`` containing a path to the :ref:`all_node_db-name`.
+is a path to the :ref:`all_node_db-name`.
 This is used to determine the
 :ref:`all_option_table@shared_memory_prefix`.
 
+job_name
+********
+This is the :ref:`create_job_table@job_table@job_name`
+for the :ref:`run_parallel@Shared Memory` that we are clearing.
 
 {xrst_end clear_shared}
 '''
 import dismod_at
 from multiprocessing import shared_memory
-#
-def clear_shared(all_node_database) :
+# BEGIN DEF
+def clear_shared(all_node_database, job_name) :
+   assert type(all_node_database) == str
+   assert type(job_name) == str
+   # END DEF
    #
    # shared_memory_prefix
    connection           = dismod_at.create_connection(
@@ -54,25 +64,34 @@ def clear_shared(all_node_database) :
       if row['option_name'] == 'shared_memory_prefix' :
          shared_memory_prefix = row['option_value']
    #
+   # shared_memory_prefix_plus
+   shared_memory_prefix_plus = f'{shared_memory_prefix}_{job_name}'
+   #
    # shared_memory_name_list
    shared_memory_suffix_list = [ '_number_cpu_inuse', '_job_status', ]
    #
    # shared_memory_suffix
    for shared_memory_suffix in shared_memory_suffix_list :
-      shared_memory_name = shared_memory_prefix + shared_memory_suffix
+      shared_memory_name = shared_memory_prefix_plus + shared_memory_suffix
       try :
          shm = shared_memory.SharedMemory(
             create = True, name = shared_memory_name, size = 1
          )
+         exists = False
       except FileExistsError :
          try :
             shm = shared_memory.SharedMemory(
                create = False, name = shared_memory_name
             )
+            exist = True
          except Exception as e :
             msg = str(e)
             assert False, msg
       #
-      print(f'removing shared memory: {shared_memory_name}')
+      if exists :
+         print(f'did find:     {shared_memory_name}')
+      else :
+         print(f'did\'nt find: {shared_memory_name}')
       shm.close()
       shm.unlink()
+      print('clear_shared: OK')
