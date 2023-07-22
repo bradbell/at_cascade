@@ -45,7 +45,7 @@ mm-dd
    might try to read a log that was changing (when running in parallel).
 #. Add the job_name to the :ref:`run_parallel@Shared Memory` name.
    This fixes a bug when running cascades in parallel.
-   It also required also adding :ref:`clear_shared@job_name` to
+   It also required adding :ref:`clear_shared@job_name` to
    the clear_shared routine.
 #. Change :ref:`csv_fit_xam-name` so that it runs jobs in parallel when
    :ref:`csv_fit_xam@breakup_computation` is True .
