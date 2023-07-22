@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import csv
 """
@@ -52,7 +52,7 @@ import at_cascade
 #
 def join_file(
 # BEGIN_SYNTAX
-# at_cascade.csv.join_file(
+# at_cascade.csv.join_file
    left_file    ,
    right_file   ,
    result_file  ,

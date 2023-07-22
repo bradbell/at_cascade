@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import at_cascade
 '''
@@ -15,9 +15,9 @@ Create Spline Functions For Covariates
 
 Syntax
 ******
-{xrst_literal
-   BEGIN_SYNTAX
-   END_SYNTAX
+{xrst_literal ,
+   BEGIN_SYNTAX, END_SYNTAX
+   BEGIN_RETURN, END_RETURN
 }
 
 covariate_table
@@ -68,7 +68,7 @@ same rectangular grid in age and time for each (node_name, sex) pair.
 {xrst_end covariate_spline}
 '''
 # BEGIN_SYNTAX
-# age_grid, time_grid, spline_cov =
+# at_casade.csv.covariate_spline
 def covariate_spline(covariate_table , node_set) :
    assert type( covariate_table ) == list
    assert type( covariate_table[0] ) == dict
@@ -165,5 +165,10 @@ def covariate_spline(covariate_table , node_set) :
          previous['sex']       = sex
          previous['age_grid']  = age_grid
          previous['time_grid'] = time_grid
-   #
+   # BEGIN_RETURN
+   # ...
+   assert type(age_grid) == list
+   assert type(time_grid) == list
+   assert type(spline_cov) == dict
    return age_grid, time_grid, spline_cov
+   # END_RETURN

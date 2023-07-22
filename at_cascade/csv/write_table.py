@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import csv
 """
@@ -69,13 +69,13 @@ def write_table(
    table      = None,
    columns    = None,
 # )
-# END_SYNTAX
 ) :
    assert type(file_name)  == str
    assert type(table)      == list
    assert type(columns) == list or columns == None
    if columns == None :
       columns = table[0].keys()
+   # END_SYNTAX
    #
    file_ptr    = open(file_name, 'w')
    writer      = csv.DictWriter(file_ptr, fieldnames = columns)

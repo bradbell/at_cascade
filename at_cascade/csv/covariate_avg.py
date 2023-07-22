@@ -1,11 +1,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin csv_covariate_avg}
 {xrst_spell
-   avg
 }
 
 Compute Covariate Averages for One Node
@@ -13,13 +12,9 @@ Compute Covariate Averages for One Node
 
 Syntax
 ******
-{xrst_literal
-   # BEGIN_SYNTAX
-   # END_SYNTAX
-}
-{xrst_literal
-   # BEGIN_RETURN
-   # END_RETURN
+{xrst_literal ,
+   # BEGIN_SYNTAX, # END_SYNTAX
+   # BEGIN_RETURN, # END_RETURN
 }
 
 covariate_table
@@ -31,15 +26,15 @@ node_name
 *********
 is a str contain the name of the node that we are computing the average for.
 
-covariate_avg
-*************
+covariate_average
+*****************
 This return is a dict where the keys are the covariates in covariate.csv
 and the values are the average of the corresponding covariate.
 
 {xrst_end csv_covariate_avg}
 '''
 # BEGIN_SYNTAX
-# covariate_average =
+# at_cascade.csv.covariate_avg
 def covariate_avg(covariate_table, node_name) :
    assert type(covariate_table) == list
    assert type(covariate_table[0]) == dict
@@ -85,6 +80,7 @@ def covariate_avg(covariate_table, node_name) :
          covariate_sum[covariate_name] / count
    #
    # BEGIN_RETURN
+   # ...
    assert type(covariate_average) == dict
    for value in covariate_average.values() :
       assert type(value) == float

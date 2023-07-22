@@ -1027,13 +1027,13 @@ def predict_all(
       at_cascade.csv.write_table(file_name, prefix_predict_table[prefix] )
 # ----------------------------------------------------------------------------
 # BEGIN_PREDICT
-# at_cascadde.csv.fit(fit_dir, sim_dir, start_job_name, max_job_depth)
+# at_cascade.csv.predict
 def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
    assert type(fit_dir)  == str
    assert sim_dir        == None or type(sim_dir) == str
    assert start_job_name == None or type(start_job_name) == str
    assert max_job_depth  == None or type(max_job_depth) == int
-# END_PREDICT
+   # END_PREDICT
    #
    # top_node_name
    node_table      = at_cascade.csv.read_table(f'{fit_dir}/node.csv')

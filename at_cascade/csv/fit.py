@@ -1588,11 +1588,11 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    )
 # ----------------------------------------------------------------------------
 # BEGIN_FIT
-# at_cascadde.csv.fit(fit_dir, max_node_depth)
+# at_cascadde.csv.fit
 def fit(fit_dir, max_node_depth = None) :
    assert type(fit_dir) == str
    assert max_node_depth == None or type(max_node_depth) == int
-# END_FIT
+   # END_FIT
    #
    # top_node_name
    node_table      = at_cascade.csv.read_table(f'{fit_dir}/node.csv')

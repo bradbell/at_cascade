@@ -48,11 +48,12 @@ is the :ref:`glossary@root_node_database` .
 {xrst_end csv_set_truth}
 """
 # BEGIN_SET_TRUTH
+# at_cascade.csv.set_truth
 def set_truth(sim_dir, fit_node_database, root_node_database) :
    assert type(sim_dir) == str
    assert type(fit_node_database) == str
    assert type(root_node_database) == str
-# END_SET_TRUTH
+   # END_SET_TRUTH
    #
    # fit_node_dir
    index        = fit_node_database.rfind('/')
@@ -162,8 +163,6 @@ def set_truth(sim_dir, fit_node_database, root_node_database) :
    ]
    #
    # copy files
-   print( f'set_truth: sim_dir = {sim_dir}')
-   print( f'set_truth: fit_node_dir = {fit_node_dir}')
    for name in copy_list :
       src = f'{sim_dir}/{name}.csv'
       dst = f'{fit_node_dir}/{name}.csv'

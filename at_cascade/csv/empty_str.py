@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import copy
 """
@@ -11,13 +11,9 @@ Create A Table from a CSV File
 
 Syntax
 ******
-{xrst_literal
-   BEGIN_SYNTAX
-   END_SYNTAX
-}
-{xrst_literal
-   BEGIN_RETURN
-   END_RETURN
+{xrst_literal ,
+   BEGIN_SYNTAX, END_SYNTAX
+   BEGIN_RETURN, END_RETURN
 }
 
 
@@ -57,13 +53,13 @@ Example
 {xrst_end csv_empty_str}
 """
 # BEGIN_SYNTAX
-# table_out =
+# at_cascade.csv.empty_str
 def empty_str(table_in, direction) :
    assert type(table_in)  == list
    if len(table_in) > 0 :
       assert type(table_in[0]) == dict
    assert direction == 'to_none' or direction == 'from_none'
-# END_SYNTAX
+   # END_SYNTAX
    #
    table_out = list()
    for row in table_in :
@@ -76,9 +72,10 @@ def empty_str(table_in, direction) :
             if row[key] == None :
                row[key] = ''
       table_out.append(row)
-# BEGIN_RETURN
+   # BEGIN_RETURN
+   # ...
    assert type(table_out) == list
    if len(table_out) > 0 :
          assert type(table_out[0]) == dict
    return table_out
-# END_RETURN
+   # END_RETURN

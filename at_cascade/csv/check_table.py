@@ -30,6 +30,7 @@ table  = at_cascade.csv.read(file_name)
 '''
 #
 # BEGIN_SYNTAX
+# at_cascade.csv.check_table
 def check_table(file_name, table) :
    assert type(file_name) == str
    assert type(table) == list
