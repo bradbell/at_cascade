@@ -157,9 +157,9 @@ def is_descendant(node_table, ancestor_node_id, this_node_id) :
          return True
    return False
 # ----------------------------------------------------------------------------
-def create_all_node_db(
 # BEGIN syntax
-# at_cascade.create_all_node_db(
+# at_cascade.create_all_node_db
+def create_all_node_db(
    all_node_database         = None,
    all_option                = None,
    split_reference_table     = None,
@@ -181,7 +181,7 @@ def create_all_node_db(
    assert type(split_reference_table)  == list
    assert type(node_split_table)       == list
    assert type(mulcov_freeze_table)    == list
-# END syntax
+   # END syntax
    #
    # some asserts
    if omega_grid is None :

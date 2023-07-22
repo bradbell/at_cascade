@@ -63,20 +63,20 @@ import multiprocessing
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
-def continue_cascade(
 # BEGIN syntax
-# at_cascade.continue_cascade(
+# at_cascade.continue_cascade
+def continue_cascade(
    all_node_database = None,
    fit_node_database = None,
    fit_goal_set      = None,
    fit_type_list     = [ 'both', 'fixed' ]
 # )
-# END syntax
 ) :
    assert type(all_node_database) == str
    assert type(fit_node_database) == str
    assert type(fit_goal_set)      == set
    assert type(fit_type_list)     == list
+   # END syntax
    #
    # split_reference_table, all_option, node_split_table
    connection       = dismod_at.create_connection(

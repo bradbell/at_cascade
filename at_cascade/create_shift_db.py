@@ -24,7 +24,6 @@ Syntax
 all_node_database
 *****************
 is a python string containing the name of the :ref:`all_node_db-name`.
-This argument can't be ``None``.
 
 fit_node_database
 *****************
@@ -68,7 +67,6 @@ Note that the predict_id column name was changed to c_shift_predict_fit_var_id
 
 shift_databases
 ***************
-This argument can't be ``None`` and is a python dictionary.
 We use the notation *shift_name* for the keys in this ``dict``.
 
 shift_name
@@ -366,17 +364,20 @@ def add_shift_grid_row(
    shift_grid_row['smooth_id']  = len( shift_table['smooth'] ) - 1
    shift_table['smooth_grid'].append( shift_grid_row )
 # ----------------------------------------------------------------------------
-def create_shift_db(
 # BEGIN syntax
-# at_cascade.create_shift_db(
-   all_node_database    = None ,
-   fit_node_database    = None ,
-   shift_databases      = None ,
+# at_cascade.create_shift_db
+def create_shift_db(
+   all_node_database    ,
+   fit_node_database    ,
+   shift_databases      ,
    no_ode_fit           = False,
 # )
-# END syntax
 ) :
-   # ------------------------------------------------------------------------
+   assert type(all_node_database) == str
+   assert type(fit_node_database) == str
+   assert type(shift_databases) == dict
+   assert type(no_ode_fit) == bool
+   # END syntax
    #
    # predict_sample
    predict_sample = not no_ode_fit

@@ -24,14 +24,12 @@ all_node_database
 is a python string specifying the location of the
 :ref:`all_node_db-name`
 relative to the current working directory.
-This argument can't be ``None``.
 
 fit_goal_set
 ************
 This is a ``set`` with elements of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
 :ref:`glossary@fit_goal_set` .
-This argument can't be ``None``.
 
 no_ode_fit
 **********
@@ -109,20 +107,20 @@ import multiprocessing
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
-def cascade_root_node(
 # BEGIN syntax
-# at_cascade.cascade_root_node(
-   all_node_database       = None,
-   fit_goal_set            = None,
+# at_cascade.cascade_root_node
+def cascade_root_node(
+   all_node_database       ,
+   fit_goal_set            ,
    no_ode_fit              = False,
    fit_type_list           = [ 'both', 'fixed' ]
 # )
-# END syntax
 ) :
    assert type(all_node_database)  == str
    assert type(fit_goal_set)       == set
    assert type(no_ode_fit)         == bool
    assert type(fit_type_list)      == list
+   # END syntax
    #
    # split_reference_table, all_option_table
    connection  = dismod_at.create_connection(

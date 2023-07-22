@@ -223,9 +223,9 @@ def possible_child_job_list(
    #
    return child_job_list
 # ----------------------------------------------------------------------------
-def avgint_parent_grid(
 # BEGIN syntax
-# at_cascade.avgint_parent_grid(
+# at_cascade.avgint_parent_grid
+def avgint_parent_grid(
    all_node_database = None ,
    fit_node_database = None ,
    job_table         = None ,

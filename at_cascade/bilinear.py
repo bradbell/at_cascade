@@ -16,9 +16,9 @@ Bilinear Spline Interpolation
 
 Syntax
 ******
-{xrst_literal
-   BEGIN_SYNTAX
-   END_SYNTAX
+{xrst_literal ,
+   BEGIN_SYNTAX, END_SYNTAX
+   BEGIN_RETURN, END_RETURN
 }
 
 x_name
@@ -96,8 +96,9 @@ class spline_wrapper :
       assert result.size == 1
       return float(result)
 
-def bilinear(
 # BEGIN_SYNTAX
+# at_cascade.bilinear
+def bilinear(
 # x_grid, y_grid, spline_dict = bilinear(
    table,
    x_name,
@@ -207,4 +208,10 @@ def bilinear(
       )
       spline_dict[z_name] = spline_wrapper( spline )
    #
+   # BEGIN_RETURN
+   # ...
+   assert type(x_grid_in) == list
+   assert type(y_grid_in) == list
+   assert type(spline_dict) == dict
    return (x_grid_in, y_grid_in, spline_dict)
+   # END_RETURN

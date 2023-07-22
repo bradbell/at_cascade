@@ -48,6 +48,7 @@ for the :ref:`run_parallel@Shared Memory` that we are clearing.
 import dismod_at
 from multiprocessing import shared_memory
 # BEGIN DEF
+# at_cascade.clear_shared
 def clear_shared(all_node_database, job_name) :
    assert type(all_node_database) == str
    assert type(job_name) == str

@@ -14,8 +14,8 @@ Check the Cascade Results for a Node
 Syntax
 ******
 {xrst_literal
-   # BEGIN syntax
-   # END syntax
+   # BEGIN DEF
+   # END DEF
 }
 
 rate_true
@@ -92,9 +92,9 @@ import math
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
+# BEGIN DEF
+# at_cascade.check_cascade_node
 def check_cascade_node(
-# BEGIN syntax
-# at_cascade.check_cascade_node(
          rate_true          ,
          all_node_database  ,
          fit_node_database  ,
@@ -106,7 +106,7 @@ def check_cascade_node(
    assert type(fit_node_database) == str
    assert type(avgint_table) == list
    assert relative_tolerance == None or type(relative_tolerance) == float
-   # END syntax
+   # END DEF
    #
    # root_node_database
    connection = dismod_at.create_connection(

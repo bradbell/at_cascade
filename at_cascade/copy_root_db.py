@@ -35,10 +35,11 @@ import at_cascade
 import dismod_at
 #
 # BEGIN_COPY_ROOT_DB
+# at_cascade.copy_root_db
 def copy_root_db(root_node_database, fit_node_database) :
    assert type(root_node_database) == str
    assert type(fit_node_database) == str
-# END_COPY_ROOT_DB
+   # END_COPY_ROOT_DB
    #
    # fit_node_database
    shutil.copyfile(root_node_database, fit_node_database)

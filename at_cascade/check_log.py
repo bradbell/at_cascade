@@ -76,9 +76,9 @@ import multiprocessing
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
-def check_log(
 # BEGIN DEF
-# message_dict = at_cascade.check_log(
+# at_cascade.check_log
+def check_log(
    message_type                  ,
    all_node_database             ,
    root_node_database            ,
@@ -218,6 +218,7 @@ def check_log(
                   message_dict[job_name].append( row['message'] )
    #
    # BEGIN RETURN
+   # ...
    assert type(message_dict) == dict
    return message_dict
    # END RETURN

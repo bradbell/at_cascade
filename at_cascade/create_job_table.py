@@ -10,9 +10,9 @@ Table of Jobs That Can Run in Parallel
 
 Syntax
 ******
-{xrst_literal
-   # BEGIN syntax
-   # END syntax
+{xrst_literal ,
+   # BEGIN DEF, END DEF
+   # BEGIN RETURN, END RETURN
 }
 
 Purpose
@@ -178,16 +178,15 @@ def get_child_job_table(
    #
    return child_job_table
 # -----------------------------------------------------------------------------
+# BEGIN DEF
+# at_cascade.create_job_table
 def create_job_table(
-# BEGIN syntax
-# job_table = at_cascade.create_job_table(
    all_node_database          = None,
    node_table                 = None,
    start_node_id              = None,
    start_split_reference_id   = None,
    fit_goal_set               = None,
 # )
-# END syntax
 ) :
    assert type(all_node_database) == str
    assert type(node_table) == list
@@ -197,6 +196,7 @@ def create_job_table(
    assert type(start_split_reference_id) == int or \
       start_split_reference_id == None
    assert type(fit_goal_set) == set
+   # END DEF
    #
    # all_table
    all_table = dict()
@@ -303,4 +303,8 @@ def create_job_table(
       # job_id
       job_id += 1
    #
+   # BEGIN RETURN
+   # ...
+   assert type(job_table) == list
    return job_table
+   # END RETURN
