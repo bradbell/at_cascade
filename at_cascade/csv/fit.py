@@ -56,7 +56,7 @@ Prototype
 
 Example
 *******
-:ref:`csv_fit_xam-name` .
+:ref:`csv_break_fit_pred-name` .
 
 fit_dir
 *******

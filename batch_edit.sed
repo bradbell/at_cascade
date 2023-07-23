@@ -15,25 +15,22 @@
 # '
 # list of files and or directories that are moved to new names
 # move_paths='
-#  example/csv/sim_and_fit.py
 # '
 # list of sed commands that map old file and directory names to new names.
 # The characters @s, @d, @n get converted to a space, dollar sign, new line.
 # move_seds='
-#  s|sim_and_fit.py|predict_xam.py|
 # '
 # list of files that get edited by the extra_seds command
 # extra_files='
-#  xrst/release_notes.xrst
 # '
 # list of sed commands that are applied to the extra files,
 # after the other sed commands in this file.
 # The characters @s, @d, @n get converted to a space, dollar sign, new line.
 # extra_seds='
-#  s|:ref:.csv_predict_xam-name.|sim_and_fit|
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
 # ...........................................................................
-s|sim_and_fit.py|predict_xam.py|
-s|csv_sim_and_fit|csv_predict_xam|
+s|sim_fit_pred-title|csv_sim_fit_pred-title|
+s|csv_fit_xam-name|csv_break_fit_pred-name|
+s|csv_fit_xam@breakup_computation|csv_break_fit_pred@breakup_computation|

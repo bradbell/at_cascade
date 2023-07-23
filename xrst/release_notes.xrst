@@ -37,7 +37,10 @@ mm-dd
 
 07-23
 =====
-Add the :ref:`sim_fit_pred-title` example.
+#. Add the :ref:`csv_sim_fit_pred-title` example.
+#. Move the csv_fit_xam example to :ref:`csv_break_fit_pred-name` .
+   This was done because it has changed from just a fit example
+   to also being an example of breaking up breaking up the computation.
 
 07-21
 =====
@@ -51,8 +54,8 @@ Add the :ref:`sim_fit_pred-title` example.
    This fixes a bug when running cascades in parallel.
    It also required adding :ref:`clear_shared@job_name` to
    the clear_shared routine.
-#. Change :ref:`csv_fit_xam-name` so that it runs jobs in parallel when
-   :ref:`csv_fit_xam@breakup_computation` is True .
+#. Change :ref:`csv_break_fit_pred-name` so that it runs jobs in parallel when
+   :ref:`csv_break_fit_pred@breakup_computation` is True .
 
 07-20
 =====
@@ -193,7 +196,7 @@ option to the csv simulate routine.
 05-10
 =====
 There was a problem with the csv fit_xam  when
-:ref:`csv_fit_xam@breakup_computation` was true.
+:ref:`csv_break_fit_pred@breakup_computation` was true.
 To be specific, multiple copies of the header appeared in the
 :ref:`csv_predict@Output Files@fit_predict.csv` and
 :ref:`csv_predict@Output Files@sam_predict.csv` files.
@@ -251,9 +254,9 @@ routines to get what the fit routine used to produce; see comments below.
    file (they have been moved to option_predict.csv).
 #. Add the :ref:`csv_predict@start_job_name` and
    :ref:`csv_predict@max_job_depth` arguments to csv.predict.
-#. Improve the documentation for the :ref:`csv_fit_xam-name` .
+#. Improve the documentation for the :ref:`csv_break_fit_pred-name` .
    In addition, include continuing the cascade in this example; see
-   :ref:`csv_fit_xam@breakup_computation` .
+   :ref:`csv_break_fit_pred@breakup_computation` .
 #. Add the :ref:`csv_fit@max_node_depth` argument to csv.fit.
 #. Change :ref:`avgint_parent_grid-name` to predict for all children,
    so continue_cascade works for any change of the
