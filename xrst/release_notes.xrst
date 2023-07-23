@@ -35,6 +35,10 @@ Release Notes for 2023
 mm-dd
 *****
 
+07-23
+=====
+Add the :ref:`sim_fit_pred-title` example.
+
 07-21
 =====
 #. Add :ref:`job_descendent-name` to the at_cascade :ref:`module-name` .
