@@ -199,6 +199,20 @@ ode_method,iota_pos_rho_pos
 '''
 '''{xrst_code}
 
+option_predict.csv
+==================
+A predict is run using the same directory as the corresponding fit.
+All of its input files are also inputs for the fit except for
+the option_predict.csv file.
+{xrst_code py}'''
+fit_file['option_predict.csv']  =  \
+'''name,value
+db2csv,true
+plot,true
+float_precision,5
+'''
+'''{xrst_code}
+
 fit_goal.csv
 ============
 {xrst_code py}'''
