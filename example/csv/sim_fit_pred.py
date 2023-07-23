@@ -12,29 +12,48 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 '''
-\{xrst_begin sim_fit_pred}
+{xrst_begin sim_fit_pred}
+{xrst_spell
+   sim
+   Sincidence
+   mtexcess
+   rho
+   std
+   meas
+   cv
+   iter
+   dage
+   dtime
+   const
+   temporaries
+}
 
-Example Simulating Fitting and Predictiong
+Example Simulating, Fitting and Predicting
 ##########################################
 
+Global Variables
+****************
+Global variables besides sim_file and fit_file.
+Variables that do not appear in a heading are temporaries.
 
 integrand_list
-**************
+==============
 Generate data and predict for the following integrands:
 {xrst_code py}'''
 integrand_list = [ 'Sincidence', 'remission', 'mtexcess', 'prevalence' ]
 '''{xrst_code}
 
 age_grid, time_grid
-********************
-Use this age-time grid for values that are not constant w.r.t age or time:
+===================
+Use this age-time grid for values the covariate grid and the
+parent rage grid.
 {xrst_code py}'''
 age_grid   = [0.0, 20.0, 50.0, 80.0, 100.0]
 time_grid  = [1980.0, 2000.0, 2020.0]
 '''{xrst_code}
 
 node_dict
-*********
+=========
 Keys are nodes and values are corresponding parent node:
 {xrst_code py}'''
 node_dict = {
@@ -43,9 +62,11 @@ node_dict = {
    'n2' : 'n0' ,
 }
 '''{xrst_code}
+
 no_effect_rate_truth
-********************
-This is the true values (used during simulation) for iota, rho, and chi:
+====================
+The true values (values used during simulation) for iota, rho, and chi
+are constant w.r.t age and time:
 {xrst_code py}'''
 no_effect_rate_truth = {
    'iota' : 0.02  ,
@@ -54,62 +75,81 @@ no_effect_rate_truth = {
 }
 '''{xrst_code}
 
+omega_truth
+===========
+{xrst_code py}'''
+omega_truth      = 0.01
+'''{xrst_code}
+
 std_random_effects_truth
-************************
+========================
 This is the true standard deviation of the random effects
 {xrst_code py}'''
-std_random_effects = 0.1
-# ----------------------------------------------------------------------------
-# sim_file
-# Input files that are placed in the simulate directory
+std_random_effects_truth = 0.2
+'''{xrst_code}
+
+sim_file
+********
+Input CSV files that are placed in the simulate directory:
+{xrst_code py}'''
 sim_file = dict()
-#
-# option_sim.csv
+'''{xrst_code}
+
+option_sim.csv
+==============
+{xrst_code py}'''
 sim_file['option_sim.csv'] = \
 '''name,value
 float_precision,4
 random_depend_sex,false
 '''
 for rate_name in no_effect_rate_truth :
-   row = f'std_random_effects_{rate_name},{std_random_effects}\n'
+   row = f'std_random_effects_{rate_name},{std_random_effects_truth}\n'
    sim_file['option_sim.csv'] += row
-#
-# node.csv
+'''{xrst_code}
+
+node.csv
+========
+{xrst_code py}'''
 sim_file['node.csv'] = \
 'node_name,parent_name\n'
 for node_name in node_dict :
    parent_name = node_dict[node_name]
    sim_file['node.csv'] += f'{node_name},{parent_name}\n'
-#
-# covariate.csv
-omega_true      = 0.01
+'''{xrst_code}
+
+covariate.csv
+=============
+{xrst_code py}'''
 sim_file['covariate.csv'] = 'node_name,sex,age,time,omega\n'
 for node_name in [ 'n0', 'n1', 'n2' ] :
    for sex in [ 'female', 'male' ] :
       for age in age_grid :
          for time in time_grid :
-            row   = f'{node_name},{sex},{age},{time},{omega_true}\n'
+            row   = f'{node_name},{sex},{age},{time},{omega_truth}\n'
             sim_file['covariate.csv'] += row
-#
-# mutiplier_sim.csv
+'''{xrst_code}
+
+multiplier_sim.csv
+==================
+There are no covariate multipliers in this example.
+{xrst_code py}'''
 sim_file['multiplier_sim.csv'] = \
-'multiplier_id,rate_name,covariate_or_sex,multiplier_true\n'
-#
-# simulate.csv
+   'multiplier_id,rate_name,covariate_or_sex,multiplier_true\n'
+'''{xrst_code}
+
+simulate.csv
+============
+{xrst_code py}'''
 header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,meas_std_cv,meas_std_min\n'
 meas_std_cv     = 0.01
 simulate_id     = 0
-meas_std_min    = {
-   'Sincidence' : no_effect_rate_truth['iota'] /  100.0 ,
-   'remission'  : no_effect_rate_truth['rho'] /  100.0 ,
-   'mtexcess'   : no_effect_rate_truth['chi'] /  100.0 ,
-   'prevalence' : 1e-6 ,
-}
-
 sim_file['simulate.csv'] = header
 for integrand_name in integrand_list :
-   std_min = meas_std_min[integrand_name]
+   std_min = 0.0
+   if integrand_name == 'prevalence' :
+      std_min = 1e-6
    for node_name in node_dict :
       for sex in [ 'female', 'male' ] :
          for age in age_grid :
@@ -119,24 +159,35 @@ for integrand_name in integrand_list :
                row += f'{meas_std_cv},{std_min}\n'
                sim_file['simulate.csv'] += row
                simulate_id += 1
-#
-# no_effect_rate.csv
+'''{xrst_code}
+
+no_effect_rate.csv
+==================
+The rates are constant, w.r.t age and time, during the simulation.
+{xrst_code py}'''
 sim_file['no_effect_rate.csv'] = 'rate_name,age,time,rate_truth\n'
 for rate_name in no_effect_rate_truth :
    rate_truth = no_effect_rate_truth[rate_name]
    sim_file['no_effect_rate.csv'] += f'{rate_name},0,0,{rate_truth}\n'
-# ----------------------------------------------------------------------------
-# fit_file
-# Input files that are placed in the fit directory
+'''{xrst_code}
+
+fit_file
+********
+Input CSV files that are placed in the fit directory:
+{xrst_code py}'''
 fit_file = dict()
-#
-# node.csv
-fit_file['node.csv'] = sim_file['node.csv']
-#
-# covariate.csv
+'''{xrst_code}
+
+Copies of Simulation Files
+==========================
+{xrst_code py}'''
+fit_file['node.csv']      = sim_file['node.csv']
 fit_file['covariate.csv'] = sim_file['covariate.csv']
-#
-# option_fit.csv
+'''{xrst_code}
+
+option_fit.csv
+==============
+{xrst_code py}'''
 fit_file['option_fit.csv']  =  \
 '''name,value
 refit_split,false
@@ -146,27 +197,39 @@ max_num_iter_fixed,50
 tolerance_fixed,1e-8
 ode_method,iota_pos_rho_pos
 '''
-#
-# fit_goal.csv
+'''{xrst_code}
+
+fit_goal.csv
+============
+{xrst_code py}'''
 fit_file['fit_goal.csv'] = \
 '''node_name
 n1
 n2
 '''
-#
-# prior.csv
+'''{xrst_code}
+
+prior.csv
+=========
+{xrst_code py}'''
+delta_prior_std        = 0.1
+std_random_effects_fit = 10.0 * std_random_effects_truth
 fit_file['prior.csv']  = \
    'name,density,mean,std,eta,lower,upper\n' + \
-   'delta_prior,log_gaussian,0.0,0.01,1e-10,,\n' + \
-   f'random_prior,gaussian,0.0,{std_random_effects},,,,\n'
+   f'delta_prior,log_gaussian,0.0,{delta_prior_std},1e-10,,\n' + \
+   f'random_prior,gaussian,0.0,{std_random_effects_fit},,,,\n'
 for rate_name in no_effect_rate_truth :
    rate_truth = no_effect_rate_truth[rate_name]
    lower      = rate_truth / 100.0
    upper      = rate_truth * 100.0
    fit_file['prior.csv'] += \
       f'prior_{rate_name},uniform,{rate_truth},,,{lower},{upper}\n'
-#
-# parent_rate.csv
+'''{xrst_code}
+
+parent_rate.csv
+===============
+The rates are constant during simulation, but not during fitting.
+{xrst_code py}'''
 fit_file['parent_rate.csv'] = \
    'rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value\n'
 for age in age_grid :
@@ -175,20 +238,40 @@ for age in age_grid :
          row  = f'{rate_name},{age},{time},prior_{rate_name},'
          row += 'delta_prior,delta_prior,\n'
          fit_file['parent_rate.csv'] += row
-#
-# child_rate.csv
+'''{xrst_code}
+
+child_rate.csv
+==============
+{xrst_code py}'''
 fit_file['child_rate.csv'] = 'rate_name,value_prior\n'
 for rate_name in no_effect_rate_truth :
    fit_file['child_rate.csv'] += f'{rate_name},random_prior\n'
-#
-# mulcov.csv
+'''{xrst_code}
+
+mulcov.csv
+==========
+{xrst_code py}'''
 fit_file['mulcov.csv'] = 'covariate,type,effected,value_prior,const_value\n'
-#
-# predict_integrand.csv
+'''{xrst_code}
+
+predict_integrand.csv
+=====================
+{xrst_code py}'''
 fit_file['predict_integrand.csv'] = 'integrand_name\n'
 for integrand_name in integrand_list :
    fit_file['predict_integrand.csv'] += f'{integrand_name}\n'
+'''{xrst_code}
+
+Rest of Source Code
+*******************
+{xrst_literal
+   BEGIN PYTHON
+   END PYTHON
+}
+{xrst_end sim_fit_pred}
+'''
 # ----------------------------------------------------------------------------
+# BEGIN PYTHON
 def sim(sim_dir ) :
    #
    # write input csv files
@@ -261,7 +344,76 @@ def fit(sim_dir, fit_dir) :
    #
    # fit
    at_cascade.csv.fit(fit_dir)
-
+# ---------------------------------------------------------------------------
+def check_predict(fit_dir) :
+   #
+   # predict_table
+   predict_table = dict()
+   for prefix in [ 'fit', 'tru', 'sam' ] :
+      file_name = f'{fit_dir}/{prefix}_predict.csv'
+      file_obj  = open(file_name, 'r')
+      predict_table[prefix] = at_cascade.csv.read_table(file_name)
+      file_obj.close()
+   #
+   # predict_table
+   key = lambda row : int( row['avgint_id'] )
+   for prefix in [ 'fit', 'tru', 'sam' ] :
+      predict_table[prefix] = sorted(predict_table[prefix], key=key)
+   #
+   # max_tru, max_fit_diff, max_sam_diff
+   max_tru      = dict()
+   max_fit_diff = dict()
+   max_sam_diff = dict()
+   for integrand_name in integrand_list :
+      max_tru[integrand_name]      = 0.0
+      max_fit_diff[integrand_name] = 0.0
+      max_sam_diff[integrand_name] = 0.0
+   #
+   # max_tru, max_fit_diff
+   for i in range( len(predict_table['tru'] ) ) :
+      tru_row        = predict_table['tru'][i]
+      fit_row        = predict_table['fit'][i]
+      tru_value      = float( tru_row['avg_integrand'] )
+      fit_value      = float( fit_row['avg_integrand'] )
+      integrand_name = tru_row['integrand_name']
+      #
+      assert int(tru_row['avgint_id']) == int(fit_row['avgint_id'])
+      assert tru_row['integrand_name'] == fit_row['integrand_name']
+      #
+      tru                      = max_tru[integrand_name]
+      max_tru[integrand_name]  = max(tru, abs( tru_value ) )
+      #
+      max_diff  = max_fit_diff[integrand_name]
+      max_diff  = max(max_diff, abs( fit_value - tru_value ) )
+      max_fit_diff[integrand_name] = max_diff
+   #
+   # check max_fit_diff
+   for integrand_name in integrand_list :
+      assert max_fit_diff[integrand_name] / max_tru[integrand_name] < 0.1
+   #
+   # max_sam_diff
+   n_tru = len(predict_table['tru'])
+   n_sam = len(predict_table['sam'])
+   assert n_sam % n_tru == 0
+   n_sample = int( n_sam / n_tru )
+   for i in range(n_tru) :
+      tru_row        = predict_table['tru'][i]
+      tru_value      = float( tru_row['avg_integrand'] )
+      integrand_name = tru_row['integrand_name']
+      for j in range(n_sample) :
+         sam_row    = predict_table['sam'][i * n_sample + j]
+         sam_value  = float( sam_row['avg_integrand'] )
+         #
+         assert int(tru_row['avgint_id']) == int(sam_row['avgint_id'])
+         assert tru_row['integrand_name'] == sam_row['integrand_name']
+         #
+         max_diff  = max_sam_diff[integrand_name]
+         max_diff  = max(max_diff, abs( sam_value - tru_value ) )
+         max_sam_diff[integrand_name] = max_diff
+   #
+   # check max_sam_diff
+   for integrand_name in integrand_list :
+      assert max_fit_diff[integrand_name] / max_tru[integrand_name] < 0.1
 # ---------------------------------------------------------------------------
 if __name__ == '__main__' :
    #
@@ -287,3 +439,9 @@ if __name__ == '__main__' :
    #
    # predict
    at_cascade.csv.predict(fit_dir, sim_dir)
+   #
+   # check_predict
+   check_predict(fit_dir)
+   #
+   print('sim_fit_pred.py: OK')
+# END PYTHON
