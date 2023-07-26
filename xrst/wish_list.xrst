@@ -46,7 +46,7 @@ of the diagonal of corresponding covariance matrix entry.
 max_fit
 *******
 Add an option to ignore the :ref:`csv_fit@Input Files@option_fit.csv@max_fit` option
-when fitting a leaf node; i.e., a not that has no children.
+when fitting a leaf node; i.e., a node that has no children.
 (This is actually for leaf jobs not leaf nodes in the special case where
 the splitting covariate is split at a leaf node.)
 
