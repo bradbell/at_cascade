@@ -35,6 +35,10 @@ Release Notes for 2023
 mm-dd
 *****
 
+07-25
+=====
+Add the :ref:`wish_list@max_fit` wish list item.
+
 07-23
 =====
 #. Add the :ref:`csv_sim_fit_pred-title` example.
