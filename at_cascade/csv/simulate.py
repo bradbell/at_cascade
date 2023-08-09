@@ -676,6 +676,48 @@ def get_multiplier_list_rate(multiplier_sim_table) :
       multiplier_list_rate[rate_name].append(row)
    return multiplier_list_rate
 # ----------------------------------------------------------------------------
+#
+# spline = spline_node_sex_cov[node_name][sex][cov_name] :
+# is a function that evaluates value = spline(age, time) where
+# node_name is a node name, sex is 'female' or 'male' (not 'both'),
+# cov_name is a covariate name or 'sex',
+# age, time, and value are floats
+# This is used to compute  covariate values.
+#
+# node_name
+# is the node for which we are evalauting the spline.
+#
+# sex
+# is the node for which we are evalauting the spline.
+# This maybe 'female', 'male', or 'both'.
+#
+# cov_name
+# is the covariiate for which we are evaluating the spline.
+#
+# age
+# is the age at which we are evaluating the spline.
+#
+# itme
+# is the itme at which we are evaluating the spline.
+#
+def eval_spline(spline_node_sex_cov, node_name, sex, cov_name, age, time) :
+   assert type(node_name) == str
+   assert type(sex) == str
+   assert type(cov_name) == str
+   assert type(age) == float
+   assert type(time) == float
+   assert sex in { 'female', 'male', 'both' }
+   if sex == 'both' :
+      spline = spline_node_sex_cov[node_name]['female'][cov_name]
+      female = spline(age, time)
+      spline = spline_node_sex_cov[node_name]['male'][cov_name]
+      male   = spline(age, time)
+      result = (female + male) / 2.0
+   else :
+      spline = spline_node_sex_cov[node_name][sex][cov_name]
+      result = spline(age, time)
+   return result
+# ----------------------------------------------------------------------------
 # rate_fun = rate_fun_dict[rate_name] :
 # For each of rate_name in spline_no_effect_rate, value = rate_fun(age, time)
 # is the value of the corresponding rate included all fo the effects
@@ -759,21 +801,11 @@ def get_rate_fun_dict(
             difference = sex_covariate_value[sex]
          else :
             covariate_name = covariate_or_sex
+            covariate      = eval_spline(
+               spline_node_sex_cov, node_name, sex, covariate_name, age, time
+            )
             reference      = root_covariate_ref[covariate_name]
-            if sex in [ 'female', 'male' ] :
-               spline         = \
-                  spline_node_sex_cov[node_name][sex][covariate_name]
-               covariate      = spline(age, time)
-               difference     = covariate - reference
-            else :
-               assert sex == 'both'
-               spline         = \
-                  spline_node_sex_cov[node_name]['female'][covariate_name]
-               female         = spline(age, time)
-               spline         = \
-                  spline_node_sex_cov[node_name]['male'][covariate_name]
-               male           = spline(age, time)
-               difference     = (female + male) / 2.0  - reference
+            difference     = covariate - reference
          effect    += float( row['multiplier_truth'] ) * difference
       #
       # rate
@@ -782,16 +814,9 @@ def get_rate_fun_dict(
    # -----------------------------------------------------------------------
    # omega_fun
    def omega_fun(age, time) :
-      if sex in [ 'female', 'male' ] :
-         spline = spline_node_sex_cov[node_name][sex]['omega']
-         omega  = spline(age, time)
-      else :
-         assert sex == 'both'
-         spline = spline_node_sex_cov[node_name]['female']['omega']
-         female = spline(age, time)
-         spline = spline_node_sex_cov[node_name]['male']['omega']
-         male   = spline(age, time)
-         omega  = (female + male) / 2.0
+      omega = eval_spline(
+         spline_node_sex_cov, node_name, sex, 'omega', age, time
+      )
       return omega
    #
    rate_fun_dict = dict()
@@ -1210,10 +1235,10 @@ def simulate(sim_dir) :
       time_mid = ( time_lower + time_upper ) / 2.0
       #
       covariate_value_dict = dict()
-      for covariate_name in root_covariate_ref.keys() :
-         spline = spline_node_sex_cov[node_name][sex][covariate_name]
-         value  =  spline(age_mid, time_mid)
-         covariate_value_dict[covariate_name] = value
+      for cov_name in root_covariate_ref.keys() :
+         covariate_value_dict[cov_name] = eval_spline(
+            spline_node_sex_cov, node_name, sex, cov_name, age_mid, time_mid
+         )
       #
       # rate_fun_dict
       rate_fun_dict = get_rate_fun_dict(

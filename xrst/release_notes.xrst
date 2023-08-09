@@ -35,6 +35,14 @@ Release Notes for 2023
 mm-dd
 *****
 
+08-09
+=====
+Some bugs in the production of
+:ref:`csv_predict@Output Files@tru_predict.csv` were fixed.
+This is only relevant when :ref:`csv_predict@sim_dir` is present
+was present in a ``csv_predict`` call.
+
+
 07-25
 =====
 Add the :ref:`wish_list@max_fit` wish list item.

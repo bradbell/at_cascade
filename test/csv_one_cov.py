@@ -64,11 +64,11 @@ for node_name in [ 'n0' ] :
             sim_file['covariate.csv'] += row
 cov_reference = cov_reference / count
 #
-# multiplier_truth, multiplier_sim.csv
-multiplier_truth = 0.5
+# mul_the_cov_truth, multiplier_sim.csv
+mul_the_cov_truth = 0.5
 sim_file['multiplier_sim.csv'] = \
 'multiplier_id,rate_name,covariate_or_sex,multiplier_truth\n' + \
-f'0,iota,the_cov,{multiplier_truth}\n'
+f'0,iota,the_cov,{mul_the_cov_truth}\n'
 #
 # simulate.csv
 header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
@@ -80,7 +80,7 @@ meas_std_cv     = 0.1
 meas_std_min    = 0.002
 for integrand_name in [ 'Sincidence', 'prevalence' ] :
    for node_name in [ 'n0' ] :
-      for sex in [ 'female', 'male' ] :
+      for sex in [ 'female', 'male', 'both' ] :
          for age in age_grid :
             for time in time_grid :
                for i in range(n_repeat) :
@@ -153,7 +153,7 @@ iota,random_prior
 # mulcov.csv
 fit_file['mulcov.csv'] = \
 'covariate,type,effected,value_prior,const_value\n' + \
-f'the_cov,rate_value,iota,,{multiplier_truth}'
+f'the_cov,rate_value,iota,,{mul_the_cov_truth}'
 #
 # predict_integrand.csv
 fit_file['predict_integrand.csv'] = \
@@ -231,9 +231,9 @@ def fit(sim_dir, fit_dir) :
    #
    # fit, predict
    at_cascade.csv.fit(fit_dir)
-   at_cascade.csv.predict(fit_dir)
+   at_cascade.csv.predict(fit_dir, sim_dir)
    #
-   # fit_predict_dict
+   # fit_predict_table
    fit_predict_table = at_cascade.csv.read_table(
       file_name = f'{fit_dir}/fit_predict.csv'
    )
@@ -254,7 +254,7 @@ def fit(sim_dir, fit_dir) :
       random_effect_dict[node_name][sex][rate_name] = random_effect
    #
    # row
-   max_error  = { 'mulcov': 0.0, 'iota' : 0.0}
+   max_error  = { 'mulcov_0': 0.0, 'iota' : 0.0}
    predict_node_set = set()
    for row in fit_predict_table :
       node_name = row['node_name']
@@ -262,17 +262,18 @@ def fit(sim_dir, fit_dir) :
       sex            = row['sex']
       age            = float( row['age'] )
       integrand_name = row['integrand_name']
-      if integrand_name == 'mulcov' :
-         avg_integrand = float( row['avg_integrand'] )
-         if multiplier_truth == 0.0 :
-            max_error['mulcov'] = max(max_error['mulcov'], abs(avg_integrand) )
+      avg_integrand  = float( row['avg_integrand'] )
+      if integrand_name == 'mulcov_0' :
+         if mul_the_cov_truth == 0.0 :
+            # This case is used for testing this program without covariates
+            abs_error = abs(avg_integrand)
+            max_error['mulcov_0'] = max(max_error['mulcov_0'], abs_error)
          else :
-            rel_error     = (1.0 - avg_integrand / multiplier_truth)
-            max_error['mulcov'] = max(max_error['mulcov'], abs(rel_error) )
+            rel_error     = (1.0 - avg_integrand / mul_the_cov_truth)
+            max_error['mulcov_0'] = max(max_error['mulcov_0'], abs(rel_error) )
       if integrand_name == 'Sincidence' :
          node_name     = row['node_name']
          time          = float( row['time'] )
-         avg_integrand = float( row['avg_integrand'] )
          if sex == 'both' :
             random_male   = random_effect_dict[node_name]['male']['iota']
             random_female = random_effect_dict[node_name]['female']['iota']
@@ -280,7 +281,7 @@ def fit(sim_dir, fit_dir) :
          else :
             random_effect = random_effect_dict[node_name][sex]['iota']
          cov_diff          = the_covariate(age, time) - cov_reference
-         cov_effect        = multiplier_truth * cov_diff
+         cov_effect        = mul_the_cov_truth * cov_diff
          total_effect      = random_effect + cov_effect
          iota              = math.exp(total_effect) * no_effect_iota
          rel_error         = (1.0 - avg_integrand / iota )

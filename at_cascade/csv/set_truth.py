@@ -78,17 +78,16 @@ def set_truth(sim_dir, fit_node_database, root_node_database) :
       row_name = fit_node_name     ,
    )
    #
-   # sex_value
-   sex_value = None
+   # cov2reference
+   cov2reference = dict()
    for row in fit_table['covariate'] :
-      if row['covariate_name'] == 'sex' :
-         sex_value = float( row['reference'] )
-   assert sex_value != None
+      cov2reference[ row['covariate_name'] ] = float( row['reference'] )
+   assert 'sex' in cov2reference
    #
    # sex_name
    sex_name = None
    for key in at_cascade.csv.sex_name2value :
-      if at_cascade.csv.sex_name2value[key] == sex_value :
+      if at_cascade.csv.sex_name2value[key] == cov2reference['sex'] :
          sex_name = key
    assert sex_name != None
    #
@@ -183,6 +182,16 @@ def set_truth(sim_dir, fit_node_database, root_node_database) :
    file_name  = f'{fit_node_dir}/option_sim.csv'
    at_cascade.csv.write_table(file_name, option_sim_table)
    #
+   # covariate.csv
+   file_name        = f'{fit_node_dir}/covariate.csv'
+   covariate_table  = at_cascade.csv.read_table(file_name)
+   for row in covariate_table :
+      if row['node_name'] == fit_node_name :
+         for cov in cov2reference :
+            if cov != 'sex' and cov in row :
+               row[cov] = cov2reference[cov]
+   at_cascade.csv.write_table(file_name, covariate_table)
+   #
    # simulate.csv
    at_cascade.csv.write_table(
       file_name = f'{fit_node_dir}/simulate.csv' ,
@@ -199,9 +208,10 @@ def set_truth(sim_dir, fit_node_database, root_node_database) :
       sim_table[table_name] = at_cascade.csv.read_table(file_name)
    #
    # remove copies
-   for name in copy_list :
-      file_copy = f'{fit_node_dir}/{name}.csv'
-      os.remove(file_copy)
+   if False :
+      for name in copy_list :
+         file_copy = f'{fit_node_dir}/{name}.csv'
+         os.remove(file_copy)
    #
    # turth_var_table
    truth_var_table = list()
@@ -232,6 +242,7 @@ def set_truth(sim_dir, fit_node_database, root_node_database) :
          #
          # age_id, time_id
          age_id       = var_row['age_id']
+         rate_id      = var_row['rate_id']
          time_id      = var_row['time_id']
          covariate_id = var_row['covariate_id']
          #
