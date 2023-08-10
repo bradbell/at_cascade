@@ -125,8 +125,6 @@ n0
 # prior.csv
 fit_file['prior.csv'] = \
 '''name,density,mean,std,eta,lower,upper
-uniform_0_0,uniform,0.0,,,0.0,0.0
-uniform_-1_1,uniform,0.0,,,-1.0,1.0
 uniform_eps_1,uniform,0.02,,,1e-6,1.0
 delta_prior,log_gaussian,0.0,0.1,1e-5,,
 random_prior,gaussian,0.0,0.2,,,,
@@ -137,11 +135,7 @@ data = 'rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value\n'
 data += f'chi,0.0,0.0,,,,{no_effect_chi}\n'
 for age in age_grid :
    for time in time_grid :
-      data += f'iota,{age},{time},uniform_eps_1,'
-      if age == 0.0 :
-         data += 'delta_prior,delta_prior,\n'
-      else :
-         data += 'delta_prior,delta_prior,\n'
+      data += f'iota,{age},{time},uniform_eps_1,delta_prior,delta_prior,\n'
 fit_file['parent_rate.csv'] = data
 #
 # child_rate.csv

@@ -907,6 +907,7 @@ def predict_all(
             while True :
                (job_description, args)  = job_queue.get(block = False)
                # predict_one
+               fit_title = args[0]
                predict_one(
                   fit_title             = args[0]          ,
                   fit_dir               = args[1]          ,
@@ -917,7 +918,7 @@ def predict_all(
                   all_covariate_table   = args[6]           ,
                )
                n_done = n_done_queue.get(block = True) + 1
-               print( f'{n_done}/{n_job_queue} {job_description}' )
+               print( f'Done: {n_done}/{n_job_queue}: {fit_title}' )
                n_done_queue.put(n_done)
          except queue.Empty :
             pass
@@ -925,6 +926,7 @@ def predict_all(
       # process_list
       # execute process_target for each process in process_list
       n_spawn      = min(n_job_queue - 1, max_number_cpu - 1)
+      print( f'Predict: n_job = {n_job_queue}, n_spawn = {n_spawn}' )
       process_list = list()
       for i in range(n_spawn) :
          p = multiprocessing.Process(
