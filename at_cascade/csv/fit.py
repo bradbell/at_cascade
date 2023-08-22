@@ -108,6 +108,23 @@ The default for this value is the empty string; i.e.,
 no extra age splitting over the uniformly spaced grid specified by
 :ref:`csv_fit@Input Files@option_fit.csv@ode_step_size`.
 
+compress_interval
+-----------------
+This string contains two float values separated by one or more spaces.
+The first (second) float value is called *age_size* ( *time_size* ).
+The default value for this option is both *age_size* and *time_size* are 100.
+
+#. If for a :ref:`csv_fit@Input Files@data_in.csv` row,
+   *age_upper* - *age_lower*  <= *age_size* ,
+   the age average for that data is approximated by its value at age
+   ( *age_upper* - *age_lower* ) / 2.
+#. If for a data_in.csv row,
+   *time_upper* - *time_lower*  <= *time_size* ,
+   the time average for that data is approximated by its value at time
+   ( *age_upper* - *age_lower* ) / 2.
+
+
+
 hold_out_integrand
 ------------------
 This string contains a space separate list of integrand names.
@@ -805,6 +822,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
    option_default  = {
       'absolute_covariates'   : (str,   None)               ,
       'age_avg_split'         : (str,   None)               ,
+      'compress_interval'     : (str,   '100.0 100.0')      ,
       'hold_out_integrand'    : (str,   None)               ,
       'max_abs_effect'        : (float, 2.0)                ,
       'max_fit'               : (int,   250)                ,
@@ -1032,6 +1050,7 @@ def create_root_node_database(fit_dir) :
    #
    # option_table
    age_avg_split      = global_option_value['age_avg_split']
+   compress_interval  = global_option_value['compress_interval']
    hold_out_integrand = global_option_value['hold_out_integrand']
    max_num_iter_fixed = global_option_value['max_num_iter_fixed']
    ode_step_size      = global_option_value['ode_step_size']
@@ -1050,6 +1069,7 @@ def create_root_node_database(fit_dir) :
       splitting_covariate = 'sex'
    option_table = [
       { 'name' : 'age_avg_split',       'value' : age_avg_split             },
+      { 'name' : 'compress_interval',   'value' : compress_interval         },
       { 'name' : 'hold_out_integrand',  'value' : hold_out_integrand        },
       { 'name' : 'max_num_iter_fixed',  'value' : str( max_num_iter_fixed ) },
       { 'name' : 'ode_step_size',       'value' : str( ode_step_size)       },
@@ -1107,9 +1127,9 @@ def create_root_node_database(fit_dir) :
             if row[key] != None :
                row[key] = float( row[key] )
       row['age_lower']  = age_lower
-      row['age_upper']  = age_lower
+      row['age_upper']  = age_upper
       row['time_lower'] = time_lower
-      row['time_upper'] = time_lower
+      row['time_upper'] = time_upper
       row['weight']     = ''
       row['subgroup']   = 'world'
       row['sex']        = at_cascade.csv.sex_name2value[sex]
