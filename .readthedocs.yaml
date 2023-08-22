@@ -11,7 +11,8 @@ build:
       #
       # This is only necessary if you need the most recent testing verison
       - pip3 uninstall -y xrst
-      - pip3 install --index-url https://test.pypi.org/simple/ xrst
+      - pip3 install --index-url https://test.pypi.org/simple/ xrst --user
+      - PATH="$PATH:$HOME/.local/bin"
       #
       # build/html
       # The xsrst html_directory for this configuration is build/html.
