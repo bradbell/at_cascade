@@ -7,18 +7,17 @@ build:
    commands:
       #
       # xrst
-      - pip3 install xrst
+      - pip install xrst
       #
       # This is only necessary if you need the most recent testing verison
-      - pip3 uninstall -y xrst
-      - pip3 install --index-url https://test.pypi.org/simple/ xrst --user
-      - PATH="$PATH:$HOME/.local/bin"
+      - pip uninstall -y xrst
+      - pip install --index-url https://test.pypi.org/simple/ xrst
       #
       # build/html
       # The xsrst html_directory for this configuration is build/html.
       - xrst
          --page_source
-         --html_theme furo
+         --html_theme sphinx_book_theme
          --group_list default
          --index_page_name at_cascade
       #
