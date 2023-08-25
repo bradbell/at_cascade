@@ -35,6 +35,16 @@ Release Notes for 2023
 mm-dd
 *****
 
+08-25
+=====
+#. Add specification for the connection between data_in.csv
+   :ref:`csv_fit@Input Files@data_in.csv@data_id`
+   and the dismod_at data table data_id column.
+#. Add discussion about the model for the measurement mean
+   needing to be positive when using a
+   :ref:`csv_fit@Input Files@data_in.csv@meas_std@binomial`
+   density for the data.
+
 08-22
 =====
 There was a bug in how ``csv.fit`` handled the upper and lower age and time

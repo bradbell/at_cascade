@@ -579,6 +579,9 @@ meas_std, eta, nu, sample_size.
 data_id
 -------
 is an :ref:`csv_module@Notation@Index Column` for data.csv.
+This is necessary so that the dismod_at data table data_id values correspond
+to the data_in.csv data_id values.
+
 
 integrand_name
 --------------
@@ -628,7 +631,15 @@ meas_std
 --------
 This float is the standard deviation of the measurement noise
 for this data point.
-This must be empty when the density is binomial.
+
+binomial
+........
+The *meas_std*
+must be empty when the density is binomial.
+In this case the standard deviation corresponding to a measurement
+is a function of the sample size and the model for the mean of the data.
+This requires that the model for the mean of the data is positive; i.e.,
+greater than zero.
 
 eta
 ---
