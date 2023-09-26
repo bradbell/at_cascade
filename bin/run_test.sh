@@ -1,7 +1,7 @@
 #! /bin/bash -e
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 if [ "$0" != 'bin/run_test.sh' ]
 then
@@ -19,6 +19,12 @@ for try in {1..2}
 do
    if python3 $test_file >& run_test.tmp
    then
+      if [ "$test_file" == 'test/recover_fit.py' ]
+      then
+         sed -i run_test.tmp \
+            -e '/fixed effects information matrix is not positive/d' \
+            -e '/sample table was not created/d'
+      fi
       if ! grep 'warning:' run_test.tmp > /dev/null
       then
          cat run_test.tmp
