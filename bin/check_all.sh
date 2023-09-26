@@ -15,8 +15,14 @@ then
    exit 1
 fi
 # -----------------------------------------------------------------------------
+file='at_cascade/run_parallel.py'
+if ! grep 'catch_exceptions_and_continue *= *True' $file > /dev/null
+then
+   echo "$file: catch_exceptions_and_continue is not True"
+   exit 1
+fi
 echo_eval bin/check_tab.sh
-echo_eval bin/check_xrst.sh
+echo_eval bin/run_xrst.sh
 # -----------------------------------------------------------------------------
 list=$(ls example/*.py example/csv/*.py test/*.py)
 for script in $list

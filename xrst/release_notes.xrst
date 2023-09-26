@@ -35,6 +35,15 @@ Release Notes for 2023
 mm-dd
 *****
 
+09-26
+=====
+#. There was a mistake in the 08-25 changes that caused the cascade to
+   abort after the first type of fit failed, instead of trying the other type.
+   (Here the types of fits are both and fixed.)
+   This has been fixed.
+#. Add the :ref:`csv_fit@Input Files@option_fit.csv@bound_random` option
+   to csv.fit.
+
 08-25
 =====
 #. Add specification for the connection between data_in.csv

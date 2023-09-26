@@ -108,6 +108,16 @@ The default for this value is the empty string; i.e.,
 no extra age splitting over the uniformly spaced grid specified by
 :ref:`csv_fit@Input Files@option_fit.csv@ode_step_size`.
 
+bound_random
+------------
+This float option specifies a bound on the random effects.
+Sometimes the initial fixed effects are very far from truth and
+the random effects try to compensate with large values.
+This bound can stabilize the optimization in this case.
+It is the intention that this bound not be active
+at the final value for the fixed effects.
+The default value for this option is infinity; i.e., no bound.
+
 compress_interval
 -----------------
 This string contains two float values separated by one or more spaces.
@@ -833,6 +843,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
    option_default  = {
       'absolute_covariates'   : (str,   None)               ,
       'age_avg_split'         : (str,   None)               ,
+      'bound_random'          : (float, float('inf'))       ,
       'compress_interval'     : (str,   '100.0 100.0')      ,
       'hold_out_integrand'    : (str,   None)               ,
       'max_abs_effect'        : (float, 2.0)                ,
@@ -1061,6 +1072,7 @@ def create_root_node_database(fit_dir) :
    #
    # option_table
    age_avg_split      = global_option_value['age_avg_split']
+   bound_random       = global_option_value['bound_random']
    compress_interval  = global_option_value['compress_interval']
    hold_out_integrand = global_option_value['hold_out_integrand']
    max_num_iter_fixed = global_option_value['max_num_iter_fixed']
@@ -1094,6 +1106,8 @@ def create_root_node_database(fit_dir) :
       { 'name' : 'splitting_covariate', 'value' : splitting_covariate       },
       { 'name' : 'rate_case'          , 'value' : ode_method                },
    ]
+   if bound_random != float('inf') :
+      option_table['bound_random'] = bound_random
    #
    # spline_cov
    age_grid, time_grid, spline_cov = at_cascade.csv.covariate_spline(
