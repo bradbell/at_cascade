@@ -96,6 +96,8 @@ The reference value for an absolute covariate is always zero.
 location that is being fit.)
 The default value for *absolute_covariates* is the empty string; i.e.,
 there are no absolute covariates.
+The covariate named ``one`` is automatically created and is always
+absolute and should not be in this list.
 
 
 age_avg_split
