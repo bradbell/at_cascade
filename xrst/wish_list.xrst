@@ -4,6 +4,7 @@
 # ----------------------------------------------------------------------------
 {xrst_begin wish_list}
 {xrst_spell
+   meas
    covariance
 }
 
@@ -12,6 +13,14 @@ Wish List for at_cascade
 
 csv.fit
 *******
+
+Measurement Value Covariate
+===========================
+Currently :ref:`csv_fit-name` automatically creates an
+absolute covariate called ``one`` .
+If we also automatically created a covariate
+called ``meas_value`` , we could use it with a meas_value
+covariate multiplier to expand or contract measurements values.
 
 Continue Cascade
 ================

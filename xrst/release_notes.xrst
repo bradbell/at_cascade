@@ -37,8 +37,10 @@ mm-dd
 
 10-02
 =====
-Add mention that ``one`` is one of the
-:ref:`csv_fit@Input Files@option_fit.csv@absolute_covariates` .
+#. Add mention that ``one`` is one of the
+   :ref:`csv_fit@Input Files@option_fit.csv@absolute_covariates` .
+#. Add :ref:`wish_list@csv.fit@Measurement Value Covariate` wish
+   list item.
 
 09-26
 =====
