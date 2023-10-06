@@ -35,6 +35,12 @@ Release Notes for 2023
 mm-dd
 *****
 
+10-05
+=====
+Add the :ref:`csv_fit@Input Files@option_fit.csv@number_sample` option
+to the ``csv.fit`` routine.
+
+
 10-02
 =====
 #. Add mention that ``one`` is one of the

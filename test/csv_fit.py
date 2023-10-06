@@ -23,6 +23,7 @@ random_seed = str( int( time.time() ) )
 csv_file['option_fit.csv'] = \
 '''name,value
 max_abs_effect,3.0
+number_sample,30
 '''
 #
 # option_predict.csv
@@ -158,7 +159,7 @@ def main() :
    at_cascade.csv.predict(fit_dir)
    #
    # number_sample
-   number_sample = 20
+   number_sample = 30
    #
    # prefix
    for prefix in [ 'fit', 'sam' ] :

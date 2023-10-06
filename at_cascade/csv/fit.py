@@ -214,6 +214,22 @@ It specifies a lower bound on the standard deviation for each measured data
 value as a fraction of the measurement value.
 The default value for *minimum_meas_cv* is zero.
 
+number_sample
+-------------
+This is the number of independent samples of the posterior distribution
+for the fitted variables to generate (for each fit).
+
+#. This sampled posterior is used to
+   created priors for the children of the node being fit.
+#. When splitting, the samples are used to create priors for the
+   same node at the new split covariate values.
+#. These samples are also used by :ref:`csv_predict-name`
+   to create posterior predictions for any function of the fitted variables.
+
+The default value for this option is 20.
+(You can get 1000 MCMC samples by just repeating each of the 20
+independent samples 50 times.)
+
 ode_step_size
 -------------
 This float must be positive (greater than zero).
@@ -853,6 +869,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'max_num_iter_fixed'    : (int,   100)                ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
       'minimum_meas_cv'       : (float, 0.0)                ,
+      'number_sample'         : (int,   20)                 ,
       'ode_method'            : (str,   'iota_pos_rho_zero'),
       'ode_step_size'         : (float, 10.0)               ,
       'quasi_fixed'           : (bool,  'true' )            ,
@@ -1513,6 +1530,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    child_prior_std_factor = global_option_value['child_prior_std_factor']
    shared_memory_prefix   = global_option_value['shared_memory_prefix']
    absolute_covariates    = global_option_value['absolute_covariates']
+   number_sample          = global_option_value['number_sample']
    if absolute_covariates == None :
       absolute_covariates = 'one'
    else :
@@ -1527,7 +1545,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       'max_abs_effect'               : global_option_value['max_abs_effect'],
       'max_fit'                      : global_option_value['max_fit'],
       'max_number_cpu'               : global_option_value['max_number_cpu'],
-      'number_sample'                : '20',
+      'number_sample'                : number_sample,
       'perturb_optimization_scale'   : 0.2,
       'perturb_optimization_start'   : 0.2,
       'shared_memory_prefix'         : shared_memory_prefix,
