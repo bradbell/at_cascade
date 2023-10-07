@@ -29,7 +29,7 @@ a rate with no data.
    (just use the original prior means).
    This is the easier solution to implement.
 #. It would be better to optimize each of the rates separately,
-   because a rate my have only a few data points and its residuals
+   because a rate may have only a few data points and its residuals
    would not be significant relative to the changes in the other rates.
    Optimizing each of the rates separately would be slower, unless
    it is done in parallel, which would take more time to implement.
