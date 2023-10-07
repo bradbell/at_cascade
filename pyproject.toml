@@ -9,7 +9,7 @@ build-backend = 'hatchling.build'
 
 [project]
 name    = 'at_cascade'
-version = '2023.10.5'
+version = '2023.10.7'
 authors = [
   {name  = 'Bradley M. Bell', email = 'bradbell@seanet.com'},
 ]
