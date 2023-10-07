@@ -35,11 +35,15 @@ Release Notes for 2023
 mm-dd
 *****
 
+10-07
+=====
+Improve the :ref:`wish_list@No Ode Fit` wish list item and move it
+outside of the csv_fit group (it is not just for :ref:`csv_fit-name` ).
+
 10-05
 =====
 Add the :ref:`csv_fit@Input Files@option_fit.csv@number_sample` option
 to the ``csv.fit`` routine.
-
 
 10-02
 =====
