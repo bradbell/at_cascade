@@ -17,13 +17,20 @@ Sometimes when there is no data for a rate, the :ref:`no_ode_fit-name`
 changes the prior because there is so much data elsewhere that the
 prior residual is not significant.
 
-#. It would be good to have an option to not include certain rates in the
-   no ode fit  (just use the original prior means).
+#. Using a smaller :ref:`csv_fit@Input Files@option_fit.csv@tolerance_fixed`
+   in the :ref:`glossary@root_node_database` will help with this,
+   but it will slow down all the fits.
+#. It would be good to have an option to not include certain rates, and
+   covariate multipliers, in the no ode fit
+   (just use the original prior means).
+   This is the easier solution to implement.
 #. It would be better to optimize each of the rates separately,
    because a rate my have only a few data points and its residuals
    would not be significant relative to the changes in the other rates.
-#. Optimizing each of the rates separately would be slower, unless
+   Optimizing each of the rates separately would be slower, unless
    it is done in parallel, which would take more time to implement.
+   This would also require automatically determining which covariate
+   multipliers are connected to which problem.
 
 csv.fit
 *******
