@@ -9,9 +9,9 @@ echo_eval() {
    eval $*
 }
 # -----------------------------------------------------------------------------
-if [ "$0" != 'bin/check_xrst.sh' ]
+if [ "$0" != 'bin/run_xrst.sh' ]
 then
-   echo 'bin/check_xrst.sh must be run from its parent directory.'
+   echo 'bin/run_xrst.sh must be run from its parent directory.'
    exit 1
 fi
 if [ -e build/html ]
@@ -33,19 +33,19 @@ cmd="xrst \
 --index_page_name $index_page_name \
 "
 echo "$cmd"
-if ! $cmd >& >( tee check_xrst.$$ )
+if ! $cmd >& >( tee run_xrst.$$ )
 then
-   echo 'check_xrst.sh: aboring due to xrst errors above'
-   rm check_xrst.$$
+   echo 'run_xrst.sh: aboring due to xrst errors above'
+   rm run_xrst.$$
    exit 1
 fi
-if grep '^warning:' check_xrst.$$ > /dev/null
+if grep '^warning:' run_xrst.$$ > /dev/null
 then
-   echo 'check_xrst.sh: aboring due to xrst warnings above'
-   rm check_xrst.$$
+   echo 'run_xrst.sh: aboring due to xrst warnings above'
+   rm run_xrst.$$
    exit 1
 fi
 # -----------------------------------------------------------------------------
-rm check_xrst.$$
-echo 'check_xrst.sh: OK'
+rm run_xrst.$$
+echo 'run_xrst.sh: OK'
 exit 0

@@ -96,6 +96,8 @@ The reference value for an absolute covariate is always zero.
 location that is being fit.)
 The default value for *absolute_covariates* is the empty string; i.e.,
 there are no absolute covariates.
+The covariate named ``one`` is automatically created and is always
+absolute and should not be in this list.
 
 
 age_avg_split
@@ -107,6 +109,16 @@ ODE and the average of an integrand over an interval.
 The default for this value is the empty string; i.e.,
 no extra age splitting over the uniformly spaced grid specified by
 :ref:`csv_fit@Input Files@option_fit.csv@ode_step_size`.
+
+bound_random
+------------
+This float option specifies a bound on the random effects.
+Sometimes the initial fixed effects are very far from truth and
+the random effects try to compensate with large values.
+This bound can stabilize the optimization in this case.
+It is the intention that this bound not be active
+at the final value for the fixed effects.
+The default value for this option is infinity; i.e., no bound.
 
 compress_interval
 -----------------
@@ -201,6 +213,22 @@ This float must be non-negative (greater than or equal zero).
 It specifies a lower bound on the standard deviation for each measured data
 value as a fraction of the measurement value.
 The default value for *minimum_meas_cv* is zero.
+
+number_sample
+-------------
+This is the number of independent samples of the posterior distribution
+for the fitted variables to generate (for each fit).
+
+#. This sampled posterior is used to
+   created priors for the children of the node being fit.
+#. When splitting, the samples are used to create priors for the
+   same node at the new split covariate values.
+#. These samples are also used by :ref:`csv_predict-name`
+   to create posterior predictions for any function of the fitted variables.
+
+The default value for this option is 20.
+(You can get 1000 MCMC samples by just repeating each of the 20
+independent samples 50 times.)
 
 ode_step_size
 -------------
@@ -833,6 +861,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
    option_default  = {
       'absolute_covariates'   : (str,   None)               ,
       'age_avg_split'         : (str,   None)               ,
+      'bound_random'          : (float, float('inf'))       ,
       'compress_interval'     : (str,   '100.0 100.0')      ,
       'hold_out_integrand'    : (str,   None)               ,
       'max_abs_effect'        : (float, 2.0)                ,
@@ -840,6 +869,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'max_num_iter_fixed'    : (int,   100)                ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
       'minimum_meas_cv'       : (float, 0.0)                ,
+      'number_sample'         : (int,   20)                 ,
       'ode_method'            : (str,   'iota_pos_rho_zero'),
       'ode_step_size'         : (float, 10.0)               ,
       'quasi_fixed'           : (bool,  'true' )            ,
@@ -1061,6 +1091,7 @@ def create_root_node_database(fit_dir) :
    #
    # option_table
    age_avg_split      = global_option_value['age_avg_split']
+   bound_random       = global_option_value['bound_random']
    compress_interval  = global_option_value['compress_interval']
    hold_out_integrand = global_option_value['hold_out_integrand']
    max_num_iter_fixed = global_option_value['max_num_iter_fixed']
@@ -1094,6 +1125,8 @@ def create_root_node_database(fit_dir) :
       { 'name' : 'splitting_covariate', 'value' : splitting_covariate       },
       { 'name' : 'rate_case'          , 'value' : ode_method                },
    ]
+   if bound_random != float('inf') :
+      option_table['bound_random'] = bound_random
    #
    # spline_cov
    age_grid, time_grid, spline_cov = at_cascade.csv.covariate_spline(
@@ -1497,6 +1530,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    child_prior_std_factor = global_option_value['child_prior_std_factor']
    shared_memory_prefix   = global_option_value['shared_memory_prefix']
    absolute_covariates    = global_option_value['absolute_covariates']
+   number_sample          = global_option_value['number_sample']
    if absolute_covariates == None :
       absolute_covariates = 'one'
    else :
@@ -1511,7 +1545,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       'max_abs_effect'               : global_option_value['max_abs_effect'],
       'max_fit'                      : global_option_value['max_fit'],
       'max_number_cpu'               : global_option_value['max_number_cpu'],
-      'number_sample'                : '20',
+      'number_sample'                : number_sample,
       'perturb_optimization_scale'   : 0.2,
       'perturb_optimization_start'   : 0.2,
       'shared_memory_prefix'         : shared_memory_prefix,

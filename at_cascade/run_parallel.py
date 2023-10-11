@@ -3,7 +3,7 @@
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # Set this to False when debugging an exception during one_job routine
-catch_exceptions_and_continue = False
+catch_exceptions_and_continue = True
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin run_parallel}

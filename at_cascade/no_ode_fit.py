@@ -328,6 +328,17 @@ def no_ode_fit(
                command += balance_fit
             system_command(command, file_stdout)
    #
+   # perturb start and scale
+   if False :
+      for perturb in [ 'start', 'scale' ] :
+         key = f'perturb_optimization_{perturb}'
+         if key in all_option_dict :
+            table = f'{perturb}_var'
+            sigma = all_option_dict[key]
+            command = ['dismodat.py', no_ode_database, 'perturb', table, sigma]
+            system_command(command, file_stdout)
+
+   #
    # fit both
    command = [ 'dismod_at', no_ode_database, 'fit', fit_type ]
    system_command(command, file_stdout)
