@@ -1,0 +1,68 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: University of Washington
+# SPDX-FileContributor: 2023-08-21 Garland Culbreth
+# ----------------------------------------------------------------------------
+{xrst_begin wishlist_swh_gc}
+{xrst_spell
+   
+}
+
+Wishlist
+########
+
+
+Setting the number of samples
+-----------------------------
+
+Option in at_cascade to specify how many prediction samples to generate.
+Default can be 20, but for a while at least we will likely produce 500 as we
+integrate AT into current GBD pipelines and as we figure out how to move toward
+instead using fitted values and fewer draws in those pipelines.
+
+Simulating Priors
+-----------------
+
+Outputting prior std or samples so we have uncertainty of the priors. Allow for
+empty child_rate.csv table if we don't want to include any RE's in a fit.
+
+Duration
+--------
+
+Calculate average duration for incident cases given future remission and
+mortality trends. 
+
+Abie's equation in his DisMod III book, page 182 in Flaxman, A.D., Vos, T., and
+Murray, C.J., 2015. An integrative metaregression framework for descriptive
+epidemiology.
+
+Duration defined with equations in DisMod II: `(Barendregt, J.J., Van
+Oortmarssen, G.J., Vos, T. and Murray, C.J., 2003)
+<https://pophealthmetrics.biomedcentral.com/articles/10.1186/1478-7954-1-4>`_.
+
+Ability to specify prediction grid in at_cascade
+------------------------------------------------
+
+So that predicted ages and times can differ from covariate.csv grid
+
+Estimate standard deviations of predictions
+-------------------------------------------
+
+Potentially useful later, no use case yet.
+
+Large Excess mortality
+----------------------
+
+I'm guessing this will come up in real data situations, and would be amazing to
+not run into NaN's. Note: Unsure how large is 'large'. Strike if none of us
+remember, unless it comes up again.
+
+Immunity
+--------
+
+Could also consider this for disease progression, where prevalent cases
+progress to a more severe disease state.
+
+Student's T density to dismod_at
+--------------------------------
+
+{xrst_end wishlist_swh_gc}
