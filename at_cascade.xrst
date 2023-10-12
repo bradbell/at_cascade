@@ -47,8 +47,8 @@ Children
    xrst/wish_list.xrst
    xrst/release_notes.xrst
    xrst/math.xrst
-   faq.xrst
-   wishlist_swh_gc.xrst
+   xrst/faq.xrst
+   xrst/bib.xrst
 }
 
 {xrst_end at_cascade}
