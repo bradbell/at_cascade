@@ -58,6 +58,11 @@ Prediction Grid
 It would be good to specify a prediction grid that may be different for
 the covariate age-time grid.
 
+See Priors for Each Fit
+=======================
+
+Outputting prior std or samples so we have uncertainty of the priors.
+
 Retry Fit
 =========
 Sometimes a particular fit fails due to insufficient memory or similar problem.
@@ -69,12 +74,26 @@ Estimate Standard Deviations
 Output the standard deviation for each fit value; i.e., the square root
 of the diagonal of corresponding covariance matrix entry.
 
+No Random Effects
+=================
+Allow for empty child_rate.csv table if we don't want to include any RE's in a
+fit.
+
+Duration
+********
+
+Calculate average duration for incident cases given future remission and
+mortality trends. See Abie's equation for duration as a function of age and
+time from his DisMod III book, section 8.2  in :ref:`bib@Flaxman et al. (2015)
+`. And the definition of duration given with equations in :ref:`bib@Barendregt
+et al. (2003)`.
+
 max_fit
 *******
-Add an option to ignore the :ref:`csv_fit@Input Files@option_fit.csv@max_fit` option
-when fitting a leaf node; i.e., a node that has no children.
-(This is actually for leaf jobs not leaf nodes in the special case where
-the splitting covariate is split at a leaf node.)
+Add an option to ignore the :ref:`csv_fit@Input Files@option_fit.csv@max_fit`
+option when fitting a leaf node; i.e., a node that has no children. (This is
+actually for leaf jobs not leaf nodes in the special case where the splitting
+covariate is split at a leaf node.)
 
 ode_step_size
 *************

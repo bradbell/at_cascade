@@ -1,0 +1,65 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: University of Washington
+# SPDX-FileContributor: 2023-10-12 Garland Culbreth
+# ----------------------------------------------------------------------------
+{xrst_begin bib}
+{xrst_spell
+   Oortmarssen
+   Barendregt
+   Pirnay
+   Lopez-Negrete
+   Wachter
+   Biegler
+}
+
+Bibliography
+############
+
+Flaxman et al. (2015)
+*********************
+
+Flaxman, A.D., Vos, T., and Murray, C.J., 2015. An integrative metaregression
+framework for descriptive epidemiology.
+
+Duration equation
+=================
+
+In the text, section title  gives as its first equation an integral for duration as a function of age and time.
+
+Barendregt et al. (2003)
+************************
+
+Barendregt, J.J., Van Oortmarssen, G.J., Vos, T. and Murray, C.J., 2003. A
+generic model for the assessment of disease epidemiology: the computational
+basis of DisMod II. Population health metrics, 1(1), pp.1-8.
+https://pophealthmetrics.biomedcentral.com/articles/10.1186/1478-7954-1-4
+
+Pirnay et al. (2012)
+********************
+
+Pirnay, H., Lopez-Negrete, R. and Biegler, L.T., 2012. Optimal sensitivity
+based on IPOPT. Mathematical Programming Computation, 4, pp.307-331.
+https://optimization-online.org/wp-content/uploads/2011/04/3008.pdf
+
+
+DisMod-AT fixed effects distribution
+************************************
+
+https://dismod-at.readthedocs.io/sample_command.html#fixed-effects-distribution
+
+Wachter and Biegler (2006)
+**************************
+
+Wachter, A. and Biegler, L.T., 2006. On the implementation of an interior-point
+filter line-search algorithm for large-scale nonlinear programming.
+Mathematical programming, 106, pp.25-57.
+https://link.springer.com/article/10.1007/s10107-004-0559-y
+
+Cole, Chu, and Greenland (2014)
+*******************************
+
+Cole, S.R., Chu, H. and Greenland, S., 2014. Maximum likelihood, profile
+likelihood, and penalized likelihood: a primer. American journal of
+epidemiology, 179(2), pp.252-260. https://doi.org/10.1093/aje/kwt245
+
+{xrst_end bib}
