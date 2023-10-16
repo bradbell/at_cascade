@@ -22,7 +22,9 @@ How does AT differ from MR?
 Estimating parameter values and uncertainty
 ===========================================
 
-DisMod-AT uses maximum likelihood estimation to find the values of each epidemiological parameter that make the input data the most probable. The method AT uses to arrive at its solution also automatically computes the 
+DisMod-AT uses maximum likelihood estimation to find the values of each
+epidemiological parameter that make the input data the most probable. The
+method AT uses to arrive at its solution also automatically computes the 
 uncertainty about that solution, as part of its optimization procedure.
 
 For a more detailed discussion of the estimation methods, see
