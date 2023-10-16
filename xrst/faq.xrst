@@ -10,82 +10,73 @@
    uncorrelated
    Asymptotically
    covariance
+   faq
 }
 
 Frequently Asked Questions
 ##########################
 
-How does DisMod-AT estimate parameters?
-***************************************
-
-Parameter values
-================
-
-DisMod-AT uses maximum likelihood estimation to find the values of each epidemiological parameter that make the input data the most probable.
-
-Detailed discussion
--------------------
-
-DisMod-AT uses priors and the parameters to construct
-a likelihood function, then optimizes that function to find the parameter
-values that give the data the maximum likelihood, using the software IPOPT
-:ref:`bib@Wachter and Biegler (2006)` to perform the optimization. A good 
-primer on maximum likelihood estimation in an epidemiological context is given 
-by :ref:`bib@Cole, Chu, and Greenland (2014)`.
-
-Parameter uncertainty
-=====================
-
-The method AT uses to arrive at its solution automatically computes the 
-uncertainty about that solution, as part of its optimization procedure 
-:ref:`bib@DisMod-AT fixed effects distribution`.
-
-Detailed discussion
--------------------
-
-DisMod-AT produces estimates by maximum likelihood estimation, using the
-software IPOPT :ref:`bib@Wachter and Biegler (2006)` to perform the 
-optimization. Once the method converges to a solution, the variances of the 
-parameter value estimates are the diagonal elements of the solution's 
-covariance matrix. Asymptotically, the covariance matrix is equal to the 
-inverse of the Hessian matrix, which IPOPT computes automatically as part of 
-its solution procedure. Therefore, to produce the standard deviations for 
-parameters the Hessian is inverted, and the square root of its diagonal 
-elements calculated. :ref:`bib@Pirnay et al. (2012)` describe how the 
-covariance matrix is obtained from the Hessian in detail in section 4 of their 
-article.
-
 How does AT differ from MR?
 ***************************
 
-The biggest difference between AT and ODE is that ODE estimates one age pattern 
+Estimating parameter values and uncertainty
+===========================================
+
+DisMod-AT uses maximum likelihood estimation to find the values of each epidemiological parameter that make the input data the most probable. The method AT uses to arrive at its solution also automatically computes the 
+uncertainty about that solution, as part of its optimization procedure.
+
+For a more detailed discussion of the estimation methods, see
+:ref:`faq@How does AT differ from MR?@Numerical methods` and
+:ref:`bib@DisMod-AT fixed effects distribution`.
+
+Joint age-time estimation
+=========================
+
+The biggest difference between AT and MR is that MR estimates one age pattern 
 for each of a discrete set of years, and AT models cohorts of age and time 
-moving through time. Hence the "age" and "time" in AT. ODE does not have an 
+moving through time. Hence the "age" and "time" in AT. MR does not have an 
 explicit method to handle joint age/time evolution -- the data is organized 
-into different year groups, estimates are computed as a function of age. In 
+into different year groups, estimates are computed as a function of age. By 
 contrast, AT is able to infer that incidence of a disease in the 20 year old 
 age group in 1990 should impact the prevalence of that disease in the 30 year 
 old age group in 2000.
 
-In addition, most DisMod-AT parameters can be functions of age and time. For 
-instance, covariate multipliers can be functions of age and time. Consider a 
-parameter beta in a regression problem. In AT, it becomes beta(a, t). For
-covariate multipliers, this amounts to an interaction between age and time: the
-effect of the covariate on the outcome may vary by age or by time.
+In addition, most DisMod-AT parameters can be functions of age and time. For
+instance, covariate multipliers can be functions of age and time. Consider a
+parameter :math:`\beta` in a regression problem. In AT, it becomes
+:math:`\beta(a, t)` For covariate multipliers, this amounts to an interaction
+between age and time: the effect of the covariate on the outcome may vary by
+age or by time.
+
+Numerical methods
+=================
 
 AT and MR also use different methods for estimating model parameters, as
-mentioned in :ref:`faq@How does DisMod-AT estimate parameters?`. Both define
-objective functions based on the differences between the measured data and
-model predictions. In MR, the model parameters are estimated using a Markov
-Chain Monte Carlo (MCMC) methods. AT uses Ipopt, an interior point line search
-local optimization method. The biggest difference between the two for an
-operator is that AT is harder to set up and will fail if a model is poorly
-specified; whereas MR would provide an answer, no matter how incorrect, for
-even unreasonable models. Also, the MCMC samples used for estimating model
-parameter statistics in MR are correlated, e.g., draw 101 is related to draw
-100, and large sample sizes are required for accurate estimates. Samples
-produced by AT are uncorrelated, and thus significantly fewer samples are
-required. This allows AT to use 20 samples, whereas MR requires 1000.
+mentioned in :ref:`faq@How does AT differ from MR?@Estimating parameter \
+values and uncertainty`. Both define objective functions based on the
+differences between the measured data and model predictions. In MR, the model
+parameters are estimated using a Markov Chain Monte Carlo (MCMC) methods. AT
+uses Ipopt, an interior point line search local optimization method. The
+biggest difference between the two for an operator is that AT is harder to set
+up and will fail if a model is poorly specified; whereas MR would provide an
+answer, no matter how incorrect, for even unreasonable models.
+
+Once Ipopt converges to a solution, the variances of the parameter value 
+estimates are the diagonal elements of the solution's covariance matrix. 
+Asymptotically, the covariance matrix is equal to the inverse of the Hessian 
+matrix, which Ipopt computes automatically as part of its solution procedure. 
+Therefore, to produce the standard deviations for parameters the Hessian is 
+inverted, and the square root of its diagonal elements calculated. 
+:ref:`bib@Pirnay et al. (2012)` describe how the covariance matrix is obtained 
+from the Hessian in detail in section 4 of their article.
+
+Fewer samples (draws)
+=====================
+
+The MCMC samples used for estimating model parameter statistics in MR are correlated, e.g., draw 101 is related to draw 100, and large sample sizes are required for accurate estimates. Samples produced by AT are uncorrelated, and thus significantly fewer samples are required. This allows AT to use 20 samples, whereas MR requires 1000.
+
+Smoothing over age and time
+===========================
 
 In DisMod-MR, there is only one parameter controlling the "smoothness" over
 age, e.g. it assumed the differences between ages 90 and 95 should be on
@@ -96,14 +87,17 @@ time are used control differences between adjacent ages and times, making it
 possible to model diseases that have notable spikes in the age or time
 dimension.
 
+Random effects
+==============
+
 In DisMod-MR, all models have random effects, e.g., child offsets from the
 parent. In DisMod-AT, random effects are optional. In fact, the first release
 of Cascade AT is not using random effects for locations at all. Instead, the
 parent fit is used as the prior for the children and a new model is fit to each
 child.
 
-What do DisMod-AT and DisMod-ODE have in common?
-************************************************
+What do AT and MR have in common?
+*********************************
 
 Though MR and AT have significant differences, they still have a lot in common.
 They both can perform meta regressions. They both have a core ordinary
