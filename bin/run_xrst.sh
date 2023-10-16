@@ -27,9 +27,8 @@ index_page_name=$(\
 # -----------------------------------------------------------------------------
 # cmd
 cmd="xrst \
---local_toc \
 --target html \
---html_theme sphinx_rtd_theme \
+--html_theme furo \
 --index_page_name $index_page_name \
 "
 echo "$cmd"
