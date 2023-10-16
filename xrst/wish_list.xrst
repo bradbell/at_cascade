@@ -6,6 +6,9 @@
 {xrst_spell
    meas
    covariance
+   Outputting
+   std
+   Abie
 }
 
 Wish List for at_cascade
@@ -84,9 +87,9 @@ Duration
 
 Calculate average duration for incident cases given future remission and
 mortality trends. See Abie's equation for duration as a function of age and
-time from his DisMod III book, section 8.2  in :ref:`bib@Flaxman et al. (2015)
-`. And the definition of duration given with equations in :ref:`bib@Barendregt
-et al. (2003)`.
+time from his DisMod III book, section 8.2  in
+:ref:`bib@Flaxman et al. (2015)`. And the definition of duration given with
+equations in :ref:`bib@Barendregt et al. (2003)`.
 
 max_fit
 *******
