@@ -75,7 +75,11 @@ from the Hessian in detail in section 4 of their article.
 Fewer samples (draws)
 =====================
 
-The MCMC samples used for estimating model parameter statistics in MR are correlated, e.g., draw 101 is related to draw 100, and large sample sizes are required for accurate estimates. Samples produced by AT are uncorrelated, and thus significantly fewer samples are required. This allows AT to use 20 samples, whereas MR requires 1000.
+The MCMC samples used for estimating model parameter statistics in MR are
+correlated, e.g., draw 101 is related to draw 100, and large sample sizes are
+required for accurate estimates. Samples produced by AT are uncorrelated, and
+thus significantly fewer samples are required. This allows AT to use 20
+samples, whereas MR requires 1000.
 
 Smoothing over age and time
 ===========================
