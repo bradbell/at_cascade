@@ -4,19 +4,15 @@
 # ----------------------------------------------------------------------------
 {xrst_begin faq}
 {xrst_spell
-   regressions
-   rho
    Ipopt
-   uncorrelated
    Asymptotically
    covariance
-   faq
 }
 
 Frequently Asked Questions
 ##########################
 
-How does AT Work?
+How does AT work?
 *****************
 
 Estimating parameter values and uncertainty
@@ -28,7 +24,7 @@ method AT uses to arrive at its solution also automatically computes the
 uncertainty about that solution, as part of its optimization procedure.
 
 For a more detailed discussion of the estimation methods, see
-:ref:`faq@How does AT differ from MR?@Numerical methods` and
+:ref:`faq@How does AT Work?@Numerical methods` and
 :ref:`bib@DisMod-AT fixed effects distribution`.
 
 Joint age-time estimation
