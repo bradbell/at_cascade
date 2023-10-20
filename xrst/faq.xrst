@@ -16,8 +16,8 @@
 Frequently Asked Questions
 ##########################
 
-How does AT differ from MR?
-***************************
+How does AT Work?
+*****************
 
 Estimating parameter values and uncertainty
 ===========================================
@@ -53,66 +53,26 @@ age or by time.
 Numerical methods
 =================
 
-AT and MR also use different methods for estimating model parameters, as
-mentioned in :ref:`faq@How does AT differ from MR?@Estimating parameter \
-values and uncertainty`. Both define objective functions based on the
-differences between the measured data and model predictions. In MR, the model
-parameters are estimated using a Markov Chain Monte Carlo (MCMC) methods. AT
-uses Ipopt, an interior point line search local optimization method. The
-biggest difference between the two for an operator is that AT is harder to set
-up and will fail if a model is poorly specified; whereas MR would provide an
-answer, no matter how incorrect, for even unreasonable models.
-
-Once Ipopt converges to a solution, the variances of the parameter value 
-estimates are the diagonal elements of the solution's covariance matrix. 
-Asymptotically, the covariance matrix is equal to the inverse of the Hessian 
-matrix, which Ipopt computes automatically as part of its solution procedure. 
-Therefore, to produce the standard deviations for parameters the Hessian is 
-inverted, and the square root of its diagonal elements calculated. 
-:ref:`bib@Pirnay et al. (2012)` describe how the covariance matrix is obtained 
-from the Hessian in detail in section 4 of their article.
-
-Fewer samples (draws)
-=====================
-
-The MCMC samples used for estimating model parameter statistics in MR are
-correlated, e.g., draw 101 is related to draw 100, and large sample sizes are
-required for accurate estimates. Samples produced by AT are uncorrelated, and
-thus significantly fewer samples are required. This allows AT to use 20
-samples, whereas MR requires 1000.
+DisMod-AT uses Ipopt, an interior point line search local optimization method, 
+to produce solutions. Once Ipopt converges to a solution, the variances of the 
+parameter value estimates are the diagonal elements of the solution's 
+covariance matrix.Asymptotically, the covariance matrix is equal to the inverse 
+of the Hessian matrix, which Ipopt computes automatically as part of its 
+solution procedure. Therefore, to produce the standard deviations for 
+parameters the Hessian is inverted, and the square root of its diagonal 
+elements calculated.:ref:`bib@Pirnay et al. (2012)` describe how the covariance 
+matrix is obtained from the Hessian in detail in section 4 of their article.
 
 Smoothing over age and time
 ===========================
 
-In DisMod-MR, there is only one parameter controlling the "smoothness" over
-age, e.g. it assumed the differences between ages 90 and 95 should be on
-average similar to the differences between ages 20 and 25. This makes it
-difficult to model rates that can sometimes change dramatically at a particular
-age or year (think shocks). In DisMod-AT, priors that are a function of age and
-time are used control differences between adjacent ages and times, making it
-possible to model diseases that have notable spikes in the age or time
-dimension.
+In DisMod-AT, priors that are a function of age and time are used control 
+differences between adjacent ages and times, making it possible to model 
+diseases that have notable spikes in the age or time dimension.
 
 Random effects
 ==============
 
-In DisMod-MR, all models have random effects, e.g., child offsets from the
-parent. In DisMod-AT, random effects are optional. In fact, the first release
-of Cascade AT is not using random effects for locations at all. Instead, the
-parent fit is used as the prior for the children and a new model is fit to each
-child.
-
-What do AT and MR have in common?
-*********************************
-
-Though MR and AT have significant differences, they still have a lot in common.
-They both can perform meta regressions. They both have a core ordinary
-differential equation that models disease dynamics as a function of disease
-rates, like iota (incidence) and rho (remission), rather than modeling just one
-measure of disease (as with a tool like CODEm that only considers
-cause-specific mortality). Both implement a "cascade" structure, typically
-fitting the world level for a certain disease or condition first, then using a
-location fit as an empirical prior for its children, and so on, until we get to
-the most detailed location level, like a U.S. state.
+In DisMod-AT, random effects are optional.
 
 {xrst_end faq}
