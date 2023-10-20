@@ -77,11 +77,6 @@ Estimate Standard Deviations
 Output the standard deviation for each fit value; i.e., the square root
 of the diagonal of corresponding covariance matrix entry.
 
-No Random Effects
-=================
-Allow for empty child_rate.csv table if we don't want to include any RE's in a
-fit.
-
 Duration
 ********
 
