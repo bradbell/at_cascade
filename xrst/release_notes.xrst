@@ -35,6 +35,17 @@ Release Notes for 2023
 mm-dd
 *****
 
+10-21
+=====
+#. Add more discussion to the csv fit
+   :ref:`csv_fit@Input Files@child_rate.csv` documentation.
+#. Correct and improve the csv simulate
+   :ref:`csv_simulate@Input Files@covariate.csv@omega` documentation.
+   Importantly, remove the following sentence:
+   'The values in this column do not matter if
+   omega does not appear in no_effect_rate.csv' .
+
+
 10-07
 =====
 Improve the :ref:`wish_list@No Ode Fit` wish list item and move it

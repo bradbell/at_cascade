@@ -376,6 +376,7 @@ covariate.csv
 This csv file has the same description as the simulate
 :ref:`csv_simulate@Input Files@covariate.csv` file.
 
+
 fit_goal.csv
 ============
 Each node in this file must be a descendant of the root node.
@@ -509,13 +510,18 @@ Either *const_value* or *value_prior* must be non-empty but not both.
 
 child_rate.csv
 ==============
-This csv file specifies the prior for the child rates; i.e.,
-the random effects.
+This csv file specifies the prior for the child rates
+pini, iota, rho and chi; i.e., their random effects.
+(The parent and child priors for omega are created automatically
+using the :ref:`csv_simulate@Input Files@covariate.csv@omega` column
+in the :ref:`csv_fit@Input Files@covariate.csv` file. )
 
 rate_name
 ---------
 this string is the name of this rate and is one of the following:
-pini, iota, rho, chi (name cannot be omega).
+pini, iota, rho, chi .
+If one of these rates does not appear in child_rate.csv ,
+that rate has not random effects.
 
 value_prior
 -----------

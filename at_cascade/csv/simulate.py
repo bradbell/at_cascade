@@ -190,9 +190,8 @@ omega
 -----
 This float is the value of omega (other cause mortality) for this row.
 Often other cause mortality is approximated by all cause mortality.
-Omega is a rate, not a covariate.
-The values in this column do not matter if
-omega does not appear in :ref:`csv_simulate@Input Files@no_effect_rate.csv`,
+Omega is a rate that is assumed to be know ahead of time
+and hence it is specified together with the covariates.
 
 covariate_name
 --------------
