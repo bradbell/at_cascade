@@ -4,9 +4,17 @@
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin copy_other_tbl}
+{xrst_spell
+   tbl
+}
 
 Copy Root Node Database
 #######################
+
+2DO
+***
+This routine should be moved
+from at_cascade.copy_other_tbl to dismod_at.copy_other_tbl .
 
 Prototype
 *********
