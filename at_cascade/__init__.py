@@ -34,6 +34,7 @@ constant_table_list = [
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
 {xrst_toc_table
+   at_cascade/copy_other_tbl.py
    at_cascade/add_log_entry.py
    at_cascade/avgint_parent_grid.py
    at_cascade/bilinear.py
@@ -74,6 +75,7 @@ constant_table_list = [
 
 # BEGIN_SORT_THIS_LINE_PLUS_1
 from .                      import csv
+from .copy_other_tbl        import copy_other_tbl
 from .add_log_entry         import add_log_entry
 from .avgint_parent_grid    import avgint_parent_grid
 from .bilinear              import bilinear

@@ -35,6 +35,12 @@ Release Notes for 2023
 mm-dd
 *****
 
+11-03
+=====
+Add the :ref:`copy_other_tbl-name` routine.
+This is useful when moving the dismod_at database corresponding
+to a fit from one location to another.
+
 10-21
 =====
 #. Add more discussion to the csv fit
