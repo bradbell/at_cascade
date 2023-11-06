@@ -81,4 +81,12 @@ are covariates, their effects at the child node are then incorporated. If there
 are random effects, the random effect at the child node is then incorporated. 
 Once these have been incorporated, the child node prior has been made.
 
+Does AT ensure child node rates sum up to their parent node?
+************************************************************
+
+No. AT uses the cascade to incorporate information across geography, to obtain 
+the best possible rate estimates at the most detailed node level. It does not 
+ensure that the rate estimates obtained for the most detailed nodes sum to 
+their respective parent rates.
+
 {xrst_end faq}
