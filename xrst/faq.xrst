@@ -71,4 +71,14 @@ Random effects
 
 In DisMod-AT, random effects are optional.
 
+How does AT make priors for child nodes
+***************************************
+
+The prior for each child node is constructed from the fit of the parent node, 
+incorporating any existing covariate effects and random effects for the child 
+node. First, the parent node fit is set to be the child node prior. If there 
+are covariates, their effects at the child node are then incorporated. If there 
+are random effects, the random effect at the child node is then incorporated. 
+Once these have been incorporated, the child node prior has been made.
+
 {xrst_end faq}
