@@ -84,9 +84,14 @@ Once these have been incorporated, the child node prior has been made.
 Does AT ensure child node rates sum up to their parent node?
 ************************************************************
 
-No. AT uses the cascade to incorporate information across geography, to obtain 
-the best possible rate estimates at the most detailed node level. It does not 
-ensure that the rate estimates obtained for the most detailed nodes sum to 
-their respective parent rates.
+at_cascade does not ensure that the rate estimates obtained for the most 
+detailed nodes sum to their respective parent rates. It uses the cascade to 
+incorporate information across geography, to obtain the best possible rate 
+estimates at the most detailed node level.
+
+at_cascade can ensure that child node rates sum to zero, in log space, during a 
+simulation, but does not ensure that during a fit. dismod_at is able to ensure 
+that child rates sum to zero, in log space, but this functionality has not yet 
+been incorporated into at_cascade.
 
 {xrst_end faq}
