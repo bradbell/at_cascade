@@ -6,6 +6,8 @@
 {xrst_spell
    meas
    covariance
+   Outputting
+   std
 }
 
 Wish List for at_cascade
@@ -36,6 +38,15 @@ a rate with no data.
    This would also require automatically determining which covariate
    multipliers are connected to which problem.
 
+Meta Regression
+***************
+The extra measurement noise added for the mismatch between the model and the
+data should decrease as one goes down the cascade.
+One reason is, there are fewer levels of random effects
+that are not modeled.
+Another reason is, there is less variation due to covariates
+that are not modeled.
+
 csv.fit
 *******
 
@@ -58,6 +69,11 @@ Prediction Grid
 It would be good to specify a prediction grid that may be different for
 the covariate age-time grid.
 
+See Priors for Each Fit
+=======================
+
+Outputting prior std or samples so we have uncertainty of the priors.
+
 Retry Fit
 =========
 Sometimes a particular fit fails due to insufficient memory or similar problem.
@@ -69,12 +85,21 @@ Estimate Standard Deviations
 Output the standard deviation for each fit value; i.e., the square root
 of the diagonal of corresponding covariance matrix entry.
 
+Duration
+********
+
+Calculate average duration for incident cases given future remission and
+mortality trends. See the equation for duration as a function of age and
+time from his DisMod III book, section 8.2  in
+:ref:`bib@Flaxman et al. (2015)`. And the definition of duration given with
+equations in :ref:`bib@Barendregt et al. (2003)`.
+
 max_fit
 *******
-Add an option to ignore the :ref:`csv_fit@Input Files@option_fit.csv@max_fit` option
-when fitting a leaf node; i.e., a node that has no children.
-(This is actually for leaf jobs not leaf nodes in the special case where
-the splitting covariate is split at a leaf node.)
+Add an option to ignore the :ref:`csv_fit@Input Files@option_fit.csv@max_fit`
+option when fitting a leaf node; i.e., a node that has no children. (This is
+actually for leaf jobs not leaf nodes in the special case where the splitting
+covariate is split at a leaf node.)
 
 ode_step_size
 *************
@@ -96,14 +121,5 @@ One partial solution would be to not put all the nodes in the
 :ref:`csv_simulate@Input Files@covariate.csv` file.
 We could use the closest ancestor's covariate and omega values
 when a node is not in covariate.csv.
-
-Meta Regression
-***************
-The extra measurement noise added for the mismatch between the model and the
-data should decrease as one goes down the cascade.
-One reason is, there are fewer levels of random effects
-that are not modeled.
-Another reason is, there is less variation due to covariates
-that are not modeled.
 
 {xrst_end wish_list}
