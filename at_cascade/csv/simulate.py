@@ -399,7 +399,10 @@ meas_mean
 ---------
 This float is the mean value for the measurement.
 This is the model value without any measurement noise.
-This is equivalent to the true value.
+This corresponds to the simulation value for all the model variables and 
+covariates, which can be thought of as the true value for the average of the 
+integrand that  is measured. (Note that the concept of true value gets becomes 
+unclear when you have model miss-specification)
 
 meas_std
 --------
