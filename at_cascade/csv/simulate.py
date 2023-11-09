@@ -399,6 +399,7 @@ meas_mean
 ---------
 This float is the mean value for the measurement.
 This is the model value without any measurement noise.
+This is equivalent to the true value.
 
 meas_std
 --------
