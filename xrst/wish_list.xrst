@@ -51,7 +51,13 @@ that are not modeled.
 
 dage and dtime priors documentation
 ***************************************
-When the dage and dtime priors use a log density the standard deviation specified is in log-scale. This could be documented more clearly, currently the explanation is in the dismod_at documentation for `delta <https://dismod-at.readthedocs.io/statistic.html#delta>`_ and `log-scaling <https://dismod-at.readthedocs.io/prior_table.html#log-scaling>`_ but should be mentioned in the at_cascade documentation as well.
+When the dage and dtime priors use a log density the standard deviation 
+specified is in log-scale. This could be documented more clearly, currently the 
+explanation is in the dismod_at documentation for
+`delta <https://dismod-at.readthedocs.io/statistic.html#delta>`_
+and
+`log-scaling <https://dismod-at.readthedocs.io/prior_table.html#log-scaling>`_ 
+but should be mentioned in the at_cascade documentation as well.
 
 csv.fit
 *******
