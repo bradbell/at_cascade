@@ -399,6 +399,12 @@ meas_mean
 ---------
 This float is the mean value for the measurement.
 This is the model value without any measurement noise.
+It corresponds to the simulation value for all
+the model variables and covariates.
+We refer to this as the *true value for the average integrand*
+even when we have model miss-specification;
+i.e., when the set of model variables or covariates in
+:ref:`csv_simulate-name` is different from the set in :ref:`csv_fit-name` .
 
 meas_std
 --------
