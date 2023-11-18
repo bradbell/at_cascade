@@ -680,8 +680,8 @@ meas_std
 --------
 This float is the standard deviation of the measurement noise
 for this data point.
-The standard deviation for a value prior is always in the same units as
-the mean for the prior, even when the density is log-scaled.
+This standard deviation is always in the same units as
+the data, even when the density is log-scaled.
 
 binomial
 ........
