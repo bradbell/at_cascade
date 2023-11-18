@@ -485,6 +485,8 @@ value_prior
 -----------
 is a string containing the name of the value prior for this grid point.
 Either *value_prior* or *const_value* must be non-empty but not both.
+The standard deviation for a value prior is always in the same units as
+the mean for the prior, even when the prior is log-scaled.
 
 dage_prior
 ----------
@@ -492,6 +494,12 @@ is a string containing the name of the dage prior for this grid point.
 If dage_prior is empty, there is no prior for the forward age difference
 of this rate at this grid point.
 This prior cannot be censored.
+If a dage prior is log-scaled,
+the standard deviation is for the difference w.r.t age
+of the offset log transform of the corresponding model variable.
+Otherwise,
+the standard deviation is for the difference w.r.t age
+of the corresponding model variable.
 
 dtime_prior
 -----------
@@ -499,6 +507,13 @@ is a string containing the name of the dtime prior for this grid point.
 If dtime_prior is empty, there is no prior for the forward time difference
 of this rate at this grid point.
 This prior cannot be censored.
+If a dtime prior is log-scaled,
+the standard deviation is for the difference w.r.t time
+of the offset log transform of the corresponding model variable.
+Otherwise,
+the standard deviation is for the difference w.r.t time
+of the corresponding model variable.
+
 
 const_value
 -----------
@@ -665,6 +680,8 @@ meas_std
 --------
 This float is the standard deviation of the measurement noise
 for this data point.
+The standard deviation for a value prior is always in the same units as
+the mean for the prior, even when the density is log-scaled.
 
 binomial
 ........

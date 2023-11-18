@@ -36,6 +36,16 @@ Release Notes for 2023
 mm-dd
 *****
 
+11-18
+=====
+Mention difference between in the meaning of the standard deviation
+for linear and log-scaled priors; see
+:ref:`csv_fit@Input Files@parent_rate.csv@value_prior` ,
+:ref:`csv_fit@Input Files@parent_rate.csv@dage_prior` ,
+:ref:`csv_fit@Input Files@parent_rate.csv@dtime_prior` .
+Also make mention of it for data densities; see
+:ref:`csv_fit@Input Files@data_in.csv@meas_std` .
+
 11-10
 =====
 Add definition of *true value for the average integrand* to the discussion of
