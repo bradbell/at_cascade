@@ -40,7 +40,11 @@ a rate with no data.
 
 Sample simulate
 ***************
-Enable the simulate `sample method <https://dismod-at.readthedocs.io/sample_command.html#simulate-index>`_ in the CSV interface. Also add documentation for sample_index to the :ref:`csv_predict@fit-predict-csv` page, and for the simulate and asymptotic sampling methods from the dismod_at documentation to relevant at_cascade pages.
+Enable the simulate `sample method
+<https://dismod-at.readthedocs.io/sample_command.html#simulate-index>`_ in
+the CSV interface. Also add documentation for sample_index to the 
+:ref:`csv_predict@fit_predict.csv` page, and for the simulate and asymptotic 
+sampling methods from the dismod_at documentation to relevant at_cascade pages.
 
 Meta Regression
 ***************
