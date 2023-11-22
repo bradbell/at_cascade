@@ -184,9 +184,16 @@ and not in ``fit_predict.csv`` .
 avgint_id
 ---------
 Each avgint_id corresponds to a different value for age, time,
-and integrand in the fit_predict file.
+or integrand in the fit_predict file.
 The age and time values comes from the covariate.csv file.
 The integrands values come from the predict_integrand.csv file.
+
+sample_index
+------------
+Each sample_index corresponds to an independent random sample
+of the model variables. The model variables for each sample
+are Gaussian correlated with mean equal to the optimal value
+and variance equal to the asymptotic approximation.
 
 integrand_name
 --------------

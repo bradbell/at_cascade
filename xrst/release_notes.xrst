@@ -36,6 +36,13 @@ Release Notes for 2023
 mm-dd
 *****
 
+11-22
+=====
+Add documentation for the
+:ref:`csv_predict@Output Files@fit_predict.csv@sample_index`
+column in the fit_predict.csv and sam_predict.csv files
+output by csv.predict.
+
 11-18
 =====
 Mention difference between in the meaning of the standard deviation
