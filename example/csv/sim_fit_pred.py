@@ -12,7 +12,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 '''
-{xrst_begin csv_sim_fit_pred}
+{xrst_begin csv.sim_fit_pred}
 {xrst_spell
    sim
    Sincidence
@@ -282,7 +282,7 @@ Rest of Source Code
    BEGIN PYTHON
    END PYTHON
 }
-{xrst_end csv_sim_fit_pred}
+{xrst_end csv.sim_fit_pred}
 '''
 # ----------------------------------------------------------------------------
 # BEGIN PYTHON

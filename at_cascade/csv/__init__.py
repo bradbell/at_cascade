@@ -3,7 +3,7 @@
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
-{xrst_begin csv_module}
+{xrst_begin csv.module}
 {xrst_spell
    distributions
    boolean
@@ -19,7 +19,7 @@ Demographer
 ===========
 None of the data is in demographer notation.
 For example,
-:ref:`csv_simulate@Input Files@covariate.csv@time`
+:ref:`csv.simulate@Input Files@covariate.csv@time`
 1990 means the beginning of 1990,
 not the time interval from 1990 to 1991.
 
@@ -105,7 +105,7 @@ Routines
 }
 .. END_SORT_THIS_LINE_MINUS_2
 
-{xrst_end csv_module}
+{xrst_end csv.module}
 '''
 # BEGIN_SORT_THIS_LINE_PLUS_1
 from .check_table      import check_table

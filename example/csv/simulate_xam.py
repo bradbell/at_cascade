@@ -13,7 +13,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 """
-{xrst_begin csv_simulate_xam}
+{xrst_begin csv.simulate_xam}
 {xrst_spell
    dir
    sim
@@ -36,23 +36,23 @@ Node Tree
    *  -  Symbol
       -  Documentation
    *  -  sim_dir
-      -  :ref:`csv_simulate@sim_dir`
+      -  :ref:`csv.simulate@sim_dir`
    *  -  csv_file['option_sim.csv']
-      -  :ref:`csv_simulate@Input Files@option_sim.csv`
+      -  :ref:`csv.simulate@Input Files@option_sim.csv`
    *  -  csv_file['node.csv']
-      -  :ref:`csv_simulate@Input Files@node.csv`
+      -  :ref:`csv.simulate@Input Files@node.csv`
    *  -  csv_file['covariate.csv']
-      -  :ref:`csv_simulate@Input Files@covariate.csv`
+      -  :ref:`csv.simulate@Input Files@covariate.csv`
    *  -  csv_file['no_effect_rate.csv']
-      -  :ref:`csv_simulate@Input Files@no_effect_rate.csv`
+      -  :ref:`csv.simulate@Input Files@no_effect_rate.csv`
    *  -  csv_file['multiplier_sim.csv']
-      -  :ref:`csv_simulate@Input Files@multiplier_sim.csv`
+      -  :ref:`csv.simulate@Input Files@multiplier_sim.csv`
    *  -  csv_file['simulate.csv']
-      -  :ref:`csv_simulate@Input Files@simulate.csv`
+      -  :ref:`csv.simulate@Input Files@simulate.csv`
    *  -  csv_file['random_effect.csv']
-      -  :ref:`csv_simulate@random_effect.csv`
+      -  :ref:`csv.simulate@random_effect.csv`
    *  -  csv_file['data_sim.csv']
-      -  :ref:`csv_simulate@Output Files@data_sim.csv`
+      -  :ref:`csv.simulate@Output Files@data_sim.csv`
 
 
 {xrst_literal
@@ -61,7 +61,7 @@ Node Tree
 }
 
 
-{xrst_end csv_simulate_xam}
+{xrst_end csv.simulate_xam}
 """
 # BEGIN_PYTHON
 #

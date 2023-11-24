@@ -243,6 +243,6 @@ def main() :
    assert max_mulcov == max_abs_effect / max_cov_diff
 #
 main()
-print('csv_fit: OK')
+print('csv.fit: OK')
 sys.exit(0)
 # END_PYTHON

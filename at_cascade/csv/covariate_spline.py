@@ -23,13 +23,13 @@ Syntax
 covariate_table
 ***************
 This is a list of dict with the same keys for each dict
-containing the information in :ref:`csv_simulate@Input Files@covariate.csv` .
+containing the information in :ref:`csv.simulate@Input Files@covariate.csv` .
 All of the keys are covariate names except for
 ``node_name`` , ``sex``, ``age`` and ``time`` .
 
 node_set
 ********
-This is the set of nodes in :ref:`csv_simulate@Input Files@node.csv`
+This is the set of nodes in :ref:`csv.simulate@Input Files@node.csv`
 
 age_grid
 ********

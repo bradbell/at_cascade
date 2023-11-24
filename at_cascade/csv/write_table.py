@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------
 import csv
 """
-{xrst_begin csv_write_table}
+{xrst_begin csv.write_table}
 {xrst_spell
    len
 }
@@ -57,10 +57,10 @@ Upon return, this file has ``len(`` *table* ``)`` + 1 lines,
 
 Example
 *******
-:ref:`csv_table-name`
+:ref:`csv.table-name`
 
 
-{xrst_end csv_write_table}
+{xrst_end csv.write_table}
 """
 def write_table(
 # BEGIN_SYNTAX

@@ -14,7 +14,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 """
-{xrst_begin csv_predict_xam}
+{xrst_begin csv.predict_xam}
 {xrst_spell
    Sincidence
    iter
@@ -32,11 +32,11 @@ Covariates
 There are no covariates in this example.
 
 #. The covariate.csv file does not have any
-   :ref:`csv_simulate@Input Files@covariate.csv@covariate_name` columns
+   :ref:`csv.simulate@Input Files@covariate.csv@covariate_name` columns
    and is only used to set the value of omega and the covariate
    age time grid.
 
-#. The :ref:`csv_simulate@Input Files@multiplier_sim.csv` file is empty; i.e.,
+#. The :ref:`csv.simulate@Input Files@multiplier_sim.csv` file is empty; i.e.,
    it only has a header row.
 
 Age Time Grid
@@ -88,15 +88,15 @@ the true value of iota for that node is
 
 The value std_random_effects_iota
 specifies the corresponding standard deviation; see
-:ref:`csv_simulate@Input Files@option_sim.csv@std_random_effects_rate`
+:ref:`csv.simulate@Input Files@option_sim.csv@std_random_effects_rate`
 The simulated random effects are reported in
-:ref:`csv_simulate@random_effect.csv`.
+:ref:`csv.simulate@random_effect.csv`.
 Note that there are no random effects for node n0 (the root node).
 
 Simulated Data
 **************
 There is a simulated data point for each of the following cases:
-see the setting of :ref:`csv_simulate@Input Files@simulate.csv`:
+see the setting of :ref:`csv.simulate@Input Files@simulate.csv`:
 
 #. For integrand_name equal to Sincidence and prevalence.
 #. For node_name equal to n0, n1, and n2.
@@ -140,24 +140,24 @@ data_in.csv
 The data used during the fit is the same as the simulated data
 with the following exceptions:
 
-#. The :ref:`csv_simulate@Output Files@data_sim.csv@meas_mean`
+#. The :ref:`csv.simulate@Output Files@data_sim.csv@meas_mean`
    is used for the measurement value during the fit; i.e.,
-   :ref:`csv_fit@Input Files@data_in.csv@meas_value` .
-   In addition, :ref:`csv_fit@Input Files@data_in.csv@meas_std`
+   :ref:`csv.fit@Input Files@data_in.csv@meas_value` .
+   In addition, :ref:`csv.fit@Input Files@data_in.csv@meas_std`
    is set to a small value.
    Not having any noise in the measurement, and a small standard deviation,
    yields the effect of a much larger data set without long running times.
 
-#. The :ref:`csv_fit@Input Files@data_in.csv@density_name` is set
+#. The :ref:`csv.fit@Input Files@data_in.csv@density_name` is set
    to gaussian and eta, nu are set to the empty string; i.e., null.
 
 
 Prediction Files
 ****************
 The files
-:ref:`csv_predict@Output Files@fit_predict.csv` ,
-:ref:`csv_predict@Output Files@tru_predict.csv` , and
-:ref:`csv_predict@Output Files@sam_predict.csv`
+:ref:`csv.predict@Output Files@fit_predict.csv` ,
+:ref:`csv.predict@Output Files@tru_predict.csv` , and
+:ref:`csv.predict@Output Files@sam_predict.csv`
 are created by this example.
 
 Source Code
@@ -167,7 +167,7 @@ Source Code
    END_PYTHON
 }
 
-{xrst_end csv_predict_xam}
+{xrst_end csv.predict_xam}
 """
 # BEGIN_PYTHON
 #

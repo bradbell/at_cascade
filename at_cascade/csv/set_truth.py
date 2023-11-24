@@ -9,7 +9,7 @@ import at_cascade
 import dismod_at
 #
 """
-{xrst_begin csv_set_truth}
+{xrst_begin csv.set_truth}
 {xrst_spell
    sim
    dir
@@ -28,7 +28,7 @@ Prototype
 
 sim_dir
 *******
-Is the :ref:`csv_simulate@sim_dir` for the simulation
+Is the :ref:`csv.simulate@sim_dir` for the simulation
 of this cascade data set.
 
 fit_node_database
@@ -45,7 +45,7 @@ root_node_database
 ******************
 is the :ref:`glossary@root_node_database` .
 
-{xrst_end csv_set_truth}
+{xrst_end csv.set_truth}
 """
 # BEGIN_SET_TRUTH
 # at_cascade.csv.set_truth

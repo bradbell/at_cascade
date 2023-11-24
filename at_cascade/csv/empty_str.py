@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------
 import copy
 """
-{xrst_begin csv_empty_str}
+{xrst_begin csv.empty_str}
 
 Create A Table from a CSV File
 ##############################
@@ -48,9 +48,9 @@ Is a copy of *table_in* after doing the conversion.
 
 Example
 *******
-:ref:`csv_table-name`
+:ref:`csv.table-name`
 
-{xrst_end csv_empty_str}
+{xrst_end csv.empty_str}
 """
 # BEGIN_SYNTAX
 # at_cascade.csv.empty_str

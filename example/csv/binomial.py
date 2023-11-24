@@ -15,7 +15,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 # --------------------------------------------------------------------------
-# {xrst_begin csv_binomial}
+# {xrst_begin csv.binomial}
 # {xrst_spell
 #     numpy
 #     Sincidence
@@ -67,7 +67,7 @@ no_effect_iota   = 0.02
 # fit_file
 # ********
 # This dictionary will contain all the files that are written to the
-# :ref:`csv_fit@fit_dir` :
+# :ref:`csv.fit@fit_dir` :
 fit_file = dict()
 #
 # option_fit.csv
@@ -187,7 +187,7 @@ fit_file['mulcov.csv'] = \
 #  # END_REST_OF_SOURCE
 # }
 #
-# {xrst_end csv_binomial}
+# {xrst_end csv.binomial}
 # -----------------------------------------------------------------------------
 # BEGIN_REST_OF_SOURCE
 # fit

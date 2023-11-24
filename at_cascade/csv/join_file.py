@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------
 import csv
 """
-{xrst_begin csv_join_file}
+{xrst_begin csv.join_file}
 {xrst_spell
 }
 
@@ -43,10 +43,10 @@ and its value is the value in  *right_file* .
 
 Example
 *******
-:ref:`csv_join_file_xam-name`
+:ref:`csv.join_file_xam-name`
 
 
-{xrst_end csv_join_file}
+{xrst_end csv.join_file}
 """
 import at_cascade
 #

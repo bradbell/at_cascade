@@ -9,7 +9,7 @@ import numpy
 import dismod_at
 import at_cascade
 """
-{xrst_begin csv_simulate}
+{xrst_begin csv.simulate}
 {xrst_spell
    bilinear
    boolean
@@ -42,7 +42,7 @@ are located.
 
 Example
 *******
-:ref:`csv_simulate_xam-name`
+:ref:`csv.simulate_xam-name`
 
 
 Input Files
@@ -56,7 +56,7 @@ The rows of this table are documented below by the name column.
 If an option name does not appear, the corresponding
 default value is used for the option.
 The final value for each of the options is reported in the file
-:ref:`csv_simulate@Output Files@option_sim_out.csv` .
+:ref:`csv.simulate@Output Files@option_sim_out.csv` .
 Because each option has a default value,
 new option are added in such a way that
 previous option_sim.csv files are still valid.
@@ -74,8 +74,8 @@ absolute_tolerance
 ------------------
 This float is the absolute error tolerance for the integrator.
 It determines the accuracy of
-:ref:`csv_simulate@Output Files@data_sim.csv@meas_mean` for
-:ref:`integrand <csv_simulate@Input Files@simulate.csv@integrand_name>`
+:ref:`csv.simulate@Output Files@data_sim.csv@meas_mean` for
+:ref:`integrand <csv.simulate@Input Files@simulate.csv@integrand_name>`
 that require the ODE; e.g.,
 prevalence requires the ODE and Sincidence does not.
 The default value for this option is 1e-5.
@@ -96,18 +96,18 @@ The default value for this option is 5.0.
 
 random_depend_sex
 -----------------
-If :ref:`csv_simulate@Input Files@option_sim.csv@new_random_effects` is
+If :ref:`csv.simulate@Input Files@option_sim.csv@new_random_effects` is
 false, this option is not used.
 Otherwise if this boolean is true, the random effects depend on sex.
 if it is false, for each *node_name* and *rate*, the random effect for
 ``female`` and ``male`` will be equal; see
-:ref:`csv_simulate@random_effect.csv` .
+:ref:`csv.simulate@random_effect.csv` .
 The default value for this option is false.
 
 new_random_effects
 ------------------
 If this boolean is true, a new set of random effects is generated and
-:ref:`csv_simulate@random_effect.csv` is an output file.
+:ref:`csv.simulate@random_effect.csv` is an output file.
 Otherwise random_effect.csv is an input file.
 The default value for this boolean is true.
 
@@ -121,14 +121,14 @@ The default value for this option is
 
 std_random_effects_rate
 -----------------------
-If :ref:`csv_simulate@Input Files@option_sim.csv@new_random_effects` is
+If :ref:`csv.simulate@Input Files@option_sim.csv@new_random_effects` is
 false, this option is not used.
 Otherwise, this float is the standard deviation of the random effects
 for the corresponding *rate* where *rate* is pini, iota, rho, or chi.
 The effects are in log of rate space, so this standard deviation
 is also in log of rate space.
 Hence only the rates that appear in
-:ref:`csv_simulate@Input Files@no_effect_rate.csv`
+:ref:`csv.simulate@Input Files@no_effect_rate.csv`
 have an effect (the other random effects multiply zero).
 The default value for this option is 0.0; i.e.,
 there are random effects for the corresponding rate.
@@ -201,7 +201,7 @@ The header row specifies the *covariate_name*
 and the other rows are floats containing the corresponding
 covariate value.
 The option_sim.csv
-:ref:`csv_simulate@Input Files@option_sim.csv@absolute_covariates`
+:ref:`csv.simulate@Input Files@option_sim.csv@absolute_covariates`
 specifies which covariates are absolute.
 All the others are :ref:`relative covariates<glossary@Relative Covariate>`.
 Note that omega and sex are not referred to as covariates for this simulation.
@@ -212,7 +212,7 @@ no_effect_rate.csv
 ==================
 This csv file specifies the grid points at which each rate is modeled
 during a simulation. For each rate_name it has a
-:ref:`csv_module@Notation@Rectangular Grid` in age and time.
+:ref:`csv.module@Notation@Rectangular Grid` in age and time.
 These are no-effect rates; i.e., the rates without
 the random and covariate effects.
 Covariate multipliers that are constrained to zero during the fitting
@@ -224,7 +224,7 @@ rate_name
 This string is ``iota``, ``rho``, ``chi``, or ``pini`` and specifies the rate.
 If one of these rates does not appear, it is modeled as always zero.
 Other cause mortality ``omega`` is specified in
-:ref:`csv_simulate@Input Files@covariate.csv` .
+:ref:`csv.simulate@Input Files@covariate.csv` .
 
 age
 ---
@@ -253,7 +253,7 @@ different multiplier. The multipliers are constant in age and time.
 
 multiplier_id
 -------------
-is an :ref:`csv_module@Notation@Index Column` for multiplier_sim.csv.
+is an :ref:`csv.module@Notation@Index Column` for multiplier_sim.csv.
 
 rate_name
 ---------
@@ -285,7 +285,7 @@ with each row corresponding to one data point.
 
 simulate_id
 -----------
-is an :ref:`csv_module@Notation@Index Column` for simulate.csv.
+is an :ref:`csv.module@Notation@Index Column` for simulate.csv.
 
 integrand_name
 --------------
@@ -319,36 +319,36 @@ meas_std_cv
 -----------
 This float is the coefficient of variation for the measurement noise
 for this data row;
-see :ref:`csv_simulate@Output Files@data_sim.csv@meas_std` .
+see :ref:`csv.simulate@Output Files@data_sim.csv@meas_std` .
 
 meas_std_min
 ------------
 This float is the minimum value for the standard deviation
 of the measurement noise for this data row;
-see :ref:`csv_simulate@Output Files@data_sim.csv@meas_std` .
+see :ref:`csv.simulate@Output Files@data_sim.csv@meas_std` .
 
 ------------------------------------------------------------------------------
 
 random_effect.csv
 *****************
 This file reports the random effect for each node, rate and sex.
-If :ref:`csv_simulate@Input Files@option_sim.csv@new_random_effects`
+If :ref:`csv.simulate@Input Files@option_sim.csv@new_random_effects`
 is true (false) , this an input (output) file.
 Only the rate names that appear in
-:ref:`csv_simulate@Input Files@no_effect_rate.csv@rate_name`
+:ref:`csv.simulate@Input Files@no_effect_rate.csv@rate_name`
 are included in random_effect.csv .
 (Random effect for rates not in no_effect_rate.csv have no effect.)
 
 node_name
 =========
-This string identifies the row in :ref:`csv_simulate@Input Files@node.csv`
+This string identifies the row in :ref:`csv.simulate@Input Files@node.csv`
 that this row corresponds to.
 All of the nodes in the node table are present in this file.
 
 rate_name
 =========
 This is a string and is one of the
-For each :ref:`csv_simulate@Input Files@no_effect_rate.csv@rate_name`
+For each :ref:`csv.simulate@Input Files@no_effect_rate.csv@rate_name`
 in the no_effect rate table,
 All of the rates in the no_effect rate table are present in this file.
 
@@ -362,7 +362,7 @@ random_effect
 =============
 This float value is the random effect for the specified node, rate, and sex.
 If new_random_effects is true and
-:ref:`csv_simulate@Input Files@option_sim.csv@random_depend_sex`  is false,
+:ref:`csv.simulate@Input Files@option_sim.csv@random_depend_sex`  is false,
 the value in this column will not depend on the value in the sex column.
 
 Discussion
@@ -379,7 +379,7 @@ Output Files
 
 option_sim_out.csv
 ==================
-This is a copy of :ref:`csv_simulate@Input Files@option_sim.csv`
+This is a copy of :ref:`csv.simulate@Input Files@option_sim.csv`
 with the default filled in for missing values.
 
 data_sim.csv
@@ -392,7 +392,7 @@ simulate_id
 -----------
 This integer identifies the row in the simulate.csv
 corresponding to this row in data_sim.csv.
-This is an :ref:`csv_module@Notation@Index Column`
+This is an :ref:`csv.module@Notation@Index Column`
 for simulate.csv and data_sim.csv.
 
 meas_mean
@@ -404,7 +404,7 @@ the model variables and covariates.
 We refer to this as the *true value for the average integrand*
 even when we have model miss-specification;
 i.e., when the set of model variables or covariates in
-:ref:`csv_simulate-name` is different from the set in :ref:`csv_fit-name` .
+:ref:`csv.simulate-name` is different from the set in :ref:`csv.fit-name` .
 
 meas_std
 --------
@@ -414,9 +414,9 @@ data point. This standard deviation is before censoring and given by
 |  *meas_std* = max ( *meas_std_min* , *meas_std_cv* * *meas_mean* )
 
 where
-:ref:`csv_simulate@Input Files@simulate.csv@meas_std_min`
+:ref:`csv.simulate@Input Files@simulate.csv@meas_std_min`
 is the minimum measure standard deviation,
-and :ref:`csv_simulate@Input Files@simulate.csv@meas_std_cv`
+and :ref:`csv.simulate@Input Files@simulate.csv@meas_std_cv`
 is the coefficient of variation for the measurement noise.
 
 meas_value
@@ -431,7 +431,7 @@ a censored normal is used to simulate the data.
 
 covariate_name
 --------------
-For each :ref:`csv_simulate@Input Files@covariate.csv@covariate_name`
+For each :ref:`csv.simulate@Input Files@covariate.csv@covariate_name`
 there is a column with this name in simulate.csv.
 The values in these columns are floats
 corresponding to the covariate value at the mid point of the ages and time
@@ -440,7 +440,7 @@ bilinear interpolation of the covariate values in covariate.csv.
 The interpolate is extended as constant in age (time) for points
 outside the age rage (time range) in the covariate.csv file.
 
-{xrst_end csv_simulate}
+{xrst_end csv.simulate}
 """
 # ----------------------------------------------------------------------------
 # Sets global global_option_value to dict representation of option_sim.csv
@@ -494,11 +494,11 @@ def set_global_option_value(sim_dir, option_table) :
       line_number += 1
       name         = row['name']
       if name in global_option_value :
-         msg  = f'csv_simulate: Error: line {line_number} in option_sim.csv\n'
+         msg  = f'csv.simulate: Error: line {line_number} in option_sim.csv\n'
          msg += f'the name {name} appears twice in this table'
          assert False, msg
       if not name in option_default :
-         msg  = f'csv_simulate: Error: line {line_number} in option_sim.csv\n'
+         msg  = f'csv.simulate: Error: line {line_number} in option_sim.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
       (option_type, defualt) = option_default[name]
@@ -507,7 +507,7 @@ def set_global_option_value(sim_dir, option_table) :
          option_value[name] = None
       elif option_type == bool :
          if value not in [ 'true', 'false' ] :
-            msg  = f'csv_simulate: Error: line {line_number} in '
+            msg  = f'csv.simulate: Error: line {line_number} in '
             msg += 'option_sim.csv\n'
             msg += f'The value for {name} is not true or false'
             assert False, msg
@@ -559,20 +559,20 @@ def get_parent_node_dict( node_table ) :
       parent_name                = row['parent_name']
       child_list_node[node_name] = list()
       if node_name in parent_node_dict :
-         msg  = f'csv_simulate: Error: line {line_number} in node.csv\n'
+         msg  = f'csv.simulate: Error: line {line_number} in node.csv\n'
          msg += f'node_name {node_name} appears twice'
          assert False, msg
       parent_node_dict[node_name] = parent_name
       #
       if parent_name == '' :
          if root_node_name != None :
-            msg  = f'csv_simulate: Error: line {line_number} in node.csv\n'
+            msg  = f'csv.simulate: Error: line {line_number} in node.csv\n'
             msg += 'one and only one node should have no parent\n'
             msg += 'node {node_name} and {root_node_name} have no parent'
             assert False, msg
          root_node_name = node_name
    if root_node_name == None :
-      msg  = f'csv_simulate: Error in node.csv\n'
+      msg  = f'csv.simulate: Error in node.csv\n'
       msg += 'there is no root node; i.e.,  node with no parent node'
       assert False, msg
    #
@@ -584,7 +584,7 @@ def get_parent_node_dict( node_table ) :
       parent_name  = row['parent_name']
       if parent_name != '' :
          if parent_name not in child_list_node :
-            msg  = f'csv_simulate: Error: line {line_number} in node.csv\n'
+            msg  = f'csv.simulate: Error: line {line_number} in node.csv\n'
             msg += f'parent_name {parent_name} is not a valid node_name'
             assert False, msg
          else :
@@ -593,7 +593,7 @@ def get_parent_node_dict( node_table ) :
    # check number of children
    for parent_name in child_list_node :
       if len( child_list_node[parent_name] ) == 1 :
-         msg  = 'csv_simulate: Error in node.csv\n'
+         msg  = 'csv.simulate: Error in node.csv\n'
          msg += f'the parent_name {parent_name} apprears once and only once'
          assert False, msg
    #
@@ -603,7 +603,7 @@ def get_parent_node_dict( node_table ) :
       parent_name  = parent_node_dict[node_name]
       while parent_name != '' :
          if parent_name in ancestor_set :
-            msg  = 'csv_simulate: Error in node_table.csv\n'
+            msg  = 'csv.simulate: Error in node_table.csv\n'
             msg += f'node {parent_name} is an ancestor of itself'
             assert False, msg
          ancestor_set.add(parent_name)
@@ -650,7 +650,7 @@ def get_spline_no_effect_rate(no_effect_rate_table) :
       )
       #
       if spline_dict == None :
-         msg  = 'csv_simulate: Error in no_effect_rate.csv\n'
+         msg  = 'csv.simulate: Error in no_effect_rate.csv\n'
          msg += 'rate_name = {rate_name}\n'
          msg += 'Expected following rectangular grid:\n'
          msg += f'age_grid  = {age_grid}\n'
@@ -1196,7 +1196,7 @@ def simulate(sim_dir) :
       # simulate_id
       if True :
          if simulate_id != int( float(sim_row['simulate_id']) ) :
-            msg  = f'csv_simulate: Error at line {line_number} '
+            msg  = f'csv.simulate: Error at line {line_number} '
             msg += f'in simulate.csv\n'
             msg += f'simulate_id = ' + sim_row['simulate_id']
             msg += ' is not equal line number minus two'
@@ -1205,7 +1205,7 @@ def simulate(sim_dir) :
       # integrand_name
       integrand_name = sim_row['integrand_name']
       if integrand_name not in valid_integrand_name :
-         msg  = f'csv_simulate: Error at line {line_number} '
+         msg  = f'csv.simulate: Error at line {line_number} '
          msg += f' in simulate.csv\n'
          msg += f'integrand_name = ' + integrand_name
          msg += ' is not a valid integrand name'
@@ -1214,7 +1214,7 @@ def simulate(sim_dir) :
       # node_name
       node_name = sim_row['node_name']
       if node_name not in node_set :
-         msg  = f'csv_simulate: Error at line {line_number} '
+         msg  = f'csv.simulate: Error at line {line_number} '
          msg += f' in simulate.csv\n'
          msg += f'node_name = ' + node_name
          msg += ' is not in node.csv'
@@ -1223,7 +1223,7 @@ def simulate(sim_dir) :
       # sex
       sex = sim_row['sex']
       if sex not in [ 'female', 'male', 'both' ] :
-         msg  = f'csv_simulate: Error at line {line_number} '
+         msg  = f'csv.simulate: Error at line {line_number} '
          msg += f' in simulate.csv\n'
          msg += f'sex = ' + sex
          msg += ' is not male, feamle, or both'
@@ -1332,4 +1332,4 @@ def simulate(sim_dir) :
    at_cascade.csv.write_table(file_name, random_effect_table)
    #
    if global_option_value['trace'] :
-      print( 'csv_simulate done' )
+      print( 'csv.simulate done' )

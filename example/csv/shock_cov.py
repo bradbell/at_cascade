@@ -14,7 +14,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
 import at_cascade
 # --------------------------------------------------------------------------
 '''
-{xrst_begin csv_shock_cov}
+{xrst_begin csv.shock_cov}
 {xrst_spell
    sim
    bilinear
@@ -52,7 +52,7 @@ random_seed = str( int( time.time() ) )
 
 Simulation
 **********
-The setting below are used by :ref:`csv_simulate-name` to
+The setting below are used by :ref:`csv.simulate-name` to
 simulate random effects and data.
 
 age_grid, time_grid
@@ -196,18 +196,18 @@ sim_file['no_effect_rate.csv'] += f'chi,0,0,{no_effect_chi}\n'
 
 Fitting
 *******
-The setting below are used by :ref:`csv_fit-name` to
+The setting below are used by :ref:`csv.fit-name` to
 fit the simulated data.
 
 node.csv
 ========
 This is a copy of the
-:ref:`csv_shock_cov@Simulation@node.csv` file above.
+:ref:`csv.shock_cov@Simulation@node.csv` file above.
 
 covariate.csv
 =============
 This is a copy of the
-:ref:`csv_shock_cov@Simulation@covariate.csv` file above.
+:ref:`csv.shock_cov@Simulation@covariate.csv` file above.
 
 option_fit.csv
 ==============
@@ -227,7 +227,7 @@ option_fit.csv
 #. A smaller (larger) value of max_num_iter_fixed is
    required when quasi_fixed is true (false).
 #. The shock, as a function of age, is not smooth at ages 25.0, 50.0, and 75.0.
-   The :ref:`csv_fit@Input Files@option_fit.csv@age_avg_split`
+   The :ref:`csv.fit@Input Files@option_fit.csv@age_avg_split`
    below instructs at_cascade not to integrate across these points.
 {xrst_code py}'''
 fit_file['option_fit.csv']  =  \
@@ -323,7 +323,7 @@ fit_file['parent_rate.csv'] = data
 
 child_rate.csv
 ==============
-In csv_fit, child rates are a random effects and are constant in age and time.
+In csv.fit, child rates are a random effects and are constant in age and time.
 Note that when fitting node n0, n1 is a child node and its rate values
 correspond to random effects (and hence are in log of rate space).
 On the other hand, when fitting node n1, there are not child rates.
@@ -336,7 +336,7 @@ iota,random_prior
 
 mulcov.csv
 ==========
-In csv_fit,  covariate multipliers are constant in age and time.
+In csv.fit,  covariate multipliers are constant in age and time.
 As in the data simulation, there is one covariate multiplier.
 It multiplies the shock covariate and affects the iota rate.
 It prior is the uniform\_-1_1 density defined above.
@@ -364,10 +364,10 @@ mulcov_0
 
 data_in.csv
 ===========
-The columns in :ref:`csv_fit@Input Files@data_in.csv`
+The columns in :ref:`csv.fit@Input Files@data_in.csv`
 are a direct copy of the corresponding columns in the simulation files
-:ref:`csv_simulate@Input Files@simulate.csv` and
-:ref:`csv_simulate@Output Files@data_sim.csv` .
+:ref:`csv.simulate@Input Files@simulate.csv` and
+:ref:`csv.simulate@Output Files@data_sim.csv` .
 The exceptions to this are listed below:
 
 #. The data_id in data_in.csv is equal to the simulate_id in
@@ -384,7 +384,7 @@ Below is the rest of the source code for this example:
    # END_SOURCE_CODE
 }
 
-{xrst_end csv_shock_cov}
+{xrst_end csv.shock_cov}
 '''
 #
 # -----------------------------------------------------------------------------

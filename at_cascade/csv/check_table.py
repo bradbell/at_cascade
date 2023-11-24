@@ -3,7 +3,7 @@
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
-{xrst_begin csv_check_table}
+{xrst_begin csv.check_table}
 
 Check Columns in a CSV File
 ###########################
@@ -26,7 +26,7 @@ is the table corresponding to the csv file; i.e.,
 table  = at_cascade.csv.read(file_name)
 {xrst_code}
 
-{xrst_end csv_check_table}
+{xrst_end csv.check_table}
 '''
 #
 # BEGIN_SYNTAX

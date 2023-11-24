@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------
 import csv
 """
-{xrst_begin csv_read_table}
+{xrst_begin csv.read_table}
 
 Create A Table from a CSV File
 ##############################
@@ -36,9 +36,9 @@ and each column name *key* , a string,
 
 Example
 *******
-:ref:`csv_table-name`
+:ref:`csv.table-name`
 
-{xrst_end csv_read_table}
+{xrst_end csv.read_table}
 """
 # BEGIN_SYNTAX
 # at_cascade.csv.read_table

@@ -3,7 +3,7 @@
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
-{xrst_begin csv_covariate_avg}
+{xrst_begin csv.covariate_avg}
 {xrst_spell
 }
 
@@ -20,7 +20,7 @@ Syntax
 covariate_table
 ***************
 Is a table (i.e., list of dict) containing the information in
-:ref:`csv_simulate@Input Files@covariate.csv` .
+:ref:`csv.simulate@Input Files@covariate.csv` .
 
 node_name
 *********
@@ -31,7 +31,7 @@ covariate_average
 This return is a dict where the keys are the covariates in covariate.csv
 and the values are the average of the corresponding covariate.
 
-{xrst_end csv_covariate_avg}
+{xrst_end csv.covariate_avg}
 '''
 # BEGIN_SYNTAX
 # at_cascade.csv.covariate_avg

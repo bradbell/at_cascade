@@ -5,7 +5,7 @@
 import os
 import sys
 '''
-{xrst_begin csv_table}
+{xrst_begin csv.table}
 
 Example Reading and Writing CSV Files
 #####################################
@@ -17,7 +17,7 @@ Example Source Code
    END_SOURCE
 }
 
-{xrst_end csv_table}
+{xrst_end csv.table}
 '''
 # BEGIN_SOURCE
 #
@@ -44,7 +44,7 @@ def main() :
    # file_name
    file_name = 'build/example/csv/file.csv'
    #
-   # csv_write_table
+   # csv.write_table
    at_cascade.csv.write_table(file_name, write_table)
    #
    # read_table

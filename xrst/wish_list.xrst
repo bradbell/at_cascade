@@ -22,7 +22,7 @@ prior residual is not significant.
 This is also true for covariate multiplies that affect
 a rate with no data.
 
-#. Using a smaller :ref:`csv_fit@Input Files@option_fit.csv@tolerance_fixed`
+#. Using a smaller :ref:`csv.fit@Input Files@option_fit.csv@tolerance_fixed`
    in the :ref:`glossary@root_node_database` will help with this,
    but it will slow down all the fits.
    Using a smaller standard deviation for the affected priors may also help.
@@ -52,7 +52,7 @@ csv.fit
 
 Measurement Value Covariate
 ===========================
-Currently :ref:`csv_fit-name` automatically creates an
+Currently :ref:`csv.fit-name` automatically creates an
 absolute covariate called ``one`` .
 If we also automatically created a covariate
 called ``meas_value`` , we could use it with a meas_value
@@ -61,7 +61,7 @@ covariate multiplier to expand or contract measurements values.
 Continue Cascade
 ================
 There should be a separate csv routine that continues a cascade from a
-goal node of a previous :ref:`csv_fit-name`; i.e.
+goal node of a previous :ref:`csv.fit-name`; i.e.
 a special version of :ref:`continue_cascade-name` for csv.fit.
 
 Prediction Grid
@@ -96,7 +96,7 @@ equations in :ref:`bib@Barendregt et al. (2003)`.
 
 max_fit
 *******
-Add an option to ignore the :ref:`csv_fit@Input Files@option_fit.csv@max_fit`
+Add an option to ignore the :ref:`csv.fit@Input Files@option_fit.csv@max_fit`
 option when fitting a leaf node; i.e., a node that has no children. (This is
 actually for leaf jobs not leaf nodes in the special case where the splitting
 covariate is split at a leaf node.)
@@ -118,7 +118,7 @@ covariate functions to locations,
 instead of covariate values to data points.
 This may use a lot of memory and take a while to set up.
 One partial solution would be to not put all the nodes in the
-:ref:`csv_simulate@Input Files@covariate.csv` file.
+:ref:`csv.simulate@Input Files@covariate.csv` file.
 We could use the closest ancestor's covariate and omega values
 when a node is not in covariate.csv.
 

@@ -5,7 +5,7 @@
 import os
 import sys
 '''
-{xrst_begin csv_join_file_xam}
+{xrst_begin csv.join_file_xam}
 
 Example Joining Two CSV Tables
 ##############################
@@ -17,7 +17,7 @@ Example Source Code
    END_SOURCE
 }
 
-{xrst_end csv_join_file_xam}
+{xrst_end csv.join_file_xam}
 '''
 # BEGIN_SOURCE
 #

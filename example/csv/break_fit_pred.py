@@ -15,7 +15,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 """
-{xrst_begin csv_break_fit_pred}
+{xrst_begin csv.break_fit_pred}
 {xrst_spell
    haqi
    Sincidence
@@ -230,14 +230,14 @@ Source Code
    END_PROGRAM
 }
 
-{xrst_end csv_break_fit_pred}
+{xrst_end csv.break_fit_pred}
 """
 # BEGIN_PROGRAM
 #
 # computation
 def computation(fit_dir) :
    #
-   # csv.fit, csv_predict
+   # csv.fit, csv.predict
    if not breakup_computation:
       at_cascade.csv.fit(fit_dir)
       at_cascade.csv.predict(fit_dir)

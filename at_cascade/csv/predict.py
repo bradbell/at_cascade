@@ -10,7 +10,7 @@ import os
 import time
 '''
 
-{xrst_begin csv_predict}
+{xrst_begin csv.predict}
 {xrst_spell
    sim
    dir
@@ -34,17 +34,17 @@ Prototype
 
 Example
 *******
-:ref:`csv_predict_xam-name` .
+:ref:`csv.predict_xam-name` .
 
 fit_dir
 *******
-Same as the csv fit :ref:`csv_fit@fit_dir` .
+Same as the csv fit :ref:`csv.fit@fit_dir` .
 
 sim_dir
 *******
 This is either None, the file
-:ref:`csv_predict@Output Files@tru_predict.csv` is not created.
-Otherwise, :ref:`csv_simulate@sim_dir` is the directory
+:ref:`csv.predict@Output Files@tru_predict.csv` is not created.
+Otherwise, :ref:`csv.simulate@sim_dir` is the directory
 used to simulate the data for this fit and the file
 tru_predict.csv is created.
 
@@ -74,7 +74,7 @@ The rows of this table are documented below by the name column.
 If an option name does not appear, the corresponding
 default value is used for the option.
 The final value for each of the options is reported in the file
-:ref:`csv_predict@Output Files@option_predict_out.csv` .
+:ref:`csv.predict@Output Files@option_predict_out.csv` .
 Because each option has a default value,
 new option are added in such a way that
 previous option_predict.csv files are still valid.
@@ -83,7 +83,7 @@ db2csv
 ------
 If this boolean option is true,
 the dismod_at `db2csv_command`_ is used to generate the csv files
-corresponding to each :ref:`csv_fit@Output Files@dismod.db` .
+corresponding to each :ref:`csv.fit@Output Files@dismod.db` .
 If this option is true, the csv files will make it more difficult
 to see the tree structure corresponding to the ``dismod.db`` files.
 The default value for this option is false .
@@ -105,7 +105,7 @@ plot
 ----
 If this boolean option is true,
 a ``data_plot.pdf`` and ``rate_plot.pdf`` file is created for each
-:ref:`csv_fit@Output Files@dismod.db` database.
+:ref:`csv.fit@Output Files@dismod.db` database.
 The data plot includes a maximum of 1,000 randomly chosen points for each
 integrand in the predict_integrand.csv file.
 The rate plot includes all the non-zero rates.
@@ -121,8 +121,8 @@ These are no effect rates; i.e., they are the estimated rate
 for this node an sex without any covariate effects
 If you want to include covariate effects, you will have to make your
 own plots using the
-:ref:`csv_predict@Output Files@fit_predict.csv` and
-:ref:`csv_predict@Output Files@sam_predict.csv` files.
+:ref:`csv.predict@Output Files@fit_predict.csv` and
+:ref:`csv.predict@Output Files@sam_predict.csv` files.
 The dismod_at `plot_curve`_ routine may be helpful in this regard.
 
 .. _plot_curve: https://bradbell.github.io/dismod_at/doc/plot_curve.htm
@@ -130,17 +130,17 @@ The dismod_at `plot_curve`_ routine may be helpful in this regard.
 covariate.csv
 =============
 Same as the csv fit
-:ref:`csv_fit@Input Files@covariate.csv` .
+:ref:`csv.fit@Input Files@covariate.csv` .
 
 fit_goal.csv
 ============
 Same as the csv fit
-:ref:`csv_fit@Input Files@fit_goal.csv` .
+:ref:`csv.fit@Input Files@fit_goal.csv` .
 
 predict_integrand.csv
 =====================
 This is the list of integrands at which predictions are made
-and stored in :ref:`csv_predict@Output Files@fit_predict.csv` .
+and stored in :ref:`csv.predict@Output Files@fit_predict.csv` .
 
 integrand_name
 --------------
@@ -148,7 +148,7 @@ This string is the name of one of the prediction integrands.
 You can use the integrand name ``mulcov_0`` , ``mulcov_1`` , ...
 which corresponds to the first , second , ...
 covariate multiplier in the csv fit
-:ref:`csv_fit@Input Files@mulcov.csv` file.
+:ref:`csv.fit@Input Files@mulcov.csv` file.
 
 
 {xrst_comment ---------------------------------------------------------------}
@@ -160,12 +160,12 @@ Output Files
 option_predict_out.csv
 ======================
 This is a copy of
-:ref:`csv_predict@Input Files@option_predict.csv` with the default
+:ref:`csv.predict@Input Files@option_predict.csv` with the default
 filled in for missing values.
 
 fit_predict.csv
 ===============
-If :ref:`csv_predict@start_job_name` is None,
+If :ref:`csv.predict@start_job_name` is None,
 this file contains the predictions for all the fits.
 These predictions for all of the nodes at the age, time and
 covariate values specified in covariate.csv.
@@ -231,7 +231,7 @@ of the corresponding covariate in covariate.csv.
 
 tru_predict.csv
 ===============
-If :ref:`csv_predict@sim_dir` is None, this file is not created.
+If :ref:`csv.predict@sim_dir` is None, this file is not created.
 Otherwise, this file contains the predictions for the model variables
 corresponding to the simulation.
 
@@ -278,7 +278,7 @@ A different (independent) sample from of the model variables
 from their posterior distribution is used to do the predictions for
 each sample index.
 
-{xrst_end csv_predict}
+{xrst_end csv.predict}
 '''
 #-----------------------------------------------------------------------------
 # split_reference_table
@@ -342,12 +342,12 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       line_number += 1
       name         = row['name']
       if name in global_option_value :
-         msg  = f'csv_predict: Error: line {line_number}'
+         msg  = f'csv.predict: Error: line {line_number}'
          msg += ' in option_predict.csv\n'
          msg += f'the name {name} appears twice in this table'
          assert False, msg
       if not name in option_default :
-         msg  = f'csv_predict: Error: line {line_number}'
+         msg  = f'csv.predict: Error: line {line_number}'
          msg += ' in option_predict.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
@@ -357,7 +357,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
          option_value[name] = None
       elif option_type == bool :
          if value not in [ 'true', 'false' ] :
-            msg  = f'csv_predict: Error: line {line_number}'
+            msg  = f'csv.predict: Error: line {line_number}'
             msg += ' in option_predict.csv\n'
             msg += f'The value for {name} is not true or false'
             assert False, msg
