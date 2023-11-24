@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -405,8 +405,8 @@ def setup_function() :
 
    )
    #
-   # write_all_option_table
-   at_cascade.ihme.write_all_option_table(
+   # write_option_all_table
+   at_cascade.ihme.write_option_all_table(
       result_dir                   = result_dir,
       root_node_name               = root_node_name ,
       shift_prior_std_factor       = shift_prior_std_factor,

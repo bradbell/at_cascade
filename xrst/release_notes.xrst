@@ -242,8 +242,8 @@ the standard deviation of the random effects,
 Merge in other_database branch:
 
 #. **API Change** :
-   The :ref:`all_option_table@root_node_database` was added to the
-   all_option table.
+   The :ref:`option_all_table@root_node_database` was added to the
+   option_all table.
    In addition it was removed as an argument to
    :ref:`cascade_root_node-name` and :ref:`create_all_node_db-name` .
 #. Change the :ref:`get_fit_integrand-name` argument from the name
@@ -393,8 +393,8 @@ Add some new items to the :ref:`wish_list@csv.fit` wish list.
 =====
 Add :ref:`csv_fit@Input Files@option_fit.csv@child_prior_std_factor`
 to the option_fit table.
-This is called :ref:`all_option_table@shift_prior_std_factor`
-in the all_option table.
+This is called :ref:`option_all_table@shift_prior_std_factor`
+in the option_all table.
 
 03-22
 =====
@@ -645,9 +645,9 @@ csv fit option_in.csv file.
 11-12
 =====
 Add the refit_split option to the
-:ref:`all option table <all_option_table@refit_split>`  and the
+:ref:`option all table <option_all_table@refit_split>`  and the
 :ref:`csv_fit@Input Files@option_fit.csv` file.
-Note that its default value for the all option table is false,
+Note that its default value for the option all table is false,
 and for option_in.csv file its default value is true.
 
 11-10
@@ -686,7 +686,7 @@ in the predict.csv file.
 
 11-03
 =====
-Add :ref:`all_option_table@number_sample` to the all option table.
+Add :ref:`option_all_table@number_sample` to the option all table.
 
 11-02
 =====
@@ -727,7 +727,7 @@ Add :ref:`all_option_table@number_sample` to the all option table.
    (it was done previously).
 2. Remove default None values for arguments to :ref:`check_cascade_node-name`
    and include argument type asserts in Syntax.
-3. Change all_mtall to `all_omega` and remove all_mtspecific .
+3. Change all_mtall to `omega_all` and remove all_mtspecific .
    In other words, do the calculation of mtall minus mtspecific
    (to get the omega constraint) outside of at_cascade.
    This completed and removed the mtall wish list entry.
@@ -882,7 +882,7 @@ because they have been completed.
 
 03-22
 =====
-Add :ref:`all_option_table@balance_fit` to the all_option table.
+Add :ref:`option_all_table@balance_fit` to the option_all table.
 
 03-14
 =====
@@ -913,8 +913,8 @@ The :ref:`remission-name` example was added.
 
 03-07
 =====
-The :ref:`all_option_table@shared_memory_prefix` was added to the
-all_option table.
+The :ref:`option_all_table@shared_memory_prefix` was added to the
+option_all table.
 
 03-05
 =====
@@ -944,17 +944,17 @@ routines to the at_cascade module.
 01-27
 =====
 1. The max_fit value is now doubled when doing
-   :ref:`all_option_table@max_fit@mulcov_freeze` fit.
+   :ref:`option_all_table@max_fit@mulcov_freeze` fit.
 
-2. If :ref:`all_option_table@max_number_cpu` was one,
+2. If :ref:`option_all_table@max_number_cpu` was one,
    the optimizer trace was not printed to the screen.
    This has been fixed.
 
 01-26
 =====
 Change perturb_optimization_scaling to
-:ref:`all_option_table@perturb_optimization_scale` and add the
-:ref:`all_option_table@perturb_optimization_start` option.
+:ref:`option_all_table@perturb_optimization_scale` and add the
+:ref:`option_all_table@perturb_optimization_start` option.
 
 01-25
 =====
@@ -974,7 +974,7 @@ at_cascade module.
 01-02
 =====
 1. The cascade would hang at the end, instead of detecting completion,
-   when :ref:`all_option_table@max_number_cpu` was greater the one.
+   when :ref:`option_all_table@max_number_cpu` was greater the one.
    This has been fixed.
 
 2. Use :ref:`create_job_table@job_table@job_name`
@@ -1021,14 +1021,14 @@ mm-dd
 
 12-24
 =====
-1. The base_directory was changed to the :ref:`all_option_table@result_dir`
-   and now a required option the all_option table.
+1. The base_directory was changed to the :ref:`option_all_table@result_dir`
+   and now a required option the option_all table.
 
 2. Change required precision in example/mulcov_freeze.py to reduce probability
    of random test failure.
 
 3. Replace :ref:`no_ode_fit-name` max_fit and max_abs_effect arguments by
-   :ref:`no_ode_fit@all_option_dict`.
+   :ref:`no_ode_fit@option_all_dict`.
 
 4. In no_ode_fit, change in_database to :ref:`no_ode_fit@root_node_database`,
    and change out_database to :ref:`no_ode_fit@root_fit_database`.
@@ -1046,7 +1046,7 @@ mm-dd
 =====
 Remove the convergence problem :ref:`wish_list-name`
 entry because it was completed
-when the :ref:`all_option_table@perturb_optimization_scale` option
+when the :ref:`option_all_table@perturb_optimization_scale` option
 was added.
 
 12-06
@@ -1059,7 +1059,7 @@ below a certain point.
 =====
 1. Add the :ref:`check_log-name` routine.
 
-2. Add the :ref:`all_option_table@perturb_optimization_scale` option
+2. Add the :ref:`option_all_table@perturb_optimization_scale` option
    and list options in alphabetical order.
 
 12-03
@@ -1102,22 +1102,22 @@ Change the name get_job_table to
 1. Add get_job_table. This routine is under construction and planned
    and part of a re-factoring for parallel processing.
 
-2. Add :ref:`all_option_table@root_split_reference_name`
-   to the all_option table (so that get_job_table can use any
+2. Add :ref:`option_all_table@root_split_reference_name`
+   to the option_all table (so that get_job_table can use any
    fit_node_database).
 
 11-28
 =====
-1. Change the :ref:`create_all_node_db@all_option` argument to
+1. Change the :ref:`create_all_node_db@option_all` argument to
    create_all_node_db to be a complete representation of the
-   :ref:`all_option_table-name`.
+   :ref:`option_all_table-name`.
    This reduces the amount of necessary documentation.
-   It also requires that root_node_name be in the all_option argument.
+   It also requires that root_node_name be in the option_all argument.
 
 2. Change the :ref:`create_all_node_db@split_reference_table` argument to
    have a default value (corresponding to the empty table).
 
-3. Change split_level in the all_option table to the
+3. Change split_level in the option_all table to the
    :ref:`node_split_table-name`.
 
 

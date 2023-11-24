@@ -19,9 +19,9 @@ Syntax
    # BEGIN RETURN, # END RETURN
 }
 
-all_option_table
+option_all_table
 ****************
-This is the :ref:`all_option_table-name` as a python list
+This is the :ref:`option_all_table-name` as a python list
 of python dictionaries.
 This argument can't be ``None``.
 
@@ -45,8 +45,8 @@ abs_covariate_id_set
 ====================
 if *key* is abs_covariate_id_set, *cov_info[key]* is a ``set`` of ``int``.
 A covariate_id is in this set if and only if the corresponding
-covariate name is in :ref:`all_option_table@absolute_covariates`.
-If absolute_covariates does not appear in the all_option table,
+covariate name is in :ref:`option_all_table@absolute_covariates`.
+If absolute_covariates does not appear in the option_all table,
 *cov_info[key]* is the empty set.
 The reference value for these absolute covariates is the same
 for all nodes and all values of the splitting covariate.
@@ -62,7 +62,7 @@ split_covariate_id
 If :ref:`split_reference_table-name` is empty, this key is not present.
 Otherwise, for *key* equal to split_covariate_id, *cov_info[key]* is an ``int``
 equal to the covariate_id corresponding to the
-:ref:`all_option_table@split_covariate_name`.
+:ref:`option_all_table@split_covariate_name`.
 
 split_reference_list
 ====================
@@ -86,26 +86,26 @@ import at_cascade
 # BEGIN DEF
 # at_cascade.get_cov_info(
 def get_cov_info(
-   all_option_table      ,
+   option_all_table      ,
    covariate_table       ,
    split_reference_table ,
 # )
 ) :
-   assert type(all_option_table) == list
+   assert type(option_all_table) == list
    assert type(covariate_table) == list
    assert type(split_reference_table) == list
    # END DEF
    #
-   # all_option
-   all_option = dict()
-   for row in all_option_table :
-      all_option[ row['option_name'] ] = row['option_value']
+   # option_all
+   option_all = dict()
+   for row in option_all_table :
+      option_all[ row['option_name'] ] = row['option_value']
    #
    # check split_covariate_name
    if len(split_reference_table) == 0 :
-      assert not 'split_covariate_name' in all_option
+      assert not 'split_covariate_name' in option_all
    else :
-      assert 'split_covariate_name' in all_option
+      assert 'split_covariate_name' in option_all
    #
    # split_reference_list
    split_reference_list = list()
@@ -114,8 +114,8 @@ def get_cov_info(
    #
    # abs_covariate_id_set
    abs_covariate_id_set = set()
-   if 'absolute_covariates' in all_option :
-      absolute_covariate_list = all_option['absolute_covariates'].split()
+   if 'absolute_covariates' in option_all :
+      absolute_covariate_list = option_all['absolute_covariates'].split()
       for covariate_name in absolute_covariate_list :
          covariate_id = at_cascade.table_name2id(
             covariate_table, 'covariate', covariate_name
@@ -137,7 +137,7 @@ def get_cov_info(
       return cov_info
    #
    # split_covarate_name
-   split_covariate_name = all_option['split_covariate_name']
+   split_covariate_name = option_all['split_covariate_name']
    #
    # split_covariate_id
    split_covariate_id   = at_cascade.table_name2id(

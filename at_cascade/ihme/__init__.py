@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 #
 # input files for all diseases
@@ -9,11 +9,11 @@ age_group_inp_file = 'ihme_db/DisMod_AT/metadata/gbd2019_age_metadata.csv'
 mtall_inp_file     = 'ihme_db/DisMod_AT/mtall/gbd2019_all_cause_mortality.csv'
 #
 # Intermediate result files that are used for all diseases.
-# This names are relative to the result_dir in the all_option table.
+# This names are relative to the result_dir in the option_all table.
 # BEGIN_SORT_THIS_LINE_PLUS_2
 csv_file = {
-   'all_omega'     : 'all_omega_table.csv',
-   'all_option'    : 'all_option_table.csv',
+   'omega_all'     : 'omega_all_table.csv',
+   'option_all'    : 'option_all_table.csv',
    'data'          : 'data_table.csv',
    'omega_index'   : 'omega_index_table.csv',
    'mulcov_freeze' : 'mulcov_freeze_table.csv',
@@ -77,7 +77,7 @@ from .main                        import main
 from .predict_csv                 import predict_csv
 from .summary                     import summary
 from .write_all_node_database     import write_all_node_database
-from .write_all_option_table      import write_all_option_table
+from .write_option_all_table      import write_option_all_table
 from .write_data_table            import write_data_table
 from .write_mtall_tables          import write_mtall_tables
 from .write_mulcov_freeze_table   import write_mulcov_freeze_table

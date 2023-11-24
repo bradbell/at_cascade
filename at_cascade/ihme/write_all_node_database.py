@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import csv
@@ -39,8 +39,8 @@ def write_all_node_database(result_dir, root_node_database) :
    #
    # intermediate files
    # BEGIN_SORT_THIS_LINE_PLUS_1
-   all_omega_table_file     = get_file_path(result_dir, 'all_omega')
-   all_option_table_file    = get_file_path(result_dir, 'all_option')
+   omega_all_table_file     = get_file_path(result_dir, 'omega_all')
+   option_all_table_file    = get_file_path(result_dir, 'option_all')
    omega_index_table_file   = get_file_path(result_dir, 'omega_index')
    mulcov_freeze_table_file = get_file_path(result_dir, 'mulcov_freeze')
    node_split_table_file    = get_file_path(result_dir, 'node_split')
@@ -62,11 +62,11 @@ def write_all_node_database(result_dir, root_node_database) :
    new        = True
    connection = dismod_at.create_connection(all_node_database, new)
    #
-   # all_option
-   all_option_table = at_cascade.csv.read_table(all_option_table_file)
-   tbl_name = 'all_option'
+   # option_all
+   option_all_table = at_cascade.csv.read_table(option_all_table_file)
+   tbl_name = 'option_all'
    col_list = [ ('option_name', 'text'), ('option_value', 'text') ]
-   write_table(connection, all_option_table, tbl_name, col_list)
+   write_table(connection, option_all_table, tbl_name, col_list)
    #
    # split_refererence_table
    split_reference_table = list()
@@ -90,12 +90,12 @@ def write_all_node_database(result_dir, root_node_database) :
    ]
    write_table(connection, split_reference_table, tbl_name, col_list)
    #
-   # all_option
-   all_option = dict()
-   for row in all_option_table :
+   # option_all
+   option_all = dict()
+   for row in option_all_table :
       option_name  = row['option_name']
       option_value = row['option_value']
-      all_option[option_name] = option_value
+      option_all[option_name] = option_value
    #
    # node_split_table
    node_split_table = at_cascade.csv.read_table( node_split_table_file )
@@ -155,15 +155,15 @@ def write_all_node_database(result_dir, root_node_database) :
    col_list = [
       ('node_id', 'integer'),
       ('split_reference_id', 'integer'),
-      ('all_omega_id', 'integer'),
+      ('omega_all_id', 'integer'),
    ]
    write_table(connection, omega_index_table, tbl_name, col_list)
    #
-   # all_omega_table
-   all_omega_table   = at_cascade.csv.read_table(all_omega_table_file)
-   tbl_name = 'all_omega'
-   col_list = [ ('all_omega_value', 'real') ]
-   write_table(connection, all_omega_table, tbl_name, col_list)
+   # omega_all_table
+   omega_all_table   = at_cascade.csv.read_table(omega_all_table_file)
+   tbl_name = 'omega_all'
+   col_list = [ ('omega_all_value', 'real') ]
+   write_table(connection, omega_all_table, tbl_name, col_list)
    #
    # mtspecific_index_table
    mtspecific_index_table = list()

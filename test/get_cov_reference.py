@@ -40,8 +40,8 @@ def main() :
    # absolute_covariates
    absolute_covariates = 'vaccine'
    #
-   # all_option table
-   tbl_name = 'all_option'
+   # option_all table
+   tbl_name = 'option_all'
    col_name = [ 'option_name', 'option_value' ]
    col_type = [ 'text',        'text'         ]
    split_covariate_name = 'sex'

@@ -221,10 +221,10 @@ The abbreviation used for rate value covariate multiplier.
 Relative Covariate
 ******************
 A relative covariate is any covariate that is not an
-:ref:`absolute covariate<all_option_table@absolute_covariates>`
+:ref:`absolute covariate<option_all_table@absolute_covariates>`
 and is not the splitting covariate
 (which is specified by the
-:ref:`all_option_table@split_covariate_name`).
+:ref:`option_all_table@split_covariate_name`).
 The reference value for a relative covariate can depend on the node
 and the value of the splitting covariate.
 
@@ -241,7 +241,7 @@ This is also denoted by :math:`\rho(a, t)`.
 root_node
 *********
 The top level node for this cascade; see
-:ref:`all_option_table@root_node_name`.
+:ref:`option_all_table@root_node_name`.
 
 root_node_database
 ******************

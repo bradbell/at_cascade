@@ -36,7 +36,7 @@ all_node_database
 *****************
 is a path to the :ref:`all_node_db-name`.
 This is used to determine the
-:ref:`all_option_table@shared_memory_prefix`.
+:ref:`option_all_table@shared_memory_prefix`.
 
 job_name
 ********
@@ -58,10 +58,10 @@ def clear_shared(all_node_database, job_name) :
    connection           = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )
-   all_option_table     = dismod_at.get_table_dict(connection, 'all_option')
+   option_all_table     = dismod_at.get_table_dict(connection, 'option_all')
    connection.close()
    shared_memory_prefix = ""
-   for row in all_option_table :
+   for row in option_all_table :
       if row['option_name'] == 'shared_memory_prefix' :
          shared_memory_prefix = row['option_value']
    #

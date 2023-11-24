@@ -203,14 +203,14 @@ fit_goal_set = { 'n3', 'n4', 'n2' }
 # END fit_goal_set
 #
 # BEGIN split_reference_table
-all_option            = {
+option_all            = {
    'refit_split':               'true',
    'result_dir':                'build/example',
    'root_node_name':            'n0',
    'root_split_reference_name': 'both',
    'split_covariate_name':      'sex',
 }
-all_option['root_node_database'] = all_option['result_dir'] + '/root_node.db'
+option_all['root_node_database'] = option_all['result_dir'] + '/root_node.db'
 split_reference_table = [
    {'split_reference_name': 'female', 'split_reference_value': 1.0},
    {'split_reference_name': 'both',   'split_reference_value': 2.0},
@@ -256,7 +256,7 @@ for row in split_reference_table :
 # END split_reference_list
 #
 # BEGIN_1 absolute_covariates
-all_option['absolute_covariates'] = 'vaccine'
+option_all['absolute_covariates'] = 'vaccine'
 # END_1 absolute_covariates
 # ----------------------------------------------------------------------------
 # functions
@@ -501,12 +501,12 @@ def root_node_db(file_name) :
 def main() :
    # -------------------------------------------------------------------------
    # result_dir
-   result_dir = all_option['result_dir']
+   result_dir = option_all['result_dir']
    if not os.path.exists(result_dir) :
       os.makedirs(result_dir)
    #
    # Create root_node.db
-   root_node_database  = all_option['root_node_database']
+   root_node_database  = option_all['root_node_database']
    root_node_db(root_node_database)
    #
    # connection
@@ -558,7 +558,7 @@ def main() :
    at_cascade.create_all_node_db(
       all_node_database      = all_node_database,
       split_reference_table  = split_reference_table,
-      all_option             = all_option,
+      option_all             = option_all,
       omega_grid             = omega_grid,
       omega_data             = omega_data,
    )

@@ -88,8 +88,8 @@ shared memory names:
 |  *shared_memory_prefix*\ ``_``\ *job_name*\ ``_job_status``
 
 where *job_name* is *job_table* [ *start_job_id* ] [ ``"job_name"`` ]
-and :ref:`all_option_table@shared_memory_prefix` is specified
-in the all option table.
+and :ref:`option_all_table@shared_memory_prefix` is specified
+in the option all table.
 
 {xrst_end run_parallel}
 '''
@@ -113,10 +113,10 @@ def get_shared_memory_prefix(all_node_database) :
    connection           = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )
-   all_option_table     = dismod_at.get_table_dict(connection, 'all_option')
+   option_all_table     = dismod_at.get_table_dict(connection, 'option_all')
    connection.close()
    shared_memory_prefix = ""
-   for row in all_option_table :
+   for row in option_all_table :
       if row['option_name'] == 'shared_memory_prefix' :
          shared_memory_prefix = row['option_value']
    return shared_memory_prefix
@@ -125,11 +125,11 @@ def get_result_database_dir(
    all_node_database, node_table, fit_node_id, fit_split_reference_id
 ) :
    #
-   # all_option, node_split_table, split_reference_table
+   # option_all, node_split_table, split_reference_table
    connection       = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )
-   all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+   option_all_table = dismod_at.get_table_dict(connection, 'option_all')
    node_split_table = dismod_at.get_table_dict(connection, 'node_split')
    split_reference_table = \
       dismod_at.get_table_dict(connection, 'split_reference')
@@ -139,7 +139,7 @@ def get_result_database_dir(
    result_dir              = None
    root_node_id            = None
    root_split_reference_id = None
-   for row in all_option_table :
+   for row in option_all_table :
       if row['option_name'] == 'result_dir' :
          result_dir = row['option_value']
       if row['option_name'] == 'root_node_name' :

@@ -65,7 +65,7 @@ that the fit corresponds to.
 database_dir
 ************
 The return value is a ``str`` containing the directory,
-relative to the :ref:`all_option_table@result_dir`,
+relative to the :ref:`option_all_table@result_dir`,
 where the database corresponding to the fit is (or will be) located.
 In other words, the fit database has the following path:
 

@@ -106,21 +106,21 @@ def check_log(
    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
    connection.close()
    #
-   # split_reference_table, all_option_table, node_split_table
+   # split_reference_table, option_all_table, node_split_table
    connection  = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )
    split_reference_table = dismod_at.get_table_dict(
       connection, 'split_reference'
    )
-   all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+   option_all_table = dismod_at.get_table_dict(connection, 'option_all')
    node_split_table = dismod_at.get_table_dict(connection, 'node_split')
    connection.close()
    #
    # root_node_name
    result_dir     = None
    root_node_name = None
-   for row in all_option_table :
+   for row in option_all_table :
       if row['option_name'] == 'result_dir' :
          result_dir = row['option_value']
       if row['option_name'] == 'root_node_name' :
@@ -143,7 +143,7 @@ def check_log(
       root_split_reference_id = None
    else :
       cov_info = at_cascade.get_cov_info(
-         all_option_table, covariate_table, split_reference_table
+         option_all_table, covariate_table, split_reference_table
       )
       root_split_reference_id = cov_info['split_reference_id']
    #

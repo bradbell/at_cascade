@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import shutil
 import datetime
@@ -59,10 +59,10 @@ def get_path_table_to_file_name(
    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
    connection.close()
    #
-   # all_option_table, node_split_table, split_reference_table
+   # option_all_table, node_split_table, split_reference_table
    new              = False
    connection       = dismod_at.create_connection(all_node_database, new)
-   all_option_table =  dismod_at.get_table_dict(connection, 'all_option')
+   option_all_table =  dismod_at.get_table_dict(connection, 'option_all')
    node_split_table =  dismod_at.get_table_dict(connection, 'node_split')
    split_reference_table = \
       dismod_at.get_table_dict(connection, 'split_reference')
@@ -84,7 +84,7 @@ def get_path_table_to_file_name(
       root_split_refernence_id = None
    else :
       cov_info = at_cascade.get_cov_info(
-         all_option_table      = all_option_table ,
+         option_all_table      = option_all_table ,
          covariate_table       = covariate_table ,
          split_reference_table = split_reference_table,
       )

@@ -106,8 +106,8 @@ def omega_constraint(
    )
    all_tables = dict()
    for name in [
-      'all_option',
-      'all_omega',
+      'option_all',
+      'omega_all',
       'omega_index',
       'omega_age_grid',
       'omega_time_grid',
@@ -118,7 +118,7 @@ def omega_constraint(
    #
    # case where omega constrained to zero
    if len( all_tables['omega_time_grid']) == 0 :
-      assert len( all_tables['all_omega'] ) == 0
+      assert len( all_tables['omega_all'] ) == 0
       assert len( all_tables['omega_index'] ) == 0
       assert len( all_tables['omega_age_grid'] ) == 0
       return
@@ -129,7 +129,7 @@ def omega_constraint(
    #
    # root_node_database
    root_node_database = None
-   for row in all_tables['all_option'] :
+   for row in all_tables['option_all'] :
       if row['option_name'] == 'root_node_database' :
          root_node_database = row['option_value']
    assert root_node_database != None
@@ -181,7 +181,7 @@ def omega_constraint(
    #
    # split_reference_id
    cov_info = at_cascade.get_cov_info(
-      all_tables['all_option'],
+      all_tables['option_all'],
       fit_tables['covariate'],
       all_tables['split_reference'],
    )
@@ -201,23 +201,23 @@ def omega_constraint(
       fit_tables['node'], 'node', parent_node_name
    )
    #
-   # node_id2all_omega_id
-   node_id2all_omega_id = dict()
+   # node_id2omega_all_id
+   node_id2omega_all_id = dict()
    for row in all_tables['omega_index'] :
-      all_omega_id = row['all_omega_id']
-      if all_omega_id % (n_omega_age * n_omega_time) != 0 :
-         msg  = 'omega_index table: Expect all_omega_id to be a multipler '
+      omega_all_id = row['omega_all_id']
+      if omega_all_id % (n_omega_age * n_omega_time) != 0 :
+         msg  = 'omega_index table: Expect omega_all_id to be a multipler '
          msg += 'of n_omega_age * n_omega_time\n'
-         msg += f'all_omega_id = {all_omega_id} '
+         msg += f'omega_all_id = {omega_all_id} '
          msg += f'n_omega_age = {n_omega_age} '
          msg += f'n_omega_time = {n_omega_time} '
          assert False, msg
       if row['split_reference_id'] == split_reference_id :
-         node_id2all_omega_id[ row['node_id'] ] = all_omega_id
+         node_id2omega_all_id[ row['node_id'] ] = omega_all_id
    #
    # omega_ancestor_node_id
    node_id = parent_node_id
-   while not node_id in node_id2all_omega_id :
+   while not node_id in node_id2omega_all_id :
       node_id = fit_tables['node'][node_id]['parent']
       if node_id is None :
          msg  = 'omega_constraint: no ancestor of ' + parent_node_name
@@ -227,11 +227,11 @@ def omega_constraint(
    assert not omega_ancestor_node_id is None
    #
    # parent_omega
-   all_omega_id = node_id2all_omega_id[omega_ancestor_node_id]
+   omega_all_id = node_id2omega_all_id[omega_ancestor_node_id]
    parent_omega   = list()
    for ij in range( n_omega_age * n_omega_time ) :
-      row  = all_tables['all_omega'][all_omega_id + ij ]
-      parent_omega.append( row['all_omega_value'] )
+      row  = all_tables['omega_all'][omega_all_id + ij ]
+      parent_omega.append( row['omega_all_value'] )
    #
    # parent_smooth_id
    parent_smooth_id  = len(fit_tables['smooth'])
@@ -266,14 +266,14 @@ def omega_constraint(
    for child_node_id in child_node_list :
       #
       # child_omega
-      if not child_node_id in node_id2all_omega_id :
+      if not child_node_id in node_id2omega_all_id :
          child_omega = parent_omega
       else :
-         all_omega_id = node_id2all_omega_id[child_node_id]
+         omega_all_id = node_id2omega_all_id[child_node_id]
          child_omega  = list()
          for ij in range( n_omega_age * n_omega_time ) :
-               row  = all_tables['all_omega'][all_omega_id + ij ]
-               child_omega.append( row['all_omega_value'] )
+               row  = all_tables['omega_all'][omega_all_id + ij ]
+               child_omega.append( row['omega_all_value'] )
       #
       # random_effect
       random_effect = list()
@@ -287,7 +287,7 @@ def omega_constraint(
          if child_omega[ij] <= 0 :
             msg  = 'child_omega <= 0'
             msg += f', child_node_id = {child_node_id}'
-            if child_node_id in node_id2all_omega_id :
+            if child_node_id in node_id2omega_all_id :
                msg += f'\nomega_ancestor_node_id = {child_node_id}'
             else :
                msg += '\nomega_ancestor_node_id = '

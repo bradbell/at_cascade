@@ -39,17 +39,17 @@ using the second fit_goal_set.
 
 Parallel Processing
 *******************
-This example sets :ref:`all_option_table@max_number_cpu`
+This example sets :ref:`option_all_table@max_number_cpu`
 as an example of parallel processing.
 The results for nodes n3 and n4 are computed in parallel
 during the call to :ref:`cascade_root_node-name`.
 The results for nodes n5 and n6 are computed in parallel
 during the call to :ref:`continue_cascade-name`.
 {xrst_literal
-   # BEGIN all_option
-   # END all_option
+   # BEGIN option_all
+   # END option_all
 }
-see :ref:`create_all_node_db@all_option`.
+see :ref:`create_all_node_db@option_all`.
 
 Rates
 *****
@@ -171,14 +171,14 @@ import at_cascade
 first_fit_goal_set  = { 'n3', 'n4', 'n2' }
 second_fit_goal_set = { 'n5', 'n6' }
 # END fit_goal_set
-# BEGIN all_option
-all_option  = {
+# BEGIN option_all
+option_all  = {
    'result_dir':     'build/example',
    'root_node_name': 'n0',
    'max_number_cpu':  '2',
 }
-all_option['root_node_database'] = all_option['result_dir'] + '/root_node.db'
-# END all_option
+option_all['root_node_database'] = option_all['result_dir'] + '/root_node.db'
+# END option_all
 # ----------------------------------------------------------------------------
 # functions
 # ----------------------------------------------------------------------------
@@ -363,7 +363,7 @@ def two_fit_goal_set_example(result_dir) :
    # -------------------------------------------------------------------------
    #
    # root_node_database
-   root_node_database  = all_option['root_node_database']
+   root_node_database  = option_all['root_node_database']
    #
    # all_node_database
    all_node_database = f'{result_dir}/all_node.db'
@@ -418,7 +418,7 @@ def two_fit_goal_set_example(result_dir) :
 def one_fit_goal_set_example(result_dir ) :
    #
    # root_node_database
-   root_node_database  = all_option['root_node_database']
+   root_node_database  = option_all['root_node_database']
    #
    # all_node_database
    all_node_database = f'{result_dir}/all_node.db'
@@ -469,19 +469,19 @@ def one_fit_goal_set_example(result_dir ) :
 def main() :
    # -------------------------------------------------------------------------
    # result_dir
-   result_dir = all_option['result_dir']
+   result_dir = option_all['result_dir']
    if not os.path.exists(result_dir) :
       os.makedirs(result_dir)
    #
    # root_node_database
-   root_node_database  = all_option['root_node_database']
+   root_node_database  = option_all['root_node_database']
    root_node_db(root_node_database)
    #
    # all_node_database
    all_node_database = f'{result_dir}/all_node.db'
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
-      all_option              = all_option,
+      option_all              = option_all,
    )
    #
    # example using continue_cascade

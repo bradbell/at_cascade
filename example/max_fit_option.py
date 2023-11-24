@@ -86,7 +86,7 @@ of how good the fit is for the nodes in the fit_goal_set.
 
 max_fit_option
 **************
-This is the value of the :ref:`all_option_table@max_fit` option.
+This is the value of the :ref:`option_all_table@max_fit` option.
 It is also te number of data values per leaf.
 Thus the leaf nodes fit all their data while the other nodes only fit
 a randomly chosen subset of their data.
@@ -98,7 +98,7 @@ a randomly chosen subset of their data.
 perturb_optimization_scale
 **************************
 This is the value of the
-:ref:`all_option_table@perturb_optimization_scale` option.
+:ref:`option_all_table@perturb_optimization_scale` option.
 It is only included as an example of using this option and is not
 necessary.
 {xrst_literal
@@ -398,7 +398,7 @@ def main() :
    #
    # Create all_node.db
    all_node_database = f'{result_dir}/all_node.db'
-   all_option        = {
+   option_all        = {
       'result_dir'                   : result_dir,
       'root_node_name'               : 'n0',
       'root_node_database'           : root_node_database,
@@ -407,7 +407,7 @@ def main() :
    }
    at_cascade.create_all_node_db(
       all_node_database     = all_node_database,
-      all_option            = all_option,
+      option_all            = option_all,
    )
    #
    # root_node_dir

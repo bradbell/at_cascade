@@ -67,7 +67,7 @@ max_node_depth
 **************
 This is the number of generations below root node that are included;
 see :ref:`job_descendent@Node Depth Versus Job Depth`
-and note that sex is the :ref:`all_option_table@split_covariate_name` .
+and note that sex is the :ref:`option_all_table@split_covariate_name` .
 If max_node_depth is zero,  only the root node will be included.
 If max_node_depth is None,  the root node and all its descendants are included.
 
@@ -1548,7 +1548,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    # root_node_name
    root_node_name = at_cascade.get_parent_node(database)
    #
-   # all_option
+   # option_all
    root_node_database     = f'{fit_dir}/root_node.db'
    child_prior_std_factor = global_option_value['child_prior_std_factor']
    shared_memory_prefix   = global_option_value['shared_memory_prefix']
@@ -1562,7 +1562,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       refit_split = 'true'
    else :
       refit_split = 'false'
-   all_option = {
+   option_all = {
       'absolute_covariates'          : absolute_covariates ,
       'balance_fit'                  : 'sex -0.5 +0.5' ,
       'max_abs_effect'               : global_option_value['max_abs_effect'],
@@ -1667,7 +1667,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    # create_all_node_db
    at_cascade.create_all_node_db(
       all_node_database         = f'{fit_dir}/all_node.db'  ,
-      all_option                = all_option                ,
+      option_all                = option_all                ,
       split_reference_table     = split_reference_table     ,
       node_split_table          = node_split_table          ,
       mulcov_freeze_table       = mulcov_freeze_table       ,

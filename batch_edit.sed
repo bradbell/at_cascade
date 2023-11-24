@@ -31,6 +31,7 @@
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
 # ...........................................................................
-s|sim_fit_pred-title|csv_sim_fit_pred-title|
-s|csv_fit_xam-name|csv_break_fit_pred-name|
-s|csv_fit_xam@breakup_computation|csv_break_fit_pred@breakup_computation|
+s|all_option|option_all|g
+s|all option|option all|g
+#
+s|all_omega|omega_all|g

@@ -59,7 +59,7 @@ max_job_depth
 *************
 This is the number of generations below start_job_name that are included;
 see :ref:`job_descendent@Node Depth Versus Job Depth`
-and note that sex is the :ref:`all_option_table@split_covariate_name` .
+and note that sex is the :ref:`option_all_table@split_covariate_name` .
 If max_job_depth is zero,  only the start job will be included.
 If max_job_depth is None,  start job and all its descendants are included;
 
@@ -447,16 +447,16 @@ def predict_one(
    assert type(all_covariate_table) == list
    assert type( all_covariate_table[0] ) == dict
    #
-   # all_option_table
+   # option_all_table
    connection       = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )
-   all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+   option_all_table = dismod_at.get_table_dict(connection, 'option_all')
    connection.close()
    #
    # root_node_database
    root_node_database = None
-   for row in all_option_table :
+   for row in option_all_table :
       if row['option_name'] == 'root_node_database' :
          root_node_database = row['option_value']
    assert root_node_database != None
@@ -493,7 +493,7 @@ def predict_one(
    #
    # fit_split_reference_id
    cov_info = at_cascade.get_cov_info(
-      all_option_table, fit_covariate_table, split_reference_table
+      option_all_table, fit_covariate_table, split_reference_table
    )
    fit_split_reference_id  = cov_info['split_reference_id']
    #

@@ -43,12 +43,12 @@ This database is located at
 
    *result_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
 
-see :ref:`all_option_table@result_dir`
-and :ref:`all_option_table@root_node_name`.
+see :ref:`option_all_table@result_dir`
+and :ref:`option_all_table@root_node_name`.
 If *no_ode_fit* is ``True`` ( ``False`` ) the priors in the
 *root_node_database* are modified (are not modified)
 before the root node is fit;
-see :ref:`all_option_table@root_node_database` .
+see :ref:`option_all_table@root_node_database` .
 Upon return, this is a :ref:`glossary@fit_node_database` with the
 extra properties listed below:
 
@@ -71,7 +71,7 @@ The dismod_at function ``plot_rate_fit`` and ``plot_data_fit``
 can be used to crate the corresponding plots.
 
 The root level fit the directory is
-:ref:`all_option_table@root_node_name` .
+:ref:`option_all_table@root_node_name` .
 If the current fit is just before a split,
 there will be a sub-directory for the fit of each
 :ref:`split_reference_table@split_reference_name` after the split.
@@ -122,28 +122,28 @@ def cascade_root_node(
    assert type(fit_type_list)      == list
    # END syntax
    #
-   # split_reference_table, all_option_table
+   # split_reference_table, option_all_table
    connection  = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )
    split_reference_table = dismod_at.get_table_dict(
       connection, 'split_reference'
    )
-   all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+   option_all_table = dismod_at.get_table_dict(connection, 'option_all')
    connection.close()
    #
-   # all_option_dict
-   all_option_dict = dict()
-   for row in all_option_table :
-      all_option_dict[ row['option_name'] ] = row['option_value']
+   # option_all_dict
+   option_all_dict = dict()
+   for row in option_all_table :
+      option_all_dict[ row['option_name'] ] = row['option_value']
    #
    # root_node_name, root_node_database, max_number_cpu, result_dir
-   root_node_name     = all_option_dict['root_node_name']
-   root_node_database = all_option_dict['root_node_database']
-   result_dir         = all_option_dict['result_dir']
+   root_node_name     = option_all_dict['root_node_name']
+   root_node_database = option_all_dict['root_node_database']
+   result_dir         = option_all_dict['result_dir']
    max_number_cpu     = 1
-   if 'max_number_cpu' in all_option_dict :
-      max_number_cpu = int( all_option_dict['max_number_cpu'] )
+   if 'max_number_cpu' in option_all_dict :
+      max_number_cpu = int( option_all_dict['max_number_cpu'] )
    #
    # check root_node_name
    parent_node_name = at_cascade.get_parent_node(root_node_database)
@@ -160,7 +160,7 @@ def cascade_root_node(
       at_cascade.no_ode_fit(
          all_node_database  = all_node_database,
          root_node_database = root_node_database,
-         all_option_dict    = all_option_dict,
+         option_all_dict    = option_all_dict,
          fit_type           = fit_type_list[0],
       )
    #
@@ -186,7 +186,7 @@ def cascade_root_node(
       root_split_reference_id = None
    else :
       cov_info = at_cascade.get_cov_info(
-         all_option_table, covariate_table, split_reference_table
+         option_all_table, covariate_table, split_reference_table
       )
       root_split_reference_id = cov_info['split_reference_id']
    #

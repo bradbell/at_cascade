@@ -388,7 +388,7 @@ def create_shift_db(
    )
    all_table  = dict()
    for name in [
-      'all_option',
+      'option_all',
       'split_reference',
       'mulcov_freeze',
    ] :
@@ -397,14 +397,14 @@ def create_shift_db(
    #
    # root_node_database
    root_node_database = None
-   for row in all_table['all_option'] :
+   for row in all_table['option_all'] :
       if row['option_name'] == 'root_node_database' :
          root_node_database = row['option_value']
    assert root_node_database != None
    #
    # shift_prior_std_factor
    shift_prior_std_factor = 1.0
-   for row in all_table['all_option'] :
+   for row in all_table['option_all'] :
       if row['option_name'] == 'shift_prior_std_factor' :
          shift_prior_std_factor = float( row['option_value'] )
    #
@@ -457,7 +457,7 @@ def create_shift_db(
    #
    # fit_split_reference_id, split_covariate_id
    cov_info = at_cascade.get_cov_info(
-      all_table['all_option'],
+      all_table['option_all'],
       fit_table['covariate'],
       all_table['split_reference']
    )

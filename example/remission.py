@@ -483,14 +483,14 @@ def main() :
    #
    # Create all_node.db
    all_node_database = f'{result_dir}/all_node.db'
-   all_option        = {
+   option_all        = {
       'result_dir'          : result_dir,
       'root_node_name'      : 'n0',
       'root_node_database'  : root_node_database,
    }
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
-      all_option              = all_option,
+      option_all              = option_all,
       omega_grid              = omega_grid,
       omega_data              = omega_data,
    )

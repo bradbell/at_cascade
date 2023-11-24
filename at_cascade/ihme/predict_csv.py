@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import csv
 import os
@@ -38,17 +38,17 @@ def predict_csv_one_job(
    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
    connection.close()
    #
-   # all_option_table, split_reference_table
+   # option_all_table, split_reference_table
    new               = False
    connection        = dismod_at.create_connection(all_node_database, new)
-   all_option_table  = dismod_at.get_table_dict(connection, 'all_option')
+   option_all_table  = dismod_at.get_table_dict(connection, 'option_all')
    split_reference_table = \
       dismod_at.get_table_dict(connection, 'split_reference')
    connection.close()
    #
    # result_dir
    result_dir = None
-   for row in all_option_table :
+   for row in option_all_table :
       if row['option_name'] == 'result_dir' :
          result_dir = row['option_value']
    assert result_dir is not None
@@ -66,7 +66,7 @@ def predict_csv_one_job(
    #
    # fit_split_reference_id
    cov_info = at_cascade.get_cov_info(
-      all_option_table, covariate_table, split_reference_table
+      option_all_table, covariate_table, split_reference_table
    )
    fit_split_reference_id  = cov_info['split_reference_id']
    #
@@ -421,10 +421,10 @@ def predict_csv(
    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
    connection.close()
    #
-   # all_option_table, split_reference_table, node_split_table
+   # option_all_table, split_reference_table, node_split_table
    new              = False
    connection       = dismod_at.create_connection(all_node_database, new)
-   all_option_table =  dismod_at.get_table_dict(connection, 'all_option')
+   option_all_table =  dismod_at.get_table_dict(connection, 'option_all')
    node_split_table =  dismod_at.get_table_dict(connection, 'node_split')
    split_reference_table = \
       dismod_at.get_table_dict(connection, 'split_reference')
@@ -433,7 +433,7 @@ def predict_csv(
    # result_dir, max_number_cpu
    result_dir     = None
    max_number_cpu = None
-   for row in all_option_table :
+   for row in option_all_table :
       if row['option_name'] == 'result_dir' :
          result_dir = row['option_value']
       if row['option_name'] == 'max_number_cpu' :
@@ -457,7 +457,7 @@ def predict_csv(
       root_split_refernence_id = None
    else :
       cov_info = at_cascade.get_cov_info(
-         all_option_table      = all_option_table ,
+         option_all_table      = option_all_table ,
          covariate_table       = covariate_table ,
          split_reference_table = split_reference_table,
       )

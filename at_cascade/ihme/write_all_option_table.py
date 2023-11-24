@@ -1,14 +1,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import csv
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
 #
-# write_all_option_table
-def write_all_option_table(
+# write_option_all_table
+def write_option_all_table(
    result_dir                   = None,
    root_node_name               = None,
    shift_prior_std_factor       = None,
@@ -29,10 +29,10 @@ def write_all_option_table(
    assert type(max_number_cpu)               == int
    assert type(shared_memory_prefix)         == str
    #
-   # all_option_table_file
-   all_option_table_file = at_cascade.ihme.csv_file['all_option']
-   all_option_table_file = f'{result_dir}/{all_option_table_file}'
-   print( f'Creating {all_option_table_file}' )
+   # option_all_table_file
+   option_all_table_file = at_cascade.ihme.csv_file['option_all']
+   option_all_table_file = f'{result_dir}/{option_all_table_file}'
+   print( f'Creating {option_all_table_file}' )
    #
    # balance_fit
    cov_name = 'sex'
@@ -42,8 +42,8 @@ def write_all_option_table(
       Value_1, value_2 = value_2, value_1
    balance_fit = f'{cov_name} {value_1} {value_2}'
    #
-   # all_option
-   all_option = {
+   # option_all
+   option_all = {
       'absolute_covariates'          : 'one',
       'split_covariate_name'         : 'sex',
       'root_split_reference_name'    : 'Both',
@@ -59,11 +59,11 @@ def write_all_option_table(
       'perturb_optimization_start'   : perturb_optimization_start,
    }
    #
-   # all_option_table
-   all_option_table = list()
-   for key in all_option :
-      row = { 'option_name' : key , 'option_value' : all_option[key] }
-      all_option_table.append( row )
+   # option_all_table
+   option_all_table = list()
+   for key in option_all :
+      row = { 'option_name' : key , 'option_value' : option_all[key] }
+      option_all_table.append( row )
    #
-   # all_option_table_file
-   at_cascade.csv.write_table(all_option_table_file, all_option_table)
+   # option_all_table_file
+   at_cascade.csv.write_table(option_all_table_file, option_all_table)

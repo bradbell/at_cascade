@@ -227,7 +227,7 @@ def main() :
    #
    # Create all_node.db
    all_node_database = 'all_node.db'
-   all_option        = {
+   option_all        = {
       'result_dir':     '.',
       'root_node_name': 'n0',
       'root_node_database': root_node_database,
@@ -235,7 +235,7 @@ def main() :
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
       split_reference_table   = list(),
-      all_option              = all_option,
+      option_all              = option_all,
    )
    #
    # node_table

@@ -172,7 +172,7 @@ def run_one_job(
    )
    all_table = dict()
    for tbl_name in [
-      'all_option',
+      'option_all',
       'split_reference',
       'node_split',
       'mulcov_freeze',
@@ -187,48 +187,48 @@ def run_one_job(
          if fit_split_reference_id == row['split_reference_id'] :
             double_max_fit = True
    #
-   # all_option_dict
-   all_option_dict = dict()
-   for row in all_table['all_option'] :
-      all_option_dict[ row['option_name']  ] = row['option_value']
+   # option_all_dict
+   option_all_dict = dict()
+   for row in all_table['option_all'] :
+      option_all_dict[ row['option_name']  ] = row['option_value']
    #
    # refit_split
-   if 'refit_split' in all_option_dict :
-      refit_split = all_option_dict['refit_split']
+   if 'refit_split' in option_all_dict :
+      refit_split = option_all_dict['refit_split']
       assert refit_split in [ 'true', 'false' ]
       refit_split = refit_split == 'true'
    else :
       refit_split = False
    #
    # result_dir
-   result_dir = all_option_dict['result_dir']
+   result_dir = option_all_dict['result_dir']
    #
    # root_node_id
-   name         = all_option_dict['root_node_name']
+   name         = option_all_dict['root_node_name']
    root_node_id = at_cascade.table_name2id(node_table, 'node', name)
    #
    # root_split_reference_id
-   if 'root_split_reference_name' not in all_option_dict :
+   if 'root_split_reference_name' not in option_all_dict :
       root_split_reference_id = None
       assert refit_split == False
    else :
-      name = all_option_dict['root_split_reference_name']
+      name = option_all_dict['root_split_reference_name']
       root_split_reference_id   = at_cascade.table_name2id(
          all_table['split_reference'], 'split_reference', name
       )
    #
    # balance_fit
-   if 'balance_fit' not in all_option_dict :
+   if 'balance_fit' not in option_all_dict :
       balance_fit = None
    else :
-      balance_fit = all_option_dict['balance_fit']
+      balance_fit = option_all_dict['balance_fit']
       balance_fit = balance_fit.split()
-      if 'max_fit' not in all_option_dict :
-         msg  = 'balance_fit appears in all_option table '
+      if 'max_fit' not in option_all_dict :
+         msg  = 'balance_fit appears in option_all table '
          msg += 'but max_fit does not.'
          assert False, msg
       if len(balance_fit) != 3 :
-         msg = 'all_option table: balance_fit is not a space separated '
+         msg = 'option_all table: balance_fit is not a space separated '
          msg += 'list with three elements'
          assert False, msg
    #
@@ -236,8 +236,8 @@ def run_one_job(
    perturb_optimization = dict()
    for key in [ 'start', 'scale' ] :
       long_key = f'perturb_optimization_{key}'
-      if long_key in all_option_dict :
-         sigma = all_option_dict[long_key]
+      if long_key in option_all_dict :
+         sigma = option_all_dict[long_key]
          if float(sigma) < 0.0 :
             msg = f'run_one_job: perturb_optimization_{key} = '
             msg += sigma
@@ -273,7 +273,7 @@ def run_one_job(
    )
    #
    # integrand_table
-   root_node_database = all_option_dict['root_node_database']
+   root_node_database = option_all_dict['root_node_database']
    fit_or_root        = at_cascade.fit_or_root_class(
       fit_node_database, root_node_database
    )
@@ -294,8 +294,8 @@ def run_one_job(
    system_command(command, file_stdout)
    #
    # max_fit
-   if 'max_fit' in all_option_dict :
-      max_fit = all_option_dict['max_fit']
+   if 'max_fit' in option_all_dict :
+      max_fit = option_all_dict['max_fit']
       if double_max_fit :
          max_fit = str( 2 * int(max_fit) )
       for integrand_id in fit_integrand :
@@ -309,8 +309,8 @@ def run_one_job(
          system_command(command, file_stdout)
    #
    # max_abs_effect
-   if 'max_abs_effect' in all_option_dict:
-      max_abs_effect = all_option_dict['max_abs_effect']
+   if 'max_abs_effect' in option_all_dict:
+      max_abs_effect = option_all_dict['max_abs_effect']
       command =[
          'dismod_at', fit_node_database, 'bnd_mulcov', max_abs_effect
       ]
@@ -330,10 +330,10 @@ def run_one_job(
    system_command(command, file_stdout)
    #
    # sample
-   if 'number_sample' not in all_option_dict :
+   if 'number_sample' not in option_all_dict :
       ns = '20'
    else :
-      ns = all_option_dict['number_sample']
+      ns = option_all_dict['number_sample']
    command = [
       'dismod_at', fit_node_database, 'sample', 'asymptotic', fit_type, ns
    ]

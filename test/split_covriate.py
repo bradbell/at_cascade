@@ -43,8 +43,8 @@ Splitting Covariate
 *******************
 This cascade is set up to split by the sex covariate at level zero:
 {xrst_literal
-   # BEGIN all_option_table
-   # END all_option_table
+   # BEGIN option_all_table
+   # END option_all_table
 }
 The :ref:`split_reference_table-name` for this example is:
 {xrst_literal
@@ -208,8 +208,8 @@ import at_cascade
 fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 # END fit_goal_set
 #
-# BEGIN all_option_table
-all_option            = {
+# BEGIN option_all_table
+option_all            = {
    'refit_split':                'true',
    'result_dir':                 'build/test',
    'root_node_name':             'n0',
@@ -217,8 +217,8 @@ all_option            = {
    'split_covariate_name':       'sex',
    'shift_prior_std_factor':      1e3,
 }
-all_option['root_node_database'] = all_option['result_dir'] + '/root_node.db'
-# END all_option_table
+option_all['root_node_database'] = option_all['result_dir'] + '/root_node.db'
+# END option_all_table
 #
 #
 # BEGIN split_reference_table
@@ -464,12 +464,12 @@ def root_node_db(file_name) :
 def main() :
    # -------------------------------------------------------------------------
    # result_dir
-   result_dir = all_option['result_dir']
+   result_dir = option_all['result_dir']
    if not os.path.exists(result_dir) :
       os.makedirs(result_dir)
    #
    # Create root_node.db
-   root_node_database  = all_option['root_node_database']
+   root_node_database  = option_all['root_node_database']
    root_node_db(root_node_database)
    #
    # omega_grid
@@ -507,7 +507,7 @@ def main() :
       all_node_database      = all_node_database,
       split_reference_table  = split_reference_table,
       node_split_table       = node_split_table,
-      all_option             = all_option,
+      option_all             = option_all,
       omega_grid             = omega_grid,
       omega_data             = omega_data,
    )

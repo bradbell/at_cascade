@@ -78,11 +78,11 @@ def continue_cascade(
    assert type(fit_type_list)     == list
    # END syntax
    #
-   # split_reference_table, all_option, node_split_table
+   # split_reference_table, option_all, node_split_table
    connection       = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )
-   all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+   option_all_table = dismod_at.get_table_dict(connection, 'option_all')
    node_split_table = dismod_at.get_table_dict(connection, 'node_split')
    split_reference_table = \
       dismod_at.get_table_dict(connection, 'split_reference')
@@ -93,7 +93,7 @@ def continue_cascade(
    root_node_name     = None
    root_node_database = None
    max_number_cpu = 1
-   for row in all_option_table :
+   for row in option_all_table :
       if row['option_name'] == 'result_dir' :
          result_dir = row['option_value']
       if row['option_name'] == 'root_node_name' :
@@ -120,7 +120,7 @@ def continue_cascade(
    #
    # root_split_reference_id
    root_split_reference_id = None
-   for row in all_option_table :
+   for row in option_all_table :
       if row['option_name'] == 'root_split_reference_name' :
          root_split_reference_name = row['option_value']
          root_split_reference_id = at_cascade.table_name2id(
@@ -138,7 +138,7 @@ def continue_cascade(
       fit_split_reference_id = None
    else :
       cov_info = at_cascade.get_cov_info(
-         all_option_table, covariate_table, split_reference_table
+         option_all_table, covariate_table, split_reference_table
       )
       fit_split_reference_id = cov_info['split_reference_id']
    #

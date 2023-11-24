@@ -33,15 +33,15 @@ root_node_database
 is a python string specifying the location of the
 :ref:`glossary@root_node_database`.
 
-all_option_dict
+option_all_dict
 ***************
-is a ``dict`` containing the values in the all_option table.
+is a ``dict`` containing the values in the option_all table.
 This dictionary has a key for each
-:ref:`all_option_table@Table Format@option_name`
+:ref:`option_all_table@Table Format@option_name`
 and the corresponding value is
-:ref:`all_option_table@Table Format@option_value`.
+:ref:`option_all_table@Table Format@option_value`.
 If an option does not appear in the table, the corresponding key
-does not appear in *all_option_dict*.
+does not appear in *option_all_dict*.
 
 fit_type
 ********
@@ -54,8 +54,8 @@ An intermediate database is stored in the file
 
    *result_dir*\ /\ *root_node_name*\ /no_ode/dismod.db
 
-see :ref:`all_option_table@result_dir`
-and :ref:`all_option_table@root_node_name`.
+see :ref:`option_all_table@result_dir`
+and :ref:`option_all_table@root_node_name`.
 This contains the results of fitting with only the integrand that
 do not require solving the ODE; i.e.
 Sincidence, remission, and mtexcess which measure
@@ -149,12 +149,12 @@ def add_index_to_name(table, name_col) :
 def no_ode_fit(
    all_node_database   ,
    root_node_database  ,
-   all_option_dict     ,
+   option_all_dict     ,
    fit_type            ,
 ) :
    assert type(all_node_database) == str
    assert type(root_node_database) == str
-   assert type(all_option_dict) == dict
+   assert type(option_all_dict) == dict
    assert fit_type == 'fixed' or fit_type == 'both'
    # END DEF
    #
@@ -164,16 +164,16 @@ def no_ode_fit(
    max_abs_effect = None
    balance_fit    = None
    max_number_cpu = 1
-   if 'result_dir' in all_option_dict :
-      result_dir =  all_option_dict['result_dir']
-   if 'max_fit' in all_option_dict :
-      max_fit = int( all_option_dict['max_fit'] )
-   if 'balance_fit' in all_option_dict :
-      balance_fit = all_option_dict['balance_fit'].split()
-   if 'max_abs_effect' in all_option_dict :
-      max_abs_effect = float( all_option_dict['max_abs_effect'] )
-   if 'max_number_cpu' in all_option_dict :
-      max_number_cpu = float( all_option_dict['max_number_cpu'] )
+   if 'result_dir' in option_all_dict :
+      result_dir =  option_all_dict['result_dir']
+   if 'max_fit' in option_all_dict :
+      max_fit = int( option_all_dict['max_fit'] )
+   if 'balance_fit' in option_all_dict :
+      balance_fit = option_all_dict['balance_fit'].split()
+   if 'max_abs_effect' in option_all_dict :
+      max_abs_effect = float( option_all_dict['max_abs_effect'] )
+   if 'max_number_cpu' in option_all_dict :
+      max_number_cpu = float( option_all_dict['max_number_cpu'] )
    assert result_dir is not None
    #
    # name_rate2integrand
@@ -219,11 +219,11 @@ def no_ode_fit(
    connection        = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )
-   all_option_table  = dismod_at.get_table_dict(connection, 'all_option')
+   option_all_table  = dismod_at.get_table_dict(connection, 'option_all')
    split_reference_table = \
       dismod_at.get_table_dict(connection, 'split_reference')
    cov_info = at_cascade.get_cov_info(
-      all_option_table, root_table['covariate'], split_reference_table
+      option_all_table, root_table['covariate'], split_reference_table
    )
    connection.close()
    root_split_reference_id = None
@@ -332,9 +332,9 @@ def no_ode_fit(
    if False :
       for perturb in [ 'start', 'scale' ] :
          key = f'perturb_optimization_{perturb}'
-         if key in all_option_dict :
+         if key in option_all_dict :
             table = f'{perturb}_var'
-            sigma = all_option_dict[key]
+            sigma = option_all_dict[key]
             command = ['dismodat.py', no_ode_database, 'perturb', table, sigma]
             system_command(command, file_stdout)
 

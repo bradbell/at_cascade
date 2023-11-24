@@ -249,8 +249,8 @@ def main() :
    # mulcov_freeze_table
    mulcov_freeze_table =  list()
    #
-   # all_omega_data
-   all_omega_data     = dict()
+   # omega_all_data
+   omega_all_data     = dict()
    for node_name in [ 'n0' ] :
       omega_list = list()
       for age_id in omega_grid['age'] :
@@ -260,11 +260,11 @@ def main() :
          mtother        = \
             average_integrand(integrand_name, age, node_name)
          omega_list.append(mtother)
-      all_omega_data[node_name] = [ omega_list ]
+      omega_all_data[node_name] = [ omega_list ]
    #
    # Create all_node.db
    all_node_database = f'{result_dir}/all_node.db'
-   all_option        = {
+   option_all        = {
       'result_dir'                : result_dir,
       'root_node_name'            : 'n0',
       'root_node_database'        : root_node_database,
@@ -274,9 +274,9 @@ def main() :
    }
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
-      all_option              = all_option,
+      option_all              = option_all,
       omega_grid              = omega_grid,
-      omega_data              = all_omega_data,
+      omega_data              = omega_all_data,
       mulcov_freeze_table     = mulcov_freeze_table,
    )
    #

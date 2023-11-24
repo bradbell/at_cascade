@@ -112,9 +112,9 @@ def check_cascade_node(
    connection = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )
-   all_option_table = dismod_at.get_table_dict(connection, 'all_option')
+   option_all_table = dismod_at.get_table_dict(connection, 'option_all')
    root_node_database = None
-   for row in all_option_table :
+   for row in option_all_table :
       if row['option_name'] == 'root_node_database' :
          root_node_database = row['option_value']
    assert root_node_database != None

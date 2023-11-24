@@ -50,7 +50,7 @@ values corresponding to:
    |  *job_table* [ *descendent*] ['split_reference_id']
 
 If the ancestor reference is equal to the descendent reference,
-or if :ref:`all_option_table@refit_split` is false,
+or if :ref:`option_all_table@refit_split` is false,
 *generation* is equal to the number of nodes between the
 ancestor and descendent nodes.
 Otherwise, *generation* is one more than the number of nodes between the

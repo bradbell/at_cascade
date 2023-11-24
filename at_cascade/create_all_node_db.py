@@ -34,15 +34,15 @@ the split_reference table and
 covariate reference can depend on the corresponding
 split covariance reference value.
 
-all_option
+option_all
 **********
 This argument can't be ``None``.
 It is a ``dict`` with a key equal to each
-:ref:`all_option_table@Table Format@option_name` that appears in the
-all_option table.
+:ref:`option_all_table@Table Format@option_name` that appears in the
+option_all table.
 The value corresponding to the key is the
-:ref:`all_option_table@Table Format@option_value`
-in the same row of the all_option_table.
+:ref:`option_all_table@Table Format@option_value`
+in the same row of the option_all_table.
 Note that keys must have type ``str`` and all the values will be converted
 to ``str``.
 
@@ -138,8 +138,8 @@ default
 =======
 The *omega_data* argument is ``None`` if and only if *omega_grid* is ``None``.
 If *omega_data* is ``None`` the
-:ref:`all_omega@all_omega Table` and
-:ref:`all_omega@omega_index Table` will be empty.
+:ref:`omega_all@omega_all Table` and
+:ref:`omega_all@omega_index Table` will be empty.
 
 
 {xrst_end create_all_node_db}
@@ -161,7 +161,7 @@ def is_descendant(node_table, ancestor_node_id, this_node_id) :
 # at_cascade.create_all_node_db
 def create_all_node_db(
    all_node_database         = None,
-   all_option                = None,
+   option_all                = None,
    split_reference_table     = None,
    node_split_table          = None,
    mulcov_freeze_table       = None,
@@ -177,7 +177,7 @@ def create_all_node_db(
       mulcov_freeze_table = list()
    #
    assert type(all_node_database)      == str
-   assert type(all_option)             == dict
+   assert type(option_all)             == dict
    assert type(split_reference_table)  == list
    assert type(node_split_table)       == list
    assert type(mulcov_freeze_table)    == list
@@ -190,9 +190,9 @@ def create_all_node_db(
       assert type(omega_grid) is dict
       assert type(omega_data) is dict
    #
-   assert 'root_node_database' in all_option
-   assert 'root_node_name'     in all_option
-   assert 'result_dir'         in all_option
+   assert 'root_node_database' in option_all
+   assert 'root_node_name'     in option_all
+   assert 'result_dir'         in option_all
    #
    # n_split
    n_split = 1
@@ -204,7 +204,7 @@ def create_all_node_db(
    # -------------------------------------------------------------------------
    # root_connection
    new                = False
-   root_node_database = all_option['root_node_database']
+   root_node_database = option_all['root_node_database']
    root_connection    = dismod_at.create_connection(root_node_database, new)
    #
    # age_table
@@ -246,14 +246,14 @@ def create_all_node_db(
    #
    # rel_covariate_id_set
    rel_covariate_id_set = set( range(len(covariate_table)) )
-   if 'split_covariate_name' in all_option :
-      split_covariate_name = all_option['split_covariate_name']
+   if 'split_covariate_name' in option_all :
+      split_covariate_name = option_all['split_covariate_name']
       split_covariate_id   = at_cascade.table_name2id(
          covariate_table, 'covariate', split_covariate_name
       )
       rel_covariate_id_set.remove(split_covariate_id)
-   if 'absolute_covariates' in all_option :
-      temp_list = all_option['absolute_covariates'].split()
+   if 'absolute_covariates' in option_all :
+      temp_list = option_all['absolute_covariates'].split()
       abs_covariate_id_set = set()
       for covariate_name in temp_list :
          covariate_id   = at_cascade.table_name2id(
@@ -302,9 +302,9 @@ def create_all_node_db(
       all_connection, tbl_name, col_name, col_type, row_list
    )
    #
-   # all_omega table
-   tbl_name  = 'all_omega'
-   col_name  = [ 'all_omega_value' ]
+   # omega_all table
+   tbl_name  = 'omega_all'
+   col_name  = [ 'omega_all_value' ]
    col_type  = [  'real' ]
    row_list  = list()
    if not omega_data is None :
@@ -326,11 +326,11 @@ def create_all_node_db(
    #
    # omega_index table
    tbl_name  = 'omega_index'
-   col_name  = [ 'node_id', 'split_reference_id', 'all_omega_id' ]
+   col_name  = [ 'node_id', 'split_reference_id', 'omega_all_id' ]
    col_type  = [ 'integer', 'integer',             'integer' ]
    row_list  = list()
    if not omega_data is None :
-      all_omega_id = 0
+      omega_all_id = 0
       for node_name in node_list :
          node_id = at_cascade.table_name2id(node_table, 'node', node_name)
          for k in range(n_split) :
@@ -338,26 +338,26 @@ def create_all_node_db(
                split_reference_id = None
             else :
                split_reference_id = k
-            row     = [ node_id, split_reference_id, all_omega_id ]
+            row     = [ node_id, split_reference_id, omega_all_id ]
             row_list.append( row )
-            all_omega_id += n_omega_age * n_omega_time
+            omega_all_id += n_omega_age * n_omega_time
    dismod_at.create_table(
       all_connection, tbl_name, col_name, col_type, row_list
    )
    #
-   # all_option table
-   if root_node_name != all_option['root_node_name' ] :
-      tmp  = all_option['root_node_name']
-      msg  = f'root_node_name in all_option is {tmp} '
+   # option_all table
+   if root_node_name != option_all['root_node_name' ] :
+      tmp  = option_all['root_node_name']
+      msg  = f'root_node_name in option_all is {tmp} '
       msg += f'while in the option table it is {root_node_name}'
       assert False, msg
-   tbl_name = 'all_option'
+   tbl_name = 'option_all'
    col_name = [ 'option_name', 'option_value' ]
    col_type = [ 'text',        'text']
    row_list = list()
-   for key in all_option :
+   for key in option_all :
       option_name = key
-      option_value = str( all_option[key] )
+      option_value = str( option_all[key] )
       row_list.append( [ option_name, option_value ] )
    dismod_at.create_table(
       all_connection, tbl_name, col_name, col_type, row_list

@@ -41,12 +41,12 @@ where n is the number of covariates minus one.
 all_node_database
 *****************
 is the :ref:all_node_db`.
-Only the :ref:`all_option_table-name` and :ref:`split_reference_table-name` are used.
+Only the :ref:`option_all_table-name` and :ref:`split_reference_table-name` are used.
 
-all_option Table
+option_all Table
 ================
-The :ref:`all_option_table@split_covariate_name` and
-:ref:`all_option_table@absolute_covariates` rows of this table
+The :ref:`option_all_table@split_covariate_name` and
+:ref:`option_all_table@absolute_covariates` rows of this table
 (if they exist) are the only rows of this table that are used.
 
 shift_node_id
@@ -63,7 +63,7 @@ cov_reference_list
 ******************
 1. The return value is a ``list`` with length equal to the
    length of the covariate table.
-2. The :ref:`all_option_table@absolute_covariates` have the same
+2. The :ref:`option_all_table@absolute_covariates` have the same
    reference value as in the *fit_node_database* covariate table.
 3. The splitting covariate has reference value corresponding to
    *split_reference_id* in the split_reference table.
@@ -104,13 +104,13 @@ def get_cov_reference(
       all_node_database, new = False, readonly = True
    )
    all_table        = dict()
-   for tbl_name in [ 'all_option', 'split_reference' ] :
+   for tbl_name in [ 'option_all', 'split_reference' ] :
       all_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
    connection.close()
    #
    # root_node_database
    root_node_database = None
-   for row in all_table['all_option'] :
+   for row in all_table['option_all'] :
       if row['option_name'] == 'root_node_database' :
          root_node_database = row['option_value']
    assert root_node_database != None
@@ -155,7 +155,7 @@ def get_cov_reference(
    #
    # cov_info
    cov_info = at_cascade.get_cov_info(
-      all_table['all_option'],
+      all_table['option_all'],
       fit_table['covariate'],
       all_table['split_reference']
    )

@@ -43,10 +43,10 @@ Splitting Covariate
 *******************
 This cascade is set up to split by the sex covariate at level zero.
 Both the *refit_split* true and false cases are run.
-The :ref:`all_option_table-name` for this example is:
+The :ref:`option_all_table-name` for this example is:
 {xrst_literal
-   # BEGIN all_option_table
-   # END all_option_table
+   # BEGIN option_all_table
+   # END option_all_table
 }
 {xrst_literal
    # BEGIN refit_split
@@ -221,16 +221,16 @@ import at_cascade
 fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 # END fit_goal_set
 #
-# BEGIN all_option_table
-all_option            = {
+# BEGIN option_all_table
+option_all            = {
    'result_dir':                 'build/example',
    'root_node_name':             'n0',
    'root_split_reference_name':  'both',
    'split_covariate_name':       'sex',
    'shift_prior_std_factor':      1e3,
 }
-all_option['root_node_database'] = all_option['result_dir'] + '/root_node.db'
-# END all_option_table
+option_all['root_node_database'] = option_all['result_dir'] + '/root_node.db'
+# END option_all_table
 #
 #
 # BEGIN split_reference_table
@@ -511,18 +511,18 @@ def root_node_db(file_name) :
 def main(refit_split) :
    # BEGIN refit_split
    if refit_split :
-      all_option['refit_split'] = 'true'
+      option_all['refit_split'] = 'true'
    else :
-      all_option['refit_split'] = 'false'
+      option_all['refit_split'] = 'false'
    # END refit_split
    # -------------------------------------------------------------------------
    # result_dir
-   result_dir = all_option['result_dir']
+   result_dir = option_all['result_dir']
    if not os.path.exists(result_dir) :
       os.makedirs(result_dir)
    #
    # Create root_node.db
-   root_node_database  = all_option['root_node_database']
+   root_node_database  = option_all['root_node_database']
    root_node_db(root_node_database)
    #
    # omega_grid
@@ -561,7 +561,7 @@ def main(refit_split) :
       all_node_database      = all_node_database,
       split_reference_table  = split_reference_table,
       node_split_table       = node_split_table,
-      all_option             = all_option,
+      option_all             = option_all,
       omega_grid             = omega_grid,
       omega_data             = omega_data,
    )

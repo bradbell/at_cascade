@@ -203,7 +203,7 @@ def create_job_table(
    connection = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )
-   tbl_list   =  [ 'all_option', 'split_reference', 'node_split' ]
+   tbl_list   =  [ 'option_all', 'split_reference', 'node_split' ]
    for name in tbl_list :
       all_table[name] = dismod_at.get_table_dict(connection, name)
    connection.close()
@@ -213,22 +213,22 @@ def create_job_table(
    for row in all_table['node_split'] :
       node_split_set.add( row['node_id'] )
    #
-   # all_option_dict
-   all_option_dict = dict()
-   for row in all_table['all_option'] :
-      all_option_dict[ row['option_name'] ] = row['option_value']
+   # option_all_dict
+   option_all_dict = dict()
+   for row in all_table['option_all'] :
+      option_all_dict[ row['option_name'] ] = row['option_value']
    #
    # refit_split
-   if 'refit_split' in all_option_dict :
-      refit_split = all_option_dict['refit_split']
+   if 'refit_split' in option_all_dict :
+      refit_split = option_all_dict['refit_split']
       assert refit_split in [ 'true', 'false' ]
       refit_split = refit_split == 'true'
    else :
       refit_split = False
    #
    # root_node_name
-   assert 'root_node_name' in all_option_dict
-   root_node_name = all_option_dict['root_node_name']
+   assert 'root_node_name' in option_all_dict
+   root_node_name = option_all_dict['root_node_name']
    #
    # root_node_id
    root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
@@ -239,8 +239,8 @@ def create_job_table(
    )
    #
    # root_split_reference_id
-   if 'root_split_reference_name' in all_option_dict :
-      root_split_reference_name = all_option_dict['root_split_reference_name']
+   if 'root_split_reference_name' in option_all_dict :
+      root_split_reference_name = option_all_dict['root_split_reference_name']
       root_split_reference_id   = at_cascade.table_name2id(
          all_table['split_reference'],
          'split_reference',
@@ -249,7 +249,7 @@ def create_job_table(
    else :
       root_split_reference_id   = None
       if refit_split :
-         msg  = 'all_option_table: refit_split is true and '
+         msg  = 'option_all_table: refit_split is true and '
          msg += ' root_split_reference_name does not appear'
          assert False, msg
    #
