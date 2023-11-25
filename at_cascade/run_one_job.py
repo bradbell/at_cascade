@@ -192,6 +192,15 @@ def run_one_job(
    for row in all_table['option_all'] :
       option_all_dict[ row['option_name']  ] = row['option_value']
    #
+   # sample_method
+   if 'sample_method' in option_all_dict :
+      sample_method = option_all_dict['sample_method']
+      if sample_method not in [ 'asymptotic', 'simulate' ] :
+         msg = 'opton_all table: sample_method is not asymptotic or simulate'
+         assert False, msg
+   else :
+      sample_method = 'asymptotic'
+   #
    # refit_split
    if 'refit_split' in option_all_dict :
       refit_split = option_all_dict['refit_split']
@@ -334,8 +343,11 @@ def run_one_job(
       ns = '20'
    else :
       ns = option_all_dict['number_sample']
+   if int( ns ) > 20 and sample_method == 'simulate' :
+      msg = 'option_all table: number_sample > 20 and sample_method = simulate'
+      assert False, msg
    command = [
-      'dismod_at', fit_node_database, 'sample', 'asymptotic', fit_type, ns
+      'dismod_at', fit_node_database, 'sample', sample_method, fit_type, ns
    ]
    system_command(command, file_stdout)
    #

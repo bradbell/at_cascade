@@ -303,7 +303,7 @@ def add_shift_grid_row(
             if eta is None :
                std  = statistics.stdev(fit_sample[key], xbar=mean)
             else:
-               # The asymptotic statistics were computed in log space
+               # The statistics were computed in log space
                # and then transformed to original space.
                #
                # log_sample

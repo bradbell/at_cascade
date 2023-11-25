@@ -71,6 +71,18 @@ and note that sex is the :ref:`option_all_table@split_covariate_name` .
 If max_node_depth is zero,  only the root node will be included.
 If max_node_depth is None,  the root node and all its descendants are included.
 
+split_reference_table
+*********************
+The :ref:`option_all_table@split_covariate_name` is ``sex`` and
+the :ref:`split_reference_table-name` has the following values for
+csv.fit, :ref:`csv.simulate-name` and :ref:`csv.predict-name` :
+{xrst_code py}'''
+split_reference_table = [
+   { 'split_reference_name' : 'female' , 'split_reference_value' : -0.5 },
+   { 'split_reference_name' : 'both'   , 'split_reference_value' :  0.0 },
+   { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
+]
+'''{xrst_code}
 
 Input Files
 ***********
@@ -834,13 +846,6 @@ each sample index.
 
 {xrst_end csv.fit}
 '''
-#-----------------------------------------------------------------------------
-# split_reference_table
-split_reference_table = [
-   { 'split_reference_name' : 'female' , 'split_reference_value' : -0.5 },
-   { 'split_reference_name' : 'both'   , 'split_reference_value' :  0.0 },
-   { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
-]
 # ----------------------------------------------------------------------------
 # Sets global global_option_value to dict representation of option_fit.csv
 #

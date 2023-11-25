@@ -36,6 +36,15 @@ Release Notes for 2023
 mm-dd
 *****
 
+11-25
+=====
+#. The :ref:`option_all_tablee@sample_method` option was added to the
+   option_all table.
+#. A definition for :ref:`glossary@child jobs` was added to the glossary.
+#. The :ref:`csv.fit@split_reference_table` for the csv.simulte,
+   csv.fit, csv.predict routines was added to the documentation.
+
+
 11-24
 =====
 **API Change**

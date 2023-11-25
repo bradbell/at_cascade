@@ -97,9 +97,10 @@ Rectangular Grid
 ================
 For each covariate multiplier that has non-null group smoothing, all of the
 age time pairs in the smoothing are represented in the new avgint table.
-For the child job node and each rate that has non-null parent smoothing,
-all of the age time pairs in the smoothing are represented in the
-new avgint table.
+For each :ref:`child job<glossary@child jobs>` ,
+each rate that has non-null parent smoothing,
+and each age time pair in the smoothing,
+there is a row in the new avgint table.
 
 {xrst_end avgint_parent_grid}
 '''

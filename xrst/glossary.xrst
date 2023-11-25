@@ -34,6 +34,21 @@ chi
 The model rate for excess mortality as a function of age and time.
 This is also denoted by :math:`\chi(a, t)`.
 
+child jobs
+**********
+#. If :ref:`option_all_table@refit_split` is false,
+   there is one child job for each child node of the current
+   :ref:`glossary@fit_node` .
+#. If :ref:`option_all_table@refit_split` is true,
+   and the current fit_node is **not** in the :ref:`node_split_table-name` ,
+   there is one child job for each child node of the current
+   :ref:`glossary@fit_node` .
+#. If :ref:`option_all_table@refit_split` is true,
+   and the current fit_node is in the :ref:`node_split_table-name` ,
+   the child jobs have the same fit_node and there is one job for each
+   :ref:`split_reference_table@split_reference_value`
+   that is not equal to the current job's split_reference value.
+
 dage
 ****
 The abbreviation *dage* is used for differences of a function value
@@ -157,7 +172,8 @@ job
 ***
 A job corresponds to one row of the :ref:`create_job_table@job_table`; i.e.,
 one fit node and split_reference_id.
-The results for a job is its fit and the value priors for its child jobs;
+The results for a job is its fit and the value priors for its
+:ref:`glossary@child jobs` ;
 see :ref:`create_job_table@job_table@start_child_job_id` and
 *end_child_job_id*\ .
 

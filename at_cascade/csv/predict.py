@@ -191,9 +191,14 @@ The integrands values come from the predict_integrand.csv file.
 sample_index
 ------------
 Each sample_index corresponds to an independent random sample
-of the model variables. The model variables for each sample
-are Gaussian correlated with mean equal to the optimal value
-and variance equal to the asymptotic approximation.
+of the model variables.
+
+#. If :ref:`option_all_table@sample_method` is asymptotic,
+   model variables for each sample are Gaussian correlated with mean equal to
+   the optimal value and variance equal to the asymptotic approximation.
+#. If :ref:`option_all_table@sample_method` is simulate,
+   the model variables for each sample at the optimal values corresponding
+   to an independent data set.
 
 integrand_name
 --------------

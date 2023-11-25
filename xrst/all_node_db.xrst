@@ -270,6 +270,15 @@ perturb_optimization_start
 This is similar to perturb_optimization_scale except that the
 starting point (instead of the scaling point) is shifted.
 
+sample_method
+*************
+This is either ``asymptotic`` or ``simulate`` and is the dismod_at
+sampling method used to create posterior samples of the model variables
+for each fit. These samples are used to create prior for the fit's
+:ref:`glossary@child jobs` and for dismod_at predictions; e.g.,
+:ref:`csv.predict-name` .
+If this option does not appear, the value ``asymptotic`` is used.
+
 shared_memory_prefix
 ********************
 This is used at the start of name for shared memory for this cascade.
@@ -356,6 +365,10 @@ split_reference_value
 This column has type ``real`` and contains the possible reference values for
 the splitting covariate.
 
+Example
+*******
+see the csv.fit :ref:`csv.fit@split_reference_table` .
+
 {xrst_end split_reference_table}
 ------------------------------------------------------------------------------
 {xrst_begin node_split_table}
@@ -389,7 +402,7 @@ Mulcov Freeze Table
 ###################
 This table specifies the :ref:`jobs<glossary@job>`
 at which the cascade will freeze the value of covariate multipliers
-for its descendants (starting with its child jobs).
+for its descendants; i.e, starting with its :ref:`glossary@child jobs` .
 To be specific, the lower and upper limit for the covariate
 multiplier in descendants of the job will be optimal value determined by job;
 see :ref:`create_job_table@job_table@parent_job_id` in the job table.
