@@ -23,7 +23,8 @@ random_seed = str( int( time.time() ) )
 csv_file['option_fit.csv'] = \
 '''name,value
 max_abs_effect,3.0
-number_sample,30
+number_sample,10
+sample_method,simulate
 '''
 #
 # option_predict.csv
@@ -159,7 +160,7 @@ def main() :
    at_cascade.csv.predict(fit_dir)
    #
    # number_sample
-   number_sample = 30
+   number_sample = 10
    #
    # prefix
    for prefix in [ 'fit', 'sam' ] :
@@ -201,10 +202,10 @@ def main() :
                   assert False
    #
    # db2csv_file_list
+   # hes_fixed.csv would be included if sample_method was asymptotic.
    db2csv_name_list = [
       'log.csv',
       'age_avg.csv',
-      'hes_fixed.csv',
       'trace_fixed.csv',
       'mixed_info.csv',
       'variable.csv',

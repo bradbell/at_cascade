@@ -277,6 +277,8 @@ sampling method used to create posterior samples of the model variables
 for each fit. These samples are used to create prior for the fit's
 :ref:`glossary@child jobs` and for dismod_at predictions; e.g.,
 :ref:`csv.predict-name` .
+It is an error for *sample_method* to be ``simulate`` and
+:ref:`option_all_table@number_sample` to be greater than 20.
 If this option does not appear, the value ``asymptotic`` is used.
 
 shared_memory_prefix

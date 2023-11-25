@@ -338,16 +338,33 @@ def run_one_job(
    command = [ 'dismod_at', fit_node_database, 'fit', fit_type ]
    system_command(command, file_stdout)
    #
-   # sample
+   # number_simulate
    if 'number_sample' not in option_all_dict :
-      ns = '20'
+      number_simulate = '20'
    else :
-      ns = option_all_dict['number_sample']
-   if int( ns ) > 20 and sample_method == 'simulate' :
-      msg = 'option_all table: number_sample > 20 and sample_method = simulate'
-      assert False, msg
+      number_simulate = option_all_dict['number_sample']
+   #
+   # sample
+   if sample_method == 'simulate' :
+      if int( number_simulate ) > 20 :
+         msg  = 'option_all table: number_sample > 20 and '
+         msg += 'sample_method is simulate.'
+         assert False, msg
+      command = [
+         'dismod_at', fit_node_database, 'set', 'truth_var', 'fit_var'
+      ]
+      system_command(command, file_stdout)
+      command = [
+         'dismod_at', fit_node_database, 'simulate', number_simulate
+      ]
+      system_command(command, file_stdout)
    command = [
-      'dismod_at', fit_node_database, 'sample', sample_method, fit_type, ns
+      'dismod_at',
+      fit_node_database,
+      'sample',
+      sample_method,
+      fit_type,
+      number_simulate
    ]
    system_command(command, file_stdout)
    #

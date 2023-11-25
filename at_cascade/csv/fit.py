@@ -361,6 +361,12 @@ This string is the name of the root node.
 The default for *root_node_name* is the top root of the entire node tree.
 Only the root node and its descendents will be fit.
 
+sample_method
+-------------
+This string specifies the :ref:`option_all_table@sample_method` .
+It must be ``asymptotic`` or ``simulate`` and it's default value is
+``asymptotic`` .
+
 shared_memory_prefix
 --------------------
 This string is used added to the front of the name of the shared
@@ -890,6 +896,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'absolute_covariates'   : (str,   None)               ,
       'age_avg_split'         : (str,   None)               ,
       'bound_random'          : (float, float('inf'))       ,
+      'child_prior_std_factor': (float,  2.0)               ,
       'compress_interval'     : (str,   '100.0 100.0')      ,
       'hold_out_integrand'    : (str,   None)               ,
       'max_abs_effect'        : (float, 2.0)                ,
@@ -904,9 +911,9 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'random_seed'           : (int ,  random_seed )       ,
       'refit_split'           : (bool,  'true' )            ,
       'root_node_name'        : (str,   top_node_name)      ,
-      'tolerance_fixed'       : (float, 1e-4)               ,
+      'sample_method'         : (str,   'asymptotic')       ,
       'shared_memory_prefix'  : (str,   user)               ,
-      'child_prior_std_factor': (float,  2.0)               ,
+      'tolerance_fixed'       : (float, 1e-4)               ,
    }
    # END_SORT_THIS_LINE_MINUS_2
    #
@@ -1576,13 +1583,14 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       'number_sample'                : number_sample,
       'perturb_optimization_scale'   : 0.2,
       'perturb_optimization_start'   : 0.2,
+      'sample_method'                : global_option_value['sample_method'],
       'shared_memory_prefix'         : shared_memory_prefix,
       'refit_split'                  : refit_split,
       'result_dir'                   : fit_dir,
       'root_node_database'           : root_node_database,
       'root_node_name'               : root_node_name,
-      'split_covariate_name'         : 'sex',
       'root_split_reference_name'    : 'both',
+      'split_covariate_name'         : 'sex',
       'shift_prior_std_factor'       : child_prior_std_factor,
    }
    #

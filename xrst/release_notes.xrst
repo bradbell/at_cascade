@@ -38,14 +38,15 @@ mm-dd
 
 11-25
 =====
-#. The :ref:`option_all_table@sample_method` option was added to the
-   option_all table.
+#. The :ref:`option_all_table@sample_method`
+   option was added to the option_all table.
+#. The :ref:`csv.fit@Input Files@option_fit.csv@sample_method`
+   option was added to the option_fit.csv file.
 #. A definition for :ref:`glossary@child jobs` was added to the glossary.
 #. The :ref:`csv.fit@split_reference_table` for the csv.simulate,
    csv.fit, csv.predict routines was added to the documentation.
 #. Fix the sort of the items in the
    :ref:`csv.fit@Input Files@option_fit.csv` documentation.
-
 
 11-24
 =====
