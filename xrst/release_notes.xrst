@@ -38,10 +38,10 @@ mm-dd
 
 11-25
 =====
-#. The :ref:`option_all_tablee@sample_method` option was added to the
+#. The :ref:`option_all_table@sample_method` option was added to the
    option_all table.
 #. A definition for :ref:`glossary@child jobs` was added to the glossary.
-#. The :ref:`csv.fit@split_reference_table` for the csv.simulte,
+#. The :ref:`csv.fit@split_reference_table` for the csv.simulate,
    csv.fit, csv.predict routines was added to the documentation.
 
 
