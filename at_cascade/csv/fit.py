@@ -132,6 +132,14 @@ It is the intention that this bound not be active
 at the final value for the fixed effects.
 The default value for this option is infinity; i.e., no bound.
 
+child_prior_std_factor
+----------------------
+This factor multiplies the parent fit posterior standard deviation for the
+value priors in the during a child fit.
+If it is greater (less) than one, the child priors are larger (smaller)
+than indicated by the posterior corresponding to the parent fit.
+The default value for this option is 2.0.
+
 compress_interval
 -----------------
 This string contains two float values separated by one or more spaces.
@@ -242,36 +250,6 @@ The default value for this option is 20.
 (You can get 1000 MCMC samples by just repeating each of the 20
 independent samples 50 times.)
 
-ode_step_size
--------------
-This float must be positive (greater than zero).
-It specifies the step size in age and time to use when solving the ODE.
-It is also used as the step size for approximating average integrands
-over age-time intervals.
-The smaller *ode_step_size*, the more computation is required to
-approximation the ODE solution and the average integrands.
-Finer resolution for specific ages can be achieved using the
-:ref:`csv.fit@Input Files@option_fit.csv@age_avg_split` option.
-The default value for this option is 10.0.
-
-quasi_fixed
------------
-If this boolean option is true,
-a quasi-Newton method is used to optimize the fixed effects.
-Otherwise a Newton method is used
-The Newton method uses second derivatives of the objective
-and hence requires more work per iteration but it can often attain
-much more accuracy in the final solution.
-The default value *quasi_fixed* is true.
-
-random_seed
------------
-This integer is used to seed the random number generator.
-The default value for this option is
-{xrst_code py}
-   random_seed = int( time.time() )
-{xrst_code}
-
 ode_method
 ----------
 This default for *ode_method* is ``iota_pos_rho_zero`` (see below).
@@ -328,6 +306,36 @@ the smoothing for
 must always have lower limit greater than zero.
 In this case an eigen vector method is used to approximate the ODE solution.
 
+ode_step_size
+-------------
+This float must be positive (greater than zero).
+It specifies the step size in age and time to use when solving the ODE.
+It is also used as the step size for approximating average integrands
+over age-time intervals.
+The smaller *ode_step_size*, the more computation is required to
+approximation the ODE solution and the average integrands.
+Finer resolution for specific ages can be achieved using the
+:ref:`csv.fit@Input Files@option_fit.csv@age_avg_split` option.
+The default value for this option is 10.0.
+
+quasi_fixed
+-----------
+If this boolean option is true,
+a quasi-Newton method is used to optimize the fixed effects.
+Otherwise a Newton method is used
+The Newton method uses second derivatives of the objective
+and hence requires more work per iteration but it can often attain
+much more accuracy in the final solution.
+The default value *quasi_fixed* is true.
+
+random_seed
+-----------
+This integer is used to seed the random number generator.
+The default value for this option is
+{xrst_code py}
+   random_seed = int( time.time() )
+{xrst_code}
+
 refit_split
 -----------
 #. If this boolean is true,
@@ -364,14 +372,6 @@ The default value for this option is your user name ($USER) with spaces
 replaced by underbars.
 If the USER environment variable is not defined,
 the value ``none`` is used for this default.
-
-child_prior_std_factor
-----------------------
-This factor multiplies the parent fit posterior standard deviation for the
-value priors in the during a child fit.
-If it is greater (less) than one, the child priors are larger (smaller)
-than indicated by the posterior corresponding to the parent fit.
-The default value for this option is 2.0.
 
 tolerance_fixed
 ---------------
