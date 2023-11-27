@@ -300,7 +300,7 @@ In this case an eigen vector method is used to approximate the ODE solution.
 
 iota_pos_rho_pos
 ................
-If *ode_method* is `iota_zero_rho_pos`` ,
+If *ode_method* is ``iota_pos_rho_pos`` ,
 the smoothing for
 *iota* and *rho*
 must always have lower limit greater than zero.
