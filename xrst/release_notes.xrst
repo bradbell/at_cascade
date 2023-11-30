@@ -36,6 +36,13 @@ Release Notes for 2023
 mm-dd
 *****
 
+11-30
+=====
+The :ref:`csv.fit@Input Files@option_fit.csv@balance_sex`
+option was added to the option_fit.csv file.
+Note that there currently is a bug in dismod_at and the
+default choice for *balance_sex* , true, does not work correctly.
+
 11-25
 =====
 #. The :ref:`option_all_table@sample_method`

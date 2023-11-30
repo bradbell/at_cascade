@@ -154,6 +154,7 @@ split_reference value).
    mul
    perturb
    std
+   subsample
 }
 
 All Node Option Table
@@ -185,14 +186,19 @@ If this option does not appear, there are no absolute covariates.
 
 balance_fit
 ***********
-This option specifies how dismod_at should balance
-the randomly selected samples.
+The subsample of the data with size
+:ref:`option_all_table@max_fit` always attempts to balance child nodes; i.e,
+get an equal number of data values for each child of the node
+currently being fit.
+If this option appears,
+it specifies additional balancing that dismod_at should do
+for the randomly selected data subsample.
 It is a space separated list with the following values
 in the following order:
 
 1. *cov_name* is the name of the covariate that we are balancing.
 2. *value_1*  is the lower covariate value that we are balancing.
-3. *value_2*   is the upper covariate values that we are balancing.
+3. *value_2*  is the upper covariate values that we are balancing.
 
 If this option appears, the :ref:`option_all_table@max_fit` option
 must also appear.
@@ -219,7 +225,7 @@ This is a text representation of a non-negative integer specifying
 the maximum number of values to fit for each integrand.
 If more than this number of values are available,
 at a :ref:`glossary@fit_node` and for one integrand,
-a randomly selected subset of the values
+a randomly selected set of the values
 are held out so that only this number are included in the fit.
 If this option does not appear, all of the data for each integrand is included
 (unless held out in the root_node data table or option table).

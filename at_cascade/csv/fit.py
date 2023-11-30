@@ -42,6 +42,7 @@ import time
    relrisk
    trapezoidal
    eigen
+   subsample
 }
 
 Fit a CSV Specified Cascade
@@ -111,7 +112,6 @@ there are no absolute covariates.
 The covariate named ``one`` is automatically created and is always
 absolute and should not be in this list.
 
-
 age_avg_split
 -------------
 This string contains a space separated list of float values
@@ -121,6 +121,17 @@ ODE and the average of an integrand over an interval.
 The default for this value is the empty string; i.e.,
 no extra age splitting over the uniformly spaced grid specified by
 :ref:`csv.fit@Input Files@option_fit.csv@ode_step_size`.
+
+balance_sex
+-----------
+This is a boolean option.
+The subsample of a data with size
+:ref:`csv.fit@Input Files@option_fit.csv@max_fit` always attempts to
+balance the child nodes; i.e.,
+get an equal number data values for each child of the node currently being fit.
+If *balance_sex* is true, the selection will also try to balance
+the sex covariate values; i.e.,
+get an equal amount of male and female data for each child node.
 
 bound_random
 ------------
@@ -154,8 +165,6 @@ The default value for this option is both *age_size* and *time_size* are 100.
    *time_upper* - *time_lower*  <= *time_size* ,
    the time average for that data is approximated by its value at time
    ( *age_upper* - *age_lower* ) / 2.
-
-
 
 hold_out_integrand
 ------------------
@@ -202,7 +211,7 @@ max_fit
 -------
 This integer is the maximum number of data values to fit per integrand.
 If for a particular fit an integrand has more than this number of
-data values, a subset of this size is randomly selected.
+data values, a subsample of this size is randomly selected.
 There is an exception to this rule, the three fits for the root node
 (corresponding to sex equal to female, both and male)
 use twice this number of values per integrand.
@@ -895,6 +904,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
    option_default  = {
       'absolute_covariates'   : (str,   None)               ,
       'age_avg_split'         : (str,   None)               ,
+      'balance_sex'           : (bool,  True)               ,
       'bound_random'          : (float, float('inf'))       ,
       'child_prior_std_factor': (float,  2.0)               ,
       'compress_interval'     : (str,   '100.0 100.0')      ,
@@ -907,9 +917,9 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'number_sample'         : (int,   20)                 ,
       'ode_method'            : (str,   'iota_pos_rho_zero'),
       'ode_step_size'         : (float, 10.0)               ,
-      'quasi_fixed'           : (bool,  'true' )            ,
+      'quasi_fixed'           : (bool,  True )              ,
       'random_seed'           : (int ,  random_seed )       ,
-      'refit_split'           : (bool,  'true' )            ,
+      'refit_split'           : (bool,  True )              ,
       'root_node_name'        : (str,   top_node_name)      ,
       'sample_method'         : (str,   'asymptotic')       ,
       'shared_memory_prefix'  : (str,   user)               ,
@@ -1135,10 +1145,9 @@ def create_root_node_database(fit_dir) :
    minimum_meas_cv    = global_option_value['minimum_meas_cv']
    ode_method         = global_option_value['ode_method']
    #
-   if global_option_value['quasi_fixed'] :
-      quasi_fixed = 'true'
-   else :
-      quasi_fixed = 'false'
+   quasi_fixed        = global_option_value['quasi_fixed'];
+   quasi_fixed        = str(quasi_fixed).lower()
+   #
    #
    if len(covariate_list) == 0 :
       splitting_covariate = None
@@ -1566,17 +1575,17 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    shared_memory_prefix   = global_option_value['shared_memory_prefix']
    absolute_covariates    = global_option_value['absolute_covariates']
    number_sample          = global_option_value['number_sample']
+   balance_sex            = global_option_value['balance_sex']
+   #
+   refit_split            = global_option_value['refit_split']
+   refit_split            = str(refit_split).lower()
+   #
    if absolute_covariates == None :
       absolute_covariates = 'one'
    else :
       absolute_covariates += ' one'
-   if global_option_value['refit_split'] :
-      refit_split = 'true'
-   else :
-      refit_split = 'false'
    option_all = {
       'absolute_covariates'          : absolute_covariates ,
-      'balance_fit'                  : 'sex -0.5 +0.5' ,
       'max_abs_effect'               : global_option_value['max_abs_effect'],
       'max_fit'                      : global_option_value['max_fit'],
       'max_number_cpu'               : global_option_value['max_number_cpu'],
@@ -1593,6 +1602,8 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
       'split_covariate_name'         : 'sex',
       'shift_prior_std_factor'       : child_prior_std_factor,
    }
+   if balance_sex :
+      option_all['balance_fit'] = 'sex -0.5 +0.5'
    #
    # node_split_table
    node_split_table = [ { 'node_name' : root_node_name } ]
