@@ -3,7 +3,7 @@
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # Test the max_fit option in option_fit.csv
-# This test failed before 2023-11-30.
+# This test failed before 2023-11-30 (when balance_sex was true).
 max_fit = 4
 #
 import os
@@ -27,7 +27,7 @@ random_seed = str( int( time.time() ) )
 csv_file['option_fit.csv'] = \
 '''name,value
 refit_split,false
-balance_sex,false
+balance_sex,true
 '''
 csv_file['option_fit.csv'] += f'max_fit,{max_fit}\n'
 #

@@ -36,6 +36,14 @@ Release Notes for 2023
 mm-dd
 *****
 
+12-02
+=====
+Using :ref:`csv.fit@Input Files@option_fit.csv@balance_sex`
+equal to true works correctly for versions of dismod_at that
+are greater than equal 20231201 (the bug mentioned below was fixed).
+Note that this will probably cause different results than before
+when the default value, true, is used for *balance_sex*  .
+
 11-30
 =====
 The :ref:`csv.fit@Input Files@option_fit.csv@balance_sex`
