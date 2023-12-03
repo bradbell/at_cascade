@@ -250,6 +250,17 @@ Otherwise, it is printed to a file called $code trace.out$ in the
 output directory corresponding to the job being run.
 If this option does not appear, the value one is used.
 
+no_ode_ignore
+*************
+The is a space separated list of rate and integrand names
+that should be ignored when during a :ref:`no_ode_fit-name` .
+The priors for the following variables will not be changed by no_ode_fit:
+
+#. The rate names in *no_ode_ignore* .
+#. The covariate multiplies that affect the rates in *no_ode_ignore*.
+#. The covariate multiplies that affect measurement values for
+   the integrands in *no_ode_ignore* .
+
 number_sample
 *************
 This is the number of independent samples of the posterior distribution

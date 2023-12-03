@@ -36,6 +36,11 @@ Release Notes for 2023
 mm-dd
 *****
 
+12-03
+=====
+Add the :ref:`option_all_table@no_ode_ignore` to the option_all table and
+:ref:`option_fit.csv <csv.fit@Input Files@option_fit.csv@no_ode_ignore>` .
+
 12-02
 =====
 Using :ref:`csv.fit@Input Files@option_fit.csv@balance_sex`

@@ -222,6 +222,7 @@ def add_shift_grid_row(
    shift_split_reference_id,
    shift_prior_std_factor,
    freeze,
+   copy_row,
    age_id_next,
    time_id_next,
 ) :
@@ -273,53 +274,54 @@ def add_shift_grid_row(
          #
          # shift_prior_row
          shift_prior_row = copy.copy( fit_prior_row )
-         #
-         # fit_var, dage_fit_var, dtime_fit_var
-         fit_var = fit_fit_var[key]
-         if age_id_next[age_id] != None :
-            next_age_id = age_id_next[age_id]
-            key = (
-               integrand_id, shift_node_id, split_id, next_age_id, time_id
-            )
-            dage_fit_var = fit_fit_var[key] - fit_var
-         if time_id_next[time_id] != None :
-            next_time_id = time_id_next[time_id]
-            key = (
-               integrand_id, shift_node_id, split_id, age_id, next_time_id
-            )
-            dtime_fit_var = fit_fit_var[key] - fit_var
-         #
-         # shift_prior_row['mean']
-         mean                     = fit_var
-         mean                     = min(mean, upper)
-         mean                     = max(mean, lower)
-         shift_prior_row['mean']  = mean
-         #
-         # if not no_ode_fit
-         if len(fit_sample) > 0 :
+         if not copy_row :
             #
-            # std
-            eta        = fit_prior_row['eta']
-            if eta is None :
-               std  = statistics.stdev(fit_sample[key], xbar=mean)
-            else:
-               # The statistics were computed in log space
-               # and then transformed to original space.
-               #
-               # log_sample
-               log_sample = list()
-               for sample in fit_sample[key] :
-                  log_sample.append( math.log( sample + eta ) )
-               #
-               # log_std
-               log_mean = math.log(mean + eta)
-               log_std  = statistics.stdev(log_sample, xbar = log_mean)
-               #
-               # inverse log transformation
-               std      = (math.exp(log_std) - 1) * (mean + eta)
+            # fit_var, dage_fit_var, dtime_fit_var
+            fit_var = fit_fit_var[key]
+            if age_id_next[age_id] != None :
+               next_age_id = age_id_next[age_id]
+               key = (
+                  integrand_id, shift_node_id, split_id, next_age_id, time_id
+               )
+               dage_fit_var = fit_fit_var[key] - fit_var
+            if time_id_next[time_id] != None :
+               next_time_id = time_id_next[time_id]
+               key = (
+                  integrand_id, shift_node_id, split_id, age_id, next_time_id
+               )
+               dtime_fit_var = fit_fit_var[key] - fit_var
             #
-            # shift_prior_row['std']
-            shift_prior_row['std']         = shift_prior_std_factor * std
+            # shift_prior_row['mean']
+            mean                     = fit_var
+            mean                     = min(mean, upper)
+            mean                     = max(mean, lower)
+            shift_prior_row['mean']  = mean
+            #
+            # if no_ode_fit then len(fit_sample) is zero
+            if len(fit_sample) > 0 :
+               #
+               # std
+               eta        = fit_prior_row['eta']
+               if eta is None :
+                  std  = statistics.stdev(fit_sample[key], xbar=mean)
+               else:
+                  # The statistics were computed in log space
+                  # and then transformed to original space.
+                  #
+                  # log_sample
+                  log_sample = list()
+                  for sample in fit_sample[key] :
+                     log_sample.append( math.log( sample + eta ) )
+                  #
+                  # log_std
+                  log_mean = math.log(mean + eta)
+                  log_std  = statistics.stdev(log_sample, xbar = log_mean)
+                  #
+                  # inverse log transformation
+                  std      = (math.exp(log_std) - 1) * (mean + eta)
+               #
+               # shift_prior_row['std']
+               shift_prior_row['std']         = shift_prior_std_factor * std
          #
          # shift_table['prior']
          shift_table['prior'].append( shift_prior_row )
@@ -407,6 +409,12 @@ def create_shift_db(
    for row in all_table['option_all'] :
       if row['option_name'] == 'shift_prior_std_factor' :
          shift_prior_std_factor = float( row['option_value'] )
+   #
+   # no_ode_ignore
+   no_ode_ignore = ''
+   for row in all_table['option_all'] :
+      if row['option_name'] == 'no_ode_ignore' :
+         no_ode_ignore = row['option_value'].strip()
    #
    # fit_table
    fit_or_root = at_cascade.fit_or_root_class(
@@ -622,6 +630,9 @@ def create_shift_db(
          if not fit_smooth_id is None :
             #
             # integrand_id
+            # This is the integrand_id corresponding to this mulcov value.
+            # The integrand_id that is affected by the mulcov is called
+            # affected_id below.
             name         = 'mulcov_' + str(mulcov_id)
             integrand_id = at_cascade.table_name2id(
                fit_table['integrand'], 'integrand', name
@@ -648,6 +659,22 @@ def create_shift_db(
             else :
                freeze = mulcov_id in mulcov_freeze_set
             #
+            # copy_row
+            copy_row = False
+            if no_ode_fit :
+               mulcov_type = shift_mulcov_row['mulcov_type']
+               if mulcov_type == 'rate_value' :
+                  rate_id   = shift_mulcov_row['rate_id']
+                  rate_name = shift_table['rate'][rate_id]['rate_name']
+                  if rate_name in no_ode_ignore.split() :
+                     copy_row = True
+               if mulcov_type == 'meas_value' :
+                  affected_id    = shift_mulcov_row['integrand_id']
+                  integrand_row  = fit_table['integrand'][affected_id]
+                  integrand_name = integrand_row['integrand_name']
+                  if integrand_name in no_ode_ignore.split() :
+                     copy_row = True
+            #
             # shift_table['smooth_grid']
             # add rows for this smoothing
             node_id  = None
@@ -665,6 +692,7 @@ def create_shift_db(
                      split_id,
                      shift_prior_std_factor,
                      freeze,
+                     copy_row,
                      age_id_next_list[fit_smooth_id],
                      time_id_next_list[fit_smooth_id],
                   )
@@ -716,6 +744,12 @@ def create_shift_db(
             # freeze
             freeze = False
             #
+            # copy_row
+            copy_row = False
+            if no_ode_fit :
+               if rate_name in no_ode_ignore.split() :
+                  copy_row = True
+            #
             # shift_table['smooth_grid']
             # add rows for this smoothing
             for fit_grid_row in fit_table['smooth_grid'] :
@@ -731,6 +765,7 @@ def create_shift_db(
                      shift_split_reference_id,
                      shift_prior_std_factor,
                      freeze,
+                     copy_row,
                      age_id_next_list[fit_smooth_id],
                      time_id_next_list[fit_smooth_id],
                   )

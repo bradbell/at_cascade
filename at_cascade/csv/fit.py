@@ -243,6 +243,18 @@ It specifies a lower bound on the standard deviation for each measured data
 value as a fraction of the measurement value.
 The default value for *minimum_meas_cv* is zero.
 
+
+no_ode_ignore
+-------------
+The is a space separated list of rate and integrand names
+that should be ignored when during a :ref:`no_ode_fit-name` .
+The priors for the following variables will not be changed by no_ode_fit:
+
+#. The rate names in *no_ode_ignore* .
+#. The covariate multiplies that affect the rates in *no_ode_ignore*.
+#. The covariate multiplies that affect measurement values for
+   the integrands in *no_ode_ignore* .
+
 number_sample
 -------------
 This is the number of independent samples of the posterior distribution
@@ -914,6 +926,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'max_num_iter_fixed'    : (int,   100)                ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
       'minimum_meas_cv'       : (float, 0.0)                ,
+      'no_ode_ignore'         : (str,   None)               ,
       'number_sample'         : (int,   20)                 ,
       'ode_method'            : (str,   'iota_pos_rho_zero'),
       'ode_step_size'         : (float, 10.0)               ,
@@ -1576,6 +1589,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    absolute_covariates    = global_option_value['absolute_covariates']
    number_sample          = global_option_value['number_sample']
    balance_sex            = global_option_value['balance_sex']
+   no_ode_ignore          = global_option_value['no_ode_ignore']
    #
    refit_split            = global_option_value['refit_split']
    refit_split            = str(refit_split).lower()
@@ -1604,6 +1618,8 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    }
    if balance_sex :
       option_all['balance_fit'] = 'sex -0.5 +0.5'
+   if no_ode_ignore != None :
+      option_all['no_ode_ignore'] = no_ode_ignore
    #
    # node_split_table
    node_split_table = [ { 'node_name' : root_node_name } ]

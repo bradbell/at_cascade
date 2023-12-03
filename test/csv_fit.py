@@ -25,6 +25,7 @@ csv_file['option_fit.csv'] = \
 max_abs_effect,3.0
 number_sample,10
 sample_method,simulate
+no_ode_ignore,iota
 '''
 #
 # option_predict.csv

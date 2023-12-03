@@ -220,10 +220,21 @@ omega
 *****
 The model rate for other cause mortality as a function of age and time.
 This is also denoted by :math:`\omega(a, t)`.
+Note that omega a a special rate because it is know ahead of time; see
+:ref:`omega_all-name` .
 
 omega_grid
 **********
 A single age-time grid used for the *omega* constraints.
+
+pini
+****
+The initial prevalence as a function of time.
+If the initial age is zero, time is *t* , and prevalence is *p*,
+then pini is the function :math:`p(0,t)` .
+This often referred to as a rate because it can be estimated and
+is an input to the dismod_at ordinary differential equation,
+like the other rates in the dismod_at model.
 
 prevalence
 **********
