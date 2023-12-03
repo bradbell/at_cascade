@@ -13,31 +13,6 @@
 Wish List for at_cascade
 ########################
 
-No Ode Fit
-**********
-Sometimes when there is no data for a rate, the :ref:`no_ode_fit-name`
-changes the prior, for the rate with no data,
-There is so much data elsewhere that the
-prior residual is not significant.
-This is also true for covariate multiplies that affect
-a rate with no data.
-
-#. Using a smaller :ref:`csv.fit@Input Files@option_fit.csv@tolerance_fixed`
-   in the :ref:`glossary@root_node_database` will help with this,
-   but it will slow down all the fits.
-   Using a smaller standard deviation for the affected priors may also help.
-#. It would be good to have an option to not include certain rates, and
-   covariate multipliers, in the no ode fit
-   (just use the original prior means).
-   This is the easier solution to implement.
-#. It would be better to optimize each of the rates separately,
-   because a rate may have only a few data points and its residuals
-   would not be significant relative to the changes in the other rates.
-   Optimizing each of the rates separately would be slower, unless
-   it is done in parallel, which would take more time to implement.
-   This would also require automatically determining which covariate
-   multipliers are connected to which problem.
-
 Meta Regression
 ***************
 The extra measurement noise added for the mismatch between the model and the
@@ -49,6 +24,12 @@ that are not modeled.
 
 csv.fit
 *******
+
+No Ode Fit
+==========
+In the special case where
+:ref:`csv.fit@Input Files@option_fit.csv@no_ode_ignore` is ``all`` ,
+do not run the no_ode fit and use the prior means for all variables.
 
 Measurement Value Covariate
 ===========================

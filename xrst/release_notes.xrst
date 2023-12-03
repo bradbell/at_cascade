@@ -38,8 +38,10 @@ mm-dd
 
 12-03
 =====
-Add the :ref:`option_all_table@no_ode_ignore` to the option_all table and
+Add :ref:`option_all_table@no_ode_ignore` to the option_all table and
 :ref:`option_fit.csv <csv.fit@Input Files@option_fit.csv@no_ode_ignore>` .
+This completed the old No Ode Fit wish list item but it added
+a new :ref:`wish_list@csv.fit@No Ode Fit` item to the csv.fit wish list.
 
 12-02
 =====
@@ -134,8 +136,9 @@ to a fit from one location to another.
 
 10-07
 =====
-Improve the :ref:`wish_list@No Ode Fit` wish list item and move it
+Improve the No Ode Fit wish list item and move it
 outside of the csv.fit group (it is not just for :ref:`csv.fit-name` ).
+(This wish list item was removed on :ref:`2023@mm-dd@12-03` .)
 
 10-05
 =====
