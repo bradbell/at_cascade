@@ -14,17 +14,16 @@ import at_cascade
 '''
 {xrst_begin csv.sim_fit_pred}
 {xrst_spell
-   sim
-   Sincidence
-   mtexcess
-   rho
-   std
-   meas
+   const
    cv
-   iter
    dage
    dtime
-   const
+   iter
+   meas
+   mtexcess
+   rho
+   sincidence
+   std
    temporaries
 }
 

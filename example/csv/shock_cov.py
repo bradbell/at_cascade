@@ -16,18 +16,18 @@ import at_cascade
 '''
 {xrst_begin csv.shock_cov}
 {xrst_spell
-   sim
    bilinear
-   std
+   const
    cv
-   Sincidence
-   pdf
-   iter
-   eps
    dage
    dtime
-   const
+   eps
+   iter
    meas
+   pdf
+   sim
+   sincidence
+   std
    trapezoidal
 }
 

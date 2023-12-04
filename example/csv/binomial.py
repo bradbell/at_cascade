@@ -17,14 +17,13 @@ import at_cascade
 # --------------------------------------------------------------------------
 # {xrst_begin csv.binomial}
 # {xrst_spell
-#     numpy
-#     Sincidence
-#     iter
 #     const
 #     dage
 #     dtime
-#     const
 #     eps
+#     iter
+#     numpy
+#     sincidence
 #     std
 # }
 # {xrst_comment_ch #}

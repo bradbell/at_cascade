@@ -23,26 +23,26 @@ import time
    dage
    dir
    dtime
+   eigen
    ipopt
    iter
    laplace
    meas
-   mul
-   multiprocessing
-   pini
-   rho
-   sincidence
-   std
-   sqlite
-   truncation
-   underbars
    mtexcess
    mtother
    mtwith
+   mul
+   multiprocessing
+   pini
    relrisk
-   trapezoidal
-   eigen
+   rho
+   sincidence
+   sqlite
+   std
    subsample
+   trapezoidal
+   truncation
+   underbars
 }
 
 Fit a CSV Specified Cascade

@@ -4,9 +4,6 @@
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_database_dir}
-{xrst_spell
-   dir
-}
 
 Get Database Directory Corresponding To a Fit
 #############################################

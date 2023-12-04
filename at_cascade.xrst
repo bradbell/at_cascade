@@ -3,14 +3,14 @@
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 {xrst_begin at_cascade}
+{xrst_spell
+   dependencies
+   pypi
+   uninstall
+}
 
 Cascading Dismod_at Analysis From Parent To Child Regions
 =========================================================
-{xrst_spell
-   pypi
-   dependencies
-   uninstall
-}
 
 Version
 *******

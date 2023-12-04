@@ -10,7 +10,6 @@
    meas
    mulstd
    subgroup
-   var
 }
 
 Map Var Table Values to its Primary Key

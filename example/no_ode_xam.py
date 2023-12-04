@@ -253,9 +253,6 @@ routine uses these tables to check that fit against the truth.
 {xrst_end no_ode_xam}
 ------------------------------------------------------------------------------
 {xrst_begin no_ode_xam.py}
-{xrst_spell
-   xam
-}
 
 no_ode_xam: Python Source Code
 ##############################

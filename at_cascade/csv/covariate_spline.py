@@ -6,7 +6,6 @@ import at_cascade
 '''
 {xrst_begin covariate_spline}
 {xrst_spell
-   spline
    cov
 }
 

@@ -16,12 +16,12 @@ import at_cascade
 """
 {xrst_begin csv.predict_xam}
 {xrst_spell
-   Sincidence
-   iter
-   std
-   pdf
    exp
+   iter
+   pdf
    sim
+   sincidence
+   std
 }
 
 Example Simulating and Fitting Incidence From Prevalence Data

@@ -12,22 +12,22 @@ Release Notes for at_cascade
 -----------------------------------------------------------------------------
 {xrst_begin 2023}
 {xrst_spell
-   xam
-   shutil
    copyfileobj
-   py
-   mm
-   dd
    cov
-   std
-   sim
-   rho
    cv
+   dd
+   errno
+   mm
    parallelized
-   readonly
    pini
    ptr
-   errno
+   py
+   readonly
+   rho
+   shutil
+   sim
+   std
+   xam
 }
 
 Release Notes for 2023
@@ -555,23 +555,22 @@ See the dismod_at documentation for the rate_eff_cov table for more details.
    avgint
    const
    cov
+   dage
    dd
    distutils
+   dtime
+   laplace
+   mm
    mtall
    mtspecific
-   mm
    numpy
    optimizer
    perturb
    pyspellchecker
    rst
-   spline
-   smoothings
-   mtspecific
-   laplace
-   dage
-   dtime
    sim
+   smoothings
+   spline
 }
 
 Release Notes for 2022

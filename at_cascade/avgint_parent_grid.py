@@ -4,9 +4,6 @@
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin avgint_parent_grid}
-{xrst_spell
-   avgint
-}
 
 Predicts Rates and Covariate Multipliers on Parent Grid
 #######################################################

@@ -5,8 +5,6 @@
 import csv
 """
 {xrst_begin csv.join_file}
-{xrst_spell
-}
 
 Join The Tables In Two Csv Files
 ################################

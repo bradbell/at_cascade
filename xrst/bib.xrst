@@ -1,24 +1,24 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington
-# SPDX-FileContributor: 2023 Garland Culbreth
+# SPDX-FileContributor: 2023-23 Garland Culbreth
 # ----------------------------------------------------------------------------
 {xrst_begin bib}
 {xrst_spell
-   Oortmarssen
-   Barendregt
-   Pirnay
-   Negrete
-   Wachter
-   Biegler
-   Bibliography
-   Flaxman
+   barendregt
+   bibliography
+   biegler
+   flaxman
+   greenland
    integrative
    metaregression
-   pp
-   wp
+   negrete
+   oortmarssen
    pdf
+   pirnay
+   pp
    readthedocs
-   Greenland
+   wachter
+   wp
 }
 
 Bibliography
@@ -33,8 +33,8 @@ framework for descriptive epidemiology.
 Duration equation
 =================
 
-In the text, section title SYSTEM DYNAMICS MODEL OF DISEASE IN A POPULATION 
-gives as its first equation an integral for duration as a function of age and 
+In the text, section title SYSTEM DYNAMICS MODEL OF DISEASE IN A POPULATION
+gives as its first equation an integral for duration as a function of age and
 time.
 
 Barendregt et al. (2003)

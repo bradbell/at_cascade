@@ -5,7 +5,6 @@
 '''
 {xrst_begin get_cov_info}
 {xrst_spell
-   cov
    rel
 }
 

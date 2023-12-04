@@ -5,8 +5,8 @@
 '''
 {xrst_begin module}
 {xrst_spell
-   subgroup
    cov
+   subgroup
 }
 
 The at_cascade Python Module

@@ -4,8 +4,6 @@
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin csv.covariate_avg}
-{xrst_spell
-}
 
 Compute Covariate Averages for One Node
 #######################################
