@@ -15,13 +15,24 @@ Prototype
    # END_COPY_ROOT_DB
 }
 
-Purpose
-*******
-This routine does the following:
+root_node_database
+******************
+This is the :ref:`glossary@root_node_database` .
+It must exist when this routine is called.
 
-#. Copy the :ref:`glossary@root_node_database` to the *fit_node_database* .
+fit_node_database
+*****************
+This is a :ref:`glossary@fit_node_database` that
+can be used to fit the root node.
+The directory where the *fit_node_database* will be located must exist
+when this routine is called.
+This database is created as follows:
+
+#. Copy the root node database to the fit node database.
+
 #. Drop all of the constant tables from the fit node database; see
    :ref:`module@constant_table_list` .
+
 #. Change the fit node database option table so that is uses the
    root node database for all the constant tables; i.e.,
    set the other_database and other_input_table options to do this.

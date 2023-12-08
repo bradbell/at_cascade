@@ -106,6 +106,7 @@ ode_step_size,5.0
 quasi_fixed,false
 max_num_iter_fixed,50
 tolerance_fixed,1e-8
+no_ode_ignore,all
 '''
 fit_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 #

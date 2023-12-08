@@ -246,14 +246,20 @@ The default value for *minimum_meas_cv* is zero.
 
 no_ode_ignore
 -------------
-The is a space separated list of rate and integrand names
-that should be ignored when during a :ref:`no_ode_fit-name` .
+The is a space separated list of rate and integrand names.
+It specifies which integrands are ignored during a :ref:`no_ode_fit-name` .
 The priors for the following variables will not be changed by no_ode_fit:
 
 #. The rate names in *no_ode_ignore* .
 #. The covariate multiplies that affect the rates in *no_ode_ignore*.
 #. The covariate multiplies that affect measurement values for
    the integrands in *no_ode_ignore* .
+
+all
+...
+In the special case where *no_ode_ignore* is ``all`` ,
+the no_ode fit is not run and none of the priors are changed before the
+:ref:`glossary@root_node` fit.
 
 number_sample
 -------------
@@ -1619,7 +1625,8 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    if balance_sex :
       option_all['balance_fit'] = 'sex -0.5 +0.5'
    if no_ode_ignore != None :
-      option_all['no_ode_ignore'] = no_ode_ignore
+      if no_ode_ignore.strip() != 'all' :
+         option_all['no_ode_ignore'] = no_ode_ignore
    #
    # node_split_table
    node_split_table = [ { 'node_name' : root_node_name } ]
@@ -1791,10 +1798,16 @@ def fit(fit_dir, max_node_depth = None) :
          else :
             fit_goal_max_depth.add( node_list[ -max_node_depth - 1] )
    #
+   # no_ode_fit
+   no_ode_fit    = True
+   no_ode_ignore = global_option_value['no_ode_ignore']
+   if no_ode_ignore != None :
+      no_ode_fit =  no_ode_ignore.strip() != 'all'
+   #
    # cascade_root_node
    at_cascade.cascade_root_node(
       all_node_database  = f'{fit_dir}/all_node.db'  ,
       fit_goal_set       = fit_goal_max_depth        ,
-      no_ode_fit         = True                      ,
+      no_ode_fit         = no_ode_fit                ,
       fit_type_list      = [ 'both', 'fixed']        ,
    )

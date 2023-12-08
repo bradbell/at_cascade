@@ -25,12 +25,6 @@ that are not modeled.
 csv.fit
 *******
 
-No Ode Fit
-==========
-In the special case where
-:ref:`csv.fit@Input Files@option_fit.csv@no_ode_ignore` is ``all`` ,
-do not run the no_ode fit and use the prior means for all variables.
-
 Measurement Value Covariate
 ===========================
 Currently :ref:`csv.fit-name` automatically creates an

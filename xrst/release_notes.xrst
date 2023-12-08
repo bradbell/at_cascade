@@ -36,12 +36,18 @@ Release Notes for 2023
 mm-dd
 *****
 
+12-08
+=====
+The option_fit.csv *no_ode_ignore* option was extend to include the
+:ref:`csv.fit@Input Files@option_fit.csv@no_ode_ignore@all` choice.
+In addition, the No Ode Fit wish list item was removed.
+
 12-03
 =====
 Add :ref:`option_all_table@no_ode_ignore` to the option_all table and
 :ref:`option_fit.csv <csv.fit@Input Files@option_fit.csv@no_ode_ignore>` .
 This completed the old No Ode Fit wish list item but it added
-a new :ref:`wish_list@csv.fit@No Ode Fit` item to the csv.fit wish list.
+a new No Ode Fit item to the csv.fit wish list.
 
 12-02
 =====

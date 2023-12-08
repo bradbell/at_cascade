@@ -154,6 +154,8 @@ def cascade_root_node(
    #
    # root_fit_database
    root_fit_database = f'{result_dir}/{root_node_name}/dismod.db'
+   if not os.path.exists( f'{result_dir}/{root_node_name}' ) :
+      os.makedirs( f'{result_dir}/{root_node_name}' )
    if not no_ode_fit :
       at_cascade.copy_root_db(root_node_database, root_fit_database)
    else :
