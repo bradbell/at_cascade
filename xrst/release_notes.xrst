@@ -36,6 +36,10 @@ Release Notes for 2023
 mm-dd
 *****
 
+12-15
+=====
+Add the :ref:`wish_list@csv.fit@Predictions` item to the wish list.
+
 12-08
 =====
 The option_fit.csv *no_ode_ignore* option was extend to include the

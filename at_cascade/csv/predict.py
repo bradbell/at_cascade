@@ -410,25 +410,31 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
 # is the directory name where the csv simulation files are located.
 #
 # fit_node_database
+# *****************
 # This string is the location, relative to fit_dir, of the dismod_at
 # databse for a fit.
 #
 # fit_node_id
+# ***********
 # This int is the node_id in the fit node for this database.
 #
 # all_node_database
+# *****************
 # This string is the all node database for this fit.
 #
 # all_covariate_table
+# *******************
 # The list of dict is the in memory representation of the
 # covariate.csv file
 #
 # global_option_value
+# *******************
 # This routine assues that global_option_value has been set.
 # If global_option_value['d2b2csv'] is true (false), the csvfiles
 # for this fit node database are (are not) created.
 #
 # fit_predict.csv
+# ***************
 # This output file is locatied in the same directory as fit_node_database.
 # It contains the predictions for this fit node at the age and time
 # specified by the covariate.csv file.

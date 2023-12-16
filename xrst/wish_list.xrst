@@ -25,6 +25,18 @@ that are not modeled.
 csv.fit
 *******
 
+Predictions
+===========
+Currently, :ref:`csv.predict-name` does not predict for fits
+that failed to produce asymptotic statistics.
+We could automatically look for the closest ancestor fit
+and use its samples to predict (with error) for any node,
+except of course when the root node fails for both sexes.
+This would require having two nodes and two sexes for every row in the
+:ref:`csv.predict@Output Files@fit_predict.csv` file:
+the (node, sex) that the fit and samples correspond to and the
+(node, sex) that covariate values (and hence predictions) corresponding to.
+
 Measurement Value Covariate
 ===========================
 Currently :ref:`csv.fit-name` automatically creates an
