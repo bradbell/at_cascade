@@ -91,7 +91,6 @@ Routines
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
 {xrst_toc_table
-   at_cascade/csv/set_truth.py
    at_cascade/csv/check_table.py
    at_cascade/csv/covariate_avg.py
    at_cascade/csv/covariate_spline.py
@@ -99,7 +98,9 @@ Routines
    at_cascade/csv/fit.py
    at_cascade/csv/join_file.py
    at_cascade/csv/predict.py
+   at_cascade/csv/predict_one.py
    at_cascade/csv/read_table.py
+   at_cascade/csv/set_truth.py
    at_cascade/csv/simulate.py
    at_cascade/csv/write_table.py
 }
@@ -115,6 +116,7 @@ from .empty_str        import empty_str
 from .fit              import fit
 from .join_file        import join_file
 from .predict          import predict
+from .predict_one      import predict_one
 from .read_table       import read_table
 from .set_truth        import set_truth
 from .simulate         import simulate
