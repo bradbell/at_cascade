@@ -150,7 +150,6 @@ split_reference value).
    bnd
    cov
    cpus
-   dir
    mul
    perturb
    std

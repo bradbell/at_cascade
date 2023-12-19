@@ -25,7 +25,6 @@ Release Notes for at_cascade
    readonly
    rho
    shutil
-   sim
    std
    xam
 }
@@ -578,7 +577,6 @@ See the dismod_at documentation for the rate_eff_cov table for more details.
    perturb
    pyspellchecker
    rst
-   sim
    smoothings
    spline
 }
@@ -1045,7 +1043,6 @@ at_cascade module.
 {xrst_begin 2021}
 {xrst_spell
    dd
-   dir
    iter
    mm
    py

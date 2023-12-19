@@ -5,7 +5,6 @@
 '''
 {xrst_begin run_one_job}
 {xrst_spell
-   dir
    obj
    var
 }

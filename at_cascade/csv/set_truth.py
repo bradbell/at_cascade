@@ -11,8 +11,6 @@ import dismod_at
 """
 {xrst_begin csv.set_truth}
 {xrst_spell
-   dir
-   sim
    var
 }
 

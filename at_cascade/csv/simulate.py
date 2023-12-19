@@ -14,13 +14,11 @@ import at_cascade
    bilinear
    boolean
    cv
-   dir
    integrator
    interpolate
    meas
    pini
    rho
-   sim
    sincidence
    std
 }

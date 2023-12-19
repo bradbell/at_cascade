@@ -21,7 +21,6 @@ import time
    cpus
    cv
    dage
-   dir
    dtime
    eigen
    ipopt

@@ -5,10 +5,8 @@
 r'''
 {xrst_begin csv.predict_one}
 {xrst_spell
-   dir
-   sim
-   pdf
    boolean
+   pdf
 }
 
 Calculate the predictions for One Fit

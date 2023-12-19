@@ -5,7 +5,6 @@
 '''
 {xrst_begin no_ode_fit}
 {xrst_spell
-   dir
    init
    mtexcess
    mtother

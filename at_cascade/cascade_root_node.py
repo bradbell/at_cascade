@@ -5,7 +5,6 @@
 '''
 {xrst_begin cascade_root_node}
 {xrst_spell
-   dir
    var
 }
 

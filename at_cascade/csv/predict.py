@@ -16,10 +16,8 @@ import time
    avgint
    boolean
    cpus
-   dir
    multiprocessing
    pdf
-   sim
 }
 
 Prediction for a CSV Fit

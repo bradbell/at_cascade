@@ -14,10 +14,6 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
 import at_cascade
 """
 {xrst_begin csv.simulate_xam}
-{xrst_spell
-   dir
-   sim
-}
 
 Example Using csv.simulate
 ##########################
