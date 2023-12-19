@@ -86,6 +86,19 @@ The following dictionary maps each sex name to the corresponding sex value
 sex_name2value = { 'female' : -0.5, 'both' : 0.0, 'male' : 0.5 }
 '''{xrst_code}
 
+split_reference_table
+*********************
+The :ref:`option_all_table@split_covariate_name` is ``sex`` and
+the :ref:`split_reference_table-name` has the following values for
+csv.fit, :ref:`csv.simulate-name` and :ref:`csv.predict-name` :
+{xrst_code py}'''
+split_reference_table = [
+   { 'split_reference_name' : 'female' , 'split_reference_value' : -0.5 },
+   { 'split_reference_name' : 'both'   , 'split_reference_value' :  0.0 },
+   { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
+]
+'''{xrst_code}
+
 Routines
 ********
 

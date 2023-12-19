@@ -283,13 +283,7 @@ each sample index.
 
 {xrst_end csv.predict}
 '''
-#-----------------------------------------------------------------------------
-# split_reference_table
-split_reference_table = [
-   { 'split_reference_name' : 'female' , 'split_reference_value' : -0.5 },
-   { 'split_reference_name' : 'both'   , 'split_reference_value' :  0.0 },
-   { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
-]
+#
 # ----------------------------------------------------------------------------
 # Sets global global_option_value to dict representation of option_predict.csv
 #
@@ -466,6 +460,7 @@ def predict_all(
    split_reference_table = \
       dismod_at.get_table_dict(connection, 'split_reference')
    connection.close()
+   assert split_reference_table == at_cascade.csv.split_reference_table
    #
    # root_split_reference_id
    root_split_reference_id = 1

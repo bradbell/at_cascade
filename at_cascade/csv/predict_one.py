@@ -84,13 +84,6 @@ import dismod_at
 import at_cascade
 import copy
 #
-# 2DO: combine copies of this table in csv/fit.py, csv/predict.py and here
-# to be on table in csv/__init__.py
-split_reference_table = [
-   { 'split_reference_name' : 'female' , 'split_reference_value' : -0.5 },
-   { 'split_reference_name' : 'both'   , 'split_reference_value' :  0.0 },
-   { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
-]
 # ----------------------------------------------------------------------------
 # Create Diagonsitcs for One Fit
 # ##############################
@@ -251,6 +244,9 @@ def predict_one(
    #
    # fit_node_name
    fit_node_name = node_table[fit_node_id]['node_name']
+   #
+   # split_reference_table
+   split_reference_table = at_cascade.csv.split_reference_table
    #
    # fit_split_reference_id
    cov_info = at_cascade.get_cov_info(

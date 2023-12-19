@@ -385,7 +385,7 @@ the splitting covariate.
 
 Example
 *******
-see the csv.fit :ref:`csv.fit@split_reference_table` .
+see the csv.module :ref:`csv.module@split_reference_table` .
 
 {xrst_end split_reference_table}
 ------------------------------------------------------------------------------
