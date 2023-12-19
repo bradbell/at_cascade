@@ -807,7 +807,7 @@ dismod.db
    This is directly below the directory for its parent node and same sex.
    It contains the ``dismod.db`` data base for the corresponding fit.
 
-.. _dismod_at_database: https://bradbell.github.io/dismod_at/doc/database.htm
+.. _dismod_at_database: https://dismod-at.readthedocs.io/database.html
 
 option_fit_out.csv
 ==================

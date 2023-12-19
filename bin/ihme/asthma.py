@@ -136,7 +136,7 @@ hold_out_integrand = 'mtstandard mtwith'
 hold_out_nid_set = set()
 #
 # rate_case
-# https://bradbell.github.io/dismod_at/doc/option_table.htm#rate_case
+# https://dismod-at.readthedocs.io/option_table.htm#rate_case
 rate_case = 'iota_pos_rho_pos'
 #
 # zero_sum_child_rate
@@ -173,7 +173,7 @@ model_rate_time_grid = [
 ]
 #
 # prior_table
-# https://bradbell.github.io/dismod_at/doc/create_database.htm#prior_table
+# https://dismod-at.readthedocs.io/create_database.htm#prior_table
 prior_table = [
    {   'name'    :    'parent_rate_value',
       'density' :    'log_gaussian',
@@ -221,7 +221,7 @@ prior_table = [
 ]
 #
 # smooth_list_dict
-# https://bradbell.github.io/dismod_at/doc/create_database.htm#smooth_table
+# https://dismod-at.readthedocs.io/create_database.htm#smooth_table
 smooth_list_dict = [
    {   'name'        : 'parent_rate_smooth',
       'value_prior' : 'parent_rate_value',
@@ -248,7 +248,7 @@ smooth_list_dict = [
 ]
 #
 # rate_table
-# https://bradbell.github.io/dismod_at/doc/create_database.htm#rate_table
+# https://dismod-at.readthedocs.io/create_database.htm#rate_table
 rate_table = [
    {   'name':          'pini',
       'parent_smooth': 'parent_pini_smooth',

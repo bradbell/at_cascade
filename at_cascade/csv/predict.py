@@ -123,7 +123,7 @@ own plots using the
 :ref:`csv.predict@Output Files@sam_predict.csv` files.
 The dismod_at `plot_curve`_ routine may be helpful in this regard.
 
-.. _plot_curve: https://bradbell.github.io/dismod_at/doc/plot_curve.htm
+.. _plot_curve: https://dismod-at.readthedocs.io/plot_curve.html
 
 covariate.csv
 =============

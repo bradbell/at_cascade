@@ -35,6 +35,12 @@ Release Notes for 2023
 mm-dd
 *****
 
+12-19
+=====
+Some of the references to the dismod_at documentation were pointing
+to an old version that was frozen on 2022-11-05. This has been
+fixed and they no point to the current dismod_at documentation.
+
 12-15
 =====
 Add the :ref:`wish_list@csv.fit@Predictions` item to the wish list.

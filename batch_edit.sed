@@ -31,7 +31,5 @@
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
 # ...........................................................................
-s|all_option|option_all|g
-s|all option|option all|g
-#
-s|all_omega|omega_all|g
+s|bradbell.github.io/dismod_at/doc/|dismod-at.readthedocs.io/|
+/dismod-at.readthedocs.io/s|htm$|html|
