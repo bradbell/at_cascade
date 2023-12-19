@@ -83,7 +83,7 @@ r'''
 import dismod_at
 import at_cascade
 import copy
-
+#
 # 2DO: combine copies of this table in csv/fit.py, csv/predict.py and here
 # to be on table in csv/__init__.py
 split_reference_table = [
@@ -91,6 +91,98 @@ split_reference_table = [
    { 'split_reference_name' : 'both'   , 'split_reference_value' :  0.0 },
    { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
 ]
+# ----------------------------------------------------------------------------
+# Create Diagonsitcs for One Fit
+# ##############################
+#
+# fit_title
+# *********
+# This string specifies the node and sex corresponding to this fit.
+# In the special case of a no_ode fit, 'no_ode' should be included
+# in the fit_title.
+#
+# fit_dir
+# *******
+# This string is the directory name where the input and output csv files
+# are located.
+#
+# fit_node_database
+# *****************
+# This string is the location, relative to fit_dir, of the dismod_at
+# database for a fit.
+#
+# db2csv
+# ******
+# If true, the `db2csv_command`_ is used to generate the csv files
+# corresponding to the *fit_node_database* .
+#
+# .. _db2csv_command: https://dismod-at.readthedocs.io/db2csv_command.html
+#
+# plot
+# ****
+# If this boolean is true, ``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
+# to *fit_node_database* are generated (in the same directory as the
+# *fit_node_database* ).
+#
+import dismod_at
+import at_cascade
+import copy
+
+def diagonse_one(
+   fit_title             ,
+   fit_dir               ,
+   fit_node_database     ,
+   db2csv                ,
+   plot                  ,
+) :
+   assert type(fit_title) == str
+   assert type(fit_dir) == str
+   assert type(fit_node_database) == str
+   #
+   # predict_integrand_table
+   predict_integrand_table = at_cascade.csv.read_table(
+         f'{fit_dir}/predict_integrand.csv'
+   )
+   #
+   # fit_node_dir
+   index        = fit_node_database.rfind('/')
+   fit_node_dir = fit_node_database[: index]
+   #
+   if db2csv :
+      #
+      # db2csv output files
+      command = [ 'dismodat.py', fit_node_database, 'db2csv' ]
+      dismod_at.system_command_prc(
+         command, print_command = False, return_stdout = True
+      )
+   #
+   if plot :
+      #
+      # data_plot.pdf
+      pdf_file       = f'{fit_node_dir}/data_plot.pdf'
+      integrand_list = list()
+      for row in predict_integrand_table :
+         integrand_name = row['integrand_name']
+         if not integrand_name.startswith('mulcov_') :
+            integrand_list.append( integrand_name )
+      dismod_at.plot_data_fit(
+         database       = fit_node_database  ,
+         pdf_file       = pdf_file           ,
+         plot_title     = fit_title          ,
+         max_plot       = 1000               ,
+         integrand_list = integrand_list     ,
+      )
+      #
+      # rate_plot.pdf
+      pdf_file = f'{fit_node_dir}/rate_plot.pdf'
+      rate_set = { 'pini', 'iota', 'chi', 'omega' }
+      dismod_at.plot_rate_fit(
+         database       = fit_node_database  ,
+         pdf_file       = pdf_file           ,
+         plot_title     = fit_title          ,
+         rate_set       = rate_set           ,
+      )
+# ----------------------------------------------------------------------------
 
 # BEGIN_DEF
 def predict_one(
@@ -304,37 +396,10 @@ def predict_one(
       file_name    = f'{fit_node_dir}/{prefix}_predict.csv'
       at_cascade.csv.write_table(file_name, predict_table)
    #
-   if db2csv :
-      #
-      # db2csv output files
-      command = [ 'dismodat.py', fit_node_database, 'db2csv' ]
-      dismod_at.system_command_prc(
-         command, print_command = False, return_stdout = True
-      )
-   #
-   if plot :
-      #
-      # data_plot.pdf
-      pdf_file       = f'{fit_node_dir}/data_plot.pdf'
-      integrand_list = list()
-      for row in predict_integrand_table :
-         integrand_name = row['integrand_name']
-         if not integrand_name.startswith('mulcov_') :
-            integrand_list.append( integrand_name )
-      dismod_at.plot_data_fit(
-         database       = fit_node_database  ,
-         pdf_file       = pdf_file           ,
-         plot_title     = fit_title          ,
-         max_plot       = 1000               ,
-         integrand_list = integrand_list     ,
-      )
-      #
-      # rate_plot.pdf
-      pdf_file = f'{fit_node_dir}/rate_plot.pdf'
-      rate_set = { 'pini', 'iota', 'chi', 'omega' }
-      dismod_at.plot_rate_fit(
-         database       = fit_node_database  ,
-         pdf_file       = pdf_file           ,
-         plot_title     = fit_title          ,
-         rate_set       = rate_set           ,
-      )
+   diagonse_one(
+      fit_title         = fit_title ,
+      fit_dir           = fit_dir ,
+      fit_node_database = fit_node_database ,
+      db2csv            = db2csv ,
+      plot              = plot ,
+   )
