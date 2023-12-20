@@ -46,6 +46,19 @@ error_message_dict
 It a dictionary, with keys equal to job names, containing
 the error message for this cascade.
 
+predict_job_dir
+***************
+This is the directory, relative to the *fit_dir*,
+that corresponds to the *predict_job_id* .
+See :ref:`get_database_dir-name` .
+
+ancestor_job_dir
+****************
+This is the directory, relative to the *fit_dir*,
+that corresponds to the closes ancestor of *predict_job_id*
+that had a successful fit and posterior sampling.
+The can be equal to *predict_job_dir*  (the closest possible case).
+
 
 {xrst_end csv.ancestor_fit}
 '''
@@ -77,10 +90,7 @@ def ancestor_fit(
    node_split_set = { root_node_id }
    #
    # job_name, predict_node_id, predict_split_reference_id
-   if predict_job_id == -1 :
-      job_row  = job_table[0]
-   else :
-      job_row  = job_table[predict_job_id]
+   job_row                     = job_table[predict_job_id]
    job_name                    = job_row['job_name']
    predict_node_id             = job_row['fit_node_id']
    predict_split_reference_id  = job_row['split_reference_id']
@@ -95,8 +105,6 @@ def ancestor_fit(
       fit_node_id             = predict_node_id                ,
       fit_split_reference_id  = predict_split_reference_id     ,
    )
-   if predict_job_id == -1 :
-      predict_job_dir += '/no_ode'
    #
    # have_fit
    predict_node_database = f'{fit_dir}/{predict_job_dir}/dismod.db'

@@ -517,14 +517,10 @@ def predict_all(
    #
    # job_id, job_row, fit_node_database_list
    fit_node_database_list = list()
-   for job_id in range(-1, n_job) :
+   for job_id in range(n_job) :
       #
-      # include_this_job, job_row
-      if job_id == -1 :
-         job_tmp = 0
-      else :
-         job_tmp = job_id
-      job_depth = at_cascade.job_descendent(job_table, start_job_id, job_tmp)
+      # include_this_job
+      job_depth = at_cascade.job_descendent(job_table, start_job_id, job_id)
       include_this_job = False
       if job_depth != None :
          if max_job_depth == None :
@@ -532,7 +528,7 @@ def predict_all(
          else :
             include_this_job = job_depth <= max_job_depth
       if include_this_job :
-         job_row = job_table[job_tmp]
+         job_row = job_table[job_id]
          #
          # job_name, fit_node_id, fit_split_reference_id
          job_name                = job_row['job_name']
@@ -561,10 +557,7 @@ def predict_all(
          sam_node_predict = f'{fit_dir}/{fit_database_dir}/sam_predict.csv'
          #
          # fit_title
-         if job_id == -1 :
-            fit_title = job_name + '.no_ode'
-         else :
-            fit_title = job_name
+         fit_title = job_name
          #
          # job_description
          if ancestor_job_dir != predict_job_dir :
@@ -588,29 +581,27 @@ def predict_all(
             # ????
             #
             # job_queue
-            # skip predict for no_ode fit (job_id == -1 and not in job_table)
-            if 0 <= job_id :
-               args = (
-                  fit_title         ,
-                  fit_dir           ,
-                  sim_dir           ,
-                  fit_node_database ,
-                  fit_node_id       ,
-                  all_node_db       ,
-                  covariate_table   ,
-                  global_option_value['float_precision'] ,
-                  global_option_value['db2csv']          ,
-                  global_option_value['plot']            ,
-               )
-               if max_number_cpu == 1 :
-                  at_cascade.csv.predict_one(*args)
-                  print(job_description)
-               else :
-                  job_queue.put( (job_description, args) )
-                  n_job_queue += 1
-               #
-               # fit_node_database_list
-               fit_node_database_list.append( fit_node_database )
+            args = (
+               fit_title         ,
+               fit_dir           ,
+               sim_dir           ,
+               fit_node_database ,
+               fit_node_id       ,
+               all_node_db       ,
+               covariate_table   ,
+               global_option_value['float_precision'] ,
+               global_option_value['db2csv']          ,
+               global_option_value['plot']            ,
+            )
+            if max_number_cpu == 1 :
+               at_cascade.csv.predict_one(*args)
+               print(job_description)
+            else :
+               job_queue.put( (job_description, args) )
+               n_job_queue += 1
+            #
+            # fit_node_database_list
+            fit_node_database_list.append( fit_node_database )
    #
    # max_number_cpu > 1
    if max_number_cpu > 1 :
