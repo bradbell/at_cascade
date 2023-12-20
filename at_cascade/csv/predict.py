@@ -515,8 +515,8 @@ def predict_all(
    job_queue   = manager.Queue()
    n_job_queue = 0
    #
-   # predict_job_id, fit_node_database_list
-   fit_node_database_list = list()
+   # predict_job_id, predict_node_database_list
+   predict_node_database_list = list()
    for predict_job_id in range(n_job) :
       #
       # include_this_job
@@ -539,7 +539,7 @@ def predict_all(
          predict_job_name        = predict_job_row['job_name']
          predict_node_id         = predict_job_row['fit_node_id']
          #
-         # fit_database_dir, ancestor_job_dir
+         # predict_job_dir, ancestor_job_dir
          predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
             fit_dir                 = fit_dir ,
             job_table               = job_table ,
@@ -551,14 +551,11 @@ def predict_all(
             error_message_dict      = error_message_dict ,
          )
          #
-         # fit_database_dir
-         fit_database_dir = predict_job_dir
-         #
-         # fit_node_database
-         fit_node_database = f'{fit_dir}/{fit_database_dir}/dismod.db'
+         # predict_node_database
+         predict_node_database = f'{fit_dir}/{predict_job_dir}/dismod.db'
          #
          # sam_node_predict
-         sam_node_predict = f'{fit_dir}/{fit_database_dir}/sam_predict.csv'
+         sam_node_predict = f'{fit_dir}/{predict_job_dir}/sam_predict.csv'
          #
          # job_description
          if ancestor_job_dir != predict_job_dir :
@@ -583,13 +580,13 @@ def predict_all(
             #
             # job_queue
             args = (
-               predict_job_name  ,
-               fit_dir           ,
-               sim_dir           ,
-               fit_node_database ,
-               predict_node_id   ,
-               all_node_db       ,
-               covariate_table   ,
+               predict_job_name                       ,
+               fit_dir                                ,
+               sim_dir                                ,
+               predict_node_database                  ,
+               predict_node_id                        ,
+               all_node_db                            ,
+               covariate_table                        ,
                global_option_value['float_precision'] ,
                global_option_value['db2csv']          ,
                global_option_value['plot']            ,
@@ -601,8 +598,8 @@ def predict_all(
                job_queue.put( (job_description, args) )
                n_job_queue += 1
             #
-            # fit_node_database_list
-            fit_node_database_list.append( fit_node_database )
+            # predict_node_database_list
+            predict_node_database_list.append( predict_node_database )
    #
    # max_number_cpu > 1
    if max_number_cpu > 1 :
@@ -673,16 +670,16 @@ def predict_all(
    else :
       prefix_list = [ 'tru', 'fit', 'sam' ]
    #
-   # fit_node_database
-   for fit_node_database in fit_node_database_list :
+   # predict_node_database
+   for predict_node_database in predict_node_database_list :
       #
       # fit_node_dir
-      index = fit_node_database.rindex('/')
-      fit_node_dir  = fit_node_database[: index]
+      index = predict_node_database.rindex('/')
+      fit_node_dir  = predict_node_database[: index]
       #
       # fit_covariate_table, integrand_table
       fit_or_root   = at_cascade.fit_or_root_class(
-         fit_node_database, root_node_database
+         predict_node_database, root_node_database
       )
       fit_covariate_table = fit_or_root.get_table('covariate')
       integrand_table     = fit_or_root.get_table('integrand')
