@@ -515,31 +515,35 @@ def predict_all(
    job_queue   = manager.Queue()
    n_job_queue = 0
    #
-   # job_id, job_row, fit_node_database_list
+   # predict_job_id, fit_node_database_list
    fit_node_database_list = list()
-   for job_id in range(n_job) :
+   for predict_job_id in range(n_job) :
       #
       # include_this_job
-      job_depth = at_cascade.job_descendent(job_table, start_job_id, job_id)
+      job_depth = at_cascade.job_descendent(
+         job_table, start_job_id, predict_job_id
+      )
       include_this_job = False
       if job_depth != None :
          if max_job_depth == None :
             include_this_job = True
          else :
             include_this_job = job_depth <= max_job_depth
+      #
       if include_this_job :
-         job_row = job_table[job_id]
          #
-         # job_name, fit_node_id, fit_split_reference_id
-         job_name                = job_row['job_name']
-         fit_node_id             = job_row['fit_node_id']
-         fit_split_reference_id  = job_row['split_reference_id']
+         # predict_job_row
+         predict_job_row = job_table[predict_job_id]
+         #
+         # predict_job_name, predict_node_id, predict_split_reference_id
+         predict_job_name        = predict_job_row['job_name']
+         predict_node_id         = predict_job_row['fit_node_id']
          #
          # fit_database_dir, ancestor_job_dir
          predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
             fit_dir                 = fit_dir ,
             job_table               = job_table ,
-            predict_job_id          = job_id ,
+            predict_job_id          = predict_job_id ,
             node_table              = node_table ,
             root_node_id            = root_node_id ,
             split_reference_table   = split_reference_table ,
@@ -557,13 +561,13 @@ def predict_all(
          sam_node_predict = f'{fit_dir}/{fit_database_dir}/sam_predict.csv'
          #
          # fit_title
-         fit_title = job_name
+         fit_title = predict_job_name
          #
          # job_description
          if ancestor_job_dir != predict_job_dir :
             if os.path.exists( sam_node_predict ) :
                os.remove( sam_node_predict )
-            print( f'Missing or bad fit in dismod.db for {job_name}' )
+            print( f'Missing or bad fit in dismod.db for {predict_job_name}' )
          else :
             job_description = 'Done: fit_predict.csv, sam_predict.csv'
             if sim_dir != None :
@@ -572,7 +576,7 @@ def predict_all(
                job_description  += ',  db2csv files'
             if global_option_value['plot'] :
                job_description  += ',  plots'
-            job_description  += f', for {fit_title}'
+            job_description  += f', for {predict_job_name}'
             #
             # ????
             # Matplotlib leaks memrory, so use a separate proccess
@@ -586,7 +590,7 @@ def predict_all(
                fit_dir           ,
                sim_dir           ,
                fit_node_database ,
-               fit_node_id       ,
+               predict_node_id   ,
                all_node_db       ,
                covariate_table   ,
                global_option_value['float_precision'] ,
@@ -631,7 +635,7 @@ def predict_all(
                   plot                  = args[9]           ,
                )
                n_done = n_done_queue.get(block = True) + 1
-               print( f'Done: {n_done}/{n_job_queue}: {fit_title}' )
+               print( f'Done: {n_done}/{n_job_queue}: {predict_job_name}' )
                n_done_queue.put(n_done)
          except queue.Empty :
             pass
