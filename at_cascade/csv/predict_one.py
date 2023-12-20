@@ -19,11 +19,9 @@ Prototype
    # END_DEF
 }
 
-fit_title
-*********
-This string specifies the node and sex corresponding to this fit.
-In the special case of a no_ode fit, 'no_ode' should be included
-in the fit_title.
+predict_job_name
+****************
+This string specifies the node and sex corresponding to this prediction.
 
 fit_dir
 *******
@@ -88,11 +86,9 @@ import copy
 # Create Diagonsitcs for One Fit
 # ##############################
 #
-# fit_title
-# *********
+# predict_job_name
+# ****************
 # This string specifies the node and sex corresponding to this fit.
-# In the special case of a no_ode fit, 'no_ode' should be included
-# in the fit_title.
 #
 # fit_dir
 # *******
@@ -122,13 +118,13 @@ import at_cascade
 import copy
 
 def diagonse_one(
-   fit_title             ,
+   predict_job_name      ,
    fit_dir               ,
    fit_node_database     ,
    db2csv                ,
    plot                  ,
 ) :
-   assert type(fit_title) == str
+   assert type(predict_job_name) == str
    assert type(fit_dir) == str
    assert type(fit_node_database) == str
    #
@@ -161,7 +157,7 @@ def diagonse_one(
       dismod_at.plot_data_fit(
          database       = fit_node_database  ,
          pdf_file       = pdf_file           ,
-         plot_title     = fit_title          ,
+         plot_title     = predict_job_name   ,
          max_plot       = 1000               ,
          integrand_list = integrand_list     ,
       )
@@ -172,14 +168,14 @@ def diagonse_one(
       dismod_at.plot_rate_fit(
          database       = fit_node_database  ,
          pdf_file       = pdf_file           ,
-         plot_title     = fit_title          ,
+         plot_title     = predict_job_name   ,
          rate_set       = rate_set           ,
       )
 # ----------------------------------------------------------------------------
 
 # BEGIN_DEF
 def predict_one(
-   fit_title             ,
+   predict_job_name      ,
    fit_dir               ,
    sim_dir               ,
    fit_node_database     ,
@@ -190,7 +186,7 @@ def predict_one(
    db2csv                ,
    plot                  ,
 ) :
-   assert type(fit_title) == str
+   assert type(predict_job_name) == str
    assert type(fit_dir) == str
    assert sim_dir == None or type(sim_dir) == str
    assert type(fit_node_database) == str
@@ -393,7 +389,7 @@ def predict_one(
       at_cascade.csv.write_table(file_name, predict_table)
    #
    diagonse_one(
-      fit_title         = fit_title ,
+      predict_job_name  = predict_job_name ,
       fit_dir           = fit_dir ,
       fit_node_database = fit_node_database ,
       db2csv            = db2csv ,

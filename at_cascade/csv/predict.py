@@ -560,9 +560,6 @@ def predict_all(
          # sam_node_predict
          sam_node_predict = f'{fit_dir}/{fit_database_dir}/sam_predict.csv'
          #
-         # fit_title
-         fit_title = predict_job_name
-         #
          # job_description
          if ancestor_job_dir != predict_job_dir :
             if os.path.exists( sam_node_predict ) :
@@ -586,7 +583,7 @@ def predict_all(
             #
             # job_queue
             args = (
-               fit_title         ,
+               predict_job_name  ,
                fit_dir           ,
                sim_dir           ,
                fit_node_database ,
@@ -621,9 +618,8 @@ def predict_all(
             while True :
                (job_description, args)  = job_queue.get(block = False)
                # predict_one
-               fit_title = args[0]
                at_cascade.csv.predict_one(
-                  fit_title             = args[0]           ,
+                  predict_job_name      = args[0]           ,
                   fit_dir               = args[1]           ,
                   sim_dir               = args[2]           ,
                   fit_node_database     = args[3]           ,
