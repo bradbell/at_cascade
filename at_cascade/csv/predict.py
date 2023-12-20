@@ -539,20 +539,20 @@ def predict_all(
          fit_node_id             = job_row['fit_node_id']
          fit_split_reference_id  = job_row['split_reference_id']
          #
-         # fit_database_dir
-         fit_database_dir = at_cascade.get_database_dir(
-            node_table              = node_table               ,
-            split_reference_table   = split_reference_table    ,
-            node_split_set          = node_split_set           ,
-            root_node_id            = root_node_id             ,
-            root_split_reference_id = root_split_reference_id  ,
-            fit_node_id             = fit_node_id              ,
-            fit_split_reference_id  = fit_split_reference_id   ,
+         # fit_database_dir, ancestor_job_dir
+         predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
+            fit_dir                 = fit_dir ,
+            job_table               = job_table ,
+            predict_job_id          = job_id ,
+            node_table              = node_table ,
+            root_node_id            = root_node_id ,
+            split_reference_table   = split_reference_table ,
+            root_split_reference_id = root_split_reference_id ,
+            error_message_dict      = error_message_dict ,
          )
          #
          # fit_database_dir
-         if job_id == -1 :
-            fit_database_dir += '/no_ode'
+         fit_database_dir = predict_job_dir
          #
          # fit_node_database
          fit_node_database = f'{fit_dir}/{fit_database_dir}/dismod.db'
@@ -567,16 +567,10 @@ def predict_all(
             fit_title = job_name
          #
          # job_description
-         # check for an error during fit both and fit fixed
-         two_errors = False
-         if job_name in error_message_dict :
-               two_errors = len( error_message_dict[job_name] ) > 1
-         if two_errors :
+         if ancestor_job_dir != predict_job_dir :
             if os.path.exists( sam_node_predict ) :
                os.remove( sam_node_predict )
-            print( f'Error in {job_name}' )
-         elif not os.path.exists( fit_node_database ) :
-            print( f'Missing dismod.db for {job_name}' )
+            print( f'Missing or bad fit in dismod.db for {job_name}' )
          else :
             job_description = 'Done: fit_predict.csv, sam_predict.csv'
             if sim_dir != None :

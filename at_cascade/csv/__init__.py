@@ -104,6 +104,7 @@ Routines
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
 {xrst_toc_table
+   at_cascade/csv/ancestor_fit.py
    at_cascade/csv/check_table.py
    at_cascade/csv/covariate_avg.py
    at_cascade/csv/covariate_spline.py
@@ -122,6 +123,7 @@ Routines
 {xrst_end csv.module}
 '''
 # BEGIN_SORT_THIS_LINE_PLUS_1
+from .ancestor_fit     import ancestor_fit
 from .check_table      import check_table
 from .covariate_avg    import covariate_avg
 from .covariate_spline import covariate_spline
