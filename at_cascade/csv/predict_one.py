@@ -74,7 +74,9 @@ This output file is located in the same directory as
 the *predict_node_database* .
 It contains the predictions for this fit node at the age and time
 specified by the covariate.csv file.
-The predictions are done using the optimal variable values.
+The predictions are done using the optimal variable values
+for the parent node and sex reference in the predict_node_database.
+
 
 {xrst_end csv.predict_one}
 r'''
@@ -211,14 +213,14 @@ def predict_one(
          root_node_database = row['option_value']
    assert root_node_database != None
    #
-   # fit_covariate_table, integrand_table, node_table
-   fit_or_root = at_cascade.fit_or_root_class(
+   # predict_covariate_table, integrand_table, node_table
+   pedict_or_root = at_cascade.fit_or_root_class(
       predict_node_database, root_node_database
    )
-   fit_covariate_table = fit_or_root.get_table('covariate')
-   integrand_table     = fit_or_root.get_table('integrand')
-   node_table          = fit_or_root.get_table('node')
-   fit_or_root.close()
+   predict_covariate_table = pedict_or_root.get_table('covariate')
+   integrand_table         = pedict_or_root.get_table('integrand')
+   node_table              = pedict_or_root.get_table('node')
+   pedict_or_root.close()
    #
    # predict_node_database
    # add the truth_var table to this database
@@ -226,8 +228,6 @@ def predict_one(
       at_cascade.csv.set_truth(
          sim_dir, predict_node_database, root_node_database
       )
-   #
-   # fit_or_root
    #
    # integrand_id_list
    predict_integrand_table = at_cascade.csv.read_table(
@@ -240,15 +240,15 @@ def predict_one(
       )
       integrand_id_list.append( integrand_id )
    #
-   # fit_node_name
-   fit_node_name = node_table[predict_node_id]['node_name']
+   # predict_node_name
+   predict_node_name = node_table[predict_node_id]['node_name']
    #
    # split_reference_table
    split_reference_table = at_cascade.csv.split_reference_table
    #
    # fit_split_reference_id
    cov_info = at_cascade.get_cov_info(
-      option_all_table, fit_covariate_table, split_reference_table
+      option_all_table, predict_covariate_table, split_reference_table
    )
    fit_split_reference_id  = cov_info['split_reference_id']
    #
@@ -264,7 +264,7 @@ def predict_one(
    male_index_dict = dict()
    if sex_name == 'both' :
       for (i_row, row) in enumerate(all_covariate_table) :
-         if row['node_name'] == fit_node_name :
+         if row['node_name'] == predict_node_name :
             sex  = row['sex']
             age  = float( row['age'] )
             time = float( row['time'] )
@@ -284,7 +284,7 @@ def predict_one(
          select = True
       else :
          select = False
-      select = select and cov_row['node_name'] == fit_node_name
+      select = select and cov_row['node_name'] == predict_node_name
       if select :
          #
          # avgint_row
@@ -301,10 +301,11 @@ def predict_one(
          }
          #
          # covariate_id
-         for covariate_id in range( len(fit_covariate_table) ) :
+         for covariate_id in range( len(predict_covariate_table) ) :
             #
             # covariate_name
-            covariate_name = fit_covariate_table[covariate_id]['covariate_name']
+            covariate_name = \
+               predict_covariate_table[covariate_id]['covariate_name']
             #
             # covariate_value
             if covariate_name == 'one' :

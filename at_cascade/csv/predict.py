@@ -571,6 +571,7 @@ def predict_all(
                plot              = False
                ancestor_database = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
                predict_database  = f'{fit_dir}/{predict_job_dir}/ancestor.db'
+               # Must copy ancestor database because predictions will change it
                shutil.copyfile(ancestor_database, predict_database)
                command = [
                   'dismod_at', predict_database,
