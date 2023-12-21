@@ -539,6 +539,7 @@ def predict_all(
          # predict_job_name, predict_node_id, predict_split_reference_id
          predict_job_name        = predict_job_row['job_name']
          predict_node_id         = predict_job_row['fit_node_id']
+         predict_sex_id          = predict_job_row['split_reference_id']
          #
          # predict_job_dir, ancestor_job_dir
          predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
@@ -602,6 +603,7 @@ def predict_all(
                sim_dir                                ,
                predict_database                       ,
                predict_node_id                        ,
+               predict_sex_id                         ,
                all_node_db                            ,
                covariate_table                        ,
                global_option_value['float_precision'] ,
@@ -638,11 +640,12 @@ def predict_all(
                   sim_dir               = args[2]           ,
                   predict_node_database = args[3]           ,
                   predict_node_id       = args[4]           ,
-                  all_node_database     = args[5]           ,
-                  all_covariate_table   = args[6]           ,
-                  float_precision       = args[7]           ,
-                  db2csv                = args[8]           ,
-                  plot                  = args[9]           ,
+                  predict_sex_id        = args[5]           ,
+                  all_node_database     = args[6]           ,
+                  all_covariate_table   = args[7]           ,
+                  float_precision       = args[8]           ,
+                  db2csv                = args[9]           ,
+                  plot                  = args[10]          ,
                )
                n_done = n_done_queue.get(block = True) + 1
                print( f'Done: {n_done}/{n_job_queue}: {predict_job_name}' )

@@ -35,7 +35,7 @@ is the directory name where the csv simulation files are located.
 predict_node_database
 *********************
 This string is the location, relative to fit_dir, of the dismod_at
-database for a fit.
+database for the closest ancestor fit.
 
 predict_node_id
 ***************
@@ -182,6 +182,7 @@ def predict_one(
    sim_dir               ,
    predict_node_database ,
    predict_node_id       ,
+   predict_sex_id        ,
    all_node_database     ,
    all_covariate_table   ,
    float_precision       ,
@@ -246,23 +247,28 @@ def predict_one(
    # split_reference_table
    split_reference_table = at_cascade.csv.split_reference_table
    #
-   # fit_split_reference_id
+   # fit_sex_id
    cov_info = at_cascade.get_cov_info(
       option_all_table, predict_covariate_table, split_reference_table
    )
-   fit_split_reference_id  = cov_info['split_reference_id']
+   fit_sex_id  = cov_info['split_reference_id']
    #
-   # sex_value
-   row       = split_reference_table[fit_split_reference_id]
-   sex_value = row['split_reference_value']
-   sex_name  = row['split_reference_name']
+   # predict_sex_value
+   row               = split_reference_table[predict_sex_id]
+   predict_sex_value = row['split_reference_value']
+   predict_sex_name  = row['split_reference_name']
+   #
+   # fit_sex_value
+   row           = split_reference_table[predict_sex_id]
+   fit_sex_value = row['split_reference_value']
+   fit_sex_name  = row['split_reference_name']
    #
    # avgint_table
    avgint_table = list()
    #
    # male_index_dict
    male_index_dict = dict()
-   if sex_name == 'both' :
+   if predict_sex_name == 'both' :
       for (i_row, row) in enumerate(all_covariate_table) :
          if row['node_name'] == predict_node_name :
             sex  = row['sex']
@@ -278,9 +284,9 @@ def predict_one(
    for cov_row in all_covariate_table :
       #
       # select
-      if cov_row['sex'] == sex_name :
+      if cov_row['sex'] == predict_sex_name :
          select = True
-      elif cov_row['sex'] == 'female' and sex_name == 'both' :
+      elif cov_row['sex'] == 'female' and predict_sex_name == 'both' :
          select = True
       else :
          select = False
@@ -311,10 +317,10 @@ def predict_one(
             if covariate_name == 'one' :
                covariate_value = 1.0
             elif covariate_name == 'sex' :
-               covariate_value = sex_value
+               covariate_value = predict_sex_value
             else :
                covariate_value = float( cov_row[covariate_name] )
-               if sex_name == 'both' :
+               if predict_sex_name == 'both' :
                   male_row  = all_covariate_table[ male_index_dict[age][time] ]
                   assert male_row['sex'] == 'male'
                   assert cov_row['sex']  == 'female'
