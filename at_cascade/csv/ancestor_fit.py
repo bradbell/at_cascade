@@ -143,19 +143,24 @@ def ancestor_fit(
          root_node_id            = root_node_id                   ,
          root_split_reference_id = root_split_reference_id        ,
          fit_node_id             = ancestor_job_id                    ,
-         fit_split_reference_id  = fit_split_reference_id         ,
+         fit_split_reference_id  = predict_split_reference_id         ,
       )
       #
       # have_fit
       ancestor_job_database = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
       if not os.path.exists( ancestor_job_database ) :
+         have_fit = False
+      elif job_name not in error_message_dict :
          have_fit = True
       else :
          have_fit  = len( error_message_dict[job_name] ) < 2
    #
    # BEGIN_RETURN
    assert type(predict_job_dir) == str
-   assert type(ancestor_job_dir) == str or ancestor_job_dir == None
+   if type(ancestor_job_dir) == str :
+      assert predict_job_dir.startswith(ancestor_job_dir)
+   else :
+      assert ancestor_job_dir == None
    #
    return predict_job_dir, ancestor_job_dir
    # END_RETURN

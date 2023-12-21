@@ -322,11 +322,6 @@ def try_one_job(
       event.set()
       lock.release()
       #
-      # raise
-      # This prints stack trace when we are not running in parallel
-      if max_number_cpu == 1 :
-         raise
-      #
       # ok
       job_done = False
    #

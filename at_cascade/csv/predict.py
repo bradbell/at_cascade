@@ -8,6 +8,7 @@ import at_cascade
 import copy
 import os
 import time
+import shutil
 '''
 
 {xrst_begin csv.predict}
@@ -515,8 +516,8 @@ def predict_all(
    job_queue   = manager.Queue()
    n_job_queue = 0
    #
-   # predict_job_id, predict_node_database_list
-   predict_node_database_list = list()
+   # predict_job_id, predict_database_list
+   predict_database_list = list()
    for predict_job_id in range(n_job) :
       #
       # include_this_job
@@ -551,24 +552,39 @@ def predict_all(
             error_message_dict      = error_message_dict ,
          )
          #
-         # predict_node_database
-         predict_node_database = f'{fit_dir}/{predict_job_dir}/dismod.db'
-         #
-         # sam_node_predict
-         sam_node_predict = f'{fit_dir}/{predict_job_dir}/sam_predict.csv'
-         #
-         # job_description
-         if ancestor_job_dir != predict_job_dir :
+         # predict_database, db2csv, plot
+         if ancestor_job_dir == None :
+            sam_node_predict = f'{fit_dir}/{predict_job_dir}/sam_predict.csv'
             if os.path.exists( sam_node_predict ) :
                os.remove( sam_node_predict )
-            print( f'Missing or bad fit in dismod.db for {predict_job_name}' )
+            print( f'Cannot find an ancestor that fit for {predict_job_name}' )
          else :
+            if ancestor_job_dir == predict_job_dir :
+               db2csv            = global_option_value['db2csv']
+               plot              = global_option_value['plot']
+               predict_database  = f'{fit_dir}/{predict_job_dir}/dismod.db'
+            else :
+               level             = predict_job_dir.count('/') + 1
+               path2root_node_db = level * '../' + 'root_node.db'
+               #
+               db2csv            = False
+               plot              = False
+               ancestor_database = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
+               predict_database  = f'{fit_dir}/{predict_job_dir}/ancestor.db'
+               shutil.copyfile(ancestor_database, predict_database)
+               command = [
+                  'dismod_at', predict_database,
+                  'set', 'option', 'other_database', path2root_node_db
+               ]
+               dismod_at.system_command_prc(command, print_command = False)
+            #
+            # job_description
             job_description = 'Done: fit_predict.csv, sam_predict.csv'
             if sim_dir != None :
                job_description  += ', tru_predict.csv'
-            if global_option_value['db2csv'] :
+            if db2csv :
                job_description  += ',  db2csv files'
-            if global_option_value['plot'] :
+            if plot :
                job_description  += ',  plots'
             job_description  += f', for {predict_job_name}'
             #
@@ -583,13 +599,13 @@ def predict_all(
                predict_job_name                       ,
                fit_dir                                ,
                sim_dir                                ,
-               predict_node_database                  ,
+               predict_database                       ,
                predict_node_id                        ,
                all_node_db                            ,
                covariate_table                        ,
                global_option_value['float_precision'] ,
-               global_option_value['db2csv']          ,
-               global_option_value['plot']            ,
+               db2csv                                 ,
+               plot                                   ,
             )
             if max_number_cpu == 1 :
                at_cascade.csv.predict_one(*args)
@@ -598,8 +614,8 @@ def predict_all(
                job_queue.put( (job_description, args) )
                n_job_queue += 1
             #
-            # predict_node_database_list
-            predict_node_database_list.append( predict_node_database )
+            # predict_database_list
+            predict_database_list.append( predict_database )
    #
    # max_number_cpu > 1
    if max_number_cpu > 1 :
@@ -670,16 +686,16 @@ def predict_all(
    else :
       prefix_list = [ 'tru', 'fit', 'sam' ]
    #
-   # predict_node_database
-   for predict_node_database in predict_node_database_list :
+   # predict_database
+   for predict_database in predict_database_list :
       #
       # fit_node_dir
-      index = predict_node_database.rindex('/')
-      fit_node_dir  = predict_node_database[: index]
+      index = predict_database.rindex('/')
+      fit_node_dir  = predict_database[: index]
       #
       # fit_covariate_table, integrand_table
       fit_or_root   = at_cascade.fit_or_root_class(
-         predict_node_database, root_node_database
+         predict_database, root_node_database
       )
       fit_covariate_table = fit_or_root.get_table('covariate')
       integrand_table     = fit_or_root.get_table('integrand')
