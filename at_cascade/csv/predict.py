@@ -516,8 +516,9 @@ def predict_all(
    job_queue   = manager.Queue()
    n_job_queue = 0
    #
-   # predict_job_id, predict_database_list
-   predict_database_list = list()
+   # ancestor_database_list, predict_job_id_list
+   ancestor_database_list = list()
+   predict_job_id_list    = list()
    for predict_job_id in range(n_job) :
       #
       # include_this_job
@@ -536,7 +537,7 @@ def predict_all(
          # predict_job_row
          predict_job_row = job_table[predict_job_id]
          #
-         # predict_job_name, predict_node_id, predict_split_reference_id
+         # predict_job_name, predict_node_id, predict_sex_id
          predict_job_name        = predict_job_row['job_name']
          predict_node_id         = predict_job_row['fit_node_id']
          predict_sex_id          = predict_job_row['split_reference_id']
@@ -553,7 +554,7 @@ def predict_all(
             error_message_dict      = error_message_dict ,
          )
          #
-         # predict_database, db2csv, plot
+         # ancestor_database, db2csv, plot
          if ancestor_job_dir == None :
             sam_node_predict = f'{fit_dir}/{predict_job_dir}/sam_predict.csv'
             if os.path.exists( sam_node_predict ) :
@@ -563,19 +564,19 @@ def predict_all(
             if ancestor_job_dir == predict_job_dir :
                db2csv            = global_option_value['db2csv']
                plot              = global_option_value['plot']
-               predict_database  = f'{fit_dir}/{predict_job_dir}/dismod.db'
+               ancestor_database  = f'{fit_dir}/{predict_job_dir}/dismod.db'
             else :
                level             = predict_job_dir.count('/') + 1
                path2root_node_db = level * '../' + 'root_node.db'
                #
                db2csv            = False
                plot              = False
-               ancestor_database = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
-               predict_database  = f'{fit_dir}/{predict_job_dir}/ancestor.db'
+               fit_database      = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
+               ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
                # Must copy ancestor database because predictions will change it
-               shutil.copyfile(ancestor_database, predict_database)
+               shutil.copyfile(fit_database, ancestor_database)
                command = [
-                  'dismod_at', predict_database,
+                  'dismod_at', ancestor_database,
                   'set', 'option', 'other_database', path2root_node_db
                ]
                dismod_at.system_command_prc(command, print_command = False)
@@ -592,7 +593,7 @@ def predict_all(
             #
             # ????
             # Matplotlib leaks memrory, so use a separate proccess
-            # for this call to predict_csv_one_job so the memory will be
+            # for this call to predict__one_job so the memory will be
             # freed when it is no longer needed
             # ????
             #
@@ -601,7 +602,7 @@ def predict_all(
                predict_job_name                       ,
                fit_dir                                ,
                sim_dir                                ,
-               predict_database                       ,
+               ancestor_database                      ,
                predict_node_id                        ,
                predict_sex_id                         ,
                all_node_db                            ,
@@ -617,8 +618,9 @@ def predict_all(
                job_queue.put( (job_description, args) )
                n_job_queue += 1
             #
-            # predict_database_list
-            predict_database_list.append( predict_database )
+            # ancestor_database_list, predict_job_id_list
+            ancestor_database_list.append( ancestor_database )
+            predict_job_id_list.append( predict_job_id )
    #
    # max_number_cpu > 1
    if max_number_cpu > 1 :
@@ -638,7 +640,7 @@ def predict_all(
                   predict_job_name      = args[0]           ,
                   fit_dir               = args[1]           ,
                   sim_dir               = args[2]           ,
-                  predict_node_database = args[3]           ,
+                  ancestor_node_database = args[3]           ,
                   predict_node_id       = args[4]           ,
                   predict_sex_id        = args[5]           ,
                   all_node_database     = args[6]           ,
@@ -690,16 +692,24 @@ def predict_all(
    else :
       prefix_list = [ 'tru', 'fit', 'sam' ]
    #
-   # predict_database
-   for predict_database in predict_database_list :
+   # ancestor_database, predict_job_id
+   assert len(ancestor_database_list) == len(predict_job_id_list)
+   for predict_index in range( len(ancestor_database_list) ) :
+      ancestor_database = ancestor_database_list[predict_index]
+      predict_job_id    = predict_job_id_list[predict_index]
       #
-      # fit_node_dir
-      index = predict_database.rindex('/')
-      fit_node_dir  = predict_database[: index]
+      # predict_node_id, predict_sex_id
+      predict_job_row   = job_table[predict_job_id]
+      predict_node_id   = predict_job_row['fit_node_id']
+      predict_sex_id    = predict_job_row['split_reference_id']
+      #
+      # predict_node_dir
+      index             = ancestor_database.rindex('/')
+      predict_node_dir  = ancestor_database[: index]
       #
       # fit_covariate_table, integrand_table
       fit_or_root   = at_cascade.fit_or_root_class(
-         predict_database, root_node_database
+         ancestor_database, root_node_database
       )
       fit_covariate_table = fit_or_root.get_table('covariate')
       integrand_table     = fit_or_root.get_table('integrand')
@@ -709,27 +719,33 @@ def predict_all(
       for prefix in prefix_list :
          #
          # predict_table
-         file_name     = f'{fit_node_dir}/{prefix}_predict.csv'
+         file_name     = f'{predict_node_dir}/{prefix}_predict.csv'
          assert os.path.isfile(file_name)
          predict_table =  at_cascade.csv.read_table(file_name)
          #
          # prefix_predict_table
          for row_in in predict_table :
-            #
             # row_out
+            #
+            # avgint_id, avg_integrand, sample_index
             row_out = dict()
             for key in ['avgint_id', 'avg_integrand' ] :
                row_out[key] = row_in[key]
             if prefix == 'sam' :
                row_out['sample_index'] = row_in['sample_index']
+            #
+            # age, time
             assert float(row_in['age_lower'])  == float(row_in['age_upper'])
             assert float(row_in['time_lower']) == float(row_in['time_upper'])
             row_out['age']  = row_in['age_lower']
             row_out['time'] = row_in['time_lower']
             #
+            # node_id
             node_id              = int( row_in['node_id'] )
             row_out['node_name'] = node_table[node_id]['node_name']
+            assert node_id == predict_node_id
             #
+            # row_out
             integrand_id  = int( row_in['integrand_id'] )
             row_out['integrand_name'] = \
                integrand_table[integrand_id]['integrand_name']
@@ -740,6 +756,8 @@ def predict_all(
                covariate_key  = f'x_{i_cov}'
                cov_value      = float( row_in[covariate_key] )
                if covariate_name == 'sex' :
+                  row_tmp   = split_reference_table[predict_sex_id]
+                  assert cov_value == row_tmp['split_reference_value']
                   cov_value = sex_value2name[cov_value]
                row_out[covariate_name] = cov_value
             #

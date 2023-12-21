@@ -33,11 +33,17 @@ fit_node_database
 *****************
 Is the name of a database, relative to the current directory,
 that corresponds to a fit.
-A new ``truth_var`` table is written to this database
-containing the dismod_at variable values corresponding to truth
-during the simulation.
-Note that the rate random effects are in log space and relative
-to the fixed effect rate at the same age and time.
+
+#. A new ``truth_var`` table is written to this database
+   containing the dismod_at variable values corresponding to truth
+   during the simulation.
+
+#. Note that the rate random effects are in log space and relative
+   to the fixed effect rate at the same age and time.
+
+#. The contents of the database, and not its location relative to the
+   :ref:`csv.fit@fit_dir` is used to determine the node and sex for
+   the truth. In fact, this routine does not know what the *fit_dir* is.
 
 root_node_database
 ******************

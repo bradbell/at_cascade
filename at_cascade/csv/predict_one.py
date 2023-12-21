@@ -32,10 +32,12 @@ sim_dir
 *******
 is the directory name where the csv simulation files are located.
 
-predict_node_database
-*********************
+ancestor_node_database
+**********************
 This string is the location, relative to fit_dir, of the dismod_at
-database for the closest ancestor fit.
+database for the closest ancestor fit (for this prediction).
+It has been copied from the original ancestor fit directory
+to the prediction directory.
 
 predict_node_id
 ***************
@@ -53,29 +55,41 @@ covariate.csv file
 float_precision
 ***************
 This is the number of decimal digits of precision to include for
-float values in the fit_predict.csv file.
+float values in fit_predict.csv, sam_predict.csv, and tru_predict.csv;
+see below.
 
 db2csv
 ******
 If true, the `db2csv_command`_ is used to generate the csv files
-corresponding to the *predict_node_database* .
+corresponding to the *ancestor_node_database* .
 
 .. _db2csv_command: https://dismod-at.readthedocs.io/db2csv_command.html
 
 plot
 ****
 If this boolean is true, ``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
-to *predict_node_database* are generated (in the same directory as the
-*predict_node_database* ).
+to *ancestor_node_database* are generated (in the same directory as the
+*ancestor_node_database* ).
 
 fit_predict.csv
 ***************
 This output file is located in the same directory as
-the *predict_node_database* .
-It contains the predictions for this fit node at the age and time
+the *ancestor_node_database* .
+It contains the predictions for this prediction node at the age and time
 specified by the covariate.csv file.
 The predictions are done using the optimal variable values
-for the parent node and sex reference in the predict_node_database.
+for the parent node and sex reference in the ancestor_node_database.
+
+sam_predict.csv
+***************
+This is the predictions corresponding to the posterior samples of the
+variable values for the parent node and sex reference in the
+ancestor_node_database.
+
+tru_predict.csv
+***************
+This is the predictions corresponding to the true (simulation) values for
+variable values for the prediction node and sex reference.
 
 
 {xrst_end csv.predict_one}
@@ -97,38 +111,42 @@ import copy
 # This string is the directory name where the input and output csv files
 # are located.
 #
-# predict_node_database
-# *********************
+# ancestor_node_database
+# **********************
 # This string is the location, relative to fit_dir, of the dismod_at
-# database for a fit.
+# database for an ancestor fit.
+# It has been copied from the original ancestor directory
+# to the pediction directory.
 #
 # db2csv
 # ******
 # If true, the `db2csv_command`_ is used to generate the csv files
-# corresponding to the *predict_node_database* .
+# corresponding to the *ancestor_node_database* .
 #
 # .. _db2csv_command: https://dismod-at.readthedocs.io/db2csv_command.html
 #
 # plot
 # ****
 # If this boolean is true, ``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
-# to *predict_node_database* are generated (in the same directory as the
-# *predict_node_database* ).
+# to *ancestor_node_database* are generated (in the same directory as the
+# *ancestor_node_database* ).
 #
 import dismod_at
 import at_cascade
 import copy
 
 def diagonse_one(
-   predict_job_name      ,
-   fit_dir               ,
-   predict_node_database ,
-   db2csv                ,
-   plot                  ,
+   predict_job_name       ,
+   fit_dir                ,
+   ancestor_node_database ,
+   db2csv                 ,
+   plot                   ,
 ) :
    assert type(predict_job_name) == str
    assert type(fit_dir) == str
-   assert type(predict_node_database) == str
+   assert type(ancestor_node_database) == str
+   assert type( db2csv ) == bool
+   assert type( plot ) == bool
    #
    # predict_integrand_table
    predict_integrand_table = at_cascade.csv.read_table(
@@ -136,13 +154,13 @@ def diagonse_one(
    )
    #
    # predict_node_dir
-   index            = predict_node_database.rfind('/')
-   predict_node_dir = predict_node_database[: index]
+   index            = ancestor_node_database.rfind('/')
+   predict_node_dir = ancestor_node_database[: index]
    #
    if db2csv :
       #
       # db2csv output files
-      command = [ 'dismodat.py', predict_node_database, 'db2csv' ]
+      command = [ 'dismodat.py', ancestor_node_database, 'db2csv' ]
       dismod_at.system_command_prc(
          command, print_command = False, return_stdout = True
       )
@@ -157,7 +175,7 @@ def diagonse_one(
          if not integrand_name.startswith('mulcov_') :
             integrand_list.append( integrand_name )
       dismod_at.plot_data_fit(
-         database       = predict_node_database  ,
+         database       = ancestor_node_database ,
          pdf_file       = pdf_file               ,
          plot_title     = predict_job_name       ,
          max_plot       = 1000                   ,
@@ -168,7 +186,7 @@ def diagonse_one(
       pdf_file = f'{predict_node_dir}/rate_plot.pdf'
       rate_set = { 'pini', 'iota', 'chi', 'omega' }
       dismod_at.plot_rate_fit(
-         database       = predict_node_database  ,
+         database       = ancestor_node_database ,
          pdf_file       = pdf_file               ,
          plot_title     = predict_job_name       ,
          rate_set       = rate_set               ,
@@ -180,7 +198,7 @@ def predict_one(
    predict_job_name      ,
    fit_dir               ,
    sim_dir               ,
-   predict_node_database ,
+   ancestor_node_database,
    predict_node_id       ,
    predict_sex_id        ,
    all_node_database     ,
@@ -192,7 +210,7 @@ def predict_one(
    assert type(predict_job_name) == str
    assert type(fit_dir) == str
    assert sim_dir == None or type(sim_dir) == str
-   assert type(predict_node_database) == str
+   assert type(ancestor_node_database) == str
    assert type(predict_node_id) == int
    assert type(all_node_database) == str
    assert type(all_covariate_table) == list
@@ -214,20 +232,20 @@ def predict_one(
          root_node_database = row['option_value']
    assert root_node_database != None
    #
-   # predict_covariate_table, integrand_table, node_table
-   pedict_or_root = at_cascade.fit_or_root_class(
-      predict_node_database, root_node_database
+   # ancestor_covariate_table, integrand_table, node_table
+   ancestor_or_root = at_cascade.fit_or_root_class(
+      ancestor_node_database, root_node_database
    )
-   predict_covariate_table = pedict_or_root.get_table('covariate')
-   integrand_table         = pedict_or_root.get_table('integrand')
-   node_table              = pedict_or_root.get_table('node')
-   pedict_or_root.close()
+   ancestor_covariate_table = ancestor_or_root.get_table('covariate')
+   integrand_table          = ancestor_or_root.get_table('integrand')
+   node_table               = ancestor_or_root.get_table('node')
+   ancestor_or_root.close()
    #
-   # predict_node_database
+   # ancestor_node_database
    # add the truth_var table to this database
    if type(sim_dir) == str :
       at_cascade.csv.set_truth(
-         sim_dir, predict_node_database, root_node_database
+         sim_dir, ancestor_node_database, root_node_database
       )
    #
    # integrand_id_list
@@ -247,21 +265,21 @@ def predict_one(
    # split_reference_table
    split_reference_table = at_cascade.csv.split_reference_table
    #
-   # fit_sex_id
+   # ancestor_sex_id
    cov_info = at_cascade.get_cov_info(
-      option_all_table, predict_covariate_table, split_reference_table
+      option_all_table, ancestor_covariate_table, split_reference_table
    )
-   fit_sex_id  = cov_info['split_reference_id']
+   ancestor_sex_id  = cov_info['split_reference_id']
    #
-   # predict_sex_value
+   # predict_sex_value, predict_sex_name
    row               = split_reference_table[predict_sex_id]
    predict_sex_value = row['split_reference_value']
    predict_sex_name  = row['split_reference_name']
    #
-   # fit_sex_value
-   row           = split_reference_table[predict_sex_id]
-   fit_sex_value = row['split_reference_value']
-   fit_sex_name  = row['split_reference_name']
+   # ancestor_sex_value, ancestor_sex_name
+   row            = split_reference_table[ancestor_sex_id]
+   ancestor_value = row['split_reference_value']
+   ancestor_name  = row['split_reference_name']
    #
    # avgint_table
    avgint_table = list()
@@ -307,11 +325,11 @@ def predict_one(
          }
          #
          # covariate_id
-         for covariate_id in range( len(predict_covariate_table) ) :
+         for covariate_id in range( len(ancestor_covariate_table) ) :
             #
             # covariate_name
             covariate_name = \
-               predict_covariate_table[covariate_id]['covariate_name']
+               ancestor_covariate_table[covariate_id]['covariate_name']
             #
             # covariate_value
             if covariate_name == 'one' :
@@ -338,7 +356,7 @@ def predict_one(
    #
    # connection
    connection = dismod_at.create_connection(
-      predict_node_database, new = False, readonly = False
+      ancestor_node_database, new = False, readonly = False
    )
    #
    # avgint table
@@ -355,8 +373,8 @@ def predict_one(
    connection.close()
    #
    # predict_node_dir
-   index            = predict_node_database.rfind('/')
-   predict_node_dir = predict_node_database[: index]
+   index            = ancestor_node_database.rfind('/')
+   predict_node_dir = ancestor_node_database[: index]
    #
    # float_format
    n_digits = str( float_precision )
@@ -366,7 +384,7 @@ def predict_one(
    for prefix in prefix_list :
       #
       # command
-      command = [ 'dismod_at', predict_node_database, 'predict' ]
+      command = [ 'dismod_at', ancestor_node_database, 'predict' ]
       if prefix == 'fit' :
          command.append( 'fit_var' )
       elif prefix == 'tru' :
@@ -376,15 +394,30 @@ def predict_one(
          command.append( 'sample' )
       dismod_at.system_command_prc(command, print_command = False )
       #
-      # predict_table
+      # predict_table, covariate_table
       connection    = dismod_at.create_connection(
-            predict_node_database, new = False, readonly = True
+            ancestor_node_database, new = False, readonly = True
       )
-      predict_table = dismod_at.get_table_dict(connection, 'predict')
+      predict_table   = dismod_at.get_table_dict(connection, 'predict')
+      covariate_table = dismod_at.get_table_dict(connection, 'covariate')
       connection.close()
+      #
+      # sex_covariate_id
+      sex_covariate_id = None
+      for (covariate_id, row) in enumerate( covariate_table ) :
+         if row['covariate_name'] == 'sex' :
+            sex_covariate_id = covariate_id
+      #
+      # predict_table
       for pred_row in predict_table :
+         #
+         # avgint_row
          avgint_id  = pred_row['avgint_id']
          avgint_row = avgint_table[avgint_id]
+         assert avgint_row['node_id'] == predict_node_id
+         assert avgint_row[ f'x_{sex_covariate_id}' ] == predict_sex_value
+         #
+         # predict_table
          for key in avgint_row.keys() :
             pred_row[key] = avgint_row[key]
          avg_integrand             = pred_row['avg_integrand']
@@ -392,6 +425,7 @@ def predict_one(
          if prefix in [ 'fit', 'tru' ] :
             assert pred_row['sample_index'] == None
             del pred_row['sample_index']
+         #
       #
       # prefix_predict.csv
       file_name    = f'{predict_node_dir}/{prefix}_predict.csv'
@@ -400,7 +434,7 @@ def predict_one(
    diagonse_one(
       predict_job_name  = predict_job_name ,
       fit_dir           = fit_dir ,
-      predict_node_database = predict_node_database ,
+      ancestor_node_database = ancestor_node_database ,
       db2csv            = db2csv ,
       plot              = plot ,
    )
