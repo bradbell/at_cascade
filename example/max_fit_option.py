@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
-'''
+r'''
 {xrst_begin_parent max_fit_option}
 {xrst_spell
    dage

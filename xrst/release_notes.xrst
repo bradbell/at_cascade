@@ -35,6 +35,12 @@ Release Notes for 2023
 mm-dd
 *****
 
+Predict Branch
+==============
+
+#. Fix a syntax warning when running the
+   :ref:`max_fit_option-name` example.
+
 12-19
 =====
 Some of the references to the dismod_at documentation were pointing
