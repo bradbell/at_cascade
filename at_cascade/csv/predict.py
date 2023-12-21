@@ -707,13 +707,13 @@ def predict_all(
       index             = ancestor_database.rindex('/')
       predict_node_dir  = ancestor_database[: index]
       #
-      # fit_covariate_table, integrand_table
-      fit_or_root   = at_cascade.fit_or_root_class(
+      # ancestor_covariate_table, integrand_table
+      ancestor_or_root   = at_cascade.fit_or_root_class(
          ancestor_database, root_node_database
       )
-      fit_covariate_table = fit_or_root.get_table('covariate')
-      integrand_table     = fit_or_root.get_table('integrand')
-      fit_or_root.close()
+      ancestor_covariate_table = ancestor_or_root.get_table('covariate')
+      integrand_table          = ancestor_or_root.get_table('integrand')
+      ancestor_or_root.close()
       #
       # prefix
       for prefix in prefix_list :
@@ -751,7 +751,7 @@ def predict_all(
                integrand_table[integrand_id]['integrand_name']
             #
             # row_out
-            for (i_cov, cov_row) in enumerate( fit_covariate_table ) :
+            for (i_cov, cov_row) in enumerate( ancestor_covariate_table ) :
                covariate_name = cov_row['covariate_name']
                covariate_key  = f'x_{i_cov}'
                cov_value      = float( row_in[covariate_key] )
