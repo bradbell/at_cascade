@@ -95,7 +95,7 @@ header += 'time_lower,time_upper,meas_value,meas_std,hold_out,'
 header += 'density_name,eta,nu'
 csv_file['data_in.csv'] = header + \
 '''
-0,Sincidence,n0,both,0,10,1990,2000,0.00,1e-4,0,gaussian,,
+0,Sincidence,n0,female,0,10,1990,2000,0.00,1e-4,0,gaussian,,
 1,Sincidence,n1,female,10,20,2000,2010,0.00,1e-4,0,gaussian,,
 2,Sincidence,n2,female,20,30,2010,2020,0.00,1e-4,0,gaussian,,
 '''
@@ -162,6 +162,12 @@ def main() :
                   assert row['integrand_name'] == 'Sincidence'
                   if row['node_name'] == node and row['sex'] == sex_name :
                      sample_list.append(row)
+                     if sex_name == 'male' :
+                        assert row['fit_node_name'] == 'n0'
+                        assert row['fit_sex'] == 'both'
+                     else :
+                        assert row['fit_node_name'] == node
+                        assert row['fit_sex'] == sex_name
                #
                # check sample_list
                if prefix == 'fit' :

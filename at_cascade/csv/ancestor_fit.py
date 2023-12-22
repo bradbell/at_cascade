@@ -129,10 +129,10 @@ def ancestor_fit(
          assert type(predict_job_dir) == str
          return predict_job_dir, ancestor_job_dir
       #
-      # job_name, ancestor_job_id, ancestor_split_reference_id
+      # job_name, ancestor_node_id, ancestor_split_reference_id
       job_row                      = job_table[job_id]
       job_name                     = job_row['job_name']
-      ancestor_job_id              = job_row['fit_node_id']
+      ancestor_node_id             = job_row['fit_node_id']
       ancestor_split_reference_id  = job_row['split_reference_id']
       #
       # ancestor_job_dir
@@ -142,8 +142,8 @@ def ancestor_fit(
          node_split_set          = node_split_set                 ,
          root_node_id            = root_node_id                   ,
          root_split_reference_id = root_split_reference_id        ,
-         fit_node_id             = ancestor_job_id                    ,
-         fit_split_reference_id  = predict_split_reference_id         ,
+         fit_node_id             = ancestor_node_id               ,
+         fit_split_reference_id  = ancestor_split_reference_id     ,
       )
       #
       # have_fit

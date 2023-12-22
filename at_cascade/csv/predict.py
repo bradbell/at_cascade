@@ -9,8 +9,7 @@ import copy
 import os
 import time
 import shutil
-'''
-
+r'''
 {xrst_begin csv.predict}
 {xrst_spell
    avg
@@ -141,14 +140,6 @@ predict_integrand.csv
 This is the list of integrands at which predictions are made
 and stored in :ref:`csv.predict@Output Files@fit_predict.csv` .
 
-integrand_name
---------------
-This string is the name of one of the prediction integrands.
-You can use the integrand name ``mulcov_0`` , ``mulcov_1`` , ...
-which corresponds to the first , second , ...
-covariate multiplier in the csv fit
-:ref:`csv.fit@Input Files@mulcov.csv` file.
-
 
 {xrst_comment ---------------------------------------------------------------}
 
@@ -180,12 +171,14 @@ In addition, the predictions are stored below *fit_dir* in the file
 
 and not in ``fit_predict.csv`` .
 
+
 avgint_id
 ---------
 Each avgint_id corresponds to a different value for age, time,
 or integrand in the fit_predict file.
 The age and time values comes from the covariate.csv file.
-The integrands values come from the predict_integrand.csv file.
+The integrands values come from the predict_integrand.csv file
+and the covariate multiplier list.
 
 sample_index
 ------------
@@ -203,6 +196,10 @@ integrand_name
 --------------
 is the integrand for this sample is equal to the integrand names
 in predict_integrand.csv
+The integrand names ``mulcov_0`` , ``mulcov_1`` , ...
+corresponds to the first , second , ...
+covariate multiplier in the csv fit
+:ref:`csv.fit@Input Files@mulcov.csv` file.
 
 avg_integrand
 -------------
@@ -211,8 +208,24 @@ with covariate and other effects but without measurement noise.
 
 node_name
 ---------
-is the node name for this sample and
-cycles through the nodes in covariate.csv.
+is the node name for this sample is predicting for.
+This cycles through all the nodes in covariate.csv.
+
+fit_node_name
+-------------
+is the node name corresponding to the fit, and samples, that was used
+to do these predictions.
+This is the nearest ancestor that had a successful fit and samples
+with the closet possible fit being the same node and sex.
+
+sex
+---
+is the sex, female, both, or male, that the predictions are for.
+
+fit_sex
+-------
+is the sex corresponding to the fit, and samples, that were used
+to do these prediction.
 
 age
 ---
@@ -224,14 +237,11 @@ time
 is the time for this prediction and is one of
 the times in covariate.csv.
 
-sex
----
-is female, both, or male.
-
 covariate_names
 ---------------
 The rest of the columns are covariate names and contain the value
-of the corresponding covariate in covariate.csv.
+of the corresponding covariate in
+:ref:`csv.fit@Input Files@covariate.csv` .
 
 tru_predict.csv
 ===============
@@ -574,6 +584,7 @@ def predict_all(
                fit_database      = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
                ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
                # Must copy ancestor database because predictions will change it
+               os.makedirs( f'{fit_dir}/{predict_job_dir}', exist_ok = True )
                shutil.copyfile(fit_database, ancestor_database)
                command = [
                   'dismod_at', ancestor_database,
@@ -715,6 +726,21 @@ def predict_all(
       integrand_table          = ancestor_or_root.get_table('integrand')
       ancestor_or_root.close()
       #
+      # ancestor_node_naem
+      ancestor_node_name = at_cascade.get_parent_node(ancestor_database)
+      #
+      # ancestor_sex_name
+      ancestor_sex_covariate_id = None
+      for (covariate_id, row) in enumerate( ancestor_covariate_table ) :
+         if row['covariate_name'] == 'sex' :
+            ancestor_sex_covariate_id = covariate_id
+      row = ancestor_covariate_table[ancestor_sex_covariate_id]
+      ancestor_sex_value = row['reference']
+      ancestor_sex_name = None
+      for sex_name in at_cascade.csv.sex_name2value :
+         if at_cascade.csv.sex_name2value[sex_name] == ancestor_sex_value :
+            ancestor_sex_name = sex_name
+      #
       # prefix
       for prefix in prefix_list :
          #
@@ -726,31 +752,44 @@ def predict_all(
          # prefix_predict_table
          for row_in in predict_table :
             # row_out
-            #
-            # avgint_id, avg_integrand, sample_index
             row_out = dict()
-            for key in ['avgint_id', 'avg_integrand' ] :
-               row_out[key] = row_in[key]
+            #
+            # avgint_id
+            row_out['avgint_id'] = row_in['avgint_id']
+            #
+            # avg_integrand
+            row_out['avg_integrand'] = row_in['avg_integrand']
+            #
+            # sample_index
             if prefix == 'sam' :
                row_out['sample_index'] = row_in['sample_index']
             #
-            # age, time
+            # age
             assert float(row_in['age_lower'])  == float(row_in['age_upper'])
-            assert float(row_in['time_lower']) == float(row_in['time_upper'])
             row_out['age']  = row_in['age_lower']
+            #
+            # time
+            assert float(row_in['time_lower']) == float(row_in['time_upper'])
             row_out['time'] = row_in['time_lower']
             #
-            # node_id
+            # node_name
             node_id              = int( row_in['node_id'] )
             row_out['node_name'] = node_table[node_id]['node_name']
             assert node_id == predict_node_id
             #
-            # row_out
+            # fit_node_name
+            row_out['fit_node_name'] = ancestor_node_name
+            #
+            # fit_sex
+            row_out['fit_sex'] = ancestor_sex_name
+            #
+            # integrand_name
             integrand_id  = int( row_in['integrand_id'] )
             row_out['integrand_name'] = \
                integrand_table[integrand_id]['integrand_name']
             #
-            # row_out
+            # covariate_name
+            # for each covariate in predict_table
             for (i_cov, cov_row) in enumerate( ancestor_covariate_table ) :
                covariate_name = cov_row['covariate_name']
                covariate_key  = f'x_{i_cov}'
