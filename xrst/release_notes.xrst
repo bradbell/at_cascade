@@ -35,8 +35,8 @@ Release Notes for 2023
 mm-dd
 *****
 
-Predict Branch
-==============
+12-22
+=====
 #. Extend the :ref:`csv.predict-name` to jobs that fail
    to fit or compute sample statistics, jobs correspond to (node, sex) pair.
    This was does by using the closest ancestor job that did fit
@@ -44,6 +44,7 @@ Predict Branch
    :ref:`csv.predict@Output Files@fit_predict.csv@fit_node_name` and
    :ref:`csv.predict@Output Files@fit_predict.csv@fit_sex` in
    the fit_predict.csv file.
+
 #. Fix a syntax warning when running the
    :ref:`max_fit_option-name` and :ref:`mulcov_freeze-name` examples.
 
