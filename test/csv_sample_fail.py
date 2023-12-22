@@ -215,5 +215,5 @@ def main() :
          assert os.path.exists(file_path)
 #
 main()
-print('csv_no_sample.py: OK')
+print('csv_sample_fail.py: OK')
 sys.exit(0)

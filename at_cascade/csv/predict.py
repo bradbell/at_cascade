@@ -40,7 +40,7 @@ Same as the csv fit :ref:`csv.fit@fit_dir` .
 
 sim_dir
 *******
-This is either None, the file
+If this is None, the file
 :ref:`csv.predict@Output Files@tru_predict.csv` is not created.
 Otherwise, :ref:`csv.simulate@sim_dir` is the directory
 used to simulate the data for this fit and the file
@@ -215,8 +215,10 @@ fit_node_name
 -------------
 is the node name corresponding to the fit, and samples, that was used
 to do these predictions.
-This is the nearest ancestor that had a successful fit and samples
-with the closet possible fit being the same node and sex.
+This identifies the nearest ancestor that had a successful fit and samples.
+If *fit_node_name* and *fit_sex* are the same as *node_name* and *sex* ,
+the fit and samples succeeded for this *node_name* and *sex* .
+Otherwise fit or samples failed for this *node_name* and *sex* .
 
 sex
 ---
@@ -248,6 +250,8 @@ tru_predict.csv
 If :ref:`csv.predict@sim_dir` is None, this file is not created.
 Otherwise, this file contains the predictions for the model variables
 corresponding to the simulation.
+It is similar to :ref:`csv.predict@Output Files@fit_predict.csv`
+with the following differences:
 
 #. The first line (header line) is the same in this file and
    fit_predict.csv.
@@ -255,11 +259,16 @@ corresponding to the simulation.
    ( *node_name* , *avgint_id* ) ,
    the other lines are the same except for the value in the
    avg_integrand column.
+#. The model variables and true values, are for the
+   *fit_node_name* and *fit_sex* . Hence this does not really represent truth
+   unless these are the same as *node_name* and *sex* .
 
 sam_predict.csv
 ===============
 This is a sampling of the predictions,
 using the posterior distribution of the model variables:
+It is similar to :ref:`csv.predict@Output Files@fit_predict.csv`
+with the following differences:
 
 #. The first line (header line) is the same in this file and
    fit_predict.csv except that sam_predict.csv has an extra column
