@@ -31,7 +31,7 @@ This database is created as follows:
 #. Copy the root node database to the fit node database.
 
 #. Drop all of the constant tables from the fit node database; see
-   :ref:`module@constant_table_list` .
+   :ref:`module@at_cascade.constant_table_list` .
 
 #. Change the fit node database option table so that is uses the
    root node database for all the constant tables; i.e.,

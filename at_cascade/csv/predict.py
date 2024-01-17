@@ -305,6 +305,24 @@ each sample index.
 '''
 #
 # ----------------------------------------------------------------------------
+# prints the durrent time and job name
+def print_time(begin, job_name, n_done = None, n_job_queue = None) :
+   assert type(begin) == bool
+   assert type(job_name) == str
+   assert n_done == None or type(n_done) == int
+   assert n_job_queue == None or type(n_job_queue) == int
+   #
+   import datetime
+   now         = datetime.datetime.now()
+   str_time    = now.strftime("%H:%M:%S")
+   if begin :
+      msg = f'Begin: {str_time}: predict {job_name}'
+   else :
+      msg = f'End:   {str_time}: predict {job_name}'
+   if type(n_done) == int :
+      msg += f' {n_done}/{n_job_queue}'
+   print(msg)
+# ----------------------------------------------------------------------------
 # Sets global global_option_value to dict representation of option_predict.csv
 #
 # fit_dir
@@ -601,16 +619,6 @@ def predict_all(
                ]
                dismod_at.system_command_prc(command, print_command = False)
             #
-            # job_description
-            job_description = 'Done: fit_predict.csv, sam_predict.csv'
-            if sim_dir != None :
-               job_description  += ', tru_predict.csv'
-            if db2csv :
-               job_description  += ',  db2csv files'
-            if plot :
-               job_description  += ',  plots'
-            job_description  += f', for {predict_job_name}'
-            #
             # ????
             # Matplotlib leaks memrory, so use a separate proccess
             # for this call to predict__one_job so the memory will be
@@ -632,10 +640,11 @@ def predict_all(
                plot                                   ,
             )
             if max_number_cpu == 1 :
+               print_time(begin = True, job_name = predict_job_name)
                at_cascade.csv.predict_one(*args)
-               print(job_description)
+               print_time(begin = False, job_name = predict_job_name)
             else :
-               job_queue.put( (job_description, args) )
+               job_queue.put( (predict_job_name, args) )
                n_job_queue += 1
             #
             # ancestor_database_list, predict_job_id_list
@@ -654,7 +663,13 @@ def predict_all(
       def process_target(job_queue, n_done_queue) :
          try :
             while True :
-               (job_description, args)  = job_queue.get(block = False)
+               (predict_job_name, args)  = job_queue.get(block = False)
+               #
+               # print Begin message
+               n_done = n_done_queue.get(block = True)
+               print_time(begin = True, job_name = predict_job_name)
+               n_done_queue.put(n_done)
+               #
                # predict_one
                at_cascade.csv.predict_one(
                   predict_job_name      = args[0]           ,
@@ -669,9 +684,17 @@ def predict_all(
                   db2csv                = args[9]           ,
                   plot                  = args[10]          ,
                )
+               #
+               # n_done, print End messsage
                n_done = n_done_queue.get(block = True) + 1
-               print( f'Done: {n_done}/{n_job_queue}: {predict_job_name}' )
+               print_time(
+                  begin       = False,
+                  job_name    = predict_job_name,
+                  n_done      = n_done,
+                  n_job_queue = n_job_queue
+               )
                n_done_queue.put(n_done)
+               #
          except queue.Empty :
             pass
       #

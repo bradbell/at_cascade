@@ -10,6 +10,26 @@ Release Notes for at_cascade
 
 {xrst_end release_notes}
 -----------------------------------------------------------------------------
+{xrst_begin 2024}
+
+Release Notes for 2024
+######################
+{xrst_spell
+   mm
+   dd
+}
+
+mm-dd
+*****
+
+01-17
+=====
+#. Add a way to determine the :ref:`module@at_cascade.version` .
+#. Add timing information ot the :ref:`csv.predict-name` output.
+
+
+{xrst_end 2024}
+-----------------------------------------------------------------------------
 {xrst_begin 2023}
 {xrst_spell
    copyfileobj
@@ -328,7 +348,7 @@ Merge in other_database branch:
 #. Change the :ref:`get_fit_integrand-name` argument from the name
    of the fit node database to a :ref:`fit_or_root_class-name` object.
 #. Read the
-   :ref:`constant tables <module@constant_table_list>` from the
+   :ref:`constant tables <module@at_cascade.constant_table_list>` from the
    :ref:`glossary@root_node_database` .
 #. Use :ref:`copy_root_db-name` to remove the constant tables from the
    :ref:`fit node databases <glossary@fit_node_database>` .

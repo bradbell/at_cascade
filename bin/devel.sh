@@ -13,6 +13,7 @@ image_link='https://bradbell.github.io/at_cascade'
 # version number (can be empty).
 version_files='
    at_cascade.xrst
+   at_cascade/__init__.py
 '
 #
 # List of special files, for this repository, that the devel tools ignore.

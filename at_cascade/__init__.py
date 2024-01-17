@@ -12,8 +12,15 @@
 The at_cascade Python Module
 ############################
 
-constant_table_list
-*******************
+at_cascade.version
+******************
+The version number for this copy of at_cascade.
+{xrst_code py}'''
+version = '2023.12.22'
+'''{xrst_code}
+
+at_cascade.constant_table_list
+******************************
 Some of the dismod_at input tables are the same for every fit of a cascade.
 The :ref:`fit_or_root_class-name` uses the
 :ref:`glossary@root_node_database` to get the value for these tables:

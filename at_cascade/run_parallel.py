@@ -227,7 +227,7 @@ def try_one_job(
       # print message at start of this fit
       now             = datetime.datetime.now()
       current_time    = now.strftime("%H:%M:%S")
-      print( f'Begin: fit {fit_type:<5} {current_time}: {job_name}' )
+      print( f'Begin: {current_time}: fit {fit_type:<5} {job_name}' )
       #
       # run_one_job
       # the lock should not be aquired during this operation
@@ -332,9 +332,9 @@ def try_one_job(
       now          = datetime.datetime.now()
       current_time = now.strftime("%H:%M:%S")
       if job_done :
-         print( f'End:   fit {fit_type:<5} {current_time}: {job_name}' )
+         print( f'End:   {current_time}: fit {fit_type:<5} {job_name}' )
       else :
-         print( f'Error: fit {fit_type:<5} {current_time}: {job_name}' )
+         print( f'Error: {current_time}: fit {fit_type:<5} {job_name}' )
       #
       # status_count
       lock.acquire()

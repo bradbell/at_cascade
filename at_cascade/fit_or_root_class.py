@@ -35,7 +35,8 @@ This ``str`` the name of the table that we are getting.
 table
 =====
 This is a ``list`` of ``dict`` representation of the table.
-If *table_name* is a :ref:`constant table <module@constant_table_list>` ,
+If *table_name* is a
+:ref:`constant table <module@at_cascade.constant_table_list>` ,
 *table* is retrieved from the root node database.
 Otherwise it is retrieved from the fit node database.
 

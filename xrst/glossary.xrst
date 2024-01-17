@@ -90,7 +90,7 @@ This is a dismod_at database with the following properties:
 
 Constant Tables
 ===============
-see :ref:`module@constant_table_list`.
+see :ref:`module@at_cascade.constant_table_list`.
 
 Option Table
 ============
