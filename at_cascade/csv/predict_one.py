@@ -7,6 +7,8 @@ r'''
 {xrst_spell
    boolean
    pdf
+   sam
+   tru
 }
 
 Calculate the predictions for One Fit

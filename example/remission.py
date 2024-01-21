@@ -7,7 +7,6 @@
 {xrst_spell
    dage
    dtime
-   rho
 }
 
 Example Estimation With Remission and No Incidence Data

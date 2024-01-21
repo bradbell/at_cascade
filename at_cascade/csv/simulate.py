@@ -11,14 +11,11 @@ import at_cascade
 """
 {xrst_begin csv.simulate}
 {xrst_spell
-   bilinear
    boolean
    cv
-   integrator
-   interpolate
    meas
+   min
    pini
-   rho
    sincidence
    std
 }

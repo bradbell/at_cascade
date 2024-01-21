@@ -19,9 +19,11 @@ import at_cascade
 # {xrst_spell
 #     const
 #     dage
+#     def
 #     dtime
 #     eps
 #     iter
+#     num
 #     numpy
 #     sincidence
 #     std

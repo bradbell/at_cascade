@@ -9,7 +9,6 @@ catch_exceptions_and_continue = True
 {xrst_begin run_parallel}
 {xrst_spell
    cpus
-   multiprocessing
 }
 
 Run With Specified Maximum Number of Processes

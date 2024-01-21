@@ -4,9 +4,6 @@
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin create_all_node_db}
-{xrst_spell
-   covariance
-}
 
 Create an All Node Database
 ###########################

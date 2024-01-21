@@ -16,6 +16,7 @@ import time
    avgint
    bnd
    boolean
+   cen
    const
    cov
    cpus
@@ -31,16 +32,14 @@ import time
    mtother
    mtwith
    mul
-   multiprocessing
+   num
    pini
+   pos
    relrisk
-   rho
+   sam
    sincidence
    sqlite
    std
-   subsample
-   trapezoidal
-   truncation
    underbars
 }
 

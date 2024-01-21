@@ -6,7 +6,6 @@
 {xrst_begin csv.module}
 {xrst_spell
    boolean
-   distributions
 }
 
 The at_cascade.csv Python Module

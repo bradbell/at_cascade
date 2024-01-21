@@ -16,8 +16,9 @@ r'''
    avgint
    boolean
    cpus
-   multiprocessing
    pdf
+   sam
+   tru
 }
 
 Prediction for a CSV Fit

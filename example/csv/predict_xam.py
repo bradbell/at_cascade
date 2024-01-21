@@ -18,9 +18,11 @@ import at_cascade
 {xrst_spell
    exp
    iter
+   num
    pdf
    sincidence
    std
+   tru
 }
 
 Example Simulating and Fitting Incidence From Prevalence Data

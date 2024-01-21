@@ -151,9 +151,7 @@ split_reference value).
    cov
    cpus
    mul
-   perturb
    std
-   subsample
 }
 
 All Node Option Table

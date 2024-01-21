@@ -1,20 +1,24 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington
-# SPDX-FileContributor: 2023-23 Garland Culbreth
+# SPDX-FileContributor: 2023-24 Garland Culbreth
 # ----------------------------------------------------------------------------
 {xrst_begin bib}
 {xrst_spell
+   al
+   american
    barendregt
-   bibliography
    biegler
+   chu
    flaxman
    greenland
-   integrative
+   lopez
    metaregression
+   murray
    negrete
    oortmarssen
    pirnay
    pp
+   vos
    wachter
 }
 

@@ -5,6 +5,7 @@
 '''
 {xrst_begin run_one_job}
 {xrst_spell
+   io
    obj
    var
 }

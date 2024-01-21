@@ -7,7 +7,6 @@ r'''
 {xrst_spell
    dage
    dtime
-   perturb
 }
 
 Example Using max_fit Option

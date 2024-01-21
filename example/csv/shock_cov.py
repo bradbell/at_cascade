@@ -16,18 +16,20 @@ import at_cascade
 '''
 {xrst_begin csv.shock_cov}
 {xrst_spell
-   bilinear
    const
    cv
    dage
+   def
    dtime
    eps
    iter
    meas
+   min
+   num
    pdf
    sincidence
    std
-   trapezoidal
+   tim
 }
 
 Simulate and Fit Incidence Using Prevalence Data and a Shock Covariate

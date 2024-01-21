@@ -9,7 +9,6 @@
    dtime
    meas
    mulstd
-   subgroup
 }
 
 Map Var Table Values to its Primary Key

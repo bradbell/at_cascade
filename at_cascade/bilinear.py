@@ -6,9 +6,6 @@ import numpy
 import scipy.interpolate
 """
 {xrst_begin bilinear}
-{xrst_spell
-   spline
-}
 
 Bilinear Spline Interpolation
 #############################

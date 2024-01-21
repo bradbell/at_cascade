@@ -9,7 +9,6 @@
    mtexcess
    mtother
    relrisk
-   rho
    sincidence
 }
 
