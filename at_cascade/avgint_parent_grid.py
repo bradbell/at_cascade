@@ -87,7 +87,7 @@ c_split_reference_id
 This column identifies a row in the split_reference table of the
 all_node_database that this prediction is for.
 If the split_reference table is empty (non-empty) the value
-wiil be (will not) be ``None``.
+will be (will not) be ``None``.
 It is also ``None`` for the covariate multiplier predictions.
 
 Rectangular Grid

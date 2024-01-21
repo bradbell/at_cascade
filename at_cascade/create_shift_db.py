@@ -73,7 +73,7 @@ shift_name
 ==========
 For each *shift_name*, *shift_databases[shift_name]* is the name of
 a :ref:`glossary@input_node_database` that is created by this command.
-The corresponding directory is assumed to alread exist.
+The corresponding directory is assumed to already exist.
 
 split_reference_name
 ====================
@@ -114,7 +114,7 @@ predict tables in the *fit_node_database*.
 
 no_ode_fit
 **********
-If this argument is ture (false) if the *fit_node_database*
+If this argument is true (false) if the *fit_node_database*
 is (is not) the result of a :ref:`no_ode_fit-name` .
 If *no_ode_fit* is false,
 the sample table and the c_shift_predict_sample

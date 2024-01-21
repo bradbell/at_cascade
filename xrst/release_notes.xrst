@@ -25,7 +25,7 @@ mm-dd
 01-17
 =====
 #. Add a way to determine the :ref:`module@at_cascade.version` .
-#. Add timing information ot the :ref:`csv.predict-name` output.
+#. Add timing information to the :ref:`csv.predict-name` output.
 
 
 {xrst_end 2024}
@@ -694,7 +694,7 @@ const_value and value_prior are empty in
    it might not be fixed for the next age and time).
 #. The sim_and_fit test would randomly fail.
    Diagnostic information has been added (when the test fails)
-   and the limits have been widened (to reduce the chance tha the
+   and the limits have been widened (to reduce the chance that the
    test fails).
 #. The following csv.fit options were added:
    :ref:`csv.fit@Input Files@option_fit.csv@age_avg_split`,

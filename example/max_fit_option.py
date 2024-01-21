@@ -87,7 +87,7 @@ of how good the fit is for the nodes in the fit_goal_set.
 max_fit_option
 **************
 This is the value of the :ref:`option_all_table@max_fit` option.
-It is also te number of data values per leaf.
+It is also the number of data values per leaf.
 Thus the leaf nodes fit all their data while the other nodes only fit
 a randomly chosen subset of their data.
 {xrst_literal

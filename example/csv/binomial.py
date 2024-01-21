@@ -44,7 +44,7 @@ def binomial_rate(sample_size, mean_rate) :
 #
 # random_seed
 # ***********
-# We us the current time in seconds to seed te random number generator:
+# We us the current time in seconds to seed the random number generator:
 # {xrst_code py}
 random_seed = str( int( time.time() ) )
 # {xrst_code}

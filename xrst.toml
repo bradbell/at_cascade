@@ -30,11 +30,15 @@ latex_macro = [
 [project_dictionary]
 data = [
    '''
+      cpu
       csv
       db
       dict
       dir
       dismod
+      gaussian
+      int
+      max
       mulcov
       multiplier
       sim
