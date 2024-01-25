@@ -93,14 +93,6 @@ import numpy
 import at_cascade
 import dismod_at
 # ----------------------------------------------------------------------------
-job_status_wait  = 0 # job is waiting for it's parent job to finish
-job_status_ready = 1 # job is readiy to run
-job_status_run   = 2 # job is running
-job_status_done  = 3 # job finished running
-job_status_error = 4 # job had an exception
-job_status_abort = 5 # job is a descendant of a job that had an exception
-job_status_name  = [ 'wait', 'ready', 'run', 'done', 'error', 'abort' ]
-# ----------------------------------------------------------------------------
 def get_shared_memory_prefix(all_node_database) :
    connection           = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
@@ -136,6 +128,22 @@ def fit_parallel(
    assert type(max_number_cpu)    == int
    assert type(fit_type_list)     == list
    # END DEF
+   # ----------------------------------------------------------------------
+   # job_status_name
+   job_status_name = [
+      'wait' , # job is waiting for it's parent job to finish
+      'ready', # job is readiy to run
+      'run'  , # job is running
+      'done' , # job finished running
+      'error', # job had an exception
+      'abort', # job is a descendant of a job that had an exception
+   ]
+   job_status_wait  = job_status_name.index( 'wait' )
+   job_status_ready = job_status_name.index( 'ready' )
+   job_status_run   = job_status_name.index( 'run' )
+   job_status_done  = job_status_name.index( 'done' )
+   job_status_error = job_status_name.index( 'error' )
+   job_status_abort = job_status_name.index( 'abort' )
    # ----------------------------------------------------------------------
    # shared_memory_prefix_plus
    shared_memory_prefix = get_shared_memory_prefix(all_node_database)
@@ -212,6 +220,7 @@ def fit_parallel(
       fit_type_list,
       lock,
       event,
+      job_status_name,
    )
    #
    # shared_number_cpu_inuse

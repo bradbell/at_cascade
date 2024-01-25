@@ -93,6 +93,23 @@ event
 is multiprocessing event,  used by all the fit processes,
 that is used to signal that the shared memory has changed.
 
+job_status_name
+***************
+is the name corresponding to each possible job integer status value.
+If *i* is an integer job status value, *job_status_name* [ *i* ] is the
+corresponding name.
+
+.. csv-table::
+   :header-rows: 1
+
+   Name,    Meaning
+   'wait',  job is waiting for it's parent job to finish
+   'ready', job is ready to run
+   'run',   job is running
+   'done',  job finished running
+   'error', job had an exception
+   'abort', job is a descendant of a job that had an exception
+
 {xrst_end fit_one_process}
 '''
 # ----------------------------------------------------------------------------
@@ -102,14 +119,6 @@ from multiprocessing import shared_memory
 import numpy
 import at_cascade
 import dismod_at
-# ----------------------------------------------------------------------------
-job_status_wait  = 0 # job is waiting for it's parent job to finish
-job_status_ready = 1 # job is readiy to run
-job_status_run   = 2 # job is running
-job_status_done  = 3 # job finished running
-job_status_error = 4 # job had an exception
-job_status_abort = 5 # job is a descendant of a job that had an exception
-job_status_name  = [ 'wait', 'ready', 'run', 'done', 'error', 'abort' ]
 # ----------------------------------------------------------------------------
 def get_result_database_dir(
    all_node_database, node_table, fit_node_id, fit_split_reference_id
@@ -176,6 +185,7 @@ def try_one_job(
    lock,
    event,
    shared_job_status,
+   job_status_name,
 )  :
    assert type(job_table) == list
    assert type(this_job_id) == int
@@ -186,6 +196,14 @@ def try_one_job(
    assert type(max_number_cpu) == int
    assert type(master_process) == bool
    assert type(fit_type_list) == list
+   #
+   # job_status_name
+   job_status_wait  = job_status_name.index( 'wait' )
+   job_status_ready = job_status_name.index( 'ready' )
+   job_status_run   = job_status_name.index( 'run' )
+   job_status_done  = job_status_name.index( 'done' )
+   job_status_error = job_status_name.index( 'error' )
+   job_status_abort = job_status_name.index( 'abort' )
    #
    # database_dir
    row = job_table[this_job_id]
@@ -354,6 +372,7 @@ def fit_one_process(
    fit_type_list,
    lock,
    event,
+   job_status_name,
 ) :
    assert type(shared_memory_prefix_plus)  == str
    assert type(job_table)         == list
@@ -366,6 +385,13 @@ def fit_one_process(
    assert type(master_process)    == bool
    assert type(fit_type_list)     == list
    # END DEF
+   # ----------------------------------------------------------------------
+   job_status_wait  = job_status_name.index( 'wait' )
+   job_status_ready = job_status_name.index( 'ready' )
+   job_status_run   = job_status_name.index( 'run' )
+   job_status_done  = job_status_name.index( 'done' )
+   job_status_error = job_status_name.index( 'error' )
+   job_status_abort = job_status_name.index( 'abort' )
    # ----------------------------------------------------------------------
    # shared_number_cpu_inuse
    tmp  = numpy.empty(1, dtype = int )
@@ -414,6 +440,7 @@ def fit_one_process(
          lock,
          event,
          shared_job_status,
+         job_status_name,
       )
    #
    while True :
@@ -522,6 +549,7 @@ def fit_one_process(
                fit_type_list,
                lock,
                event,
+               job_status_name,
             )
             target = fit_one_process
             p = multiprocessing.Process(target = target, args = args)
@@ -547,4 +575,5 @@ def fit_one_process(
             lock,
             event,
             shared_job_status,
+            job_status_name,
          )
