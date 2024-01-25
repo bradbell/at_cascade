@@ -30,7 +30,7 @@ predict Branch
    run_parallel,      :ref:`fit_parallel-name`
    run_parallel_job,  fit_one_process
    run_one_job,       :ref:`fit_one_job-name`
-
+   predict_one,       :ref:`csv.pre_one_job-name`
 
 mm-dd
 *****

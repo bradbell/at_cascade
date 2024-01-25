@@ -111,7 +111,7 @@ Routines
    at_cascade/csv/fit.py
    at_cascade/csv/join_file.py
    at_cascade/csv/predict.py
-   at_cascade/csv/predict_one.py
+   at_cascade/csv/pre_one_job.py
    at_cascade/csv/read_table.py
    at_cascade/csv/set_truth.py
    at_cascade/csv/simulate.py
@@ -130,7 +130,7 @@ from .empty_str        import empty_str
 from .fit              import fit
 from .join_file        import join_file
 from .predict          import predict
-from .predict_one      import predict_one
+from .pre_one_job      import pre_one_job
 from .read_table       import read_table
 from .set_truth        import set_truth
 from .simulate         import simulate

@@ -642,7 +642,7 @@ def predict_all(
             )
             if max_number_cpu == 1 :
                print_time(begin = True, job_name = predict_job_name)
-               at_cascade.csv.predict_one(*args)
+               at_cascade.csv.pre_one_job(*args)
                print_time(begin = False, job_name = predict_job_name)
             else :
                job_queue.put( (predict_job_name, args) )
@@ -671,8 +671,8 @@ def predict_all(
                print_time(begin = True, job_name = predict_job_name)
                n_done_queue.put(n_done)
                #
-               # predict_one
-               at_cascade.csv.predict_one(
+               # pre_one_job
+               at_cascade.csv.pre_one_job(
                   predict_job_name      = args[0]           ,
                   fit_dir               = args[1]           ,
                   sim_dir               = args[2]           ,

@@ -3,7 +3,7 @@
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
-{xrst_begin csv.predict_one}
+{xrst_begin csv.pre_one_job}
 {xrst_spell
    boolean
    pdf
@@ -94,7 +94,7 @@ This is the predictions corresponding to the true (simulation) values for
 variable values for the prediction node and sex reference.
 
 
-{xrst_end csv.predict_one}
+{xrst_end csv.pre_one_job}
 r'''
 import dismod_at
 import at_cascade
@@ -196,7 +196,7 @@ def diagonse_one(
 # ----------------------------------------------------------------------------
 
 # BEGIN_DEF
-def predict_one(
+def pre_one_job(
    predict_job_name      ,
    fit_dir               ,
    sim_dir               ,
