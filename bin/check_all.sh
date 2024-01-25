@@ -15,7 +15,7 @@ then
    exit 1
 fi
 # -----------------------------------------------------------------------------
-file='at_cascade/fit_parallel.py'
+file='at_cascade/fit_one_process.py'
 if ! grep 'catch_exceptions_and_continue *= *True' $file > /dev/null
 then
    echo "$file: catch_exceptions_and_continue is not True"

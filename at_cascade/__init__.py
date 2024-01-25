@@ -67,6 +67,7 @@ constant_table_list = [
    at_cascade/no_ode_fit.py
    at_cascade/omega_constraint.py
    at_cascade/fit_one_job.py
+   at_cascade/fit_one_process.py
    at_cascade/fit_parallel.py
    at_cascade/table_exists.py
    at_cascade/table_name2id.py
@@ -108,6 +109,7 @@ from .move_table            import move_table
 from .no_ode_fit            import no_ode_fit
 from .omega_constraint      import omega_constraint
 from .fit_one_job           import fit_one_job
+from .fit_one_process       import fit_one_process
 from .fit_parallel          import fit_parallel
 from .table_exists          import table_exists
 from .table_name2id         import table_name2id
