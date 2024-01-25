@@ -19,6 +19,19 @@ Release Notes for at_cascade
 Release Notes for 2024
 ######################
 
+predict Branch
+**************
+#. Change the following names:
+
+.. csv-table::
+   :header-rows: 1
+
+   Old Name, New Name
+   run_parallel,      :ref:`fit_parallel-name`
+   run_parallel_job,  fit_one_process
+   run_one_job,       :ref:`fit_one_job-name`
+
+
 mm-dd
 *****
 
@@ -256,7 +269,7 @@ Add the :ref:`wish_list@max_fit` wish list item.
 #. Fix bug in :ref:`csv.predict-name`. To be specific, only check
    logs for jobs that we are predicting for. Checking logs for other jobs
    might try to read a log that was changing (when running in parallel).
-#. Add the job_name to the :ref:`run_parallel@Shared Memory` name.
+#. Add the job_name to the :ref:`fit_parallel@Shared Memory` name.
    This fixes a bug when running cascades in parallel.
    It also required adding :ref:`clear_shared@job_name` to
    the clear_shared routine.
@@ -1096,9 +1109,9 @@ mm-dd
 12-29
 =====
 1. Fix error recovery and add more job status reporting to
-   :ref:`run_parallel-name`.
+   :ref:`fit_parallel-name`.
 
-2. Document the :ref:`run_parallel@trace.out` file.
+2. Document the :ref:`fit_parallel@trace.out` file.
 
 12-28
 =====
@@ -1111,8 +1124,8 @@ mm-dd
 1. Add exception handling to running in parallel so that
    program does not hang when a job fails.
 
-2. Change the run_one_job trace_fit argument to
-   :ref:`run_one_job@trace_file_obj` so that opening and closing the file
+2. Change the fit_one_job trace_fit argument to
+   :ref:`fit_one_job@trace_file_obj` so that opening and closing the file
    is managed by the calling program.
 
 12-24
@@ -1160,9 +1173,9 @@ below a certain point.
 
 12-03
 =====
-1. Add the :ref:`run_parallel-name` routine which
+1. Add the :ref:`fit_parallel-name` routine which
    runs :ref:`create_job_table@job_table` jobs
-   sequentially (in parallel) when :ref:`run_parallel@max_number_cpu` is
+   sequentially (in parallel) when :ref:`fit_parallel@max_number_cpu` is
    one (greater than one).
 
 2. Add a :ref:`wish_list-name` for at_cascade.

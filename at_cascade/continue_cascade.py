@@ -227,8 +227,8 @@ def continue_cascade(
    # skip_start_job
    skip_start_job = True
    #
-   # run_parallel_job
-   at_cascade.run_parallel(
+   # fit_one_process
+   at_cascade.fit_parallel(
       job_table         = job_table ,
       start_job_id      = start_job_id,
       all_node_database = all_node_database,

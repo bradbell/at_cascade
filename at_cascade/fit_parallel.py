@@ -6,12 +6,12 @@
 catch_exceptions_and_continue = True
 # ----------------------------------------------------------------------------
 '''
-{xrst_begin run_parallel}
+{xrst_begin fit_parallel}
 {xrst_spell
    cpus
 }
 
-Run With Specified Maximum Number of Processes
+Fit With Specified Maximum Number of Processes
 ##############################################
 
 Prototype
@@ -30,26 +30,26 @@ start_job_id
 ************
 This is the :ref:`create_job_table@job_table@job_id`
 for the starting job.
-The run_parallel routine will not return until this job,
+The fit_parallel routine will not return until this job,
 and all it descendants in the job table, have been run,
 or an error occurs that prevents a job from completing..
 
 
 all_node_database
 *****************
-:ref:`run_one_job@all_node_database`
+:ref:`fit_one_job@all_node_database`
 
 node_table
 **********
-:ref:`run_one_job@node_table`
+:ref:`fit_one_job@node_table`
 
 fit_integrand
 *************
-:ref:`run_one_job@fit_integrand`
+:ref:`fit_one_job@fit_integrand`
 
 fit_node_database
 *****************
-:ref:`run_one_job@fit_node_database`
+:ref:`fit_one_job@fit_node_database`
 
 skip_start_job
 **************
@@ -90,7 +90,7 @@ where *job_name* is *job_table* [ *start_job_id* ] [ ``"job_name"`` ]
 and :ref:`option_all_table@shared_memory_prefix` is specified
 in the option all table.
 
-{xrst_end run_parallel}
+{xrst_end fit_parallel}
 '''
 # ----------------------------------------------------------------------------
 import datetime
@@ -228,10 +228,10 @@ def try_one_job(
       current_time    = now.strftime("%H:%M:%S")
       print( f'Begin: {current_time}: fit {fit_type:<5} {job_name}' )
       #
-      # run_one_job
+      # fit_one_job
       # the lock should not be aquired during this operation
       if not catch_exceptions_and_continue :
-         at_cascade.run_one_job(
+         at_cascade.fit_one_job(
             job_table         = job_table,
             run_job_id        = this_job_id ,
             all_node_database = all_node_database,
@@ -246,7 +246,7 @@ def try_one_job(
          job_done = True
       else :
          try :
-            at_cascade.run_one_job(
+            at_cascade.fit_one_job(
                job_table         = job_table,
                run_job_id        = this_job_id ,
                all_node_database = all_node_database,
@@ -349,7 +349,7 @@ def try_one_job(
       trace_file_obj.close()
    return
 # ----------------------------------------------------------------------------
-def run_parallel_job(
+def fit_one_process(
    shared_memory_prefix_plus,
    job_table,
    this_job_id,
@@ -441,7 +441,7 @@ def run_parallel_job(
             #
             # no jobs running or ready
             if master_process and shared_number_cpu_inuse[0] == 1:
-               # We are done, return to run_parallel which wuill use
+               # We are done, return to fit_parallel which wuill use
                # the shared memory for error checking and then free it.
                #
                # should not need this release
@@ -530,7 +530,7 @@ def run_parallel_job(
                lock,
                event,
             )
-            target = run_parallel_job
+            target = fit_one_process
             p = multiprocessing.Process(target = target, args = args)
             #
             p.deamon = False
@@ -557,8 +557,8 @@ def run_parallel_job(
          )
 # ----------------------------------------------------------------------------
 # BEGIN DEF
-# at_cascade.run_parallel
-def run_parallel(
+# at_cascade.fit_parallel
+def fit_parallel(
    job_table         ,
    start_job_id      ,
    all_node_database ,
@@ -641,8 +641,8 @@ def run_parallel(
    event = multiprocessing.Event()
    event.set()
    #
-   # run_parallel_job
-   run_parallel_job(
+   # fit_one_process
+   fit_one_process(
       shared_memory_prefix_plus,
       job_table,
       start_job_id,

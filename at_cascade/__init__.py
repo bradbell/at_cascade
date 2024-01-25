@@ -66,8 +66,8 @@ constant_table_list = [
    at_cascade/move_table.py
    at_cascade/no_ode_fit.py
    at_cascade/omega_constraint.py
-   at_cascade/run_one_job.py
-   at_cascade/run_parallel.py
+   at_cascade/fit_one_job.py
+   at_cascade/fit_parallel.py
    at_cascade/table_exists.py
    at_cascade/table_name2id.py
 }
@@ -107,8 +107,8 @@ from .job_descendent        import job_descendent
 from .move_table            import move_table
 from .no_ode_fit            import no_ode_fit
 from .omega_constraint      import omega_constraint
-from .run_one_job           import run_one_job
-from .run_parallel          import run_parallel
+from .fit_one_job           import fit_one_job
+from .fit_parallel          import fit_parallel
 from .table_exists          import table_exists
 from .table_name2id         import table_name2id
 # END_SORT_THIS_LINE_MINUS_1

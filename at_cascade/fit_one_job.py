@@ -3,7 +3,7 @@
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
-{xrst_begin run_one_job}
+{xrst_begin fit_one_job}
 {xrst_spell
    io
    obj
@@ -96,7 +96,7 @@ If *fit_type* is 'both', the previous contents of the log are removed.
 Upon return,
 a summary of the operations preformed on dismod.db is added to the log table.
 
-{xrst_end run_one_job}
+{xrst_end fit_one_job}
 '''
 # ----------------------------------------------------------------------------
 import io
@@ -128,8 +128,8 @@ def system_command(command, file_stdout) :
       )
 # ----------------------------------------------------------------------------
 # BEGIN syntax
-# at_cascade.run_one_job
-def run_one_job(
+# at_cascade.fit_one_job
+def fit_one_job(
    job_table               ,
    run_job_id              ,
    all_node_database       ,
@@ -248,7 +248,7 @@ def run_one_job(
       if long_key in option_all_dict :
          sigma = option_all_dict[long_key]
          if float(sigma) < 0.0 :
-            msg = f'run_one_job: perturb_optimization_{key} = '
+            msg = f'fit_one_job: perturb_optimization_{key} = '
             msg += sigma
             msg += ' is less than zero'
             assert False, msg

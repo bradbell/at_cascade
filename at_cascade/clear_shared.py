@@ -29,7 +29,7 @@ to run the cascade:
    FileExistsError: [Errno 17] File exists: *name*
 
 where *name* ends with ``_number_cpu_inuse`` or ``_job_status``.
-This may happen if the previous :ref:`run_parallel-name`
+This may happen if the previous :ref:`fit_parallel-name`
 did not terminate cleanly; e.g., if the system crashed.
 
 all_node_database
@@ -41,7 +41,7 @@ This is used to determine the
 job_name
 ********
 This is the :ref:`create_job_table@job_table@job_name`
-for the :ref:`run_parallel@Shared Memory` that we are clearing.
+for the :ref:`fit_parallel@Shared Memory` that we are clearing.
 
 {xrst_end clear_shared}
 '''
