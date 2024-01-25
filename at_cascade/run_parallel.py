@@ -580,7 +580,7 @@ def run_parallel(
    assert type(fit_type_list)     == list
    # END DEF
    # ----------------------------------------------------------------------
-   # shared_memory_prefix
+   # shared_memory_prefix_plus
    shared_memory_prefix = get_shared_memory_prefix(all_node_database)
    start_name           = job_table[start_job_id]['job_name']
    shared_memory_prefix_plus = shared_memory_prefix + f'_{start_name}'
