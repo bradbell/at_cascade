@@ -15,6 +15,52 @@ Prototype
    # END DEF
 }
 
+fit_dir
+*******
+Same as the csv fit :ref:`csv.fit@fit_dir` .
+
+sim_dir
+*******
+Same as :ref:`csv.predict@sim_dir` .
+
+option_predict
+**************
+This is an in memory representation of
+:ref:`csv.predict@Input Files@option_predict.csv` .
+
+all_node_database
+*****************
+This is the all node database for this fit.
+
+all_covariate_table
+*******************
+This is an in memory representation of
+:ref:`csv.fit@Input Files@covariate.csv` .
+
+job_table
+*********
+is the :ref:`create_job_table@job_table` for this cascade.
+
+node_table
+**********
+is the dismod_at node table for this cascade.
+
+root_node_id
+************
+is the node table id for the root node of the cascade.
+
+error_message_dict
+******************
+For each :ref:`create_job_table@job_table@job_name` in the job table
+that is a key in *error_message_dict*.  The corresponding value
+
+| *error_message_dict* [ *job_name* ]
+
+
+is a non-empty ``list`` of ``str`` containing the error messages for that job.
+If a *job_name* is not a *key* is in *error_message_dict*,
+there were no error messages for that job.
+
 {xrst_end csv.pre_one_process}
 '''
 # ----------------------------------------------------------------------------
@@ -46,20 +92,32 @@ def print_time(begin, job_name, n_done = None, n_job_queue = None) :
 def pre_one_process(
    fit_dir,
    sim_dir,
+   option_predict,
    all_node_database,
    all_covariate_table,
-   #
    job_table,
    node_table,
    root_node_id,
-   split_reference_table,
    error_message_dict,
-   option_predict,
-   #
    job_queue,
    n_job_queue,
    n_done_queue,
 ) :
+   assert type(fit_dir)                             == str
+   assert sim_dir == None or type(sim_dir)          == str
+   assert type(option_predict)                      == dict
+   assert type(all_node_database)                   == str
+   assert type(all_covariate_table)                 == list
+   assert type( all_covariate_table[0] )            == dict
+   assert type(job_table)                           == list
+   assert type(node_table)                          == list
+   assert type(node_table[0])                       == dict
+   assert type(root_node_id)                        == int
+   assert type(error_message_dict)                  == dict
+   # END DEF
+   #
+   # split_reference_table
+   split_reference_table = at_cascade.csv.split_reference_table
    #
    # float_precision
    float_precision = option_predict['float_precision']
@@ -68,7 +126,6 @@ def pre_one_process(
    root_split_reference_id = 1
    assert 'both' == split_reference_table[1]['split_reference_name']
    #
-   # END DEF
    try :
       while True :
          #

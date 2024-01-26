@@ -59,12 +59,14 @@ If *max_job_depth* is zero, only the start job is included.
 
 message_dict
 ************
-For each :ref:`create_job_table@job_table@job_name` there is a key in
-*message_dict*.
-The corresponding value *message_dict[job_name]*
-is a non-empty ``list`` of ``str``
-containing the messages for that job.
-If an *job_name* is not a *key* is in *message_dict*,
+For each :ref:`create_job_table@job_table@job_name` in the job table
+that is a key in *message_dict*.  The corresponding value
+
+| *message_dict* [ *job_name* ]
+
+
+is a non-empty ``list`` of ``str`` containing the messages for that job.
+If a *job_name* is not a *key* is in *message_dict*,
 there were no messages of the specified type for that job.
 
 {xrst_end check_log}
