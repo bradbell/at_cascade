@@ -647,34 +647,32 @@ def predict_all(
             ancestor_database_list.append( ancestor_database )
             predict_job_id_list.append( predict_job_id )
    #
-   if True :
-      #
-      # n_done_queue
-      # The number of job_queue entries that have been completed
-      n_done_queue   = manager.Queue()
-      n_done_queue.put(0)
-      #
-      # process_list
-      # execute pre_one_process for each process in process_list
-      n_spawn      = min(n_job_queue - 1, max_number_cpu - 1)
-      print( f'Predict: n_job = {n_job_queue}, n_spawn = {n_spawn}' )
-      process_list = list()
-      for i in range(n_spawn) :
-         p = multiprocessing.Process(
-            target = at_cascade.csv.pre_one_process,
-            args=(job_queue, n_job_queue, n_done_queue, )
-         )
-         p.start()
-         process_list.append(p)
-      #
-      # pre_one_process
-      # use this process as well to execute proess_target
-      at_cascade.csv.pre_one_process(job_queue, n_job_queue, n_done_queue)
-      #
-      # join
-      # wait for all the processes to finish (detect an empty queue).
-      for p in process_list :
-         p.join()
+   # n_done_queue
+   # The number of job_queue entries that have been completed
+   n_done_queue   = manager.Queue()
+   n_done_queue.put(0)
+   #
+   # process_list
+   # execute pre_one_process for each process in process_list
+   n_spawn      = min(n_job_queue - 1, max_number_cpu - 1)
+   print( f'Predict: n_job = {n_job_queue}, n_spawn = {n_spawn}' )
+   process_list = list()
+   for i in range(n_spawn) :
+      p = multiprocessing.Process(
+         target = at_cascade.csv.pre_one_process,
+         args=(job_queue, n_job_queue, n_done_queue, )
+      )
+      p.start()
+      process_list.append(p)
+   #
+   # pre_one_process
+   # use this process as well to execute proess_target
+   at_cascade.csv.pre_one_process(job_queue, n_job_queue, n_done_queue)
+   #
+   # join
+   # wait for all the processes to finish (detect an empty queue).
+   for p in process_list :
+      p.join()
    #
    # sex_value2name
    sex_value2name = dict()
