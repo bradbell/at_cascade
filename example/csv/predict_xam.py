@@ -257,7 +257,7 @@ fit_file['option_predict.csv']  =  \
 plot,true
 db2csv,true
 float_precision,12
-max_number_cpu,1
+max_number_cpu,2
 '''
 #
 # fit_goal.csv

@@ -110,8 +110,9 @@ Routines
    at_cascade/csv/empty_str.py
    at_cascade/csv/fit.py
    at_cascade/csv/join_file.py
-   at_cascade/csv/predict.py
    at_cascade/csv/pre_one_job.py
+   at_cascade/csv/pre_one_process.py
+   at_cascade/csv/predict.py
    at_cascade/csv/read_table.py
    at_cascade/csv/set_truth.py
    at_cascade/csv/simulate.py
@@ -129,8 +130,9 @@ from .covariate_spline import covariate_spline
 from .empty_str        import empty_str
 from .fit              import fit
 from .join_file        import join_file
-from .predict          import predict
 from .pre_one_job      import pre_one_job
+from .pre_one_process  import pre_one_process
+from .predict          import predict
 from .read_table       import read_table
 from .set_truth        import set_truth
 from .simulate         import simulate

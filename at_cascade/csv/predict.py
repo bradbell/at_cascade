@@ -640,80 +640,36 @@ def predict_all(
                db2csv                                 ,
                plot                                   ,
             )
-            if max_number_cpu == 1 :
-               print_time(begin = True, job_name = predict_job_name)
-               at_cascade.csv.pre_one_job(*args)
-               print_time(begin = False, job_name = predict_job_name)
-            else :
-               job_queue.put( (predict_job_name, args) )
-               n_job_queue += 1
+            job_queue.put( (predict_job_name, args) )
+            n_job_queue += 1
             #
             # ancestor_database_list, predict_job_id_list
             ancestor_database_list.append( ancestor_database )
             predict_job_id_list.append( predict_job_id )
    #
-   # max_number_cpu > 1
-   if max_number_cpu > 1 :
+   if True :
       #
       # n_done_queue
       # The number of job_queue entries that have been completed
       n_done_queue   = manager.Queue()
       n_done_queue.put(0)
       #
-      # process_target
-      def process_target(job_queue, n_done_queue) :
-         try :
-            while True :
-               (predict_job_name, args)  = job_queue.get(block = False)
-               #
-               # print Begin message
-               n_done = n_done_queue.get(block = True)
-               print_time(begin = True, job_name = predict_job_name)
-               n_done_queue.put(n_done)
-               #
-               # pre_one_job
-               at_cascade.csv.pre_one_job(
-                  predict_job_name      = args[0]           ,
-                  fit_dir               = args[1]           ,
-                  sim_dir               = args[2]           ,
-                  ancestor_node_database = args[3]           ,
-                  predict_node_id       = args[4]           ,
-                  predict_sex_id        = args[5]           ,
-                  all_node_database     = args[6]           ,
-                  all_covariate_table   = args[7]           ,
-                  float_precision       = args[8]           ,
-                  db2csv                = args[9]           ,
-                  plot                  = args[10]          ,
-               )
-               #
-               # n_done, print End messsage
-               n_done = n_done_queue.get(block = True) + 1
-               print_time(
-                  begin       = False,
-                  job_name    = predict_job_name,
-                  n_done      = n_done,
-                  n_job_queue = n_job_queue
-               )
-               n_done_queue.put(n_done)
-               #
-         except queue.Empty :
-            pass
-      #
       # process_list
-      # execute process_target for each process in process_list
+      # execute pre_one_process for each process in process_list
       n_spawn      = min(n_job_queue - 1, max_number_cpu - 1)
       print( f'Predict: n_job = {n_job_queue}, n_spawn = {n_spawn}' )
       process_list = list()
       for i in range(n_spawn) :
          p = multiprocessing.Process(
-            target = process_target, args=(job_queue, n_done_queue,)
+            target = at_cascade.csv.pre_one_process,
+            args=(job_queue, n_job_queue, n_done_queue, )
          )
          p.start()
          process_list.append(p)
       #
-      # process_target
+      # pre_one_process
       # use this process as well to execute proess_target
-      process_target(job_queue, n_done_queue)
+      at_cascade.csv.pre_one_process(job_queue, n_job_queue, n_done_queue)
       #
       # join
       # wait for all the processes to finish (detect an empty queue).
