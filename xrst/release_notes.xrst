@@ -14,6 +14,7 @@ Release Notes for at_cascade
 {xrst_spell
    dd
    mm
+   inuse
 }
 
 Release Notes for 2024
@@ -31,6 +32,13 @@ predict Branch
    run_parallel_job,  fit_one_process
    run_one_job,       :ref:`fit_one_job-name`
    predict_one,       :ref:`csv.pre_one_job-name`
+
+#. The text ``_fit`` was added to the python shared memory used for fitting.
+   To be specific, the new shared memory names are:
+
+   | *shared_memory_prefix*\ ``_fit_``\ *job_name*\ ``_number_cpu_inuse``
+   | *shared_memory_prefix*\ ``_fit_``\ *job_name*\ ``_job_status``
+
 
 mm-dd
 *****

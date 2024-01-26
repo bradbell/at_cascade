@@ -66,7 +66,7 @@ def clear_shared(all_node_database, job_name) :
          shared_memory_prefix = row['option_value']
    #
    # shared_memory_prefix_plus
-   shared_memory_prefix_plus = f'{shared_memory_prefix}_{job_name}'
+   shared_memory_prefix_plus = f'{shared_memory_prefix}_fit_{job_name}'
    #
    # shared_memory_name_list
    shared_memory_suffix_list = [ '_number_cpu_inuse', '_job_status', ]

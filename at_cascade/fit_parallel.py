@@ -31,7 +31,6 @@ The fit_parallel routine will not return until this job,
 and all it descendants in the job table, have been run,
 or an error occurs that prevents a job from completing..
 
-
 all_node_database
 *****************
 :ref:`fit_one_job@all_node_database`
@@ -86,14 +85,16 @@ in the option all table.
 {xrst_end fit_parallel}
 '''
 # ----------------------------------------------------------------------------
-import datetime
 import multiprocessing
 from multiprocessing import shared_memory
 import numpy
 import at_cascade
 import dismod_at
 # ----------------------------------------------------------------------------
+# shared_memory_prefix = get_shared_memory_prefix(all_node_database)
 def get_shared_memory_prefix(all_node_database) :
+   assert type(all_node_database) == str
+   #
    connection           = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )
@@ -135,8 +136,8 @@ def fit_parallel(
       'ready', # job is readiy to run
       'run'  , # job is running
       'done' , # job finished running
-      'error', # job had an exception
-      'abort', # job is a descendant of a job that had an exception
+      'error', # job had an exception and could not recover
+      'abort', # job is a descendant of a job that could not recover
    ]
    job_status_wait  = job_status_name.index( 'wait' )
    job_status_ready = job_status_name.index( 'ready' )
@@ -148,8 +149,8 @@ def fit_parallel(
    # shared_memory_prefix_plus
    shared_memory_prefix = get_shared_memory_prefix(all_node_database)
    start_name           = job_table[start_job_id]['job_name']
-   shared_memory_prefix_plus = shared_memory_prefix + f'_{start_name}'
-   print(f'create: {shared_memory_prefix_plus} shared memory')
+   shared_memory_prefix_plus = shared_memory_prefix + f'_fit_{start_name}'
+   print(f'create: {shared_memory_prefix_plus} fit shared memory')
    # -------------------------------------------------------------------------
    # shared_number_cpu_inuse
    tmp  = numpy.empty(1, dtype = int )
@@ -235,7 +236,7 @@ def fit_parallel(
       assert status in [ job_status_done, job_status_error, job_status_abort ]
    #
    # free shared memory objects
-   print(f'remove: {shared_memory_prefix_plus} shared memory')
+   print(f'remove: {shared_memory_prefix_plus} fit shared memory')
    for shm in shm_list :
       shm.close()
       shm.unlink()
