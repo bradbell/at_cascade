@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
-'''
+r'''
 {xrst_begin csv.module}
 {xrst_spell
    boolean
@@ -112,6 +112,8 @@ Routines
    at_cascade/csv/join_file.py
    at_cascade/csv/pre_one_job.py
    at_cascade/csv/pre_one_process.py
+   at_cascade/csv/pre_parallel.py
+   at_cascade/csv/pre_user_csv.py
    at_cascade/csv/predict.py
    at_cascade/csv/read_table.py
    at_cascade/csv/set_truth.py
@@ -132,6 +134,8 @@ from .fit              import fit
 from .join_file        import join_file
 from .pre_one_job      import pre_one_job
 from .pre_one_process  import pre_one_process
+from .pre_parallel     import pre_parallel
+from .pre_user_csv     import pre_user_csv
 from .predict          import predict
 from .read_table       import read_table
 from .set_truth        import set_truth

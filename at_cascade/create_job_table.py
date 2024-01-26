@@ -17,7 +17,7 @@ Syntax
 
 Purpose
 *******
-This routine returns a list of (fit_node_id, split_reference_id) pairs
+This routine returns a list of dict
 that specify all the dismod_at fits that need to be run.
 In addition, for each fit it specifies which job needs to run before,
 and which jobs can be run after.
@@ -305,6 +305,7 @@ def create_job_table(
    #
    # BEGIN RETURN
    # ...
-   assert type(job_table) == list
+   assert type(job_table)      == list
+   assert type( job_table[0] ) == dict
    return job_table
    # END RETURN
