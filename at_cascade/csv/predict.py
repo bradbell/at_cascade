@@ -627,20 +627,16 @@ def predict_all(
             # ????
             #
             # job_queue
+            # arguments to pre_one_job that are different for each job
             args = (
                predict_job_name                       ,
-               fit_dir                                ,
-               sim_dir                                ,
                ancestor_database                      ,
                predict_node_id                        ,
                predict_sex_id                         ,
-               all_node_db                            ,
-               covariate_table                        ,
-               global_option_value['float_precision'] ,
                db2csv                                 ,
                plot                                   ,
             )
-            job_queue.put( (predict_job_name, args) )
+            job_queue.put( args )
             n_job_queue += 1
             #
             # ancestor_database_list, predict_job_id_list
@@ -652,6 +648,9 @@ def predict_all(
    n_done_queue   = manager.Queue()
    n_done_queue.put(0)
    #
+   # float_precision
+   float_precision = global_option_value['float_precision']
+   #
    # process_list
    # execute pre_one_process for each process in process_list
    n_spawn      = min(n_job_queue - 1, max_number_cpu - 1)
@@ -660,14 +659,32 @@ def predict_all(
    for i in range(n_spawn) :
       p = multiprocessing.Process(
          target = at_cascade.csv.pre_one_process,
-         args=(job_queue, n_job_queue, n_done_queue, )
+         args=(
+            fit_dir,
+            sim_dir,
+            float_precision,
+            all_node_db,
+            covariate_table,
+            job_queue,
+            n_job_queue,
+            n_done_queue,
+         )
       )
       p.start()
       process_list.append(p)
    #
    # pre_one_process
-   # use this process as well to execute proess_target
-   at_cascade.csv.pre_one_process(job_queue, n_job_queue, n_done_queue)
+   # use this process as well to execute pre_one_process
+   at_cascade.csv.pre_one_process(
+      fit_dir,
+      sim_dir,
+      float_precision,
+      all_node_db,
+      covariate_table,
+      job_queue,
+      n_job_queue,
+      n_done_queue
+   )
    #
    # join
    # wait for all the processes to finish (detect an empty queue).

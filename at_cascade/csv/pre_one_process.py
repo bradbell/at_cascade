@@ -41,6 +41,11 @@ def print_time(begin, job_name, n_done = None, n_job_queue = None) :
 # ----------------------------------------------------------------------------
 # BEGIN DEF
 def pre_one_process(
+   fit_dir,
+   sim_dir,
+   float_precision,
+   all_node_database,
+   all_covariate_table,
    job_queue,
    n_job_queue,
    n_done_queue,
@@ -48,7 +53,10 @@ def pre_one_process(
    # END DEF
    try :
       while True :
-         (predict_job_name, args)  = job_queue.get(block = False)
+         args = job_queue.get(block = False)
+         #
+         # predict_job_name
+         predict_job_name = args[0]
          #
          # print Begin message
          n_done = n_done_queue.get(block = True)
@@ -57,17 +65,17 @@ def pre_one_process(
          #
          # pre_one_job
          at_cascade.csv.pre_one_job(
-            predict_job_name        = args[0]           ,
-            fit_dir                 = args[1]           ,
-            sim_dir                 = args[2]           ,
-            ancestor_node_database  = args[3]           ,
-            predict_node_id         = args[4]           ,
-            predict_sex_id          = args[5]           ,
-            all_node_database       = args[6]           ,
-            all_covariate_table     = args[7]           ,
-            float_precision         = args[8]           ,
-            db2csv                  = args[9]           ,
-            plot                    = args[10]          ,
+            fit_dir                 = fit_dir             ,
+            sim_dir                 = sim_dir             ,
+            float_precision         = float_precision     ,
+            all_node_database       = all_node_database   ,
+            all_covariate_table     = all_covariate_table ,
+            predict_job_name        = args[0]             ,
+            ancestor_node_database  = args[1]             ,
+            predict_node_id         = args[2]             ,
+            predict_sex_id          = args[3]             ,
+            db2csv                  = args[4]             ,
+            plot                    = args[5]             ,
          )
          #
          # n_done, print End messsage
