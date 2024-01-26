@@ -568,71 +568,72 @@ def predict_all(
             include_this_job = True
          else :
             include_this_job = job_depth <= max_job_depth
-      #
       if include_this_job :
-         #
-         # predict_job_name, predict_node_id, predict_sex_id
-         predict_job_row         = job_table[predict_job_id]
-         predict_job_name        = predict_job_row['job_name']
-         predict_node_id         = predict_job_row['fit_node_id']
-         predict_sex_id          = predict_job_row['split_reference_id']
-         #
-         # predict_job_dir, ancestor_job_dir
-         predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
-            fit_dir                 = fit_dir ,
-            job_table               = job_table ,
-            predict_job_id          = predict_job_id ,
-            node_table              = node_table ,
-            root_node_id            = root_node_id ,
-            split_reference_table   = split_reference_table ,
-            root_split_reference_id = root_split_reference_id ,
-            error_message_dict      = error_message_dict ,
-         )
-         #
-         if ancestor_job_dir == None :
-            sam_node_predict = f'{fit_dir}/{predict_job_dir}/sam_predict.csv'
-            if os.path.exists( sam_node_predict ) :
-               os.remove( sam_node_predict )
-            print( f'Cannot find an ancestor that fit for {predict_job_name}' )
+         predict_job_id_list.append( predict_job_id )
+   #
+   # predict_job_id
+   for predict_job_id in predict_job_id_list :
+      #
+      # predict_job_name, predict_node_id, predict_sex_id
+      predict_job_row         = job_table[predict_job_id]
+      predict_job_name        = predict_job_row['job_name']
+      predict_node_id         = predict_job_row['fit_node_id']
+      predict_sex_id          = predict_job_row['split_reference_id']
+      #
+      # predict_job_dir, ancestor_job_dir
+      predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
+         fit_dir                 = fit_dir ,
+         job_table               = job_table ,
+         predict_job_id          = predict_job_id ,
+         node_table              = node_table ,
+         root_node_id            = root_node_id ,
+         split_reference_table   = split_reference_table ,
+         root_split_reference_id = root_split_reference_id ,
+         error_message_dict      = error_message_dict ,
+      )
+      #
+      if ancestor_job_dir == None :
+         sam_node_predict = f'{fit_dir}/{predict_job_dir}/sam_predict.csv'
+         if os.path.exists( sam_node_predict ) :
+            os.remove( sam_node_predict )
+         msg = f'Cannot find an ancestor that fit for {predict_job_name}'
+         assert False, msg
+      else :
+         # db2csv, plot, fit_database
+         if ancestor_job_dir == predict_job_dir :
+            db2csv            = global_option_value['db2csv']
+            plot              = global_option_value['plot']
+            fit_database      = f'{fit_dir}/{predict_job_dir}/dismod.db'
          else :
-            # db2csv, plot, fit_database
-            if ancestor_job_dir == predict_job_dir :
-               db2csv            = global_option_value['db2csv']
-               plot              = global_option_value['plot']
-               fit_database      = f'{fit_dir}/{predict_job_dir}/dismod.db'
-            else :
-               db2csv            = False
-               plot              = False
-               fit_database      = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
-            #
-            # ancestor_database
-            # Must copy ancestor database because predictions will change it
-            ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
-            level             = predict_job_dir.count('/') + 1
-            path2root_node_db = level * '../' + 'root_node.db'
-            os.makedirs( f'{fit_dir}/{predict_job_dir}', exist_ok = True )
-            shutil.copyfile(fit_database, ancestor_database)
-            command = [
-               'dismod_at', ancestor_database,
-               'set', 'option', 'other_database', path2root_node_db
-            ]
-            dismod_at.system_command_prc(command, print_command = False)
-            #
-            # job_queue
-            # arguments to pre_one_job that are different for each job
-            args = (
-               predict_job_name                       ,
-               ancestor_database                      ,
-               predict_node_id                        ,
-               predict_sex_id                         ,
-               db2csv                                 ,
-               plot                                   ,
-            )
-            job_queue.put( args )
-            n_job_queue += 1
-            #
-            # predict_job_id_list
-            predict_job_id_list.append( predict_job_id )
+            db2csv            = False
+            plot              = False
+            fit_database      = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
+         #
+         # ancestor_database
+         # Must copy ancestor database because predictions will change it
+         ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
+         level             = predict_job_dir.count('/') + 1
+         path2root_node_db = level * '../' + 'root_node.db'
+         os.makedirs( f'{fit_dir}/{predict_job_dir}', exist_ok = True )
+         shutil.copyfile(fit_database, ancestor_database)
+         command = [
+            'dismod_at', ancestor_database,
+            'set', 'option', 'other_database', path2root_node_db
+         ]
+         dismod_at.system_command_prc(command, print_command = False)
+         #
+         # job_queue
+         # arguments to pre_one_job that are different for each job
+         args = (
+            predict_job_name                       ,
+            ancestor_database                      ,
+            predict_node_id                        ,
+            predict_sex_id                         ,
+            db2csv                                 ,
+            plot                                   ,
+         )
+         job_queue.put( args )
+         n_job_queue += 1
    #
    # n_done_queue
    # The number of job_queue entries that have been completed
