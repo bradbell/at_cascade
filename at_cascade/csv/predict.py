@@ -8,7 +8,6 @@ import at_cascade
 import copy
 import os
 import time
-import shutil
 r'''
 {xrst_begin csv.predict}
 {xrst_spell
@@ -304,25 +303,6 @@ each sample index.
 
 {xrst_end csv.predict}
 '''
-#
-# ----------------------------------------------------------------------------
-# prints the durrent time and job name
-def print_time(begin, job_name, n_done = None, n_job_queue = None) :
-   assert type(begin) == bool
-   assert type(job_name) == str
-   assert n_done == None or type(n_done) == int
-   assert n_job_queue == None or type(n_job_queue) == int
-   #
-   import datetime
-   now         = datetime.datetime.now()
-   str_time    = now.strftime("%H:%M:%S")
-   if begin :
-      msg = f'Begin: {str_time}: predict {job_name}'
-   else :
-      msg = f'End:   {str_time}: predict {job_name}'
-   if type(n_done) == int :
-      msg += f' {n_done}/{n_job_queue}'
-   print(msg)
 # ----------------------------------------------------------------------------
 # Sets global global_option_value to dict representation of option_predict.csv
 #
@@ -573,75 +553,15 @@ def predict_all(
    #
    # predict_job_id
    for predict_job_id in predict_job_id_list :
-      #
-      # predict_job_name, predict_node_id, predict_sex_id
-      predict_job_row         = job_table[predict_job_id]
-      predict_job_name        = predict_job_row['job_name']
-      predict_node_id         = predict_job_row['fit_node_id']
-      predict_sex_id          = predict_job_row['split_reference_id']
-      #
-      # predict_job_dir, ancestor_job_dir
-      predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
-         fit_dir                 = fit_dir ,
-         job_table               = job_table ,
-         predict_job_id          = predict_job_id ,
-         node_table              = node_table ,
-         root_node_id            = root_node_id ,
-         split_reference_table   = split_reference_table ,
-         root_split_reference_id = root_split_reference_id ,
-         error_message_dict      = error_message_dict ,
-      )
-      #
-      if ancestor_job_dir == None :
-         sam_node_predict = f'{fit_dir}/{predict_job_dir}/sam_predict.csv'
-         if os.path.exists( sam_node_predict ) :
-            os.remove( sam_node_predict )
-         msg = f'Cannot find an ancestor that fit for {predict_job_name}'
-         assert False, msg
-      else :
-         # db2csv, plot, fit_database
-         if ancestor_job_dir == predict_job_dir :
-            db2csv            = global_option_value['db2csv']
-            plot              = global_option_value['plot']
-            fit_database      = f'{fit_dir}/{predict_job_dir}/dismod.db'
-         else :
-            db2csv            = False
-            plot              = False
-            fit_database      = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
-         #
-         # ancestor_database
-         # Must copy ancestor database because predictions will change it
-         ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
-         level             = predict_job_dir.count('/') + 1
-         path2root_node_db = level * '../' + 'root_node.db'
-         os.makedirs( f'{fit_dir}/{predict_job_dir}', exist_ok = True )
-         shutil.copyfile(fit_database, ancestor_database)
-         command = [
-            'dismod_at', ancestor_database,
-            'set', 'option', 'other_database', path2root_node_db
-         ]
-         dismod_at.system_command_prc(command, print_command = False)
-         #
-         # job_queue
-         # arguments to pre_one_job that are different for each job
-         args = (
-            predict_job_name                       ,
-            ancestor_database                      ,
-            predict_node_id                        ,
-            predict_sex_id                         ,
-            db2csv                                 ,
-            plot                                   ,
-         )
-         job_queue.put( args )
-         n_job_queue += 1
+      job_queue.put( predict_job_id )
+   #
+   # n_job_queue
+   n_job_queue = len( predict_job_id_list )
    #
    # n_done_queue
    # The number of job_queue entries that have been completed
    n_done_queue   = manager.Queue()
    n_done_queue.put(0)
-   #
-   # float_precision
-   float_precision = global_option_value['float_precision']
    #
    # process_list
    # execute pre_one_process for each process in process_list
@@ -654,9 +574,14 @@ def predict_all(
          args=(
             fit_dir,
             sim_dir,
-            float_precision,
             all_node_db,
             covariate_table,
+            job_table,
+            node_table,
+            root_node_id,
+            split_reference_table,
+            error_message_dict,
+            global_option_value,
             job_queue,
             n_job_queue,
             n_done_queue,
@@ -670,9 +595,14 @@ def predict_all(
    at_cascade.csv.pre_one_process(
       fit_dir,
       sim_dir,
-      float_precision,
       all_node_db,
       covariate_table,
+      job_table,
+      node_table,
+      root_node_id,
+      split_reference_table,
+      error_message_dict,
+      global_option_value,
       job_queue,
       n_job_queue,
       n_done_queue
