@@ -592,39 +592,34 @@ def predict_all(
             error_message_dict      = error_message_dict ,
          )
          #
-         # ancestor_database, db2csv, plot
          if ancestor_job_dir == None :
             sam_node_predict = f'{fit_dir}/{predict_job_dir}/sam_predict.csv'
             if os.path.exists( sam_node_predict ) :
                os.remove( sam_node_predict )
             print( f'Cannot find an ancestor that fit for {predict_job_name}' )
          else :
+            # db2csv, plot, fit_database
             if ancestor_job_dir == predict_job_dir :
                db2csv            = global_option_value['db2csv']
                plot              = global_option_value['plot']
-               ancestor_database  = f'{fit_dir}/{predict_job_dir}/dismod.db'
+               fit_database      = f'{fit_dir}/{predict_job_dir}/dismod.db'
             else :
-               level             = predict_job_dir.count('/') + 1
-               path2root_node_db = level * '../' + 'root_node.db'
-               #
                db2csv            = False
                plot              = False
                fit_database      = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
-               ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
-               # Must copy ancestor database because predictions will change it
-               os.makedirs( f'{fit_dir}/{predict_job_dir}', exist_ok = True )
-               shutil.copyfile(fit_database, ancestor_database)
-               command = [
-                  'dismod_at', ancestor_database,
-                  'set', 'option', 'other_database', path2root_node_db
-               ]
-               dismod_at.system_command_prc(command, print_command = False)
             #
-            # ????
-            # Matplotlib leaks memrory, so use a separate proccess
-            # for this call to predict__one_job so the memory will be
-            # freed when it is no longer needed
-            # ????
+            # ancestor_database
+            # Must copy ancestor database because predictions will change it
+            ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
+            level             = predict_job_dir.count('/') + 1
+            path2root_node_db = level * '../' + 'root_node.db'
+            os.makedirs( f'{fit_dir}/{predict_job_dir}', exist_ok = True )
+            shutil.copyfile(fit_database, ancestor_database)
+            command = [
+               'dismod_at', ancestor_database,
+               'set', 'option', 'other_database', path2root_node_db
+            ]
+            dismod_at.system_command_prc(command, print_command = False)
             #
             # job_queue
             # arguments to pre_one_job that are different for each job
