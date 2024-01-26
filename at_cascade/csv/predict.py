@@ -554,8 +554,7 @@ def predict_all(
    job_queue   = manager.Queue()
    n_job_queue = 0
    #
-   # ancestor_database_list, predict_job_id_list
-   ancestor_database_list = list()
+   # predict_job_id_list
    predict_job_id_list    = list()
    for predict_job_id in range(n_job) :
       #
@@ -572,10 +571,8 @@ def predict_all(
       #
       if include_this_job :
          #
-         # predict_job_row
-         predict_job_row = job_table[predict_job_id]
-         #
          # predict_job_name, predict_node_id, predict_sex_id
+         predict_job_row         = job_table[predict_job_id]
          predict_job_name        = predict_job_row['job_name']
          predict_node_id         = predict_job_row['fit_node_id']
          predict_sex_id          = predict_job_row['split_reference_id']
@@ -634,8 +631,7 @@ def predict_all(
             job_queue.put( args )
             n_job_queue += 1
             #
-            # ancestor_database_list, predict_job_id_list
-            ancestor_database_list.append( ancestor_database )
+            # predict_job_id_list
             predict_job_id_list.append( predict_job_id )
    #
    # n_done_queue
@@ -702,20 +698,27 @@ def predict_all(
    else :
       prefix_list = [ 'tru', 'fit', 'sam' ]
    #
-   # ancestor_database, predict_job_id
-   assert len(ancestor_database_list) == len(predict_job_id_list)
-   for predict_index in range( len(ancestor_database_list) ) :
-      ancestor_database = ancestor_database_list[predict_index]
-      predict_job_id    = predict_job_id_list[predict_index]
+   # predict_job_id
+   for predict_job_id in predict_job_id_list :
       #
       # predict_node_id, predict_sex_id
       predict_job_row   = job_table[predict_job_id]
       predict_node_id   = predict_job_row['fit_node_id']
       predict_sex_id    = predict_job_row['split_reference_id']
       #
-      # predict_node_dir
-      index             = ancestor_database.rindex('/')
-      predict_node_dir  = ancestor_database[: index]
+      # predict_job_dir
+      predict_job_dir = at_cascade.get_database_dir(
+         node_table              = node_table                     ,
+         split_reference_table   = split_reference_table          ,
+         node_split_set          = node_split_set                 ,
+         root_node_id            = root_node_id                   ,
+         root_split_reference_id = root_split_reference_id        ,
+         fit_node_id             = predict_node_id                ,
+         fit_split_reference_id  = predict_sex_id                 ,
+      )
+      #
+      # ancestor_database
+      ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
       #
       # ancestor_covariate_table, integrand_table
       ancestor_or_root   = at_cascade.fit_or_root_class(
@@ -744,7 +747,7 @@ def predict_all(
       for prefix in prefix_list :
          #
          # predict_table
-         file_name     = f'{predict_node_dir}/{prefix}_predict.csv'
+         file_name     = f'{fit_dir}/{predict_job_dir}/{prefix}_predict.csv'
          assert os.path.isfile(file_name)
          predict_table =  at_cascade.csv.read_table(file_name)
          #
