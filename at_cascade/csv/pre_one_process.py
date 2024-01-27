@@ -1,6 +1,9 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
+# Set this to False when debugging an exception during pre_one_job routine
+catch_exceptions_and_continue = True
+# ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.pre_one_process}
 
@@ -64,7 +67,7 @@ there were no error messages for that job.
 {xrst_end csv.pre_one_process}
 '''
 # ----------------------------------------------------------------------------
-import queue
+import numpy
 import os
 import datetime
 import shutil
@@ -72,11 +75,11 @@ import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
 # prints the durrent time and job name
-def print_time(begin, job_name, n_done = None, n_job_queue = None) :
+def print_time(begin, job_name, n_done = None, n_job_total = None) :
    assert type(begin) == bool
    assert type(job_name) == str
    assert n_done == None or type(n_done) == int
-   assert n_job_queue == None or type(n_job_queue) == int
+   assert n_job_total == None or type(n_job_total) == int
    #
    now         = datetime.datetime.now()
    str_time    = now.strftime("%H:%M:%S")
@@ -85,7 +88,7 @@ def print_time(begin, job_name, n_done = None, n_job_queue = None) :
    else :
       msg = f'End:   {str_time}: predict {job_name}'
    if type(n_done) == int :
-      msg += f' {n_done}/{n_job_queue}'
+      msg += f' {n_done}/{n_job_total}'
    print(msg)
 # ----------------------------------------------------------------------------
 # BEGIN DEF
@@ -102,6 +105,10 @@ def pre_one_process(
    job_queue,
    n_job_queue,
    n_done_queue,
+   job_status_name,
+   shared_job_status,
+   shared_lock,
+   shared_event,
 ) :
    assert type(fit_dir)                             == str
    assert sim_dir == None or type(sim_dir)          == str
@@ -115,6 +122,15 @@ def pre_one_process(
    assert type(root_node_id)                        == int
    assert type(error_message_dict)                  == dict
    # END DEF
+   # ----------------------------------------------------------------------
+   job_status_skip  = job_status_name.index( 'skip' )
+   job_status_ready = job_status_name.index( 'ready' )
+   job_status_run   = job_status_name.index( 'run' )
+   job_status_done  = job_status_name.index( 'done' )
+   # ----------------------------------------------------------------------
+   #
+   # job_table_index
+   job_table_index = numpy.array( range(len(job_table)), dtype = int)
    #
    # split_reference_table
    split_reference_table = at_cascade.csv.split_reference_table
@@ -126,11 +142,36 @@ def pre_one_process(
    root_split_reference_id = 1
    assert 'both' == split_reference_table[1]['split_reference_name']
    #
-   try :
-      while True :
+   # n_skip
+   n_skip = None
+   #
+   while True :
          #
-         # predict_job_id
-         predict_job_id = job_queue.get(block = False)
+         # Begin Lock
+         shared_lock.acquire()
+         #
+         # n_skip, predict_job_id, shared_job_status
+         #
+         job_id_ready = job_table_index[shared_job_status == job_status_ready]
+         job_id_skip  = job_table_index[shared_job_status == job_status_skip]
+         #
+         # if n_ready is zero, all jobs are done or running
+         n_ready      = len(job_id_ready)
+         if n_ready == 0 :
+            shared_lock.release()
+            return
+         #
+         if n_skip == None :
+            n_skip = len(job_id_skip)
+         assert n_skip == len(job_id_skip)
+         #
+         predict_job_id                    = int( job_id_ready[0] )
+         shared_job_status[predict_job_id] = job_status_run
+         #
+         # End Lock
+         shared_event.set()
+         shared_lock.release()
+         # -------------------------------------------------------------------
          #
          # predict_job_name, predict_node_id, predict_sex_id
          predict_job_row         = job_table[predict_job_id]
@@ -138,10 +179,8 @@ def pre_one_process(
          predict_node_id         = predict_job_row['fit_node_id']
          predict_sex_id          = predict_job_row['split_reference_id']
          #
-         # print Begin message
-         n_done = n_done_queue.get(block = True)
+         # print_time
          print_time(begin = True, job_name = predict_job_name)
-         n_done_queue.put(n_done)
          #
          # predict_job_dir, ancestor_job_dir
          predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
@@ -200,15 +239,25 @@ def pre_one_process(
             plot                    = plot                      ,
          )
          #
-         # n_done, print End messsage
-         n_done = n_done_queue.get(block = True) + 1
+         # Begin Lock
+         shared_lock.acquire()
+         #
+         # shared_job_status, n_done
+         assert shared_job_status[predict_job_id] == job_status_run
+         shared_job_status[predict_job_id] = job_status_done
+         job_id_done = job_table_index[ shared_job_status == job_status_done]
+         n_done      = len(job_id_done)
+         n_total     = len(job_table) - n_skip
+         #
+         # print_time
          print_time(
             begin       = False,
             job_name    = predict_job_name,
             n_done      = n_done,
-            n_job_queue = n_job_queue
+            n_job_total = n_total,
          )
-         n_done_queue.put(n_done)
          #
-   except queue.Empty :
-      pass
+         # End Lock
+         shared_event.set()
+         shared_lock.release()
+         # -------------------------------------------------------------------

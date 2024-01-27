@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
-# Set this to False when debugging an exception during one_job routine
+# Set this to False when debugging an exception during fit_one_job routine
 catch_exceptions_and_continue = True
 # ----------------------------------------------------------------------------
 '''
@@ -419,9 +419,9 @@ def fit_one_process(
          shm_number_cpu_inuse,
          shm_job_status,
    ]
-   # job_id_array
-   # job_id_array
-   job_id_array = numpy.array( range(len(job_table)), dtype = int )
+   #
+   # job_table_index
+   job_table_index = numpy.array( range(len(job_table)), dtype = int )
    #
    if not skip_this_job :
       #
@@ -448,10 +448,10 @@ def fit_one_process(
       lock.acquire()
       #
       # job_id_ready
-      job_id_ready = job_id_array[ shared_job_status == job_status_ready ]
+      job_id_ready = job_table_index[ shared_job_status == job_status_ready ]
       #
       # job_id_run
-      job_id_run  = job_id_array[ shared_job_status == job_status_run ]
+      job_id_run  = job_table_index[ shared_job_status == job_status_run ]
       #
       # n_job_ready
       n_job_ready = job_id_ready.size

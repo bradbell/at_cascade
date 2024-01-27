@@ -59,6 +59,22 @@ import at_cascade
 import dismod_at
 import multiprocessing
 import queue
+import numpy
+# ----------------------------------------------------------------------------
+# shared_memory_prefix = get_shared_memory_prefix(all_node_database)
+def get_shared_memory_prefix(all_node_database) :
+   assert type(all_node_database) == str
+   #
+   connection           = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
+   option_all_table     = dismod_at.get_table_dict(connection, 'option_all')
+   connection.close()
+   shared_memory_prefix = ""
+   for row in option_all_table :
+      if row['option_name'] == 'shared_memory_prefix' :
+         shared_memory_prefix = row['option_value']
+   return shared_memory_prefix
 # ----------------------------------------------------------------------------
 # BEGIN DEF
 def pre_parallel(
@@ -78,6 +94,19 @@ def pre_parallel(
    assert type( next(iter(fit_goal_set) ))  == str
    assert type( option_predict )            == dict
    # END DEF
+   # ----------------------------------------------------------------------
+   # job_status_name
+   job_status_name = [
+      'skip' , # will not process this job
+      'ready', # job is readiy to run
+      'run'  , # job is running
+      'done' , # job finished running
+   ]
+   job_status_skip  = job_status_name.index( 'skip' )
+   job_status_ready = job_status_name.index( 'ready' )
+   job_status_run   = job_status_name.index( 'run' )
+   job_status_done  = job_status_name.index( 'done' )
+   # -------------------------------------------------------------------------
    #
    # max_number_cpu
    max_number_cpu = option_predict['max_number_cpu']
@@ -194,6 +223,33 @@ def pre_parallel(
    # The number of job_queue entries that have been completed
    n_done_queue   = manager.Queue()
    n_done_queue.put(0)
+   # ----------------------------------------------------------------------
+   # shared_memory_prefix_plus
+   shared_memory_prefix = get_shared_memory_prefix(all_node_db)
+   start_name           = job_table[start_job_id]['job_name']
+   shared_memory_prefix_plus = shared_memory_prefix + f'_pre_{start_name}'
+   print(f'create: {shared_memory_prefix_plus} shared memory')
+   #
+   # shared_job_status
+   tmp  = numpy.empty(len(job_table), dtype = int )
+   name = shared_memory_prefix_plus + '_job_status'
+   shm_job_status = multiprocessing.shared_memory.SharedMemory(
+      create = True, size = tmp.nbytes, name = name
+   )
+   shared_job_status = numpy.ndarray(
+      tmp.shape, dtype = tmp.dtype, buffer = shm_job_status.buf
+   )
+   shared_job_status[:] = job_status_skip
+   for predict_job_id in predict_job_id_list :
+      shared_job_status[predict_job_id] = job_status_ready
+   #
+   # shared_lock
+   shared_lock = multiprocessing.Lock()
+   #
+   # shared_event
+   shared_event = multiprocessing.Event()
+   shared_event.set()
+   # -------------------------------------------------------------------------
    #
    # process_list
    # execute pre_one_process for each process in process_list
@@ -216,6 +272,10 @@ def pre_parallel(
             job_queue,
             n_job_queue,
             n_done_queue,
+            job_status_name,
+            shared_job_status,
+            shared_lock,
+            shared_event,
          )
       )
       p.start()
@@ -235,7 +295,11 @@ def pre_parallel(
       error_message_dict,
       job_queue,
       n_job_queue,
-      n_done_queue
+      n_done_queue,
+      job_status_name,
+      shared_job_status,
+      shared_lock,
+      shared_event,
    )
    #
    # join
@@ -254,3 +318,8 @@ def pre_parallel(
       root_node_id,
       root_node_database,
    )
+   #
+   # shm_job_status
+   print(f'remove: {shared_memory_prefix_plus} shared memory')
+   shm_job_status.close()
+   shm_job_status.unlink()

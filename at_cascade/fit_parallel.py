@@ -86,7 +86,6 @@ in the option all table.
 '''
 # ----------------------------------------------------------------------------
 import multiprocessing
-from multiprocessing import shared_memory
 import numpy
 import at_cascade
 import dismod_at
@@ -150,12 +149,12 @@ def fit_parallel(
    shared_memory_prefix = get_shared_memory_prefix(all_node_database)
    start_name           = job_table[start_job_id]['job_name']
    shared_memory_prefix_plus = shared_memory_prefix + f'_fit_{start_name}'
-   print(f'create: {shared_memory_prefix_plus} fit shared memory')
+   print(f'create: {shared_memory_prefix_plus} shared memory')
    # -------------------------------------------------------------------------
    # shared_number_cpu_inuse
    tmp  = numpy.empty(1, dtype = int )
    name = shared_memory_prefix_plus + '_number_cpu_inuse'
-   shm_number_cpu_inuse = shared_memory.SharedMemory(
+   shm_number_cpu_inuse = multiprocessing.shared_memory.SharedMemory(
       create = True, size = tmp.nbytes, name = name
    )
    shared_number_cpu_inuse = numpy.ndarray(
@@ -165,7 +164,7 @@ def fit_parallel(
    # shared_job_status
    tmp  = numpy.empty(len(job_table), dtype = int )
    name = shared_memory_prefix_plus + '_job_status'
-   shm_job_status = shared_memory.SharedMemory(
+   shm_job_status = multiprocessing.shared_memory.SharedMemory(
       create = True, size = tmp.nbytes, name = name
    )
    shared_job_status = numpy.ndarray(
@@ -231,12 +230,13 @@ def fit_parallel(
       assert msg, False
    #
    # shared_job_status
+   # 2DO: jobs that come before the start job should be in wait state ?
    for job_id in range(0, len(job_table) ):
       status = shared_job_status[job_id]
       assert status in [ job_status_done, job_status_error, job_status_abort ]
    #
    # free shared memory objects
-   print(f'remove: {shared_memory_prefix_plus} fit shared memory')
+   print(f'remove: {shared_memory_prefix_plus} shared memory')
    for shm in shm_list :
       shm.close()
       shm.unlink()
