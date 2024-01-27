@@ -9,8 +9,9 @@ catch_exceptions_and_continue = True
 {xrst_begin fit_one_process}
 {xrst_spell
    cpus
-   len
    inuse
+   numpy
+   dtype
 }
 
 Fit Using One Process
@@ -23,22 +24,6 @@ Prototype
    # BEGIN DEF
    # END DEF
 }
-
-shared_memory_prefix_plus
-*************************
-This is the prefix used in front the following shared memory names:
-
-| *shared_memory_prefix_plus*\ ``_number_cpu_inuse``
-| *shared_memory_prefix_plus*\ ``_job_status``
-
-number_cpu_inuse
-================
-is and integer array of length one containing
-the number of cpu's (processes) currently in use preforming the fit.
-
-job_status
-==========
-is and integer array with length equal ``len(``\ *job_table* ``)`` .
 
 job_table
 *********
@@ -82,17 +67,6 @@ For each job, the first type of fit is attempted.
 If it fails, and there is a second type of fit, it is attempted.
 If it also fails, the corresponding job fails.
 
-shared_lock
-***********
-is a shared memory lock, used by all the fit processes,
-that must be acquired to read or write shared memory;
-see :ref:`fit_one_process@shared_memory_prefix_plus` above.
-
-shared_event
-************
-is multiprocessing event,  used by all the fit processes,
-that is used to signal that the shared memory has changed.
-
 job_status_name
 ***************
 is the name corresponding to each possible job status integer values.
@@ -109,6 +83,33 @@ corresponding name.
    'done',  job finished running
    'error', job had an exception
    'abort', job is a descendant of a job that had an exception
+
+shared_job_status
+*****************
+This memory is shared by all the processes doing predictions.
+It is an numpy array with ``dtype`` equal to ``int`` and
+with length equal to the length of *job_table* .
+The value *shared_job_status* [ *job_table_index* ] is the
+integer status code for the corresponding job; see *job_status_name* above.
+
+number_cpu_inuse
+****************
+This memory is shared by all the processes doing fits.
+It is an numpy array with ``dtype`` equal to ``int`` and
+with length equal to one.
+The value *number_cpu_inuse* [0] is the number of cpus (precesses)
+currently fitting this cascade.
+
+shared_lock
+***********
+is a shared memory lock, used by all the fit processes,
+that must be acquired to read or write shared memory; i.e.,
+*shared_job_status* or *shared_number_cpu_in_use* .
+
+shared_event
+************
+is multiprocessing event,  used by all the fit processes,
+that is used to signal that the shared memory has changed.
 
 {xrst_end fit_one_process}
 '''
@@ -360,7 +361,6 @@ def try_one_job(
 # ----------------------------------------------------------------------------
 # BEGIN DEF
 def fit_one_process(
-   shared_memory_prefix_plus,
    job_table,
    this_job_id,
    all_node_database,
@@ -370,20 +370,26 @@ def fit_one_process(
    max_number_cpu,
    master_process,
    fit_type_list,
+   job_status_name,
+   shared_job_status,
+   shared_number_cpu_inuse,
    shared_lock,
    shared_event,
-   job_status_name,
 ) :
-   assert type(shared_memory_prefix_plus)  == str
-   assert type(job_table)         == list
-   assert type(this_job_id)       == int
-   assert type(all_node_database) == str
-   assert type(node_table)        == list
-   assert type(fit_integrand)     == set
-   assert type(skip_this_job)     == bool
-   assert type(max_number_cpu)    == int
-   assert type(master_process)    == bool
-   assert type(fit_type_list)     == list
+   assert type(job_table)            == list
+   assert type(this_job_id)          == int
+   assert type(all_node_database)    == str
+   assert type(node_table)           == list
+   assert type(fit_integrand)        == set
+   assert type(skip_this_job)        == bool
+   assert type(max_number_cpu)       == int
+   assert type(master_process)       == bool
+   assert type(fit_type_list)        == list
+   assert type(job_status_name)      == list
+   assert type( job_status_name[0] ) == str
+   assert type(shared_job_status)    == numpy.ndarray
+   assert type(shared_lock)          == multiprocessing.synchronize.Lock
+   assert type(shared_event)         == multiprocessing.synchronize.Event
    # END DEF
    # ----------------------------------------------------------------------
    job_status_wait  = job_status_name.index( 'wait' )
@@ -393,32 +399,6 @@ def fit_one_process(
    job_status_error = job_status_name.index( 'error' )
    job_status_abort = job_status_name.index( 'abort' )
    # ----------------------------------------------------------------------
-   # shared_number_cpu_inuse
-   tmp  = numpy.empty(1, dtype = int )
-   name = shared_memory_prefix_plus + '_number_cpu_inuse'
-   shm_number_cpu_inuse = shared_memory.SharedMemory(
-      create = False, name = name
-   )
-   shared_number_cpu_inuse = numpy.ndarray(
-      tmp.shape, dtype = tmp.dtype, buffer = shm_number_cpu_inuse.buf
-   )
-   # ----------------------------------------------------------------------
-   # shared_job_status
-   tmp  = numpy.empty(len(job_table), dtype = int )
-   name = shared_memory_prefix_plus + '_job_status'
-   shm_job_status = shared_memory.SharedMemory(
-      create = False, name = name
-   )
-   shared_job_status = numpy.ndarray(
-      tmp.shape, dtype = tmp.dtype, buffer = shm_job_status.buf
-   )
-   # ----------------------------------------------------------------------
-   #
-   # shm_list
-   shm_list = [
-         shm_number_cpu_inuse,
-         shm_job_status,
-   ]
    #
    # job_table_index
    job_table_index = numpy.array( range(len(job_table)), dtype = int )
@@ -477,9 +457,6 @@ def fit_one_process(
                shared_event.set()
                shared_lock.release()
                #
-               # this process is done with its shared memory
-               for shm in shm_list :
-                  shm.close()
                return
          else :
             #
@@ -498,9 +475,6 @@ def fit_one_process(
                # release
                shared_lock.release()
                #
-               # this process is done with its shared memory
-               for shm in shm_list :
-                  shm.close()
                return
       else :
          #
@@ -537,7 +511,6 @@ def fit_one_process(
             #
             # p
             args = (
-               shared_memory_prefix_plus,
                job_table,
                job_id,
                all_node_database,
@@ -547,9 +520,11 @@ def fit_one_process(
                max_number_cpu,
                is_child_master_process,
                fit_type_list,
+               job_status_name,
+               shared_job_status,
+               shared_number_cpu_inuse,
                shared_lock,
                shared_event,
-               job_status_name,
             )
             target = fit_one_process
             p = multiprocessing.Process(target = target, args = args)

@@ -208,7 +208,6 @@ def fit_parallel(
    #
    # fit_one_process
    at_cascade.fit_one_process(
-      shared_memory_prefix_plus,
       job_table,
       start_job_id,
       all_node_database,
@@ -218,9 +217,11 @@ def fit_parallel(
       max_number_cpu,
       master_process,
       fit_type_list,
+      job_status_name,
+      shared_job_status,
+      shared_number_cpu_inuse,
       shared_lock,
       shared_event,
-      job_status_name,
    )
    #
    # shared_number_cpu_inuse
