@@ -82,14 +82,14 @@ For each job, the first type of fit is attempted.
 If it fails, and there is a second type of fit, it is attempted.
 If it also fails, the corresponding job fails.
 
-lock
-****
+shared_lock
+***********
 is a shared memory lock, used by all the fit processes,
 that must be acquired to read or write shared memory;
 see :ref:`fit_one_process@shared_memory_prefix_plus` above.
 
-event
-*****
+shared_event
+************
 is multiprocessing event,  used by all the fit processes,
 that is used to signal that the shared memory has changed.
 
@@ -182,8 +182,8 @@ def try_one_job(
    max_number_cpu,
    master_process,
    fit_type_list,
-   lock,
-   event,
+   shared_lock,
+   shared_event,
    shared_job_status,
    job_status_name,
 )  :
@@ -275,8 +275,8 @@ def try_one_job(
    #
    if job_done :
       #
-      # lock
-      lock.acquire()
+      # shared_lock
+      shared_lock.acquire()
       #
       # shared_job_status
       assert shared_job_status[this_job_id] == job_status_run
@@ -292,8 +292,8 @@ def try_one_job(
       #
       # release
       # shared memory has changed
-      event.set()
-      lock.release()
+      shared_event.set()
+      shared_lock.release()
       #
    else :
       # if job not ok
@@ -307,8 +307,8 @@ def try_one_job(
             descendant_set.add( job_id )
       descendant_set.remove( this_job_id )
       #
-      # lock
-      lock.acquire()
+      # shared_lock
+      shared_lock.acquire()
       #
       # shared_job_status[this_job_id]
       if shared_job_status[this_job_id] != job_status_run :
@@ -327,8 +327,8 @@ def try_one_job(
       #
       # release
       # shared memory has changed
-      event.set()
-      lock.release()
+      shared_event.set()
+      shared_lock.release()
       #
       # ok
       job_done = False
@@ -345,13 +345,13 @@ def try_one_job(
          print( f'Error: {current_time}: fit {fit_type:<5} {job_name}' )
       #
       # status_count
-      lock.acquire()
+      shared_lock.acquire()
       n_status      = len( job_status_name )
       status_count  = dict()
       for job_status_i in range(n_status) :
          name               = job_status_name[job_status_i]
          status_count[name] =  sum( shared_job_status == job_status_i )
-      lock.release()
+      shared_lock.release()
       #
       print( f'       {status_count}' )
       #
@@ -370,8 +370,8 @@ def fit_one_process(
    max_number_cpu,
    master_process,
    fit_type_list,
-   lock,
-   event,
+   shared_lock,
+   shared_event,
    job_status_name,
 ) :
    assert type(shared_memory_prefix_plus)  == str
@@ -437,15 +437,15 @@ def fit_one_process(
          max_number_cpu,
          master_process,
          fit_type_list,
-         lock,
-         event,
+         shared_lock,
+         shared_event,
          shared_job_status,
          job_status_name,
       )
    #
    while True :
-      # lock
-      lock.acquire()
+      # shared_lock
+      shared_lock.acquire()
       #
       # job_id_ready
       job_id_ready = job_table_index[ shared_job_status == job_status_ready ]
@@ -465,7 +465,7 @@ def fit_one_process(
                # the shared memory for error checking and then free it.
                #
                # should not need this release
-               lock.release()
+               shared_lock.release()
                #
                return
             else :
@@ -474,8 +474,8 @@ def fit_one_process(
                #
                # release
                # shared memory has changed
-               event.set()
-               lock.release()
+               shared_event.set()
+               shared_lock.release()
                #
                # this process is done with its shared memory
                for shm in shm_list :
@@ -488,15 +488,15 @@ def fit_one_process(
                #
                # wait for another process to shared memory,
                # then go back to the while True point above
-               event.clear()
-               lock.release()
-               event.wait()
+               shared_event.clear()
+               shared_lock.release()
+               shared_event.wait()
             else :
                # return this processor
                shared_number_cpu_inuse[0] -= 1
                #
                # release
-               lock.release()
+               shared_lock.release()
                #
                # this process is done with its shared memory
                for shm in shm_list :
@@ -520,8 +520,8 @@ def fit_one_process(
          #
          # release
          # shared memory has changed
-         event.set()
-         lock.release()
+         shared_event.set()
+         shared_lock.release()
          #
          # skip_child_job
          skip_child_job = False
@@ -547,8 +547,8 @@ def fit_one_process(
                max_number_cpu,
                is_child_master_process,
                fit_type_list,
-               lock,
-               event,
+               shared_lock,
+               shared_event,
                job_status_name,
             )
             target = fit_one_process
@@ -572,8 +572,8 @@ def fit_one_process(
             max_number_cpu,
             master_process,
             fit_type_list,
-            lock,
-            event,
+            shared_lock,
+            shared_event,
             shared_job_status,
             job_status_name,
          )

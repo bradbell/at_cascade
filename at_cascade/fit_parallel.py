@@ -198,13 +198,13 @@ def fit_parallel(
    # master_process
    master_process = True
    #
-   # lock
-   lock = multiprocessing.Lock()
+   # shared_lock
+   shared_lock = multiprocessing.Lock()
    #
-   # event
+   # shared_event
    # shared memory has changed
-   event = multiprocessing.Event()
-   event.set()
+   shared_event = multiprocessing.Event()
+   shared_event.set()
    #
    # fit_one_process
    at_cascade.fit_one_process(
@@ -218,8 +218,8 @@ def fit_parallel(
       max_number_cpu,
       master_process,
       fit_type_list,
-      lock,
-      event,
+      shared_lock,
+      shared_event,
       job_status_name,
    )
    #
