@@ -58,7 +58,6 @@ r'''
 import at_cascade
 import dismod_at
 import multiprocessing
-import queue
 import numpy
 # ----------------------------------------------------------------------------
 # shared_memory_prefix = get_shared_memory_prefix(all_node_database)
@@ -210,19 +209,9 @@ def pre_parallel(
       if include_this_job :
          predict_job_id_list.append( predict_job_id )
    #
-   # job_queue
-   # Need Manager; see https://bugs.python.org/issue18277
-   job_queue   = manager.Queue()
-   for predict_job_id in predict_job_id_list :
-      job_queue.put( predict_job_id )
+   # n_predict
+   n_predict = len(predict_job_id_list)
    #
-   # n_job_queue
-   n_job_queue = len( predict_job_id_list )
-   #
-   # n_done_queue
-   # The number of job_queue entries that have been completed
-   n_done_queue   = manager.Queue()
-   n_done_queue.put(0)
    # ----------------------------------------------------------------------
    # shared_memory_prefix_plus
    shared_memory_prefix = get_shared_memory_prefix(all_node_db)
@@ -250,8 +239,8 @@ def pre_parallel(
    #
    # process_list
    # execute pre_one_process for each process in process_list
-   n_spawn      = min(n_job_queue - 1, max_number_cpu - 1)
-   print( f'Predict: n_job = {n_job_queue}, n_spawn = {n_spawn}' )
+   n_spawn      = min(n_predict - 1, max_number_cpu - 1)
+   print( f'Predict: n_predict = {n_predict}, n_spawn = {n_spawn}' )
    process_list = list()
    for i in range(n_spawn) :
       p = multiprocessing.Process(
@@ -292,7 +281,7 @@ def pre_parallel(
    )
    #
    # join
-   # wait for all the processes to finish (detect an empty queue).
+   # wait for all the processes to finish
    for p in process_list :
       p.join()
    #
