@@ -102,9 +102,6 @@ def pre_one_process(
    node_table,
    root_node_id,
    error_message_dict,
-   job_queue,
-   n_job_queue,
-   n_done_queue,
    job_status_name,
    shared_job_status,
    shared_lock,
@@ -146,118 +143,118 @@ def pre_one_process(
    n_skip = None
    #
    while True :
-         #
-         # Begin Lock
-         shared_lock.acquire()
-         #
-         # n_skip, predict_job_id, shared_job_status
-         #
-         job_id_ready = job_table_index[shared_job_status == job_status_ready]
-         job_id_skip  = job_table_index[shared_job_status == job_status_skip]
-         #
-         # if n_ready is zero, all jobs are done or running
-         n_ready      = len(job_id_ready)
-         if n_ready == 0 :
-            shared_lock.release()
-            return
-         #
-         if n_skip == None :
-            n_skip = len(job_id_skip)
-         assert n_skip == len(job_id_skip)
-         #
-         predict_job_id                    = int( job_id_ready[0] )
-         shared_job_status[predict_job_id] = job_status_run
-         #
-         # End Lock
-         shared_event.set()
+      #
+      # Begin Lock
+      shared_lock.acquire()
+      #
+      # n_skip, predict_job_id, shared_job_status
+      #
+      job_id_ready = job_table_index[shared_job_status == job_status_ready]
+      job_id_skip  = job_table_index[shared_job_status == job_status_skip]
+      #
+      # if n_ready is zero, all jobs are done or running
+      n_ready      = len(job_id_ready)
+      if n_ready == 0 :
          shared_lock.release()
-         # -------------------------------------------------------------------
-         #
-         # predict_job_name, predict_node_id, predict_sex_id
-         predict_job_row         = job_table[predict_job_id]
-         predict_job_name        = predict_job_row['job_name']
-         predict_node_id         = predict_job_row['fit_node_id']
-         predict_sex_id          = predict_job_row['split_reference_id']
-         #
-         # print_time
-         print_time(begin = True, job_name = predict_job_name)
-         #
-         # predict_job_dir, ancestor_job_dir
-         predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
-            fit_dir                 = fit_dir ,
-            job_table               = job_table ,
-            predict_job_id          = predict_job_id ,
-            node_table              = node_table ,
-            root_node_id            = root_node_id ,
-            split_reference_table   = split_reference_table ,
-            root_split_reference_id = root_split_reference_id ,
-            error_message_dict      = error_message_dict ,
-         )
-         #
-         if ancestor_job_dir == None :
-            sam_node_predict = f'{fit_dir}/{predict_job_dir}/sam_predict.csv'
-            if os.path.exists( sam_node_predict ) :
-               os.remove( sam_node_predict )
-            msg = f'Cannot find an ancestor that fit for {predict_job_name}'
-            assert False, msg
-         #
-         # db2csv, plot, fit_database
-         if ancestor_job_dir == predict_job_dir :
-            db2csv            = option_predict['db2csv']
-            plot              = option_predict['plot']
-            fit_database      = f'{fit_dir}/{predict_job_dir}/dismod.db'
-         else :
-            db2csv            = False
-            plot              = False
-            fit_database      = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
-         #
-         # ancestor_database
-         # Must copy ancestor database because predictions will change it
-         ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
-         level             = predict_job_dir.count('/') + 1
-         path2root_node_db = level * '../' + 'root_node.db'
-         os.makedirs( f'{fit_dir}/{predict_job_dir}', exist_ok = True )
-         shutil.copyfile(fit_database, ancestor_database)
-         command = [
-            'dismod_at', ancestor_database,
-            'set', 'option', 'other_database', path2root_node_db
-         ]
-         dismod_at.system_command_prc(command, print_command = False)
-         #
-         # pre_one_job
-         at_cascade.csv.pre_one_job(
-            fit_dir                 = fit_dir                   ,
-            sim_dir                 = sim_dir                   ,
-            float_precision         = float_precision           ,
-            all_node_database       = all_node_database         ,
-            all_covariate_table     = all_covariate_table       ,
-            predict_job_name        = predict_job_name          ,
-            ancestor_node_database  = ancestor_database         ,
-            predict_node_id         = predict_node_id           ,
-            predict_sex_id          = predict_sex_id            ,
-            db2csv                  = db2csv                    ,
-            plot                    = plot                      ,
-         )
-         #
-         # Begin Lock
-         shared_lock.acquire()
-         #
-         # shared_job_status, n_done
-         assert shared_job_status[predict_job_id] == job_status_run
-         shared_job_status[predict_job_id] = job_status_done
-         job_id_done = job_table_index[ shared_job_status == job_status_done]
-         n_done      = len(job_id_done)
-         n_total     = len(job_table) - n_skip
-         #
-         # print_time
-         print_time(
-            begin       = False,
-            job_name    = predict_job_name,
-            n_done      = n_done,
-            n_job_total = n_total,
-         )
-         #
-         # End Lock
-         shared_event.set()
-         shared_lock.release()
-         # -------------------------------------------------------------------
+         return
+      #
+      if n_skip == None :
+         n_skip = len(job_id_skip)
+      assert n_skip == len(job_id_skip)
+      #
+      predict_job_id                    = int( job_id_ready[0] )
+      shared_job_status[predict_job_id] = job_status_run
+      #
+      # End Lock
+      shared_event.set()
+      shared_lock.release()
+      # -------------------------------------------------------------------
+      #
+      # predict_job_name, predict_node_id, predict_sex_id
+      predict_job_row         = job_table[predict_job_id]
+      predict_job_name        = predict_job_row['job_name']
+      predict_node_id         = predict_job_row['fit_node_id']
+      predict_sex_id          = predict_job_row['split_reference_id']
+      #
+      # print_time
+      print_time(begin = True, job_name = predict_job_name)
+      #
+      # predict_job_dir, ancestor_job_dir
+      predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
+         fit_dir                 = fit_dir ,
+         job_table               = job_table ,
+         predict_job_id          = predict_job_id ,
+         node_table              = node_table ,
+         root_node_id            = root_node_id ,
+         split_reference_table   = split_reference_table ,
+         root_split_reference_id = root_split_reference_id ,
+         error_message_dict      = error_message_dict ,
+      )
+      #
+      if ancestor_job_dir == None :
+         sam_node_predict = f'{fit_dir}/{predict_job_dir}/sam_predict.csv'
+         if os.path.exists( sam_node_predict ) :
+            os.remove( sam_node_predict )
+         msg = f'Cannot find an ancestor that fit for {predict_job_name}'
+         assert False, msg
+      #
+      # db2csv, plot, fit_database
+      if ancestor_job_dir == predict_job_dir :
+         db2csv            = option_predict['db2csv']
+         plot              = option_predict['plot']
+         fit_database      = f'{fit_dir}/{predict_job_dir}/dismod.db'
+      else :
+         db2csv            = False
+         plot              = False
+         fit_database      = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
+      #
+      # ancestor_database
+      # Must copy ancestor database because predictions will change it
+      ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
+      level             = predict_job_dir.count('/') + 1
+      path2root_node_db = level * '../' + 'root_node.db'
+      os.makedirs( f'{fit_dir}/{predict_job_dir}', exist_ok = True )
+      shutil.copyfile(fit_database, ancestor_database)
+      command = [
+         'dismod_at', ancestor_database,
+         'set', 'option', 'other_database', path2root_node_db
+      ]
+      dismod_at.system_command_prc(command, print_command = False)
+      #
+      # pre_one_job
+      at_cascade.csv.pre_one_job(
+         fit_dir                 = fit_dir                   ,
+         sim_dir                 = sim_dir                   ,
+         float_precision         = float_precision           ,
+         all_node_database       = all_node_database         ,
+         all_covariate_table     = all_covariate_table       ,
+         predict_job_name        = predict_job_name          ,
+         ancestor_node_database  = ancestor_database         ,
+         predict_node_id         = predict_node_id           ,
+         predict_sex_id          = predict_sex_id            ,
+         db2csv                  = db2csv                    ,
+         plot                    = plot                      ,
+      )
+      #
+      # Begin Lock
+      shared_lock.acquire()
+      #
+      # shared_job_status, n_done
+      assert shared_job_status[predict_job_id] == job_status_run
+      shared_job_status[predict_job_id] = job_status_done
+      job_id_done = job_table_index[ shared_job_status == job_status_done]
+      n_done      = len(job_id_done)
+      n_total     = len(job_table) - n_skip
+      #
+      # print_time
+      print_time(
+         begin       = False,
+         job_name    = predict_job_name,
+         n_done      = n_done,
+         n_job_total = n_total,
+      )
+      #
+      # End Lock
+      shared_event.set()
+      shared_lock.release()
+      # -------------------------------------------------------------------
