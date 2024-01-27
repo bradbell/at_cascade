@@ -95,7 +95,7 @@ that is used to signal that the shared memory has changed.
 
 job_status_name
 ***************
-is the name corresponding to each possible job integer status value.
+is the name corresponding to each possible job status integer values.
 If *i* is an integer job status value, *job_status_name* [ *i* ] is the
 corresponding name.
 

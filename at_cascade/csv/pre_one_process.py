@@ -6,6 +6,10 @@ catch_exceptions_and_continue = True
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.pre_one_process}
+{xrst_spell
+   numpy
+   dtype
+}
 
 Predict Using One Process
 #########################
@@ -64,6 +68,35 @@ is a non-empty ``list`` of ``str`` containing the error messages for that job.
 If a *job_name* is not a *key* is in *error_message_dict*,
 there were no error messages for that job.
 
+job_status_name
+***************
+is the name corresponding to each possible job status integer values.
+If *i* is an integer job status value, *job_status_name* [ *i* ] is the
+corresponding name.
+
+.. csv-table::
+   :header-rows: 1
+
+   Name,    Meaning
+   'skip',  job is not included in the predictions
+   'ready', job is ready to run
+   'run',   job is running
+   'done',  job finished running
+
+shared_job_status
+*****************
+This memory is shared by all the processes doing predictions.
+It is an numpy array with ``dtype`` equal to ``int`` and
+with length equal to the length of *job_table* .
+The value *shared_job_status* [ *job_table_index* ] is the
+integer status code for the corresponding job; see *job_status_name* above.
+
+shared_lock
+***********
+This lock must be acquired during the time that
+a process reads or changes *shared_job_status* .
+
+
 {xrst_end csv.pre_one_process}
 '''
 # ----------------------------------------------------------------------------
@@ -73,6 +106,7 @@ import datetime
 import shutil
 import dismod_at
 import at_cascade
+import multiprocessing
 # ----------------------------------------------------------------------------
 # prints the durrent time and job name
 def print_time(begin, job_name, n_done = None, n_job_total = None) :
@@ -105,19 +139,22 @@ def pre_one_process(
    job_status_name,
    shared_job_status,
    shared_lock,
-   shared_event,
 ) :
-   assert type(fit_dir)                             == str
-   assert sim_dir == None or type(sim_dir)          == str
-   assert type(option_predict)                      == dict
-   assert type(all_node_database)                   == str
-   assert type(all_covariate_table)                 == list
-   assert type( all_covariate_table[0] )            == dict
-   assert type(job_table)                           == list
-   assert type(node_table)                          == list
-   assert type(node_table[0])                       == dict
-   assert type(root_node_id)                        == int
-   assert type(error_message_dict)                  == dict
+   assert type(fit_dir)                    == str
+   assert sim_dir == None or type(sim_dir) == str
+   assert type(option_predict)             == dict
+   assert type(all_node_database)          == str
+   assert type(all_covariate_table)        == list
+   assert type( all_covariate_table[0] )   == dict
+   assert type(job_table)                  == list
+   assert type(node_table)                 == list
+   assert type(node_table[0])              == dict
+   assert type(root_node_id)               == int
+   assert type(error_message_dict)         == dict
+   assert type(job_status_name)            == list
+   assert type( job_status_name[0] )       == str
+   assert type(shared_job_status)          == numpy.ndarray
+   assert type(shared_lock)                == multiprocessing.synchronize.Lock
    # END DEF
    # ----------------------------------------------------------------------
    job_status_skip  = job_status_name.index( 'skip' )
@@ -166,7 +203,6 @@ def pre_one_process(
       shared_job_status[predict_job_id] = job_status_run
       #
       # End Lock
-      shared_event.set()
       shared_lock.release()
       # -------------------------------------------------------------------
       #
@@ -255,6 +291,5 @@ def pre_one_process(
       )
       #
       # End Lock
-      shared_event.set()
       shared_lock.release()
       # -------------------------------------------------------------------

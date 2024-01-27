@@ -246,9 +246,6 @@ def pre_parallel(
    # shared_lock
    shared_lock = multiprocessing.Lock()
    #
-   # shared_event
-   shared_event = multiprocessing.Event()
-   shared_event.set()
    # -------------------------------------------------------------------------
    #
    # process_list
@@ -272,7 +269,6 @@ def pre_parallel(
             job_status_name,
             shared_job_status,
             shared_lock,
-            shared_event,
          )
       )
       p.start()
@@ -293,7 +289,6 @@ def pre_parallel(
       job_status_name,
       shared_job_status,
       shared_lock,
-      shared_event,
    )
    #
    # join
