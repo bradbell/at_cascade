@@ -65,34 +65,45 @@ def clear_shared(all_node_database, job_name) :
       if row['option_name'] == 'shared_memory_prefix' :
          shared_memory_prefix = row['option_value']
    #
-   # shared_memory_prefix_plus
-   shared_memory_prefix_plus = f'{shared_memory_prefix}_fit_{job_name}'
-   #
-   # shared_memory_name_list
-   shared_memory_suffix_list = [ '_number_cpu_inuse', '_job_status', ]
-   #
-   # shared_memory_suffix
-   for shared_memory_suffix in shared_memory_suffix_list :
-      shared_memory_name = shared_memory_prefix_plus + shared_memory_suffix
-      try :
-         shm = shared_memory.SharedMemory(
-            create = True, name = shared_memory_name, size = 1
-         )
-         exists = False
-      except FileExistsError :
+   # plus
+   for plus in [ f'_fit_{job_name}' , f'_pre_{job_name}' ] :
+      #
+      # shared_memory_prefix_plus
+      shared_memory_prefix_plus = shared_memory_prefix + plus
+      #
+      # name
+      if plus.startswith( '_fit_' ) :
+         name_list = [ '_number_cpu_inuse', '_job_status' ]
+      else :
+         name_list = [ '_job_status' ]
+      for name in name_list :
+         #
+         # shared_memory_name
+         shared_memory_name = shared_memory_prefix_plus + name
          try :
             shm = shared_memory.SharedMemory(
-               create = False, name = shared_memory_name
+               create = True, name = shared_memory_name, size = 1
             )
-            exist = True
-         except Exception as e :
-            msg = str(e)
-            assert False, msg
-      #
-      if exists :
-         print(f'did find:     {shared_memory_name}')
-      else :
-         print(f'did\'nt find: {shared_memory_name}')
-      shm.close()
-      shm.unlink()
-      print('clear_shared: OK')
+            exists = False
+         except FileExistsError :
+            try :
+               shm = shared_memory.SharedMemory(
+                  create = False, name = shared_memory_name
+               )
+               exist = True
+            except Exception as e :
+               print( str(e) )
+               exist = None
+         #
+         if exists == None :
+            print( f'Unknonw state: {shared_memory_name}' )
+            print( 'Try re-runing clear_shared')
+         else :
+            if exists :
+               print( f'Did Find:       {shared_memory_name}' )
+            else :
+               print( f'Did Not Find:   {shared_memory_name}' )
+            #
+            shm.close()
+            shm.unlink()
+   print('clear_shared: OK')

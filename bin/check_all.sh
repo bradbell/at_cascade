@@ -22,7 +22,10 @@ then
    exit 1
 fi
 echo_eval bin/check_tab.sh
-echo_eval bin/run_xrst.sh
+if which xrst >& /dev/null
+then
+   echo_eval bin/run_xrst.sh
+fi
 # -----------------------------------------------------------------------------
 list=$(ls example/*.py example/csv/*.py test/*.py)
 for script in $list

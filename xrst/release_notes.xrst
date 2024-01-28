@@ -15,6 +15,8 @@ Release Notes for at_cascade
    dd
    mm
    inuse
+   pre
+   py
 }
 
 Release Notes for 2024
@@ -22,16 +24,20 @@ Release Notes for 2024
 
 predict Branch
 **************
-#. Change the following names:
+#. Change the following names, note that predict_all and process_target
+   were inside predict.py.
 
 .. csv-table::
    :header-rows: 1
 
    Old Name, New Name
-   run_parallel,      :ref:`fit_parallel-name`
-   run_parallel_job,  fit_one_process
-   run_one_job,       :ref:`fit_one_job-name`
-   predict_one,       :ref:`csv.pre_one_job-name`
+   run_parallel,            :ref:`fit_parallel-name`
+   run_parallel_job,        fit_one_process
+   run_one_job,             :ref:`fit_one_job-name`
+   predict:predict_all,     :ref:`csv.pre_parallel-name`
+   predict:process_target,  :ref:`csv.pre_one_process-name`
+   predict_one,             :ref:`csv.pre_one_job-name`
+
 
 #. The text ``_fit`` was added to the python shared memory used for fitting.
    To be specific, the new shared memory names are:
@@ -39,6 +45,16 @@ predict Branch
    | *shared_memory_prefix*\ ``_fit_``\ *job_name*\ ``_number_cpu_inuse``
    | *shared_memory_prefix*\ ``_fit_``\ *job_name*\ ``_job_status``
 
+#. The following python shared memory is used by :ref:`csv.predict-name` :
+
+   | *shared_memory_prefix*\ ``_pre_``\ *job_name*\ ``_job_status``
+
+#. The :ref:`clear_shared-name` routine was modified so that it works
+   for the new shared memory names above.
+
+#. The ``bin/check_all.sh`` script was modified so that it skips building
+   the documentation (and hence works) when ``xrst``
+   is not available on the system.
 
 mm-dd
 *****
