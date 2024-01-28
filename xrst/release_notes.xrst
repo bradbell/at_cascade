@@ -17,13 +17,28 @@ Release Notes for at_cascade
    inuse
    pre
    py
+   nfs
+   Errno
 }
 
 Release Notes for 2024
 ######################
 
-predict Branch
-**************
+mm-dd
+*****
+
+01-28
+=====
+**API Change**
+
+.. _issue13978: https://bugs.python.org/issue13978
+
+#. There was a bug (that has been fixed)
+   in the way multiprocessing Manger used; see issue13978_.
+   This would cause the following error on some systems::
+
+      OSError: [Errno 16] Device or resource busy: '.nfs ...
+
 #. Change the following names, note that predict_all and process_target
    were inside predict.py.
 
@@ -55,9 +70,6 @@ predict Branch
 #. The ``bin/check_all.sh`` script was modified so that it skips building
    the documentation (and hence works) when ``xrst``
    is not available on the system.
-
-mm-dd
-*****
 
 01-17
 =====
