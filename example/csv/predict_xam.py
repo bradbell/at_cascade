@@ -368,9 +368,11 @@ def fit(sim_dir, fit_dir) :
          table     = table ,
    )
    #
-   # fit, predict
+   # fit
    at_cascade.csv.fit(fit_dir)
-   at_cascade.csv.predict(fit_dir, sim_dir)
+# -----------------------------------------------------------------------------
+# check
+def check(sim_dir, fit_dir) :
    #
    # random_effect_node
    random_effect_table = at_cascade.csv.read_table(
@@ -484,6 +486,12 @@ if __name__ == '__main__' :
    #
    # fit
    fit(sim_dir, fit_dir)
+   #
+   # predict
+   at_cascade.csv.predict(fit_dir, sim_dir)
+   #
+   # check
+   check(sim_dir, fit_dir)
    #
    print('csv_predict_xam: OK')
    sys.exit(0)
