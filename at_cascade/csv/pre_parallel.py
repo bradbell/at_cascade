@@ -188,10 +188,6 @@ def pre_parallel(
    # process_list
    process_list = list()
    #
-   # manager
-   manager = multiprocessing.Manager()
-   #
-   #
    # predict_job_id_list
    predict_job_id_list    = list()
    for predict_job_id in range(n_job) :
