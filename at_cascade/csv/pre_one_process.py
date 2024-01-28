@@ -83,10 +83,11 @@ corresponding name.
    'run',   job is running
    'done',  job finished running
 
-shared_job_status
-*****************
-This memory is shared by all the processes doing predictions.
-It is an numpy array with ``dtype`` equal to ``int`` and
+shared_job_status_name
+**********************
+This the name of the shared job status memory.
+The corresponding multiprocessing shared memory is
+a numpy array with ``dtype`` equal to ``int`` and
 with length equal to the length of *job_table* .
 The value *shared_job_status* [ *job_table_index* ] is the
 integer status code for the corresponding job; see *job_status_name* above.
