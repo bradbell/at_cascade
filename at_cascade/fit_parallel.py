@@ -151,7 +151,7 @@ def fit_parallel(
    shared_memory_prefix_plus = shared_memory_prefix + f'_fit_{start_name}'
    print(f'create: {shared_memory_prefix_plus} shared memory')
    # -------------------------------------------------------------------------
-   # shared_number_cpu_inuse
+   # shm_number_cpu_inuse, shared_number_cpu_inuse
    tmp  = numpy.empty(1, dtype = int )
    name = shared_memory_prefix_plus + '_number_cpu_inuse'
    shm_number_cpu_inuse = multiprocessing.shared_memory.SharedMemory(
@@ -161,7 +161,7 @@ def fit_parallel(
       tmp.shape, dtype = tmp.dtype, buffer = shm_number_cpu_inuse.buf
    )
    # -------------------------------------------------------------------------
-   # shared_job_status
+   # shm_job_status, shared_job_status
    tmp  = numpy.empty(len(job_table), dtype = int )
    name = shared_memory_prefix_plus + '_job_status'
    shm_job_status = multiprocessing.shared_memory.SharedMemory(
@@ -218,8 +218,8 @@ def fit_parallel(
       master_process,
       fit_type_list,
       job_status_name,
-      shared_job_status,
-      shared_number_cpu_inuse,
+      shm_job_status.name,
+      shm_number_cpu_inuse.name,
       shared_lock,
       shared_event,
    )

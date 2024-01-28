@@ -371,8 +371,8 @@ def fit_one_process(
    master_process,
    fit_type_list,
    job_status_name,
-   shared_job_status,
-   shared_number_cpu_inuse,
+   shared_job_status_name,
+   shared_number_cpu_inuse_name,
    shared_lock,
    shared_event,
 ) :
@@ -387,7 +387,8 @@ def fit_one_process(
    assert type(fit_type_list)        == list
    assert type(job_status_name)      == list
    assert type( job_status_name[0] ) == str
-   assert type(shared_job_status)    == numpy.ndarray
+   assert type(shared_job_status_name)       == str
+   assert type(shared_number_cpu_inuse_name) == str
    assert type(shared_lock)          == multiprocessing.synchronize.Lock
    assert type(shared_event)         == multiprocessing.synchronize.Event
    # END DEF
@@ -399,6 +400,24 @@ def fit_one_process(
    job_status_error = job_status_name.index( 'error' )
    job_status_abort = job_status_name.index( 'abort' )
    # ----------------------------------------------------------------------
+   #
+   # shm_job_status, shared_job_status
+   tmp  = numpy.empty(len(job_table), dtype = int )
+   shm_job_status = multiprocessing.shared_memory.SharedMemory(
+      create = False, size = tmp.nbytes, name = shared_job_status_name
+   )
+   shared_job_status = numpy.ndarray(
+      tmp.shape, dtype = tmp.dtype, buffer = shm_job_status.buf
+   )
+   #
+   # shm_number_cpu_inuse, shared_number_cpu_inuse
+   tmp  = numpy.empty(1, dtype = int )
+   shm_number_cpu_inuse = multiprocessing.shared_memory.SharedMemory(
+      create = False, size = tmp.nbytes, name = shared_number_cpu_inuse_name
+   )
+   shared_number_cpu_inuse = numpy.ndarray(
+      tmp.shape, dtype = tmp.dtype, buffer = shm_number_cpu_inuse.buf
+   )
    #
    # job_table_index
    job_table_index = numpy.array( range(len(job_table)), dtype = int )
@@ -447,6 +466,8 @@ def fit_one_process(
                # should not need this release
                shared_lock.release()
                #
+               shm_job_status.close()
+               shm_number_cpu_inuse.close()
                return
             else :
                # return this processor
@@ -457,6 +478,8 @@ def fit_one_process(
                shared_event.set()
                shared_lock.release()
                #
+               shm_job_status.close()
+               shm_number_cpu_inuse.close()
                return
          else :
             #
@@ -475,6 +498,8 @@ def fit_one_process(
                # release
                shared_lock.release()
                #
+               shm_job_status.close()
+               shm_number_cpu_inuse.close()
                return
       else :
          #
@@ -521,8 +546,8 @@ def fit_one_process(
                is_child_master_process,
                fit_type_list,
                job_status_name,
-               shared_job_status,
-               shared_number_cpu_inuse,
+               shared_job_status_name,
+               shared_number_cpu_inuse_name,
                shared_lock,
                shared_event,
             )

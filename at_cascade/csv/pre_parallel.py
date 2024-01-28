@@ -219,7 +219,7 @@ def pre_parallel(
    shared_memory_prefix_plus = shared_memory_prefix + f'_pre_{start_name}'
    print(f'create: {shared_memory_prefix_plus} shared memory')
    #
-   # shared_job_status
+   # shm_job_status, shared_job_status
    tmp  = numpy.empty(len(job_table), dtype = int )
    name = shared_memory_prefix_plus + '_job_status'
    shm_job_status = multiprocessing.shared_memory.SharedMemory(
@@ -256,7 +256,7 @@ def pre_parallel(
             root_node_id,
             error_message_dict,
             job_status_name,
-            shared_job_status,
+            shm_job_status.name,
             shared_lock,
          )
       )
@@ -276,7 +276,7 @@ def pre_parallel(
       root_node_id,
       error_message_dict,
       job_status_name,
-      shared_job_status,
+      shm_job_status.name,
       shared_lock,
    )
    #

@@ -137,7 +137,7 @@ def pre_one_process(
    root_node_id,
    error_message_dict,
    job_status_name,
-   shared_job_status,
+   shared_job_status_name,
    shared_lock,
 ) :
    assert type(fit_dir)                    == str
@@ -153,7 +153,7 @@ def pre_one_process(
    assert type(error_message_dict)         == dict
    assert type(job_status_name)            == list
    assert type( job_status_name[0] )       == str
-   assert type(shared_job_status)          == numpy.ndarray
+   assert type(shared_job_status_name)     == str
    assert type(shared_lock)                == multiprocessing.synchronize.Lock
    # END DEF
    # ----------------------------------------------------------------------
@@ -162,6 +162,15 @@ def pre_one_process(
    job_status_run   = job_status_name.index( 'run' )
    job_status_done  = job_status_name.index( 'done' )
    # ----------------------------------------------------------------------
+   #
+   # shm_job_status, shared_job_status
+   tmp  = numpy.empty(len(job_table), dtype = int )
+   shm_job_status = multiprocessing.shared_memory.SharedMemory(
+      create = False, size = tmp.nbytes, name = shared_job_status_name
+   )
+   shared_job_status = numpy.ndarray(
+      tmp.shape, dtype = tmp.dtype, buffer = shm_job_status.buf
+   )
    #
    # job_table_index
    job_table_index = numpy.array( range(len(job_table)), dtype = int)
@@ -193,6 +202,7 @@ def pre_one_process(
       n_ready      = len(job_id_ready)
       if n_ready == 0 :
          shared_lock.release()
+         shm_job_status.close()
          return
       #
       if n_skip == None :
