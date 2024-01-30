@@ -27,6 +27,11 @@ Release Notes for 2024
 mm-dd
 *****
 
+01-30
+=====
+Add a :ref:`csv.fit@Input Files@option_fit.csv@ode_method@no_ode@2DO`
+comment as part of csv.fit.ode_method.no_ode.
+
 01-28
 =====
 **API Change**

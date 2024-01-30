@@ -280,6 +280,14 @@ If all of your integrands are in the set above, you can use
 ``no_ode`` as the *ode_method* and avoid having to worry about
 constraining certain rates to be positive or zero.
 
+2DO
+,,,
+This ode_method does not currently work in the context of csv.fit
+because csv.fit automatically requests the prevalence integrand for
+predicting values of pini.
+This should either be fixed or no_ode should be removed from the
+possible ode_method values.
+
 trapezoidal
 ...........
 If *ode_method* is ``trapezoidal`` ,
