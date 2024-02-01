@@ -27,6 +27,14 @@ Release Notes for 2024
 mm-dd
 *****
 
+02-01
+=====
+An undefined variable error would occur if and option value was empty
+in :ref:`csv.fit@Input Files@option_fit.csv`
+or :ref:`csv.predict@Input Files@option_predict.csv` .
+This has been fixed and the default value is now used when an option
+value is empty.
+
 01-30
 =====
 Add a :ref:`csv.fit@Input Files@option_fit.csv@ode_method@no_ode@2DO`

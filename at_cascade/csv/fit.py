@@ -78,8 +78,8 @@ option_fit.csv
 This csv file has two columns,
 one called ``name`` and the other called ``value``.
 The rows of this table are documented below by the name column.
-If an option name does not appear, the corresponding
-default value is used for the option.
+If an option name does not appear, the corresponding value is empty,
+the default value is used for the option.
 The final value for each of the options is reported in the file
 :ref:`csv.fit@Output Files@option_fit_out.csv` .
 Because each option has a default value,
@@ -955,16 +955,15 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
          assert False, msg
       (option_type, defualt) = option_default[name]
       value                  = row['value']
-      if value == '' :
-         option_value[name] = None
-      elif option_type == bool :
-         if value not in [ 'true', 'false' ] :
-            msg  = f'csv.fit: Error: line {line_number} in option_fit.csv\n'
-            msg += f'The value for {name} is not true or false'
-            assert False, msg
-         global_option_value[name] = value == 'true'
-      else :
-         global_option_value[name] = option_type( value )
+      if value.strip() != '' :
+         if option_type == bool :
+            if value not in [ 'true', 'false' ] :
+               msg  = f'csv.fit: Error: line {line_number} in option_fit.csv\n'
+               msg += f'The value for {name} is not true or false'
+               assert False, msg
+            global_option_value[name] = value == 'true'
+         else :
+            global_option_value[name] = option_type( value )
    #
    # global_option_value
    for name in option_default :
