@@ -27,6 +27,24 @@ Release Notes for 2024
 mm-dd
 *****
 
+.. _issue13: https://github.com/bradbell/at_cascade/issues/13
+
+02-02
+=====
+There seems to be a problem that can causes :ref:`csv.predict-name` to crash;
+see issue13_.
+Instead of crashing, the program now reports what predictions
+are missing with a message of the form:
+
+| csv.predict: Cannot find *file_name*
+
+where *file_name* ends with ``_predict.csv`` .
+In addition, predict error reporting of the following form was added:
+
+| Error: *time* predict *job_name* .. : *message*
+
+This may help us understand when (and or why) this is happening.
+
 02-01
 =====
 An undefined variable error would occur if and option value was empty

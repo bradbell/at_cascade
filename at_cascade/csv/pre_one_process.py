@@ -110,20 +110,33 @@ import at_cascade
 import multiprocessing
 # ----------------------------------------------------------------------------
 # prints the durrent time and job name
-def print_time(begin, job_name, n_done = None, n_job_total = None) :
-   assert type(begin) == bool
+def print_time(
+   begin               ,
+   job_name            ,
+   n_done      = None  ,
+   n_job_total = None  ,
+   job_error   = None  ,
+) :
+   assert type(begin)    == bool
    assert type(job_name) == str
-   assert n_done == None or type(n_done) == int
-   assert n_job_total == None or type(n_job_total) == int
+   if begin :
+      assert n_done      == None
+      assert n_job_total == None
+      assert job_error   == None
+   else :
+      assert type(n_done)      == int
+      assert type(n_job_total) == int
+      assert type(job_error)   == str or job_error == None
    #
    now         = datetime.datetime.now()
    str_time    = now.strftime("%H:%M:%S")
    if begin :
-      msg = f'Begin: {str_time}: predict {job_name}'
+      msg  = f'Begin: {str_time}: predict {job_name}'
+   elif job_error == None :
+      msg  = f'End:   {str_time}: predict {job_name} {n_done}/{n_job_total}'
    else :
-      msg = f'End:   {str_time}: predict {job_name}'
-   if type(n_done) == int :
-      msg += f' {n_done}/{n_job_total}'
+      msg  = f'Error: {str_time}: predict {job_name} {n_done}/{n_job_total}: '
+      msg += job_error
    print(msg)
 # ----------------------------------------------------------------------------
 # BEGIN DEF
@@ -269,19 +282,39 @@ def pre_one_process(
       dismod_at.system_command_prc(command, print_command = False)
       #
       # pre_one_job
-      at_cascade.csv.pre_one_job(
-         fit_dir                 = fit_dir                   ,
-         sim_dir                 = sim_dir                   ,
-         float_precision         = float_precision           ,
-         all_node_database       = all_node_database         ,
-         all_covariate_table     = all_covariate_table       ,
-         predict_job_name        = predict_job_name          ,
-         ancestor_node_database  = ancestor_database         ,
-         predict_node_id         = predict_node_id           ,
-         predict_sex_id          = predict_sex_id            ,
-         db2csv                  = db2csv                    ,
-         plot                    = plot                      ,
-      )
+      if not catch_exceptions_and_continue :
+         at_cascade.csv.pre_one_job(
+            fit_dir                 = fit_dir                   ,
+            sim_dir                 = sim_dir                   ,
+            float_precision         = float_precision           ,
+            all_node_database       = all_node_database         ,
+            all_covariate_table     = all_covariate_table       ,
+            predict_job_name        = predict_job_name          ,
+            ancestor_node_database  = ancestor_database         ,
+            predict_node_id         = predict_node_id           ,
+            predict_sex_id          = predict_sex_id            ,
+            db2csv                  = db2csv                    ,
+            plot                    = plot                      ,
+         )
+      else :
+         try :
+            at_cascade.csv.pre_one_job(
+               fit_dir                 = fit_dir                   ,
+               sim_dir                 = sim_dir                   ,
+               float_precision         = float_precision           ,
+               all_node_database       = all_node_database         ,
+               all_covariate_table     = all_covariate_table       ,
+               predict_job_name        = predict_job_name          ,
+               ancestor_node_database  = ancestor_database         ,
+               predict_node_id         = predict_node_id           ,
+               predict_sex_id          = predict_sex_id            ,
+               db2csv                  = db2csv                    ,
+               plot                    = plot                      ,
+            )
+            # job_error
+            predict_job_error = None
+         except Exception as e :
+            predict_job_error = str(e)
       #
       # Begin Lock
       shared_lock.acquire()
@@ -299,6 +332,7 @@ def pre_one_process(
          job_name    = predict_job_name,
          n_done      = n_done,
          n_job_total = n_total,
+         job_error   = predict_job_error,
       )
       #
       # End Lock
