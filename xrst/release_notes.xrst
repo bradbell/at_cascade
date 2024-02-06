@@ -29,6 +29,13 @@ mm-dd
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
 
+02-06
+=====
+#. Remove the Predictions wish list item because it was completed on 2023,
+   :ref:`2023@mm-dd@12-22` .
+
+# Add the :ref:`wish_list@csv.fit@root_node_sex` item to the wish list.
+
 02-02
 =====
 There seems to be a problem that can causes :ref:`csv.predict-name` to crash;
@@ -157,7 +164,8 @@ fixed and they no point to the current dismod_at documentation.
 
 12-15
 =====
-Add the :ref:`wish_list@csv.fit@Predictions` item to the wish list.
+Add the a Predictions item to the wish list
+(this was completed on :ref:`2023@mm-dd@12-22` ).
 
 12-08
 =====
