@@ -29,13 +29,13 @@ csv.fit
 root_node_sex
 =============
 Add a *root_node_sex* argument to the csv.fit :ref:`csv.fit@Prototype` so that
-one could start with male, female, or both at the root node.
-The default for this argument would be both (the way it currently works).
-Currently, :ref:`cascade_root_node-name` put its root node fit in:
+one could start with female, male, or both at the root node.
+The default for this argument would be both, the way it works now.
+Currently, :ref:`cascade_root_node-name` puts its root node fit in:
 |newline|
 |tab| *result_dir* ``/`` *root_node_name* ``/dismod.db``
 |newline|
-We could run both the female and male fits from the same directory,
+We could run the female and male fits from the same directory,
 and at the same time, if cascade_root_node put its root node fit in:
 |newline|
 |tab| *result_dir* ``/`` *root_node_sex* ``/`` *root_name_name* ``/dismod.db``
