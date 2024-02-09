@@ -36,6 +36,8 @@ mm-dd
    that are not descendant of the root node.
    This allows one to start a fit at any node
    without having to change fit_goal.csv.
+#. Some discussion, that explains why you may want to change
+   :ref:`csv.fit@Input Files@option_fit.csv@root_node_name` , was added.
 #. Add the :ref:`wish_list@csv.fit@root_node_name` item to the wish list.
 
 02-06
