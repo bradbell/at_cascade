@@ -135,6 +135,11 @@ fit_goal.csv
 Same as the csv fit
 :ref:`csv.fit@Input Files@fit_goal.csv` .
 
+option_fit.csv
+==============
+The value option_fit.csv
+:ref:`csv.fit@Input Files@option_fit.csv@refit_split` value is used.
+
 predict_integrand.csv
 =====================
 This is the list of integrands at which predictions are made
@@ -411,18 +416,34 @@ def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
    assert max_job_depth  == None or type(max_job_depth) == int
    # END_PREDICT
    #
+   # dismod_node_table, dismod_option_table
+   database     = f'{fit_dir}/root_node.db'
+   connection   = dismod_at.create_connection(
+      database, new = False, readonly = True
+   )
+   dismod_node_table   = dismod_at.get_table_dict(connection, 'node')
+   dismod_option_table = dismod_at.get_table_dict(connection, 'option')
+   connection.close()
+   #
    # top_node_name
-   node_table      = at_cascade.csv.read_table(f'{fit_dir}/node.csv')
    top_node_name = None
-   for row in node_table :
-      if row['parent_name'] == '' :
+   for row in dismod_node_table :
+      if row['parent'] == None :
          if top_node_name != None :
-            msg = 'node.csv: more than one node has no parent node'
+            msg = 'root_node.db: node table: more than one node has no parent'
             assert False, msg
          top_node_name = row['node_name']
    if top_node_name == None :
-      msg = 'node.csv: no node has an empty parent_name'
+      msg = 'root_node.db: node_table: no node has None for parent'
       assert False, msg
+   #
+   # refit_split
+   refit_split  = True
+   option_table = at_cascade.csv.read_table(f'{fit_dir}/option_fit.csv')
+   for row in option_table :
+      if row['name'] == 'refit_split' :
+         if row['value'] == 'false' :
+            refit_split = False
    #
    # global_option_value
    option_table = at_cascade.csv.read_table(f'{fit_dir}/option_predict.csv')
@@ -430,12 +451,60 @@ def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
       fit_dir, option_table, top_node_name
    )
    #
+   # start_node_name
+   start_node_name = None
+   if start_job_name == None :
+      for row in dismod_option_table :
+         if row['option_name'] == 'parent_node_name' :
+            start_node_name = row['option_value']
+         elif row['option_value'] == 'parent_node_id' :
+            start_node_id   = int( row['option_value'] )
+            start_node_name = dismod_node_table[parent_node_id]['node_name']
+   else :
+      index           = start_job_name.rindex('.')
+      start_node_name = start_job_name[: index]
+   assert start_node_name != None
+   #
+   # max_node_depth
+   if max_job_depth == None :
+      max_node_depth = None
+   elif not refit_split :
+      max_node_depth = max_job_depth
+   elif start_job_name == None or start_job_name.endswith('.both') :
+      if refit_split :
+         if max_job_depth > 0 :
+            max_node_depth = max_job_depth - 1
+         else :
+            max_node_depth = 0
+      else :
+         max_node_depth = max_job_depth
+   else :
+         max_node_depth = max_job_depth
+   #
    # fit_goal_set
    fit_goal_set   = set()
    file_name      = f'{fit_dir}/fit_goal.csv'
    fit_goal_table = at_cascade.csv.read_table(file_name)
    for row in fit_goal_table :
-      fit_goal_set.add( row['node_name'] )
+      node_name = row['node_name']
+      node_list = [ node_name ]
+      node_id   = at_cascade.table_name2id(dismod_node_table, 'node', node_name)
+      while node_name != start_node_name and node_id != None :
+         node_id   = dismod_node_table[node_id]['parent']
+         if node_id != None :
+            node_name = dismod_node_table[node_id]['node_name']
+            node_list.append( node_name )
+      if node_name == start_node_name :
+         if max_node_depth == None :
+            fit_goal_set.add( node_list[0] )
+         elif len(node_list) <= max_node_depth + 1 :
+            fit_goal_set.add( node_list[0] )
+         else :
+            fit_goal_set.add( node_list[-max_node_depth - 1] )
+   if len(fit_goal_set) == 0 :
+      msg  = f'Cannot find start_node_name = {start_node_name},\n'
+      msg += 'or any of its children, in fit_goal.csv'
+      assert False, msg
    #
    # covariate_table
    file_name       = f'{fit_dir}/covariate.csv'

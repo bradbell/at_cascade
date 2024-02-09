@@ -26,6 +26,7 @@ max_abs_effect,3.0
 number_sample,10
 sample_method,simulate
 no_ode_ignore,iota
+root_node_name,n0
 '''
 #
 # option_predict.csv
@@ -37,11 +38,14 @@ plot,true
 '''
 #
 # node.csv
+# Use node n-1 to test starting below the base of the tree
 csv_file['node.csv'] = \
 '''node_name,parent_name
-n0,
+n-1,
+n0,n-1
 n1,n0
 n2,n0
+n3,n-1
 '''
 #
 # sex_name2income
@@ -50,19 +54,25 @@ sex_name2income = { 'female' : 1.0, 'both' : 1.5, 'male' : 2.0 }
 # covariate.csv
 csv_file['covariate.csv'] = \
 '''node_name,sex,income,age,time,omega
+n-1,female,1.0,50,2000,0.02
 n0,female,1.0,50,2000,0.02
 n1,female,1.0,50,2000,0.02
 n2,female,1.0,50,2000,0.02
+n3,female,1.0,50,2000,0.02
+n-1,male,2.0,50,2000,0.02
 n0,male,2.0,50,2000,0.02
 n1,male,2.0,50,2000,0.02
 n2,male,2.0,50,2000,0.02
+n3,male,2.0,50,2000,0.02
 '''
 #
 # fit_goal.csv
+# n-2 is not included in test because it is not below the root node n0
 csv_file['fit_goal.csv'] = \
 '''node_name
 n1
 n2
+n3
 '''
 #
 # predict_integrand.csv

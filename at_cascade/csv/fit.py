@@ -8,7 +8,7 @@ import at_cascade
 import copy
 import os
 import time
-'''
+r'''
 
 {xrst_begin csv.fit}
 {xrst_spell
@@ -380,6 +380,9 @@ root_node_name
 This string is the name of the root node.
 The default for *root_node_name* is the top root of the entire node tree.
 Only the root node and its descendents will be fit.
+Sometimes it is useful to set :ref:`csv.fit@max_node_depth` to zero
+and change *root_node_name* to a particular node that the
+cascade is having trouble fitting. This can greatly speed up model building.
 
 sample_method
 -------------
@@ -417,8 +420,12 @@ This csv file has the same description as the simulate
 
 fit_goal.csv
 ============
-Each node in this file must be a descendant of the root node.
-Each node, and all its ancestors up to the root node, will be fit.
+If a :ref:`csv.simulate@Input Files@node.csv@node_name` is in this table,
+and the node is a descendant of the root node,
+it will be included in the fit.
+(This makes it different from the :ref:`glossary@fit_goal_set` which only
+contains nodes that are descendants of the root node.)
+In addition, all its ancestors up to the root node, are also included.
 
 node_name
 ---------
@@ -1747,7 +1754,7 @@ def fit(fit_dir, max_node_depth = None) :
    file_name      = f'{fit_dir}/{root_node_name}'
    if os.path.exists( file_name ) :
       msg  = f'{file_name} already exists.\n'
-      msg == 'you must remove it before running this csv fit'
+      msg += 'you must remove it before running this csv fit.'
       assert False, msg
    #
    # fit_goal_set
@@ -1776,22 +1783,25 @@ def fit(fit_dir, max_node_depth = None) :
    root_node_id   = at_cascade.table_name2id(node_table, 'node', root_node_name)
    #
    # fit_goal_max_depth
-   if max_node_depth == None :
-      fit_goal_max_depth = fit_goal_set
-   else :
-      fit_goal_max_depth = set()
-      for node_name in fit_goal_set :
-         node_list = list()
-         node_id   = at_cascade.table_name2id(node_table, 'node', node_name)
+   fit_goal_max_depth = set()
+   for node_name in fit_goal_set :
+      node_list = list()
+      node_id   = at_cascade.table_name2id(node_table, 'node', node_name)
+      node_list.append(node_id)
+      while node_id != root_node_id and node_id != None :
+         node_id = node_table[node_id]['parent']
          node_list.append(node_id)
-         while node_id != root_node_id and node_id != None :
-            node_id = node_table[node_id]['parent']
-            node_list.append(node_id)
-         assert node_id != None
-         if len(node_list) <= max_node_depth + 1 :
+      if node_id == root_node_id :
+         if max_node_depth == None :
+            fit_goal_max_depth.add( node_list[0] )
+         elif len(node_list) <= max_node_depth + 1 :
             fit_goal_max_depth.add( node_list[0] )
          else :
             fit_goal_max_depth.add( node_list[ -max_node_depth - 1] )
+   if len(fit_goal_max_depth) == 0 :
+      msg  = f'Cannot find root_node_name = {root_node_name},\n'
+      msg += 'or any of its children, in fit_goal.csv'
+      assert False, msg
    #
    # no_ode_fit
    no_ode_fit    = True

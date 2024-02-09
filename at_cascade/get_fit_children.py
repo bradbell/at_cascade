@@ -86,7 +86,7 @@ def get_fit_children(
             msg       = 'get_fit_children: goal node = ' + goal_name
             msg      += '\nis not a descendant of the root node = '
             msg      += node_table[root_node_id]['node_name']
-            sys.exit(msg)
+            assert False, msg
          #
          # fit_children
          fit_children[parent_id].add(node_id)

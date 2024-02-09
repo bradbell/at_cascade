@@ -26,6 +26,12 @@ that are not modeled.
 csv.fit
 *******
 
+root_node_name
+==============
+Change :ref:`csv.fit@Input Files@option_fit.csv@root_node_name`
+from an csv.fit option to an argument in the :ref:`csv.fit@Prototype`
+so that one can start with any node without changing the csv.fit input files.
+
 root_node_sex
 =============
 Add a *root_node_sex* argument to the csv.fit :ref:`csv.fit@Prototype` so that
@@ -38,7 +44,7 @@ Currently, :ref:`cascade_root_node-name` puts its root node fit in:
 We could run the female and male fits from the same directory,
 and at the same time, if cascade_root_node put its root node fit in:
 |newline|
-|tab| *result_dir* ``/`` *root_node_sex* ``/`` *root_name_name* ``/dismod.db``
+|tab| *result_dir* ``/`` *root_node_sex* ``/`` *root_node_name* ``/dismod.db``
 |newline|
 For example,
 if ``1_Earth/dismod.db`` contains the root node fit for both sexes,

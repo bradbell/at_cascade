@@ -29,6 +29,15 @@ mm-dd
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
 
+02-09
+=====
+#. The csv.fit and csv.predict were changed so that
+   :ref:`csv.fit@Input Files@fit_goal.csv` can have nodes
+   that are not descendant of the root node.
+   This allows one to start a fit at any node
+   without having to change fit_goal.csv.
+#. Add the :ref:`wish_list@csv.fit@root_node_name` item to the wish list.
+
 02-06
 =====
 #. Remove the Predictions wish list item because it was completed on 2023,
