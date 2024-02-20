@@ -38,7 +38,8 @@ mm-dd
    without having to change fit_goal.csv.
 #. Some discussion, that explains why you may want to change
    :ref:`csv.fit@Input Files@option_fit.csv@root_node_name` , was added.
-#. Add the :ref:`wish_list@csv.fit@root_node_name` item to the wish list.
+#. Add the :ref:`wish_list@csv.fit@root_node_name`
+   and root_ode_sex items to the wish list.
 
 02-06
 =====
