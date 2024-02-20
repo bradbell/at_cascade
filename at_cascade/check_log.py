@@ -171,8 +171,10 @@ def check_log(
       #
       # include_this_job
       job_depth = at_cascade.job_descendent(job_table, start_job_id, job_id)
-      if max_job_depth == None :
-         include_this_job = job_depth != None
+      if job_depth == None :
+         include_this_job = False
+      elif max_job_depth == None :
+         include_this_job = True
       else :
          include_this_job = job_depth <= max_job_depth
       if include_this_job :

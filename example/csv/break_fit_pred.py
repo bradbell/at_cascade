@@ -285,7 +285,7 @@ def computation(fit_dir) :
       #
       # p_predict
       sim_dir       = None
-      max_job_depth = None
+      max_job_depth = 1
       for sex in [ 'female', 'male' ] :
          start_job_name = f'n0.{sex}'
          args           = (fit_dir, sim_dir, start_job_name, max_job_depth)

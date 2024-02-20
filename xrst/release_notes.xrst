@@ -29,6 +29,15 @@ mm-dd
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
 
+02-20
+=====
+There was a bug in ``check_log.py`` that could cause the following assert::
+
+   TypeError: '<=' not supported between instances of 'NoneType' and 'int'
+
+This has been fixed.
+
+
 02-09
 =====
 #. The csv.fit and csv.predict were changed so that
