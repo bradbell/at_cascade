@@ -20,7 +20,7 @@ build:
       # The xsrst html_directory for this configuration is build/html.
       - xrst
          --page_source
-         --html_theme sphinx_book_theme
+         --html_theme furo
          --group_list default
          --index_page_name at_cascade
          --suppress_spell_warnings
