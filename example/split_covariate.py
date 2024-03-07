@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
-'''
+r'''
 {xrst_begin_parent split_covariate}
 {xrst_spell
    dage
@@ -66,7 +66,7 @@ Note that we have used node_name (instead of node_id) here and let
 :ref:`create_all_node_db-name` do the conversion to node_id.
 The cascade computation tree is::
 
-            /-------------n0-------------\
+                /-------------n0-------------\
           /---female---\                /----male----\
          n1             n2            n1              n2
        /  \            /  \          /  \            /  \

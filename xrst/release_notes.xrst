@@ -29,6 +29,14 @@ mm-dd
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
 
+03-07
+=====
+If there was a :ref:`split_reference_table-name` ,
+:ref:`option_all_table@refit_split` was false,  and
+:ref:`continue_cascade@fit_node_database` in continue_cascade
+was the node just before the split, continue_cascade would crash with
+a python dictionary key error. This has been fixed.
+
 02-20
 =====
 There was a bug in ``check_log.py`` that could cause the following assert::

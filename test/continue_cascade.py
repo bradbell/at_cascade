@@ -2,184 +2,15 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
-r'''
-@xrst_begin_parent split_covariate@
-{xrst_spell
-   dage
-   dtime
-}
-
-Example Using split_reference Table
-###################################
-This example splits the analysis by sex.
-To simplify the example everything is constant w.r.t. age and time.
-
-Nodes
-*****
-The following is a diagram of the node tree for this example.
-The :ref:`glossary@root_node` is n0,
-the :ref:`glossary@fit_goal_set`
-and the leaf nodes are {n3, n4, n5, n6}::
-
-                n0
-          /-----/\-----\
-        n1              n2
-       /  \            /  \
-     n3    n4        n5    n6
-
-fit_goal_set
-============
-{xrst_literal
-   # BEGIN fit_goal_set
-   # END fit_goal_set
-}
-
-Rates
-*****
-The only non-zero dismod_at rates for this example are
-:ref:`glossary@iota`.and :ref:`glossary@omega`.
-
-Splitting Covariate
-*******************
-This cascade is set up to split by the sex covariate at level zero:
-{xrst_literal
-   # BEGIN option_all_table
-   # END option_all_table
-}
-The :ref:`split_reference_table-name` for this example is:
-{xrst_literal
-   # BEGIN split_reference_table
-   # END split_reference_table
-}
-The :ref:`node_split_table-name` for this example is
-{xrst_literal
-   # BEGIN node_split_table
-   # END node_split_table
-}
-Note that we have used node_name (instead of node_id) here and let
-:ref:`create_all_node_db-name` do the conversion to node_id.
-The cascade computation tree is::
-
-            /-------------n0-------------\
+# This tests continuing the cascade from the splitting node
+# when refit_split is false. This was crashing on 2024-03-07.
+#
+'''
+                /-------------n0-------------\
           /---female---\                /----male----\
         n1              n2            n1              n2
        /  \            /  \          /  \            /  \
      n3    n4        n5    n6      n3    n4        n5    n6
-
-The sex reference value for the root node (n0) corresponds to both sexes:
-{xrst_literal
-   # BEGIN root_split_reference_id
-   # END root_split_reference_id
-}
-
-Covariate
-*********
-There is only one covariate for this example, sex.
-
-alpha
-=====
-We use *alpha*
-for the :ref:`glossary@rate_value` covariate multiplier
-that multiplies sex.
-This multiplier affects the value of iota.
-The true value for *alpha* (used which simulating the data) is
-{xrst_literal
-   # BEGIN alpha_true
-   # END alpha_true
-}
-
-Random Effects
-**************
-There are no random effect for this example.
-
-Simulated Data
-**************
-
-rate_true(rate, a, t, n, c)
-===========================
-For *rate* equal to iota or omega,
-this is the true value for *rate*
-in node *n* at age *a*, time *t*, and covariate values *c=[sex]*.
-The covariate values are a list in the same order as the covariate table.
-The values *a* and *t* are not used by this function for this example.
-{xrst_literal
-   # BEGIN rate_true
-   # END rate_true
-}
-
-y_i
-===
-The only simulated integrand for this example is :ref:`glossary@Sincidence`
-which is a direct measurement of iota.
-This data is simulated without any noise; i.e.,
-the i-th measurement is simulated as
-*y_i = rate_true('iota', None, None, n, [sex])*
-where *n* is the node and  *sex* is the sex covariate value.
-
-Cases Simulated
-===============
-Data is simulated for the leaf nodes for female, male sexes; i.e.,
-each *n_i* is in the set { n3, n4, n5, n6 } and the female, male sexes.
-Since the data does not have any nose, the data residuals are a measure
-of how good the fit is for the nodes in the fit_goal_set below the female
-and male sexes.
-
-Parent Rate Smoothing
-*********************
-This is the iota smoothing used for the fit_node.
-There are no :ref:`glossary@dage` or :ref:`glossary@dtime`
-priors because there is only one age and one time point in the smoothing grid.
-
-Value Prior
-===========
-The following is the value prior used for the root_node
-{xrst_literal
-   # BEGIN parent_value_prior
-   # END parent_value_prior
-}
-The mean and standard deviation are only used for the root_node.
-The :ref:`create_shift_db-name`
-routine replaces them for other nodes.
-
-Alpha Smoothing
-***************
-This is the smoothing used for *alpha* which multiplies the sex covariate.
-There is only one age and one time point in this smoothing
-so it does not have dage or dtime priors.
-
-Value Prior
-===========
-The following is the value prior used for this smoothing:
-{xrst_literal
-   # BEGIN alpha_value_prior
-   # END alpha_value_prior
-}
-The mean and standard deviation are only used for the root_node.
-The create_shift_db
-routine replaces them for other nodes.
-
-Checking The Fit
-****************
-The results of the fit are checked by check_cascade_node
-using the :ref:`check_cascade_node@avgint_table`
-that was created by the root_node_db routine.
-The node_id for each row is replaced by the node_id for the
-fit being checked.
-routine uses these tables to check that fit against the truth.
-
-{xrst_end split_covariate}
-------------------------------------------------------------------------------
-@xrst_begin split_covariate.py@
-
-split_covariate: Python Source Code
-###################################
-
-{xrst_literal
-   BEGIN split_covariate source code
-   END split_covariate source code
-}
-
-{xrst_end split_covariate.py}
 '''
 # BEGIN split_covariate source code
 # ----------------------------------------------------------------------------
@@ -210,7 +41,7 @@ fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 #
 # BEGIN option_all_table
 option_all            = {
-   'refit_split':                'true',
+   'refit_split':                'false',
    'result_dir':                 'build/test',
    'root_node_name':             'n0',
    'root_split_reference_name':  'both',
@@ -577,37 +408,8 @@ def main() :
          else :
             assert row['var_type'] == 'mulcov_rate_value'
             fit_alpha = fit_var_table[var_id]['fit_var_value']
-   #
-   # shift_mean
-   shift_database    = f'{result_dir}/n0/female/dismod.db'
-   connection        = dismod_at.create_connection(
-      shift_database, new = False, readonly = True
-   )
-   rate_table        = dismod_at.get_table_dict(connection, 'rate')
-   smooth_grid_table = dismod_at.get_table_dict(connection, 'smooth_grid')
-   prior_table       = dismod_at.get_table_dict(connection, 'prior')
-   connection.close()
-   for row in rate_table :
-      if row['rate_name'] == 'iota' :
-         smooth_id = row['parent_smooth_id']
-   for row in smooth_grid_table :
-      if row['smooth_id'] == smooth_id :
-         prior_id = row['value_prior_id']
-   shift_mean = prior_table[prior_id]['mean']
-   #
-   # sex_difference
-   sex_difference = 0.0
-   for row in split_reference_table :
-      if row['split_reference_name'] == 'both' :
-         sex_difference -= row['split_reference_value']
-      if row['split_reference_name'] == 'female' :
-         sex_difference += row['split_reference_value']
-   #
-   # check
-   check = fit_iota * exp( fit_alpha * sex_difference )
-   assert abs(1.0 - shift_mean/check) < 1e-12
 #
 main()
-print('split_covariate: OK')
+print('continue_cascade: OK')
 sys.exit(0)
 # END split_covariate source code

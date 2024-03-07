@@ -15,12 +15,18 @@ then
    exit 1
 fi
 # -----------------------------------------------------------------------------
-file='at_cascade/fit_one_process.py'
-if ! grep 'catch_exceptions_and_continue *= *True' $file > /dev/null
-then
-   echo "$file: catch_exceptions_and_continue is not True"
-   exit 1
-fi
+list='
+   at_cascade/fit_one_process.py
+   at_cascade/csv/pre_one_process.py
+'
+for file in $list
+do
+   if ! grep 'catch_exceptions_and_continue *= *True' $file > /dev/null
+   then
+      echo "$file: catch_exceptions_and_continue is not True"
+      exit 1
+   fi
+done
 echo_eval bin/check_tab.sh
 if which xrst >& /dev/null
 then

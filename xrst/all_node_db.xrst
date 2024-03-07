@@ -330,19 +330,19 @@ is the name of the :ref:`glossary@root_node` in the node table of the
 root_node_database
 ******************
 This option_name must appear and the corresponding option_value
+
+root_split_reference_name
+*************************
+This is the `split_reference_table.split_reference_name`
+corresponding to the root_node_database.
+If :ref:`split_reference_table-name` is empty (is not empty)
+this option must not (must) appear.
 is the name of the :ref:`glossary@root_node_database` .
 
 split_covariate_name
 ********************
 is the name, in the root_node_database covariate table, of the splitting
 covariate.
-If :ref:`split_reference_table-name` is empty (is not empty)
-this option must not (must) appear.
-
-root_split_reference_name
-*************************
-This is the `split_reference_table.split_reference_name`
-corresponding to the root_node_database.
 If :ref:`split_reference_table-name` is empty (is not empty)
 this option must not (must) appear.
 

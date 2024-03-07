@@ -88,11 +88,13 @@ def continue_cascade(
       dismod_at.get_table_dict(connection, 'split_reference')
    connection.close()
    #
-   # result_dir, root_node_name, root_node_database, max_number_cpu
+   # result_dir, root_node_name, root_node_database,
+   # max_number_cpu, refit_split
    result_dir         = None
    root_node_name     = None
    root_node_database = None
-   max_number_cpu = 1
+   max_number_cpu     = 1
+   refit_split        = False
    for row in option_all_table :
       if row['option_name'] == 'result_dir' :
          result_dir = row['option_value']
@@ -102,6 +104,8 @@ def continue_cascade(
          root_node_database = row['option_value']
       if row['option_name'] == 'max_number_cpu' :
          max_number_cpu = int( row['option_value'] )
+      if row['option_name'] == 'refit_split' :
+         refit_split = row['option_value'] == 'true'
    assert result_dir is not None
    assert root_node_name is not None
    assert root_node_database is not None
@@ -199,8 +203,18 @@ def continue_cascade(
       # shift_node_database
       shift_node_database = f'{shift_database_dir}/dismod.db'
       #
+      # skip_refit
+      if refit_split :
+         skip_refit = False
+      else :
+         skip_refit = fit_split_reference_id != shift_split_reference_id
+      #
       # shift_name
-      shift_name = shift_database_dir.split('/')[-1]
+      dir_list = shift_database_dir.split('/')
+      if skip_refit :
+         shift_name = dir_list[-2] + '/' + dir_list[-1]
+      else :
+         shift_name = dir_list[-1]
       #
       # shfit_databases
       shift_databases[shift_name] = shift_node_database
