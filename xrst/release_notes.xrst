@@ -35,7 +35,11 @@ If there was a :ref:`split_reference_table-name` ,
 :ref:`option_all_table@refit_split` was false,  and
 :ref:`continue_cascade@fit_node_database` in continue_cascade
 was the node just before the split, continue_cascade would crash with
-a python dictionary key error. This has been fixed.
+a python dictionary key error.
+For example, this error occurred when using continue_cascade
+after :ref:`csv.fit-name` and continuing from the
+:ref:`root node<csv.fit@Input Files@option_fit.csv@root_node_name>` .
+This has been fixed.
 
 02-20
 =====
