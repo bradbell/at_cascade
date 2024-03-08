@@ -123,6 +123,17 @@ import numpy
 import at_cascade
 import dismod_at
 # ----------------------------------------------------------------------------
+# acquire lock
+def acquire_lock(shared_lock) :
+   seconds = None
+   ok = shared_lock.acquire(
+      block   = True,
+      timeout = seconds
+   )
+   if not ok :
+      msg = f'pre_one_process: did not obtain lock in {seconds} seconds'
+      assert False, msg
+# ----------------------------------------------------------------------------
 def get_result_database_dir(
    all_node_database, node_table, fit_node_id, fit_split_reference_id
 ) :
@@ -279,7 +290,7 @@ def try_one_job(
    if job_done :
       #
       # shared_lock
-      shared_lock.acquire()
+      acquire_lock(shared_lock)
       #
       # shared_job_status
       assert shared_job_status[this_job_id] == job_status_run
@@ -311,7 +322,7 @@ def try_one_job(
       descendant_set.remove( this_job_id )
       #
       # shared_lock
-      shared_lock.acquire()
+      acquire_lock(shared_lock)
       #
       # shared_job_status[this_job_id]
       if shared_job_status[this_job_id] != job_status_run :
@@ -348,7 +359,7 @@ def try_one_job(
          print( f'Error: {current_time}: fit {fit_type:<5} {job_name}' )
       #
       # status_count
-      shared_lock.acquire()
+      acquire_lock(shared_lock)
       n_status      = len( job_status_name )
       status_count  = dict()
       for job_status_i in range(n_status) :
@@ -446,7 +457,7 @@ def fit_one_process(
    #
    while True :
       # shared_lock
-      shared_lock.acquire()
+      acquire_lock(shared_lock)
       #
       # job_id_ready
       job_id_ready = job_table_index[ shared_job_status == job_status_ready ]

@@ -417,6 +417,12 @@ covariate.csv
 This csv file has the same description as the simulate
 :ref:`csv.simulate@Input Files@covariate.csv` file.
 
+population
+----------
+If this table has a covariate called ``population`` ,
+it is also used to weight the data as a function of age and time.
+This function is different for each location.
+The :ref:`csv.simulate-name` routine does not yet do this data weighting.
 
 fit_goal.csv
 ============
@@ -1396,6 +1402,23 @@ def create_root_node_database(fit_dir) :
          'weight_name'    : weight_name     ,
       }
       rate_eff_cov_table.append(row)
+   #
+   # data_table
+   sex_value2name = dict()
+   for name in at_cascade.csv.sex_name2value :
+      value = at_cascade.csv.sex_name2value[name]
+      sex_value2name[value] = name
+   if 'population' in covariate_list :
+      for row in data_table :
+         age_lower     = float( row['age_lower'] )
+         age_upper     = float( row['age_upper'] )
+         if age_lower != age_upper :
+            sex_name      = sex_value2name[ row['sex'] ]
+            key           = ( row['node_name'], sex_name, 'population' )
+            fun           = weight_dict[key]
+            index         = fun.index
+            weight_name   = f'weight_{index}'
+            row['weight'] = weight_name
    #
    # smooth_dict
    smooth_dict = dict()

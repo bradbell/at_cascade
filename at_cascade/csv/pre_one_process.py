@@ -109,6 +109,17 @@ import dismod_at
 import at_cascade
 import multiprocessing
 # ----------------------------------------------------------------------------
+# acquire lock
+def acquire_lock(shared_lock) :
+   seconds = None
+   ok = shared_lock.acquire(
+      block   = True,
+      timeout = seconds
+   )
+   if not ok :
+      msg = f'pre_one_process: did not obtain lock in {seconds} seconds'
+      assert False, msg
+# ----------------------------------------------------------------------------
 # prints the durrent time and job name
 def print_time(
    begin               ,
@@ -205,7 +216,7 @@ def pre_one_process(
    while True :
       #
       # Begin Lock
-      shared_lock.acquire()
+      acquire_lock(shared_lock)
       #
       # n_skip, predict_job_id, shared_job_status
       #
@@ -283,6 +294,7 @@ def pre_one_process(
       #
       # pre_one_job
       if not catch_exceptions_and_continue :
+         predict_job_error = None
          at_cascade.csv.pre_one_job(
             fit_dir                 = fit_dir                   ,
             sim_dir                 = sim_dir                   ,
@@ -317,7 +329,7 @@ def pre_one_process(
             predict_job_error = str(e)
       #
       # Begin Lock
-      shared_lock.acquire()
+      acquire_lock(shared_lock)
       #
       # shared_job_status, n_done
       assert shared_job_status[predict_job_id] == job_status_run

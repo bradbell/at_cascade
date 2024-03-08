@@ -55,8 +55,8 @@ n2,n0
 option_fit.csv
 **************
 This example uses the default value for all the options in option_fit.csv
-except for the random seed which is chosen using the python time package,
-max_number_cpu should be either 1 or None.
+except for the random_seed (which is chosen using the python time package),
+and max_number_cpu (which should be either 1 or None).
 {xrst_code py}"""
 max_number_cpu = None
 random_seed    = str( int( time.time() ) )
@@ -140,7 +140,7 @@ parent_rate.csv
 ***************
 The only non-zero rates are omega and iota
 (omega is known and specified by the covariate.csv file).
-The mode for iota is constant (with respect to age and time).
+The model for iota is constant (with respect to age and time).
 Its value prior is uniform_eps_1.
 It does not have any dage or dtime priors because it is constant
 (so there are no age or time difference between grid values).
@@ -206,7 +206,7 @@ csv_file['data_in.csv'] = header + \
 '''
 csv_file['data_in.csv'] = csv_file['data_in.csv'].replace(' ', '')
 """{xrst_code}
-The measurement value above is 0.0000 gets replaced by
+The measurement value meas_value is 0.0000 above and gets replaced by
 the following code:
 {xrst_literal
    # BEGIN_MEAS_VALUE
@@ -374,7 +374,7 @@ def main() :
    # prefix
    for prefix in [ 'fit' , 'sam' ] :
       #
-      # all_predict_table
+      # predict_table
       file_name = f'{fit_dir}/{prefix}_predict.csv'
       predict_table = at_cascade.csv.read_table(file_name)
       #
@@ -403,7 +403,7 @@ def main() :
                iota      = math.exp(effect) * no_effect_iota
                rel_error = (avgint - iota) / iota
                assert abs(rel_error) < 0.01
-   print('fit_xam.py: OK')
+   print('break_fit_pred.py: OK')
 #
 main()
 # END_PROGRAM
