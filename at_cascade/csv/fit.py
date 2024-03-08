@@ -420,7 +420,8 @@ This csv file has the same description as the simulate
 population
 ----------
 If this table has a covariate called ``population`` ,
-it is also used to weight the data as a function of age and time.
+it is also used to weight the data as a function of age and time; e.g.,
+see :ref:`csv.population-name` .
 This function is different for each location.
 The :ref:`csv.simulate-name` routine does not yet do this data weighting.
 
