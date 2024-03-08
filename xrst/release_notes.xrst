@@ -29,7 +29,7 @@ mm-dd
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
 
-03-09
+03-08
 =====
 Population weighting of measurement values was added to csv.fit using the
 :ref:`csv.fit@Input Files@covariate.csv@population` column
