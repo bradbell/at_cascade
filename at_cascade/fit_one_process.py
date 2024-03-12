@@ -125,14 +125,14 @@ import dismod_at
 # ----------------------------------------------------------------------------
 # acquire lock
 def acquire_lock(shared_lock) :
-   seconds = None
+   seconds = 10
    ok = shared_lock.acquire(
       block   = True,
       timeout = seconds
    )
    if not ok :
       msg = f'pre_one_process: did not obtain lock in {seconds} seconds'
-      assert False, msg
+      sys.exit(msg)
 # ----------------------------------------------------------------------------
 def get_result_database_dir(
    all_node_database, node_table, fit_node_id, fit_split_reference_id
@@ -499,11 +499,12 @@ def fit_one_process(
             # jobs are running but none are ready
             if master_process :
                #
-               # wait for another process to shared memory,
+               # wait for another process to change shared memory,
                # then go back to the while True point above
                shared_event.clear()
                shared_lock.release()
-               shared_event.wait()
+               seconds = 10.0
+               shared_event.wait(timeout = seconds)
             else :
                # return this processor
                shared_number_cpu_inuse[0] -= 1

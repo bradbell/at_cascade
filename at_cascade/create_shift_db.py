@@ -123,6 +123,10 @@ In this case both the means and standard deviations in the value priors
 are replaced using the results of the fit.
 Otherwise, only the means are replaced.
 
+Log Table
+=========
+There is no log table in the shifted databases.
+
 {xrst_end create_shift_db}
 '''
 # ----------------------------------------------------------------------------
@@ -833,15 +837,12 @@ def create_shift_db(
       at_cascade.empty_avgint_table(shift_connection)
       #
       # drop the following tables:
-      # c_shift_avgint, c_shift_predict_sample, c_shift_predict_fit_var
-      command  = 'DROP TABLE c_shift_avgint'
-      dismod_at.sql_command(shift_connection, command)
-      #
-      command  = 'DROP TABLE c_shift_predict_fit_var'
-      dismod_at.sql_command(shift_connection, command)
-      #
+      # log, c_shift_avgint, c_shift_predict_sample, c_shift_predict_fit_var
+      drop_list = [ 'log', 'c_shift_avgint' , 'c_shift_predict_fit_var' ]
       if predict_sample :
-         command  = 'DROP TABLE c_shift_predict_sample'
+         drop_list.append(  'c_shift_predict_sample' )
+      for table_name in drop_list :
+         command  = f'DROP TABLE {table_name}'
          dismod_at.sql_command(shift_connection, command)
       #
       # shift_connection

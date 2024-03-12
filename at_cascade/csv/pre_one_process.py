@@ -111,7 +111,7 @@ import multiprocessing
 # ----------------------------------------------------------------------------
 # acquire lock
 def acquire_lock(shared_lock) :
-   seconds = None
+   seconds = 10
    ok = shared_lock.acquire(
       block   = True,
       timeout = seconds

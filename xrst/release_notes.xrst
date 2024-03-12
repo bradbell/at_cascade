@@ -12,6 +12,7 @@ Release Notes for at_cascade
 -----------------------------------------------------------------------------
 {xrst_begin 2024}
 {xrst_spell
+   multi
    dd
    mm
    inuse
@@ -28,6 +29,17 @@ mm-dd
 *****
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
+
+03-12
+=====
+Sometimes when running :ref:`csv.fit-name` with a large value for
+:ref:`csv.fit@Input Files@option_fit.csv@max_number_cpu` (12 or more),
+and when a region had a lot of sub-regions (e.g. 47),
+one or more of the fit processes would never finish there would be no
+trace.out for the corresponding sex, region.
+Some multi-processing time out limits were added.
+This, combined with the advancing to dismod_at-2024.3.10,
+seems to have fixed this problem.
 
 03-08
 =====

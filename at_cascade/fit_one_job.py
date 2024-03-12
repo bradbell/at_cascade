@@ -102,6 +102,7 @@ a summary of the operations preformed on dismod.db is added to the log table.
 import io
 import os
 import time
+import inspect
 import dismod_at
 import at_cascade
 # -----------------------------------------------------------------------------
@@ -137,7 +138,7 @@ def fit_one_job(
    fit_integrand           ,
    fit_type                ,
    first_fit               ,
-   trace_file_obj    = None,
+   trace_file_obj   = None ,
 # )
 ) :
    assert type(job_table) == list
@@ -147,11 +148,22 @@ def fit_one_job(
    assert type(fit_integrand) == set
    assert fit_type in [ 'both', 'fixed' ]
    assert type(first_fit) == bool
-   # END syntax
-   #
-   # file_stdout
    if trace_file_obj is not None :
       assert isinstance(trace_file_obj, io.TextIOBase)
+   # END syntax
+   #
+   # trace_line_number
+   # You can use this routine to help track down a crash during fit_one_job.
+   def trace_line_number(line_number ) :
+      msg = f'fit_one_job.py: line {line_number}'
+      if trace_file_obj == None :
+         print( msg )
+      else :
+         trace_file_obj.write( f'{msg}\n' )
+         trace_file_obj.flush()
+   # trace_line_number( inspect.currentframe().f_lineno )
+   #
+   # file_stdout
    file_stdout = trace_file_obj
    #
    # fit_node_id
@@ -288,15 +300,6 @@ def fit_one_job(
    )
    integrand_table = fit_or_root.get_table('integrand')
    fit_or_root.close()
-   #
-   # log table
-   if first_fit :
-      cmd = 'drop table if exists log'
-      dismod_at.sql_command(connection, cmd)
-      #
-      # omega_constraint
-      at_cascade.omega_constraint(all_node_database, fit_node_database)
-      at_cascade.add_log_entry(connection, 'omega_constraint')
    #
    # init
    command = [ 'dismod_at', fit_node_database, 'init' ]
@@ -446,3 +449,5 @@ def fit_one_job(
    #
    # connection
    connection.close()
+   #
+   # trace_line_number( inspect.currentframe().f_lineno )
