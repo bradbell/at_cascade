@@ -30,6 +30,11 @@ mm-dd
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
 
+03-20
+=====
+The comments for the csv fit and predict case where
+:ref:`csv.break_fit_pred@breakup_computation` is true were improved.
+
 03-12
 =====
 Sometimes when running :ref:`csv.fit-name` with a large value for

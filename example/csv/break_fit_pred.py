@@ -57,11 +57,14 @@ option_fit.csv
 This example uses the default value for all the options in option_fit.csv
 except for the random_seed (which is chosen using the python time package),
 and max_number_cpu (which should be either 1 or None).
+The value for refit_split is the same as its default, but it is included
+for emphasis.
 {xrst_code py}"""
 max_number_cpu = None
 random_seed    = str( int( time.time() ) )
 csv_file['option_fit.csv']  = 'name,value\n'
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
+csv_file['option_fit.csv'] += 'refit_split,true\n'
 if max_number_cpu == 1 :
    csv_file['option_fit.csv'] += f'max_number_cpu,1\n'
 """{xrst_code}
@@ -166,7 +169,7 @@ csv_file['child_rate.csv'] = \
 '''rate_name,value_prior
 iota,gauss_01
 '''
-"""{xrst_code}
+r"""{xrst_code}
 
 mulcov.csv
 **********
@@ -243,14 +246,17 @@ def computation(fit_dir) :
       at_cascade.csv.predict(fit_dir)
    else :
       # csv.fit: Just fit the root node
+      # Since refit_split is true, this will include n0.female and n0.male.
+      # Note that, for n0.female and n0.male, the node depth is zero
+      # but the job depth is one (max_job_depth is used by csv.predict).
       at_cascade.csv.fit(fit_dir, max_node_depth = 0)
       #
       # all_node_database, fit_goal_set
       all_node_database = f'{fit_dir}/all_node.db'
       fit_goal_set      = { 'n1', 'n2' }
       #
-      # run prediict for n0, and fit for female, male in parallel
-      #
+      # Run two continues starting at n0.female and n0.male
+      # If max_number_cpu != 1, run them in parallel.
       # p_fit
       p_fit = dict()
       for sex in [ 'female' , 'male' ] :
@@ -264,7 +270,8 @@ def computation(fit_dir) :
             )
             p_fit[sex].start()
       #
-      # p_predict
+      # Run one predict for n0.both
+      # If max_number_cpu != 1, cannot yet predict for n0.female or n0.male
       p_predict      = dict()
       sim_dir        = None
       start_job_name = 'n0.both'
@@ -278,12 +285,14 @@ def computation(fit_dir) :
          )
          p_predict['both'].start()
       #
-      # wait for the fit jobs to complete
+      # If max_number_cpu != 1, wait for continue jobs to finish
       for sex in p_fit :
          p_fit[sex].join()
       #
       #
-      # p_predict
+      # Run predict starting at n0.female and n0.male and include
+      # n1.female, n2.female, n1.male, n1.female.
+      # If max_number_cpu != 1, run them in parallel.
       sim_dir       = None
       max_job_depth = 1
       for sex in [ 'female', 'male' ] :
@@ -297,7 +306,7 @@ def computation(fit_dir) :
             )
             p_predict[sex].start()
       #
-      # wait for the predict jobs to complete
+      # If max_number_cpu != 1, wait for predict jobs to finish
       for sex in p_predict :
          p_predict[sex].join()
       #
