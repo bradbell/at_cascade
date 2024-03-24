@@ -77,6 +77,7 @@ corresponding name.
    :header-rows: 1
 
    Name,    Meaning
+   'skip' , This is a prior only job and completed by the parent fit
    'wait',  job is waiting for it's parent job to finish
    'ready', job is ready to run
    'run',   job is running
@@ -116,6 +117,7 @@ that is used to signal that the shared memory has changed.
 {xrst_end fit_one_process}
 '''
 # ----------------------------------------------------------------------------
+import sys
 import datetime
 import multiprocessing
 from multiprocessing import shared_memory
@@ -212,6 +214,7 @@ def try_one_job(
    assert type(fit_type_list) == list
    #
    # job_status_name
+   job_status_skip  = job_status_name.index( 'skip' )
    job_status_wait  = job_status_name.index( 'wait' )
    job_status_ready = job_status_name.index( 'ready' )
    job_status_run   = job_status_name.index( 'run' )
@@ -296,13 +299,15 @@ def try_one_job(
       assert shared_job_status[this_job_id] == job_status_run
       shared_job_status[this_job_id] = job_status_done
       #
-      # shared_job_status[child_job_id] = job_status_ready
+      # shared_job_status[child_job_id]
       start_child_job_id    = job_table[this_job_id ]['start_child_job_id']
       end_child_job_id      = job_table[this_job_id ]['end_child_job_id']
       child_range = range(start_child_job_id, end_child_job_id)
       for child_job_id in child_range :
-         assert shared_job_status[child_job_id] == job_status_wait
-         shared_job_status[child_job_id] = job_status_ready
+         if shared_job_status[child_job_id] == job_status_wait :
+            shared_job_status[child_job_id] = job_status_ready
+         else :
+            assert shared_job_status[child_job_id] == job_status_wait
       #
       # release
       # shared memory has changed
@@ -333,11 +338,12 @@ def try_one_job(
       #
       # shared_job_status[descendant_set]
       for job_id in descendant_set :
-         if shared_job_status[job_id] != job_status_wait :
-            msg  = 'try_one_job: except: shared_job_status[job_id] = '
-            msg += job_status_name[ shared_job_status[job_id] ]
-            print(msg)
-         shared_job_status[job_id] = job_status_abort
+         if shared_job_status[job_id] != job_status_skip :
+            if shared_job_status[job_id] != job_status_wait :
+               msg  = 'try_one_job: except: shared_job_status[job_id] = '
+               msg += job_status_name[ shared_job_status[job_id] ]
+               print(msg)
+            shared_job_status[job_id] = job_status_abort
       #
       # release
       # shared memory has changed
@@ -406,6 +412,7 @@ def fit_one_process(
    assert type(shared_event)         == multiprocessing.synchronize.Event
    # END DEF
    # ----------------------------------------------------------------------
+   job_status_skip  = job_status_name.index( 'skip' )
    job_status_wait  = job_status_name.index( 'wait' )
    job_status_ready = job_status_name.index( 'ready' )
    job_status_run   = job_status_name.index( 'run' )

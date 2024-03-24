@@ -75,15 +75,17 @@ Otherwise, *job_name* is equal to
 where *split_reference_name* is the split reference name corresponding to
 *split_reference_id*.
 
-only_priors
-===========
+prior_only
+==========
 If this ``bool`` is false, this job should be run.
-If *only_priors* is true,
+It will be false for if this is the start node;
+see:ref:`create_job_table@start_node_id` .
+If *prior_only* is true,
 this job will not be run and this job will not have any children.
 The priors for this job will be created if the parent job succeeds
-(*only_priors* cannot be true for the parent job).
+(*prior_only* cannot be true for the parent job).
 These priors are intended to be used by a subsequent call to
-:ref:`continue_cascade-name` where *only_priors* for this job is false.
+:ref:`continue_cascade-name` where *prior_only* for this job is false.
 
 fit_node_id
 ===========
@@ -137,6 +139,7 @@ def get_child_job_table(
    split_reference_table      ,
    node_split_set             ,
    fit_children               ,
+   prior_children             ,
    node_table                 ,
 ) :
    assert type(job_id) == int
@@ -146,8 +149,10 @@ def get_child_job_table(
    assert type(root_split_reference_id)==int or root_split_reference_id == None
    assert type(node_split_set) == set
    assert type(fit_children) == list
+   assert type(prior_children) == list
    if len(fit_children) > 0 :
       assert type( fit_children[0] ) == set
+      assert type( prior_children[0] ) == set
    assert type(node_table) == list
    if len(node_table) > 0 :
       assert type( node_table[0] ) == dict
@@ -162,16 +167,21 @@ def get_child_job_table(
       shift_reference_set = set( range( len(split_reference_table) ) )
       shift_reference_set.remove( root_split_reference_id )
    #
-   # shift_node_set
+   # fit_node_set, shift_node_set
    if fit_node_id in node_split_set and not already_split and refit_split :
       shift_node_set = { fit_node_id }
+      fit_node_set   = { fit_node_id }
    else :
-      shift_node_set = fit_children[ fit_node_id ]
+      shift_node_set = prior_children[ fit_node_id ]
+      fit_node_set   = fit_children[ fit_node_id ]
    #
    # child_job_table
    child_job_table = list()
    for shift_split_reference_id in shift_reference_set :
       for shift_node_id in shift_node_set :
+         #
+         # prior_only
+         prior_only = shift_node_id not in fit_node_set
          #
          # job_name
          job_name = node_table[shift_node_id]['node_name']
@@ -183,6 +193,7 @@ def get_child_job_table(
          # child_job_table
          row = {
             'job_name'           : job_name,
+            'prior_only'         : prior_only,
             'fit_node_id'        : shift_node_id,
             'split_reference_id' : shift_split_reference_id,
             'parent_job_id'      : job_id,
@@ -221,18 +232,18 @@ def create_job_table(
       all_table[name] = dismod_at.get_table_dict(connection, name)
    connection.close()
    #
-   # fit_goal_super_set
+   # prior_goal_set
    if len(all_table['fit_goal']) > 0 :
-      fit_goal_super_set = set()
+      prior_goal_set = set()
       for row in all_table['fit_goal'] :
-         fit_goal_super_set.add( row['node_id'] )
+         prior_goal_set.add( row['node_id'] )
       for node in fit_goal_set :
          if type(node) == str :
             node_id = at_cascade.table_name2id(node_table, 'node', node)
          else :
             assert type(node) == int
             node_id = node
-         if node_id not in fit_goal_super_set :
+         if node_id not in prior_goal_set :
             node_name = node_table[node_id]['node_name']
             msg  = f'create_job_table: node {node_name} is in fit_goal_set\n'
             msg += 'but it is not in the fit_goal table'
@@ -268,6 +279,11 @@ def create_job_table(
       root_node_id, fit_goal_set, node_table
    )
    #
+   # prior_children
+   prior_children = at_cascade.get_fit_children(
+      root_node_id, fit_goal_set, node_table
+   )
+   #
    # root_split_reference_id
    if 'root_split_reference_name' in option_all_dict :
       root_split_reference_name = option_all_dict['root_split_reference_name']
@@ -293,6 +309,7 @@ def create_job_table(
    # job_table
    job_table = [ {
       'job_name'           : job_name,
+      'prior_only'         : False,
       'fit_node_id'        : start_node_id,
       'split_reference_id' : start_split_reference_id,
       'parent_job_id'      : None,
@@ -318,6 +335,7 @@ def create_job_table(
          all_table['split_reference'],
          node_split_set,
          fit_children,
+         prior_children,
          node_table,
       )
       #

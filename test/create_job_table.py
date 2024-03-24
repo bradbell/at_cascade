@@ -32,6 +32,8 @@ check_job_table = [
 # (n4,s2) j10
 { 'fit_node_id' : 4,  'split_reference_id' : 2, 'parent_job_id' : 4    },
 ]
+for row in check_job_table :
+   row['prior_only'] = False
 #
 for job_id in range(5) :
    check_job_table[job_id]['start_child_job_id'] = 2 * job_id + 1

@@ -131,6 +131,7 @@ def fit_parallel(
    # ----------------------------------------------------------------------
    # job_status_name
    job_status_name = [
+      'skip' , # This is a prior only job and completed by the parent fit
       'wait' , # job is waiting for it's parent job to finish
       'ready', # job is readiy to run
       'run'  , # job is running
@@ -138,6 +139,7 @@ def fit_parallel(
       'error', # job had an exception and could not recover
       'abort', # job is a descendant of a job that could not recover
    ]
+   job_status_skip  = job_status_name.index( 'skip' )
    job_status_wait  = job_status_name.index( 'wait' )
    job_status_ready = job_status_name.index( 'ready' )
    job_status_run   = job_status_name.index( 'run' )
@@ -182,7 +184,11 @@ def fit_parallel(
    shared_number_cpu_inuse[0] = 1
    #
    # shared_job_status
-   shared_job_status[:]  = job_status_wait
+   for job_id in range( len(job_table) ) :
+      if job_table[job_id]['prior_only'] :
+         shared_job_status[job_id] = job_status_skip
+      else :
+         shared_job_status[job_id]  = job_status_wait
    if skip_start_job :
       shared_job_status[start_job_id] = job_status_done
       #
@@ -234,7 +240,8 @@ def fit_parallel(
    # 2DO: jobs that come before the start job should be in wait state ?
    for job_id in range(0, len(job_table) ):
       status = shared_job_status[job_id]
-      assert status in [ job_status_done, job_status_error, job_status_abort ]
+      assert status in \
+         [job_status_done, job_status_error, job_status_abort, job_status_skip]
    #
    # free shared memory objects
    print(f'remove: {shared_memory_prefix_plus} shared memory')
