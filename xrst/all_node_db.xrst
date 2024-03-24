@@ -458,7 +458,7 @@ and any descendant of the root node, can be in the fit goal set.
 node_id
 *******
 This column has type ``integer`` and contains a dismod_at node_id
-for each of the nodes in the fit goal table
+for each of the nodes in the fit goal table.
 
 {xrst_end fit_goal_table}
 ------------------------------------------------------------------------------

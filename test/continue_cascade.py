@@ -5,7 +5,7 @@
 # This tests continuing the cascade from the splitting node
 # when refit_split is false. This was crashing on 2024-03-07.
 #
-'''
+r'''
                 /-------------n0-------------\
           /---female---\                /----male----\
         n1              n2            n1              n2

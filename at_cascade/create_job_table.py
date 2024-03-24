@@ -222,6 +222,17 @@ def create_job_table(
    assert type(fit_goal_set) == set
    # END DEF
    #
+   # fit_goal_set
+   temp = set()
+   for node in fit_goal_set :
+      if type(node) == str :
+         node_id = at_cascade.table_name2id(node_table, 'node', node)
+      else :
+         assert type(node) == int
+         node_id = node
+      temp.add(node_id)
+   fit_goal_set = temp
+   #
    # all_table
    all_table = dict()
    connection = dismod_at.create_connection(
@@ -233,21 +244,18 @@ def create_job_table(
    connection.close()
    #
    # prior_goal_set
-   if len(all_table['fit_goal']) > 0 :
-      prior_goal_set = set()
+   prior_goal_set = set()
+   if len(all_table['fit_goal']) == 0 :
+      prior_goal_set = set( range( len(node_table) ) )
+   else :
       for row in all_table['fit_goal'] :
          prior_goal_set.add( row['node_id'] )
-      for node in fit_goal_set :
-         if type(node) == str :
-            node_id = at_cascade.table_name2id(node_table, 'node', node)
-         else :
-            assert type(node) == int
-            node_id = node
-         if node_id not in prior_goal_set :
-            node_name = node_table[node_id]['node_name']
-            msg  = f'create_job_table: node {node_name} is in fit_goal_set\n'
-            msg += 'but it is not in the fit_goal table'
-            assert False, msg
+   for node in fit_goal_set :
+      if node_id not in prior_goal_set :
+         node_name = node_table[node_id]['node_name']
+         msg  = f'create_job_table: node {node_name} is in fit_goal_set\n'
+         msg += 'but it is not in the fit_goal table'
+         assert False, msg
    #
    # node_split_set
    node_split_set = set()
@@ -281,7 +289,7 @@ def create_job_table(
    #
    # prior_children
    prior_children = at_cascade.get_fit_children(
-      root_node_id, fit_goal_set, node_table
+      root_node_id, prior_goal_set, node_table
    )
    #
    # root_split_reference_id

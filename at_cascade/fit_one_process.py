@@ -307,7 +307,7 @@ def try_one_job(
          if shared_job_status[child_job_id] == job_status_wait :
             shared_job_status[child_job_id] = job_status_ready
          else :
-            assert shared_job_status[child_job_id] == job_status_wait
+            assert shared_job_status[child_job_id] == job_status_skip
       #
       # release
       # shared memory has changed

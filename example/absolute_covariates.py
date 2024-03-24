@@ -17,7 +17,8 @@ Nodes
 *****
 The following is a diagram of the node tree for this example.
 The :ref:`glossary@root_node` is n0,
-the :ref:`glossary@fit_goal_set` is {n3, n4, n2},
+the :ref:`glossary@fit_goal_set`
+and :ref:`fit_goal_table-name` are {n3, n4, n2},
 and the leaf nodes are {n3, n4, n5, n6}::
 
                 n0
@@ -29,8 +30,8 @@ and the leaf nodes are {n3, n4, n5, n6}::
 fit_goal_set
 ============
 {xrst_literal
-   # BEGIN fit_goal_set
-   # END fit_goal_set
+   # BEGIN_FIT_GOAL
+   # END_FIT_GOAL
 }
 
 Rates
@@ -198,9 +199,10 @@ import at_cascade
 # -----------------------------------------------------------------------------
 # global varables
 # -----------------------------------------------------------------------------
-# BEGIN fit_goal_set
+# BEGIN_FIT_GOAL
 fit_goal_set = { 'n3', 'n4', 'n2' }
-# END fit_goal_set
+fit_goal_table = [  { 'node_id' : 3 }, {'node_id' : 4 }, { 'node_id' : 2 } ]
+# END_FIT_GOAL
 #
 # BEGIN split_reference_table
 option_all            = {
@@ -561,6 +563,7 @@ def main() :
       option_all             = option_all,
       omega_grid             = omega_grid,
       omega_data             = omega_data,
+      fit_goal_table         = fit_goal_table,
    )
    #
    # root_fit_dir
