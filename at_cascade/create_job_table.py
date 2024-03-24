@@ -4,6 +4,9 @@
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin create_job_table}
+{xrst_spell
+   bool
+}
 
 Table of Jobs That Can Run in Parallel
 ######################################
@@ -71,6 +74,16 @@ Otherwise, *job_name* is equal to
 *node_name*\ ``.``\ *split_reference_name*
 where *split_reference_name* is the split reference name corresponding to
 *split_reference_id*.
+
+only_priors
+===========
+If this ``bool`` is false, this job should be run.
+If *only_priors* is true,
+this job will not be run and this job will not have any children.
+The priors for this job will be created if the parent job succeeds
+(*only_priors* cannot be true for the parent job).
+These priors are intended to be used by a subsequent call to
+:ref:`continue_cascade-name` where *only_priors* for this job is false.
 
 fit_node_id
 ===========
@@ -203,10 +216,27 @@ def create_job_table(
    connection = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )
-   tbl_list   =  [ 'option_all', 'split_reference', 'node_split' ]
+   tbl_list   =  [ 'option_all', 'split_reference', 'node_split', 'fit_goal' ]
    for name in tbl_list :
       all_table[name] = dismod_at.get_table_dict(connection, name)
    connection.close()
+   #
+   # fit_goal_super_set
+   if len(all_table['fit_goal']) > 0 :
+      fit_goal_super_set = set()
+      for row in all_table['fit_goal'] :
+         fit_goal_super_set.add( row['node_id'] )
+      for node in fit_goal_set :
+         if type(node) == str :
+            node_id = at_cascade.table_name2id(node_table, 'node', node)
+         else :
+            assert type(node) == int
+            node_id = node
+         if node_id not in fit_goal_super_set :
+            node_name = node_table[node_id]['node_name']
+            msg  = f'create_job_table: node {node_name} is in fit_goal_set\n'
+            msg += 'but it is not in the fit_goal table'
+            assert False, msg
    #
    # node_split_set
    node_split_set = set()

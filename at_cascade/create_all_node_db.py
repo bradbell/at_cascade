@@ -21,16 +21,6 @@ is a python string containing the name of the
 :ref:`all_node_db-name` that is created by this call.
 This argument can't be ``None``.
 
-List
-====
-If *split_reference_table* is empty,
-the length of the reference list is one and none of the
-covariates depend on a splitting covariate.
-Otherwise, the length of the list is the same as the length of
-the split_reference table and
-covariate reference can depend on the corresponding
-split covariance reference value.
-
 option_all
 **********
 This argument can't be ``None``.
@@ -43,6 +33,15 @@ in the same row of the option_all_table.
 Note that keys must have type ``str`` and all the values will be converted
 to ``str``.
 
+fit_goal_table
+**************
+This specifies the nodes in the :ref:`fit_goal_table-name`.
+It must be a ``list`` of ``dict`` representation of the
+:ref:`fit_goal_table-name` with one key for each ``dict``.
+If the key is node_id (node_name) the corresponding value is
+the ``int`` ( ``str`` ) representation of the node.
+If this argument is ``None``, the fit_goal table is empty.
+
 split_reference_table
 *********************
 This specifies the possible reference values for the splitting covariate.
@@ -52,7 +51,7 @@ If this argument is ``None``, the split_reference table is empty.
 
 node_split_table
 ****************
-This specifies the node at which the cascade will split by the value
+This specifies the nodes at which the cascade will split by the value
 of the splitting covariate.
 It must be a ``list`` of ``dict`` representation of the
 :ref:`node_split_table-name` with one key for each ``dict``.
@@ -159,6 +158,7 @@ def is_descendant(node_table, ancestor_node_id, this_node_id) :
 def create_all_node_db(
    all_node_database         = None,
    option_all                = None,
+   fit_goal_table            = None,
    split_reference_table     = None,
    node_split_table          = None,
    mulcov_freeze_table       = None,
@@ -166,6 +166,8 @@ def create_all_node_db(
    omega_data                = None,
 # )
 ) :
+   if fit_goal_table is None :
+      fit_goal_table = list()
    if split_reference_table is None :
       split_reference_table = list()
    if node_split_table is None :
@@ -175,6 +177,7 @@ def create_all_node_db(
    #
    assert type(all_node_database)      == str
    assert type(option_all)             == dict
+   assert type(fit_goal_table)         == list
    assert type(split_reference_table)  == list
    assert type(node_split_table)       == list
    assert type(mulcov_freeze_table)    == list
@@ -369,6 +372,22 @@ def create_all_node_db(
       name  = row['split_reference_name']
       value = row['split_reference_value']
       row_list.append( [ name, value ] )
+   dismod_at.create_table(
+      all_connection, tbl_name, col_name, col_type, row_list
+   )
+   #
+   # fit_goal table
+   tbl_name = 'fit_goal'
+   col_name = [ 'node_id' ]
+   col_type = [ 'integer' ]
+   row_list = list()
+   for row in fit_goal_table :
+      if 'node_id' in row :
+         node_id = row['node_id']
+      else :
+         node_name = row['node_name']
+         node_id   = at_cascade.table_name2id(node_table, 'node', node_name)
+      row_list.append( [ node_id ] )
    dismod_at.create_table(
       all_connection, tbl_name, col_name, col_type, row_list
    )

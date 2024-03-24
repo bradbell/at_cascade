@@ -29,6 +29,8 @@ fit_goal_set
 This is a ``set`` with elements of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
 :ref:`glossary@fit_goal_set` .
+This must be a subset of the nodes in the
+:ref:`fit_goal_table-name` .
 
 no_ode_fit
 **********
@@ -177,7 +179,6 @@ def cascade_root_node(
       assert False, msg
    fit_integrand = at_cascade.get_fit_integrand(fit_or_root)
    fit_or_root.close()
-   #
    #
    # root_node_id
    root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)

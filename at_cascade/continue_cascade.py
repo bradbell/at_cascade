@@ -46,6 +46,8 @@ specifying the node_id (node_name) for each element of the
 This argument can't be ``None``.
 It can be different from when the original cascade was run; e.g.,
 it could include new goal nodes.
+It must be a subset of the nodes in the
+:ref:`fit_goal_table-name` .
 
 fit_type_list
 *************
@@ -78,7 +80,7 @@ def continue_cascade(
    assert type(fit_type_list)     == list
    # END syntax
    #
-   # split_reference_table, option_all, node_split_table
+   # split_reference_table, option_all, node_split_table, fit_goal
    connection       = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )

@@ -446,3 +446,19 @@ that is frozen.
 
 {xrst_end mulcov_freeze_table}
 ------------------------------------------------------------------------------
+{xrst_begin fit_goal_table}
+
+Fit Goal Table
+##############
+This table restricts which nodes can be in the
+:ref:`glossary@fit_goal_set` .
+If it is empty, the :ref:`glossary@root_node` ,
+and any descendant of the root node, can be in the fit goal set.
+
+node_id
+*******
+This column has type ``integer`` and contains a dismod_at node_id
+for each of the nodes in the fit goal table
+
+{xrst_end fit_goal_table}
+------------------------------------------------------------------------------
