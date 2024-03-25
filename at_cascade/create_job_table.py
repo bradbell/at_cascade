@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
-'''
+r'''
 {xrst_begin create_job_table}
 {xrst_spell
    bool
@@ -54,6 +54,9 @@ This is ``None`` if and only if
 fit_goal_set
 ************
 This is the :ref:`glossary@fit_goal_set`.
+Each such node must be the start node, or a descendant of the start node.
+In addition, it must be in the :ref:`fit_goal_table-name` ,
+or an ancestor of a node in the fit goal table.
 
 job_table
 *********
@@ -129,6 +132,13 @@ Note that this job is the parent of each job between the start and end,
 # -----------------------------------------------------------------------------
 import dismod_at
 import at_cascade
+# -----------------------------------------------------------------------------
+def ancestor_set(node_table, node_id) :
+   result = { node_id }
+   while node_table[node_id]['parent'] != None :
+      node_id = node_table[node_id]['parent']
+      result.add(node_id)
+   return result
 # -----------------------------------------------------------------------------
 def get_child_job_table(
    job_id                     ,
@@ -250,11 +260,28 @@ def create_job_table(
    else :
       for row in all_table['fit_goal'] :
          prior_goal_set.add( row['node_id'] )
-   for node in fit_goal_set :
-      if node_id not in prior_goal_set :
+   #
+   # fit_node_set
+   fit_node_set = set()
+   if len(all_table['fit_goal']) == 0 :
+      fit_node_set = set( range( len(node_table) ) )
+   else :
+      for row in all_table['fit_goal'] :
+         node_id = row['node_id']
+         fit_node_set = fit_node_set.union(ancestor_set(node_table, node_id ))
+   #
+   for node_id in fit_goal_set :
+      if start_node_id not in ancestor_set(node_table, node_id) :
+         node_name       = node_table[node_id]['node_name']
+         start_node_name = node_table[start_node_id]['node_name']
+         msg  = f'create_job_table: node {node_name} is in fit_goal_set but\n'
+         msg += 'it is not a descendant of the start node {start_node_name}'
+         assert False, msg
+      if node_id not in fit_node_set :
          node_name = node_table[node_id]['node_name']
          msg  = f'create_job_table: node {node_name} is in fit_goal_set\n'
-         msg += 'but it is not in the fit_goal table'
+         msg += 'but it is not in the fit_goal table or the ancestor of'
+         msg += 'a node in the fit_goal table.'
          assert False, msg
    #
    # node_split_set

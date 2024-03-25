@@ -45,11 +45,9 @@ fit_goal_set
 This is a ``set`` with elements of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
 :ref:`glossary@fit_goal_set` .
-This argument can't be ``None``.
-It can be different from when the original cascade was run; e.g.,
-it could include new goal nodes.
-It must be a subset of the nodes in the
-:ref:`fit_goal_table-name` .
+Each such node must be the root node, or a descendant of the root node.
+In addition, it must be in the :ref:`fit_goal_table-name` ,
+or an ancestor of a node in the fit goal table.
 
 fit_type_list
 *************
