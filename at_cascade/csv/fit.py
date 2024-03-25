@@ -887,6 +887,15 @@ each sample index.
 {xrst_end csv.fit}
 '''
 # ----------------------------------------------------------------------------
+# Returns the node indices for the ancestors of the node specified by node_id.
+# The node specified by node_id is included in this set.
+def ancestor_set(node_table, node_id) :
+   result = { node_id }
+   while node_table[node_id]['parent'] != None :
+      node_id = node_table[node_id]['parent']
+      result.add(node_id)
+   return result
+# ----------------------------------------------------------------------------
 # Sets global global_option_value to dict representation of option_fit.csv
 #
 # fit_dir
@@ -1587,15 +1596,26 @@ def create_root_node_database(fit_dir) :
 # covariate_table
 # is the list of dict corresponding to the covariate.csv file.
 #
+# fit_goal_table
+# is the list of dict corresponding to the fit_goal.csv file.
+# The ``node_id`` column has been added to this table.
+#
 # global_option_value
 # This routine assues that global_option_value has been set.
 #
-def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
+def create_all_node_database(
+   fit_dir, age_grid, time_grid, covariate_table, fit_goal_table
+) :
    assert type(fit_dir) == str
    assert type(age_grid) == list
    assert type(time_grid) == list
+   #
    assert type(covariate_table) == list
    assert type( covariate_table[0] ) == dict
+   #
+   assert type(fit_goal_table) == list
+   if len( fit_goal_table ) > 0 :
+      assert type( fit_goal_table[0] ) == dict
    #
    # root_node_table
    root_node_table = dict()
@@ -1741,6 +1761,7 @@ def create_all_node_database(fit_dir, age_grid, time_grid, covariate_table) :
    at_cascade.create_all_node_db(
       all_node_database         = f'{fit_dir}/all_node.db'  ,
       option_all                = option_all                ,
+      fit_goal_table            = fit_goal_table            ,
       split_reference_table     = split_reference_table     ,
       node_split_table          = node_split_table          ,
       mulcov_freeze_table       = mulcov_freeze_table       ,
@@ -1774,6 +1795,7 @@ def fit(fit_dir, max_node_depth = None) :
       fit_dir, option_table, top_node_name
    )
    #
+   # root_node_name
    root_node_name = global_option_value['root_node_name']
    file_name      = f'{fit_dir}/{root_node_name}'
    if os.path.exists( file_name ) :
@@ -1781,18 +1803,21 @@ def fit(fit_dir, max_node_depth = None) :
       msg += 'you must remove it before running this csv fit.'
       assert False, msg
    #
-   # fit_goal_set
-   fit_goal_set   = set()
+   # fit_goal_table
    file_name      = f'{fit_dir}/fit_goal.csv'
    fit_goal_table = at_cascade.csv.read_table(file_name)
    for row in fit_goal_table :
-      fit_goal_set.add( row['node_name'] )
+      node_name      = row['node_name']
+      node_id        = at_cascade.table_name2id(node_table, 'node', node_name)
+      row['node_id'] = node_id
    #
    # root_node.db
    age_grid, time_grid, covariate_table = create_root_node_database(fit_dir)
    #
    # all_node.db
-   create_all_node_database(fit_dir, age_grid, time_grid, covariate_table)
+   create_all_node_database(
+      fit_dir, age_grid, time_grid, covariate_table, fit_goal_table
+   )
    #
    # node_table
    database     = f'{fit_dir}/root_node.db'
@@ -1803,18 +1828,29 @@ def fit(fit_dir, max_node_depth = None) :
    connection.close()
    #
    # root_node_id
-   root_node_name = at_cascade.get_parent_node(database)
+   assert root_node_name == at_cascade.get_parent_node(database)
    root_node_id   = at_cascade.table_name2id(node_table, 'node', root_node_name)
+   #
+   # fit_goal_set
+   if len(fit_goal_table) == 0 :
+      fit_goal_set = set( range( len(node_table) ) )
+   else :
+      fit_goal_set = set()
+      for row in fit_goal_table :
+         node_id = row['node_id']
+         if root_node_id in ancestor_set(node_table, node_id ) :
+            fit_goal_set.add(node_id)
    #
    # fit_goal_max_depth
    fit_goal_max_depth = set()
-   for node_name in fit_goal_set :
+   for node_id in fit_goal_set :
+      # node_id is the root node or a descedant of the root node.
       node_list = list()
-      node_id   = at_cascade.table_name2id(node_table, 'node', node_name)
       node_list.append(node_id)
-      while node_id != root_node_id and node_id != None :
+      while node_id != root_node_id :
          node_id = node_table[node_id]['parent']
          node_list.append(node_id)
+         assert node_id != None
       if node_id == root_node_id :
          if max_node_depth == None :
             fit_goal_max_depth.add( node_list[0] )
