@@ -157,7 +157,7 @@ def fit_parallel(
    shared_memory_prefix = get_shared_memory_prefix(all_node_database)
    start_name           = job_table[start_job_id]['job_name']
    shared_memory_prefix_plus = \
-      f'{shared_memory_prefix}_{shared_unique}_fit_{start_name}'
+      f'{shared_memory_prefix}_{shared_unique}_{start_name}'
    print(f'create: {shared_memory_prefix_plus} shared memory')
    # -------------------------------------------------------------------------
    # shm_number_cpu_inuse, shared_number_cpu_inuse
@@ -199,12 +199,13 @@ def fit_parallel(
    if skip_start_job :
       shared_job_status[start_job_id] = job_status_done
       #
-      # shared_job_status[child_job_id] = job_status_ready
+      # shared_job_status[child_job_id]
       start_child_job_id    = job_table[start_job_id ]['start_child_job_id']
       end_child_job_id      = job_table[start_job_id ]['end_child_job_id']
       child_range = range(start_child_job_id, end_child_job_id)
       for child_job_id in child_range :
-         shared_job_status[child_job_id] = job_status_ready
+         if not job_table[child_job_id]['prior_only'] :
+            shared_job_status[child_job_id] = job_status_ready
    else :
       shared_job_status[start_job_id] = job_status_run
    #
@@ -244,7 +245,6 @@ def fit_parallel(
       assert msg, False
    #
    # shared_job_status
-   # 2DO: jobs that come before the start job should be in wait state ?
    for job_id in range(0, len(job_table) ):
       status = shared_job_status[job_id]
       assert status in \

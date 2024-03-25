@@ -236,6 +236,9 @@ def try_one_job(
    # job_name
    job_name = job_table[this_job_id]['job_name']
    #
+   # prior_only
+   assert not job_table[this_job_id]['prior_only']
+   #
    # trace_file_obj
    trace_file_obj = None
    if max_number_cpu > 1 :
@@ -305,8 +308,10 @@ def try_one_job(
       child_range = range(start_child_job_id, end_child_job_id)
       for child_job_id in child_range :
          if shared_job_status[child_job_id] == job_status_wait :
+            assert not job_table[child_job_id]['prior_only']
             shared_job_status[child_job_id] = job_status_ready
          else :
+            assert job_table[child_job_id]['prior_only']
             assert shared_job_status[child_job_id] == job_status_skip
       #
       # release

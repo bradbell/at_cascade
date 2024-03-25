@@ -34,9 +34,11 @@ fit_node_database
 is a python string specifying the location of a dismod_at database
 relative to the current working directory.
 This is a :ref:`glossary@fit_node_database` with the
-final state after running :ref:`cascade_root_node-name` on this database.
-The necessary state of *fit_node_database* is reached before
-cascade_root_node starts runs on any of its child nodes.
+final state after a run of
+:ref:`cascade_root_node-name` or :ref:`continue_cascade-name`
+that includes fitting this database.
+The *fit_node_database* is not changed, it is only used
+to identify which child jobs to fit.
 
 fit_goal_set
 ************
@@ -57,6 +59,23 @@ For each job, the first type of fit is attempted.
 If it fails, and there is a second type of fit, it is attempted.
 If it also fails, the corresponding job fails.
 
+shared_unique
+*************
+Under normal circumstances, you should use the default value ``con``
+for this parameter.
+
+#. Parallel runs of continue_cascade must use different values of
+   *shared_unique* so the corresponding shared memory names are different;
+   see :ref:`fit_parallel@shared_unique` .
+
+#. The *shared_unique* spacial case is where you are running (in parallel)
+   continue_cascade with the same *fit_node_database*, and disjoint
+   *fit_goal_set* . (The intersection of disjoint sets is empty.)
+
+#. In the special case above, the suggested value for *shared_unique*
+   is *node_name* , where *node_name* is the name of one of the nodes
+   in the *fit_goal_set*.
+
 {xrst_end   continue_cascade}
 '''
 import time
@@ -71,13 +90,15 @@ def continue_cascade(
    all_node_database = None,
    fit_node_database = None,
    fit_goal_set      = None,
-   fit_type_list     = [ 'both', 'fixed' ]
+   fit_type_list     = [ 'both', 'fixed' ],
+   shared_unique     = 'con',
 # )
 ) :
    assert type(all_node_database) == str
    assert type(fit_node_database) == str
    assert type(fit_goal_set)      == set
    assert type(fit_type_list)     == list
+   assert type(shared_unique)     == str
    # END syntax
    #
    # split_reference_table, option_all, node_split_table, fit_goal
@@ -180,5 +201,5 @@ def continue_cascade(
       skip_start_job    = skip_start_job,
       max_number_cpu    = max_number_cpu,
       fit_type_list     = fit_type_list,
-      shared_unique     = 'con',
+      shared_unique     = shared_unique,
    )

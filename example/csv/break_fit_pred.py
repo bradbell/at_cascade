@@ -57,14 +57,13 @@ option_fit.csv
 This example uses the default value for all the options in option_fit.csv
 except for the random_seed (which is chosen using the python time package),
 and max_number_cpu (which should be either 1 or None).
-The value for refit_split is the same as its default, but it is included
 for emphasis.
 {xrst_code py}"""
 max_number_cpu = None
 random_seed    = str( int( time.time() ) )
 csv_file['option_fit.csv']  = 'name,value\n'
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
-csv_file['option_fit.csv'] += 'refit_split,true\n'
+csv_file['option_fit.csv'] += 'refit_split,false\n'
 if max_number_cpu == 1 :
    csv_file['option_fit.csv'] += f'max_number_cpu,1\n'
 """{xrst_code}
@@ -246,69 +245,70 @@ def computation(fit_dir) :
       at_cascade.csv.predict(fit_dir)
    else :
       # csv.fit: Just fit the root node
-      # Since refit_split is true, this will include n0.female and n0.male.
-      # Note that, for n0.female and n0.male, the node depth is zero
-      # but the job depth is one (max_job_depth is used by csv.predict).
+      # Since refit_split is false, this will only fit include n0.both.
       at_cascade.csv.fit(fit_dir, max_node_depth = 0)
       #
-      # all_node_database, fit_goal_set
+      # all_node_database
       all_node_database = f'{fit_dir}/all_node.db'
-      fit_goal_set      = { 'n1', 'n2' }
       #
-      # Run two continues starting at n0.female and n0.male
+      # Run two continues starting at n0.both.
       # If max_number_cpu != 1, run them in parallel.
       # p_fit
       p_fit = dict()
-      for sex in [ 'female' , 'male' ] :
-         fit_node_database = f'{fit_dir}/n0/{sex}/dismod.db'
-         args   = (all_node_database, fit_node_database, fit_goal_set)
+      fit_node_database = f'{fit_dir}/n0/dismod.db'
+      fit_type          = [ 'both', 'fixed']
+      for node_name in [ 'n1' , 'n2' ] :
+         fit_goal_set  = { node_name }
+         shared_unique = node_name
+         args          = (
+            all_node_database,
+            fit_node_database,
+            fit_goal_set,
+            fit_type,
+            shared_unique,
+         )
          if max_number_cpu == 1 :
             at_cascade.continue_cascade( *args )
          else :
-            p_fit[sex] = multiprocessing.Process(
+            p_fit[node_name] = multiprocessing.Process(
                target = at_cascade.continue_cascade , args = args ,
             )
-            p_fit[sex].start()
+            p_fit[node_name].start()
       #
-      # Run one predict for n0.both
-      # If max_number_cpu != 1, cannot yet predict for n0.female or n0.male
+      # Run one predict for n0.both using this process
+      # If max_number_cpu != 1, this is in parallel with the continues above
       p_predict      = dict()
       sim_dir        = None
       start_job_name = 'n0.both'
       max_job_depth  = 0
       args            = (fit_dir, sim_dir, start_job_name, max_job_depth)
-      if max_number_cpu == 1 :
-         at_cascade.csv.predict( *args )
-      else :
-         p_predict['both'] = multiprocessing.Process(
-            target = at_cascade.csv.predict , args = args
-         )
-         p_predict['both'].start()
+      at_cascade.csv.predict( *args )
       #
       # If max_number_cpu != 1, wait for continue jobs to finish
-      for sex in p_fit :
-         p_fit[sex].join()
+      for key in p_fit :
+         p_fit[key].join()
       #
       #
-      # Run predict starting at n0.female and n0.male and include
-      # n1.female, n2.female, n1.male, n1.female.
+      # Run predict starting at
+      # n1.female, n1.male, n2.female, n2.male.
       # If max_number_cpu != 1, run them in parallel.
       sim_dir       = None
       max_job_depth = 1
-      for sex in [ 'female', 'male' ] :
-         start_job_name = f'n0.{sex}'
-         args           = (fit_dir, sim_dir, start_job_name, max_job_depth)
-         if max_number_cpu == 1 :
-            at_cascade.csv.predict(*args)
-         else :
-            p_predict[sex] = multiprocessing.Process(
-               target = at_cascade.csv.predict, args = args                   ,
-            )
-            p_predict[sex].start()
+      for node_name in [ 'n1', 'n2' ] :
+         for sex in [ 'female', 'male' ] :
+            start_job_name = f'{node_name}.{sex}'
+            args           = (fit_dir, sim_dir, start_job_name, max_job_depth)
+            if max_number_cpu == 1 :
+               at_cascade.csv.predict(*args)
+            else :
+               p_predict[sex] = multiprocessing.Process(
+                  target = at_cascade.csv.predict, args = args,
+                )
+               p_predict[sex].start()
       #
       # If max_number_cpu != 1, wait for predict jobs to finish
-      for sex in p_predict :
-         p_predict[sex].join()
+      for key in p_predict :
+         p_predict[key].join()
       #
       # predict
       # fit_predict.csv, sam_predict.csv
