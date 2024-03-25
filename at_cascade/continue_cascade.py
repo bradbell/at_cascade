@@ -72,7 +72,8 @@ for this parameter.
 
 #. In the special case above, the suggested value for *shared_unique*
    is ``_`` *node_name* , where *node_name* is the name of one of the nodes
-   in the *fit_goal_set*.
+   in the *fit_goal_set*. It may be necessary to include the value
+   of the splitting covariate in *shared_unique* .
 
 {xrst_end   continue_cascade}
 '''
