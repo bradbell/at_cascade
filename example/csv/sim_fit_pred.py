@@ -215,11 +215,11 @@ float_precision,5
 
 fit_goal.csv
 ============
+An empty fit_goal.csv corresponds to fitting all nodes at or below the
+:ref:`root node<csv.fit@Input Files@option_fit.csv@root_node_name>` .
 {xrst_code py}'''
 fit_file['fit_goal.csv'] = \
 '''node_name
-n1
-n2
 '''
 '''{xrst_code}
 

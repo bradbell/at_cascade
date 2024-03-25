@@ -309,6 +309,15 @@ each sample index.
 {xrst_end csv.predict}
 '''
 # ----------------------------------------------------------------------------
+# Returns the node indices for the ancestors of the node specified by node_id.
+# The node specified by node_id is included in this set.
+def ancestor_set(node_table, node_id) :
+   result = { node_id }
+   while node_table[node_id]['parent'] != None :
+      node_id = node_table[node_id]['parent']
+      result.add(node_id)
+   return result
+# ----------------------------------------------------------------------------
 # Sets global global_option_value to dict representation of option_predict.csv
 #
 # fit_dir
@@ -481,26 +490,41 @@ def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
    else :
          max_node_depth = max_job_depth
    #
-   # fit_goal_set
-   fit_goal_set   = set()
+   # fit_goal_table
    file_name      = f'{fit_dir}/fit_goal.csv'
    fit_goal_table = at_cascade.csv.read_table(file_name)
+   if len(fit_goal_table) == 0 :
+      fit_goal_table = list()
+      for node_id in range( len(dismod_node_table) ) :
+         node_name = dismod_node_table[node_id]['node_name']
+         row = { 'node_id' : node_id , 'node_name' : node_name}
+         fit_goal_table.append( row )
    for row in fit_goal_table :
       node_name = row['node_name']
-      node_list = [ node_name ]
       node_id   = at_cascade.table_name2id(dismod_node_table, 'node', node_name)
-      while node_name != start_node_name and node_id != None :
+      row['node_id'] = node_id
+   #
+   # fit_goal_set
+   fit_goal_set   = set()
+   start_node_id  = \
+      at_cascade.table_name2id(dismod_node_table, 'node', start_node_name)
+   for row in fit_goal_table :
+      node_id   = row['node_id']
+      node_list = [ node_id ]
+      while node_id != start_node_id and node_id != None :
          node_id   = dismod_node_table[node_id]['parent']
          if node_id != None :
-            node_name = dismod_node_table[node_id]['node_name']
-            node_list.append( node_name )
-      if node_name == start_node_name :
+            node_list.append( node_id )
+      if node_id == start_node_id :
          if max_node_depth == None :
-            fit_goal_set.add( node_list[0] )
+            node_id   = node_list[0]
          elif len(node_list) <= max_node_depth + 1 :
-            fit_goal_set.add( node_list[0] )
+            node_id   = node_list[0]
          else :
-            fit_goal_set.add( node_list[-max_node_depth - 1] )
+            node_id  = node_list[-max_node_depth - 1]
+         node_name = dismod_node_table[node_id]['node_name']
+         fit_goal_set.add( node_name )
+   #
    if len(fit_goal_set) == 0 :
       msg  = f'Cannot find start_node_name = {start_node_name},\n'
       msg += 'or any of its children, in fit_goal.csv'

@@ -430,9 +430,16 @@ fit_goal.csv
 If a :ref:`csv.simulate@Input Files@node.csv@node_name` is in this table,
 and the node is a descendant of the root node,
 it will be included in the fit.
-(This makes it different from the :ref:`glossary@fit_goal_set` which only
-contains nodes that are descendants of the root node.)
-In addition, all its ancestors up to the root node, are also included.
+All the ancestors of goal nodes, up to the root node, are also fit.
+
+#. This is different from the :ref:`glossary@fit_goal_set` which only
+   contains nodes that are descendants of the root node.
+
+#. A fit_goal.csv file that only has its header line is the same
+   as one that contain all the nodes in the node table.
+
+#. If you only have one node in this file, at_cascade will do a drill
+   from the root node to the goal node.
 
 node_name
 ---------
