@@ -41,7 +41,8 @@ This is used to determine the
 job_name
 ********
 This is the :ref:`create_job_table@job_table@job_name`
-for the :ref:`fit_parallel@Shared Memory` that we are clearing.
+for the shared memory that we are clearing; see
+:ref:`fit_parallel@shared_unique` .
 
 {xrst_end clear_shared}
 '''

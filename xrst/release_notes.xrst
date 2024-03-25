@@ -400,7 +400,8 @@ Add the :ref:`wish_list@max_fit` wish list item.
 #. Fix bug in :ref:`csv.predict-name`. To be specific, only check
    logs for jobs that we are predicting for. Checking logs for other jobs
    might try to read a log that was changing (when running in parallel).
-#. Add the job_name to the :ref:`fit_parallel@Shared Memory` name.
+#. Add the job_name to the shared memory name; see
+   :ref:`fit_parallel@shared_unique` .
    This fixes a bug when running cascades in parallel.
    It also required adding :ref:`clear_shared@job_name` to
    the clear_shared routine.

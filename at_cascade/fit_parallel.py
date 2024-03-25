@@ -64,23 +64,27 @@ For each job, the first type of fit is attempted.
 If it fails, and there is a second type of fit, it is attempted.
 If it also fails, the corresponding job fails.
 
+shared_unique
+*************
+All of these jobs us the following two python multiprocessing
+shared memory names:
+
+|  *shared_memory_prefix* _ *shared_unique* _  *job_name* _number_cpu_in_use
+|  *shared_memory_prefix* _ *shared_unique* _  *job_name* _job_status``
+
+#. *shared_unique* is text that makes this shared name unique among
+   all the currently running calls to fit_parallel.
+   It is suggested that you use ``fit`` for this value unless you
+   are running more than one call with the same prefix and job name.
+#. *job_name* is *job_table* [ *start_job_id* ] [ ``"job_name"`` ]
+#. :ref:`option_all_table@shared_memory_prefix` is specified
+   in the option all table.
+
 trace.out
 *********
 If the *max_number_cpu* is one, standard output is not redirected.
 Otherwise, standard output for each job is written to a file called
 ``trace.out`` in the same directory as the database for the job.
-
-Shared Memory
-*************
-All of these jobs us the following two python multiprocessing
-shared memory names:
-
-|  *shared_memory_prefix*\ ``_``\ *job_name*\ ``_number_cpu_in_use``
-|  *shared_memory_prefix*\ ``_``\ *job_name*\ ``_job_status``
-
-where *job_name* is *job_table* [ *start_job_id* ] [ ``"job_name"`` ]
-and :ref:`option_all_table@shared_memory_prefix` is specified
-in the option all table.
 
 {xrst_end fit_parallel}
 '''
@@ -116,6 +120,7 @@ def fit_parallel(
    skip_start_job    ,
    max_number_cpu    ,
    fit_type_list     ,
+   shared_unique     ,
 # )
 ) :
    #
@@ -127,6 +132,7 @@ def fit_parallel(
    assert type(skip_start_job)    == bool
    assert type(max_number_cpu)    == int
    assert type(fit_type_list)     == list
+   assert type(shared_unique)     == str
    # END DEF
    # ----------------------------------------------------------------------
    # job_status_name
@@ -150,7 +156,8 @@ def fit_parallel(
    # shared_memory_prefix_plus
    shared_memory_prefix = get_shared_memory_prefix(all_node_database)
    start_name           = job_table[start_job_id]['job_name']
-   shared_memory_prefix_plus = shared_memory_prefix + f'_fit_{start_name}'
+   shared_memory_prefix_plus = \
+      f'{shared_memory_prefix}_{shared_unique}_fit_{start_name}'
    print(f'create: {shared_memory_prefix_plus} shared memory')
    # -------------------------------------------------------------------------
    # shm_number_cpu_inuse, shared_number_cpu_inuse

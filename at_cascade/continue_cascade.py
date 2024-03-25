@@ -180,4 +180,5 @@ def continue_cascade(
       skip_start_job    = skip_start_job,
       max_number_cpu    = max_number_cpu,
       fit_type_list     = fit_type_list,
+      shared_unique     = 'con',
    )
