@@ -69,14 +69,16 @@ shared_unique
 All of these jobs us the following two python multiprocessing
 shared memory names:
 
-|  *shared_memory_prefix* _ *shared_unique* _  *job_name* _number_cpu_in_use
-|  *shared_memory_prefix* _ *shared_unique* _  *job_name* _job_status``
+|  *shared_memory_prefix* _ *job_name* *shared_unique* _number_cpu_in_use
+|  *shared_memory_prefix* _ *job_name* *shared_unique* _job_status``
+
+#. *job_name* is *job_table* [ *start_job_id* ] [ ``"job_name"`` ]
 
 #. *shared_unique* is text that makes this shared name unique among
    all the currently running calls to fit_parallel.
-   It is suggested that you use ``fit`` for this value unless you
+   It is suggested that you use the empty string for this value unless you
    are running more than one call with the same prefix and job name.
-#. *job_name* is *job_table* [ *start_job_id* ] [ ``"job_name"`` ]
+
 #. :ref:`option_all_table@shared_memory_prefix` is specified
    in the option all table.
 
@@ -157,7 +159,7 @@ def fit_parallel(
    shared_memory_prefix = get_shared_memory_prefix(all_node_database)
    start_name           = job_table[start_job_id]['job_name']
    shared_memory_prefix_plus = \
-      f'{shared_memory_prefix}_{shared_unique}_{start_name}'
+      f'{shared_memory_prefix}_{start_name}{shared_unique}'
    print(f'create: {shared_memory_prefix_plus} shared memory')
    # -------------------------------------------------------------------------
    # shm_number_cpu_inuse, shared_number_cpu_inuse

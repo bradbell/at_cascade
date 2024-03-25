@@ -259,7 +259,7 @@ def computation(fit_dir) :
       fit_type          = [ 'both', 'fixed']
       for node_name in [ 'n1' , 'n2' ] :
          fit_goal_set  = { node_name }
-         shared_unique = node_name
+         shared_unique = '_' + node_name
          args          = (
             all_node_database,
             fit_node_database,

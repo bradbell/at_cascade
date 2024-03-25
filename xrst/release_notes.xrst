@@ -30,6 +30,27 @@ mm-dd
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
 
+03-25
+=====
+#. The :ref:`csv.fit@Input Files@fit_goal.csv` file has been changed
+   in the following ways: It can have nodes that are not descendants
+   of the root node. If the set of specified nodes is empty,
+   the entire set of node is used.
+
+#. The :ref:`continue_cascade@shared_unique` argument was added
+   to the continue_cascade routine. This makes it possible
+   have two continue_cascade call running at the same time
+   and starting at the same (node,sex) pair.
+
+#. The :ref:`csv.break_fit_pred@breakup_computation`
+   example was modified to demonstrate (and test) running two
+   continues form the same starting (node, sex) pair.
+
+#. The shared memory names were shortened. To be specific,
+   ``_fit`` and ``_pre`` were removed.
+   This was done because a fit and a csv.predict cannot be run
+   starting at the (node,sex) pair and at the same time.
+
 03-20
 =====
 The comments for the csv fit and predict case where

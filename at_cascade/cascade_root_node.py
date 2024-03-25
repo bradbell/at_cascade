@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
-'''
+r'''
 {xrst_begin cascade_root_node}
 {xrst_spell
    var
@@ -218,5 +218,5 @@ def cascade_root_node(
       skip_start_job    = skip_start_job,
       max_number_cpu    = max_number_cpu,
       fit_type_list     = fit_type_list,
-      shared_unique     = 'con',
+      shared_unique     = '',
    )

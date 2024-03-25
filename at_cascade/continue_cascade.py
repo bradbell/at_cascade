@@ -71,7 +71,7 @@ for this parameter.
    *fit_goal_set* . (The intersection of disjoint sets is empty.)
 
 #. In the special case above, the suggested value for *shared_unique*
-   is *node_name* , where *node_name* is the name of one of the nodes
+   is ``_`` *node_name* , where *node_name* is the name of one of the nodes
    in the *fit_goal_set*.
 
 {xrst_end   continue_cascade}
@@ -89,7 +89,7 @@ def continue_cascade(
    fit_node_database = None,
    fit_goal_set      = None,
    fit_type_list     = [ 'both', 'fixed' ],
-   shared_unique     = 'con',
+   shared_unique     = '',
 # )
 ) :
    assert type(all_node_database) == str
