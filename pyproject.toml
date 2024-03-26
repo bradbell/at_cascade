@@ -2,11 +2,12 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
-
+# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
+#
 [build-system]
-requires      = ['hatchling']
-build-backend = 'hatchling.build'
-
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+# ----------------------------------------------------------------------------
 [project]
 name    = 'at_cascade'
 version = '2024.3.25'
@@ -14,14 +15,14 @@ authors = [
   {name  = 'Bradley M. Bell', email = 'bradbell@seanet.com'},
 ]
 description       = 'Cascading dismod_at from parent to child regions'
-license           = 'GPL-3.0-or-later'
+license           = { text = 'AGPL-3.0-or-later' }
 requires-python   = '>=3.8'
 classifiers       = [
 'Programming Language :: Python :: 3',
 'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
 'Operating System :: OS Independent',
 ]
-install_requires = [
+dependencies = [
   'matplotlib',
   'numpy',
   'scipy',
