@@ -1,7 +1,7 @@
 #! /bin/bash -e
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
@@ -27,7 +27,12 @@ do
       exit 1
    fi
 done
-echo_eval bin/check_tab.sh
+# -----------------------------------------------------------------------------
+list=$(ls bin/check_*.sh | sed -e '/check_all.sh/d' )
+for check in $list
+do
+   echo_eval $check
+done
 if which xrst >& /dev/null
 then
    echo_eval bin/run_xrst.sh

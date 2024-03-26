@@ -1,10 +1,8 @@
-#! /bin/bash -e
+#! /usr/bin/env bash
+set -e -u
 # SPDX-License-Identifier: GPL-3.0-or-later
-# SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
-# -----------------------------------------------------------------------------
-# This file was copied from Brad's xrst project and in the interest of keeping
-# the copyright simple, the UW was given full permission to use it as wanted.
+# SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
+# SPDX-FileContributor: 2020-24 Bradley M. Bell
 # -----------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
@@ -19,8 +17,7 @@ then
 fi
 if [ "$PASSWORD" == '' ]
 then
-   echo 'bin/upload.sh: Must first set PASSWORD using'
-   echo 'export PASSWORD=<value>'
+   echo 'bin/upload.sh: Must set PASSWORD environment variable before running'
    exit 1
 fi
 if [ -e dist ]
