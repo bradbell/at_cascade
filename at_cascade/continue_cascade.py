@@ -59,7 +59,7 @@ If it also fails, the corresponding job fails.
 
 shared_unique
 *************
-Under normal circumstances, you should use the default value ``con``
+Under normal circumstances, you should use the empty string (default value)
 for this parameter.
 
 #. Parallel runs of continue_cascade must use different values of
@@ -73,7 +73,8 @@ for this parameter.
 #. In the special case above, the suggested value for *shared_unique*
    is ``_`` *node_name* , where *node_name* is the name of one of the nodes
    in the *fit_goal_set*. It may be necessary to include the value
-   of the splitting covariate in *shared_unique* .
+   of the splitting covariate in *shared_unique*  .
+   (The splitting covariate is sex in the :ref:`csv.fit-name` case.)
 
 {xrst_end   continue_cascade}
 '''
