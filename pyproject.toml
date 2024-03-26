@@ -10,7 +10,7 @@ build-backend = "setuptools.build_meta"
 # ----------------------------------------------------------------------------
 [project]
 name    = 'at_cascade'
-version = '2024.3.25'
+version = '2024.3.26'
 authors = [
   {name  = 'Bradley M. Bell', email = 'bradbell@seanet.com'},
 ]
