@@ -5,7 +5,6 @@
 '''
 {xrst_begin create_shift_db}
 {xrst_spell
-   avgint
    dage
    dtime
    var

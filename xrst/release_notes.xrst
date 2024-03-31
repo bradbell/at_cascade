@@ -16,7 +16,6 @@ Release Notes for at_cascade
    dd
    mm
    inuse
-   pre
    py
    nfs
    Errno
@@ -198,20 +197,17 @@ comment as part of csv.fit.ode_method.no_ode.
 {xrst_spell
    cen
    copyfileobj
-   cov
    cv
    dd
    errno
    mm
    pini
    ptr
-   py
    readonly
    sam
    shutil
    std
    tru
-   xam
 }
 
 Release Notes for 2023
@@ -767,9 +763,7 @@ See the dismod_at documentation for the rate_eff_cov table for more details.
 -----------------------------------------------------------------------------
 {xrst_begin 2022}
 {xrst_spell
-   avgint
    const
-   cov
    dage
    dd
    distutils
