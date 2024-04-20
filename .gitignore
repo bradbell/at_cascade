@@ -6,10 +6,13 @@
 # ------------------
 # files at top level
 # ------------------
-# use to make git commits
-/git_commit.sh
+#
+# created by bin/git_commit.sh
+/git_commit.log
 # log of run_xrst.sh
+#
 /xrst.log
+#
 # bin/run_test.sh temporary file
 /run_test.tmp
 # ------------------------

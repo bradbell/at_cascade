@@ -49,7 +49,7 @@ do
    res=''
    while [ "$res" != 'delete' ] && [ "$res" != 'add' ] && [ "$res" != 'abort' ]
    do
-      read -p "$file is uknown to git, [delete/add/abort] ?" res
+      read -p "'$file' is unknown to git, [delete/add/abort] ?" res
    done
    if [ "$res" == 'delete' ]
    then
@@ -60,6 +60,8 @@ do
    then
       echo 'bin/git_commit.sh: aborting'
       exit 1
+   else
+      git add "$file"
    fi
 done
 # -----------------------------------------------------------------------------
