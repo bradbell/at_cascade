@@ -66,11 +66,12 @@ listed below:
 
 .. csv-table::
    :header: Name, Value
+   :delim: |
 
-   random_seed, chosen using current seconds reported by python time package.
-   compress_interval, use zero so that no intervals get compressed.
-   tolerance_fixed, this is set small, 1e-8, so we can check accuracy.
-   ode_step_size, step size use to approximate averages w.r.t. age, time.
+   random_seed| chosen using current seconds reported by python time package.
+   compress_interval| use zero so that no intervals get compressed.
+   tolerance_fixed| this is set small, 1e-8, so we can check accuracy.
+   ode_step_size| step size use to approximate averages w.r.t. age, time.
 
 The population covariate is used to weight the data; see
 :ref:`csv.fit@Input Files@covariate.csv@population` in the covariate.csv table.
