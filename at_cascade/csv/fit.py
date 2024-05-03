@@ -431,6 +431,7 @@ This function is different for each sex and location.
    the ``male`` and ``female`` sexes; i.e.,
    one cannot have data that is for ``both`` sexes
    when doing population weighting.
+   It would be easy to add a ``both`` weighting if the need arises.
 
 #. No population weighting is used during the predictions in
    :ref:`csv.predict@Output Files@fit_predict.csv` because these predictions
