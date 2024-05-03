@@ -423,8 +423,19 @@ population
 If this table has a covariate called ``population`` ,
 it is also used to weight the data as a function of age and time; e.g.,
 see :ref:`csv.population-name` .
-This function is different for each location.
-The :ref:`csv.simulate-name` routine does not yet do this data weighting.
+This function is different for each sex and location.
+
+#. The :ref:`csv.simulate-name` routine does not yet do this data weighting.
+
+#. Currently there are only population weightings for
+   the ``male`` and ``female`` sexes; i.e.,
+   one cannot have data that is for ``both`` sexes
+   when doing population weighting.
+
+#. No population weighting is used during the predictions in
+   :ref:`csv.predict@Output Files@fit_predict.csv` because these predictions
+   are for a single (age, time) point and not a rectangular (age, time) region.
+   (Hence, we can do predictions that correspond to sex equal to ``both`` ).
 
 fit_goal.csv
 ============
@@ -1778,7 +1789,7 @@ def create_all_node_database(
    )
 # ----------------------------------------------------------------------------
 # BEGIN_FIT
-# at_cascadde.csv.fit
+# at_cascade.csv.fit
 def fit(fit_dir, max_node_depth = None) :
    assert type(fit_dir) == str
    assert max_node_depth == None or type(max_node_depth) == int

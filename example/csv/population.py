@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -28,16 +28,17 @@ import at_cascade
    uniform uniform
 }
 
-Breakup Fitting and Prediction and Run in Parallel
-##################################################
+Population Weighting of Measurement Values
+##########################################
 
 ode_step_size
 *************
 The only integrand Sincidence does use the dismod_at ODE.
 Thus this step size is only
-used when approximating averages with respect to age and time
+used when approximating averages with respect to age and time.
+It is very small so that the predictions are very accurate.
 {xrst_code py}"""
-ode_step_size = 1.0
+ode_step_size = 0.01
 """{xrst_code}
 
 csv_file
@@ -69,8 +70,15 @@ listed below:
    random_seed, chosen using current seconds reported by python time package.
    compress_interval, use zero so that no intervals get compressed.
    tolerance_fixed, this is set small, 1e-8, so we can check accuracy.
-   absolute_covariates, population is an absolute and only covariate.
    ode_step_size, step size use to approximate averages w.r.t. age, time.
+   max_number_cpu,1
+
+The population covariate is used to weight the data; see
+:ref:`csv.fit@Input Files@covariate.csv@population` in the covariate.csv table.
+It does not matter if it is an
+:ref:`csv.fit@Input Files@option_fit.csv@absolute_covariates`
+because it does not appear in the
+:ref:`csv.fit@Input Files@mulcov.csv@covariate` column of the mulcov.csv table.
 
 {xrst_code py}"""
 random_seed    = str( int( time.time() ) )
@@ -78,7 +86,6 @@ csv_file['option_fit.csv']  = 'name,value\n'
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 csv_file['option_fit.csv'] += f'compress_interval,0.0 0.0\n'
 csv_file['option_fit.csv'] += f'tolerance_fixed,1e-8\n'
-csv_file['option_fit.csv'] += f'absolute_covariates,population\n'
 csv_file['option_fit.csv'] += f'ode_step_size,{ode_step_size}\n'
 """{xrst_code}
 
@@ -93,7 +100,7 @@ covariate.csv
 *************
 This example has one covariate,  population.
 Other cause mortality, omega, is constant and equal to 0.02.
-THe population depends on age (but not time):
+THe population depends on age (but not time or sex):
 {xrst_code py}"""
 population_age_0   = 1e4
 population_age_100 = 1e3
@@ -310,7 +317,7 @@ def main() :
       iota      = float( row['avg_integrand'] )
       check     = no_effect_iota(age)
       rel_error = (iota - check) / check
-      assert abs(rel_error) < 1e-2
+      assert abs(rel_error) < 1e-4
    #
    print('population.py: OK')
 #

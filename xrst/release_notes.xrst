@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
-# SPDX-FileContributor: 2023 Garland Culbreth
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2023-24 Garland Culbreth
 # ----------------------------------------------------------------------------
 {xrst_begin_parent release_notes}
 
@@ -28,6 +28,26 @@ mm-dd
 *****
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
+
+05-03
+=====
+A discussion of some subtle issues related to
+:ref:`csv.fit@Input Files@covariate.csv@population` weighting was added.
+In addition, the :ref:`csv.population-name` example was improved as followed:
+
+#. The :ref:`csv.population@ode_step_size` was made smaller.
+   so that the relative error tolerance could be changed from 1e-2
+   to 1e-5 .
+
+#. The absolute covariate setting was removed from
+   :ref:`csv.population@option_fit.csv` .
+
+Creating the :ref:`csv.predict@Output Files@fit_predict.csv` file
+was moved to the :ref:`csv.predict-name` routine on
+:ref:`2023-04-09 <2023@mm-dd@04-09>` .
+Some old documentation for fit_predict.csv,
+that was left under :ref:`csv.fit-name`, was removed.
+
 
 03-25
 =====
