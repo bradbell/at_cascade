@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -31,8 +31,7 @@ def main() :
    #
    # result_dir
    result_dir = 'build/example/csv'
-   if not os.path.exists(result_dir) :
-      os.makedirs(result_dir)
+   at_cascade.empty_directory(result_dir)
    #
    # write_table
    write_table = [

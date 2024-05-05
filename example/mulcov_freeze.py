@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin_parent mulcov_freeze}
@@ -549,8 +549,7 @@ def main() :
    # -------------------------------------------------------------------------
    # result_dir
    result_dir = 'build/example'
-   if not os.path.exists(result_dir) :
-      os.makedirs(result_dir)
+   at_cascade.empty_directory(result_dir)
    #
    # Create root_node.db
    root_node_database  = f'{result_dir}/root_node.db'
@@ -571,11 +570,7 @@ def main() :
    #
    # root_node_dir
    root_node_dir = f'{result_dir}/n0'
-   if os.path.exists(root_node_dir) :
-      # rmtree is very dangerous so make sure root_node_dir is as expected
-      assert root_node_dir == 'build/example/n0'
-      shutil.rmtree( root_node_dir )
-   os.makedirs(root_node_dir )
+   os.mkdir(root_node_dir)
    #
    # avgint_table
    # also erase avgint table in root node database

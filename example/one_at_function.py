@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin_parent one_at_function}
@@ -538,8 +538,7 @@ def main() :
    # -------------------------------------------------------------------------
    # result_dir
    result_dir = 'build/example'
-   if not os.path.exists(result_dir) :
-      os.makedirs(result_dir)
+   at_cascade.empty_directory(result_dir)
    #
    # Create root_node.db
    root_node_database  = f'{result_dir}/root_node.db'

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin_parent absolute_covariates}
@@ -504,8 +504,7 @@ def main() :
    # -------------------------------------------------------------------------
    # result_dir
    result_dir = option_all['result_dir']
-   if not os.path.exists(result_dir) :
-      os.makedirs(result_dir)
+   at_cascade.empty_directory(result_dir)
    #
    # Create root_node.db
    root_node_database  = option_all['root_node_database']
