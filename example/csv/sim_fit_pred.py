@@ -433,8 +433,7 @@ if __name__ == '__main__' :
    #
    # sim_dir
    sim_dir = 'build/example/csv/sim'
-   if not os.path.exists(sim_dir) :
-      os.makedirs(sim_dir)
+   at_cascade.empty_directory(sim_dir)
    #
    # sim
    sim(sim_dir)
