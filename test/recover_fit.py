@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
@@ -251,16 +251,6 @@ def main() :
       option_all              = option_all,
       mulcov_freeze_table     = mulcov_freeze_table,
    )
-   #
-   # root_node_dir
-   for node_name in [ 'n0', 'n1' ] :
-      root_node_dir = f'{result_dir}/{node_name}'
-      if os.path.exists(root_node_dir) :
-         # rmtree is dangerous so make sure root_node_dir is as expected
-         assert root_node_dir == f'build/test/{node_name}'
-         shutil.rmtree( root_node_dir )
-   root_node_dir = f'{result_dir}/n0'
-   os.makedirs(root_node_dir )
    #
    # cascade starting at root node
    at_cascade.cascade_root_node(
