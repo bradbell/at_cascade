@@ -336,9 +336,6 @@ def main() :
    # fit_dir
    fit_dir = 'build/example/csv'
    at_cascade.empty_directory(fit_dir)
-   root_node_name = 'n0'
-   if os.path.exists( fit_dir + '/' + root_node_name  ) :
-      shutil.rmtree( fit_dir + '/' + root_node_name  )
    #
    # write csv files
    for name in csv_file :
