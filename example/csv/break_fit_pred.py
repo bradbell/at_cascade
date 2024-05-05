@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -316,7 +316,9 @@ def computation(fit_dir) :
          file_name = f'{fit_dir}/{prefix}_predict.csv'
          file_out  = open(file_name, 'w')
          writer    = None
-         for start_job_name in [ 'n0.both', 'n0.female', 'n0.male' ] :
+         for start_job_name in [
+            'n0.both', 'n1.female', 'n1.male', 'n2.female', 'n2.male'
+         ] :
             file_name = f'{fit_dir}/predict/{prefix}_{start_job_name}.csv'
             file_in   = open(file_name, 'r')
             reader    = csv.DictReader(file_in)
@@ -392,7 +394,7 @@ def main() :
          # sex
          for sex in [ 'female', 'both', 'male' ] :
             #
-            # sample
+            # sample_list
             sample_list = list()
             for row in predict_table :
                if row['integrand_name'] == 'Sincidence' and \
@@ -400,9 +402,14 @@ def main() :
                         row['sex'] == sex :
                   #
                   sample_list.append(row)
+            if node == 'n0' and sex == 'both' :
+               assert len(sample_list) != 0
+            elif node != 'n0' and sex != 'both' :
+               assert len(sample_list) != 0
+            else :
+               assert len(sample_list) == 0
             #
-            if node == 'n0' or sex != 'both' :
-               assert len(sample_list) > 0
+            if len(sample_list) > 0 :
                sum_avgint = 0.0
                for row in sample_list :
                   sum_avgint   += float( row['avg_integrand'] )

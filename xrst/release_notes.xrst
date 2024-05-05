@@ -29,6 +29,12 @@ mm-dd
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
 
+05-05
+=====
+There was a bug in the :ref:`csv.break_fit_pred-name` example
+(starting with 03-25 below) that caused an assert.
+This has been fixed.
+
 05-03
 =====
 A discussion of some subtle issues related to
