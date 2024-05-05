@@ -540,10 +540,6 @@ if __name__ == '__main__' :
    sim_dir = 'build/example/csv/sim'
    at_cascade.empty_directory(sim_dir)
    #
-   # clear out a previous run
-   if os.path.exists( 'build/example/csv/fit/n0' ) :
-      shutil.rmtree( 'build/example/csv/fit/n0' )
-   #
    # fit_dir
    fit_dir = 'build/example/csv/fit'
    at_cascade.empty_directory(fit_dir)
