@@ -295,10 +295,6 @@ if __name__ == '__main__' :
    if not os.path.exists(sim_dir) :
       os.makedirs(sim_dir)
    #
-   # clear out a previous run
-   if os.path.exists( 'build/test/fit/n0' ) :
-      shutil.rmtree( 'build/test/fit/n0' )
-   #
    # fit_dir
    fit_dir = 'build/test/fit'
    at_cascade.empty_directory(fit_dir)

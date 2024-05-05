@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ---------------------------------------------------------------------------
 import os
 import sys
@@ -16,8 +16,7 @@ def main() :
    #
    # wrok_dir
    work_dir = 'build/test'
-   if not os.path.exists(work_dir) :
-      os.makedirs(work_dir)
+   at_cascade.empty_directory(work_dir)
    os.chdir(work_dir)
    #
    # example.db
