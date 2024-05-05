@@ -31,9 +31,12 @@ mm-dd
 
 05-05
 =====
-There was a bug in the :ref:`csv.break_fit_pred-name` example
-(starting with 03-25 below) that caused an assert.
-This has been fixed.
+#. There was a bug in the :ref:`csv.break_fit_pred-name` example
+   (starting with 03-25 below) that caused an assert.
+   This has been fixed.
+
+#. Use the new :ref:`empty_directory-name` routine to simplify the
+   :ref:`examples <example-name>` .
 
 05-03
 =====
