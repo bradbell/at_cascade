@@ -306,8 +306,7 @@ def main() :
    #
    # result_dir
    result_dir = 'build/test'
-   if not os.path.exists(result_dir) :
-      os.makedirs(result_dir)
+   at_cascade.empty_directory(result_dir)
    #
    # root_node.db
    root_node_database  = f'{result_dir}/root_node.db'

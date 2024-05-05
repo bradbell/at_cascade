@@ -296,8 +296,7 @@ def main() :
    # -------------------------------------------------------------------------
    # result_dir
    result_dir = option_all['result_dir']
-   if not os.path.exists(result_dir) :
-      os.makedirs(result_dir)
+   at_cascade.empty_directory(result_dir)
    #
    # Create root_node.db
    root_node_database  = option_all['root_node_database']
@@ -345,11 +344,7 @@ def main() :
    #
    # root_node_dir
    root_node_dir = f'{result_dir}/n0'
-   if os.path.exists(root_node_dir) :
-      # rmtree is very dangerous so make sure root_node_dir is as expected
-      assert root_node_dir == 'build/test/n0'
-      shutil.rmtree( root_node_dir )
-   os.makedirs(root_node_dir )
+   os.mkdir(root_node_dir)
    #
    # avgint_table
    # also erase avgint table in root node database
