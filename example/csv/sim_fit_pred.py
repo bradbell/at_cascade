@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # imports
 import time
@@ -441,8 +441,7 @@ if __name__ == '__main__' :
    #
    # fit_dir
    fit_dir = 'build/example/csv/fit'
-   if not os.path.exists(fit_dir) :
-      os.mkdir(fit_dir)
+   at_cascade.empty_directory(fit_dir)
    #
    # clear out a previous fit
    if os.path.exists( f'{fit_dir}/n0' ) :
