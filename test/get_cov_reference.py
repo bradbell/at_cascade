@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
@@ -20,8 +20,7 @@ import at_cascade
 def main() :
    # -------------------------------------------------------------------------
    # change into the build/test directory
-   if not os.path.exists('build/test') :
-      os.makedirs('build/test')
+   at_cascade.empty_directory('build/test')
    os.chdir('build/test')
    # ------------------------------------------------------------------------
    # all_node_database
