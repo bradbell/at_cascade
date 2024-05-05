@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -132,11 +132,7 @@ def main() :
    #
    # fit_dir
    fit_dir = 'build/test'
-   if not os.path.exists(fit_dir) :
-      os.makedirs(fit_dir)
-   root_node_name = 'n0'
-   if os.path.exists( fit_dir + '/' + root_node_name  ) :
-      shutil.rmtree( fit_dir + '/' + root_node_name  )
+   at_cascade.empty_directory(fit_dir)
    #
    # write csv files
    for name in csv_file :
