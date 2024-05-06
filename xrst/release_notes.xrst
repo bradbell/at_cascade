@@ -29,6 +29,11 @@ mm-dd
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
 
+05-06
+=====
+Use the new :ref:`extract_avgint-name` routine to simplify the
+:ref:`examples <example-name>` .
+
 05-05
 =====
 #. There was a bug in the :ref:`csv.break_fit_pred-name` example

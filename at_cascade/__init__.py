@@ -55,6 +55,7 @@ constant_table_list = [
    at_cascade/create_shift_db.py
    at_cascade/empty_avgint_table.py
    at_cascade/empty_directory.py
+   at_cascade/extract_avgint.py
    at_cascade/fit_one_job.py
    at_cascade/fit_one_process.py
    at_cascade/fit_or_root_class.py
@@ -98,6 +99,7 @@ from .create_job_table      import create_job_table
 from .create_shift_db       import create_shift_db
 from .empty_avgint_table    import empty_avgint_table
 from .empty_directory       import empty_directory
+from .extract_avgint        import extract_avgint
 from .fit_one_job           import fit_one_job
 from .fit_one_process       import fit_one_process
 from .fit_or_root_class     import fit_or_root_class

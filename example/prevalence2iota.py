@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
-'''
+r'''
 {xrst_begin_parent prevalence2iota}
 {xrst_spell
    avg
@@ -656,17 +656,8 @@ def main() :
    os.mkdir(root_node_dir)
    #
    # avgint_table
-   # also erase avgint table in root node database
-   connection      = dismod_at.create_connection(
-      root_node_database, new = False, readonly = False
-   )
-   avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
-   empty_table     = list()
-   message         = 'erase avgint table'
-   tbl_name        = 'avgint'
-   dismod_at.replace_table(connection, tbl_name, empty_table)
-   at_cascade.add_log_entry(connection, message)
-   connection.close()
+   # This also erases the avgint table from root_node_database
+   avgint_table = at_cascade.extract_avgint( root_node_database )
    #
    # cascade starting at root node
    at_cascade.cascade_root_node(
