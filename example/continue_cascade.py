@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
-'''
+r'''
 {xrst_begin_parent continue_cascade_xam}
 {xrst_spell
    dage
@@ -370,11 +370,7 @@ def two_fit_goal_set_example(result_dir) :
    #
    # root_fit_dir
    root_fit_dir = f'{result_dir}/n0'
-   if os.path.exists(root_fit_dir) :
-      # rmtree is very dangerous so make sure root_fit_dir is as expected
-      assert root_fit_dir == 'build/example/n0'
-      shutil.rmtree( root_fit_dir )
-   os.makedirs(root_fit_dir )
+   at_cascade.empty_directory(root_ft_dir)
    #
    # avgint_table
    # also erase avgint table in root node database
@@ -425,11 +421,7 @@ def one_fit_goal_set_example(result_dir ) :
    #
    # root_fit_dir
    root_fit_dir = f'{result_dir}/n0'
-   if os.path.exists(root_fit_dir) :
-      # rmtree is very dangerous so make sure root_fit_dir is as expected
-      assert root_fit_dir == 'build/example/n0'
-      shutil.rmtree( root_fit_dir )
-   os.makedirs(root_fit_dir )
+   at_cascade.empty_directory(root_fit_dir)
    #
    # avgint_table
    # also erase avgint table in root node database

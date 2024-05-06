@@ -442,10 +442,6 @@ if __name__ == '__main__' :
    fit_dir = 'build/example/csv/fit'
    at_cascade.empty_directory(fit_dir)
    #
-   # clear out a previous fit
-   if os.path.exists( f'{fit_dir}/n0' ) :
-      shutil.rmtree( f'{fit_dir}/n0' )
-   #
    # fit
    fit(sim_dir, fit_dir)
    #

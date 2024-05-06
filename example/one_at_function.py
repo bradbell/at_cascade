@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
-'''
+r'''
 {xrst_begin_parent one_at_function}
 {xrst_spell
    avg
@@ -555,16 +555,6 @@ def main() :
       all_node_database       = all_node_database,
       option_all              = option_all,
    )
-   #
-   # root_node_dir
-   for node_name in [ 'n0', 'n1' ] :
-      root_node_dir = f'{result_dir}/{node_name}'
-      if os.path.exists(root_node_dir) :
-         # rmtree is dangerous so make sure root_node_dir is as expected
-         assert root_node_dir == f'build/example/{node_name}'
-         shutil.rmtree( root_node_dir )
-   root_node_dir = f'{result_dir}/n1'
-   os.makedirs(root_node_dir )
    #
    # avgint_table
    # also erase avgint table in root node database

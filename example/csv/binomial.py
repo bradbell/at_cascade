@@ -277,8 +277,6 @@ if __name__ == '__main__' :
    # fit_dir
    fit_dir = 'build/test/fit'
    at_cascade.empty_directory(fit_dir)
-   if os.path.exists( 'build/test/fit/n0' ) :
-      shutil.rmtree( 'build/test/fit/n0' )
    #
    # fit
    fit(fit_dir)

@@ -565,14 +565,6 @@ def main() :
       fit_goal_table         = fit_goal_table,
    )
    #
-   # root_fit_dir
-   root_fit_dir = f'{result_dir}/n0'
-   if os.path.exists( root_fit_dir ) :
-      # rmtree is very dangerous so make sure root_fit_dir is as expected
-      assert root_fit_dir == 'build/example/n0'
-      shutil.rmtree( root_fit_dir )
-   os.makedirs( root_fit_dir )
-   #
    # cascade starting at root node
    at_cascade.cascade_root_node(
       all_node_database  = all_node_database ,
