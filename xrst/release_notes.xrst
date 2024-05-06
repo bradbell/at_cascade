@@ -38,6 +38,10 @@ mm-dd
 #. Move csv.predict_xam to :ref:`csv.prevalence2iota-name`
    (better name for this example).
 
+#. Change the :ref:`continue_cascade-name` example so that it checks
+   (as part of the at_cascade testing)
+   both the one and two fit goal set cases.
+
 05-05
 =====
 #. There was a bug in the :ref:`csv.break_fit_pred-name` example

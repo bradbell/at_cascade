@@ -359,7 +359,7 @@ def root_node_db(file_name) :
       option_table
    )
 # ----------------------------------------------------------------------------
-def two_fit_goal_set_example(result_dir) :
+def two_fit_goal_set_example(result_dir, avgint_table) :
    # -------------------------------------------------------------------------
    #
    # root_node_database
@@ -370,11 +370,7 @@ def two_fit_goal_set_example(result_dir) :
    #
    # root_fit_dir
    root_fit_dir = f'{result_dir}/n0'
-   at_cascade.empty_directory(root_ft_dir)
-   #
-   # avgint_table
-   # This also erases the avgint table from root_node_database
-   avgint_table = at_cascade.extract_avgint( root_node_database )
+   at_cascade.empty_directory(root_fit_dir)
    #
    # cascade starting at n0
    at_cascade.cascade_root_node(
@@ -402,7 +398,7 @@ def two_fit_goal_set_example(result_dir) :
          relative_tolerance = 1e-7,
       )
 # ----------------------------------------------------------------------------
-def one_fit_goal_set_example(result_dir ) :
+def one_fit_goal_set_example(result_dir, avgint_table) :
    #
    # root_node_database
    root_node_database  = option_all['root_node_database']
@@ -413,10 +409,6 @@ def one_fit_goal_set_example(result_dir ) :
    # root_fit_dir
    root_fit_dir = f'{result_dir}/n0'
    at_cascade.empty_directory(root_fit_dir)
-   #
-   # avgint_table
-   # This also erases the avgint table from root_node_database
-   avgint_table = at_cascade.extract_avgint( root_node_database )
    #
    # cascade starting at n0
    fit_goal_set = first_fit_goal_set | second_fit_goal_set
@@ -450,6 +442,10 @@ def main() :
    root_node_database  = option_all['root_node_database']
    root_node_db(root_node_database)
    #
+   # avgint_table
+   # This also erases the avgint table from root_node_database
+   avgint_table = at_cascade.extract_avgint( root_node_database )
+   #
    # all_node_database
    all_node_database = f'{result_dir}/all_node.db'
    at_cascade.create_all_node_db(
@@ -458,10 +454,10 @@ def main() :
    )
    #
    # example using continue_cascade
-   # two_fit_goal_set_example(result_dir)
+   two_fit_goal_set_example(result_dir, avgint_table)
    #
    # same calculation without continue_cascade
-   one_fit_goal_set_example(result_dir)
+   one_fit_goal_set_example(result_dir, avgint_table)
 #
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :
