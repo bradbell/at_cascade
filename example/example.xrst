@@ -18,7 +18,7 @@ The at_cascade Examples
    example/csv/csv_table.py
    example/csv/join_file_xam.py
    example/csv/population.py
-   example/csv/predict_xam.py
+   example/csv/prevalence2iota.py
    example/csv/shock_cov.py
    example/csv/sim_fit_pred.py
    example/csv/simulate_xam.py

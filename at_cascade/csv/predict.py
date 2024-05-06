@@ -33,7 +33,7 @@ Prototype
 
 Example
 *******
-:ref:`csv.predict_xam-name` .
+:ref:`csv.sim_fit_pred-name` .
 
 fit_dir
 *******

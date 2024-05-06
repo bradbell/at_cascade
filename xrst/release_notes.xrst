@@ -19,6 +19,7 @@ Release Notes for at_cascade
    py
    nfs
    Errno
+   xam
 }
 
 Release Notes for 2024
@@ -31,8 +32,11 @@ mm-dd
 
 05-06
 =====
-Use the new :ref:`extract_avgint-name` routine to simplify the
-:ref:`examples <example-name>` .
+#. Use the new :ref:`extract_avgint-name` routine to simplify the
+   :ref:`examples <example-name>` .
+
+#. Move csv.predict_xam to :ref:`csv.prevalence2iota-name`
+   (better name for this example).
 
 05-05
 =====
@@ -242,6 +246,7 @@ comment as part of csv.fit.ode_method.no_ode.
    shutil
    std
    tru
+   xam
 }
 
 Release Notes for 2023
@@ -555,7 +560,7 @@ Merge in other_database branch:
 =====
 #. Add the :ref:`csv.predict@Input Files@option_predict.csv@float_precision`
    to control the accuracy of the prediction files.
-#. Change the :ref:`csv.predict_xam-name` example to check for
+#. Change the :ref:`csv.prevalence2iota-name` example to check for
    extremely high accuracy in the corresponding
    :ref:`csv.predict@Output Files@tru_predict.csv` file.
 
@@ -566,7 +571,7 @@ Merge in other_database branch:
    tru_predict.csv and sam_predict.csv.
 #. Add :ref:`csv.simulate@Input Files@option_sim.csv@trace` to the
    option_sim.csv file.
-#. Change the csv_sim_and_fit example to :ref:`csv.predict_xam-name` .
+#. Change the csv_sim_and_fit example to :ref:`csv.prevalence2iota-name` .
 
 05-14
 =====

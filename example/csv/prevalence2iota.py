@@ -14,7 +14,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 """
-{xrst_begin csv.predict_xam}
+{xrst_begin csv.prevalence2iota}
 {xrst_spell
    exp
    iter
@@ -168,7 +168,7 @@ Source Code
    END_PYTHON
 }
 
-{xrst_end csv.predict_xam}
+{xrst_end csv.prevalence2iota}
 """
 # BEGIN_PYTHON
 #
@@ -487,6 +487,6 @@ if __name__ == '__main__' :
    # check
    check(sim_dir, fit_dir)
    #
-   print('csv_predict_xam: OK')
+   print('csv.prevalence2iota: OK')
    sys.exit(0)
 # END_PYTHON
