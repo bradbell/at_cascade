@@ -70,7 +70,7 @@ and prevalence does not depend on omega.
 If *true_iota* is the true iota for a node, the corresponding
 true prevalence is the following function of age:
 
-   1 - exp( - *iota* * *age* )
+   1 - exp( - *true_iota* * *age* )
 
 random_seed
 ***********
@@ -209,7 +209,7 @@ for node_name in [ 'n0', 'n1', 'n2' ] :
             row = f'{node_name},{sex},{age},{time},{true_omega_all}\n'
             sim_file['covariate.csv'] += row
 #
-# true_iota_n0, no_effect_rate.csv
+# no_effect_rate.csv
 sim_file['no_effect_rate.csv'] = 'rate_name,age,time,rate_truth\n'
 sim_file['no_effect_rate.csv'] += f'iota,0.0,1980.0,{true_iota_n0}\n'
 #
@@ -281,6 +281,12 @@ uniform_eps_1,uniform,0.02,,,1e-6,1.0
 random_prior,gaussian,0.0,0.2,,,,
 '''
 #
+# parent_rate.csv
+fit_file['parent_rate.csv'] = \
+'''rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value
+iota,50.0,2000.0,uniform_eps_1,,,
+'''
+#
 # child_rate.csv
 fit_file['child_rate.csv'] = \
 '''rate_name,value_prior
@@ -321,11 +327,6 @@ def fit(sim_dir, fit_dir) :
          src = f'{sim_dir}/{file_name}' ,
          dst = f'{fit_dir}/{file_name}' ,
       )
-   #
-   # fit_file['parent_rate.csv']
-   data = 'rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value\n'
-   data  += f'iota,50.0,2000.0,uniform_eps_1,,,\n'
-   fit_file['parent_rate.csv'] = data
    #
    # csv files in fit_file
    for name in fit_file :
