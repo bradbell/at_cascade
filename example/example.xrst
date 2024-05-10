@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 {xrst_begin example}
 
@@ -15,6 +15,7 @@ The at_cascade Examples
    example/continue_cascade.py
    example/csv/binomial.py
    example/csv/break_fit_pred.py
+   example/csv/coverage.py
    example/csv/csv_table.py
    example/csv/join_file_xam.py
    example/csv/population.py

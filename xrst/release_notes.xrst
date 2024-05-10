@@ -30,6 +30,10 @@ mm-dd
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
 
+05-10
+=====
+Add the :ref:`csv.coverage-name` example.
+
 05-06
 =====
 #. Use the new :ref:`extract_avgint-name` routine to simplify the
