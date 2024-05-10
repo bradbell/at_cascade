@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import time
 import math
@@ -1082,6 +1082,9 @@ def simulate(sim_dir) :
    #
    # global_option_value
    set_global_option_value( sim_dir, input_table['option_sim'] )
+   #
+   # random_seed
+   random.seed( int( global_option_value['random_seed'] ) )
    #
    #
    if global_option_value['trace'] :

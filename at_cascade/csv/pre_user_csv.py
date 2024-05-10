@@ -156,7 +156,8 @@ def pre_user_csv(
          # file_name
          file_name     = f'{fit_dir}/{predict_job_dir}/{prefix}_predict.csv'
          if not os.path.isfile(file_name) :
-            print( f'csv.predict: Cannot find {file_name}' )
+            msg = f'csv.predict: Cannot find {file_name}'
+            assert False, msg
          else :
             # predict_table
             predict_table =  at_cascade.csv.read_table(file_name)
