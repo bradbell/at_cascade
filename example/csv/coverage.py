@@ -83,6 +83,9 @@ This is the number of data points in each data set; i.e., each fit.
 {xrst_code py}'''
 n_data_per_fit  = 1
 '''{xrst_code}
+We can use a very small number of data points because the
+measurement noise is Gaussian and the model for Sincidence is a linear
+function of the model variable iota.
 
 Number Samples Per Fit
 **********************
