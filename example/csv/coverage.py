@@ -387,7 +387,7 @@ def posterior_truth(fit_dir) :
    #
    # table
    table = at_cascade.csv.read_table(
-      file_name = f'{fit_dir}/fit_predict.csv'
+      file_name = f'{fit_dir}/tru_predict.csv'
    )
    assert len(table) == n_grid
    #
@@ -532,7 +532,7 @@ def main() :
          print( msg )
          # print( f'fit_list =\n{fit_list}' )
          # 0.5 should be the probability of being within the limits
-         ok = ok and abs( probability - 0.5 ) <= 0.2
+         ok = ok and abs( probability - 0.5 ) <= 0.1
    assert ok
    #
    print('csv.coverage: OK')
