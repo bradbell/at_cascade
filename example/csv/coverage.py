@@ -19,11 +19,21 @@ In order to keep this example simple, and fast to execute:
 #. The only model variable is iota and it is constant
    with respect to age and time; see no_effect_rate.csv.
 
-#. The only integrand is Sincidence; see predict_integrand.csv below.
-
 #. The only node (location) is n0 and only the 'both' sex value is fit
    for this node; see node.csv and refit_split in option_fit.csv below.
 
+#. The measurements used the Sincidence integrand so that fitting
+   does not need to solve the ode and hence is faster; see simulate.csv.
+   (This example is checked every time the at_cascade automated tests
+   are run.)
+
+#. The predictions use the prevalence integrand;
+   see predict_integrand.csv below.
+   We use posterior samples,
+   instead of the standard deviation of the samples,
+   to approximate the confidence interval because
+   the asymptotic distribution of prevalence is not Gaussian
+   (The asymptotic distribution of iota is Gaussian).
 
 Age-Time Grid
 *************
@@ -71,7 +81,7 @@ Number Data Per Fit
 *******************
 This is the number of data points in each data set; i.e., each fit.
 {xrst_code py}'''
-n_data_per_fit  = 5
+n_data_per_fit  = 1
 '''{xrst_code}
 
 Number Samples Per Fit
@@ -80,7 +90,7 @@ This is the number of samples from the asymptotic distribution
 that generated for each fit.
 This is also the number of times each prediction is repeated.
 {xrst_code py}'''
-n_sample_per_fit = 50
+n_sample_per_fit = 40
 '''{xrst_code}
 The more samples per fit, the more accurate the standard deviation
 that approximates the posterior statistics.
@@ -92,16 +102,20 @@ The larger this number, the more accurate sample probability that
 the fit will be withing the confidence limits.
 {xrst_code py}'''
 number_fit = 40
+assert number_fit % 4 == 0
 '''{xrst_code}
-The more samples per fit, the more accurate the standard deviation.
+The more fits, the more accurate the test of how often the fit is in the
+confidence limits.
 The time to run this example divided by *number_fit* should be nearly constant.
+We require number_fit to be zero mod 4 because the lower and upper
+confidence limits correspond to 1/4 below and 1/4 above.
 
 Measurement Noise CV
 ********************
 This the coefficient of variation for the Gaussian measurement noise; i.e.,
 the measurement standard deviation is the measurement mean times this value.
 {xrst_code py}'''
-meas_std_cv = 0.5
+meas_std_cv = 1.0
 '''{xrst_code}
 
 Source Code
@@ -180,6 +194,7 @@ for simulate_id in range( n_data_per_fit ) :
 fit_file = dict()
 #
 # option_fit.csv
+# The ode step size should not matter because we are using iota_pos_rho_zero.
 # The random_seed will get replaced by the next_random_seed function below.
 fit_file['option_fit.csv']  =  \
 '''name,value
@@ -187,6 +202,8 @@ refit_split,false
 quasi_fixed,false
 tolerance_fixed,1e-8
 max_num_iter_fixed,50
+ode_method,iota_pos_rho_zero
+ode_step_size,1.0
 '''
 fit_file['option_fit.csv'] += f'number_sample,{n_sample_per_fit}\n'
 fit_file['option_fit.csv'] += 'random_seed,0\n'
@@ -207,7 +224,7 @@ n0
 # predict_integrand.csv
 fit_file['predict_integrand.csv'] = \
 '''integrand_name
-Sincidence
+prevalence
 '''
 #
 # prior.csv
@@ -247,7 +264,7 @@ def next_random_seed(option_file) :
 # -----------------------------------------------------------------------------
 # sim
 # Simulate the data for one fit
-def sim(sim_dir) :
+def run_sim(sim_dir) :
    #
    # write input csv files
    for name in sim_file :
@@ -272,7 +289,7 @@ def sim(sim_dir) :
 # -----------------------------------------------------------------------------
 # fit
 # Do one fit
-def fit(sim_dir, fit_dir) :
+def run_fit(sim_dir, fit_dir) :
    #
    # node.csv, covarite.csv
    for file_name in [ 'node.csv', 'covariate.csv' ] :
@@ -332,69 +349,100 @@ def fit(sim_dir, fit_dir) :
    # fit
    at_cascade.csv.fit(fit_dir)
 # -----------------------------------------------------------------------------
-# summary
-summary_dict   = dict()
-def weighted_residual(sim_dir, fit_dir) :
-   global summary_dict
+def posterior_fit(fit_dir) :
    #
    # n_grid
    n_grid = len(age_grid) * len(time_grid)
    #
-   # prefix
-   for prefix in [ 'tru', 'fit', 'sam' ] :
-      #
-      # table
-      table = at_cascade.csv.read_table(
-         file_name = f'{fit_dir}/{prefix}_predict.csv'
-      )
-      if prefix == 'sam' :
-         assert len(table) == n_sample_per_fit * n_grid
-      else :
-         assert len(table) == n_grid
-      #
-      # This groups together all rows for same node, age, time.
-      key   = lambda row : ( row['node_name'] , row['avgint_id'] )
-      table = sorted(table, key = key)
-      #
-      # summary_dict[ 'true', 'fit', or 'sam' ]
-      summary_dict[prefix] = list()
-      for row in table :
-         summary_dict[prefix].append( float( row['avg_integrand'] ) )
-   #
-   # summary_dict['std']
-   if 'std' not in summary_dict :
-      summary_dict['std'] = list()
-      for i_grid in range(n_grid) :
-         sumsq = 0.0
-         for i_sample in range( n_sample_per_fit ) :
-            sample = summary_dict['sam'][i_grid * n_sample_per_fit + i_sample]
-            diff   = sample - summary_dict['fit'][i_grid]
-            sumsq  += diff * diff
-         #
-         summary_dict['std'].append( numpy.sqrt( sumsq / n_sample_per_fit ) )
-   #
-   # eps99
-   eps99 = 99.0 * numpy.finfo(float).eps
-   #
-   # tru
-   # Check that the truth for Sincidence is equal to true_iota.
-   for tru in summary_dict['tru'] :
-      assert abs( 1.0 -  tru / true_iota) < eps99
+   # table
+   table = at_cascade.csv.read_table(
+      file_name = f'{fit_dir}/fit_predict.csv'
+   )
+   assert len(table) == n_grid
    #
    # fit
-   # Check that predicitons for Sincidence do not depend on or time.
-   # This might not be true for other integerands; e.g., prevalence.
-   fit    = summary_dict['fit'][0]
-   for other_fit in summary_dict['fit'] :
-      assert abs( 1.0 -  other_fit / fit) < eps99
+   fit = dict()
+   for age in age_grid :
+      fit[age] = dict()
    #
-   # residual
-   tru      = summary_dict['tru'][0]
-   fit      = summary_dict['fit'][0]
-   std      = summary_dict['std'][0]
-   residual = (fit - tru) / std
+   # predict
+   for row in table :
+      age           = float( row['age'] )
+      time          = float( row['time'] )
+      avg_integrand = float( row['avg_integrand'] )
+      fit[age][time] = avg_integrand
    #
-   return residual
+   return fit
+# -----------------------------------------------------------------------------
+def posterior_truth(fit_dir) :
+   #
+   # n_grid
+   n_grid = len(age_grid) * len(time_grid)
+   #
+   # table
+   table = at_cascade.csv.read_table(
+      file_name = f'{fit_dir}/fit_predict.csv'
+   )
+   assert len(table) == n_grid
+   #
+   # truth
+   truth = dict()
+   for age in age_grid :
+      truth[age] = dict()
+   #
+   # predict
+   for row in table :
+      age           = float( row['age'] )
+      time          = float( row['time'] )
+      avg_integrand = float( row['avg_integrand'] )
+      truth[age][time] = avg_integrand
+   #
+   return truth
+# -----------------------------------------------------------------------------
+def posterior_sample(fit_dir) :
+   #
+   # truth
+   truth = posterior_truth(fit_dir)
+   #
+   # fit
+   fit  = posterior_fit(fit_dir)
+   #
+   # n_grid
+   n_grid = len(age_grid) * len(time_grid)
+   #
+   # table
+   table = at_cascade.csv.read_table(
+      file_name = f'{fit_dir}/sam_predict.csv'
+   )
+   assert len(table) == n_grid * n_sample_per_fit
+   #
+   # sample_list
+   sample_list = dict()
+   for age in age_grid :
+      sample_list[age] = dict()
+      for time in time_grid :
+         sample_list[age][time] = list()
+   #
+   # sample_list
+   # We shift the samples from being centered on the fit to being centered
+   # on the truth. This enables us to check how often a fits falls within
+   # the confidence interval from the truth.
+   for row in table :
+      age           = float( row['age'] )
+      time          = float( row['time'] )
+      avg_integrand = float( row['avg_integrand'] )
+      shift         = truth[age][time] - fit[age][time]
+      assert age in age_grid
+      assert time in time_grid
+      sample_list[age][time].append( avg_integrand + shift )
+   #
+   # sample_list
+   for age in age_grid :
+      for time in time_grid :
+         assert len( sample_list[age][time] ) == n_sample_per_fit
+         sample_list[age][time] = sorted( sample_list[age][time] )
+   #
+   return sample_list
 # -----------------------------------------------------------------------------
 def main() :
    #
@@ -406,42 +454,80 @@ def main() :
    fit_dir = 'build/example/csv/fit'
    at_cascade.empty_directory(fit_dir)
    #
-   # residual
-   residual_list = list()
-   for i_data_set in range(number_fit) :
+   # fit_list
+   fit_list = dict()
+   for age in age_grid :
+      fit_list[age] = dict()
+      for time in time_grid :
+         fit_list[age][time] = list()
+   #
+   # fit_list, posterior_sam
+   for i_fit in range(number_fit) :
       #
       # fit_dir/n0
       at_cascade.empty_directory( f'{fit_dir}/n0' )
       os.rmdir( f'{fit_dir}/n0' )
       #
-      # sim
-      sim(sim_dir)
+      # run_sim
+      run_sim(sim_dir)
       #
-      # fit
-      fit(sim_dir, fit_dir)
+      # run_fit
+      run_fit(sim_dir, fit_dir)
       #
       # predict
       at_cascade.csv.predict(fit_dir, sim_dir)
       #
-      # residual
-      residual_list.append( weighted_residual(sim_dir, fit_dir) )
+      # posterior_sam
+      if i_fit == 0 :
+         posterior_sam = posterior_sample(fit_dir)
+      #
+      # fit_list
+      fit = posterior_fit(fit_dir)
+      for age in age_grid :
+         for time in time_grid :
+            fit_list[age][time].append( fit[age][time] )
    #
-   # confidence_theory, confidence_sample
-   # probability that residual is in interval [-0.68, +0.68]
-   cdf               = scipy.stats.norm.cdf
-   confidence_theory = cdf(+0.68) - cdf(-0.68)
-   count  = 0
-   for residual in residual_list :
-      if abs(residual) <= 0.68 :
-         count += 1
-   confidence_sample = count / number_fit
-   difference = confidence_sample - confidence_theory
-   msg  = f'random_seed = {random_seed}, '
-   msg += f'theory = {confidence_theory:.4f}, '
-   msg += f'sample = {confidence_sample:.4f}, '
-   msg += f'difference = {difference:.4f}'
-   print( msg )
-   assert abs(difference) < 0.1
+   # lower_index, upper_index
+   # sample index corresponding to 1/4 of the values below (above)
+   lower_index = round( n_sample_per_fit / 4 )
+   upper_index = round( n_sample_per_fit * 3 / 4 )
+   #
+   # sample_lower, sample_upper
+   sample_lower = dict()
+   sample_upper = dict()
+   for age in age_grid :
+      sample_lower[age] = dict()
+      sample_upper[age] = dict()
+      for time in time_grid :
+         sample_lower[age][time] = posterior_sam[age][time][lower_index]
+         sample_upper[age][time] = posterior_sam[age][time][upper_index]
+   #
+   #
+   # age
+   # Exclude age zero because prevalence at age zero is indentically zero.
+   ok = True
+   for age in age_grid[1 :] :
+      # time
+      for time in time_grid :
+         assert len(fit_list[age][time]) == number_fit
+         count = 0
+         lower = sample_lower[age][time]
+         upper = sample_upper[age][time]
+         for fit in fit_list[age][time] :
+            if lower < fit and fit < upper :
+               count += 1
+         probability = count / number_fit
+         msg  = f'random_seed = {random_seed}, '
+         msg += f'age = {age}, '
+         msg += f'time = {time}, '
+         msg += f'lower = {lower:.4f}, '
+         msg += f'upper = {upper:.4f}, '
+         msg += f'probability = {probability}'
+         print( msg )
+         # print( f'fit_list =\n{fit_list}' )
+         # 0.5 should be the probability of being within the limits
+         ok = ok and abs( probability - 0.5 ) <= 0.2
+   assert ok
    #
    print('csv.coverage: OK')
    sys.exit(0)
