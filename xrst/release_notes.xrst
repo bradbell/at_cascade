@@ -33,9 +33,14 @@ mm-dd
 
 05-11
 =====
-Change the :ref:`csv.coverage-name` example from testing predictions of
-Sincidence to testing predictions of prevalence.
-This tests a non-linear function of the model variable iota.
+#. Change the :ref:`csv.coverage-name` example from testing predictions of
+   Sincidence to testing predictions of prevalence.
+   This tests a non-linear function of the model variable iota.
+#. The csv.simulate routine was not using its
+   :ref:`csv.simulate@Input Files@option_sim.csv@random_seed` properly.
+   This has been fixed and only affected the
+   :ref:`csv.simulate@Output Files@data_sim.csv@meas_value` column
+   of the data_sim.csv output file.
 
 05-10
 =====
