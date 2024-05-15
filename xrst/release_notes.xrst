@@ -35,7 +35,7 @@ mm-dd
 =====
 #. The at_cascade version numbers have not been advancing since
    version 2024.3.26. This has been fixed and the version numbers from
-   2024.4.15 onward should be correct.
+   2024.5.15 onward should be correct.
 #. The :ref:`csv.fit@Input Files@option_fit.csv@root_node_sex` option
    was added to the csv.fit routine.
    The new :ref:`csv.start_node_sex-name` example was uses this option,
