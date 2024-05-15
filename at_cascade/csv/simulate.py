@@ -1128,7 +1128,9 @@ def simulate(sim_dir) :
    #
    # root_covariate_ref
    root_covariate_ref = at_cascade.csv.covariate_avg(
-      input_table['covariate'] , root_node_name
+      covariate_table = input_table['covariate'] ,
+      node_name       = root_node_name           ,
+      sex             = 'both'                   ,
    )
    absolute_covariates = global_option_value['absolute_covariates']
    if absolute_covariates != None :

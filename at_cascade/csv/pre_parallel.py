@@ -120,20 +120,29 @@ def pre_parallel(
    # root_node_name
    root_node_name = at_cascade.get_parent_node(root_node_database)
    #
-   # node_table
+   # node_table, covariate_table
    connection      = dismod_at.create_connection(
       root_node_database, new = False, readonly = True
    )
    node_table      = dismod_at.get_table_dict(connection, 'node')
+   covariate_table = dismod_at.get_table_dict(connection, 'covariate')
    connection.close()
+   #
+   # root_split_reference_id
+   root_split_reference_id = None
+   sex_value               = None
+   for row in covariate_table :
+      if row['covariate_name'] == 'sex' :
+            sex_value = row['reference']
+   for (row_id, row) in enumerate( at_cascade.csv.split_reference_table ) :
+      if row['split_reference_value'] == sex_value :
+         root_split_reference_id = row_id
+   assert root_split_reference_id != None
    #
    # root_node_id
    root_node_id = at_cascade.table_name2id(
       node_table, 'node', root_node_name
    )
-   #
-   # node_split_set
-   node_split_set = { root_node_id }
    #
    # split_reference_table
    connection      = dismod_at.create_connection(
@@ -143,10 +152,6 @@ def pre_parallel(
       dismod_at.get_table_dict(connection, 'split_reference')
    connection.close()
    assert split_reference_table == at_cascade.csv.split_reference_table
-   #
-   # root_split_reference_id
-   root_split_reference_id = 1
-   assert 'both' == split_reference_table[1]['split_reference_name']
    #
    # job_table
    job_table = at_cascade.create_job_table(
@@ -251,6 +256,7 @@ def pre_parallel(
             job_table,
             node_table,
             root_node_id,
+            root_split_reference_id,
             error_message_dict,
             job_status_name,
             shm_job_status.name,
@@ -271,6 +277,7 @@ def pre_parallel(
       job_table,
       node_table,
       root_node_id,
+      root_split_reference_id,
       error_message_dict,
       job_status_name,
       shm_job_status.name,
@@ -291,6 +298,7 @@ def pre_parallel(
       predict_job_id_list,
       node_table,
       root_node_id,
+      root_split_reference_id,
       root_node_database,
    )
    #

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 {xrst_begin wish_list}
 {xrst_spell
@@ -8,11 +8,19 @@
    meas
    meta
    std
-   newline
 }
 
 Wish List for at_cascade
 ########################
+
+Covariate Reference Values
+**************************
+The cascade uses :ref:`get_cov_reference-name` to set to covariate
+reference values for jobs below the root job.
+It is currently averaging the covariate values in the data table
+that correspond to each job.
+This is probably not ideal because a job might have very few data point.
+
 
 Meta Regression
 ***************
@@ -29,26 +37,9 @@ csv.fit
 root_node_name
 ==============
 Change :ref:`csv.fit@Input Files@option_fit.csv@root_node_name`
+and *root_node_sex*
 from an csv.fit option to an argument in the :ref:`csv.fit@Prototype`
 so that one can start with any node without changing the csv.fit input files.
-
-root_node_sex
-=============
-Add a *root_node_sex* argument to the csv.fit :ref:`csv.fit@Prototype` so that
-one could start with female, male, or both at the root node.
-The default for this argument would be both, the way it works now.
-Currently, :ref:`cascade_root_node-name` puts its root node fit in:
-|newline|
-|tab| *result_dir* ``/`` *root_node_name* ``/dismod.db``
-|newline|
-We could run the female and male fits from the same directory,
-and at the same time, if cascade_root_node put its root node fit in:
-|newline|
-|tab| *result_dir* ``/`` *root_node_sex* ``/`` *root_node_name* ``/dismod.db``
-|newline|
-For example,
-if ``1_Earth/dismod.db`` contains the root node fit for both sexes,
-``both/1_Earth/dismod.db`` would be the new location for that fit.
 
 Measurement Value Covariate
 ===========================

@@ -47,6 +47,10 @@ root_node_id
 ************
 is the node table id for the root node of the cascade.
 
+root_split_reference_id
+***********************
+is the split_reference table id for the root job of the cascade
+
 root_node_database
 ******************
 specifies the location of the dismod_at
@@ -66,6 +70,7 @@ def pre_user_csv(
    predict_job_id_list,
    node_table,
    root_node_id,
+   root_split_reference_id,
    root_node_database,
 ) :
    assert type(fit_dir)                    == str
@@ -80,14 +85,12 @@ def pre_user_csv(
    assert type(node_table)                 == list
    assert type( node_table[0] )            == dict
    assert type(root_node_id)               == int
+   assert type(root_split_reference_id)    == int
    assert type(root_node_database)         == str
    # END DEF
    #
    # split_reference_table
    split_reference_table = at_cascade.csv.split_reference_table
-   # root_split_reference_id
-   root_split_reference_id = 1
-   assert 'both' == split_reference_table[1]['split_reference_name']
    #
    # sex_value2name
    sex_value2name = dict()

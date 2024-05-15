@@ -15,7 +15,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 """
-{xrst_begin csv.break_fit_pred}
+{xrst_begin csv.start_node_sex}
 {xrst_spell
    const
    dage
@@ -29,8 +29,8 @@ import at_cascade
    uniform uniform
 }
 
-Breakup Fitting and Prediction and Run in Parallel
-##################################################
+Start Fitting a a Particular Node and Sex
+#########################################
 
 csv_file
 ********
@@ -48,7 +48,8 @@ csv_file['node.csv'] = \
 '''node_name,parent_name
 n0,
 n1,n0
-n2,n0
+n2,n1
+n3,n1
 '''
 """{xrst_code}
 
@@ -57,18 +58,19 @@ option_fit.csv
 This example uses the default value for all the options in option_fit.csv
 except for:
 
-#. random_seed is chosen using the python time package
+#. The root node name is n1 and root sex is female.
 #. refit_split is set to false
-#. max_number_cpu should be either 1 or None
+#. random_seed is chosen using the python time package
 
 {xrst_code py}"""
-max_number_cpu = None
+csv_file['option_fit.csv']  = \
+'''name,value
+root_node_name,n1
+root_node_sex,female
+refit_split,false
+'''
 random_seed    = str( int( time.time() ) )
-csv_file['option_fit.csv']  = 'name,value\n'
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
-csv_file['option_fit.csv'] += 'refit_split,false\n'
-if max_number_cpu == 1 :
-   csv_file['option_fit.csv'] += f'max_number_cpu,1\n'
 """{xrst_code}
 
 option_predict.csv
@@ -82,28 +84,29 @@ covariate.csv
 *************
 This example has one covariate called haqi.
 Other cause mortality, omega, is constant and equal to 0.02.
-The covariate only depends on the node and has values
-1.0, 0.5, 1.5 for nodes n0, n1, n2 respectively.
+The covariate depends on the node and sex
 {xrst_code py}"""
 csv_file['covariate.csv'] = \
 '''node_name,sex,age,time,omega,haqi
 n0,female,50,2000,0.02,1.0
-n1,female,50,2000,0.02,0.5
-n2,female,50,2000,0.02,1.5
-n0,male,50,2000,0.02,1.0
-n1,male,50,2000,0.02,0.5
-n2,male,50,2000,0.02,1.5
+n1,female,50,2000,0.02,1.0
+n2,female,50,2000,0.02,0.5
+n3,female,50,2000,0.02,1.5
+n0,male,50,2000,0.02,1.2
+n1,male,50,2000,0.02,1.2
+n2,male,50,2000,0.02,0.7
+n3,male,50,2000,0.02,1.7
 '''
 """{xrst_code}
 
 fit_goal.csv
 ************
-The goal is to fit the model for nodes n1 and n2.
+The goal is to fit the model for nodes n2 and n3.
 {xrst_code py}"""
 csv_file['fit_goal.csv'] = \
 '''node_name
-n1
 n2
+n3
 '''
 """{xrst_code}
 
@@ -163,8 +166,8 @@ between the rate for a node being fit and the rate for one of its child nodes.
 These random effects are different for each child node.
 The are constant in age and time so age and time do not appear
 in child_rate.csv.
-In this example, when fitting n0, the child nodes are n1 and n2.
-When fitting n1 and n2, there are no child nodes (no random effects).
+In this example, when fitting n1, the child nodes are n2 and n3.
+When fitting n2 and n3, there are no child nodes (no random effects).
 Our prior for the random effects is gauss_01.
 {xrst_code py}"""
 csv_file['child_rate.csv'] = \
@@ -202,12 +205,12 @@ header += 'time_lower, time_upper, meas_value, meas_std, hold_out, '
 header += 'density_name, eta, nu'
 csv_file['data_in.csv'] = header + \
 '''
-0, Sincidence, n0, female, 0,  10, 1990, 2000, 0.0000, 0.001, 0, gaussian, ,
-1, Sincidence, n0, male,   0,  10, 1990, 2000, 0.0000, 0.001, 0, gaussian, ,
-2, Sincidence, n1, female, 10, 20, 2000, 2010, 0.0000, 0.001, 0, gaussian, ,
-3, Sincidence, n1, male,   10, 20, 2000, 2010, 0.0000, 0.001, 0, gaussian, ,
-4, Sincidence, n2, female, 20, 30, 2010, 2020, 0.0000, 0.001, 0, gaussian, ,
-5, Sincidence, n2, male,   20, 30, 2010, 2020, 0.0000, 0.001, 0, gaussian, ,
+0, Sincidence, n1, female, 0,  10, 1990, 2000, 0.0000, 0.001, 0, gaussian, ,
+1, Sincidence, n1, male,   0,  10, 1990, 2000, 0.0000, 0.001, 0, gaussian, ,
+2, Sincidence, n2, female, 10, 20, 2000, 2010, 0.0000, 0.001, 0, gaussian, ,
+3, Sincidence, n2, male,   10, 20, 2000, 2010, 0.0000, 0.001, 0, gaussian, ,
+4, Sincidence, n3, female, 20, 30, 2010, 2020, 0.0000, 0.001, 0, gaussian, ,
+5, Sincidence, n3, male,   20, 30, 2010, 2020, 0.0000, 0.001, 0, gaussian, ,
 '''
 csv_file['data_in.csv'] = csv_file['data_in.csv'].replace(' ', '')
 """{xrst_code}
@@ -218,16 +221,6 @@ the following code:
    # END_MEAS_VALUE
 }
 
-breakup_computation
-*******************
-Sometimes it is useful to fit some nodes, look at the results,
-and if they are good, continue the computation to the entire
-fit goal set. This will be done during if breakup_computation is true
-(see source code below):
-{xrst_code py}"""
-breakup_computation = True
-"""{xrst_code}
-
 Source Code
 ***********
 {xrst_literal
@@ -235,103 +228,9 @@ Source Code
    END_PROGRAM
 }
 
-{xrst_end csv.break_fit_pred}
+{xrst_end csv.start_node_sex}
 """
 # BEGIN_PROGRAM
-#
-# computation
-def computation(fit_dir) :
-   #
-   # csv.fit, csv.predict
-   if not breakup_computation:
-      at_cascade.csv.fit(fit_dir)
-      at_cascade.csv.predict(fit_dir)
-   else :
-      # csv.fit: Just fit the root node
-      # Since refit_split is false, this will only fit include n0.both.
-      at_cascade.csv.fit(fit_dir, max_node_depth = 0)
-      #
-      # all_node_database
-      all_node_database = f'{fit_dir}/all_node.db'
-      #
-      # Run two continues starting at n0.both.
-      # If max_number_cpu != 1, run them in parallel.
-      # p_fit
-      p_fit = dict()
-      fit_node_database = f'{fit_dir}/n0/dismod.db'
-      fit_type          = [ 'both', 'fixed']
-      for node_name in [ 'n1' , 'n2' ] :
-         fit_goal_set  = { node_name }
-         shared_unique = '_' + node_name
-         args          = (
-            all_node_database,
-            fit_node_database,
-            fit_goal_set,
-            fit_type,
-            shared_unique,
-         )
-         if max_number_cpu == 1 :
-            at_cascade.continue_cascade( *args )
-         else :
-            p_fit[node_name] = multiprocessing.Process(
-               target = at_cascade.continue_cascade , args = args ,
-            )
-            p_fit[node_name].start()
-      #
-      # Run one predict for n0.both using this process
-      # If max_number_cpu != 1, this is in parallel with the continues above
-      p_predict      = dict()
-      sim_dir        = None
-      start_job_name = 'n0.both'
-      max_job_depth  = 0
-      args            = (fit_dir, sim_dir, start_job_name, max_job_depth)
-      at_cascade.csv.predict( *args )
-      #
-      # If max_number_cpu != 1, wait for continue jobs to finish
-      for key in p_fit :
-         p_fit[key].join()
-      #
-      #
-      # Run predict starting at
-      # n1.female, n1.male, n2.female, n2.male.
-      # If max_number_cpu != 1, run them in parallel.
-      sim_dir       = None
-      max_job_depth = 1
-      for node_name in [ 'n1', 'n2' ] :
-         for sex in [ 'female', 'male' ] :
-            start_job_name = f'{node_name}.{sex}'
-            args           = (fit_dir, sim_dir, start_job_name, max_job_depth)
-            if max_number_cpu == 1 :
-               at_cascade.csv.predict(*args)
-            else :
-               p_predict[sex] = multiprocessing.Process(
-                  target = at_cascade.csv.predict, args = args,
-                )
-               p_predict[sex].start()
-      #
-      # If max_number_cpu != 1, wait for predict jobs to finish
-      for key in p_predict :
-         p_predict[key].join()
-      #
-      # predict
-      # fit_predict.csv, sam_predict.csv
-      for prefix in [ 'fit' , 'sam' ] :
-         file_name = f'{fit_dir}/{prefix}_predict.csv'
-         file_out  = open(file_name, 'w')
-         writer    = None
-         for start_job_name in [
-            'n0.both', 'n1.female', 'n1.male', 'n2.female', 'n2.male'
-         ] :
-            file_name = f'{fit_dir}/predict/{prefix}_{start_job_name}.csv'
-            file_in   = open(file_name, 'r')
-            reader    = csv.DictReader(file_in)
-            for row in reader :
-               if writer == None :
-                  writer = csv.DictWriter(file_out, fieldnames = row.keys() )
-                  writer.writeheader()
-               writer.writerow(row)
-         file_out.close()
-   return
 #
 # main
 def main() :
@@ -347,17 +246,26 @@ def main() :
       file_ptr.write( csv_file[name] )
       file_ptr.close()
    #
-   # node2haqi, haqi_avg
-   node2haqi  = { 'n0' : 1.0, 'n1' : 0.5, 'n2' : 1.5 }
+   # node_sex2haqi
    file_name  = f'{fit_dir}/covariate.csv'
    table      = at_cascade.csv.read_table( file_name )
-   haqi_sum   = 0.0
+   node_sex2haqi = dict()
    for row in table :
       node_name = row['node_name']
-      haqi      = float( row['haqi'] )
-      haqi_sum += haqi
-      assert haqi == node2haqi[node_name]
-   haqi_avg = haqi_sum / len(table)
+      sex       = row['sex']
+      haqi      = float(  row['haqi'] )
+      key       = (node_name, sex)
+      if key not in node_sex2haqi :
+         node_sex2haqi[key] = list()
+      node_sex2haqi[key].append( haqi )
+   #
+   # haqi_avg
+   haqi_sum = 8.0
+   for key in node_sex2haqi :
+      value              = node_sex2haqi[key]
+      node_sex2haqi[key] = sum(value) / len(value)
+      haqi_sum          += node_sex2haqi[key]
+   haqi_avg = haqi_sum / len(node_sex2haqi)
    #
    # data_in.csv
    float_format      = '{0:.5g}'
@@ -367,19 +275,23 @@ def main() :
    table             = at_cascade.csv.read_table( file_name )
    for row in table :
       node_name      = row['node_name']
+      sex            = row['sex']
       integrand_name = row['integrand_name']
       assert integrand_name == 'Sincidence'
       #
       # BEGIN_MEAS_VALUE
-      haqi              = node2haqi[node_name]
+      haqi              = node_sex2haqi[(node_name, sex)]
       effect            = true_mulcov_haqi * (haqi - haqi_avg)
       iota              = math.exp(effect) * no_effect_iota
       row['meas_value'] = float_format.format( iota )
       # END_MEAS_VALUE
    at_cascade.csv.write_table(file_name, table)
    #
-   # computation
-   computation(fit_dir)
+   # fit
+   at_cascade.csv.fit(fit_dir)
+   #
+   # predict
+   at_cascade.csv.predict(fit_dir)
    #
    # prefix
    for prefix in [ 'fit' , 'sam' ] :
@@ -389,7 +301,7 @@ def main() :
       predict_table = at_cascade.csv.read_table(file_name)
       #
       # node
-      for node in [ 'n0', 'n1', 'n2' ] :
+      for node in [ 'n1', 'n2', 'n3' ] :
          # sex
          for sex in [ 'female', 'both', 'male' ] :
             #
@@ -401,12 +313,10 @@ def main() :
                         row['sex'] == sex :
                   #
                   sample_list.append(row)
-            if node == 'n0' and sex == 'both' :
-               assert len(sample_list) != 0
-            elif node != 'n0' and sex != 'both' :
-               assert len(sample_list) != 0
-            else :
+            if sex != 'female' :
                assert len(sample_list) == 0
+            else :
+               assert len(sample_list) > 0
             #
             if len(sample_list) > 0 :
                sum_avgint = 0.0
@@ -417,8 +327,14 @@ def main() :
                effect    = true_mulcov_haqi * (haqi - haqi_avg)
                iota      = math.exp(effect) * no_effect_iota
                rel_error = (avgint - iota) / iota
-               assert abs(rel_error) < 0.01
-   print('break_fit_pred.py: OK')
+               #
+               assert haqi == node_sex2haqi[ (node, sex) ]
+               if prefix == 'sam' :
+                  assert abs(rel_error) < 1e-2
+               else :
+                  assert abs(rel_error) < 1e-4
+
+   print('start_node_sex.py: OK')
 #
 main()
 # END_PROGRAM

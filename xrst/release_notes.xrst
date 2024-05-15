@@ -31,6 +31,14 @@ mm-dd
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
 
+05-15
+=====
+#. The :ref:`csv.fit@Input Files@option_fit.csv@root_node_sex` option
+   was added to the csv.fit routine.
+   The new :ref:`csv.start_node_sex-name` example was uses this option,
+   and the root_node_name option.
+#. Add the :ref:`wish_list@Covariate Reference Values` wish list item.
+
 05-11
 =====
 #. Change the :ref:`csv.coverage-name` example from testing predictions of
@@ -168,7 +176,8 @@ This has been fixed.
 #. Remove the Predictions wish list item because it was completed on 2023,
    :ref:`2023@mm-dd@12-22` .
 
-#. Add the :ref:`wish_list@csv.fit@root_node_sex` item to the wish list.
+#. Add the root_node_sex item to the wish list
+   (it was completed on 2024-05-13).
 
 02-02
 =====

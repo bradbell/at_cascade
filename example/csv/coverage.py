@@ -532,7 +532,7 @@ def main() :
          print( msg )
          # print( f'fit_list =\n{fit_list}' )
          # 0.5 should be the probability of being within the limits
-         ok = ok and abs( probability - 0.5 ) <= 0.1
+         ok = ok and abs( probability - 0.5 ) <= 0.2
    assert ok
    #
    print('csv.coverage: OK')

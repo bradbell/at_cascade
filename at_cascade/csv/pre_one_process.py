@@ -57,6 +57,10 @@ root_node_id
 ************
 is the node table id for the root node of the cascade.
 
+root_split_reference_id
+***********************
+is the split_reference table id for the root job of the cascade
+
 error_message_dict
 ******************
 For each :ref:`create_job_table@job_table@job_name` in the job table
@@ -161,6 +165,7 @@ def pre_one_process(
    job_table,
    node_table,
    root_node_id,
+   root_split_reference_id,
    error_message_dict,
    job_status_name,
    shared_job_status_name,
@@ -176,6 +181,7 @@ def pre_one_process(
    assert type(node_table)                 == list
    assert type(node_table[0])              == dict
    assert type(root_node_id)               == int
+   assert type(root_split_reference_id)    == int
    assert type(error_message_dict)         == dict
    assert type(job_status_name)            == list
    assert type( job_status_name[0] )       == str
@@ -206,10 +212,6 @@ def pre_one_process(
    #
    # float_precision
    float_precision = option_predict['float_precision']
-   #
-   # root_split_reference_id
-   root_split_reference_id = 1
-   assert 'both' == split_reference_table[1]['split_reference_name']
    #
    # n_skip
    n_skip = None

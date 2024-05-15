@@ -23,6 +23,7 @@ The at_cascade Examples
    example/csv/shock_cov.py
    example/csv/sim_fit_pred.py
    example/csv/simulate_xam.py
+   example/csv/start_node_sex.py
    example/max_fit_option.py
    example/mulcov_freeze.py
    example/no_ode_xam.py

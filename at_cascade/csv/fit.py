@@ -385,6 +385,16 @@ Sometimes it is useful to set :ref:`csv.fit@max_node_depth` to zero
 and change *root_node_name* to a particular node that the
 cascade is having trouble fitting. This can greatly speed up model building.
 
+root_node_sex
+-------------
+This is either ``female`` , ``male`` , or ``both``.
+If it is ``both``, then the ``female`` and ``male`` directories
+occur directory below the directory for the root node; i.e.,
+the sexes are split just after fitting the root node..
+If it is not ``both``, there is no ``female`` or ``male`` directory
+directly below the directory for the root node and all of the fits
+are for the *root_node_sex* .
+
 sample_method
 -------------
 This string specifies the :ref:`option_all_table@sample_method` .
@@ -976,6 +986,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'random_seed'           : (int ,  random_seed )       ,
       'refit_split'           : (bool,  True )              ,
       'root_node_name'        : (str,   top_node_name)      ,
+      'root_node_sex'         : (str,   'both')             ,
       'sample_method'         : (str,   'asymptotic')       ,
       'shared_memory_prefix'  : (str,   user)               ,
       'tolerance_fixed'       : (float, 1e-4)               ,
@@ -1145,17 +1156,19 @@ def create_root_node_database(fit_dir) :
       node_name   = row['node_name']
       node_set.add( node_name )
    #
-   # root_node_name, random_seed
+   # root_node_name, root_node_sex, random_seed
    root_node_name = global_option_value['root_node_name']
+   root_node_sex  = global_option_value['root_node_sex']
    random_seed    = global_option_value['random_seed']
    #
    # root_covariate_ref
    root_covariate_ref = at_cascade.csv.covariate_avg(
-      covariate_table, root_node_name
+      covariate_table, root_node_name, root_node_sex
    )
    #
    # covariate_list
    covariate_list = list( root_covariate_ref.keys() )
+   assert not 'sex' in covariate_list
    #
    # root_covariate_ref
    absolute_covariates = global_option_value['absolute_covariates']
@@ -1177,9 +1190,10 @@ def create_root_node_database(fit_dir) :
          assert False, msg
    #
    # dismod_at_covariate_table
+   value = at_cascade.csv.sex_name2value[root_node_sex]
    dismod_at_covariate_table = [
-      { 'name': 'sex', 'reference': 0.0, 'max_difference' : 0.5 }  ,
-      { 'name': 'one', 'reference': 0.0, 'max_difference' : None } ,
+      { 'name': 'sex', 'reference': value, 'max_difference' : 0.5 }  ,
+      { 'name': 'one', 'reference': 0.0,   'max_difference' : None } ,
    ]
    for covariate_name in covariate_list :
       dismod_at_covariate_table.append({
@@ -1648,11 +1662,26 @@ def create_all_node_database(
          connection = connection, tbl_name = name)
    connection.close()
    #
+   # root_node_sex
+   root_node_sex = global_option_value['root_node_sex']
+   #
    # split_reference_table
    split_reference_table = at_cascade.csv.split_reference_table
+   assert split_reference_table[0]['split_reference_name'] == 'female'
+   assert split_reference_table[1]['split_reference_name'] == 'both'
+   assert split_reference_table[2]['split_reference_name'] == 'male'
+   #
+   # root_split_reference_id
+   split_reference_table = at_cascade.csv.split_reference_table
+   root_split_reference_id = at_cascade.table_name2id(
+      table    = split_reference_table ,
+      tbl_name = 'split_reference'     ,
+      row_name = root_node_sex         ,
+   )
    #
    # root_node_name
    root_node_name = at_cascade.get_parent_node(database)
+   assert root_node_name == global_option_value['root_node_name']
    #
    # option_all
    root_node_database     = f'{fit_dir}/root_node.db'
@@ -1695,7 +1724,10 @@ def create_all_node_database(
          option_all['no_ode_ignore'] = no_ode_ignore
    #
    # node_split_table
-   node_split_table = [ { 'node_name' : root_node_name } ]
+   if root_node_sex == 'both' :
+      node_split_table = [ { 'node_name' : root_node_name } ]
+   else :
+      node_split_table = list()
    #
    # mulcov_freeze_table
    mulcov_freeze_table = list()
@@ -1703,12 +1735,11 @@ def create_all_node_database(
       covariate_id    = row['covariate_id']
       cov_row         = root_node_table['covariate'][covariate_id]
       covariate_name = cov_row['covariate_name']
-      if covariate_name == 'sex' :
-         assert split_reference_table[1]['split_reference_name'] == 'both'
+      if covariate_name == 'sex' or root_node_sex != 'both' :
          row = {
-            'fit_node_name'      : root_node_name     ,
-            'split_reference_id' : 1                  ,
-            'mulcov_id'          : mulcov_id          ,
+            'fit_node_name'      : root_node_name           ,
+            'split_reference_id' : root_split_reference_id  ,
+            'mulcov_id'          : mulcov_id                ,
          }
          mulcov_freeze_table.append(row)
       else :

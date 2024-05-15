@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin csv.covariate_avg}
@@ -29,15 +29,28 @@ covariate_average
 This return is a dict where the keys are the covariates in covariate.csv
 and the values are the average of the corresponding covariate.
 
+sex
+***
+is the sex that this average is for. If it is female or male,
+only that sex is included in the average.
+If it is both, both sexes are included in the average.
+
 {xrst_end csv.covariate_avg}
 '''
 # BEGIN_SYNTAX
 # at_cascade.csv.covariate_avg
-def covariate_avg(covariate_table, node_name) :
+def covariate_avg(covariate_table, node_name, sex) :
    assert type(covariate_table) == list
    assert type(covariate_table[0]) == dict
    assert type(node_name) == str
+   assert sex in [ 'female', 'male', 'both' ]
    # END_SYNTAX
+   #
+   # include_sex
+   if sex == 'both' :
+      include_sex = { 'female', 'male' }
+   else :
+      include_sex = { sex }
    #
    # covariate_name_list
    covariate_name_list = list()
@@ -62,13 +75,17 @@ def covariate_avg(covariate_table, node_name) :
          msg += 'sex = {sex} is not female or male'
          assert False, msg
       #
-      if node_name == row['node_name'] :
+      if node_name == row['node_name'] and row['sex'] in include_sex :
          count += 1
          for covariate_name in covariate_name_list :
             covariate_sum[covariate_name] += float( row[covariate_name] )
    #
    if count == 0 :
-      msg  = f'node "{node_name}" does not appear in covariate.csv'
+      if sex == 'both' :
+         msg  = f'node "{node_name}" does not appear '
+      else :
+         msg  = f'node "{node_name}" does not appear with sex "{sex}" '
+      msg += 'in covariate.csv'
       assert False, msg
    #
    # covariate_average
