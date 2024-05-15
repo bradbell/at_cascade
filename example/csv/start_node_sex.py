@@ -42,7 +42,6 @@ csv_file = dict()
 
 node.csv
 ********
-For this example the root node, n0, has two children, n1 and n2.
 {xrst_code py}"""
 csv_file['node.csv'] = \
 '''node_name,parent_name
@@ -51,7 +50,15 @@ n1,n0
 n2,n1
 n3,n1
 '''
-"""{xrst_code}
+r"""{xrst_code}
+The following is a diagram of this node tree::
+
+        n0
+        |
+        n1
+       /  \
+     n2    n3
+
 
 option_fit.csv
 **************
