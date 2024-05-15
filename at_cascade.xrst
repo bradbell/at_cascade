@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 {xrst_begin at_cascade}
 {xrst_spell
@@ -13,7 +13,7 @@ Cascading Dismod_at Analysis From Parent To Child Regions
 
 Version
 *******
-at_cascade-2024.3.26
+at_cascade-2024.5.15
 
 Git Repository
 **************
