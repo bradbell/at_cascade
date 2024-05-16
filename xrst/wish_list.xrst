@@ -4,6 +4,7 @@
 # ----------------------------------------------------------------------------
 {xrst_begin wish_list}
 {xrst_spell
+   avgint
    attaches
    meas
    meta
@@ -13,6 +14,15 @@
 Wish List for at_cascade
 ########################
 
+avgint Table
+************
+Change :ref:`cascade_root_node-name` so that upon return
+the avgint table in each dismod.db database corresponds to the predictions
+for all the possible child jobs corresponding to that database.
+In addition, change :ref:`csv.predict-name` so that upon return
+the avgint table in each ancestor.db database corresponds to the prediction
+for the corresponding job; i.e., (node, sex) pair.
+
 Covariate Reference Values
 **************************
 The cascade uses :ref:`get_cov_reference-name` to set to covariate
@@ -20,7 +30,6 @@ reference values for jobs below the root job.
 It is currently averaging the covariate values in the data table
 that correspond to each job.
 This is probably not ideal because a job might have very few data point.
-
 
 Meta Regression
 ***************
@@ -33,13 +42,6 @@ that are not modeled.
 
 csv.fit
 *******
-
-root_node_name
-==============
-Change :ref:`csv.fit@Input Files@option_fit.csv@root_node_name`
-and *root_node_sex*
-from an csv.fit option to an argument in the :ref:`csv.fit@Prototype`
-so that one can start with any node without changing the csv.fit input files.
 
 Measurement Value Covariate
 ===========================
@@ -62,7 +64,6 @@ the covariate age-time grid.
 
 See Priors for Each Fit
 =======================
-
 Outputting prior std or samples so we have uncertainty of the priors.
 
 Retry Fit
@@ -76,9 +77,19 @@ Estimate Standard Deviations
 Output the standard deviation for each fit value; i.e., the square root
 of the diagonal of corresponding covariance matrix entry.
 
+covariate.csv
+=============
+The covariate quick fix in dismod_at that attaches
+covariate functions to locations,
+instead of covariate values to data points.
+This may use a lot of memory and take a while to set up.
+One partial solution would be to not put all the nodes in the
+:ref:`csv.simulate@Input Files@covariate.csv` file.
+We could use the closest ancestor's covariate and omega values
+when a node is not in covariate.csv.
+
 Duration
 ********
-
 Calculate average duration for incident cases given future remission and
 mortality trends. See the equation for duration as a function of age and
 time from his DisMod III book, section 8.2  in
@@ -94,23 +105,12 @@ covariate is split at a leaf node.)
 
 ode_step_size
 *************
-Want to be able to used a bigger ode step size when there is a shock
+Want to be able to use a bigger ode step size when there is a shock
 or other rapid change for a particular age or time.
 
 No Data
 *******
 A fit is not necessary, and should be skipped,
 when there is no data for the fit.
-
-covariate.csv
-*************
-The covariate quick fix in dismod_at that attaches
-covariate functions to locations,
-instead of covariate values to data points.
-This may use a lot of memory and take a while to set up.
-One partial solution would be to not put all the nodes in the
-:ref:`csv.simulate@Input Files@covariate.csv` file.
-We could use the closest ancestor's covariate and omega values
-when a node is not in covariate.csv.
 
 {xrst_end wish_list}

@@ -29,6 +29,7 @@ for file_name in $(git ls-files | sed \
    -e '/^readme.md$/d' \
    -e '/^readme.md$/d' \
    -e '/^bin\/check_copy.sh$/d' \
+   -e '/^bin\/check_version.sh$/d' \
    -e '/^bin\/check_invisible.sh$/d' \
    -e '/^bin\/upload.sh$/d' \
    -e '/^bin\/git_commit.sh$/d' \

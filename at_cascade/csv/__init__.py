@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.module}
@@ -10,6 +10,11 @@ r'''
 
 The at_cascade.csv Python Module
 ################################
+
+Interface Example
+*****************
+The python code that implements this interface to the at_cascade
+:ref:`module-name` can be used as an example for other interfaces.
 
 Notation
 ********
