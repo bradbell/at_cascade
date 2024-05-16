@@ -1247,7 +1247,11 @@ def create_root_node_database(fit_dir) :
    #
    # data_table
    data_table     = input_table['data_in']
-   for row in data_table :
+   for (i_row, row) in enumerate(data_table) :
+      if i_row != int( row['data_id'] ) :
+         line = i_row + 2
+         msg  = f'Expected data_id = {i_row} in line {line} of data_in.csv'
+         assert False, msg
       #
       # age_mid
       age_lower = float( row['age_lower'] )
