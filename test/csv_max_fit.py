@@ -97,14 +97,14 @@ header += 'density_name,eta,nu'
 csv_file['data_in.csv'] = header + \
 '''
 0,Sincidence,n0,both,0,10,1990,2000,0.01,1e-4,0,gaussian,,
-0,Sincidence,n0,female,0,10,1990,2000,0.01,1e-4,0,gaussian,,
-0,Sincidence,n0,male,0,10,1990,2000,0.01,1e-4,0,gaussian,,
-0,Sincidence,n1,both,0,10,1990,2000,0.01,1e-4,0,gaussian,,
-0,Sincidence,n1,female,0,10,1990,2000,0.01,1e-4,0,gaussian,,
-0,Sincidence,n1,male,0,10,1990,2000,0.01,1e-4,0,gaussian,,
-0,Sincidence,n2,both,0,10,1990,2000,0.01,1e-4,0,gaussian,,
-0,Sincidence,n2,female,0,10,1990,2000,0.01,1e-4,0,gaussian,,
-0,Sincidence,n2,male,0,10,1990,2000,0.01,1e-4,0,gaussian,,
+1,Sincidence,n0,female,0,10,1990,2000,0.01,1e-4,0,gaussian,,
+2,Sincidence,n0,male,0,10,1990,2000,0.01,1e-4,0,gaussian,,
+3,Sincidence,n1,both,0,10,1990,2000,0.01,1e-4,0,gaussian,,
+4,Sincidence,n1,female,0,10,1990,2000,0.01,1e-4,0,gaussian,,
+5,Sincidence,n1,male,0,10,1990,2000,0.01,1e-4,0,gaussian,,
+6,Sincidence,n2,both,0,10,1990,2000,0.01,1e-4,0,gaussian,,
+7,Sincidence,n2,female,0,10,1990,2000,0.01,1e-4,0,gaussian,,
+8,Sincidence,n2,male,0,10,1990,2000,0.01,1e-4,0,gaussian,,
 '''
 #
 #
