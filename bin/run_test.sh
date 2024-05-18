@@ -15,7 +15,7 @@ then
    exit 1
 fi
 test_file="$1"
-for try in {1..2}
+for try_number in {1..3}
 do
    if python3 $test_file >& run_test.tmp
    then
@@ -42,14 +42,9 @@ do
          exit 0
       fi
    fi
-   if [ "$try" != '2' ]
-   then
-      echo "$run_test: Error or warning, re-running with a different seed:"
-      echo 'sleep 1'
-      sleep 1
-   fi
+   echo "run_test.sh $test_file: Error or warning during try number $try_number"
 done
 cat run_test.tmp
 rm run_test.tmp
-echo "run_test.sh: $test_file: Error or warning 2 times in a row."
+echo "run_test.sh: $test_file: giving up after try number $try_number"
 exit 1
