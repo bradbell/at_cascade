@@ -1277,8 +1277,8 @@ def create_root_node_database(fit_dir) :
             row[covariate_name] = covariate_value
          else :
             row[covariate_name] = 0.0
-            for sex in [ 'female', 'male' ] :
-               spline              = spline_cov[node_name][sex][covariate_name]
+            for tmp in [ 'female', 'male' ] :
+               spline              = spline_cov[node_name][tmp][covariate_name]
                covariate_value     = spline(age_mid, time_mid)
                row[covariate_name] += covariate_value / 2.0
       #

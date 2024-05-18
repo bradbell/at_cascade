@@ -100,8 +100,10 @@ covariate.csv
 *************
 This example has one covariate,  population.
 Other cause mortality, omega, is constant and equal to 0.02.
-The population depends on age and sex but not time
-(the male population is half of the female population).
+The population depends on age and sex but not time.
+The female (male) population decreases (increases) with age.
+This is unrealistic for the male case but is set this way just
+to make sure that the different population weights have a different effect.
 {xrst_code py}"""
 female_population_age_0   = 1e4
 female_population_age_100 = 1e3
@@ -109,8 +111,8 @@ csv_file['covariate.csv'] = \
    'node_name,sex,age,time,omega,population\n' + \
    'n0,female,0,2000,0.02,'   + str(female_population_age_0) + '\n' \
    'n0,female,100,2000,0.02,' + str(female_population_age_100) + '\n' \
-   'n0,male,0,2000,0.02,'     + str(female_population_age_0/2) + '\n' \
-   'n0,male,100,2000,0.02,'   + str(female_population_age_100/2) + '\n'
+   'n0,male,0,2000,0.02,'     + str(female_population_age_100) + '\n' \
+   'n0,male,100,2000,0.02,'   + str(female_population_age_0) + '\n'
 """{xrst_code}
 
 fit_goal.csv
@@ -204,15 +206,12 @@ header += 'time_lower, time_upper, meas_value, meas_std, hold_out, '
 header += 'density_name, eta, nu'
 csv_file['data_in.csv'] = header + \
 '''
-0, Sincidence, n0, female, 0,     0, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
-1, Sincidence, n0, female, 0,   100, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
-2, Sincidence, n0, female, 100, 100, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
-3, Sincidence, n0, male,   0,     0, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
-4, Sincidence, n0, male,   0,   100, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
-5, Sincidence, n0, male,   100, 100, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
-6, Sincidence, n0, both,   0,     0, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
-7, Sincidence, n0, both,   0,   100, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
-8, Sincidence, n0, both,   100, 100, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
+0, Sincidence, n0, female,  0,    50, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
+1, Sincidence, n0, female, 50,   100, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
+2, Sincidence, n0,   male,  0,    50, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
+3, Sincidence, n0,   male, 50,   100, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
+4, Sincidence, n0,   both,  0,    50, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
+5, Sincidence, n0,   both, 50,   100, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
 '''
 csv_file['data_in.csv'] = csv_file['data_in.csv'].replace(' ', '')
 """{xrst_code}
@@ -243,8 +242,8 @@ def no_effect_iota(age) :
 #
 # population
 def population(sex, age) :
-   male_population_age_0   = female_population_age_0 / 2
-   male_population_age_100 = female_population_age_100 / 2
+   male_population_age_0   = female_population_age_100
+   male_population_age_100 = female_population_age_0
    if sex == 'female' :
       age_0    = female_population_age_0
       age_100  = female_population_age_100
@@ -328,6 +327,8 @@ def main() :
       iota      = float( row['avg_integrand'] )
       check     = no_effect_iota(age)
       rel_error = (iota - check) / check
+      if abs(rel_error) >= 1e-4 :
+        print(f'age={age}, iota={iota}, check={check}, rel_error={rel_error}')
       assert abs(rel_error) < 1e-4
    #
    print('population.py: OK')

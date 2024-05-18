@@ -31,6 +31,13 @@ mm-dd
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
 
+05-18
+=====
+The :ref:`csv.population-name` example was changed to better test
+the population weighting.
+In addition, a bug was fixed in the population weighting of data
+for both sexes.
+
 05-17
 =====
 The :ref:`csv.population-name` example was changed to include
