@@ -82,6 +82,7 @@ ode_step_size,5.0
 quasi_fixed,false
 max_num_iter_fixed,50
 tolerance_fixed,1e-8
+max_number_cpu,1
 '''
 fit_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 # {xrst_code}
@@ -275,7 +276,7 @@ def fit(fit_dir) :
 if __name__ == '__main__' :
    #
    # fit_dir
-   fit_dir = 'build/test/fit'
+   fit_dir = 'build/example/csv/fit'
    at_cascade.empty_directory(fit_dir)
    #
    # fit

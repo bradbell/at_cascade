@@ -1,7 +1,7 @@
 #! /bin/bash -e
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 if [ "$0" != 'bin/run_test.sh' ]
 then
@@ -31,6 +31,9 @@ do
             -e '/dismod_at warning: sample asymptotic/d' \
             -e '/sample table was not created/d'
       fi
+      # virtual box is getting these warnings:
+      sed -i run_test.tmp \
+         -e '/^libEGL warning: egl: failed to create dri2 screen/d'
       if ! grep 'warning:' run_test.tmp > /dev/null
       then
          cat run_test.tmp
