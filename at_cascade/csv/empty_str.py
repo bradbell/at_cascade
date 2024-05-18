@@ -31,12 +31,12 @@ direction
 is a ``str`` that is equal to ``to_none`` or ``from_none``.
 
 to_none
--------
+=======
 If *direction* is to_none, then every empty string is converted to None.
 In this case there cannot be any None field values in the input.
 
 from_none
----------
+=========
 If *direction* is from_none, then every None value is converted to
 the empty string.
 In this case there cannot be any empty string values in the input.

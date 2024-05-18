@@ -30,6 +30,11 @@ latex_macro = [
    '\newcommand{\R}[1]{ {\rm #1} }' ,
 ]
 
+[heading]
+#   level         0,     1,     2,     3,     4,
+character = [   '#',   '*',   '=',   '-',   '.',  ]
+overline  = [ false, false, false, false, false,  ]
+
 # BEGIN_SORT_THIS_LINE_PLUS_4
 [project_dictionary]
 data = [
