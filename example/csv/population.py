@@ -100,16 +100,17 @@ covariate.csv
 *************
 This example has one covariate,  population.
 Other cause mortality, omega, is constant and equal to 0.02.
-THe population depends on age (but not time or sex):
+The population depends on age and sex but not time
+(the male population is half of the female population).
 {xrst_code py}"""
-population_age_0   = 1e4
-population_age_100 = 1e3
+female_population_age_0   = 1e4
+female_population_age_100 = 1e3
 csv_file['covariate.csv'] = \
    'node_name,sex,age,time,omega,population\n' + \
-   'n0,female,0,2000,0.02,'   + str(population_age_0) + '\n' \
-   'n0,female,100,2000,0.02,' + str(population_age_100) + '\n' \
-   'n0,male,0,2000,0.02,'     + str(population_age_0) + '\n' \
-   'n0,male,100,2000,0.02,'   + str(population_age_100) + '\n'
+   'n0,female,0,2000,0.02,'   + str(female_population_age_0) + '\n' \
+   'n0,female,100,2000,0.02,' + str(female_population_age_100) + '\n' \
+   'n0,male,0,2000,0.02,'     + str(female_population_age_0/2) + '\n' \
+   'n0,male,100,2000,0.02,'   + str(female_population_age_100/2) + '\n'
 """{xrst_code}
 
 fit_goal.csv
@@ -209,6 +210,9 @@ csv_file['data_in.csv'] = header + \
 3, Sincidence, n0, male,   0,     0, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
 4, Sincidence, n0, male,   0,   100, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
 5, Sincidence, n0, male,   100, 100, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
+6, Sincidence, n0, both,   0,     0, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
+7, Sincidence, n0, both,   0,   100, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
+8, Sincidence, n0, both,   100, 100, 2000, 2000, 0.0000, 0.001, 0, gaussian, ,
 '''
 csv_file['data_in.csv'] = csv_file['data_in.csv'].replace(' ', '')
 """{xrst_code}
@@ -238,14 +242,24 @@ def no_effect_iota(age) :
    return iota
 #
 # population
-def population(age) :
-   age_0    = population_age_0
-   age_100  = population_age_100
-   pop      = ( age_0 * (100.0 - age) + age_100 * (age - 0.0) ) / 100.0
+def population(sex, age) :
+   male_population_age_0   = female_population_age_0 / 2
+   male_population_age_100 = female_population_age_100 / 2
+   if sex == 'female' :
+      age_0    = female_population_age_0
+      age_100  = female_population_age_100
+   elif sex == 'male' :
+      age_0    = male_population_age_0
+      age_100  = male_population_age_100
+   else :
+      assert sex == 'both'
+      age_0    = (female_population_age_0   + male_population_age_0) / 2
+      age_100  = (female_population_age_100 + male_population_age_100) / 2
+   pop = ( age_0 * (100.0 - age) + age_100 * (age - 0.0) ) / 100.0
    return pop
 #
 # average_Sincidence
-def average_Sincidence(age_lower, age_upper) :
+def average_Sincidence(sex, age_lower, age_upper) :
    if age_lower == age_upper :
       return no_effect_iota(age_lower)
    #
@@ -257,7 +271,7 @@ def average_Sincidence(age_lower, age_upper) :
    sum_pop   = 0.0
    for i_step in range(n_step + 1) :
       age     = age_lower + i_step * step_size
-      pop     = population(age)
+      pop     = population(sex, age)
       iota    = no_effect_iota(age)
       average += pop * iota
       sum_pop += pop
@@ -283,6 +297,7 @@ def main() :
    file_name         = f'{fit_dir}/data_in.csv'
    table             = at_cascade.csv.read_table( file_name )
    for row in table :
+      sex            = row['sex']
       node_name      = row['node_name']
       integrand_name = row['integrand_name']
       age_lower      = float( row['age_lower'] )
@@ -290,7 +305,7 @@ def main() :
       assert integrand_name == 'Sincidence'
       #
       # BEGIN_MEAS_VALUE
-      row['meas_value'] = average_Sincidence(age_lower, age_upper)
+      row['meas_value'] = average_Sincidence(sex, age_lower, age_upper)
       # END_MEAS_VALUE
    at_cascade.csv.write_table(file_name, table)
    #

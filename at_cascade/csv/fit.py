@@ -428,6 +428,7 @@ covariate.csv
 This csv file has the same description as the simulate
 :ref:`csv.simulate@Input Files@covariate.csv` file.
 
+
 population
 ----------
 If this table has a covariate called ``population`` ,
@@ -437,16 +438,19 @@ This function is different for each sex and location.
 
 #. The :ref:`csv.simulate-name` routine does not yet do this data weighting.
 
-#. Currently there are only population weightings for
-   the ``male`` and ``female`` sexes; i.e.,
-   one cannot have data that is for ``both`` sexes
-   when doing population weighting.
-   It would be easy to add a ``both`` weighting if the need arises.
-
 #. No population weighting is used during the predictions in
    :ref:`csv.predict@Output Files@fit_predict.csv` because these predictions
    are for a single (age, time) point and not a rectangular (age, time) region.
-   (Hence, we can do predictions that correspond to sex equal to ``both`` ).
+
+Both Sexes
+..........
+The population weighting, and covariate value,
+for data with sex equal to ``both`` is the
+average of the ``female`` and ``male`` populations.
+One might think the ``both`` population would be the sum of the
+female and male populations but this would make the population covariate
+different than all the other covariates (which use the average of the
+female and male values for both).
 
 fit_goal.csv
 ============

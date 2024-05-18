@@ -31,6 +31,13 @@ mm-dd
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
 
+05-17
+=====
+The :ref:`csv.population-name` example was changed to include
+population weighting for data that corresponds to
+:ref:`csv.fit@Input Files@covariate.csv@population@Both Sexes`
+
+
 05-16
 =====
 #. The root_node_name item was removed from the wish list because
@@ -41,7 +48,7 @@ mm-dd
 #. The documentation now mentions that the csv module is can be used  as an
    :ref:`csv.module@Interface Example` for at_cascade.
 #. The csv.fit routine now checks for the proper value of
-   :ref:`csv.fit@Input Files@data_in.csv@data_id` 
+   :ref:`csv.fit@Input Files@data_in.csv@data_id`
    in each row of the data_in.csv file.
 
 05-15
