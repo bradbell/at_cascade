@@ -35,8 +35,10 @@ mm-dd
 =====
 The :ref:`csv.population-name` example was changed to better test
 the population weighting.
-In addition, a bug was fixed in the population weighting of data
-for both sexes.
+In addition, a csv.fit bug was fixed in the
+:ref:`csv.fit@Input Files@covariate.csv@population` weighting and
+all the covariate values for data with sex equal to both
+(the male instead of both values were being used).
 
 05-17
 =====
