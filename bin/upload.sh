@@ -15,7 +15,7 @@ then
    echo "bin/upload.sh: must be executed from its parent directory"
    exit 1
 fi
-if [ "$PASSWORD" == '' ]
+if [ "${PASSWORD+xxx}" == '' ]
 then
    echo 'bin/upload.sh: Must set PASSWORD environment variable before running'
    exit 1
