@@ -3,8 +3,75 @@
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
-Change this to docuemtaton for relrisk.py example
-(once main() defined below runs without error).
+{xrst_begin relrisk}
+{xrst_spell
+   avgint
+   sincidence
+   mtexcess
+}
+
+Example Fitting Relative Risk Data
+##################################
+
+Nodes
+*****
+The following is a diagram of the node tree for this example
+(the :ref:`glossary@root_node` is n0)::
+
+                n0
+          /-----/\-----\
+        n1              n2
+       /  \            /  \
+     n3    n4        n5    n6
+
+{xrst_literal
+   # BEGIN node_table
+   # END node_table
+}
+
+fit_goal_set
+************
+The :ref:`glossary@fit_goal_set`
+is the leaf nodes:
+
+{xrst_literal
+   # BEGIN fit_goal_set
+   # END fit_goal_set
+}
+
+rate_true
+*********
+The true value of the rates (for this example) are:
+{xrst_literal
+   # BEGIN rate_true
+   # END rate_true
+}
+
+Rate Priors
+***********
+The fitted rates for this example are iota and chi
+(rho is zero and omega is constrained to have its true value).
+The prior each fitted rate is set as follows
+{xrst_literal
+   # BEGIN prior_table
+   # END prior_table
+}
+
+Data Table
+**********
+Each leaf node has two data values, the true value of Sincidence and relrisk
+for the node.
+
+avgint Table
+************
+Each leaf node has predictions for three avgint values,
+Sincidence, mtexcess, and relrisk.
+The values corresponding to the fit for each leaf node is compared
+to the truth using :ref:`check_cascade_node-name` .
+
+
+
+{xrst_end relrisk}
 '''
 # BEGIN PYTHON
 # ----------------------------------------------------------------------------
@@ -41,8 +108,10 @@ option_all['root_node_database'] = option_all['result_dir'] + '/root_node.db'
 # functions
 # ----------------------------------------------------------------------------
 # BEGIN rate_true
-def rate_true(rate, a, t, n, c) :
-   # omega_true
+def rate_true(rate_name, node_name) :
+   iota_true  = 1e-3
+   rho_true   = 0.0
+   chi_true   = 1e-1
    omega_true = {
       'n3' : 1e-2,
       'n4' : 2e-2,
@@ -53,23 +122,21 @@ def rate_true(rate, a, t, n, c) :
    omega_true['n2'] = (omega_true['n5'] + omega_true['n6']) / 2
    omega_true['n0'] = (omega_true['n1'] + omega_true['n2']) / 2
    #
-   if rate == 'iota' :
-      return 1e-3
-   elif rate == 'rho' :
-      return 0.0
-   elif rate == 'chi' :
-      return 1e-1
-   elif rate == 'omega' :
-      return omega_true[n]
-   assert False
+   rate2true = {
+      'iota'   : iota_true ,
+      'rho'    : rho_true  ,
+      'chi'    : chi_true  ,
+      'omega'  : omega_true[node_name]
+   }
+   return rate2true[ rate_name ]
 # END rate_true
 # ----------------------------------------------------------------------------
 def root_node_db(file_name) :
    #
-   # prior_table
+   # BEGIN prior_table
    prior_table = list()
    for rate_name in [ 'iota', 'chi' ] :
-      rate_0   = rate_true(rate_name, None, None, 'n0', None)
+      rate_0   = rate_true(rate_name, 'n0')
       prior_table.append(
          {  'name':    f'parent_{rate_name}_prior',
             'density': 'uniform',
@@ -78,6 +145,7 @@ def root_node_db(file_name) :
             'mean':    rate_0 * 2,
          }
       )
+   # END prior_table
    #
    # smooth_table
    smooth_table = list()
@@ -95,7 +163,7 @@ def root_node_db(file_name) :
       'time_id':    [0],
       'fun':        fun,
    })
-   # node_table
+   # BEGIN node_table
    node_table = [
       { 'name':'n0',        'parent':''   },
       { 'name':'n1',        'parent':'n0' },
@@ -105,6 +173,7 @@ def root_node_db(file_name) :
       { 'name':'n5',        'parent':'n2' },
       { 'name':'n6',        'parent':'n2' },
    ]
+   # END node_table
    #
    # rate_table
    rate_table = list()
@@ -148,8 +217,8 @@ def root_node_db(file_name) :
    #
    # data_table
    data_table  = list()
-   leaf_set    = { 'n3', 'n4', 'n5', 'n6' }
-   for integrand in [ 'Sincidence', 'mtexcess', 'relrisk' ] :
+   leaf_set    = fit_goal_set
+   for integrand in [ 'Sincidence', 'relrisk' ] :
       row = {
          'subgroup':     'world',
          'weight':       '',
@@ -164,9 +233,9 @@ def root_node_db(file_name) :
       for node in leaf_set :
          #
          # meas_value
-         iota    = rate_true('iota',  None, None, node, None)
-         chi     = rate_true('chi',   None, None, node, None)
-         omega   = rate_true('omega', None, None, node, None)
+         iota    = rate_true('iota',  node)
+         chi     = rate_true('chi',   node)
+         omega   = rate_true('omega', node)
          relrisk = 1 + chi / omega
          if integrand == 'Sincidence' :
             meas_value = iota
@@ -258,7 +327,7 @@ def main() :
          for time_id in omega_grid['time'] :
             age    = age_table[age_id]['age']
             time   = time_table[time_id]['time']
-            omega  = rate_true('omega', None, None, node_name, None)
+            omega  = rate_true('omega', node_name)
             omega_data[node_name][0].append( omega )
    #
    # Create all_node.db
@@ -289,8 +358,9 @@ def main() :
    # check results
    for subdir in [ 'n1/n3', 'n1/n4', 'n2/n5', 'n2/n6' ] :
       goal_database = f'{result_dir}/n0/{subdir}/dismod.db'
+      rate_fun      = lambda r, a, t, n, c : rate_true(r, n)
       at_cascade.check_cascade_node(
-         rate_true          = rate_true,
+         rate_true          = rate_fun,
          all_node_database  = all_node_database,
          fit_node_database  = goal_database,
          avgint_table       = avgint_table,

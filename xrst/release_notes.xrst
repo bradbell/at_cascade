@@ -21,6 +21,7 @@ Release Notes for at_cascade
    Errno
    xam
    sincidence
+   mtstandard
 }
 
 Release Notes for 2024
@@ -30,6 +31,14 @@ mm-dd
 *****
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
+
+05-24
+=====
+The cascade was setting omega to zero for all nodes.
+Note that this does not affect prevalence, but it does affect some other
+integrands; e.g., mtstandard and relrisk.
+This new :ref:`relrisk-name` example (which now passes its test)
+checks for this bug.
 
 05-18
 =====

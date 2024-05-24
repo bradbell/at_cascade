@@ -29,6 +29,7 @@ The at_cascade Examples
    example/no_ode_xam.py
    example/one_at_function.py
    example/prevalence2iota.py
+   example/relrisk.py
    example/remission.py
    example/split_covariate.py
 }
