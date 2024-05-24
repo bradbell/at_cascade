@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin create_shift_db}
@@ -846,3 +846,6 @@ def create_shift_db(
       #
       # shift_connection
       shift_connection.close()
+      #
+      # shift_database
+      at_cascade.omega_constraint(all_node_database, shift_database)

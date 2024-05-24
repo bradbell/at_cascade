@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin cascade_root_node}
@@ -160,6 +160,7 @@ def cascade_root_node(
       os.makedirs( f'{result_dir}/{root_node_name}' )
    if not no_ode_fit :
       at_cascade.copy_root_db(root_node_database, root_fit_database)
+      at_cascade.omega_constraint(all_node_database, root_fit_database)
    else :
       at_cascade.no_ode_fit(
          all_node_database  = all_node_database,

@@ -10,16 +10,11 @@ Change this to docuemtaton for relrisk.py example
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
-import math
+import numpy
 import sys
 import os
 import copy
-import time
-import csv
-import random
-import shutil
 import dismod_at
-from math import exp
 #
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
@@ -42,7 +37,6 @@ option_all            = {
 option_all['root_node_database'] = option_all['result_dir'] + '/root_node.db'
 # END option_all_table
 #
-#
 # ----------------------------------------------------------------------------
 # functions
 # ----------------------------------------------------------------------------
@@ -61,6 +55,8 @@ def rate_true(rate, a, t, n, c) :
    #
    if rate == 'iota' :
       return 1e-3
+   elif rate == 'rho' :
+      return 0.0
    elif rate == 'chi' :
       return 1e-1
    elif rate == 'omega' :
@@ -73,7 +69,7 @@ def root_node_db(file_name) :
    # prior_table
    prior_table = list()
    for rate_name in [ 'iota', 'chi' ] :
-      rate_0   = rate_true(rate_name, None, None, None, None)
+      rate_0   = rate_true(rate_name, None, None, 'n0', None)
       prior_table.append(
          {  'name':    f'parent_{rate_name}_prior',
             'density': 'uniform',
@@ -85,14 +81,20 @@ def root_node_db(file_name) :
    #
    # smooth_table
    smooth_table = list()
-   for rate_name in [ 'iota', 'chi' ] :
-      fun = lambda a, t : ( f'parent_{rate_name}_prior', None, None)
-      smooth_table.append({
-         'name':       f'parent_{rate_name}_smooth',
-         'age_id':     [0],
-         'time_id':    [0],
-         'fun':        fun,
-      })
+   fun = lambda a, t : ( f'parent_iota_prior', None, None)
+   smooth_table.append({
+      'name':       f'parent_iota_smooth',
+      'age_id':     [0],
+      'time_id':    [0],
+      'fun':        fun,
+   })
+   fun = lambda a, t : ( f'parent_chi_prior', None, None)
+   smooth_table.append({
+      'name':       f'parent_chi_smooth',
+      'age_id':     [0],
+      'time_id':    [0],
+      'fun':        fun,
+   })
    # node_table
    node_table = [
       { 'name':'n0',        'parent':''   },
@@ -292,17 +294,11 @@ def main() :
          all_node_database  = all_node_database,
          fit_node_database  = goal_database,
          avgint_table       = avgint_table,
-         relative_tolerance = 1e-5,
+         relative_tolerance = float( numpy.finfo(float).eps * 100.0 ),
       )
 #
-if True :
-   msg  = '2024-05-24: When running release build main() terminates with:\n'
-   msg += 'Cannot compute the relrisk integrand.\n'
-   msg += 'chi = 0.2, omega = 0'
-   print(msg)
-else :
-   main()
-   print('relrisk: OK')
+main()
+print('relrisk: OK')
 #
 sys.exit(0)
 # END PYTHON
