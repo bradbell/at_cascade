@@ -323,7 +323,6 @@ def root_node_db(file_name) :
    income    = avg_income['n0'][root_split_reference_id]
    c         = [ sex, income ]
    iota_n0   = rate_true('iota', None, None, 'n0', c)
-   # END iota_50
    #
    # prior_table
    prior_table = list()
