@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin copy_other_tbl}
@@ -36,7 +36,7 @@ import at_cascade
 import dismod_at
 #
 # BEGIN_PROTOTYPE
-# at_cascade.copy_root_db
+# at_cascade.copy_other_tbl
 def copy_other_tbl(fit_node_database) :
    assert type(fit_node_database) == str
    # END_PROTOTYPE
