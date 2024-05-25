@@ -69,6 +69,12 @@ Sincidence, mtexcess, and relrisk.
 The values corresponding to the fit for each leaf node is compared
 to the truth using :ref:`check_cascade_node-name` .
 
+Source Code
+***********
+{xrst_literal
+   # BEGIN PYTHON
+   # END PYTHON
+}
 
 
 {xrst_end relrisk}
