@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin copy_root_db}
@@ -37,6 +37,8 @@ This database is created as follows:
    root node database for all the constant tables; i.e.,
    set the other_database and other_input_table options to do this.
 
+#. Create an empty log table in the fit node database.
+
 
 {xrst_end copy_root_db}
 '''
@@ -44,7 +46,22 @@ import os
 import shutil
 import at_cascade
 import dismod_at
-#
+# -----------------------------------------------------------------------------
+def create_empty_log_table(connection) :
+   #
+   cmd  = 'create table if not exists log('
+   cmd += ' log_id        integer primary key,'
+   cmd += ' message_type  text               ,'
+   cmd += ' table_name    text               ,'
+   cmd += ' row_id        integer            ,'
+   cmd += ' unix_time     integer            ,'
+   cmd += ' message       text               )'
+   dismod_at.sql_command(connection, cmd)
+   #
+   # log table
+   empty_list = list()
+   dismod_at.replace_table(connection, 'log', empty_list)
+# -----------------------------------------------------------------------------
 # BEGIN_COPY_ROOT_DB
 # at_cascade.copy_root_db
 def copy_root_db(root_node_database, fit_node_database) :
@@ -98,3 +115,9 @@ def copy_root_db(root_node_database, fit_node_database) :
    dismod_at.replace_table(
       connection, tbl_name = 'option', table_dict = option_table
    )
+   #
+   # log table
+   create_empty_log_table(connection)
+   #
+   # connection
+   connection.close()

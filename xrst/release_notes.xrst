@@ -24,13 +24,22 @@ Release Notes for at_cascade
    mtstandard
 }
 
+.. _issue13: https://github.com/bradbell/at_cascade/issues/13
+
 Release Notes for 2024
 ######################
 
 mm-dd
 *****
 
-.. _issue13: https://github.com/bradbell/at_cascade/issues/13
+05-25
+=====
+The :ref:`cascade_root_node-name` routine now puts
+dismod_at and at_cascade version numbers at the beginning of
+the log table in the ``dismod.db`` database corresponding to the root node.
+This requires dismod_at-2024.5.25 or later so that
+the command ``dismod_at --version`` just prints its version number 
+to standard output.
 
 05-24
 =====

@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
-'''
+r'''
 {xrst_begin no_ode_fit}
 {xrst_spell
    init
@@ -116,21 +116,6 @@ def system_command(command, file_stdout) :
          file_stderr   = None,
          write_command = True,
       )
-# -----------------------------------------------------------------------------
-def create_empty_log_table(connection) :
-   #
-   cmd  = 'create table if not exists log('
-   cmd += ' log_id        integer primary key,'
-   cmd += ' message_type  text               ,'
-   cmd += ' table_name    text               ,'
-   cmd += ' row_id        integer            ,'
-   cmd += ' unix_time     integer            ,'
-   cmd += ' message       text               )'
-   dismod_at.sql_command(connection, cmd)
-   #
-   # log table
-   empty_list = list()
-   dismod_at.replace_table(connection, 'log', empty_list)
 # ----------------------------------------------------------------------------
 def add_index_to_name(table, name_col) :
    row   = table[-1]
@@ -258,12 +243,8 @@ def no_ode_fit(
       no_ode_database, new = False, readonly = False
    )
    #
-   # log table
-   create_empty_log_table(connection)
-   #
    # omega_constraint
    at_cascade.omega_constraint(all_node_database, no_ode_database)
-   at_cascade.add_log_entry(connection, 'omega_constraint')
    #
    # move avgint -> c_root_avgint
    at_cascade.move_table(connection, 'avgint', 'c_root_avgint')

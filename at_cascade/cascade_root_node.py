@@ -169,6 +169,26 @@ def cascade_root_node(
          fit_type           = fit_type_list[0],
       )
    #
+   # dismod_at_version
+   dismod_at_version = dismod_at.system_command_prc(
+      command       = [ 'dismod_at', '--version' ] ,
+      print_command = False,
+      return_stdout = True,
+      return_stderr = False,
+   )
+   dismod_at_version = dismod_at_version.strip()
+   #
+   # at_cascade_version
+   at_cascade_version = 'at_cascade-' + at_cascade.version
+   #
+   # log table
+   connection  = dismod_at.create_connection(
+      root_fit_database, new = False, readonly = False
+   )
+   at_cascade.add_log_entry(connection, dismod_at_version)
+   at_cascade.add_log_entry(connection, at_cascade_version)
+   connection.close()
+   #
    # node_table, covariate_table, fit_integrand
    fit_or_root = at_cascade.fit_or_root_class(
       root_fit_database, root_node_database
