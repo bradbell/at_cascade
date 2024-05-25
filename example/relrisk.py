@@ -87,6 +87,7 @@ import numpy
 import sys
 import os
 import copy
+import multiprocessing
 import dismod_at
 #
 # import at_cascade with a preference current directory version
@@ -102,10 +103,12 @@ fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 # END fit_goal_set
 #
 # BEGIN option_all_table
+max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
 option_all            = {
    'result_dir':                 'build/example',
    'root_node_name':             'n0',
    'refit_split':                'false',
+   'max_number_cpu':             max_number_cpu,
 }
 option_all['root_node_database'] = option_all['result_dir'] + '/root_node.db'
 # END option_all_table
