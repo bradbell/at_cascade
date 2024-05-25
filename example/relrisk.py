@@ -29,11 +29,19 @@ The following is a diagram of the node tree for this example
    # END node_table
 }
 
+relative_tolerance
+******************
+This is the relative tolerance that we will use when checking that the
+results are correct:
+{xrst_literal
+   # BEGIN relative_tolerance
+   # END relative_tolerance
+}
+
 fit_goal_set
 ************
 The :ref:`glossary@fit_goal_set`
 is the leaf nodes:
-
 {xrst_literal
    # BEGIN fit_goal_set
    # END fit_goal_set
@@ -51,7 +59,7 @@ Rate Priors
 ***********
 The fitted rates for this example are iota and chi
 (rho is zero and omega is constrained to have its true value).
-The prior each fitted rate is set as follows
+The parent and child priors each fitted rate is set as follows
 {xrst_literal
    # BEGIN prior_table
    # END prior_table
@@ -98,6 +106,10 @@ import at_cascade
 # -----------------------------------------------------------------------------
 # global varables
 # -----------------------------------------------------------------------------
+# BEGIN relative_tolerance
+relative_tolerance = 1e-14
+# END relative_tolerance
+#
 # BEGIN fit_goal_set
 fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
 # END fit_goal_set
@@ -280,7 +292,7 @@ def root_node_db(file_name) :
       { 'name': 'zero_sum_child_rate',  'value':'iota'},
       { 'name':'quasi_fixed',           'value':'false'},
       { 'name':'max_num_iter_fixed',    'value':'50'},
-      { 'name':'tolerance_fixed',       'value':'1e-8'},
+      { 'name':'tolerance_fixed',       'value':relative_tolerance},
    ]
    # ----------------------------------------------------------------------
    # create database
@@ -364,8 +376,10 @@ def main() :
       fit_goal_set       = fit_goal_set      ,
    )
    #
-   # check results
-   for subdir in [ 'n1/n3', 'n1/n4', 'n2/n5', 'n2/n6' ] :
+   # check fixed effects
+   # The parent rate values for all but node n0 should fit exactly because
+   # the prior is uniform and there is only one level of random effects
+   for subdir in [ 'n1', 'n2', 'n1/n3', 'n1/n4', 'n2/n5', 'n2/n6' ] :
       goal_database = f'{result_dir}/n0/{subdir}/dismod.db'
       rate_fun      = lambda r, a, t, n, c : rate_true(r, n)
       at_cascade.check_cascade_node(
@@ -375,6 +389,77 @@ def main() :
          avgint_table       = avgint_table,
          relative_tolerance = float( numpy.finfo(float).eps * 100.0 ),
       )
+   # -------------------------------------------------------------------------
+   # Check omega random effects are set correctly
+   # -------------------------------------------------------------------------
+   #
+   # n1_database
+   # n1 is the parent node for this fit
+   n1_database = f'{result_dir}/n0/n1/dismod.db'
+   #
+   # avgint_table
+   # n3 is the child node for the predictions
+   connection = dismod_at.create_connection(
+      n1_database, new = False, readonly = False
+   )
+   for row in avgint_table :
+      row['node_id'] = 3
+   tbl_name    = 'avgint'
+   dismod_at.replace_table(connection, tbl_name, avgint_table)
+   connection.close()
+   #
+   # predict
+   # create predictions for node n3 corresponding to fit for n1
+   command = [ 'dismod_at', n1_database, 'predict', 'fit_var' ]
+   dismod_at.system_command_prc(command)
+   #
+   # name_table
+   # for name = predict, integrand, node
+   fit_or_root     = at_cascade.fit_or_root_class(
+      n1_database, root_node_database
+   )
+   predict_table   = fit_or_root.get_table('predict')
+   integrand_table = fit_or_root.get_table('integrand')
+   node_table      = fit_or_root.get_table('node')
+   connection.close()
+   #
+   for (predict_id, predict_row) in enumerate(predict_table) :
+      #
+      # avgint_id
+      avgint_id  = predict_row['avgint_id']
+      avgint_row = avgint_table[avgint_id]
+      assert avgint_id == predict_id
+      #
+      # node_name
+      node_id   = avgint_row['node_id']
+      node_name = node_table[node_id]['node_name']
+      assert node_name == 'n3'
+      #
+      # integrand_name
+      integrand_id   = avgint_table[avgint_id]['integrand_id']
+      integrand_name = integrand_table[integrand_id]['integrand_name']
+      #
+      # avg_integrand
+      avg_integrand  = predict_table[avgint_id]['avg_integrand']
+      #
+      # check
+      iota  = rate_true('iota', node_name)
+      chi   = rate_true('chi',  node_name)
+      omega = rate_true('omega', node_name)
+      if integrand_name == 'Sincidence' :
+         check = iota
+      elif integrand_name == 'mtexcess' :
+         check = chi
+      else :
+         assert integrand_name == 'relrisk'
+         check = 1.0 + chi / omega
+      #
+      # rel_error
+      rel_error = 1.0 - avg_integrand / check
+      if abs(rel_error) > relative_tolerance :
+         msg = f'subdir = {subdir}, rel_error = {rel_error}'
+         assert False, msg
+
 #
 main()
 print('relrisk: OK')
