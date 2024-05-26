@@ -29,6 +29,14 @@ The following is a diagram of the node tree for this example
    # END node_table
 }
 
+Discussion
+**********
+This example is interesting because it gives a prefect fit to the
+data for all nodes except node n0.
+This is because there is two levels of random effects for node n0,
+one level of random effects for node n1 and n2,
+and no random effects for nodes n3, n4, n5, n6.
+
 relative_tolerance
 ******************
 This is the relative tolerance that we will use when checking that the
@@ -37,6 +45,13 @@ results are correct:
    # BEGIN relative_tolerance
    # END relative_tolerance
 }
+The fixed effect values for nodes n1 through n6 are checked to see that
+they are correct to this tolerance.
+The random effects for node n3, corresponding to the fit of node n1,
+is also checked.
+Note that all the random effects are zero except for the omega constraints.
+In addition, the leaf nodes n3, n4, n5, and n6 do not have any omega random
+effects.
 
 fit_goal_set
 ************
