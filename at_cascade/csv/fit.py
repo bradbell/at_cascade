@@ -247,6 +247,12 @@ In the special case where *no_ode_ignore* is ``all`` ,
 the no_ode fit is not run and none of the priors are changed before the
 :ref:`glossary@root_node` fit.
 
+no_ode_fit
+----------
+If this is true (false) a :ref:`no_ode_fit-name` is (is not)
+used to get better values for the fixed effects prior means.
+The default value for *no_ode_fit* is true.
+
 number_sample
 -------------
 This is the number of independent samples of the posterior distribution
@@ -983,6 +989,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'max_number_cpu'        : (int,   max_number_cpu)     ,
       'minimum_meas_cv'       : (float, 0.0)                ,
       'no_ode_ignore'         : (str,   None)               ,
+      'no_ode_fit'            : (bool,  True)               ,
       'number_sample'         : (int,   20)                 ,
       'ode_method'            : (str,   'iota_pos_rho_zero'),
       'ode_step_size'         : (float, 10.0)               ,
@@ -1923,7 +1930,7 @@ def fit(fit_dir, max_node_depth = None) :
       assert False, msg
    #
    # no_ode_fit
-   no_ode_fit    = True
+   no_ode_fit    = global_option_value['no_ode_fit']
    no_ode_ignore = global_option_value['no_ode_ignore']
    if no_ode_ignore != None :
       no_ode_fit =  no_ode_ignore.strip() != 'all'
