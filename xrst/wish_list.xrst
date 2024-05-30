@@ -43,6 +43,14 @@ that are not modeled.
 csv.fit
 *******
 
+See Priors for Each Fit
+=======================
+Having a node's prior mean and std (or samples) automatically output on the
+prediction grid in some accessible format would be beneficial for assessing fits
+to data for that node. When viewing a node's fit with its fit_predict.csv
+information being able to also view the node's prior and see how it compares to
+the fit would be very good.
+
 Measurement Value Covariate
 ===========================
 Currently :ref:`csv.fit-name` automatically creates an
@@ -61,10 +69,6 @@ Prediction Grid
 ===============
 It would be good to specify a prediction grid that may be different for
 the covariate age-time grid.
-
-See Priors for Each Fit
-=======================
-Outputting prior std or samples so we have uncertainty of the priors.
 
 Retry Fit
 =========
