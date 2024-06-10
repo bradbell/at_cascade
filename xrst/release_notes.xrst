@@ -32,6 +32,16 @@ Release Notes for 2024
 mm-dd
 *****
 
+06-10
+=====
+If the age time grid in :ref:`csv.fit@Input Files@covariate.csv`
+was not the same for all nodes, the error message would print::
+
+   node_name = {node_name}, sex = {sex}
+
+The text ``{node_name}`` and ``{sex}`` are now replace
+by the name of the node and the sex for which the age time grid is different.
+
 05-30
 =====
 The :ref:`csv.fit@Input Files@option_fit.csv@no_ode_fit` option

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import at_cascade
 '''
@@ -132,7 +132,7 @@ def covariate_spline(covariate_table , node_set) :
          #
          if spline_dict == None :
             msg  = 'covariate_spline: Error in covariate.csv\n'
-            msg += 'node_name = {node_name}, sex = {sex} \n'
+            msg += f'node_name = {node_name}, sex = {sex} \n'
             msg += 'Expected following rectangular grid:\n'
             msg += f'age_grid  = {age_grid}\n'
             msg += f'time_grid = {time_grid}'
