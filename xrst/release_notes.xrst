@@ -22,6 +22,7 @@ Release Notes for at_cascade
    xam
    sincidence
    mtstandard
+   args
 }
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
@@ -34,13 +35,31 @@ mm-dd
 
 06-10
 =====
-If the age time grid in :ref:`csv.fit@Input Files@covariate.csv`
-was not the same for all nodes, the error message would print::
 
-   node_name = {node_name}, sex = {sex}
+#. If the age time grid in :ref:`csv.fit@Input Files@covariate.csv`
+   was not the same for all nodes, the error message would print::
 
-The text ``{node_name}`` and ``{sex}`` are now replace
-by the name of the node and the sex for which the age time grid is different.
+      node_name = {node_name}, sex = {sex}
+
+   The text ``{node_name}`` and ``{sex}`` are now replace
+   by the name of the node and the sex for which the age time grid is different.
+
+#. Fix a bug in the :ref:`csv.break_fit_pred-name` example.
+   To be specific, the python source code::
+
+               p_predict[sex] = multiprocessing.Process(
+                  target = at_cascade.csv.predict, args = args,
+                )
+               p_predict[sex].start()
+
+   was replaced by the source code::
+
+               key            = (node_name, sex)
+               p_predict[key] = multiprocessing.Process(
+                  target = at_cascade.csv.predict, args = args,
+                )
+               p_predict[key].start()
+
 
 05-30
 =====

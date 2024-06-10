@@ -304,10 +304,11 @@ def computation(fit_dir) :
             if max_number_cpu == 1 :
                at_cascade.csv.predict(*args)
             else :
-               p_predict[sex] = multiprocessing.Process(
+               key            = (node_name, sex)
+               p_predict[key] = multiprocessing.Process(
                   target = at_cascade.csv.predict, args = args,
                 )
-               p_predict[sex].start()
+               p_predict[key].start()
       #
       # If max_number_cpu != 1, wait for predict jobs to finish
       for key in p_predict :
