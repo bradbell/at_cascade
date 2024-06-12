@@ -5,8 +5,8 @@
 r'''
 {xrst_begin csv.pre_user}
 
-Convert Prediction Csv Files to User Format
-###########################################
+Convert Prediction Csv Files From dismod_at Notation to User csv.fit Notation
+#############################################################################
 
 Prototype
 *********
@@ -55,6 +55,23 @@ root_node_database
 ******************
 specifies the location of the dismod_at
 :ref:`glossary@root_node_database`.
+
+Input Prediction Files
+**********************
+Each job in the *predict_job_id_list* has a corresponding directory.
+The files
+:ref:`csv.pre_one_job@fit_predict.csv` and
+:ref:`csv.pre_one_job@sam_predict.csv`
+must exist in each of these directories.
+In addition if *sim_dir* is not None,
+T
+:ref:`csv.pre_one_job@tru_predict.csv` must also exist.
+These files use dismod_at notation.
+
+Output Prediction Files
+***********************
+The predictions get converted to csv.predict notation; see
+:ref:`csv.predict@Output Files` .
 
 {xrst_end csv.pre_user}
 '''
@@ -139,7 +156,7 @@ def pre_user(
       integrand_table          = ancestor_or_root.get_table('integrand')
       ancestor_or_root.close()
       #
-      # ancestor_node_naem
+      # ancestor_node_name
       ancestor_node_name = at_cascade.get_parent_node(ancestor_database)
       #
       # ancestor_sex_name

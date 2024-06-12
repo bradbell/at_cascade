@@ -39,6 +39,8 @@ mm-dd
 #. Some of the at_cascade.csv routine were missing
    ``at_cascade.csv`` at the beginning of their prototype; e.g., see
    the :ref:`csv.pre_user@Prototype` for ``csv.pre_user`` .
+#. The csv.predict documentation was improved by adding a discussion
+   of the :ref:`csv.pre_user@Input Prediction Files` .
 
 06-10
 =====
