@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.pre_one_job}
@@ -129,7 +129,7 @@ import copy
 #
 # plot
 # ****
-# If this boolean is true, ``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
+# If true, ``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
 # to *ancestor_node_database* are generated (in the same directory as the
 # *ancestor_node_database* ).
 #
@@ -218,6 +218,8 @@ def pre_one_job(
    assert type(all_covariate_table) == list
    assert type( all_covariate_table[0] ) == dict
    assert type( float_precision ) == int
+   assert type( db2csv ) == bool
+   assert type( plot ) == bool
    # END_DEF
    #
    # option_all_table
