@@ -35,7 +35,10 @@ mm-dd
 
 06-12
 =====
-Change ``csv.pre_user_csv`` to :ref:`csv.pre_user-name` .
+#. Change ``csv.pre_user_csv`` to :ref:`csv.pre_user-name` .
+#. Some of the at_cascade.csv routine were missing
+   ``at_cascade.csv`` at the beginning of their prototype; e.g., see
+   the :ref:`csv.pre_user@Prototype` for ``csv.pre_user`` .
 
 06-10
 =====

@@ -64,7 +64,7 @@ Example
 """
 def write_table(
 # BEGIN_SYNTAX
-# table = at_cascade.csv.write_table(
+# at_cascade.csv.write_table(
    file_name  = None,
    table      = None,
    columns    = None,
