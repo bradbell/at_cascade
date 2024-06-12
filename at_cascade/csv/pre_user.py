@@ -3,7 +3,7 @@
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
-{xrst_begin pre_user_csv}
+{xrst_begin csv.pre_user}
 
 Convert Prediction Csv Files to User Format
 ###########################################
@@ -56,13 +56,13 @@ root_node_database
 specifies the location of the dismod_at
 :ref:`glossary@root_node_database`.
 
-{xrst_end pre_user_csv}
+{xrst_end csv.pre_user}
 '''
 import os
 import at_cascade
 
 # BEGIN DEF
-def pre_user_csv(
+def pre_user(
    fit_dir,
    sim_dir,
    job_table,
