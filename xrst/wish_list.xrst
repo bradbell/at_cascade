@@ -51,6 +51,12 @@ If we also automatically created a covariate
 called ``meas_value`` , we could use it with a meas_value
 covariate multiplier to expand or contract measurements values.
 
+Omit Measurement Value Covariates During Prediction
+===================================================
+Currently there's a bug which causes meas_value covariate effects to be
+included when producing predictions. This is not intended behavior and can
+cause unrealistic predictions.
+
 Continue Cascade
 ================
 There should be a separate csv routine that continues a cascade from a
