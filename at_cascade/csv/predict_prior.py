@@ -86,19 +86,3 @@ def predict_prior(fit_dir):
    
    # finish with success message
    print('predict_prior.py: OK')
-
-
-"""
-Note: For initial test runs I've been calling this using the below with:
-
-command = [ 'python3', 'at_cascade/csv/predict_prior.py' ] 
-if True :
-   dismod_at.system_command_prc(command)
-print('prior_pred.py: OK')
-
-since I can't get it to do at_cascade.csv.predict_prior() without a module
-not found error yet. Once I have that fixed I'll remove this section
-"""
-if __name__ == '__main__':
-   current_directory = os.getcwd()
-   predict_prior(fit_dir=os.path.join(current_directory, 'build/example/csv'))
