@@ -55,9 +55,6 @@ if True :
    dismod_at.system_command_prc(command)
 #
 print('\n\n =============== BEGIN prior_pred.py =============== \n\n')
-#
-# Run our new prior prediction module
-command = [ 'python3', 'at_cascade/csv/predict_prior.py' ] 
-if True :
-   dismod_at.system_command_prc(command)
+at_cascade.csv.predict_prior(
+   fit_dir=os.path.join(current_directory, 'build/example/csv'))
 print('prior_pred.py: OK')
