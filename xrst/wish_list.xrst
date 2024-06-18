@@ -14,6 +14,12 @@
 Wish List for at_cascade
 ########################
 
+Omit Measurement Value Covariates During Prediction
+***************************************************
+Currently there's a bug which causes meas_value covariate effects to be
+included when producing predictions. This is not intended behavior and can
+cause unrealistic predictions.
+
 avgint Table
 ************
 Change :ref:`cascade_root_node-name` so that upon return
@@ -50,12 +56,6 @@ absolute covariate called ``one`` .
 If we also automatically created a covariate
 called ``meas_value`` , we could use it with a meas_value
 covariate multiplier to expand or contract measurements values.
-
-Omit Measurement Value Covariates During Prediction
-===================================================
-Currently there's a bug which causes meas_value covariate effects to be
-included when producing predictions. This is not intended behavior and can
-cause unrealistic predictions.
 
 Continue Cascade
 ================
