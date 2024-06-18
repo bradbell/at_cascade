@@ -120,6 +120,7 @@ Routines
    at_cascade/csv/pre_parallel.py
    at_cascade/csv/pre_user.py
    at_cascade/csv/predict.py
+   at_cascade/csv/predict_prior.py
    at_cascade/csv/read_table.py
    at_cascade/csv/set_truth.py
    at_cascade/csv/simulate.py
@@ -146,4 +147,5 @@ from .read_table       import read_table
 from .set_truth        import set_truth
 from .simulate         import simulate
 from .write_table      import write_table
+from .predict_prior    import predict_prior
 # END_SORT_THIS_LINE_MINUS_1
