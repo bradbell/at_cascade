@@ -33,6 +33,10 @@ Release Notes for 2024
 mm-dd
 *****
 
+06-18
+=====
+Add the :ref:`wish_list@Measurement Value Effects` wish list item.
+
 06-12
 =====
 #. Change ``csv.pre_user_csv`` to :ref:`csv.pre_user-name` .
