@@ -14,11 +14,14 @@
 Wish List for at_cascade
 ########################
 
-Omit Measurement Value Covariates During Prediction
-***************************************************
-Currently there's a bug which causes meas_value covariate effects to be
-included when producing predictions. This is not intended behavior and can
-cause unrealistic predictions.
+Measurement Value Effects
+*************************
+Currently all the covariate effects are
+included in the predictions made by :ref:`csv.predict-name` .
+Some users would like to omit the
+:ref:`csv.fit@Input Files@mulcov.csv@type@meas_value`
+covariate effects, because these effects
+represent biases in the measurements and not changes in the integrand.
 
 avgint Table
 ************
