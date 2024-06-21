@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
+# SPDX-FileContributor: 2024-06 Nate Temiquel, Garland Culbreth
+# ----------------------------------------------------------------------------
 import os
 import dismod_at
 
