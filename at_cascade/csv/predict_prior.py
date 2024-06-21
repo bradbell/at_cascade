@@ -4,17 +4,17 @@
 # ----------------------------------------------------------------------------
 import os
 import dismod_at
-
-
+#
+#
 def predict_prior(fit_dir):
    # job_dir
    job_dir = f'{fit_dir}/n0'
-   
+   #
    # prior_pred.db
    command = [ 'cp', f'{job_dir}/dismod.db', f'{job_dir}/prior_pred.db' ]
    dismod_at.system_command_prc(command)
    # prior_connect
-   prior_connect = dismod_at.create_connection( 
+   prior_connect = dismod_at.create_connection(
       file_name = f'{job_dir}/prior_pred.db' ,
       new       = False ,
       readonly  = False ,
@@ -27,9 +27,9 @@ def predict_prior(fit_dir):
          row['option_value'] = option_value.replace( ' data ', ' ' )
    # prior_pred.db: option_table
    dismod_at.replace_table(
-      prior_connect, 
+      prior_connect,
       tbl_name   = 'option',
-      table_dict = option_table, 
+      table_dict = option_table,
    )
    # data_table
    connection = dismod_at.create_connection(
@@ -72,7 +72,7 @@ def predict_prior(fit_dir):
    )
    # prior_connect
    prior_connect.close()
-   
+   #
    # prior_pred.db: init
    command  = [ 'dismod_at', f'{job_dir}/prior_pred.db', 'init' ]
    sigma    = '.3'
@@ -87,6 +87,7 @@ def predict_prior(fit_dir):
    # prior_pred.db sample
    command = [ 'dismod_at', database, 'sample' , 'asymptotic', 'both', '20' ]
    dismod_at.system_command_prc(command)
-   
+   #
    # finish with success message
    print('predict_prior.py: OK')
+#
