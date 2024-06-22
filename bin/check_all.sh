@@ -38,7 +38,7 @@ then
    echo_eval bin/run_xrst.sh
 fi
 # -----------------------------------------------------------------------------
-list=$(ls example/*.py example/csv/*.py test/*.py)
+list=$(ls example/*.py example/csv/*.py test/*.py test/csv/*.py)
 for script in $list
 do
    echo_eval bin/run_test.sh $script

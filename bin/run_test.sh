@@ -25,7 +25,7 @@ do
             -e '/fixed effects information matrix is not positive/d' \
             -e '/sample table was not created/d'
       fi
-      if [ "$test_file" == 'test/csv_sample_fail.py' ]
+      if [ "$test_file" == 'test/csv/sample_fail.py' ]
       then
          sed -i run_test.tmp \
             -e '/dismod_at warning: sample asymptotic/d' \

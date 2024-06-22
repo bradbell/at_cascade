@@ -111,7 +111,7 @@ csv_file['data_in.csv'] = header + \
 def main() :
    #
    # fit_dir
-   fit_dir = 'build/test'
+   fit_dir = 'build/test/csv'
    at_cascade.empty_directory(fit_dir)
    #
    # write csv files
