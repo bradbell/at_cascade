@@ -308,12 +308,14 @@ def add_shift_grid_row(
                if eta is None :
                   std  = statistics.stdev(fit_sample[key], xbar=mean)
                else:
-                  # The statistics were computed in log space
-                  # and then transformed to original space.
+                  # There is a log trasnformation of this variable before
+                  # passing it to cppad_mixed. Hence its value are gaussian
+                  # in log space.
                   #
                   # log_sample
                   log_sample = list()
                   for sample in fit_sample[key] :
+                     sample = max( - eta / 5.0 , sample )
                      log_sample.append( math.log( sample + eta ) )
                   #
                   # log_std
