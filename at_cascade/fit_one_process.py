@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # Set this to False when debugging an exception during fit_one_job routine
 catch_exceptions_and_continue = True
@@ -293,6 +293,10 @@ def try_one_job(
             #
             print( f'\nfit {fit_type:<5} {job_name} message:\n' + str(e) )
    #
+   # trace_file_obj
+   if trace_file_obj != None :
+      trace_file_obj.close()
+   #
    if job_done :
       #
       # shared_lock
@@ -380,7 +384,6 @@ def try_one_job(
       #
       print( f'       {status_count}' )
       #
-      trace_file_obj.close()
    return
 # ----------------------------------------------------------------------------
 # BEGIN DEF

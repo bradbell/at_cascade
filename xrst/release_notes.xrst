@@ -21,6 +21,7 @@ Release Notes for at_cascade
    Errno
    xam
    sincidence
+   meas
    mtstandard
    args
 }
@@ -33,9 +34,25 @@ Release Notes for 2024
 mm-dd
 *****
 
+06-24
+=====
+Remove the Measurement Value Effects wish list item
+(it was completed on 06-23 by adding the zero_meas_value option).
+
+06-23
+=====
+#. Add the :ref:`csv.predict@Input Files@option_predict.csv@zero_meas_value`
+   prediction option.
+   Note that this requires dismod_at version 2024.6.23 or later.
+#. There was a problem computing the standard deviations of variables
+   that have priors where eta is not None. This has been fixed.
+   (These variables are simulated in log space and negative values
+   could cause this transformation to fail.)
+
 06-18
 =====
-Add the :ref:`wish_list@Measurement Value Effects` wish list item.
+Add the Measurement Value Effects wish list item.
+(it was completed on 06-23 by adding the zero_meas_value option).
 
 06-12
 =====

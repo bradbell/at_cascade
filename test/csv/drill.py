@@ -33,8 +33,8 @@ root_node_name,n0
 random_seed = str( int( time.time() ) )
 csv_file['option_predict.csv'] = \
 '''name,value
-db2csv,true
-plot,true
+db2csv,false
+plot,false
 '''
 #
 # node.csv
@@ -67,12 +67,10 @@ n3,male,2.0,50,2000,0.02
 '''
 #
 # fit_goal.csv
-# n-1 is not included in test because it is not below the root node n0
+# do a drill do n2
 csv_file['fit_goal.csv'] = \
 '''node_name
-n1
 n2
-n3
 '''
 #
 # predict_integrand.csv
@@ -131,7 +129,7 @@ csv_file['data_in.csv'] = header + \
 def main() :
    #
    # fit_dir
-   fit_dir = 'build/test'
+   fit_dir = 'build/test/csv'
    at_cascade.empty_directory(fit_dir)
    #
    # write csv files
@@ -177,7 +175,7 @@ def main() :
       predict_table = at_cascade.csv.read_table(file_name)
       #
       # node
-      for node in [ 'n0', 'n1', 'n2' ] :
+      for node in [ 'n-1', 'n0', 'n1', 'n2', 'n3' ] :
          # sex_name
          for sex_name in [ 'female', 'both', 'male' ] :
             #
@@ -191,7 +189,9 @@ def main() :
                   sample_list.append(row)
             #
             # check sample_list
-            if node == 'n0' or sex_name != 'both' :
+            if node in [ 'n-1', 'n1' , 'n3' ] :
+               assert len(sample_list) == 0
+            elif node == 'n0' or sex_name != 'both' :
                if prefix == 'fit' :
                   assert len(sample_list) == 1
                else :
@@ -221,22 +221,21 @@ def main() :
    ]
    #
    # subdir_list
-   subdir_list = {
-      ('n0', 'both')   : 'n0' ,
-      ('n0', 'female') : 'n0/female' ,
-      ('n0', 'male')   : 'n0/male' ,
-      ('n1', 'female') : 'n0/female/n1' ,
-      ('n1', 'male')   : 'n0/male/n1' ,
-      ('n2', 'female') : 'n0/female/n2' ,
-      ('n2', 'male')   : 'n0/male/n2' ,
-   }
+   check_list = [
+      { 'dir' : 'n0',            'exists' : True },
+      { 'dir' : 'n0/female',     'exists' : True },
+      { 'dir' : 'n0/male',       'exists' : True },
+      { 'dir' : 'n0/female/n1',  'exists' : False},
+      { 'dir' : 'n0/male/n1',    'exists' : False},
+      { 'dir' : 'n0/female/n2',  'exists' : True  },
+      { 'dir' : 'n0/male/n2',    'exists' : True  },
+   ]
    #
    # check for db2csv files
-   for (node, sex) in subdir_list :
-      subdir = subdir_list[(node, sex)]
-      for name in db2csv_name_list + [ 'data_plot.pdf', 'rate_plot.pdf' ] :
-         file_path = f'{fit_dir}/{subdir}/{name}'
-         assert os.path.exists(file_path)
+   for check in check_list :
+      subdir = check['dir']
+      path   = f'{fit_dir}/{subdir}'
+      assert os.path.exists(path) == check['exists']
    #
    file_name = f'{fit_dir}/n0/dismod.db'
    new      = False

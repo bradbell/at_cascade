@@ -209,6 +209,7 @@ def pre_one_job(
    float_precision       ,
    db2csv                ,
    plot                  ,
+   zero_meas_value       ,
 ) :
    assert type(predict_job_name) == str
    assert type(fit_dir) == str
@@ -221,6 +222,7 @@ def pre_one_job(
    assert type( float_precision ) == int
    assert type( db2csv ) == bool
    assert type( plot ) == bool
+   assert type( zero_meas_value) == bool
    # END_DEF
    #
    # option_all_table
@@ -397,6 +399,8 @@ def pre_one_job(
       else :
          assert prefix == 'sam'
          command.append( 'sample' )
+      if zero_meas_value :
+         command.append( 'zero_meas_value' )
       dismod_at.system_command_prc(command, print_command = False )
       #
       # predict_table, covariate_table

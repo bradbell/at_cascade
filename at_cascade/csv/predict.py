@@ -16,6 +16,7 @@ r'''
    avgint
    boolean
    cpus
+   meas
    pdf
    sam
    tru
@@ -89,6 +90,22 @@ The default value for this option is false .
 
 .. _db2csv_command: https://dismod-at.readthedocs.io/db2csv_command.html
 
+float_precision
+---------------
+This integer is the number of decimal digits of precision to
+include for float values in the output csv files.
+The default value for this option is 5.
+
+These are no effect rates; i.e., they are the estimated rate
+for this node an sex without any covariate effects
+If you want to include covariate effects, you will have to make your
+own plots using the
+:ref:`csv.predict@Output Files@fit_predict.csv` and
+:ref:`csv.predict@Output Files@sam_predict.csv` files.
+The dismod_at `plot_curve`_ routine may be helpful in this regard.
+
+.. _plot_curve: https://dismod-at.readthedocs.io/plot_curve.html
+
 max_number_cpu
 --------------
 This integer is the maximum number of cpus (processes) to use
@@ -110,21 +127,13 @@ integrand in the predict_integrand.csv file.
 The rate plot includes all the non-zero rates.
 The default value for this option is false .
 
-float_precision
+zero_meas_value
 ---------------
-This integer is the number of decimal digits of precision to
-include for float values in the output csv files.
-The default value for this option is 5.
-
-These are no effect rates; i.e., they are the estimated rate
-for this node an sex without any covariate effects
-If you want to include covariate effects, you will have to make your
-own plots using the
-:ref:`csv.predict@Output Files@fit_predict.csv` and
-:ref:`csv.predict@Output Files@sam_predict.csv` files.
-The dismod_at `plot_curve`_ routine may be helpful in this regard.
-
-.. _plot_curve: https://dismod-at.readthedocs.io/plot_curve.html
+If this boolean option is true, the
+:ref:`csv.fit@Input Files@mulcov.csv@type@meas_value` covariate
+multipliers are set to zero during the predictions
+(instead of their simulation values, fit, or sample values).
+The default value for this option is false .
 
 covariate.csv
 =============
@@ -363,6 +372,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'float_precision'       : (int,   5)                  ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
       'plot'                  : (bool,  False)              ,
+      'zero_meas_value'       : (bool,  False)              ,
    }
    # END_SORT_THIS_LINE_MINUS_2
    #
@@ -405,6 +415,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
    table = list()
    for name in global_option_value :
       value = global_option_value[name]
+
       if type(value) == bool :
          if value :
             value = 'true'

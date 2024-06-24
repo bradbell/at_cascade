@@ -283,6 +283,9 @@ def pre_one_process(
          plot              = False
          fit_database      = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
       #
+      # zero_meas_value
+      zero_meas_value = option_predict['zero_meas_value']
+      #
       # ancestor_database
       # Must copy ancestor database because predictions will change it
       ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
@@ -311,6 +314,7 @@ def pre_one_process(
             predict_sex_id          = predict_sex_id            ,
             db2csv                  = db2csv                    ,
             plot                    = plot                      ,
+            zero_meas_value         = zero_meas_value           ,
          )
       else :
          try :
@@ -326,6 +330,7 @@ def pre_one_process(
                predict_sex_id          = predict_sex_id            ,
                db2csv                  = db2csv                    ,
                plot                    = plot                      ,
+               zero_meas_value         = zero_meas_value           ,
             )
             # job_error
             predict_job_error = None
