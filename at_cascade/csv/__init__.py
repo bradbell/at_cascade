@@ -120,7 +120,6 @@ Routines
    at_cascade/csv/pre_parallel.py
    at_cascade/csv/pre_user.py
    at_cascade/csv/predict.py
-   at_cascade/csv/predict_prior.py
    at_cascade/csv/read_table.py
    at_cascade/csv/set_truth.py
    at_cascade/csv/simulate.py
