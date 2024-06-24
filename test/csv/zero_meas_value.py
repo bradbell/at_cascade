@@ -27,10 +27,9 @@ csv_file['option_fit.csv'] = \
 '''name,value
 max_abs_effect,3.0
 number_sample,10
-sample_method,simulate
+sample_method,asymptotic
 no_ode_ignore,iota
 root_node_name,n0
-max_number_cpu,1
 absolute_covariates,young
 '''
 #
@@ -41,6 +40,7 @@ csv_file['option_predict.csv'] = \
 db2csv,true
 plot,true
 zero_meas_value,true
+max_number_cpu,1
 '''
 #
 # node.csv
@@ -132,7 +132,7 @@ def main() :
    table      = at_cascade.csv.read_table( file_name )
    #
    # data_in.csv
-   float_format        = '{0:.7g}'
+   float_format        = '{0:.8g}'
    mulcov_young_true   = 0.5
    file_name           = f'{fit_dir}/data_in.csv'
    table               = at_cascade.csv.read_table( file_name )
