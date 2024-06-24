@@ -146,4 +146,5 @@ from .read_table       import read_table
 from .set_truth        import set_truth
 from .simulate         import simulate
 from .write_table      import write_table
+from .predict_prior    import predict_prior
 # END_SORT_THIS_LINE_MINUS_1
