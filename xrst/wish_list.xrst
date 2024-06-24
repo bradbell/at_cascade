@@ -14,15 +14,6 @@
 Wish List for at_cascade
 ########################
 
-Measurement Value Effects
-*************************
-Currently all the covariate effects are
-included in the predictions made by :ref:`csv.predict-name` .
-Some users would like to omit the
-:ref:`csv.fit@Input Files@mulcov.csv@type@meas_value`
-covariate effects, because these effects
-represent biases in the measurements and not changes in the integrand.
-
 avgint Table
 ************
 Change :ref:`cascade_root_node-name` so that upon return
