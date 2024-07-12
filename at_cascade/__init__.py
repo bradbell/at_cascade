@@ -15,7 +15,7 @@ at_cascade.version
 ******************
 The version number for this copy of at_cascade.
 {xrst_code py}'''
-version = '2024.7.10'
+version = '2024.7.12'
 '''{xrst_code}
 
 at_cascade.constant_table_list
@@ -40,6 +40,7 @@ constant_table_list = [
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
 {xrst_toc_table
+   at_cascade/map_shared.py
    at_cascade/add_log_entry.py
    at_cascade/avgint_parent_grid.py
    at_cascade/bilinear.py
@@ -84,6 +85,7 @@ constant_table_list = [
 
 # BEGIN_SORT_THIS_LINE_PLUS_1
 from .                      import csv
+from .map_shared            import map_shared
 from .add_log_entry         import add_log_entry
 from .avgint_parent_grid    import avgint_parent_grid
 from .bilinear              import bilinear

@@ -34,6 +34,10 @@ Release Notes for 2024
 mm-dd
 *****
 
+07-12
+=====
+Add the :ref:`map_shared-name` routine so that at_cascade runs on macOS.
+
 06-24
 =====
 Remove the Measurement Value Effects wish list item

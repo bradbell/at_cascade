@@ -216,17 +216,18 @@ def pre_parallel(
    n_predict = len(predict_job_id_list)
    #
    # ----------------------------------------------------------------------
-   # shared_memory_prefix_plus
-   shared_memory_prefix = get_shared_memory_prefix(all_node_db)
-   start_name           = job_table[start_job_id]['job_name']
+   # shared_job_status_name
+   shared_memory_prefix      = get_shared_memory_prefix(all_node_db)
+   start_name                = job_table[start_job_id]['job_name']
    shared_memory_prefix_plus = shared_memory_prefix + f'_pre_{start_name}'
-   print(f'create: {shared_memory_prefix_plus} shared memory')
+   shared_job_status_name    = shared_memory_prefix_plus + '_job_status'
+   print(f'create: {shared_job_status_name} shared memory')
    #
    # shm_job_status, shared_job_status
-   tmp  = numpy.empty(len(job_table), dtype = int )
-   name = shared_memory_prefix_plus + '_job_status'
+   tmp    = numpy.empty(len(job_table), dtype = int )
+   mapped = at_cascade.map_shared( shared_job_status_name )
    shm_job_status = multiprocessing.shared_memory.SharedMemory(
-      create = True, size = tmp.nbytes, name = name
+      create = True, size = tmp.nbytes, name = mapped
    )
    shared_job_status = numpy.ndarray(
       tmp.shape, dtype = tmp.dtype, buffer = shm_job_status.buf
@@ -260,7 +261,7 @@ def pre_parallel(
             root_split_reference_id,
             error_message_dict,
             job_status_name,
-            shm_job_status.name,
+            shared_job_status_name,
             shared_lock,
          )
       )
@@ -281,7 +282,7 @@ def pre_parallel(
       root_split_reference_id,
       error_message_dict,
       job_status_name,
-      shm_job_status.name,
+      shared_job_status_name,
       shared_lock,
    )
    #
@@ -304,6 +305,6 @@ def pre_parallel(
    )
    #
    # shm_job_status
-   print(f'remove: {shared_memory_prefix_plus} shared memory')
+   print(f'remove: {shared_job_status_name} shared memory')
    shm_job_status.close()
    shm_job_status.unlink()

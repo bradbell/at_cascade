@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin clear_shared}
@@ -13,7 +13,7 @@ Clear at_cascade Shared Memory
 ##############################
 
 Prototype
-i********
+*********
 {xrst_literal
    # BEGIN DEF
    # END DEF
@@ -75,15 +75,16 @@ def clear_shared(all_node_database, job_name) :
       #
       # shared_memory_name
       shared_memory_name = shared_memory_prefix_plus + name
+      mapped_memory_name = at_cascde.map_shared( shared_memory_name )
       try :
          shm = shared_memory.SharedMemory(
-            create = True, name = shared_memory_name, size = 1
+            create = True, name = mapped_memory_name, size = 1
          )
          exists = False
       except FileExistsError :
          try :
             shm = shared_memory.SharedMemory(
-               create = False, name = shared_memory_name
+               create = False, name = mapped_memory_name
             )
             exist = True
          except Exception as e :
