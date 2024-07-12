@@ -28,6 +28,9 @@ dependencies = [
   'scipy',
 ]
 
+[tool.setuptools]
+packages = [ 'at_cascade' ]
+
 [project.urls]
 'Homepage'    = 'https://bradbell.github.io/at_cascade'
 'Bug Tracker' = 'https://github.com/bradbell/at_cascade/issues'

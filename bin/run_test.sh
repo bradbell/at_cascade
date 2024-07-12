@@ -14,25 +14,37 @@ then
    echo "The test_file '$1' does not exist."
    exit 1
 fi
+#
+# sed_path
+if which gsed >& /dev/null
+then
+   sed_path=$(which gsed)
+else
+   sed_path=$(which sed)
+fi
+#
+# test_file
 test_file="$1"
+#
+# try_number
 for try_number in {1..3}
 do
    if python3 $test_file >& run_test.tmp
    then
       if [ "$test_file" == 'test/recover_fit.py' ]
       then
-         sed -i run_test.tmp \
+         $sed_path -i run_test.tmp \
             -e '/fixed effects information matrix is not positive/d' \
             -e '/sample table was not created/d'
       fi
       if [ "$test_file" == 'test/csv/sample_fail.py' ]
       then
-         sed -i run_test.tmp \
+         $sed_path -i run_test.tmp \
             -e '/dismod_at warning: sample asymptotic/d' \
             -e '/sample table was not created/d'
       fi
       # virtual box is getting these warnings:
-      sed -i run_test.tmp \
+      $sed_path -i run_test.tmp \
          -e '/^libEGL warning: egl: failed to create dri2 screen/d'
       if ! grep 'warning:' run_test.tmp > /dev/null
       then
