@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # test copy_root_db and copy_other_tbl.py
 # ----------------------------------------------------------------------------
@@ -173,7 +173,7 @@ def main() :
    assert float( row['meas_value'] ) == iota_mean
 
 #
-main()
-print('copy_other_tbl: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('copy_other_tbl: OK')
 # END no_ode_xam source code

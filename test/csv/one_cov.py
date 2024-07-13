@@ -305,5 +305,4 @@ if __name__ == '__main__' :
    fit(sim_dir, fit_dir)
    #
    print('csv_one_cov.py: OK')
-   sys.exit(0)
 # END_SOURCE_CODE

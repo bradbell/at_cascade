@@ -175,6 +175,6 @@ def main() :
    #
    # connection
    connection.close()
-main()
-print('get_cov_rererence: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('get_cov_rererence: OK')

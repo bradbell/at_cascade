@@ -25,6 +25,10 @@ fi
 #
 # test_file
 test_file="$1"
+if [ "$test_file" == 'example/csv/coverage.py' ]
+then
+   echo '   This example is expected to take about 2 minutes to run.'
+fi
 #
 # try_number
 for try_number in {1..3}

@@ -250,7 +250,7 @@ def main() :
    assert max_cov_diff == 0.5
    assert max_mulcov == max_abs_effect / max_cov_diff
 #
-main()
-print('csv_fit.py: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('csv_fit.py: OK')
 # END_PYTHON

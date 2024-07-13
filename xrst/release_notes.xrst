@@ -36,9 +36,9 @@ mm-dd
 
 07-13
 =====
-Change the main program in all the examples so that it only executes
+Change the main program in all the examples and tests so that it only executes
 when ``__name__`` is equal to ``'__main__'`` . This was another change
-necessary for the macOS system.
+necessary for the macOS system (when using the python multiprocessing package).
 
 07-12
 =====
