@@ -36,7 +36,12 @@ def map_shared(shared_name) :
    mac_os  = platform.system() == 'Darwin'
    sandbox  = os.getcwd().endswith('at_cascade.git')
    if mac_os or sandbox :
-      mapped_name = str( hash(shared_name) )
+      hash_code   = 0
+      factor      = 0
+      for ch in shared_name :
+         factor    += 1
+         hash_code += factor * ord(ch)
+      mapped_name = str( hash_code )
    else :
       mapped = shared_name
    # BEGIN RETURN
