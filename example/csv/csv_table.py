@@ -56,5 +56,4 @@ def main() :
 if __name__ == '__main__' :
    main()
    print('cvs_table: OK')
-   sys.exit(0)
 # END_SOURCE

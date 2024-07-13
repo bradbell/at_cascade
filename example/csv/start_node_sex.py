@@ -341,7 +341,8 @@ def main() :
                else :
                   assert abs(rel_error) < 1e-4
 
-   print('start_node_sex.py: OK')
 #
-main()
+if __name__ == '__main__' :
+   main()
+   print('start_node_sex.py: OK')
 # END_PROGRAM

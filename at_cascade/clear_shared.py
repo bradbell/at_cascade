@@ -47,6 +47,7 @@ for the shared memory that we are clearing; see
 {xrst_end clear_shared}
 '''
 import dismod_at
+import at_cascade
 from multiprocessing import shared_memory
 # BEGIN DEF
 # at_cascade.clear_shared
@@ -75,7 +76,7 @@ def clear_shared(all_node_database, job_name) :
       #
       # shared_memory_name
       shared_memory_name = shared_memory_prefix_plus + name
-      mapped_memory_name = at_cascde.map_shared( shared_memory_name )
+      mapped_memory_name = at_cascade.map_shared( shared_memory_name )
       try :
          shm = shared_memory.SharedMemory(
             create = True, name = mapped_memory_name, size = 1
@@ -86,10 +87,10 @@ def clear_shared(all_node_database, job_name) :
             shm = shared_memory.SharedMemory(
                create = False, name = mapped_memory_name
             )
-            exist = True
+            exists = True
          except Exception as e :
             print( str(e) )
-            exist = None
+            exists = None
       #
       if exists == None :
          print( f'Unknonw state: {shared_memory_name}' )

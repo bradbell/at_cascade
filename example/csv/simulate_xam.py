@@ -228,8 +228,8 @@ def main() :
       check_mean = math.exp(effect) * no_effect_iota
       assert abs( check_mean - meas_mean ) <= eps10 * meas_mean
    #
-   print('simulte_xam.py: OK')
-   sys.exit(0)
 #
-main()
+if __name__ == '__main__' :
+   main()
+   print('simulte_xam.py: OK')
 # END_PYTHON

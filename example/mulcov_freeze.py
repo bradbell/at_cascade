@@ -628,7 +628,7 @@ def main() :
       else :
          assert abs( 1.0 - alpha / alpha_n1 ) > 20.0 * eps
 #
-main()
-print('mulcov_freeze: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('mulcov_freeze: OK')
 # END mulcov_freeze source code

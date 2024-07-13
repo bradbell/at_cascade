@@ -476,8 +476,7 @@ def main() :
          assert False, msg
 
 #
-main()
-print('relrisk: OK')
-#
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('relrisk: OK')
 # END PYTHON

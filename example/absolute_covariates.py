@@ -581,7 +581,7 @@ def main() :
    for not_fit_dir in [ 'n0/n2/n5', 'n0/n2/n6' ] :
       assert not os.path.exists( f'{result_dir}/{not_fit_dir}' )
 #
-main()
-print('absolute_covariates: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('absolute_covariates: OK')
 # END_2 absolute_covariates source code

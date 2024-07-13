@@ -331,7 +331,8 @@ def main() :
         print(f'age={age}, iota={iota}, check={check}, rel_error={rel_error}')
       assert abs(rel_error) < 1e-4
    #
-   print('population.py: OK')
 #
-main()
+if __name__ == '__main__' :
+   main()
+   print('population.py: OK')
 # END_PROGRAM

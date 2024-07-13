@@ -77,5 +77,4 @@ def main() :
 if __name__ == '__main__' :
    main()
    print('csv_join_file_xam: OK')
-   sys.exit(0)
 # END_SOURCE

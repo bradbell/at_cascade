@@ -34,6 +34,12 @@ Release Notes for 2024
 mm-dd
 *****
 
+07-13
+=====
+Change the main program in all the examples so that it only executes
+when ``__name__`` is equal to ``'__main__'`` . This was another change
+necessary for the macOS system.
+
 07-12
 =====
 Add the :ref:`map_shared-name` routine so that at_cascade runs on macOS.
