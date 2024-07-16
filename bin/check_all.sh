@@ -15,6 +15,27 @@ then
    exit 1
 fi
 # -----------------------------------------------------------------------------
+if ! which dismod_at > /dev/null
+then
+   echo 'Cannot find dismod_at executable is not in your PATH directories:'
+   echo $PATH
+   exit 1
+fi
+if ! python -c 'import dismod_at' >& /dev/null
+then
+   echo 'Cannot find dismod_at python module in your PYTHONPATH directories:'
+   echo $PYTHONPATH
+   exit 1
+fi
+if ! which gsed > /dev/null
+then
+   if [ $(uname -s) == 'Darwin' ]
+   then
+      echo 'This is a macOS system and the gsed program is not installed'
+      exit 1
+   fi
+fi
+# -----------------------------------------------------------------------------
 list='
    at_cascade/fit_one_process.py
    at_cascade/csv/pre_one_process.py
