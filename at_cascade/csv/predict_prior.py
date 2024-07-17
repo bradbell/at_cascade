@@ -87,7 +87,4 @@ def predict_prior(fit_dir):
    # prior_pred.db sample
    command = [ 'dismod_at', database, 'sample' , 'asymptotic', 'both', '20' ]
    dismod_at.system_command_prc(command)
-   #
-   # finish with success message
-   print('predict_prior.py: OK')
 #
