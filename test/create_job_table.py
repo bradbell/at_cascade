@@ -415,6 +415,6 @@ def main() :
    )
    assert job_table == check_job_table
 #
-main()
-print('create_job_table: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('create_job_table: OK')

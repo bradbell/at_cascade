@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin fit_parallel}
@@ -162,21 +162,28 @@ def fit_parallel(
       f'{shared_memory_prefix}_{start_name}{shared_unique}'
    print(f'create: {shared_memory_prefix_plus} shared memory')
    # -------------------------------------------------------------------------
+   # shared_number_cpu_inuse_name
+   shared_number_cpu_inuse_name = \
+      shared_memory_prefix_plus + '_number_cpu_inuse'
+   #
    # shm_number_cpu_inuse, shared_number_cpu_inuse
-   tmp  = numpy.empty(1, dtype = int )
-   name = shared_memory_prefix_plus + '_number_cpu_inuse'
+   tmp    = numpy.empty(1, dtype = int )
+   mapped = at_cascade.map_shared(shared_number_cpu_inuse_name)
    shm_number_cpu_inuse = multiprocessing.shared_memory.SharedMemory(
-      create = True, size = tmp.nbytes, name = name
+      create = True, size = tmp.nbytes, name = mapped
    )
    shared_number_cpu_inuse = numpy.ndarray(
       tmp.shape, dtype = tmp.dtype, buffer = shm_number_cpu_inuse.buf
    )
    # -------------------------------------------------------------------------
+   # shared_job_status_name
+   shared_job_status_name = shared_memory_prefix_plus + '_job_status'
+   #
    # shm_job_status, shared_job_status
-   tmp  = numpy.empty(len(job_table), dtype = int )
-   name = shared_memory_prefix_plus + '_job_status'
+   tmp    = numpy.empty(len(job_table), dtype = int )
+   mapped = at_cascade.map_shared(shared_job_status_name)
    shm_job_status = multiprocessing.shared_memory.SharedMemory(
-      create = True, size = tmp.nbytes, name = name
+      create = True, size = tmp.nbytes, name = mapped
    )
    shared_job_status = numpy.ndarray(
       tmp.shape, dtype = tmp.dtype, buffer = shm_job_status.buf
@@ -234,8 +241,8 @@ def fit_parallel(
       master_process,
       fit_type_list,
       job_status_name,
-      shm_job_status.name,
-      shm_number_cpu_inuse.name,
+      shared_job_status_name,
+      shared_number_cpu_inuse_name,
       shared_lock,
       shared_event,
    )

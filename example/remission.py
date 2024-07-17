@@ -519,7 +519,7 @@ def main() :
       )
    #
 #
-main()
-print('remission: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('remission: OK')
 # END remission source code

@@ -210,6 +210,6 @@ def main() :
          file_path = f'{fit_dir}/{subdir}/{name}'
          assert os.path.exists(file_path)
 #
-main()
-print('csv_sample_fail.py: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('csv_sample_fail.py: OK')

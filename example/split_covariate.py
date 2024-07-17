@@ -644,8 +644,8 @@ def main(refit_split) :
    check = fit_iota * exp( fit_alpha * income_difference )
    assert abs(1.0 - shift_mean/check) < 1e-12
 #
-main(False)
-main(True)
-print('split_covariate: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main(False)
+   main(True)
+   print('split_covariate: OK')
 # END split_covariate source code

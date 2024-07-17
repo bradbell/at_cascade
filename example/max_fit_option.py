@@ -460,7 +460,7 @@ def main() :
       #
       assert len(data_subset) - count_hold_out == max_fit_option
 #
-main()
-print('max_fit_option: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('max_fit_option: OK')
 # END source code

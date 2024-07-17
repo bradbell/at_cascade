@@ -463,5 +463,4 @@ def main() :
 if __name__ == '__main__' :
    main()
    print('max_fit_option: OK')
-   sys.exit(0)
 # END source code

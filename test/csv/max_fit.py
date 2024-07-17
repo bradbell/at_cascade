@@ -149,7 +149,7 @@ def main() :
          hold_in_count += 1
    assert hold_in_count == max_fit
 #
-main()
-print('csv_max_fit: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('csv_max_fit: OK')
 # END_PYTHON

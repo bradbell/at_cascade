@@ -348,6 +348,6 @@ def main() :
    for fit_node_name in [ 'n1', 'n2' ] :
       check_dage_mean(result_dir, fit_node_name)
 #
-main()
-print('no_child_data.py: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('no_child_data.py: OK')

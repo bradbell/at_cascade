@@ -681,7 +681,7 @@ def main() :
       assert not os.path.exists( not_fit_dir )
 
 #
-main()
-print('prevalence2iota: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('prevalence2iota: OK')
 # END prevalence2iota source code

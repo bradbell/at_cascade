@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 @xrst_begin_parent split_covariate@
@@ -602,7 +602,7 @@ def main() :
    check = fit_iota * exp( fit_alpha * sex_difference )
    assert abs(1.0 - shift_mean/check) < 1e-12
 #
-main()
-print('split_covariate: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('split_covariate: OK')
 # END split_covariate source code

@@ -4,6 +4,12 @@ set -e -u
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 # SPDX-FileContributor: 2020-24 Bradley M. Bell
 # -----------------------------------------------------------------------------
+# bash function that echos and executes a command
+echo_eval() {
+   echo $*
+   eval $*
+}
+# -----------------------------------------------------------------------------
 if [ $# != 0 ]
 then
    echo 'bin/check_version.sh: does not expect any arguments'
@@ -23,7 +29,7 @@ fi
 #
 # check_version
 check_version() {
-   sed "$1" -f temp.sed > temp.out
+   sed -f temp.sed "$1" > temp.out
    if ! diff "$1" temp.out > /dev/null
    then
       version_ok='no'

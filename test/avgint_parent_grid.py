@@ -334,6 +334,6 @@ def main() :
       relative_err = 1.0 - predict_value / true_value
       assert abs( relative_err ) < 1e-7
 #
-main()
-print('avgint_parent_grid.py: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('avgint_parent_grid.py: OK')

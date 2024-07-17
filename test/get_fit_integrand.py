@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 #
 import os
@@ -114,6 +114,6 @@ def main() :
    # check fit_integrand
    check = { 0, 1, 2, 4 }
    assert check == fit_integrand
-main()
-print('get_fit_integrand: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('get_fit_integrand: OK')

@@ -254,6 +254,6 @@ def main() :
       eps99 = 99.0 * numpy.finfo(float).eps
       assert abs( relative_err ) < eps99
 #
-main()
-print('omega_constraint.py: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('omega_constraint.py: OK')

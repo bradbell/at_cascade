@@ -489,5 +489,4 @@ if __name__ == '__main__' :
    check(sim_dir, fit_dir)
    #
    print('csv.prevalence2iota: OK')
-   sys.exit(0)
 # END_PYTHON

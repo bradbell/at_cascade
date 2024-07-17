@@ -161,7 +161,7 @@ def main() :
       avg_integrand = float( row['avg_integrand'] )
       assert abs( 1.0 - avg_integrand / no_effect_iota_true ) < 1e-5
 #
-main()
-print('csv_fit.py: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('csv_fit.py: OK')
 # END_PYTHON

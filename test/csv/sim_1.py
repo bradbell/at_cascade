@@ -229,8 +229,8 @@ def run_test() :
       #
       assert abs( meas_mean / average_withC - 1.0 ) < 1e-3
 #
-run_test()
-#
-print('simulte_xam.py: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   run_test()
+   print('simulte_xam.py: OK')
+   sys.exit(0)
 # END_PYTHON

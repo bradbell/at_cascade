@@ -581,7 +581,7 @@ def main() :
    for not_fit_dir in [ f'{result_dir}/n0', '{result_dir}/n2' ] :
       assert not os.path.exists( not_fit_dir )
 #
-main()
-print('one_at_function: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('one_at_function: OK')
 # END one_at_function source code

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 #
 # Below is a diagram of the node tree for this example.
@@ -51,6 +51,6 @@ def main() :
    expected[1] = {3, 4} # fit children of n1
    #
    assert fit_children == expected
-main()
-print('get_fit_children: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('get_fit_children: OK')

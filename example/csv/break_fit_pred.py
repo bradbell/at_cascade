@@ -419,7 +419,8 @@ def main() :
                iota      = math.exp(effect) * no_effect_iota
                rel_error = (avgint - iota) / iota
                assert abs(rel_error) < 0.01
-   print('break_fit_pred.py: OK')
 #
-main()
+if __name__ == '__main__' :
+   main()
+   print('break_fit_pred.py: OK')
 # END_PROGRAM

@@ -859,7 +859,7 @@ def main() :
    assert float(row['std'])   == 10 * alpha_true_max_abs
    assert float(row['mean'])  != 0.0
 #
-main()
-print('no_ode_xam: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('no_ode_xam: OK')
 # END no_ode_xam source code

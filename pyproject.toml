@@ -9,24 +9,27 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 # ----------------------------------------------------------------------------
 [project]
-name    = 'at_cascade'
-version = '2024.6.24'
-authors = [
-  {name  = 'Bradley M. Bell', email = 'bradbell@seanet.com'},
-]
+name              = 'at_cascade'
+version           = '2024.7.15'
 description       = 'Cascading dismod_at from parent to child regions'
 license           = { text = 'AGPL-3.0-or-later' }
 requires-python   = '>=3.8'
+authors = [
+  {name  = 'Bradley M. Bell', email = 'bradbell@seanet.com'},
+]
 classifiers       = [
-'Programming Language :: Python :: 3',
-'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
-'Operating System :: OS Independent',
+   'Programming Language :: Python :: 3',
+   'License              :: OSI Approved',
+   'Operating System     :: OS Independent',
 ]
 dependencies = [
-  'matplotlib',
+  'dismod_at',
   'numpy',
   'scipy',
 ]
+
+[tool.setuptools]
+packages = [ 'at_cascade' ]
 
 [project.urls]
 'Homepage'    = 'https://bradbell.github.io/at_cascade'

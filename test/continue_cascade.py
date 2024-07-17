@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # This tests continuing the cascade from the splitting node
 # when refit_split is false. This was crashing on 2024-03-07.
@@ -404,7 +404,7 @@ def main() :
             assert row['var_type'] == 'mulcov_rate_value'
             fit_alpha = fit_var_table[var_id]['fit_var_value']
 #
-main()
-print('continue_cascade: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('continue_cascade: OK')
 # END split_covariate source code

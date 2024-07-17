@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # BEGIN no_ode_xam source code
 # ----------------------------------------------------------------------------
@@ -371,7 +371,7 @@ def main() :
          else :
             assert n0_row[key] == '' or n0_row[key] == no_ode_row[key]
    #
-main()
-print('no_ode_xam: OK')
-sys.exit(0)
+if __name__ == '__main__' :
+   main()
+   print('no_ode_xam: OK')
 # END no_ode_xam source code

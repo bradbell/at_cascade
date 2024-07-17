@@ -430,18 +430,20 @@ def fit_one_process(
    # ----------------------------------------------------------------------
    #
    # shm_job_status, shared_job_status
-   tmp  = numpy.empty(len(job_table), dtype = int )
+   tmp    = numpy.empty(len(job_table), dtype = int )
+   mapped = at_cascade.map_shared( shared_job_status_name )
    shm_job_status = multiprocessing.shared_memory.SharedMemory(
-      create = False, size = tmp.nbytes, name = shared_job_status_name
+      create = False, size = tmp.nbytes, name = mapped
    )
    shared_job_status = numpy.ndarray(
       tmp.shape, dtype = tmp.dtype, buffer = shm_job_status.buf
    )
    #
    # shm_number_cpu_inuse, shared_number_cpu_inuse
-   tmp  = numpy.empty(1, dtype = int )
+   tmp    = numpy.empty(1, dtype = int )
+   mapped = at_cascade.map_shared( shared_number_cpu_inuse_name )
    shm_number_cpu_inuse = multiprocessing.shared_memory.SharedMemory(
-      create = False, size = tmp.nbytes, name = shared_number_cpu_inuse_name
+      create = False, size = tmp.nbytes, name = mapped
    )
    shared_number_cpu_inuse = numpy.ndarray(
       tmp.shape, dtype = tmp.dtype, buffer = shm_number_cpu_inuse.buf
