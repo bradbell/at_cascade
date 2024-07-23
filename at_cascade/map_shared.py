@@ -21,8 +21,8 @@ Prototype
 Purpose
 *******
 The mac Darwin system has a limit on the length (in characters) of
-shared memory names. This routine returns a hash mapping of the shared memory
-name that is short enough to work on all systems.
+shared memory names. This routine returns a mapping of the shared memory
+name that is short enough to work on the current system.
 
 {xrst_end map_shared}
 '''
@@ -43,7 +43,8 @@ def map_shared(shared_name) :
          hash_code += factor * ord(ch)
       mapped_name = str( hash_code )
    else :
-      mapped = shared_name
+      # This case is not tested by bin/check_all.sh
+      mapped_name = shared_name
    # BEGIN RETURN
    assert type(mapped_name) == str
    return mapped_name

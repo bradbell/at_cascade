@@ -34,6 +34,11 @@ Release Notes for 2024
 mm-dd
 *****
 
+07-23
+=====
+Fix bug in :ref:`map_shared-name` when not running on macOS or in sandbox
+(introduced on 07-12).
+
 07-13
 =====
 Change the main program in all the examples and tests so that it only executes
