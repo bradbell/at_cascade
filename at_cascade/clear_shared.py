@@ -97,9 +97,11 @@ def clear_shared(all_node_database, job_name) :
          print( 'Try re-runing clear_shared')
       else :
          if exists :
-            print( f'Did Find:       {shared_memory_name}' )
+            print( f'Found:     {shared_memory_name}' )
          else :
-            print( f'Did Not Find:   {shared_memory_name}' )
+            print( f'Not Found: {shared_memory_name}' )
+         if shared_memory_name != mapped_memory_name :
+            print( f'           {mapped_memory_name}' )
          #
          shm.close()
          shm.unlink()
