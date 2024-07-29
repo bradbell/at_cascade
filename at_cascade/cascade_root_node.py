@@ -39,6 +39,14 @@ if ``True`` ( ``False`` ) the :ref:`no_ode_fit-name` routine
 will (will not) be used to modify the mean of the parent value
 and difference priors.
 
+fit_type_list
+*************
+This is a list with one or two elements
+and its possible elements are ``both`` and ``fixed``.
+For each job, the first type of fit is attempted.
+If it fails, and there is a second type of fit, it is attempted.
+If it also fails, the corresponding job fails.
+
 root_fit_database
 *****************
 This database is located at
@@ -54,13 +62,11 @@ see :ref:`option_all_table@root_node_database` .
 Upon return, this is a :ref:`glossary@fit_node_database` with the
 extra properties listed below:
 
-fit_type_list
-*************
-This is a list with one or two elements
-and its possible elements are ``both`` and ``fixed``.
-For each job, the first type of fit is attempted.
-If it fails, and there is a second type of fit, it is attempted.
-If it also fails, the corresponding job fails.
+Version
+=======
+The ``at_cascade`` and ``dismod_at`` version numbers
+are stored at the beginning of the log table in the
+*root_fit_database* .
 
 Output dismod.db
 ****************

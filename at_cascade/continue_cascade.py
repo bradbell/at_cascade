@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin continue_cascade}
@@ -66,7 +66,7 @@ for this parameter.
    *shared_unique* so the corresponding shared memory names are different;
    see :ref:`fit_parallel@shared_unique` .
 
-#. The *shared_unique* spacial case is where you are running (in parallel)
+#. The *shared_unique* special case is where you are running (in parallel)
    continue_cascade with the same *fit_node_database*, and disjoint
    *fit_goal_set* . (The intersection of disjoint sets is empty.)
 

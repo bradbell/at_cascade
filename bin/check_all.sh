@@ -1,7 +1,8 @@
-#! /bin/bash -e
+#! /usr/bin/env bash
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
+set -e -u
 # ----------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
@@ -15,7 +16,7 @@ then
    exit 1
 fi
 # -----------------------------------------------------------------------------
-if ! which dismod_at > /dev/null
+if ! which dismod_at >& /dev/null
 then
    echo 'Cannot find dismod_at executable is not in your PATH directories:'
    echo $PATH
@@ -27,7 +28,7 @@ then
    echo $PYTHONPATH
    exit 1
 fi
-if ! which gsed > /dev/null
+if ! which gsed >& /dev/null
 then
    if [ $(uname -s) == 'Darwin' ]
    then
