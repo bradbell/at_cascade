@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin fit_one_job}
@@ -288,11 +288,6 @@ def fit_one_job(
    parent_node_name = at_cascade.get_parent_node(fit_node_database)
    assert parent_node_name == node_table[fit_node_id]['node_name']
    #
-   # connection
-   connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
-   )
-   #
    # integrand_table
    root_node_database = option_all_dict['root_node_database']
    fit_or_root        = at_cascade.fit_or_root_class(
@@ -378,6 +373,13 @@ def fit_one_job(
       job_table         = job_table         ,
       fit_job_id        = run_job_id        ,
    )
+   #
+   # connection
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = False
+   )
+   #
+   # log avgint_parent_grid
    at_cascade.add_log_entry(connection, 'avgint_parent_grid')
    #
    # c_shift_predict_fit_var
@@ -393,6 +395,9 @@ def fit_one_job(
    # c_shift_avgint
    # is the table created by avgint_parent_grid
    at_cascade.move_table(connection, 'avgint', 'c_shift_avgint')
+   #
+   # connection
+   connection.close()
    #
    # shift_databases
    shift_databases = dict()
@@ -445,9 +450,10 @@ def fit_one_job(
    )
    #
    # empty_avgint_table
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = False
+   )
    at_cascade.empty_avgint_table(connection)
-   #
-   # connection
    connection.close()
    #
    # trace_line_number( inspect.currentframe().f_lineno )

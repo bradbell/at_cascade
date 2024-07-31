@@ -35,6 +35,17 @@ Release Notes for 2024
 mm-dd
 *****
 
+07-30
+=====
+It the IHME cluster is reporting errors like
+``SQL error: database is locked. SQL command: insert into log`` .
+This seems to happened at random times and is possibly due to
+an instability in the cluster file system.
+In the hope that it may reduce the number of times this occurs,
+the :ref:`fit_one_job-name` routine has been changed so
+that it does not leave a database connection open for long periods of time
+when the connection is not being used.
+
 07-23
 =====
 #. Fix bug in :ref:`map_shared-name` when not running on macOS or in sandbox
@@ -43,7 +54,7 @@ mm-dd
    when the mapped name is not the same as the shared name.
    Currently the mapped name and the shared not are the same except for
    Darwin (i.e. macOS) systems.
-#. See the heading 
+#. See the heading
    :ref:`cascade_root_node@root_fit_database@Version`
    is the cascade_root_node documentation.
 
