@@ -17,10 +17,12 @@ requires-python   = '>=3.8'
 authors = [
   {name  = 'Bradley M. Bell', email = 'bradbell@seanet.com'},
 ]
+#
+# see https://pypi.org/classifiers/
 classifiers       = [
    'Programming Language :: Python :: 3',
-   'License              :: OSI Approved',
-   'Operating System     :: OS Independent',
+   'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
+   'Operating System :: OS Independent',
 ]
 dependencies = [
   'dismod_at',
@@ -32,5 +34,5 @@ dependencies = [
 packages = [ 'at_cascade' ]
 
 [project.urls]
-'Homepage'    = 'https://bradbell.github.io/at_cascade'
+'Homepage'    = 'https://at-cascade.readthedocs.io'
 'Bug Tracker' = 'https://github.com/bradbell/at_cascade/issues'
