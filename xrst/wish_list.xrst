@@ -14,6 +14,19 @@
 Wish List for at_cascade
 ########################
 
+Predict with start_job_id below failing node
+********************************************
+Change :ref:`at_cascade/check_log.py` so that it will check logs starting 
+from the root_node. Currently check_log.py only checks logs starting from 
+the start_job_id and continuing down the cascade. This creates a case in 
+which the at_cascade.csv.predict function may generate bad ancestor.db files
+if the parent location of start_job_id fails to fit.
+
+Surface integrand table in at_cascade docs
+******************************************
+Add the integrand table found in https://dismod-at.readthedocs.io/integrand_table.html
+to the AT_Cascade docs for better visibility for end users of AT-Cascade
+
 avgint Table
 ************
 Change :ref:`cascade_root_node-name` so that upon return
