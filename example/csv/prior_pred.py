@@ -23,7 +23,7 @@ n1,n0
 n2,n0
 '''
 #
-max_number_cpu = None
+max_number_cpu = 1
 random_seed    = str( int( time.time() ) )
 csv_file['option_fit.csv']  = 'name,value\n'
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
@@ -35,12 +35,12 @@ csv_file['option_predict.csv']  = 'name,value\n'
 #
 csv_file['covariate.csv'] = \
 '''node_name,sex,age,time,omega,haqi
-n0,female,50,2000,0.02,1.0
-n1,female,50,2000,0.02,0.5
-n2,female,50,2000,0.02,1.5
-n0,male,50,2000,0.02,1.0
-n1,male,50,2000,0.02,0.5
-n2,male,50,2000,0.02,1.5
+n0,female,50,2000,0.002,1.0
+n1,female,50,2000,0.002,0.5
+n2,female,50,2000,0.002,1.5
+n0,male,50,2000,0.002,1.0
+n1,male,50,2000,0.002,0.5
+n2,male,50,2000,0.002,1.5
 '''
 #
 csv_file['fit_goal.csv'] = \
@@ -59,8 +59,8 @@ csv_file['prior.csv'] = \
 '''name,lower,upper,mean,std,density
 uniform_-1_1,-1.0,1.0,0.5,1.0,uniform
 uniform_eps_1,1e-6,1.0,0.5,1.0,uniform
-gauss_01,,,0.0,1.0,gaussian
-gauss_1e-6,1e-6,10,1,0.2,gaussian
+gauss_01,,,0.0,0.05,gaussian
+gauss_1e-6,1e-6,10,1,0.02,gaussian
 '''
 #
 csv_file['parent_rate.csv'] = \
@@ -245,42 +245,42 @@ def main() :
    computation(fit_dir)
    #
    # prefix
-   # for prefix in [ 'fit' , 'sam' ] :
-   #    #
-   #    # predict_table
-   #    file_name = f'{fit_dir}/{prefix}_predict.csv'
-   #    predict_table = at_cascade.csv.read_table(file_name)
-   #    #
-   #    # node
-   #    for node in [ 'n0', 'n1', 'n2' ] :
-   #       # sex
-   #       for sex in [ 'female', 'both', 'male' ] :
-   #          #
-   #          # sample_list
-   #          sample_list = list()
-   #          for row in predict_table :
-   #             if row['integrand_name'] == 'Sincidence' and \
-   #                   row['node_name'] == node and \
-   #                      row['sex'] == sex :
-   #                #
-   #                sample_list.append(row)
-   #          if node == 'n0' and sex == 'both' :
-   #             assert len(sample_list) != 0
-   #          elif node != 'n0' and sex != 'both' :
-   #             assert len(sample_list) != 0
-   #          else :
-   #             assert len(sample_list) == 0
-   #          #
-   #          if len(sample_list) > 0 :
-   #             sum_avgint = 0.0
-   #             for row in sample_list :
-   #                sum_avgint   += float( row['avg_integrand'] )
-   #             avgint    = sum_avgint / len(sample_list)
-   #             haqi      = float( row['haqi'] )
-   #             effect    = true_mulcov_haqi * (haqi - haqi_avg)
-   #             iota      = math.exp(effect) * no_effect_iota
-   #             rel_error = (avgint - iota) / iota
-   #             assert abs(rel_error) < 0.01
+   for prefix in [ 'fit' , 'sam' ] :
+      #
+      # predict_table
+      file_name = f'{fit_dir}/{prefix}_predict.csv'
+      predict_table = at_cascade.csv.read_table(file_name)
+      #
+      # node
+      for node in [ 'n0', 'n1', 'n2' ] :
+         # sex
+         for sex in [ 'female', 'both', 'male' ] :
+            #
+            # sample_list
+            sample_list = list()
+            for row in predict_table :
+               if row['integrand_name'] == 'Sincidence' and \
+                     row['node_name'] == node and \
+                        row['sex'] == sex :
+                  #
+                  sample_list.append(row)
+            if node == 'n0' and sex == 'both' :
+               assert len(sample_list) != 0
+            elif node != 'n0' and sex != 'both' :
+               assert len(sample_list) != 0
+            else :
+               assert len(sample_list) == 0
+            #
+            if len(sample_list) > 0 :
+               sum_avgint = 0.0
+               for row in sample_list :
+                  sum_avgint   += float( row['avg_integrand'] )
+               avgint    = sum_avgint / len(sample_list)
+               haqi      = float( row['haqi'] )
+               effect    = true_mulcov_haqi * (haqi - haqi_avg)
+               iota      = math.exp(effect) * no_effect_iota
+               rel_error = (avgint - iota) / iota
+               assert abs(rel_error) < 0.01
    print('prior_pred.py: OK')
 #
 main()
