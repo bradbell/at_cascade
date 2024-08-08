@@ -20,6 +20,12 @@ then
    echo 'bin/upload.sh: Must set PASSWORD environment variable before running'
    exit 1
 fi
+current_branch=$(git branch --show-current)
+if [ "$current_branch" != 'master' ]
+then
+   echo "bin/upload.sh: current_branch = $current_branch is not master"
+   exit 1
+fi
 if [ -e dist ]
 then
    rm -r dist
