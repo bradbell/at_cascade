@@ -14,6 +14,7 @@ current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
+import dismod_at
 #
 csv_file = dict()
 csv_file['node.csv'] = \
@@ -36,15 +37,16 @@ csv_file['option_predict.csv']  = 'name,value\n'
 csv_file['covariate.csv'] = \
 '''node_name,sex,age,time,omega,haqi
 n0,female,50,2000,0.002,1.0
-n1,female,50,2000,0.002,0.5
-n2,female,50,2000,0.002,1.5
+n1,female,50,2000,0.002,1.0
+n2,female,50,2000,0.002,1.0
 n0,male,50,2000,0.002,1.0
-n1,male,50,2000,0.002,0.5
-n2,male,50,2000,0.002,1.5
+n1,male,50,2000,0.002,1.0
+n2,male,50,2000,0.002,1.0
 '''
 #
 csv_file['fit_goal.csv'] = \
 '''node_name
+n0
 n1
 n2
 '''
@@ -60,7 +62,7 @@ csv_file['prior.csv'] = \
 uniform_-1_1,-1.0,1.0,0.5,1.0,uniform
 uniform_eps_1,1e-6,1.0,0.5,1.0,uniform
 gauss_01,,,0.0,0.05,gaussian
-gauss_1e-6,1e-6,10,1,0.02,gaussian
+gauss_1e-6,1e-6,10,0.1,0.02,gaussian
 '''
 #
 csv_file['parent_rate.csv'] = \
@@ -105,7 +107,6 @@ def computation(fit_dir) :
       at_cascade.csv.fit(fit_dir)
       at_cascade.csv.predict_prior(fit_dir)
    else :
-      print("entered else")
       # csv.fit: Just fit the root node
       # Since refit_split is false, this will only fit include n0.both.
       at_cascade.csv.fit(fit_dir, max_node_depth = 0)
@@ -143,7 +144,7 @@ def computation(fit_dir) :
       sim_dir        = None
       start_job_name = 'n0.both'
       max_job_depth  = 0
-      args            = ( fit_dir, )
+      args           = ( fit_dir, f'{fit_dir}/n0/', start_job_name, max_job_depth )
       print("args = ", *args)
       print("calling predict_prior")
       at_cascade.csv.predict_prior( *args )
@@ -158,11 +159,12 @@ def computation(fit_dir) :
       # n1.female, n1.male, n2.female, n2.male.
       # If max_number_cpu != 1, run them in parallel.
       sim_dir       = None
-      max_job_depth = 1
+      max_job_depth = 0
       for node_name in [ 'n1', 'n2' ] :
          for sex in [ 'female', 'male' ] :
             start_job_name = f'{node_name}.{sex}'
-            args           = ( fit_dir, )
+            job_dir = f'{fit_dir}/n0/{sex}/{node_name}/'
+            args           = ( fit_dir, job_dir, start_job_name, max_job_depth )
             if max_number_cpu == 1 :
                at_cascade.csv.predict_prior(*args)
             else :
@@ -175,26 +177,6 @@ def computation(fit_dir) :
       # If max_number_cpu != 1, wait for predict jobs to finish
       for key in p_predict :
          p_predict[key].join()
-      #
-      # # predict
-      # # fit_predict.csv, sam_predict.csv
-      # for prefix in [ 'fit' , 'sam' ] :
-      #    file_name = f'{fit_dir}/{prefix}_predict.csv'
-      #    file_out  = open(file_name, 'w')
-      #    writer    = None
-      #    for start_job_name in [
-      #       'n0.both', 'n1.female', 'n1.male', 'n2.female', 'n2.male'
-      #    ] :
-      #       file_name = f'{fit_dir}/predict/{prefix}_{start_job_name}.csv'
-      #       file_in   = open(file_name, 'r')
-      #       reader    = csv.DictReader(file_in)
-      #       for row in reader :
-      #          if writer == None :
-      #             writer = csv.DictWriter(file_out, fieldnames = row.keys() )
-      #             writer.writeheader()
-      #          writer.writerow(row)
-      #    file_out.close()
-   return
 #
 # main
 def main() :
@@ -211,7 +193,7 @@ def main() :
       file_ptr.close()
    #
    # node2haqi, haqi_avg
-   node2haqi  = { 'n0' : 1.0, 'n1' : 0.5, 'n2' : 1.5 }
+   node2haqi  = { 'n0' : 1.0, 'n1' : 1.0, 'n2' : 1.0 }
    file_name  = f'{fit_dir}/covariate.csv'
    table      = at_cascade.csv.read_table( file_name )
    haqi_sum   = 0.0
@@ -225,7 +207,7 @@ def main() :
    # data_in.csv
    float_format      = '{0:.5g}'
    true_mulcov_haqi  = 0.5
-   no_effect_iota    = 0.1
+   no_effect_iota    = 0.5
    file_name         = f'{fit_dir}/data_in.csv'
    table             = at_cascade.csv.read_table( file_name )
    for row in table :
@@ -247,23 +229,22 @@ def main() :
    # prefix
    for prefix in [ 'fit' , 'sam' ] :
       #
-      # predict_table
-      file_name = f'{fit_dir}/{prefix}_predict.csv'
-      predict_table = at_cascade.csv.read_table(file_name)
-      #
       # node
       for node in [ 'n0', 'n1', 'n2' ] :
          # sex
          for sex in [ 'female', 'both', 'male' ] :
             #
             # sample_list
+            # predict_table
+            file_name = f'{fit_dir}/{prefix}_predict.csv'
+            predict_table = at_cascade.csv.read_table(file_name)
+            #
             sample_list = list()
             for row in predict_table :
-               if row['integrand_name'] == 'Sincidence' and \
+               if row['integrand_name'] == "Sincidence" and \
                      row['node_name'] == node and \
                         row['sex'] == sex :
-                  #
-                  sample_list.append(row)
+                           sample_list.append(row)
             if node == 'n0' and sex == 'both' :
                assert len(sample_list) != 0
             elif node != 'n0' and sex != 'both' :
@@ -272,6 +253,11 @@ def main() :
                assert len(sample_list) == 0
             #
             if len(sample_list) > 0 :
+               print(f'{sample_list}')
+               print(f'prefix: {prefix}')
+               print(f'length: {len(sample_list)}')
+               print(f'node: {node}')
+               print(f'sex: {sex}')
                sum_avgint = 0.0
                for row in sample_list :
                   sum_avgint   += float( row['avg_integrand'] )
@@ -280,8 +266,12 @@ def main() :
                effect    = true_mulcov_haqi * (haqi - haqi_avg)
                iota      = math.exp(effect) * no_effect_iota
                rel_error = (avgint - iota) / iota
+               print(f'iota: {iota}')
+               print(f'avgint: {avgint}')
+               print(f'relative error: {rel_error}')
                assert abs(rel_error) < 0.01
-   print('prior_pred.py: OK')
 #
-main()
+if __name__ == '__main__' :
+   main()
+   print('prior_pred.py: OK')
 # END_PROGRAM
