@@ -15,16 +15,55 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 import dismod_at
-#
+"""
+{xrst_begin csv.break_fit_pred}
+{xrst_spell
+   const
+   dage
+   delim
+   dtime
+   eps
+   haqi
+   meas
+   sincidence
+   std
+   uniform uniform
+}
+
+Predict Fit Values and Samples for Priors
+#########################################
+
+csv_file
+********
+This dictionary is used to hold the data corresponding to the
+csv files for this example:
+{xrst_code py}"""
 csv_file = dict()
+"""{xrst_code}
+
+node.csv
+********
+For this example the root node, n0, has two children, n1 and n2.
+{xrst_code py}"""
 csv_file['node.csv'] = \
 '''node_name,parent_name
 n0,
 n1,n0
 n2,n0
 '''
-#
-max_number_cpu = 1
+"""{xrst_code}
+
+option_fit.csv
+**************
+This example uses the default value for all the options in option_fit.csv
+except for:
+
+#. random_seed is chosen using the python time package
+#. refit_split is set to false
+#. max_number_cpu should be either 1 or None
+
+{xrst_code py}"""
+max_number_cpu = None
 random_seed    = str( int( time.time() ) )
 csv_file['option_fit.csv']  = 'name,value\n'
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
@@ -32,8 +71,22 @@ csv_file['option_fit.csv'] += 'refit_split,false\n'
 #
 if max_number_cpu == 1 :
    csv_file['option_fit.csv'] += f'max_number_cpu,1\n'
+"""{xrst_code}
+
+option_predict.csv
+******************
+This example uses the default value for all the options in option_predict.csv.
+{xrst_code py}"""
 csv_file['option_predict.csv']  = 'name,value\n'
-#
+"""{xrst_code}
+
+covariate.csv
+*************
+This example has one covariate called haqi.
+Other cause mortality, omega, is constant and equal to 0.02.
+The covariate only depends on the node and is held constant
+at 1.0.
+{xrst_code py}"""
 csv_file['covariate.csv'] = \
 '''node_name,sex,age,time,omega,haqi
 n0,female,50,2000,0.002,1.0
@@ -43,20 +96,46 @@ n0,male,50,2000,0.002,1.0
 n1,male,50,2000,0.002,1.0
 n2,male,50,2000,0.002,1.0
 '''
-#
+"""{xrst_code}
+
+fit_goal.csv
+************
+The goal is to fit the model for nodes n1 and n2.
+{xrst_code py}"""
 csv_file['fit_goal.csv'] = \
 '''node_name
-n0
 n1
 n2
 '''
-#
+"""{xrst_code}
+
+predict_integrand.csv
+*********************
+For this example we want to know the values of Sincidence
+and prevalence for each of the goal nodes.
+(Note that Sincidence is a direct measurement of iota.)
+{xrst_code py}"""
 csv_file['predict_integrand.csv'] = \
 '''integrand_name
 Sincidence
 prevalence
 '''
-#
+"""{xrst_code}
+
+prior.csv
+*********
+We define four priors:
+
+.. csv-table::
+   :widths: auto
+   :delim: ;
+
+   uniform_1_1; a uniform distribution on [ -1, 1 ]
+   uniform_eps_1; a uniform distribution on [ 1e-6, 1 ]
+   gauss_01; a mean 0 standard deviation 1 Gaussian distribution
+   gauss_1e-6: a mean 0.1, standard deviation 0.02 Gaussian distribution on [1e-6, 10]
+
+{xrst_code py}"""
 csv_file['prior.csv'] = \
 '''name,lower,upper,mean,std,density
 uniform_-1_1,-1.0,1.0,0.5,1.0,uniform
@@ -64,22 +143,64 @@ uniform_eps_1,1e-6,1.0,0.5,1.0,uniform
 gauss_01,,,0.0,0.05,gaussian
 gauss_1e-6,1e-6,10,0.1,0.02,gaussian
 '''
-#
+"""{xrst_code}
+
+parent_rate.csv
+***************
+The only non-zero rates are omega and iota
+(omega is known and specified by the covariate.csv file).
+The model for iota is constant (with respect to age and time).
+Its value prior is gauss_1e-6.
+It does not have any dage or dtime priors because it is constant
+(so there are no age or time difference between grid values).
+{xrst_code py}"""
 csv_file['parent_rate.csv'] = \
 '''rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value
 iota,0.0,0.0,gauss_1e-6,,,
 '''
-#
+"""{xrst_code}
+
+child_rate.csv
+**************
+The child rates are random effects that represent the difference
+between the rate for a node being fit and the rate for one of its child nodes.
+These random effects are different for each child node.
+The are constant in age and time so age and time do not appear
+in child_rate.csv.
+In this example, when fitting n0, the child nodes are n1 and n2.
+When fitting n1 and n2, there are no child nodes (no random effects).
+Our prior for the random effects is gauss_01.
+{xrst_code py}"""
 csv_file['child_rate.csv'] = \
 '''rate_name,value_prior
 iota,gauss_01
 '''
-#
+r"""{xrst_code}
+
+mulcov.csv
+**********
+There is one covariate multiplier,
+it multiplies haqi and affects iota.
+The prior distribution for this multiplier is gauss_1e-6.
+{xrst_code py}"""
 csv_file['mulcov.csv'] = \
 '''covariate,type,effected,value_prior,const_value
 haqi,rate_value,iota,gauss_1e-6,
 '''
-#
+"""{xrst_code}
+
+
+
+data_in.csv
+***********
+The data_in.csv file has one point for each combination of node and sex.
+The integrand is Sincidence (a direct measurement of iota.)
+The age interval is [20, 30] and the time interval is [2000, 2010]
+for each data point. (These do not really matter because the true iota
+for this example is constant.)
+The measurement standard deviation is 0.001 (during the fitting) and
+none of the data is held out.
+{xrst_code py}"""
 header  = 'data_id, integrand_name, node_name, sex, age_lower, age_upper, '
 header += 'time_lower, time_upper, meas_value, meas_std, hold_out, '
 header += 'density_name, eta, nu'
@@ -93,15 +214,40 @@ csv_file['data_in.csv'] = header + \
 5, Sincidence, n2, male,   20, 30, 2010, 2020, 0.0000, 0.001, 0, gaussian, ,
 '''
 csv_file['data_in.csv'] = csv_file['data_in.csv'].replace(' ', '')
-#
+"""{xrst_code}
+The measurement value meas_value is 0.0000 above and gets replaced by
+the following code:
+{xrst_literal
+   # BEGIN_MEAS_VALUE
+   # END_MEAS_VALUE
+}
+
+breakup_computation
+*******************
+Sometimes it is useful to fit some nodes, look at the results,
+and if they are good, continue the computation to the entire
+fit goal set. This will be done during if breakup_computation is true
+(see source code below):
+{xrst_code py}"""
 breakup_computation = True
-#
+"""{xrst_code}
+
+Source Code
+***********
+{xrst_literal
+   BEGIN_PROGRAM
+   END_PROGRAM
+}
+
+{xrst_end csv.prior_pred}
+"""
 # BEGIN_PROGRAM
 #
 # computation
 def computation(fit_dir) :
    #
    # csv.fit, csv.predict_prior
+   print("entered computation")
    if not breakup_computation:
       at_cascade.csv.fit(fit_dir)
       at_cascade.csv.predict_prior(fit_dir)
