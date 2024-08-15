@@ -14,6 +14,16 @@
 Wish List for at_cascade
 ########################
 
+Re-fit only locations with data during cascade
+**********************************************
+Currently at_cascade performs a fit at each node in the cascade whether the node
+has data or not. Adding a feature which activates when a node has no data and
+does not perform a new fit for that node, instead using the node's prior as the
+fit, under the reasoning that there's no new information to update the prior, 
+could speed up large cascades and potentially avoid issues where a node with no
+data gets re-fit with a wide prior, allowing the re-fit to wander from the prior
+despite having no information driving the change.
+
 avgint Table
 ************
 Change :ref:`cascade_root_node-name` so that upon return
