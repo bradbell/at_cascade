@@ -14,8 +14,8 @@
 Wish List for at_cascade
 ########################
 
-Re-fit only locations with data during cascade
-**********************************************
+Re-fit only nodes with data
+***************************
 Currently at_cascade performs a fit at each node in the cascade whether the node
 has data or not. Adding a feature which activates when a node has no data and
 does not perform a new fit for that node, instead using the node's prior as the
