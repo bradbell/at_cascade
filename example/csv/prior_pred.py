@@ -102,7 +102,6 @@ breakup_computation = True
 def computation(fit_dir) :
    #
    # csv.fit, csv.predict_prior
-   print("entered computation")
    if not breakup_computation:
       at_cascade.csv.fit(fit_dir)
       at_cascade.csv.predict_prior(fit_dir)
@@ -145,10 +144,7 @@ def computation(fit_dir) :
       start_job_name = 'n0.both'
       max_job_depth  = 0
       args           = ( fit_dir, f'{fit_dir}/n0/', start_job_name, max_job_depth )
-      print("args = ", *args)
-      print("calling predict_prior")
       at_cascade.csv.predict_prior( *args )
-      print("finished predict_prior call")
       #
       # If max_number_cpu != 1, wait for continue jobs to finish
       for key in p_fit :
@@ -253,11 +249,6 @@ def main() :
                assert len(sample_list) == 0
             #
             if len(sample_list) > 0 :
-               print(f'{sample_list}')
-               print(f'prefix: {prefix}')
-               print(f'length: {len(sample_list)}')
-               print(f'node: {node}')
-               print(f'sex: {sex}')
                sum_avgint = 0.0
                for row in sample_list :
                   sum_avgint   += float( row['avg_integrand'] )
@@ -266,9 +257,6 @@ def main() :
                effect    = true_mulcov_haqi * (haqi - haqi_avg)
                iota      = math.exp(effect) * no_effect_iota
                rel_error = (avgint - iota) / iota
-               print(f'iota: {iota}')
-               print(f'avgint: {avgint}')
-               print(f'relative error: {rel_error}')
                assert abs(rel_error) < 0.01
 #
 if __name__ == '__main__' :
