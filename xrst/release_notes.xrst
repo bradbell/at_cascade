@@ -37,8 +37,10 @@ mm-dd
 
 08-18
 =====
-Add special ``at_cascade`` log messages to mark the progress of the fitting
-operation; see :ref:`fit_one_job@fit_node_database@log` for ``fit_one_job`` .
+#. Add special ``at_cascade`` log messages to mark the progress of the fitting
+   operation; see :ref:`fit_one_job@fit_node_database@log` for ``fit_one_job`` .
+#. Change fit_one_job so that it aborts the fit when there is no data;
+   see :ref:`fit_one_job@fit_node_database@log` .
 
 07-30
 =====

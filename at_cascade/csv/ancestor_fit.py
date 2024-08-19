@@ -4,6 +4,9 @@
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.ancestor_fit}
+{xrst_spell
+   msg
+}
 
 Determine Closet Ancestor With Fit and Samples
 ##############################################
@@ -41,10 +44,11 @@ root_split_reference_id
 is the split_reference_id (sex id) for the root node of the cascade.
 The cascade can begin at female, both, or male.
 
-error_message_dict
-******************
-It a dictionary, with keys equal to job names, containing
-the error message for this cascade.
+at_cascade_msg_dict
+*******************
+is a dictionary, with keys equal to job names, containing
+the log messages that have type ``at_cascade`` .
+The messages for each key are in the log table for the corresponding job.
 
 predict_job_dir
 ***************
@@ -75,7 +79,7 @@ def ancestor_fit(
    root_node_id,
    split_reference_table,
    root_split_reference_id,
-   error_message_dict,
+   at_cascade_msg_dict,
 ) :
    assert type(fit_dir) == str
    assert type(job_table) == list
@@ -84,7 +88,7 @@ def ancestor_fit(
    assert type( root_node_id ) == int
    assert type(split_reference_table) == list
    assert type( root_split_reference_id) == int
-   assert type( error_message_dict ) == dict
+   assert type( at_cascade_msg_dict ) == dict
    # END_DEF
    #
    # node_split_set
@@ -111,7 +115,7 @@ def ancestor_fit(
    predict_node_database = f'{fit_dir}/{predict_job_dir}/dismod.db'
    have_fit = False
    if os.path.exists( predict_node_database ) :
-      messages  = error_message_dict[job_name]
+      messages  = at_cascade_msg_dict[job_name]
       have_fit  = 'sample: OK' in messages
    if have_fit :
       ancestor_job_dir = predict_job_dir
@@ -148,7 +152,7 @@ def ancestor_fit(
       # have_fit
       ancestor_job_database = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
       if os.path.exists( ancestor_job_database ) :
-         messages  = error_message_dict[job_name]
+         messages  = at_cascade_msg_dict[job_name]
          have_fit  = 'sample: OK' in messages
    #
    # BEGIN_RETURN

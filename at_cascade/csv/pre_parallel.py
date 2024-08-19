@@ -178,8 +178,8 @@ def pre_parallel(
       msg += f'The root job name for this cascade is {root_job_name}.'
       assert False, msg
    #
-   # error_message_dict
-   error_message_dict = at_cascade.check_log(
+   # at_cascade_msg_dict
+   at_cascade_msg_dict = at_cascade.check_log(
       message_type       = 'at_cascade'         ,
       all_node_database  = all_node_db          ,
       root_node_database = root_node_database   ,
@@ -259,7 +259,7 @@ def pre_parallel(
             node_table,
             root_node_id,
             root_split_reference_id,
-            error_message_dict,
+            at_cascade_msg_dict,
             job_status_name,
             shared_job_status_name,
             shared_lock,
@@ -280,7 +280,7 @@ def pre_parallel(
       node_table,
       root_node_id,
       root_split_reference_id,
-      error_message_dict,
+      at_cascade_msg_dict,
       job_status_name,
       shared_job_status_name,
       shared_lock,
