@@ -99,10 +99,10 @@ In addition, the following entries are added to the log table:
    :header-rows:1
 
    message_type, message,        meaning
-   at_cascade,   no data: abort, abort this fit because there is no data
+   at_cascade,   no data: abort, abort fit because all the data is held out
    at_cascade,   fit: OK,        the maximum likelihood problem was solved
    at_cascade,   sample: OK,     the posterior samples were computed
-   at_cascade,   children: OK,   the child databases were created (with priors)
+   at_cascade,   children: OK,   the child databases, with priors, were created
 
 Exception
 *********
@@ -315,20 +315,6 @@ def fit_one_job(
    command = [ 'dismod_at', fit_node_database, 'init' ]
    system_command(command, file_stdout)
    #
-   # fit_node_datase.log_table
-   # if fit has no data, abort with 'fit: error: no data abort' in log_table
-   connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
-   )
-   data_subset_table = dismod_at.get_table_dict(connection, 'data_subset')
-   if len( data_subset_table )  == 0 :
-      msg      = 'no data: abort'
-      at_cascade.add_log_entry(connection, msg)
-      job_name = job_table[run_job_id]['job_name']
-      msg      = f'no data: abort {job_name}'
-      raise Exception(msg)
-   connection.close()
-   #
    # max_fit
    if 'max_fit' in option_all_dict :
       max_fit = option_all_dict['max_fit']
@@ -360,6 +346,22 @@ def fit_one_job(
          'dismodat.py', fit_node_database, 'perturb', table, sigma
       ]
       system_command(command, file_stdout)
+   #
+   # fit_node_datase.log_table
+   # if fit has no data, abort with 'fit: error: no data abort' in log_table
+   data_include_table = at_cascade.data_include(
+      fit_node_database, root_node_database
+   )
+   if len( data_include_table )  == 0 :
+      msg        = 'no data: abort'
+      connection = dismod_at.create_connection(
+         fit_node_database, new = False, readonly = False
+      )
+      at_cascade.add_log_entry(connection, msg)
+      #
+      job_name = job_table[run_job_id]['job_name']
+      msg      = f'no data: abort {job_name}'
+      raise Exception(msg)
    #
    # fit
    command = [ 'dismod_at', fit_node_database, 'fit', fit_type ]
