@@ -266,6 +266,7 @@ def pre_one_process(
          split_reference_table   = split_reference_table ,
          root_split_reference_id = root_split_reference_id ,
          at_cascade_log_dict     = at_cascade_log_dict ,
+         allow_same_job          = True ,
       )
       #
       if ancestor_job_dir == None :
