@@ -10,7 +10,6 @@ r'''
 {xrst_spell
    numpy
    dtype
-   msg
 }
 
 Predict Using One Process
@@ -62,17 +61,17 @@ root_split_reference_id
 ***********************
 is the split_reference table id for the root job of the cascade
 
-at_cascade_msg_dict
+at_cascade_log_dict
 *******************
 For each :ref:`create_job_table@job_table@job_name` in the job table
-that is a key in *at_cascade_msg_dict*.  The corresponding value
+that is a key in *at_cascade_log_dict*.  The corresponding value
 
-| *at_cascade_msg_dict* [ *job_name* ]
+| *at_cascade_log_dict* [ *job_name* ]
 
 
 is a non-empty ``list`` of ``str`` containing ``at_cascade`` messages
 in the log table for that job.
-If a *job_name* is not a *key* is in *at_cascade_msg_dict*,
+If a *job_name* is not a *key* is in *at_cascade_log_dict*,
 there were no at_cascade messages for that job.
 
 job_status_name
@@ -169,7 +168,7 @@ def pre_one_process(
    node_table,
    root_node_id,
    root_split_reference_id,
-   at_cascade_msg_dict,
+   at_cascade_log_dict,
    job_status_name,
    shared_job_status_name,
    shared_lock,
@@ -185,7 +184,7 @@ def pre_one_process(
    assert type(node_table[0])              == dict
    assert type(root_node_id)               == int
    assert type(root_split_reference_id)    == int
-   assert type(at_cascade_msg_dict)        == dict
+   assert type(at_cascade_log_dict)        == dict
    assert type(job_status_name)            == list
    assert type( job_status_name[0] )       == str
    assert type(shared_job_status_name)     == str
@@ -266,7 +265,7 @@ def pre_one_process(
          root_node_id            = root_node_id ,
          split_reference_table   = split_reference_table ,
          root_split_reference_id = root_split_reference_id ,
-         at_cascade_msg_dict     = at_cascade_msg_dict ,
+         at_cascade_log_dict     = at_cascade_log_dict ,
       )
       #
       if ancestor_job_dir == None :

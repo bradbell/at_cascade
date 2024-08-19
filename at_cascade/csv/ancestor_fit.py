@@ -4,9 +4,6 @@
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.ancestor_fit}
-{xrst_spell
-   msg
-}
 
 Determine Closet Ancestor With Fit and Samples
 ##############################################
@@ -44,7 +41,7 @@ root_split_reference_id
 is the split_reference_id (sex id) for the root node of the cascade.
 The cascade can begin at female, both, or male.
 
-at_cascade_msg_dict
+at_cascade_log_dict
 *******************
 is a dictionary, with keys equal to job names, containing
 the log messages that have type ``at_cascade`` .
@@ -79,7 +76,7 @@ def ancestor_fit(
    root_node_id,
    split_reference_table,
    root_split_reference_id,
-   at_cascade_msg_dict,
+   at_cascade_log_dict,
 ) :
    assert type(fit_dir) == str
    assert type(job_table) == list
@@ -88,7 +85,7 @@ def ancestor_fit(
    assert type( root_node_id ) == int
    assert type(split_reference_table) == list
    assert type( root_split_reference_id) == int
-   assert type( at_cascade_msg_dict ) == dict
+   assert type( at_cascade_log_dict ) == dict
    # END_DEF
    #
    # node_split_set
@@ -111,19 +108,19 @@ def ancestor_fit(
       fit_split_reference_id  = predict_split_reference_id     ,
    )
    #
-   # have_fit
+   # sample_ok
    predict_node_database = f'{fit_dir}/{predict_job_dir}/dismod.db'
-   have_fit = False
+   sample_ok = False
    if os.path.exists( predict_node_database ) :
-      messages  = at_cascade_msg_dict[job_name]
-      have_fit  = 'sample: OK' in messages
-   if have_fit :
+      messages  = at_cascade_log_dict[job_name]
+      sample_ok  = 'sample: OK' in messages
+   if sample_ok :
       ancestor_job_dir = predict_job_dir
       return predict_job_dir, ancestor_job_dir
    #
    # job_id, ancestor_job_dir
    job_id            = predict_job_id
-   while not have_fit :
+   while not sample_ok :
       #
       # job_id
       job_id = job_table[job_id]['parent_job_id']
@@ -149,11 +146,11 @@ def ancestor_fit(
          fit_split_reference_id  = ancestor_split_reference_id     ,
       )
       #
-      # have_fit
+      # sample_ok
       ancestor_job_database = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
       if os.path.exists( ancestor_job_database ) :
-         messages  = at_cascade_msg_dict[job_name]
-         have_fit  = 'sample: OK' in messages
+         messages   = at_cascade_log_dict[job_name]
+         sample_ok  = 'sample: OK' in messages
    #
    # BEGIN_RETURN
    assert type(predict_job_dir) == str
