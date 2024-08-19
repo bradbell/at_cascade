@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.ancestor_fit}
@@ -109,12 +109,10 @@ def ancestor_fit(
    #
    # have_fit
    predict_node_database = f'{fit_dir}/{predict_job_dir}/dismod.db'
-   if not os.path.exists( predict_node_database ) :
-      have_fit = False
-   elif job_name not in error_message_dict :
-      have_fit = True
-   else :
-      have_fit  = len( error_message_dict[job_name] ) < 2
+   have_fit = False
+   if os.path.exists( predict_node_database ) :
+      messages  = error_message_dict[job_name]
+      have_fit  = 'sample: OK' in messages
    if have_fit :
       ancestor_job_dir = predict_job_dir
       return predict_job_dir, ancestor_job_dir
@@ -149,12 +147,9 @@ def ancestor_fit(
       #
       # have_fit
       ancestor_job_database = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
-      if not os.path.exists( ancestor_job_database ) :
-         have_fit = False
-      elif job_name not in error_message_dict :
-         have_fit = True
-      else :
-         have_fit  = len( error_message_dict[job_name] ) < 2
+      if os.path.exists( ancestor_job_database ) :
+         messages  = error_message_dict[job_name]
+         have_fit  = 'sample: OK' in messages
    #
    # BEGIN_RETURN
    assert type(predict_job_dir) == str

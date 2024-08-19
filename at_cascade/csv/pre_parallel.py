@@ -180,7 +180,7 @@ def pre_parallel(
    #
    # error_message_dict
    error_message_dict = at_cascade.check_log(
-      message_type       = 'error'              ,
+      message_type       = 'at_cascade'         ,
       all_node_database  = all_node_db          ,
       root_node_database = root_node_database   ,
       fit_goal_set       = fit_goal_set         ,

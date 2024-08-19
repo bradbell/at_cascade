@@ -35,6 +35,11 @@ Release Notes for 2024
 mm-dd
 *****
 
+08-18
+=====
+Add special ``at_cascade`` log messages to mark the progress of the fitting
+operation; see :ref:`fit_one_job@fit_node_database@log` for ``fit_one_job`` .
+
 07-30
 =====
 It the IHME cluster is reporting errors like

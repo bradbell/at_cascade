@@ -3,6 +3,7 @@
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # Test prdictions when on of the fits or samples fails.
+# This also tests predictions when a there is no data for a fit.
 #
 import os
 import sys
@@ -32,6 +33,7 @@ csv_file['option_predict.csv'] = \
 '''name,value
 db2csv,true
 plot,true
+max_number_cpu,1
 '''
 #
 # node.csv
