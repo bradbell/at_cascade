@@ -171,6 +171,8 @@ def try_one_job(
    all_covariate_table     ,
    float_precision         ,
    fit_same_as_predict     ,
+   db2csv                  ,
+   plot                    ,
    zero_meas_value         ,
 ) :
    assert type(predict_job_name) == str
@@ -183,6 +185,8 @@ def try_one_job(
    assert type( all_covariate_table[0] ) == dict
    assert type( float_precision ) == int
    assert type( fit_same_as_predict ) == bool
+   assert type( db2csv ) == bool
+   assert type( plot ) == bool
    assert type( zero_meas_value) == bool
    #
    # predict_job_error
@@ -200,6 +204,8 @@ def try_one_job(
          all_covariate_table     = all_covariate_table       ,
          float_precision         = float_precision           ,
          fit_same_as_predict     = fit_same_as_predict       ,
+         db2csv                  = db2csv                    ,
+         plot                    = plot                      ,
          zero_meas_value         = zero_meas_value           ,
       )
    else :
@@ -215,6 +221,8 @@ def try_one_job(
             all_covariate_table     = all_covariate_table       ,
             float_precision         = float_precision           ,
             fit_same_as_predict     = fit_same_as_predict       ,
+            db2csv                  = db2csv                    ,
+            plot                    = plot                      ,
             zero_meas_value         = zero_meas_value           ,
          )
          #
@@ -326,8 +334,11 @@ def pre_one_process(
       # print_begin
       print_begin(job_name = predict_job_name)
       #
-      # zero_meas_value
+      # zero_meas_value, db2csv, plot
       zero_meas_value = option_predict['zero_meas_value']
+      db2csv          = option_predict['db2csv']
+      plot            = option_predict['plot']
+      #
       #
       # predict_job_dir, ancestor_job_dir
       predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
@@ -386,6 +397,8 @@ def pre_one_process(
          all_covariate_table     = all_covariate_table       ,
          float_precision         = float_precision           ,
          fit_same_as_predict     = fit_same_as_predict       ,
+         db2csv                  = db2csv                    ,
+         plot                    = plot                      ,
          zero_meas_value         = zero_meas_value           ,
       )
       #
