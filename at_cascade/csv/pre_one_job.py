@@ -235,14 +235,14 @@ def pre_one_job(
          root_node_database = row['option_value']
    assert root_node_database != None
    #
-   # ancestor_covariate_table, integrand_table, node_table
-   ancestor_or_root = at_cascade.fit_or_root_class(
+   # fit_covariate_table, integrand_table, node_table
+   fit_or_root = at_cascade.fit_or_root_class(
       fit_database, root_node_database
    )
-   ancestor_covariate_table = ancestor_or_root.get_table('covariate')
-   integrand_table          = ancestor_or_root.get_table('integrand')
-   node_table               = ancestor_or_root.get_table('node')
-   ancestor_or_root.close()
+   fit_covariate_table      = fit_or_root.get_table('covariate')
+   integrand_table          = fit_or_root.get_table('integrand')
+   node_table               = fit_or_root.get_table('node')
+   fit_or_root.close()
    #
    # fit_database
    # add the truth_var table to this database
@@ -268,21 +268,10 @@ def pre_one_job(
    # split_reference_table
    split_reference_table = at_cascade.csv.split_reference_table
    #
-   # ancestor_sex_id
-   cov_info = at_cascade.get_cov_info(
-      option_all_table, ancestor_covariate_table, split_reference_table
-   )
-   ancestor_sex_id  = cov_info['split_reference_id']
-   #
    # predict_sex_value, predict_sex_name
    row               = split_reference_table[predict_sex_id]
    predict_sex_value = row['split_reference_value']
    predict_sex_name  = row['split_reference_name']
-   #
-   # ancestor_sex_value, ancestor_sex_name
-   row            = split_reference_table[ancestor_sex_id]
-   ancestor_value = row['split_reference_value']
-   ancestor_name  = row['split_reference_name']
    #
    # avgint_table
    avgint_table = list()
@@ -328,11 +317,11 @@ def pre_one_job(
          }
          #
          # covariate_id
-         for covariate_id in range( len(ancestor_covariate_table) ) :
+         for covariate_id in range( len(fit_covariate_table) ) :
             #
             # covariate_name
             covariate_name = \
-               ancestor_covariate_table[covariate_id]['covariate_name']
+               fit_covariate_table[covariate_id]['covariate_name']
             #
             # covariate_value
             if covariate_name == 'one' :
