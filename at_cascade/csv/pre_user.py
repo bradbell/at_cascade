@@ -4,6 +4,10 @@
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.pre_user}
+{xrst_spell
+   tru
+   sam
+}
 
 Convert Prediction Csv Files From dismod_at Notation to User csv.fit Notation
 #############################################################################
@@ -59,14 +63,13 @@ specifies the location of the dismod_at
 Input Prediction Files
 **********************
 Each job in the *predict_job_id_list* has a corresponding directory.
-The files
-:ref:`csv.pre_one_job@fit_predict.csv` and
-:ref:`csv.pre_one_job@sam_predict.csv`
-must exist in each of these directories.
+For prefix equal to ``fit`` , ``sam`` ,
+the file *prefix*\ _prior.csv or *prefix\ _posterior.csv
+must exist in each of these directories
+( see :ref:`pre_one_job@Csv Output Files` ).
 In addition if *sim_dir* is not None,
-T
-:ref:`csv.pre_one_job@tru_predict.csv` must also exist.
-These files use dismod_at notation.
+the file tru_prior.csv or true_posterior.csv
+must also exist. These files use dismod_at notation.
 
 Output Prediction Files
 ***********************
@@ -175,67 +178,70 @@ def pre_user(
       for prefix in prefix_list :
          #
          # file_name
-         file_name     = f'{fit_dir}/{predict_job_dir}/{prefix}_predict.csv'
+         file_name = f'{fit_dir}/{predict_job_dir}/{prefix}_prior.csv'
          if not os.path.isfile(file_name) :
-            msg = f'csv.predict: Cannot find {file_name}'
-            assert False, msg
-         else :
-            # predict_table
-            predict_table =  at_cascade.csv.read_table(file_name)
+            name = f'{fit_dir}/{predict_job_dir}/{prefix}_posterior.csv'
+            if os.path.isfile(name) :
+               file_name = name
+            else :
+               msg = f'csv.predict: Cannot find\n{file_name} or\n{name}'
+               assert False, msg
+         # predict_table
+         predict_table =  at_cascade.csv.read_table(file_name)
+         #
+         # prefix_predict_table
+         for row_in in predict_table :
+            # row_out
+            row_out = dict()
+            #
+            # avgint_id
+            row_out['avgint_id'] = row_in['avgint_id']
+            #
+            # avg_integrand
+            row_out['avg_integrand'] = row_in['avg_integrand']
+            #
+            # sample_index
+            if prefix == 'sam' :
+               row_out['sample_index'] = row_in['sample_index']
+            #
+            # age
+            assert float(row_in['age_lower'])  == float(row_in['age_upper'])
+            row_out['age']  = row_in['age_lower']
+            #
+            # time
+            assert float(row_in['time_lower']) == float(row_in['time_upper'])
+            row_out['time'] = row_in['time_lower']
+            #
+            # node_name
+            node_id              = int( row_in['node_id'] )
+            row_out['node_name'] = node_table[node_id]['node_name']
+            assert node_id == predict_node_id
+            #
+            # fit_node_name
+            row_out['fit_node_name'] = ancestor_node_name
+            #
+            # fit_sex
+            row_out['fit_sex'] = ancestor_sex_name
+            #
+            # integrand_name
+            integrand_id  = int( row_in['integrand_id'] )
+            row_out['integrand_name'] = \
+               integrand_table[integrand_id]['integrand_name']
+            #
+            # covariate_name
+            # for each covariate in predict_table
+            for (i_cov, cov_row) in enumerate( ancestor_covariate_table ) :
+               covariate_name = cov_row['covariate_name']
+               covariate_key  = f'x_{i_cov}'
+               cov_value      = float( row_in[covariate_key] )
+               if covariate_name == 'sex' :
+                  row_tmp   = split_reference_table[predict_sex_id]
+                  assert cov_value == row_tmp['split_reference_value']
+                  cov_value = sex_value2name[cov_value]
+               row_out[covariate_name] = cov_value
             #
             # prefix_predict_table
-            for row_in in predict_table :
-               # row_out
-               row_out = dict()
-               #
-               # avgint_id
-               row_out['avgint_id'] = row_in['avgint_id']
-               #
-               # avg_integrand
-               row_out['avg_integrand'] = row_in['avg_integrand']
-               #
-               # sample_index
-               if prefix == 'sam' :
-                  row_out['sample_index'] = row_in['sample_index']
-               #
-               # age
-               assert float(row_in['age_lower'])  == float(row_in['age_upper'])
-               row_out['age']  = row_in['age_lower']
-               #
-               # time
-               assert float(row_in['time_lower']) == float(row_in['time_upper'])
-               row_out['time'] = row_in['time_lower']
-               #
-               # node_name
-               node_id              = int( row_in['node_id'] )
-               row_out['node_name'] = node_table[node_id]['node_name']
-               assert node_id == predict_node_id
-               #
-               # fit_node_name
-               row_out['fit_node_name'] = ancestor_node_name
-               #
-               # fit_sex
-               row_out['fit_sex'] = ancestor_sex_name
-               #
-               # integrand_name
-               integrand_id  = int( row_in['integrand_id'] )
-               row_out['integrand_name'] = \
-                  integrand_table[integrand_id]['integrand_name']
-               #
-               # covariate_name
-               # for each covariate in predict_table
-               for (i_cov, cov_row) in enumerate( ancestor_covariate_table ) :
-                  covariate_name = cov_row['covariate_name']
-                  covariate_key  = f'x_{i_cov}'
-                  cov_value      = float( row_in[covariate_key] )
-                  if covariate_name == 'sex' :
-                     row_tmp   = split_reference_table[predict_sex_id]
-                     assert cov_value == row_tmp['split_reference_value']
-                     cov_value = sex_value2name[cov_value]
-                  row_out[covariate_name] = cov_value
-               #
-               # prefix_predict_table
-               prefix_predict_table[prefix].append( row_out )
+            prefix_predict_table[prefix].append( row_out )
    #
    # fit_dir/predict
    if start_job_name != None :
