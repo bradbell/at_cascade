@@ -34,12 +34,14 @@ sim_dir
 *******
 is the directory name where the csv simulation files are located.
 
-ancestor_node_database
-**********************
+fit_database
+************
 This string is the location, relative to fit_dir, of the dismod_at
-database for the closest ancestor fit (for this prediction).
-It has been copied from the original ancestor fit directory
-to the prediction directory.
+database for the fit for this prediction.
+It is either the fit corresponding to this prediction,
+or an ancestor of the fit for this prediction.
+If it is an ancestor, it has been copied from the original
+ancestor fit directory to the prediction directory.
 
 predict_node_id
 ***************
@@ -63,30 +65,29 @@ see below.
 db2csv
 ******
 If true, the `db2csv_command`_ is used to generate the csv files
-corresponding to the *ancestor_node_database* .
+corresponding to the *fit_database* .
 
 .. _db2csv_command: https://dismod-at.readthedocs.io/db2csv_command.html
 
 plot
 ****
 If this boolean is true, ``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
-to *ancestor_node_database* are generated (in the same directory as the
-*ancestor_node_database* ).
+to *fit_database* are generated, in the same directory as *fit_database* ;
+i.e., the prediction directory
 
 fit_predict.csv
 ***************
-This output file is located in the same directory as
-the *ancestor_node_database* .
-It contains the predictions for this prediction node at the age and time
-specified by the covariate.csv file.
+This output file is located in the prediction directory.
+It contains the predictions for this prediction node and sex
+at the age and time specified by the covariate.csv file.
 The predictions are done using the optimal variable values
-for the parent node and sex reference in the ancestor_node_database.
+for the parent node and sex reference in the fit_database.
 
 sam_predict.csv
 ***************
 This is the predictions corresponding to the posterior samples of the
 variable values for the parent node and sex reference in the
-ancestor_node_database.
+fit_database.
 
 tru_predict.csv
 ***************
@@ -113,25 +114,24 @@ import copy
 # This string is the directory name where the input and output csv files
 # are located.
 #
-# ancestor_node_database
-# **********************
+# fit_database
+# ************
 # This string is the location, relative to fit_dir, of the dismod_at
-# database for an ancestor fit.
-# It has been copied from the original ancestor directory
-# to the pediction directory.
+# database for a fit.
+# It must be located in the pediction directory.
 #
 # db2csv
 # ******
 # If true, the `db2csv_command`_ is used to generate the csv files
-# corresponding to the *ancestor_node_database* .
+# corresponding to the *fit_database* .
 #
 # .. _db2csv_command: https://dismod-at.readthedocs.io/db2csv_command.html
 #
 # plot
 # ****
 # If true, ``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
-# to *ancestor_node_database* are generated (in the same directory as the
-# *ancestor_node_database* ).
+# to *fit_database* are generated, in the same directory as the
+# *fit_database* ; i.e., the prediction directory.
 #
 import dismod_at
 import at_cascade
@@ -140,13 +140,13 @@ import copy
 def diagonse_one(
    predict_job_name       ,
    fit_dir                ,
-   ancestor_node_database ,
+   fit_database           ,
    db2csv                 ,
    plot                   ,
 ) :
    assert type(predict_job_name) == str
    assert type(fit_dir) == str
-   assert type(ancestor_node_database) == str
+   assert type(fit_database) == str
    assert type( db2csv ) == bool
    assert type( plot ) == bool
    #
@@ -156,13 +156,13 @@ def diagonse_one(
    )
    #
    # predict_node_dir
-   index            = ancestor_node_database.rfind('/')
-   predict_node_dir = ancestor_node_database[: index]
+   index            = fit_database.rfind('/')
+   predict_node_dir = fit_database[: index]
    #
    if db2csv :
       #
       # db2csv output files
-      command = [ 'dismodat.py', ancestor_node_database, 'db2csv' ]
+      command = [ 'dismodat.py', fit_database, 'db2csv' ]
       dismod_at.system_command_prc(
          command, print_command = False, return_stdout = True
       )
@@ -177,7 +177,7 @@ def diagonse_one(
          if not integrand_name.startswith('mulcov_') :
             integrand_list.append( integrand_name )
       dismod_at.plot_data_fit(
-         database       = ancestor_node_database ,
+         database       = fit_database           ,
          pdf_file       = pdf_file               ,
          plot_title     = predict_job_name       ,
          max_plot       = 1000                   ,
@@ -188,7 +188,7 @@ def diagonse_one(
       pdf_file = f'{predict_node_dir}/rate_plot.pdf'
       rate_set = { 'pini', 'iota', 'chi', 'omega' }
       dismod_at.plot_rate_fit(
-         database       = ancestor_node_database ,
+         database       = fit_database           ,
          pdf_file       = pdf_file               ,
          plot_title     = predict_job_name       ,
          rate_set       = rate_set               ,
@@ -201,7 +201,7 @@ def pre_one_job(
    predict_job_name      ,
    fit_dir               ,
    sim_dir               ,
-   ancestor_node_database,
+   fit_database          ,
    predict_node_id       ,
    predict_sex_id        ,
    all_node_database     ,
@@ -214,7 +214,7 @@ def pre_one_job(
    assert type(predict_job_name) == str
    assert type(fit_dir) == str
    assert sim_dir == None or type(sim_dir) == str
-   assert type(ancestor_node_database) == str
+   assert type(fit_database) == str
    assert type(predict_node_id) == int
    assert type(all_node_database) == str
    assert type(all_covariate_table) == list
@@ -241,18 +241,18 @@ def pre_one_job(
    #
    # ancestor_covariate_table, integrand_table, node_table
    ancestor_or_root = at_cascade.fit_or_root_class(
-      ancestor_node_database, root_node_database
+      fit_database, root_node_database
    )
    ancestor_covariate_table = ancestor_or_root.get_table('covariate')
    integrand_table          = ancestor_or_root.get_table('integrand')
    node_table               = ancestor_or_root.get_table('node')
    ancestor_or_root.close()
    #
-   # ancestor_node_database
+   # fit_database
    # add the truth_var table to this database
    if type(sim_dir) == str :
       at_cascade.csv.set_truth(
-         sim_dir, ancestor_node_database, root_node_database
+         sim_dir, fit_database, root_node_database
       )
    #
    # integrand_id_list
@@ -363,7 +363,7 @@ def pre_one_job(
    #
    # connection
    connection = dismod_at.create_connection(
-      ancestor_node_database, new = False, readonly = False
+      fit_database, new = False, readonly = False
    )
    #
    # avgint table
@@ -380,8 +380,8 @@ def pre_one_job(
    connection.close()
    #
    # predict_node_dir
-   index            = ancestor_node_database.rfind('/')
-   predict_node_dir = ancestor_node_database[: index]
+   index            = fit_database.rfind('/')
+   predict_node_dir = fit_database[: index]
    #
    # float_format
    n_digits = str( float_precision )
@@ -391,7 +391,7 @@ def pre_one_job(
    for prefix in prefix_list :
       #
       # command
-      command = [ 'dismod_at', ancestor_node_database, 'predict' ]
+      command = [ 'dismod_at', fit_database, 'predict' ]
       if prefix == 'fit' :
          command.append( 'fit_var' )
       elif prefix == 'tru' :
@@ -405,7 +405,7 @@ def pre_one_job(
       #
       # predict_table, covariate_table
       connection    = dismod_at.create_connection(
-            ancestor_node_database, new = False, readonly = True
+            fit_database, new = False, readonly = True
       )
       predict_table   = dismod_at.get_table_dict(connection, 'predict')
       covariate_table = dismod_at.get_table_dict(connection, 'covariate')
@@ -443,7 +443,7 @@ def pre_one_job(
    diagonse_one(
       predict_job_name  = predict_job_name ,
       fit_dir           = fit_dir ,
-      ancestor_node_database = ancestor_node_database ,
+      fit_database      = fit_database ,
       db2csv            = db2csv ,
       plot              = plot ,
    )

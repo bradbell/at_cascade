@@ -160,7 +160,7 @@ def try_one_job(
    predict_job_name        ,
    fit_dir                 ,
    sim_dir                 ,
-   ancestor_node_database  ,
+   fit_database            ,
    predict_node_id         ,
    predict_sex_id          ,
    all_node_database       ,
@@ -173,7 +173,7 @@ def try_one_job(
    assert type(predict_job_name) == str
    assert type(fit_dir) == str
    assert sim_dir == None or type(sim_dir) == str
-   assert type(ancestor_node_database) == str
+   assert type(fit_database) == str
    assert type(predict_node_id) == int
    assert type(all_node_database) == str
    assert type(all_covariate_table) == list
@@ -191,7 +191,7 @@ def try_one_job(
          predict_job_name        = predict_job_name          ,
          fit_dir                 = fit_dir                   ,
          sim_dir                 = sim_dir                   ,
-         ancestor_node_database  = ancestor_node_database    ,
+         fit_database            = fit_database              ,
          predict_node_id         = predict_node_id           ,
          predict_sex_id          = predict_sex_id            ,
          all_node_database       = all_node_database         ,
@@ -207,7 +207,7 @@ def try_one_job(
             predict_job_name        = predict_job_name          ,
             fit_dir                 = fit_dir                   ,
             sim_dir                 = sim_dir                   ,
-            ancestor_node_database  = ancestor_node_database    ,
+            fit_database            = fit_database              ,
             predict_node_id         = predict_node_id           ,
             predict_sex_id          = predict_sex_id            ,
             all_node_database       = all_node_database         ,
@@ -377,7 +377,7 @@ def pre_one_process(
          predict_job_name        = predict_job_name          ,
          fit_dir                 = fit_dir                   ,
          sim_dir                 = sim_dir                   ,
-         ancestor_node_database  = ancestor_database         ,
+         fit_database            = ancestor_database         ,
          predict_node_id         = predict_node_id           ,
          predict_sex_id          = predict_sex_id            ,
          all_node_database       = all_node_database         ,
