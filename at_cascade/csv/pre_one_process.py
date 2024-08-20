@@ -103,6 +103,12 @@ shared_lock
 This lock must be acquired during the time that
 a process reads or changes *shared_job_status* .
 
+Output Files
+************
+see :ref:`csv.pre_one_job@fit_predict.csv` , 
+:ref:`csv.pre_one_job@sam_predict.csv` ,  and
+:ref:`csv.pre_one_job@tru_predict.csv` . 
+
 
 {xrst_end csv.pre_one_process}
 '''
@@ -326,6 +332,9 @@ def pre_one_process(
       # print_begin
       print_begin(job_name = predict_job_name)
       #
+      # zero_meas_value
+      zero_meas_value = option_predict['zero_meas_value']
+      #
       # predict_job_dir, ancestor_job_dir
       predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
          fit_dir                 = fit_dir ,
@@ -339,10 +348,14 @@ def pre_one_process(
          allow_same_job          = True ,
       )
       #
+      # predict_directory
+      predict_directory = f'{fit_dir}/{predict_job_dir}'
+      for prefix in [ 'fit', 'sam', 'tru' ] :
+         output_file = f'{predict_directory}/{prefix}_predict.csv'
+         if os.path.exists( output_file ) :
+            os.remove( output_file )
+      #
       if ancestor_job_dir == None :
-         sam_node_predict = f'{fit_dir}/{predict_job_dir}/sam_predict.csv'
-         if os.path.exists( sam_node_predict ) :
-            os.remove( sam_node_predict )
          msg = f'Cannot find an ancestor that fit for {predict_job_name}'
          assert False, msg
       #
@@ -350,21 +363,18 @@ def pre_one_process(
       if ancestor_job_dir == predict_job_dir :
          db2csv            = option_predict['db2csv']
          plot              = option_predict['plot']
-         fit_database      = f'{fit_dir}/{predict_job_dir}/dismod.db'
+         fit_database      = f'{predict_directory}/dismod.db'
       else :
          db2csv            = False
          plot              = False
          fit_database      = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
       #
-      # zero_meas_value
-      zero_meas_value = option_predict['zero_meas_value']
-      #
       # ancestor_database
       # Must copy ancestor database because predictions will change it
-      ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
+      ancestor_database = f'{predict_directory}/ancestor.db'
       level             = predict_job_dir.count('/') + 1
       path2root_node_db = level * '../' + 'root_node.db'
-      os.makedirs( f'{fit_dir}/{predict_job_dir}', exist_ok = True )
+      os.makedirs( f'{predict_directory}', exist_ok = True )
       shutil.copyfile(fit_database, ancestor_database)
       command = [
          'dismod_at', ancestor_database,
