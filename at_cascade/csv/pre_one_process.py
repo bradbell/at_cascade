@@ -105,9 +105,9 @@ a process reads or changes *shared_job_status* .
 
 Output Files
 ************
-see :ref:`csv.pre_one_job@fit_predict.csv` , 
+see :ref:`csv.pre_one_job@fit_predict.csv` ,
 :ref:`csv.pre_one_job@sam_predict.csv` ,  and
-:ref:`csv.pre_one_job@tru_predict.csv` . 
+:ref:`csv.pre_one_job@tru_predict.csv` .
 
 
 {xrst_end csv.pre_one_process}
@@ -172,8 +172,7 @@ def try_one_job(
    all_node_database       ,
    all_covariate_table     ,
    float_precision         ,
-   db2csv                  ,
-   plot                    ,
+   fit_same_as_predict     ,
    zero_meas_value         ,
 ) :
    assert type(predict_job_name) == str
@@ -185,8 +184,7 @@ def try_one_job(
    assert type(all_covariate_table) == list
    assert type( all_covariate_table[0] ) == dict
    assert type( float_precision ) == int
-   assert type( db2csv ) == bool
-   assert type( plot ) == bool
+   assert type( fit_same_as_predict ) == bool
    assert type( zero_meas_value) == bool
    #
    # predict_job_error
@@ -203,8 +201,7 @@ def try_one_job(
          all_node_database       = all_node_database         ,
          all_covariate_table     = all_covariate_table       ,
          float_precision         = float_precision           ,
-         db2csv                  = db2csv                    ,
-         plot                    = plot                      ,
+         fit_same_as_predict     = fit_same_as_predict       ,
          zero_meas_value         = zero_meas_value           ,
       )
    else :
@@ -219,8 +216,7 @@ def try_one_job(
             all_node_database       = all_node_database         ,
             all_covariate_table     = all_covariate_table       ,
             float_precision         = float_precision           ,
-            db2csv                  = db2csv                    ,
-            plot                    = plot                      ,
+            fit_same_as_predict     = fit_same_as_predict       ,
             zero_meas_value         = zero_meas_value           ,
          )
          #
@@ -359,15 +355,13 @@ def pre_one_process(
          msg = f'Cannot find an ancestor that fit for {predict_job_name}'
          assert False, msg
       #
-      # db2csv, plot, fit_database
+      # fit_same_as_predict, fit_database
       if ancestor_job_dir == predict_job_dir :
-         db2csv            = option_predict['db2csv']
-         plot              = option_predict['plot']
-         fit_database      = f'{predict_directory}/dismod.db'
+         fit_same_as_predict = True
+         fit_database        = f'{predict_directory}/dismod.db'
       else :
-         db2csv            = False
-         plot              = False
-         fit_database      = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
+         fit_same_as_predict = False
+         fit_database        = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
       #
       # ancestor_database
       # Must copy ancestor database because predictions will change it
@@ -393,8 +387,7 @@ def pre_one_process(
          all_node_database       = all_node_database         ,
          all_covariate_table     = all_covariate_table       ,
          float_precision         = float_precision           ,
-         db2csv                  = db2csv                    ,
-         plot                    = plot                      ,
+         fit_same_as_predict     = fit_same_as_predict       ,
          zero_meas_value         = zero_meas_value           ,
       )
       #
