@@ -79,25 +79,24 @@ If fit_same_as_predict, ``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
 to *fit_database* are generated, in the same directory as *fit_database* ;
 i.e., the prediction directory
 
-fit_predict.csv
-***************
-This output file is located in the prediction directory.
-It contains the predictions for this prediction node and sex
-at the age and time specified by the covariate.csv file.
-The predictions are done using the optimal variable values
-for the parent node and sex reference in the fit_database.
+Csv Output Files
+****************
+#. These files are located in the prediction directory; i.e.,
+   the directory corresponding to the predictions for this location, sex.
+#. The predictions are on the same age, time grid as the covariate file.
+#. If *fit_same_as_predict* is true (false), the posterior (prior) prediction
+   files are written.
 
-sam_predict.csv
-***************
-This is the predictions corresponding to the posterior samples of the
-variable values for the parent node and sex reference in the
-fit_database.
+.. csv-table::
+   :header-rows: 1
 
-tru_predict.csv
-***************
-This is the predictions corresponding to the true (simulation) values for
-variable values for the prediction node and sex reference.
-
+   File Name,         Description
+   fit_prior.csv,     uses optimal prior variable values
+   fit_posterior.csv, uses optimal posterior variable values
+   sam_prior.csv,     uses samples from the prior
+   sam_posterior.csv, uses samples from the posterior
+   tru_prior.csv,     uses simulation variable values for an ancestor
+   tru_posterior.csv, uses simulation variable values for this location,sex
 
 {xrst_end csv.pre_one_job}
 r'''
@@ -364,6 +363,12 @@ def pre_one_job(
       prefix_list.append( 'tru' )
    connection.close()
    #
+   # suffix
+   if fit_same_as_predict :
+      suffix = 'posterior'
+   else :
+      suffix = 'prior'
+   #
    # predict_node_dir
    index            = fit_database.rfind('/')
    predict_node_dir = fit_database[: index]
@@ -421,8 +426,8 @@ def pre_one_job(
             del pred_row['sample_index']
          #
       #
-      # prefix_predict.csv
-      file_name    = f'{predict_node_dir}/{prefix}_predict.csv'
+      # prefix_suffix.csv
+      file_name    = f'{predict_node_dir}/{prefix}_{suffix}.csv'
       at_cascade.csv.write_table(file_name, predict_table)
    #
    diagonse_one(

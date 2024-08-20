@@ -103,11 +103,9 @@ shared_lock
 This lock must be acquired during the time that
 a process reads or changes *shared_job_status* .
 
-Output Files
-************
-see :ref:`csv.pre_one_job@fit_predict.csv` ,
-:ref:`csv.pre_one_job@sam_predict.csv` ,  and
-:ref:`csv.pre_one_job@tru_predict.csv` .
+Csv Output Files
+****************
+see :ref:`csv.pre_one_job@Csv Output Files`
 
 
 {xrst_end csv.pre_one_process}
