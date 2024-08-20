@@ -67,15 +67,17 @@ If true, the fit in *fit_database* corresponds to this prediction,
 otherwise it is a fit for the closest ancestor that has a fit.
 
 db2csv
-======
-If fit_same_as_predict, the `db2csv_command`_ is used to generate the csv files
+******
+If fit_same_as_predict and db2csv,
+the `db2csv_command`_ is used to generate the csv files
 corresponding to the *fit_database* .
 
 .. _db2csv_command: https://dismod-at.readthedocs.io/db2csv_command.html
 
 plot
-====
-If fit_same_as_predict, ``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
+****
+If fit_same_as_predict and plot,
+``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
 to *fit_database* are generated, in the same directory as *fit_database* ;
 i.e., the prediction directory
 
@@ -125,12 +127,20 @@ import copy
 #
 # fit_same_as_predict
 # *******************
-# If true, the `db2csv_command`_ is used to generate the csv files
+# if true, the the fit location,sex is same as prediction location,sex.
+#
+# db2csv
+# ******
+# If fit_same_as_predict and db2csv,
+# the `db2csv_command`_ is used to generate the csv files
 # corresponding to the *fit_database* .
 #
 # .. _db2csv_command: https://dismod-at.readthedocs.io/db2csv_command.html
 #
-# In addition,``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
+# plot
+# ****
+# If fit_same_as_predict and plot,
+# ``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
 # to *fit_database* are generated, in the same directory as the
 # *fit_database* ; i.e., the prediction directory.
 #
@@ -143,11 +153,15 @@ def diagonse_one(
    fit_dir                ,
    fit_database           ,
    fit_same_as_predict    ,
+   db2csv                 ,
+   plot                   ,
 ) :
    assert type(predict_job_name) == str
    assert type(fit_dir) == str
    assert type(fit_database) == str
    assert type( fit_same_as_predict ) == bool
+   assert type( db2csv ) == bool
+   assert type( plot ) == bool
    #
    # predict_integrand_table
    predict_integrand_table = at_cascade.csv.read_table(
@@ -158,13 +172,14 @@ def diagonse_one(
    index            = fit_database.rfind('/')
    predict_node_dir = fit_database[: index]
    #
-   if fit_same_as_predict :
+   if fit_same_as_predict and db2csv :
       #
       # db2csv output files
       command = [ 'dismodat.py', fit_database, 'db2csv' ]
       dismod_at.system_command_prc(
          command, print_command = False, return_stdout = True
       )
+   if fit_same_as_predict and plot :
       #
       # data_plot.pdf
       pdf_file       = f'{predict_node_dir}/data_plot.pdf'
@@ -205,6 +220,8 @@ def pre_one_job(
    all_covariate_table   ,
    float_precision       ,
    fit_same_as_predict   ,
+   db2csv                ,
+   plot                  ,
    zero_meas_value       ,
 ) :
    assert type(predict_job_name) == str
@@ -217,6 +234,8 @@ def pre_one_job(
    assert type( all_covariate_table[0] ) == dict
    assert type( float_precision ) == int
    assert type( fit_same_as_predict ) == bool
+   assert type( db2csv ) == bool
+   assert type( plot ) == bool
    assert type( zero_meas_value) == bool
    # END_DEF
    #
@@ -435,4 +454,6 @@ def pre_one_job(
       fit_dir              = fit_dir ,
       fit_database         = fit_database ,
       fit_same_as_predict  = fit_same_as_predict ,
+      db2csv               = db2csv ,
+      plot                 = plot ,
    )
