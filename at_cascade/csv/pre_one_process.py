@@ -156,10 +156,80 @@ def print_end(
       msg += job_error
    print(msg)
 # ----------------------------------------------------------------------------
+def try_one_job(
+   predict_job_name        ,
+   fit_dir                 ,
+   sim_dir                 ,
+   ancestor_node_database  ,
+   predict_node_id         ,
+   predict_sex_id          ,
+   all_node_database       ,
+   all_covariate_table     ,
+   float_precision         ,
+   db2csv                  ,
+   plot                    ,
+   zero_meas_value         ,
+) :
+   assert type(predict_job_name) == str
+   assert type(fit_dir) == str
+   assert sim_dir == None or type(sim_dir) == str
+   assert type(ancestor_node_database) == str
+   assert type(predict_node_id) == int
+   assert type(all_node_database) == str
+   assert type(all_covariate_table) == list
+   assert type( all_covariate_table[0] ) == dict
+   assert type( float_precision ) == int
+   assert type( db2csv ) == bool
+   assert type( plot ) == bool
+   assert type( zero_meas_value) == bool
+   #
+   # predict_job_error
+   predict_job_error = None
+   #
+   if not catch_exceptions_and_continue :
+      at_cascade.csv.pre_one_job(
+         predict_job_name        = predict_job_name          ,
+         fit_dir                 = fit_dir                   ,
+         sim_dir                 = sim_dir                   ,
+         ancestor_node_database  = ancestor_node_database    ,
+         predict_node_id         = predict_node_id           ,
+         predict_sex_id          = predict_sex_id            ,
+         all_node_database       = all_node_database         ,
+         all_covariate_table     = all_covariate_table       ,
+         float_precision         = float_precision           ,
+         db2csv                  = db2csv                    ,
+         plot                    = plot                      ,
+         zero_meas_value         = zero_meas_value           ,
+      )
+   else :
+      try :
+         at_cascade.csv.pre_one_job(
+            predict_job_name        = predict_job_name          ,
+            fit_dir                 = fit_dir                   ,
+            sim_dir                 = sim_dir                   ,
+            ancestor_node_database  = ancestor_node_database    ,
+            predict_node_id         = predict_node_id           ,
+            predict_sex_id          = predict_sex_id            ,
+            all_node_database       = all_node_database         ,
+            all_covariate_table     = all_covariate_table       ,
+            float_precision         = float_precision           ,
+            db2csv                  = db2csv                    ,
+            plot                    = plot                      ,
+            zero_meas_value         = zero_meas_value           ,
+         )
+         #
+         # predict_job_error
+         predict_job_error = None
+      except Exception as e :
+         predict_job_error = str(e)
+   #
+   assert predict_job_error == None or type(predict_job_error) == str
+   return predict_job_error
+# ----------------------------------------------------------------------------
 # BEGIN DEF
 # at_cascade.csv.pre_one_process
 def pre_one_process(
-   fit_dir,
+  fit_dir,
    sim_dir,
    option_predict,
    all_node_database,
@@ -302,43 +372,21 @@ def pre_one_process(
       ]
       dismod_at.system_command_prc(command, print_command = False)
       #
-      # pre_one_job
-      if not catch_exceptions_and_continue :
-         predict_job_error = None
-         at_cascade.csv.pre_one_job(
-            predict_job_name        = predict_job_name          ,
-            fit_dir                 = fit_dir                   ,
-            sim_dir                 = sim_dir                   ,
-            ancestor_node_database  = ancestor_database         ,
-            predict_node_id         = predict_node_id           ,
-            predict_sex_id          = predict_sex_id            ,
-            all_node_database       = all_node_database         ,
-            all_covariate_table     = all_covariate_table       ,
-            float_precision         = float_precision           ,
-            db2csv                  = db2csv                    ,
-            plot                    = plot                      ,
-            zero_meas_value         = zero_meas_value           ,
-         )
-      else :
-         try :
-            at_cascade.csv.pre_one_job(
-               predict_job_name        = predict_job_name          ,
-               fit_dir                 = fit_dir                   ,
-               sim_dir                 = sim_dir                   ,
-               ancestor_node_database  = ancestor_database         ,
-               predict_node_id         = predict_node_id           ,
-               predict_sex_id          = predict_sex_id            ,
-               all_node_database       = all_node_database         ,
-               all_covariate_table     = all_covariate_table       ,
-               float_precision         = float_precision           ,
-               db2csv                  = db2csv                    ,
-               plot                    = plot                      ,
-               zero_meas_value         = zero_meas_value           ,
-            )
-            # job_error
-            predict_job_error = None
-         except Exception as e :
-            predict_job_error = str(e)
+      # predict_job_error
+      predict_job_error = try_one_job(
+         predict_job_name        = predict_job_name          ,
+         fit_dir                 = fit_dir                   ,
+         sim_dir                 = sim_dir                   ,
+         ancestor_node_database  = ancestor_database         ,
+         predict_node_id         = predict_node_id           ,
+         predict_sex_id          = predict_sex_id            ,
+         all_node_database       = all_node_database         ,
+         all_covariate_table     = all_covariate_table       ,
+         float_precision         = float_precision           ,
+         db2csv                  = db2csv                    ,
+         plot                    = plot                      ,
+         zero_meas_value         = zero_meas_value           ,
+      )
       #
       # Begin Lock
       acquire_lock(shared_lock)
