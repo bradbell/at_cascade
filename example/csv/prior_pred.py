@@ -16,7 +16,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
 import at_cascade
 import dismod_at
 """
-{xrst_begin csv.break_fit_pred}
+{xrst_begin csv.prior_pred}
 {xrst_spell
    const
    dage
