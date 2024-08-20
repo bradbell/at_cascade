@@ -115,8 +115,9 @@ import dismod_at
 import at_cascade
 import multiprocessing
 # ----------------------------------------------------------------------------
-# acquire lock
+# acquire_lock
 def acquire_lock(shared_lock) :
+   assert type(shared_lock) == multiprocessing.synchronize.Lock
    seconds = 10
    ok = shared_lock.acquire(
       block   = True,
@@ -126,30 +127,29 @@ def acquire_lock(shared_lock) :
       msg = f'pre_one_process: did not obtain lock in {seconds} seconds'
       assert False, msg
 # ----------------------------------------------------------------------------
-# prints the durrent time and job name
-def print_time(
-   begin               ,
+# print_begin
+def print_begin(job_name) :
+   assert type(job_name) == str
+   now         = datetime.datetime.now()
+   str_time    = now.strftime("%H:%M:%S")
+   msg  = f'Begin: {str_time}: predict {job_name}'
+   print(msg)
+# ----------------------------------------------------------------------------
+# print_end
+def print_end(
    job_name            ,
    n_done      = None  ,
    n_job_total = None  ,
    job_error   = None  ,
 ) :
-   assert type(begin)    == bool
    assert type(job_name) == str
-   if begin :
-      assert n_done      == None
-      assert n_job_total == None
-      assert job_error   == None
-   else :
-      assert type(n_done)      == int
-      assert type(n_job_total) == int
-      assert type(job_error)   == str or job_error == None
+   assert type(n_done)      == int
+   assert type(n_job_total) == int
+   assert type(job_error)   == str or job_error == None
    #
    now         = datetime.datetime.now()
    str_time    = now.strftime("%H:%M:%S")
-   if begin :
-      msg  = f'Begin: {str_time}: predict {job_name}'
-   elif job_error == None :
+   if job_error == None :
       msg  = f'End:   {str_time}: predict {job_name} {n_done}/{n_job_total}'
    else :
       msg  = f'Error: {str_time}: predict {job_name} {n_done}/{n_job_total}: '
@@ -253,8 +253,8 @@ def pre_one_process(
       predict_node_id         = predict_job_row['fit_node_id']
       predict_sex_id          = predict_job_row['split_reference_id']
       #
-      # print_time
-      print_time(begin = True, job_name = predict_job_name)
+      # print_begin
+      print_begin(job_name = predict_job_name)
       #
       # predict_job_dir, ancestor_job_dir
       predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
@@ -350,9 +350,8 @@ def pre_one_process(
       n_done      = len(job_id_done)
       n_total     = len(job_table) - n_skip
       #
-      # print_time
-      print_time(
-         begin       = False,
+      # print_end
+      print_end(
          job_name    = predict_job_name,
          n_done      = n_done,
          n_job_total = n_total,

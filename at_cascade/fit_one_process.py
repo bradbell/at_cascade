@@ -294,7 +294,7 @@ def try_one_job(
             msg      = str(e)
             if msg.startswith( 'no data: abort' ) :
                have_data = False
-            print( f'\nfit {fit_type:<5} {job_name} message:\n' + msg )
+            print( f'fit {fit_type} {job_name} message: ' + msg )
    #
    # trace_file_obj
    if trace_file_obj != None :
