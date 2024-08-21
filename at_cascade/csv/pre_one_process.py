@@ -369,28 +369,26 @@ def pre_one_process(
          fit_same_as_predict = True
          fit_database        = f'{predict_directory}/dismod.db'
       else :
+         # Must copy ancestor database because predictions will change it
          fit_same_as_predict = False
-         fit_database        = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
-      #
-      # ancestor_database
-      # Must copy ancestor database because predictions will change it
-      ancestor_database = f'{predict_directory}/ancestor.db'
-      level             = predict_job_dir.count('/') + 1
-      path2root_node_db = level * '../' + 'root_node.db'
-      os.makedirs( f'{predict_directory}', exist_ok = True )
-      shutil.copyfile(fit_database, ancestor_database)
-      command = [
-         'dismod_at', ancestor_database,
-         'set', 'option', 'other_database', path2root_node_db
-      ]
-      dismod_at.system_command_prc(command, print_command = False)
+         ancestor_database   = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
+         fit_database        = f'{predict_directory}/ancestor.db'
+         level             = predict_job_dir.count('/') + 1
+         path2root_node_db = level * '../' + 'root_node.db'
+         os.makedirs( f'{predict_directory}', exist_ok = True )
+         shutil.copyfile(ancestor_database, fit_database)
+         command = [
+            'dismod_at', fit_database,
+            'set', 'option', 'other_database', path2root_node_db
+         ]
+         dismod_at.system_command_prc(command, print_command = False)
       #
       # predict_job_error
       predict_job_error = try_one_job(
          predict_job_name        = predict_job_name          ,
          fit_dir                 = fit_dir                   ,
          sim_dir                 = sim_dir                   ,
-         fit_database            = ancestor_database         ,
+         fit_database            = fit_database              ,
          predict_node_id         = predict_node_id           ,
          predict_sex_id          = predict_sex_id            ,
          all_node_database       = all_node_database         ,
