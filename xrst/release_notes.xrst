@@ -35,6 +35,13 @@ Release Notes for 2024
 mm-dd
 *****
 
+08-21
+=====
+There was a problem in the parallel predictions when
+:ref:`csv.predict@start_job_name` was not None. 
+The logs were only being checked starting at the start job 
+instead of the root node. This has been fixed.
+
 08-18
 =====
 #. Add special ``at_cascade`` log messages to mark the progress of the fitting
