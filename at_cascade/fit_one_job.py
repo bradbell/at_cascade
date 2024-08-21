@@ -92,9 +92,24 @@ distribution for the model variables for the fit_node.
 
 log
 ===
-If *fit_type* is 'both', the previous contents of the log are removed.
-Upon return,
-a summary of the operations preformed on dismod.db is added to the log table.
+Upon return, a summary of the operations preformed by dismod.
+In addition, the following entries are added to the log table:
+
+.. csv-table::
+   :header-rows:1
+
+   message_type, message,        meaning
+   at_cascade,   no data: abort, abort fit because all the data is held out
+   at_cascade,   fit: OK,        the maximum likelihood problem was solved
+   at_cascade,   sample: OK,     the posterior samples were computed
+   at_cascade,   children: OK,   the child databases, with priors, were created
+
+Exception
+*********
+If there is no data from this fit, this routine will raise an exception
+with a message that starts with: ``no data: abort`` ; i.e., the same
+as the message it puts in the log.
+
 
 {xrst_end fit_one_job}
 '''
@@ -332,9 +347,33 @@ def fit_one_job(
       ]
       system_command(command, file_stdout)
    #
+   # fit_node_datase.log_table
+   # if fit has no data, abort with 'fit: error: no data abort' in log_table
+   data_include_table = at_cascade.data_include(
+      fit_node_database, root_node_database
+   )
+   if len( data_include_table )  == 0 :
+      msg        = 'no data: abort'
+      connection = dismod_at.create_connection(
+         fit_node_database, new = False, readonly = False
+      )
+      at_cascade.add_log_entry(connection, msg)
+      #
+      job_name = job_table[run_job_id]['job_name']
+      msg      = f'no data: abort {job_name}'
+      raise Exception(msg)
+   #
    # fit
    command = [ 'dismod_at', fit_node_database, 'fit', fit_type ]
    system_command(command, file_stdout)
+   #
+   # fit_node_database.log_table
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = False
+   )
+   msg      = 'fit: OK'
+   at_cascade.add_log_entry(connection, msg)
+   connection.close()
    #
    # number_simulate
    if 'number_sample' not in option_all_dict :
@@ -366,6 +405,14 @@ def fit_one_job(
    ]
    system_command(command, file_stdout)
    #
+   # fit_node_database.log_table
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = False
+   )
+   msg      = 'sample: OK'
+   at_cascade.add_log_entry(connection, msg)
+   connection.close()
+   #
    # avgint_parent_grid
    at_cascade.avgint_parent_grid(
       all_node_database = all_node_database ,
@@ -378,9 +425,6 @@ def fit_one_job(
    connection = dismod_at.create_connection(
       fit_node_database, new = False, readonly = False
    )
-   #
-   # log avgint_parent_grid
-   at_cascade.add_log_entry(connection, 'avgint_parent_grid')
    #
    # c_shift_predict_fit_var
    command = [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
@@ -454,6 +498,15 @@ def fit_one_job(
       fit_node_database, new = False, readonly = False
    )
    at_cascade.empty_avgint_table(connection)
+   connection.close()
+   #
+   #
+   # fit_node_database.log_table
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = False
+   )
+   msg      = 'children: OK'
+   at_cascade.add_log_entry(connection, msg)
    connection.close()
    #
    # trace_line_number( inspect.currentframe().f_lineno )

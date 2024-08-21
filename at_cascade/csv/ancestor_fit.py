@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.ancestor_fit}
@@ -41,10 +41,18 @@ root_split_reference_id
 is the split_reference_id (sex id) for the root node of the cascade.
 The cascade can begin at female, both, or male.
 
-error_message_dict
-******************
-It a dictionary, with keys equal to job names, containing
-the error message for this cascade.
+at_cascade_log_dict
+*******************
+is a dictionary, with keys equal to job names, containing
+the log messages that have type ``at_cascade`` .
+The messages for each key are in the log table for the corresponding job.
+
+allow_same_job
+**************
+If this is true (false) the a job corresponding to the ancestor fit
+can be the same as the job for the prediction; i.e., the predict job
+is the closes ancestor job. Otherwise, the parent of the predict job
+is the closes ancestor job.
 
 predict_job_dir
 ***************
@@ -55,9 +63,8 @@ See :ref:`get_database_dir-name` .
 ancestor_job_dir
 ****************
 This is the directory, relative to the *fit_dir*,
-that corresponds to the closes ancestor of *predict_job_id*
+that corresponds to the closest ancestor of *predict_job_id*
 that had a successful fit and posterior sampling.
-The can be equal to *predict_job_dir*  (the closest possible case).
 
 
 {xrst_end csv.ancestor_fit}
@@ -75,7 +82,8 @@ def ancestor_fit(
    root_node_id,
    split_reference_table,
    root_split_reference_id,
-   error_message_dict,
+   at_cascade_log_dict,
+   allow_same_job,
 ) :
    assert type(fit_dir) == str
    assert type(job_table) == list
@@ -84,7 +92,8 @@ def ancestor_fit(
    assert type( root_node_id ) == int
    assert type(split_reference_table) == list
    assert type( root_split_reference_id) == int
-   assert type( error_message_dict ) == dict
+   assert type( at_cascade_log_dict ) == dict
+   assert type( allow_same_job ) == bool
    # END_DEF
    #
    # node_split_set
@@ -107,21 +116,20 @@ def ancestor_fit(
       fit_split_reference_id  = predict_split_reference_id     ,
    )
    #
-   # have_fit
+   # sample_ok
    predict_node_database = f'{fit_dir}/{predict_job_dir}/dismod.db'
-   if not os.path.exists( predict_node_database ) :
-      have_fit = False
-   elif job_name not in error_message_dict :
-      have_fit = True
-   else :
-      have_fit  = len( error_message_dict[job_name] ) < 2
-   if have_fit :
+   sample_ok = False
+   if os.path.exists( predict_node_database ) :
+      messages  = at_cascade_log_dict[job_name]
+      sample_ok  = 'sample: OK' in messages
+   if sample_ok and allow_same_job :
       ancestor_job_dir = predict_job_dir
       return predict_job_dir, ancestor_job_dir
+   sample_ok = False
    #
    # job_id, ancestor_job_dir
    job_id            = predict_job_id
-   while not have_fit :
+   while not sample_ok :
       #
       # job_id
       job_id = job_table[job_id]['parent_job_id']
@@ -147,14 +155,11 @@ def ancestor_fit(
          fit_split_reference_id  = ancestor_split_reference_id     ,
       )
       #
-      # have_fit
+      # sample_ok
       ancestor_job_database = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
-      if not os.path.exists( ancestor_job_database ) :
-         have_fit = False
-      elif job_name not in error_message_dict :
-         have_fit = True
-      else :
-         have_fit  = len( error_message_dict[job_name] ) < 2
+      if os.path.exists( ancestor_job_database ) :
+         messages   = at_cascade_log_dict[job_name]
+         sample_ok  = 'sample: OK' in messages
    #
    # BEGIN_RETURN
    assert type(predict_job_dir) == str

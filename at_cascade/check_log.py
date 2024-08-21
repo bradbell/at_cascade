@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin check_log}
@@ -21,7 +21,7 @@ Read all the logs for a cascade and return any warning or error messages.
 
 message_type
 ************
-is  equal to ``error`` or ``warning``.
+is  equal to ``error``, ``warning`` or ``at_cascade`` .
 The corresponding messages are returned.
 
 all_node_database
@@ -98,7 +98,7 @@ def check_log(
    assert max_job_depth == None or type(max_job_depth) == int
    # END DEF
    #
-   assert message_type in [ 'error', 'warning' ]
+   assert message_type in [ 'error', 'warning', 'at_cascade' ]
    #
    # node_table, covariate_table
    connection      = dismod_at.create_connection(

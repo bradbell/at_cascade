@@ -67,6 +67,7 @@ random_seed    = str( int( time.time() ) )
 csv_file['option_fit.csv']  = 'name,value\n'
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 csv_file['option_fit.csv'] += 'refit_split,false\n'
+csv_file['option_fit.csv'] += 'tolerance_fixed,1e-8\n'
 if max_number_cpu == 1 :
    csv_file['option_fit.csv'] += f'max_number_cpu,1\n'
 """{xrst_code}
@@ -76,6 +77,7 @@ option_predict.csv
 This example uses the default value for all the options in option_predict.csv.
 {xrst_code py}"""
 csv_file['option_predict.csv']  = 'name,value\n'
+csv_file['option_predict.csv'] += 'db2csv,true\n'
 """{xrst_code}
 
 covariate.csv
@@ -194,20 +196,22 @@ The integrand is Sincidence (a direct measurement of iota.)
 The age interval is [20, 30] and the time interval is [2000, 2010]
 for each data point. (These do not really matter because the true iota
 for this example is constant.)
-The measurement standard deviation is 0.001 (during the fitting) and
+The measurement standard deviation is 1e-5 (during the fitting) and
 none of the data is held out.
+The small standard deviation during the fitting makes checking the
+posterior samples easier.
 {xrst_code py}"""
 header  = 'data_id, integrand_name, node_name, sex, age_lower, age_upper, '
 header += 'time_lower, time_upper, meas_value, meas_std, hold_out, '
 header += 'density_name, eta, nu'
 csv_file['data_in.csv'] = header + \
 '''
-0, Sincidence, n0, female, 0,  10, 1990, 2000, 0.0000, 0.001, 0, gaussian, ,
-1, Sincidence, n0, male,   0,  10, 1990, 2000, 0.0000, 0.001, 0, gaussian, ,
-2, Sincidence, n1, female, 10, 20, 2000, 2010, 0.0000, 0.001, 0, gaussian, ,
-3, Sincidence, n1, male,   10, 20, 2000, 2010, 0.0000, 0.001, 0, gaussian, ,
-4, Sincidence, n2, female, 20, 30, 2010, 2020, 0.0000, 0.001, 0, gaussian, ,
-5, Sincidence, n2, male,   20, 30, 2010, 2020, 0.0000, 0.001, 0, gaussian, ,
+0, Sincidence, n0, female, 0,  10, 1990, 2000, 0.0000,  1e-4, 0, gaussian, ,
+1, Sincidence, n0, male,   0,  10, 1990, 2000, 0.0000,  1e-4, 0, gaussian, ,
+2, Sincidence, n1, female, 10, 20, 2000, 2010, 0.0000,  1e-4, 0, gaussian, ,
+3, Sincidence, n1, male,   10, 20, 2000, 2010, 0.0000,  1e-4, 0, gaussian, ,
+4, Sincidence, n2, female, 20, 30, 2010, 2020, 0.0000,  1e-4, 0, gaussian, ,
+5, Sincidence, n2, male,   20, 30, 2010, 2020, 0.0000,  1e-4, 0, gaussian, ,
 '''
 csv_file['data_in.csv'] = csv_file['data_in.csv'].replace(' ', '')
 """{xrst_code}
@@ -398,8 +402,8 @@ def main() :
             sample_list = list()
             for row in predict_table :
                if row['integrand_name'] == 'Sincidence' and \
-                     row['node_name'] == node and \
-                        row['sex'] == sex :
+                     row['node_name'] == node and row['fit_node_name'] == node \
+                        and row['sex'] == sex and row['fit_node_name'] == node :
                   #
                   sample_list.append(row)
             if node == 'n0' and sex == 'both' :
@@ -418,7 +422,9 @@ def main() :
                effect    = true_mulcov_haqi * (haqi - haqi_avg)
                iota      = math.exp(effect) * no_effect_iota
                rel_error = (avgint - iota) / iota
-               assert abs(rel_error) < 0.01
+               if abs(rel_error) > 1e-3 :
+                  msg = f'node = {node}, sex = {sex}, rel_error = {rel_error}'
+                  assert False, msg
 #
 if __name__ == '__main__' :
    main()

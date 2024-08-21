@@ -4,6 +4,8 @@
 # ----------------------------------------------------------------------------
 # imports
 # ----------------------------------------------------------------------------
+# Test case where there is no child data
+#
 import csv
 import sys
 import os
@@ -218,6 +220,23 @@ def check_fit(result_dir, fit_node_name) :
    else :
       fit_node_database = f'{result_dir}/n0/{fit_node_name}/dismod.db'
    #
+   # fit_node_database.log_table
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = True
+   )
+   log_table = dismod_at.get_table_dict(connection, 'log')
+   connection.close()
+   #
+   # have_data
+   have_data = True
+   for row in log_table :
+      if row['message_type'] == 'at_cascade' :
+         if row['message'] == 'no data: abort' :
+            have_data = False
+   assert (fit_node_name == 'n0') == have_data
+   if not have_data :
+      return
+   #
    # root_node_database
    root_node_database  = f'{result_dir}/root_node.db'
    #
@@ -253,52 +272,6 @@ def check_fit(result_dir, fit_node_name) :
          rel_error = 1.0 - fit_var_value / true_var_value
          assert abs(rel_error) < 1e-4
 # ----------------------------------------------------------------------------
-def check_dage_mean(result_dir, fit_node_name) :
-   #
-   # fit_node_dir
-   if fit_node_name == 'n0' :
-      fit_node_dir = f'{result_dir}/n0'
-   else :
-      fit_node_dir = f'{result_dir}/n0/{fit_node_name}'
-   #
-
-   #
-   # db2csv
-   fit_node_database = f'{fit_node_dir}/dismod.db'
-   dismod_at.system_command_prc(
-      ['dismodat.py', fit_node_database, 'db2csv']
-   )
-   #
-   # variable_table
-   file_name       = f'{fit_node_dir}/variable.csv'
-   file_ptr        = open(file_name, 'r')
-   reader          = csv.DictReader(file_ptr)
-   previous_mean_v = None
-   previous_age    = None
-   for row in reader :
-      age      = float( row['age'] )
-      mean_v   = float( row['mean_v'] )
-      if row['mean_a'] == '' :
-         mean_a = None
-      else :
-         mean_a   = float( row['mean_a'] )
-      var_type = row['var_type']
-      node     = row['node']
-      if var_type == 'rate' :
-         assert node == fit_node_name
-         if previous_mean_v is not None :
-            #
-            assert type(previous_age)    == float
-            assert type(previous_mean_v) == float
-            assert type(previous_mean_a) == float
-            #
-            diff = mean_v - previous_mean_v
-            rel_error = 1.0 - diff / previous_mean_a
-            assert abs(rel_error) < 1e-4
-      previous_age      = age
-      previous_mean_v   = mean_v
-      previous_mean_a   = mean_a
-# ----------------------------------------------------------------------------
 # main
 # ----------------------------------------------------------------------------
 def main() :
@@ -318,7 +291,6 @@ def main() :
       'split_reference_id' : None,
       'mulcov_id':           0,
    } ]
-
    #
    # option_all
    option_all        = {
@@ -345,8 +317,6 @@ def main() :
    for fit_node_name in [ 'n0', 'n1', 'n2' ] :
       check_fit(result_dir, fit_node_name)
    #
-   for fit_node_name in [ 'n1', 'n2' ] :
-      check_dage_mean(result_dir, fit_node_name)
 #
 if __name__ == '__main__' :
    main()

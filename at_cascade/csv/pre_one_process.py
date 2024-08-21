@@ -61,17 +61,18 @@ root_split_reference_id
 ***********************
 is the split_reference table id for the root job of the cascade
 
-error_message_dict
-******************
+at_cascade_log_dict
+*******************
 For each :ref:`create_job_table@job_table@job_name` in the job table
-that is a key in *error_message_dict*.  The corresponding value
+that is a key in *at_cascade_log_dict*.  The corresponding value
 
-| *error_message_dict* [ *job_name* ]
+| *at_cascade_log_dict* [ *job_name* ]
 
 
-is a non-empty ``list`` of ``str`` containing the error messages for that job.
-If a *job_name* is not a *key* is in *error_message_dict*,
-there were no error messages for that job.
+is a non-empty ``list`` of ``str`` containing ``at_cascade`` messages
+in the log table for that job.
+If a *job_name* is not a *key* is in *at_cascade_log_dict*,
+there were no at_cascade messages for that job.
 
 job_status_name
 ***************
@@ -102,6 +103,10 @@ shared_lock
 This lock must be acquired during the time that
 a process reads or changes *shared_job_status* .
 
+Csv Output Files
+****************
+see :ref:`csv.pre_one_job@Csv Output Files`
+
 
 {xrst_end csv.pre_one_process}
 '''
@@ -114,8 +119,9 @@ import dismod_at
 import at_cascade
 import multiprocessing
 # ----------------------------------------------------------------------------
-# acquire lock
+# acquire_lock
 def acquire_lock(shared_lock) :
+   assert type(shared_lock) == multiprocessing.synchronize.Lock
    seconds = 10
    ok = shared_lock.acquire(
       block   = True,
@@ -125,40 +131,113 @@ def acquire_lock(shared_lock) :
       msg = f'pre_one_process: did not obtain lock in {seconds} seconds'
       assert False, msg
 # ----------------------------------------------------------------------------
-# prints the durrent time and job name
-def print_time(
-   begin               ,
+# print_begin
+def print_begin(job_name) :
+   assert type(job_name) == str
+   now         = datetime.datetime.now()
+   str_time    = now.strftime("%H:%M:%S")
+   msg  = f'Begin: {str_time}: predict {job_name}'
+   print(msg)
+# ----------------------------------------------------------------------------
+# print_end
+def print_end(
    job_name            ,
    n_done      = None  ,
    n_job_total = None  ,
    job_error   = None  ,
 ) :
-   assert type(begin)    == bool
    assert type(job_name) == str
-   if begin :
-      assert n_done      == None
-      assert n_job_total == None
-      assert job_error   == None
-   else :
-      assert type(n_done)      == int
-      assert type(n_job_total) == int
-      assert type(job_error)   == str or job_error == None
+   assert type(n_done)      == int
+   assert type(n_job_total) == int
+   assert type(job_error)   == str or job_error == None
    #
    now         = datetime.datetime.now()
    str_time    = now.strftime("%H:%M:%S")
-   if begin :
-      msg  = f'Begin: {str_time}: predict {job_name}'
-   elif job_error == None :
+   if job_error == None :
       msg  = f'End:   {str_time}: predict {job_name} {n_done}/{n_job_total}'
    else :
       msg  = f'Error: {str_time}: predict {job_name} {n_done}/{n_job_total}: '
       msg += job_error
    print(msg)
 # ----------------------------------------------------------------------------
+def try_one_job(
+   predict_job_name        ,
+   fit_dir                 ,
+   sim_dir                 ,
+   fit_database            ,
+   predict_node_id         ,
+   predict_sex_id          ,
+   all_node_database       ,
+   all_covariate_table     ,
+   float_precision         ,
+   fit_same_as_predict     ,
+   db2csv                  ,
+   plot                    ,
+   zero_meas_value         ,
+) :
+   assert type(predict_job_name) == str
+   assert type(fit_dir) == str
+   assert sim_dir == None or type(sim_dir) == str
+   assert type(fit_database) == str
+   assert type(predict_node_id) == int
+   assert type(all_node_database) == str
+   assert type(all_covariate_table) == list
+   assert type( all_covariate_table[0] ) == dict
+   assert type( float_precision ) == int
+   assert type( fit_same_as_predict ) == bool
+   assert type( db2csv ) == bool
+   assert type( plot ) == bool
+   assert type( zero_meas_value) == bool
+   #
+   # predict_job_error
+   predict_job_error = None
+   #
+   if not catch_exceptions_and_continue :
+      at_cascade.csv.pre_one_job(
+         predict_job_name        = predict_job_name          ,
+         fit_dir                 = fit_dir                   ,
+         sim_dir                 = sim_dir                   ,
+         fit_database            = fit_database              ,
+         predict_node_id         = predict_node_id           ,
+         predict_sex_id          = predict_sex_id            ,
+         all_node_database       = all_node_database         ,
+         all_covariate_table     = all_covariate_table       ,
+         float_precision         = float_precision           ,
+         fit_same_as_predict     = fit_same_as_predict       ,
+         db2csv                  = db2csv                    ,
+         plot                    = plot                      ,
+         zero_meas_value         = zero_meas_value           ,
+      )
+   else :
+      try :
+         at_cascade.csv.pre_one_job(
+            predict_job_name        = predict_job_name          ,
+            fit_dir                 = fit_dir                   ,
+            sim_dir                 = sim_dir                   ,
+            fit_database            = fit_database              ,
+            predict_node_id         = predict_node_id           ,
+            predict_sex_id          = predict_sex_id            ,
+            all_node_database       = all_node_database         ,
+            all_covariate_table     = all_covariate_table       ,
+            float_precision         = float_precision           ,
+            fit_same_as_predict     = fit_same_as_predict       ,
+            db2csv                  = db2csv                    ,
+            plot                    = plot                      ,
+            zero_meas_value         = zero_meas_value           ,
+         )
+         #
+         # predict_job_error
+         predict_job_error = None
+      except Exception as e :
+         predict_job_error = str(e)
+   #
+   assert predict_job_error == None or type(predict_job_error) == str
+   return predict_job_error
+# ----------------------------------------------------------------------------
 # BEGIN DEF
 # at_cascade.csv.pre_one_process
 def pre_one_process(
-   fit_dir,
+  fit_dir,
    sim_dir,
    option_predict,
    all_node_database,
@@ -167,7 +246,7 @@ def pre_one_process(
    node_table,
    root_node_id,
    root_split_reference_id,
-   error_message_dict,
+   at_cascade_log_dict,
    job_status_name,
    shared_job_status_name,
    shared_lock,
@@ -183,7 +262,7 @@ def pre_one_process(
    assert type(node_table[0])              == dict
    assert type(root_node_id)               == int
    assert type(root_split_reference_id)    == int
-   assert type(error_message_dict)         == dict
+   assert type(at_cascade_log_dict)        == dict
    assert type(job_status_name)            == list
    assert type( job_status_name[0] )       == str
    assert type(shared_job_status_name)     == str
@@ -252,8 +331,14 @@ def pre_one_process(
       predict_node_id         = predict_job_row['fit_node_id']
       predict_sex_id          = predict_job_row['split_reference_id']
       #
-      # print_time
-      print_time(begin = True, job_name = predict_job_name)
+      # print_begin
+      print_begin(job_name = predict_job_name)
+      #
+      # zero_meas_value, db2csv, plot
+      zero_meas_value = option_predict['zero_meas_value']
+      db2csv          = option_predict['db2csv']
+      plot            = option_predict['plot']
+      #
       #
       # predict_job_dir, ancestor_job_dir
       predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
@@ -264,35 +349,35 @@ def pre_one_process(
          root_node_id            = root_node_id ,
          split_reference_table   = split_reference_table ,
          root_split_reference_id = root_split_reference_id ,
-         error_message_dict      = error_message_dict ,
+         at_cascade_log_dict     = at_cascade_log_dict ,
+         allow_same_job          = True ,
       )
       #
+      # predict_directory
+      predict_directory = f'{fit_dir}/{predict_job_dir}'
+      for prefix in [ 'fit', 'sam', 'tru' ] :
+         output_file = f'{predict_directory}/{prefix}_predict.csv'
+         if os.path.exists( output_file ) :
+            os.remove( output_file )
+      #
       if ancestor_job_dir == None :
-         sam_node_predict = f'{fit_dir}/{predict_job_dir}/sam_predict.csv'
-         if os.path.exists( sam_node_predict ) :
-            os.remove( sam_node_predict )
          msg = f'Cannot find an ancestor that fit for {predict_job_name}'
          assert False, msg
       #
-      # db2csv, plot, fit_database
+      # fit_same_as_predict, fit_database
       if ancestor_job_dir == predict_job_dir :
-         db2csv            = option_predict['db2csv']
-         plot              = option_predict['plot']
-         fit_database      = f'{fit_dir}/{predict_job_dir}/dismod.db'
+         fit_same_as_predict = True
+         fit_database        = f'{predict_directory}/dismod.db'
       else :
-         db2csv            = False
-         plot              = False
-         fit_database      = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
-      #
-      # zero_meas_value
-      zero_meas_value = option_predict['zero_meas_value']
+         fit_same_as_predict = False
+         fit_database        = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
       #
       # ancestor_database
       # Must copy ancestor database because predictions will change it
-      ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
+      ancestor_database = f'{predict_directory}/ancestor.db'
       level             = predict_job_dir.count('/') + 1
       path2root_node_db = level * '../' + 'root_node.db'
-      os.makedirs( f'{fit_dir}/{predict_job_dir}', exist_ok = True )
+      os.makedirs( f'{predict_directory}', exist_ok = True )
       shutil.copyfile(fit_database, ancestor_database)
       command = [
          'dismod_at', ancestor_database,
@@ -300,43 +385,22 @@ def pre_one_process(
       ]
       dismod_at.system_command_prc(command, print_command = False)
       #
-      # pre_one_job
-      if not catch_exceptions_and_continue :
-         predict_job_error = None
-         at_cascade.csv.pre_one_job(
-            fit_dir                 = fit_dir                   ,
-            sim_dir                 = sim_dir                   ,
-            float_precision         = float_precision           ,
-            all_node_database       = all_node_database         ,
-            all_covariate_table     = all_covariate_table       ,
-            predict_job_name        = predict_job_name          ,
-            ancestor_node_database  = ancestor_database         ,
-            predict_node_id         = predict_node_id           ,
-            predict_sex_id          = predict_sex_id            ,
-            db2csv                  = db2csv                    ,
-            plot                    = plot                      ,
-            zero_meas_value         = zero_meas_value           ,
-         )
-      else :
-         try :
-            at_cascade.csv.pre_one_job(
-               fit_dir                 = fit_dir                   ,
-               sim_dir                 = sim_dir                   ,
-               float_precision         = float_precision           ,
-               all_node_database       = all_node_database         ,
-               all_covariate_table     = all_covariate_table       ,
-               predict_job_name        = predict_job_name          ,
-               ancestor_node_database  = ancestor_database         ,
-               predict_node_id         = predict_node_id           ,
-               predict_sex_id          = predict_sex_id            ,
-               db2csv                  = db2csv                    ,
-               plot                    = plot                      ,
-               zero_meas_value         = zero_meas_value           ,
-            )
-            # job_error
-            predict_job_error = None
-         except Exception as e :
-            predict_job_error = str(e)
+      # predict_job_error
+      predict_job_error = try_one_job(
+         predict_job_name        = predict_job_name          ,
+         fit_dir                 = fit_dir                   ,
+         sim_dir                 = sim_dir                   ,
+         fit_database            = ancestor_database         ,
+         predict_node_id         = predict_node_id           ,
+         predict_sex_id          = predict_sex_id            ,
+         all_node_database       = all_node_database         ,
+         all_covariate_table     = all_covariate_table       ,
+         float_precision         = float_precision           ,
+         fit_same_as_predict     = fit_same_as_predict       ,
+         db2csv                  = db2csv                    ,
+         plot                    = plot                      ,
+         zero_meas_value         = zero_meas_value           ,
+      )
       #
       # Begin Lock
       acquire_lock(shared_lock)
@@ -348,9 +412,8 @@ def pre_one_process(
       n_done      = len(job_id_done)
       n_total     = len(job_table) - n_skip
       #
-      # print_time
-      print_time(
-         begin       = False,
+      # print_end
+      print_end(
          job_name    = predict_job_name,
          n_done      = n_done,
          n_job_total = n_total,

@@ -245,10 +245,11 @@ def try_one_job(
       trace_file_name = f'{result_database_dir}/trace.out'
       trace_file_obj  = open(trace_file_name, 'w')
    #
-   # job_done, fit_type_index, fit_type
+   # job_done, fit_type_index, fit_type, have_data
    job_done       = False
+   have_data      = True
    fit_type_index = 0
-   while (not job_done) and ( fit_type_index < len(fit_type_list) ) :
+   while have_data and (not job_done) and (fit_type_index< len(fit_type_list)) :
       fit_type        = fit_type_list[fit_type_index]
       fit_type_index += 1
       #
@@ -290,8 +291,10 @@ def try_one_job(
             job_done = True
          except Exception as e:
             job_done = False
-            #
-            print( f'\nfit {fit_type:<5} {job_name} message:\n' + str(e) )
+            msg      = str(e)
+            if msg.startswith( 'no data: abort' ) :
+               have_data = False
+            print( f'fit {fit_type} {job_name} message: ' + msg )
    #
    # trace_file_obj
    if trace_file_obj != None :
