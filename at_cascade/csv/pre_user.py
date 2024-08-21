@@ -148,44 +148,49 @@ def pre_user(
          fit_split_reference_id  = predict_sex_id                 ,
       )
       #
-      # ancestor_database
+      # fit_database, fit_same_as_predict
       ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
+      if os.path.isfile( ancestor_database ) :
+         fit_database        = ancestor_database
+         fit_same_as_predict = False
+      else :
+         fit_database        = f'{fit_dir}/{predict_job_dir}/dismod.db'
+         fit_same_as_predict = True
       #
-      # ancestor_covariate_table, integrand_table
-      ancestor_or_root   = at_cascade.fit_or_root_class(
-         ancestor_database, root_node_database
+      # fit_covariate_table, integrand_table
+      fit_or_root = at_cascade.fit_or_root_class(
+         fit_database, root_node_database
       )
-      ancestor_covariate_table = ancestor_or_root.get_table('covariate')
-      integrand_table          = ancestor_or_root.get_table('integrand')
-      ancestor_or_root.close()
+      fit_covariate_table = fit_or_root.get_table('covariate')
+      integrand_table     = fit_or_root.get_table('integrand')
+      fit_or_root.close()
       #
-      # ancestor_node_name
-      ancestor_node_name = at_cascade.get_parent_node(ancestor_database)
+      # fit_node_name
+      fit_node_name = at_cascade.get_parent_node(fit_database)
       #
-      # ancestor_sex_name
-      ancestor_sex_covariate_id = None
-      for (covariate_id, row) in enumerate( ancestor_covariate_table ) :
+      # fit_sex_name
+      fit_sex_covariate_id = None
+      for (covariate_id, row) in enumerate( fit_covariate_table ) :
          if row['covariate_name'] == 'sex' :
-            ancestor_sex_covariate_id = covariate_id
-      row = ancestor_covariate_table[ancestor_sex_covariate_id]
-      ancestor_sex_value = row['reference']
-      ancestor_sex_name = None
+            fit_sex_covariate_id = covariate_id
+      row = fit_covariate_table[fit_sex_covariate_id]
+      fit_sex_value = row['reference']
+      fit_sex_name = None
       for sex_name in at_cascade.csv.sex_name2value :
-         if at_cascade.csv.sex_name2value[sex_name] == ancestor_sex_value :
-            ancestor_sex_name = sex_name
+         if at_cascade.csv.sex_name2value[sex_name] == fit_sex_value :
+            fit_sex_name = sex_name
       #
       # prefix
       for prefix in prefix_list :
          #
          # file_name
-         file_name = f'{fit_dir}/{predict_job_dir}/{prefix}_prior.csv'
+         if fit_same_as_predict :
+            file_name = f'{fit_dir}/{predict_job_dir}/{prefix}_posterior.csv'
+         else :
+            file_name = f'{fit_dir}/{predict_job_dir}/{prefix}_prior.csv'
          if not os.path.isfile(file_name) :
-            name = f'{fit_dir}/{predict_job_dir}/{prefix}_posterior.csv'
-            if os.path.isfile(name) :
-               file_name = name
-            else :
-               msg = f'csv.predict: Cannot find\n{file_name} or\n{name}'
-               assert False, msg
+            msg = f'csv.predict: Cannot find fild {file_name}'
+            assert False, msg
          # predict_table
          predict_table =  at_cascade.csv.read_table(file_name)
          #
@@ -218,10 +223,10 @@ def pre_user(
             assert node_id == predict_node_id
             #
             # fit_node_name
-            row_out['fit_node_name'] = ancestor_node_name
+            row_out['fit_node_name'] = fit_node_name
             #
             # fit_sex
-            row_out['fit_sex'] = ancestor_sex_name
+            row_out['fit_sex'] = fit_sex_name
             #
             # integrand_name
             integrand_id  = int( row_in['integrand_id'] )
@@ -230,7 +235,7 @@ def pre_user(
             #
             # covariate_name
             # for each covariate in predict_table
-            for (i_cov, cov_row) in enumerate( ancestor_covariate_table ) :
+            for (i_cov, cov_row) in enumerate( fit_covariate_table ) :
                covariate_name = cov_row['covariate_name']
                covariate_key  = f'x_{i_cov}'
                cov_value      = float( row_in[covariate_key] )
