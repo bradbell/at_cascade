@@ -137,7 +137,7 @@ def pre_user(
       predict_node_id   = predict_job_row['fit_node_id']
       predict_sex_id    = predict_job_row['split_reference_id']
       #
-      # predict_job_dir
+      # predict_directory
       predict_job_dir = at_cascade.get_database_dir(
          node_table              = node_table                     ,
          split_reference_table   = split_reference_table          ,
@@ -147,14 +147,15 @@ def pre_user(
          fit_node_id             = predict_node_id                ,
          fit_split_reference_id  = predict_sex_id                 ,
       )
+      predict_directory = f'{fit_dir}/{predict_job_dir}'
       #
       # fit_database, fit_same_as_predict
-      ancestor_database = f'{fit_dir}/{predict_job_dir}/ancestor.db'
+      ancestor_database = f'{predict_directory}/ancestor.db'
       if os.path.isfile( ancestor_database ) :
          fit_database        = ancestor_database
          fit_same_as_predict = False
       else :
-         fit_database        = f'{fit_dir}/{predict_job_dir}/dismod.db'
+         fit_database        = f'{predict_directory}/dismod.db'
          fit_same_as_predict = True
       #
       # fit_covariate_table, integrand_table
@@ -185,9 +186,9 @@ def pre_user(
          #
          # file_name
          if fit_same_as_predict :
-            file_name = f'{fit_dir}/{predict_job_dir}/{prefix}_posterior.csv'
+            file_name = f'{predict_directory}/{prefix}_posterior.csv'
          else :
-            file_name = f'{fit_dir}/{predict_job_dir}/{prefix}_prior.csv'
+            file_name = f'{predict_directory}/{prefix}_prior.csv'
          if not os.path.isfile(file_name) :
             msg = f'csv.predict: Cannot find fild {file_name}'
             assert False, msg
