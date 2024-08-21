@@ -47,6 +47,13 @@ is a dictionary, with keys equal to job names, containing
 the log messages that have type ``at_cascade`` .
 The messages for each key are in the log table for the corresponding job.
 
+allow_same_job
+**************
+If this is true (false) the a job corresponding to the ancestor fit
+can be the same as the job for the prediction; i.e., the predict job
+is the closes ancestor job. Otherwise, the parent of the predict job
+is the closes ancestor job.
+
 predict_job_dir
 ***************
 This is the directory, relative to the *fit_dir*,
@@ -56,9 +63,8 @@ See :ref:`get_database_dir-name` .
 ancestor_job_dir
 ****************
 This is the directory, relative to the *fit_dir*,
-that corresponds to the closes ancestor of *predict_job_id*
+that corresponds to the closest ancestor of *predict_job_id*
 that had a successful fit and posterior sampling.
-The can be equal to *predict_job_dir*  (the closest possible case).
 
 
 {xrst_end csv.ancestor_fit}
@@ -77,6 +83,7 @@ def ancestor_fit(
    split_reference_table,
    root_split_reference_id,
    at_cascade_log_dict,
+   allow_same_job,
 ) :
    assert type(fit_dir) == str
    assert type(job_table) == list
@@ -86,6 +93,7 @@ def ancestor_fit(
    assert type(split_reference_table) == list
    assert type( root_split_reference_id) == int
    assert type( at_cascade_log_dict ) == dict
+   assert type( allow_same_job ) == bool
    # END_DEF
    #
    # node_split_set
@@ -114,9 +122,10 @@ def ancestor_fit(
    if os.path.exists( predict_node_database ) :
       messages  = at_cascade_log_dict[job_name]
       sample_ok  = 'sample: OK' in messages
-   if sample_ok :
+   if sample_ok and allow_same_job :
       ancestor_job_dir = predict_job_dir
       return predict_job_dir, ancestor_job_dir
+   sample_ok = False
    #
    # job_id, ancestor_job_dir
    job_id            = predict_job_id
