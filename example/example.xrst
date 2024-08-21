@@ -13,6 +13,7 @@ The at_cascade Examples
    example/absolute_covariates.py
    example/bilinear.py
    example/continue_cascade.py
+   example/csv/ancestor_fail.py
    example/csv/binomial.py
    example/csv/break_fit_pred.py
    example/csv/coverage.py
