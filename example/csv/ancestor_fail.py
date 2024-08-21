@@ -1,14 +1,3 @@
-# TODO: no data at n1, n2
-# TODO: fit all
-# TODO: predict n2
-# TODO: remove all unecessary logic
-# TODO: check that n1, n2 both fail to fit
-# TODO: check that n2 outputs fit/sam_predict.csv
-# TODO: check that n2 fit node is n0
-
-
-
-
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2024 Nathan Temiquel
