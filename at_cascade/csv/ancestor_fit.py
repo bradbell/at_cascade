@@ -125,6 +125,7 @@ def ancestor_fit(
    if sample_ok and allow_same_job :
       ancestor_job_dir = predict_job_dir
       return predict_job_dir, ancestor_job_dir
+   sample_ok = False
    #
    # job_id, ancestor_job_dir
    job_id            = predict_job_id

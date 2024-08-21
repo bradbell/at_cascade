@@ -179,12 +179,14 @@ def pre_parallel(
       assert False, msg
    #
    # at_cascade_log_dict
+   # get log for all jobs so that can find ancestor jobs that completed
+   log_start_job_id = 0
    at_cascade_log_dict = at_cascade.check_log(
       message_type       = 'at_cascade'         ,
       all_node_database  = all_node_db          ,
       root_node_database = root_node_database   ,
       fit_goal_set       = fit_goal_set         ,
-      start_job_id       = start_job_id         ,
+      start_job_id       = log_start_job_id     ,
       max_job_depth      = max_job_depth        ,
    )
    #
