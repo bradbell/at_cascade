@@ -259,7 +259,7 @@ def pre_user(
                # assert predict_node_id != root_node_id
          else :
             if suffix == 'posterior' :
-               fit_database = f'{predict_directory}/dismod.db'
+               fit_database = f'{predict_directory}/this.db'
             else :
                fit_database = f'{predict_directory}/ancestor.db'
             #
