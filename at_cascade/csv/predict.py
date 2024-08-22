@@ -170,21 +170,19 @@ filled in for missing values.
 
 fit_predict.csv
 ===============
-If :ref:`csv.predict@start_job_name` is None,
-this file contains the predictions for all the fits.
-These predictions for all of the nodes at the age, time and
-covariate values specified in covariate.csv.
-The prediction is done using the optimal variable values.
+#. If :ref:`csv.predict@start_job_name` is None,
+   ``fit_predict.csv`` contains the predictions for all the fits.
+   These predictions for all of the nodes at the age, time and
+   covariate values specified in covariate.csv.
+   The prediction is done using the optimal variable values.
 
-start_job_name
---------------
-If *start_job_name* is not None,
-the predictions are only for jobs at or below the starting job.
-In addition, the predictions are stored below *fit_dir* in the file
+#. If :ref:`csv.predict@start_job_name` is not None,
+   the predictions are only for jobs at or below the starting job.
+   In addition, the predictions are stored below *fit_dir* in the file
 
-   ``predict/fit_``\ *start_job_name*\ ``.csv``
+      ``predict/fit_``\ *start_job_name*\ ``.csv``
 
-and not in ``fit_predict.csv`` .
+   and not in ``fit_predict.csv`` .
 
 
 avgint_id
@@ -231,9 +229,17 @@ fit_node_name
 is the node name corresponding to the fit, and samples, that was used
 to do these predictions.
 This identifies the nearest ancestor that had a successful fit and samples.
+
+posterior
+.........
 If *fit_node_name* and *fit_sex* are the same as *node_name* and *sex* ,
-the fit and samples succeeded for this *node_name* and *sex* .
-Otherwise fit or samples failed for this *node_name* and *sex* .
+the fit and samples succeeded for this *node_name* and *sex* and
+these are the corresponding posterior predictions.
+
+prior
+.....
+If *fit_node_name* and *fit_sex* are the same as *node_name* and *sex* ,
+these are prior predictions for this *node*  and *sex* value.
 
 sex
 ---

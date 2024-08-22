@@ -250,13 +250,9 @@ def pre_user(
       for suffix in [ 'prior', 'posterior' ] :
          if not os.path.isfile( f'{predict_directory}/sam_{suffix}.csv' ) :
             if suffix == 'prior' :
-               pass
-               # will check this once we generate both prior and posterior
-               # assert predict_node_id == root_node_id
+               assert predict_job_id == 0
             else :
-               pass
-               # will check this once we generate both prior and posterior
-               # assert predict_node_id != root_node_id
+               assert predict_job_id != 0
          else :
             if suffix == 'posterior' :
                fit_database = f'{predict_directory}/this.db'

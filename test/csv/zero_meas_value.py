@@ -40,7 +40,6 @@ csv_file['option_predict.csv'] = \
 db2csv,true
 plot,true
 zero_meas_value,true
-max_number_cpu,1
 '''
 #
 # node.csv

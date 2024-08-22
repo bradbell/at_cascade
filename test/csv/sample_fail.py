@@ -160,17 +160,32 @@ def main() :
                   if row['node_name'] == node and row['sex'] == sex_name :
                      sample_list.append(row)
                      if sex_name == 'male' :
+                        # only have priors from n0.both in this case
                         assert row['fit_node_name'] == 'n0'
                         assert row['fit_sex'] == 'both'
                      else :
-                        assert row['fit_node_name'] == node
-                        assert row['fit_sex'] == sex_name
+                        # have both priors and posteriors in this case
+                        if node == 'n0' :
+                           assert row['fit_node_name'] == node
+                           assert row['fit_sex'] in [ 'both', 'female' ]
+                        else :
+                           assert row['fit_node_name'] in [ 'n0', node ]
+                           assert row['fit_sex'] == 'female'
                #
-               # check sample_list
-               if prefix == 'fit' :
-                  assert len(sample_list) == 1
+               # check len(sample_list)
+               if sex_name == 'female' :
+                  # have priors and posteriors
+                  if prefix == 'fit' :
+                     assert len(sample_list) == 2
+                  else :
+                     assert len(sample_list) == 2 * number_sample
                else :
-                  assert len(sample_list) == number_sample
+                  # only have priors
+                  if prefix == 'fit' :
+                     assert len(sample_list) == 1
+                  else :
+                     assert len(sample_list) == 1 * number_sample
+               #
                sum_avgint = 0.0
                for row in sample_list :
                   sum_avgint   += float( row['avg_integrand'] )
