@@ -8,6 +8,8 @@ r'''
    pdf
    sam
    tru
+   avgint
+   avg
 }
 
 Calculate the predictions for One Fit
@@ -88,6 +90,21 @@ Csv Output Files
 #. The predictions are on the same age, time grid as the covariate file.
 #. If *fit_same_as_predict* is true (false), the posterior (prior) prediction
    files are written.
+#. The following columns are included in these files:
+
+   .. csv-table::
+      :header-rows: 1
+
+      Column,        Meaning
+      avgint_id,     This index the value we are predicting
+      sample_index,  This index the random samples for each value
+      avg_integrand, This is the model value for the prediction
+      age_lower,     Lower age limit for averaging this integrand
+      age_upper,     Upper age limit for averaging (must equal lower).
+      time_lower,    Lower time limit for averaging this integrand
+      time_upper,    Upper time limit for averaging (must equal lower).
+      node_id,       Identifies the node for this prediction.
+      x_j,           Value of the j-th covariate 
 
 .. csv-table::
    :header-rows: 1
