@@ -373,13 +373,10 @@ def pre_one_process(
             if os.path.exists( output_file ) :
                os.remove( output_file )
       #
-      # path2root_node_db
-      level             = predict_job_dir.count('/') + 1
-      path2root_node_db = level * '../' + 'root_node.db'
-      #
       # predict_job_error
       predict_job_error = None
       if ancestor_job_dir == predict_job_dir :
+         #
          # fit_same_as_predict, fit_database
          fit_same_as_predict = True
          src_database        = f'{predict_directory}/dismod.db'
@@ -402,20 +399,43 @@ def pre_one_process(
             plot                    = plot                      ,
             zero_meas_value         = zero_meas_value           ,
          )
+         #
+         # predict_job_dir, ancestor_job_dir
+         predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
+            fit_dir                 = fit_dir ,
+            job_table               = job_table ,
+            predict_job_id          = predict_job_id ,
+            node_table              = node_table ,
+            root_node_id            = root_node_id ,
+            split_reference_table   = split_reference_table ,
+            root_split_reference_id = root_split_reference_id ,
+            at_cascade_log_dict     = at_cascade_log_dict ,
+            allow_same_job          = False ,
+         )
+         assert predict_job_dir != ancestor_job_dir
+      #
+      if ancestor_job_dir == None :
+         assert predict_job_id == 0
       else :
+         assert predict_job_dir != ancestor_job_dir
+         #
          # fit_same_as_predict, fit_database
          fit_same_as_predict = False
          src_database   = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
          fit_database   = f'{predict_directory}/ancestor.db'
          shutil.copyfile(src_database, fit_database)
+         #
+         # fit_database
+         level             = predict_job_dir.count('/') + 1
+         path2root_node_db = level * '../' + 'root_node.db'
          command = [
             'dismod_at', fit_database,
             'set', 'option', 'other_database', path2root_node_db
          ]
          dismod_at.system_command_prc(command, print_command = False)
          #
-         # try_one_job, predict_job_error
-         predict_job_error = try_one_job(
+         # try_one_job, prior_job_error
+         prior_job_error = try_one_job(
             predict_job_name        = predict_job_name          ,
             fit_dir                 = fit_dir                   ,
             sim_dir                 = sim_dir                   ,
@@ -430,6 +450,10 @@ def pre_one_process(
             plot                    = plot                      ,
             zero_meas_value         = zero_meas_value           ,
          )
+         if predict_job_error == None :
+            predict_job_error = prior_job_error
+         elif prior_job_error != None :
+            predict_job_error = f'{prior_job_error}: {predict_job_error}'
       #
       # Begin Lock
       acquire_lock(shared_lock)

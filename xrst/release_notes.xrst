@@ -39,13 +39,20 @@ mm-dd
 
 08-22
 =====
-The example ``csv.start_node_sex.py`` was moved to
-:ref:`csv.root_node_sex-name` ,
-the computation of ``haqi_avg`` was corrected,
-and indent level of the following line was corrected::
+#. The example ``csv.start_node_sex.py`` was moved to
+   :ref:`csv.root_node_sex-name` ,
+   the computation of ``haqi_avg`` was corrected,
+   and indent level of the following line was corrected::
 
-   sample_list.append(row)
+      sample_list.append(row)
 
+#. **API Change** The :ref:`csv.predict-name` routine now includes priors
+   even when posteriors are also available; see the discussion about
+   :ref:`priors <csv.predict@Output Files@fit_predict.csv@fit_node_name@prior>`
+   for the csv.predict output files.
+
+#. Some of the example and tests had to be changed because the number of
+   rows in the csv.predict Output files is now larger.
 
 08-21
 =====

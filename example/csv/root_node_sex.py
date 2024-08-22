@@ -205,7 +205,7 @@ The integrand is Sincidence (a direct measurement of iota.)
 The age interval is [20, 30] and the time interval is [2000, 2010]
 for each data point. (These do not really matter because the true iota
 for this example is constant.)
-The measurement standard deviation is 0.001 (during the fitting) and
+The measurement standard deviation is 1e-4 (during the fitting) and
 none of the data is held out.
 {xrst_code py}"""
 header  = 'data_id, integrand_name, node_name, sex, age_lower, age_upper, '
@@ -213,12 +213,12 @@ header += 'time_lower, time_upper, meas_value, meas_std, hold_out, '
 header += 'density_name, eta, nu'
 csv_file['data_in.csv'] = header + \
 '''
-0, Sincidence, n1, female, 0,  10, 1990, 2000, 0.0000, 0.001, 0, gaussian, ,
-1, Sincidence, n1, male,   0,  10, 1990, 2000, 0.0000, 0.001, 0, gaussian, ,
-2, Sincidence, n2, female, 10, 20, 2000, 2010, 0.0000, 0.001, 0, gaussian, ,
-3, Sincidence, n2, male,   10, 20, 2000, 2010, 0.0000, 0.001, 0, gaussian, ,
-4, Sincidence, n3, female, 20, 30, 2010, 2020, 0.0000, 0.001, 0, gaussian, ,
-5, Sincidence, n3, male,   20, 30, 2010, 2020, 0.0000, 0.001, 0, gaussian, ,
+0, Sincidence, n1, female, 0,  10, 1990, 2000, 0.0000,  1e-4, 0, gaussian, ,
+1, Sincidence, n1, male,   0,  10, 1990, 2000, 0.0000,  1e-4, 0, gaussian, ,
+2, Sincidence, n2, female, 10, 20, 2000, 2010, 0.0000,  1e-4, 0, gaussian, ,
+3, Sincidence, n2, male,   10, 20, 2000, 2010, 0.0000,  1e-4, 0, gaussian, ,
+4, Sincidence, n3, female, 20, 30, 2010, 2020, 0.0000,  1e-4, 0, gaussian, ,
+5, Sincidence, n3, male,   20, 30, 2010, 2020, 0.0000,  1e-4, 0, gaussian, ,
 '''
 csv_file['data_in.csv'] = csv_file['data_in.csv'].replace(' ', '')
 """{xrst_code}
@@ -316,11 +316,16 @@ def main() :
             # sample_list
             sample_list = list()
             for row in predict_table :
-               if row['integrand_name'] == 'Sincidence' and \
-                     row['node_name'] == node and \
-                        row['sex'] == sex :
-                           #
-                           sample_list.append(row)
+               # 2DO: It seesm the prior samples do not work in this example
+               # This looks like a bug in sam_prior.csv that has been hidden.
+               include = True
+               include = include and row['integrand_name'] == 'Sincidence'
+               include = include and row['node_name'] == node
+               include = include and row['sex'] == sex
+               include = include and row['fit_node_name'] == node
+               include = include and row['fit_sex'] == sex
+               if include :
+                  sample_list.append(row)
             if sex != 'female' :
                assert len(sample_list) == 0
             else :

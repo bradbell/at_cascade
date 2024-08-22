@@ -27,8 +27,10 @@ fi
 test_file="$1"
 if [ "$test_file" == 'example/csv/coverage.py' ]
 then
-   let tmp="$RANDOM % 4"
-   if [ "tmp" == 0 ]
+   set +e
+   random_03=$(expr $RANDOM % 4)
+   set -e
+   if [ "$random_03" == 0 ]
    then
       echo "   Running $test_file this time (it takes about 2 minutes)."
    else

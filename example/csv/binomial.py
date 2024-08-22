@@ -82,7 +82,6 @@ ode_step_size,5.0
 quasi_fixed,false
 max_num_iter_fixed,50
 tolerance_fixed,1e-8
-max_number_cpu,1
 '''
 fit_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 # {xrst_code}
