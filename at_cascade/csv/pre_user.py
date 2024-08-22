@@ -90,7 +90,6 @@ def assert_is_table(table) :
 # user_predict_table = predict_table_dismod2user( .. )
 # Note that we are only using covarigte_table for the mapping from
 # covariate indices to names so use any dismod covariate table works.
-# we are 
 def predict_table_dismod2user(
    predict_table,
    node_table,
@@ -247,65 +246,72 @@ def pre_user(
       )
       predict_directory = f'{fit_dir}/{predict_job_dir}'
       #
-      # fit_database, fit_same_as_predict
-      ancestor_database = f'{predict_directory}/ancestor.db'
-      if os.path.isfile( ancestor_database ) :
-         fit_database        = ancestor_database
-         fit_same_as_predict = False
-      else :
-         fit_database        = f'{predict_directory}/dismod.db'
-         fit_same_as_predict = True
-      #
-      # fit_covariate_table
-      assert 'covariate' not in at_cascade.constant_table_list
-      connection = dismod_at.create_connection(
-         fit_database, new = False, readonly = True
-      )
-      fit_covariate_table = dismod_at.get_table_dict(connection, 'covariate')
-      connection.close()
-      #
-      # fit_node_name
-      fit_node_name = at_cascade.get_parent_node(fit_database)
-      #
-      # fit_sex_name
-      fit_sex_covariate_id = None
-      for (covariate_id, row) in enumerate( fit_covariate_table ) :
-         if row['covariate_name'] == 'sex' :
-            fit_sex_covariate_id = covariate_id
-      row = fit_covariate_table[fit_sex_covariate_id]
-      fit_sex_value = row['reference']
-      fit_sex_name = None
-      for sex_name in at_cascade.csv.sex_name2value :
-         if at_cascade.csv.sex_name2value[sex_name] == fit_sex_value :
-            fit_sex_name = sex_name
-      #
-      # prefix
-      for prefix in prefix_list :
-         #
-         # file_name
-         if fit_same_as_predict :
-            file_name = f'{predict_directory}/{prefix}_posterior.csv'
+      # suffix
+      for suffix in [ 'prior', 'posterior' ] :
+         if not os.path.isfile( f'{predict_directory}/sam_{suffix}.csv' ) :
+            if suffix == 'prior' :
+               pass
+               # will check this once we generate both prior and posterior
+               # assert predict_node_id == root_node_id
+            else :
+               pass
+               # will check this once we generate both prior and posterior
+               # assert predict_node_id != root_node_id
          else :
-            file_name = f'{predict_directory}/{prefix}_prior.csv'
-         if not os.path.isfile(file_name) :
-            msg = f'csv.predict: Cannot find fild {file_name}'
-            assert False, msg
-         # predict_table
-         predict_table =  at_cascade.csv.read_table(file_name)
-         #
-         # prefix_predict_table
-         prefix_predict_table[prefix] += predict_table_dismod2user(
-            predict_table         = predict_table ,
-            node_table            = node_table ,
-            integrand_table       = integrand_table ,
-            covariate_table       = fit_covariate_table ,
-            split_reference_table = split_reference_table,
-            sex_value2name        = sex_value2name ,
-            fit_node_name         = fit_node_name ,
-            fit_sex_name          = fit_sex_name ,
-            predict_node_id       = predict_node_id ,
-            predict_sex_id        = predict_sex_id ,
-         )
+            if suffix == 'posterior' :
+               fit_database = f'{predict_directory}/dismod.db'
+            else :
+               fit_database = f'{predict_directory}/ancestor.db'
+            #
+            # fit_covariate_table
+            assert 'covariate' not in at_cascade.constant_table_list
+            connection = dismod_at.create_connection(
+               fit_database, new = False, readonly = True
+            )
+            fit_covariate_table = \
+               dismod_at.get_table_dict(connection, 'covariate')
+            connection.close()
+            #
+            # fit_node_name
+            fit_node_name = at_cascade.get_parent_node(fit_database)
+            #
+            # fit_sex_name
+            fit_sex_covariate_id = None
+            for (covariate_id, row) in enumerate( fit_covariate_table ) :
+               if row['covariate_name'] == 'sex' :
+                  fit_sex_covariate_id = covariate_id
+            row = fit_covariate_table[fit_sex_covariate_id]
+            fit_sex_value = row['reference']
+            fit_sex_name = None
+            for sex_name in at_cascade.csv.sex_name2value :
+               if at_cascade.csv.sex_name2value[sex_name] == fit_sex_value :
+                  fit_sex_name = sex_name
+            #
+            # prefix
+            for prefix in prefix_list :
+               #
+               # file_name
+               file_name = f'{predict_directory}/{prefix}_{suffix}.csv'
+               if not os.path.isfile(file_name) :
+                  msg = f'csv.predict: Cannot find fild {file_name}'
+                  assert False, msg
+               #
+               # predict_table
+               predict_table =  at_cascade.csv.read_table(file_name)
+               #
+               # prefix_predict_table
+               prefix_predict_table[prefix] += predict_table_dismod2user(
+                  predict_table         = predict_table ,
+                  node_table            = node_table ,
+                  integrand_table       = integrand_table ,
+                  covariate_table       = fit_covariate_table ,
+                  split_reference_table = split_reference_table,
+                  sex_value2name        = sex_value2name ,
+                  fit_node_name         = fit_node_name ,
+                  fit_sex_name          = fit_sex_name ,
+                  predict_node_id       = predict_node_id ,
+                  predict_sex_id        = predict_sex_id ,
+               )
    #
    # fit_dir/predict
    if start_job_name != None :
