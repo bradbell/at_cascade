@@ -107,6 +107,11 @@ Csv Output Files
 ****************
 see :ref:`csv.pre_one_job@Csv Output Files`
 
+Parallel Processing
+*******************
+Always copy ``dismod_at.db`` to another file before predicting with it
+because ``dismod_at.db`` may be an ancestor for another prediction or fit
+that is running in parallel.
 
 {xrst_end csv.pre_one_process}
 '''
@@ -351,15 +356,6 @@ def pre_one_process(
          at_cascade_log_dict     = at_cascade_log_dict ,
          allow_same_job          = True ,
       )
-      #
-      # predict_directory
-      predict_directory = f'{fit_dir}/{predict_job_dir}'
-      for prefix in [ 'fit', 'sam', 'tru' ] :
-         for suffix in [ 'prior', 'posterior' ] :
-            output_file = f'{predict_directory}/{prefix}_{suffix}.csv'
-            if os.path.exists( output_file ) :
-               os.remove( output_file )
-      #
       if ancestor_job_dir == None :
          if predict_job_id == 0 :
             msg = f'Cannot find a fit for the root job {predict_job_name}'
@@ -368,12 +364,27 @@ def pre_one_process(
             msg += ' or any of its ancestors'
             assert False, msg
       #
+      # predict_directory
+      predict_directory = f'{fit_dir}/{predict_job_dir}'
+      os.makedirs( f'{predict_directory}', exist_ok = True )
+      for prefix in [ 'fit', 'sam', 'tru' ] :
+         for suffix in [ 'prior', 'posterior' ] :
+            output_file = f'{predict_directory}/{prefix}_{suffix}.csv'
+            if os.path.exists( output_file ) :
+               os.remove( output_file )
+      #
+      # path2root_node_db
+      level             = predict_job_dir.count('/') + 1
+      path2root_node_db = level * '../' + 'root_node.db'
+      #
       # predict_job_error
       predict_job_error = None
       if ancestor_job_dir == predict_job_dir :
          # fit_same_as_predict, fit_database
          fit_same_as_predict = True
-         fit_database        = f'{predict_directory}/dismod.db'
+         src_database        = f'{predict_directory}/dismod.db'
+         fit_database        = f'{predict_directory}/this.db'
+         shutil.copyfile(src_database, fit_database)
          #
          # try_one_job, predict_job_error
          predict_job_error   = try_one_job(
@@ -394,13 +405,9 @@ def pre_one_process(
       else :
          # fit_same_as_predict, fit_database
          fit_same_as_predict = False
-         ancestor_database   = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
-         fit_database        = f'{predict_directory}/ancestor.db'
-         level             = predict_job_dir.count('/') + 1
-         path2root_node_db = level * '../' + 'root_node.db'
-         os.makedirs( f'{predict_directory}', exist_ok = True )
-         # must copy ancestor_database becasue predictions would change it
-         shutil.copyfile(ancestor_database, fit_database)
+         src_database   = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
+         fit_database   = f'{predict_directory}/ancestor.db'
+         shutil.copyfile(src_database, fit_database)
          command = [
             'dismod_at', fit_database,
             'set', 'option', 'other_database', path2root_node_db
