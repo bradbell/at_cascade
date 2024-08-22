@@ -85,12 +85,30 @@ i.e., the prediction directory
 
 Csv Output Files
 ****************
-#. These files are located in the prediction directory; i.e.,
+#. The csv output files are located in the prediction directory; i.e.,
    the directory corresponding to the predictions for this location, sex.
 #. The predictions are on the same age, time grid as the covariate file.
-#. If *fit_same_as_predict* is true (false), the posterior (prior) prediction
-   files are written.
-#. The following columns are included in these files:
+#. If *fit_same_as_predict* is true, the following files are created
+   (the tru_posterior.csv file is not created when *sim_dir* is None):
+
+   .. csv-table::
+
+      fit_posterior.csv, uses optimal posterior variable values
+      sam_posterior.csv, uses samples from the posterior
+      tru_posterior.csv, uses simulation variable values for this location,sex
+
+#. If *fit_same_as_predict* is false, the following files are created
+   (the tru_prior.csv file is not created when *sim_dir* is None):
+
+   .. csv-table::
+
+      fit_prior.csv,     uses optimal prior variable values
+      sam_prior.csv,     uses samples from the prior
+      tru_prior.csv,     uses simulation variable values for an ancestor
+
+
+#. The following columns are included in these files
+   (the sample_index column is only included in the sample files):
 
    .. csv-table::
       :header-rows: 1
@@ -104,18 +122,7 @@ Csv Output Files
       time_lower,    Lower time limit for averaging this integrand
       time_upper,    Upper time limit for averaging (must equal lower).
       node_id,       Identifies the node for this prediction.
-      x_j,           Value of the j-th covariate 
-
-.. csv-table::
-   :header-rows: 1
-
-   File Name,         Description
-   fit_prior.csv,     uses optimal prior variable values
-   fit_posterior.csv, uses optimal posterior variable values
-   sam_prior.csv,     uses samples from the prior
-   sam_posterior.csv, uses samples from the posterior
-   tru_prior.csv,     uses simulation variable values for an ancestor
-   tru_posterior.csv, uses simulation variable values for this location,sex
+      x_j,           Value of the j-th covariate
 
 {xrst_end csv.pre_one_job}
 r'''

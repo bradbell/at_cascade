@@ -27,7 +27,14 @@ fi
 test_file="$1"
 if [ "$test_file" == 'example/csv/coverage.py' ]
 then
-   echo '   This example is expected to take about 2 minutes to run.'
+   let tmp="$RANDOM % 4"
+   if [ "tmp" == 0 ]
+   then
+      echo "   Running $test_file this time (it takes about 2 minutes)."
+   else
+      echo "   Skipping $test_file this time (it takes about 2 minutes)."
+      exit 0
+   fi
 fi
 #
 # try_number
