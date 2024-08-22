@@ -79,6 +79,7 @@ The predictions get converted to csv.predict notation; see
 {xrst_end csv.pre_user}
 '''
 import os
+import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
 def assert_is_table(table) :
@@ -87,6 +88,9 @@ def assert_is_table(table) :
       assert type( table[0] ) == dict
 # ----------------------------------------------------------------------------
 # user_predict_table = predict_table_dismod2user( .. )
+# Note that we are only using covarigte_table for the mapping from
+# covariate indices to names so use any dismod covariate table works.
+# we are 
 def predict_table_dismod2user(
    predict_table,
    node_table,
@@ -199,6 +203,14 @@ def pre_user(
    # split_reference_table
    split_reference_table = at_cascade.csv.split_reference_table
    #
+   # integrand_table
+   assert 'integrand' in at_cascade.constant_table_list
+   connection = dismod_at.create_connection(
+      root_node_database, new = False, readonly = True
+   )
+   integrand_table = dismod_at.get_table_dict(connection, 'integrand')
+   connection.close()
+   #
    # sex_value2name
    sex_value2name = dict()
    for row in split_reference_table :
@@ -244,13 +256,13 @@ def pre_user(
          fit_database        = f'{predict_directory}/dismod.db'
          fit_same_as_predict = True
       #
-      # fit_covariate_table, integrand_table
-      fit_or_root = at_cascade.fit_or_root_class(
-         fit_database, root_node_database
+      # fit_covariate_table
+      assert 'covariate' not in at_cascade.constant_table_list
+      connection = dismod_at.create_connection(
+         fit_database, new = False, readonly = True
       )
-      fit_covariate_table = fit_or_root.get_table('covariate')
-      integrand_table     = fit_or_root.get_table('integrand')
-      fit_or_root.close()
+      fit_covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+      connection.close()
       #
       # fit_node_name
       fit_node_name = at_cascade.get_parent_node(fit_database)
