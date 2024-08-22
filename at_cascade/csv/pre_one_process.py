@@ -339,7 +339,6 @@ def pre_one_process(
       db2csv          = option_predict['db2csv']
       plot            = option_predict['plot']
       #
-      #
       # predict_job_dir, ancestor_job_dir
       predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
          fit_dir                 = fit_dir ,
