@@ -356,49 +356,74 @@ def pre_one_process(
       # predict_directory
       predict_directory = f'{fit_dir}/{predict_job_dir}'
       for prefix in [ 'fit', 'sam', 'tru' ] :
-         output_file = f'{predict_directory}/{prefix}_predict.csv'
-         if os.path.exists( output_file ) :
-            os.remove( output_file )
+         for suffix in [ 'prior', 'posterior' ] :
+            output_file = f'{predict_directory}/{prefix}_{suffix}.csv'
+            if os.path.exists( output_file ) :
+               os.remove( output_file )
       #
       if ancestor_job_dir == None :
-         msg = f'Cannot find an ancestor that fit for {predict_job_name}'
-         assert False, msg
+         if predict_job_id == 0 :
+            msg = f'Cannot find a fit for the root job {predict_job_name}'
+         else :
+            msg = f'Cannot find a fit for {predict_job_name}'
+            msg += ' or any of its ancestors'
+            assert False, msg
       #
-      # fit_same_as_predict, fit_database
+      # predict_job_error
+      predict_job_error = None
       if ancestor_job_dir == predict_job_dir :
+         # fit_same_as_predict, fit_database
          fit_same_as_predict = True
          fit_database        = f'{predict_directory}/dismod.db'
+         #
+         # try_one_job, predict_job_error
+         predict_job_error   = try_one_job(
+            predict_job_name        = predict_job_name          ,
+            fit_dir                 = fit_dir                   ,
+            sim_dir                 = sim_dir                   ,
+            fit_database            = fit_database              ,
+            predict_node_id         = predict_node_id           ,
+            predict_sex_id          = predict_sex_id            ,
+            all_node_database       = all_node_database         ,
+            all_covariate_table     = all_covariate_table       ,
+            float_precision         = float_precision           ,
+            fit_same_as_predict     = fit_same_as_predict       ,
+            db2csv                  = db2csv                    ,
+            plot                    = plot                      ,
+            zero_meas_value         = zero_meas_value           ,
+         )
       else :
-         # Must copy ancestor database because predictions will change it
+         # fit_same_as_predict, fit_database
          fit_same_as_predict = False
          ancestor_database   = f'{fit_dir}/{ancestor_job_dir}/dismod.db'
          fit_database        = f'{predict_directory}/ancestor.db'
          level             = predict_job_dir.count('/') + 1
          path2root_node_db = level * '../' + 'root_node.db'
          os.makedirs( f'{predict_directory}', exist_ok = True )
+         # must copy ancestor_database becasue predictions would change it
          shutil.copyfile(ancestor_database, fit_database)
          command = [
             'dismod_at', fit_database,
             'set', 'option', 'other_database', path2root_node_db
          ]
          dismod_at.system_command_prc(command, print_command = False)
-      #
-      # predict_job_error
-      predict_job_error = try_one_job(
-         predict_job_name        = predict_job_name          ,
-         fit_dir                 = fit_dir                   ,
-         sim_dir                 = sim_dir                   ,
-         fit_database            = fit_database              ,
-         predict_node_id         = predict_node_id           ,
-         predict_sex_id          = predict_sex_id            ,
-         all_node_database       = all_node_database         ,
-         all_covariate_table     = all_covariate_table       ,
-         float_precision         = float_precision           ,
-         fit_same_as_predict     = fit_same_as_predict       ,
-         db2csv                  = db2csv                    ,
-         plot                    = plot                      ,
-         zero_meas_value         = zero_meas_value           ,
-      )
+         #
+         # try_one_job, predict_job_error
+         predict_job_error = try_one_job(
+            predict_job_name        = predict_job_name          ,
+            fit_dir                 = fit_dir                   ,
+            sim_dir                 = sim_dir                   ,
+            fit_database            = fit_database              ,
+            predict_node_id         = predict_node_id           ,
+            predict_sex_id          = predict_sex_id            ,
+            all_node_database       = all_node_database         ,
+            all_covariate_table     = all_covariate_table       ,
+            float_precision         = float_precision           ,
+            fit_same_as_predict     = fit_same_as_predict       ,
+            db2csv                  = db2csv                    ,
+            plot                    = plot                      ,
+            zero_meas_value         = zero_meas_value           ,
+         )
       #
       # Begin Lock
       acquire_lock(shared_lock)
