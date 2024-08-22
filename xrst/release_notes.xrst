@@ -16,7 +16,6 @@ Release Notes for at_cascade
    dd
    mm
    inuse
-   py
    nfs
    Errno
    xam
@@ -25,6 +24,9 @@ Release Notes for at_cascade
    mtstandard
    args
    darwin
+   py
+   haqi
+   avg
 }
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
@@ -35,11 +37,21 @@ Release Notes for 2024
 mm-dd
 *****
 
+08-22
+=====
+The example ``csv.start_node_sex.py`` was moved to
+:ref:`csv.root_node_sex-name` ,
+the computation of ``haqi_avg`` was corrected,
+and indent level of the following line was corrected::
+
+   sample_list.append(row)
+
+
 08-21
 =====
 There was a problem in the parallel predictions when
-:ref:`csv.predict@start_job_name` was not None. 
-The logs were only being checked starting at the start job 
+:ref:`csv.predict@start_job_name` was not None.
+The logs were only being checked starting at the start job
 instead of the root node. This has been fixed.
 
 08-18
@@ -197,7 +209,7 @@ population weighting for data that corresponds to
    2024.5.15 onward should be correct.
 #. The :ref:`csv.fit@Input Files@option_fit.csv@root_node_sex` option
    was added to the csv.fit routine.
-   The new :ref:`csv.start_node_sex-name` example was uses this option,
+   The new :ref:`csv.root_node_sex-name` example was uses this option,
    and the root_node_name option.
 #. Add the :ref:`wish_list@Covariate Reference Values` wish list item.
 

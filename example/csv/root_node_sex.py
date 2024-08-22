@@ -15,7 +15,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 """
-{xrst_begin csv.start_node_sex}
+{xrst_begin csv.root_node_sex}
 {xrst_spell
    const
    dage
@@ -75,6 +75,7 @@ csv_file['option_fit.csv']  = \
 root_node_name,n1
 root_node_sex,female
 refit_split,false
+tolerance_fixed,1e-8
 '''
 random_seed    = str( int( time.time() ) )
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
@@ -235,7 +236,7 @@ Source Code
    END_PROGRAM
 }
 
-{xrst_end csv.start_node_sex}
+{xrst_end csv.root_node_sex}
 """
 # BEGIN_PROGRAM
 #
@@ -267,7 +268,7 @@ def main() :
       node_sex2haqi[key].append( haqi )
    #
    # haqi_avg
-   haqi_sum = 8.0
+   haqi_sum = 0.0
    for key in node_sex2haqi :
       value              = node_sex2haqi[key]
       node_sex2haqi[key] = sum(value) / len(value)
@@ -318,8 +319,8 @@ def main() :
                if row['integrand_name'] == 'Sincidence' and \
                      row['node_name'] == node and \
                         row['sex'] == sex :
-                  #
-                  sample_list.append(row)
+                           #
+                           sample_list.append(row)
             if sex != 'female' :
                assert len(sample_list) == 0
             else :
@@ -336,13 +337,15 @@ def main() :
                rel_error = (avgint - iota) / iota
                #
                assert haqi == node_sex2haqi[ (node, sex) ]
-               if prefix == 'sam' :
-                  assert abs(rel_error) < 1e-2
+               if False :
+                  print( node, prefix, rel_error )
                else :
-                  assert abs(rel_error) < 1e-4
-
+                  if prefix == 'sam' :
+                     assert abs(rel_error) < 1e-2
+                  else :
+                     assert abs(rel_error) < 1e-4
 #
 if __name__ == '__main__' :
    main()
-   print('start_node_sex.py: OK')
+   print('root_node_sex.py: OK')
 # END_PROGRAM
