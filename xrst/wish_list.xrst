@@ -66,6 +66,12 @@ See Priors for Each Fit
 =======================
 Outputting prior std or samples so we have uncertainty of the priors.
 
+Allow Different Numbers of Samples for Fit and Predict
+======================================================
+Independently specify the number of samples used during fitting and predicting.
+This would help reduce file size, potentially significantly, if the samples are
+possible to decouple.
+
 Retry Fit
 =========
 Sometimes a particular fit fails due to insufficient memory or similar problem.
