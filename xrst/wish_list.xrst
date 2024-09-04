@@ -51,6 +51,11 @@ If we also automatically created a covariate
 called ``meas_value`` , we could use it with a meas_value
 covariate multiplier to expand or contract measurements values.
 
+Sum random effects to zero
+==========================
+It would be good to have an option which constrains random effects at a given
+level of the cascade to sum to zero.
+
 Continue Cascade
 ================
 There should be a separate csv routine that continues a cascade from a
