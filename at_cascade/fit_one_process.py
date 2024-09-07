@@ -382,7 +382,6 @@ def try_one_job(
       status_count  = dict()
       for job_status_i in range(n_status) :
          name               = job_status_name[job_status_i]
-         # convert because numpy-2.0.0 prints np.int64(value) instead of value
          status_count[name] =  int( sum( shared_job_status == job_status_i ) )
       shared_lock.release()
       #
