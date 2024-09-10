@@ -45,6 +45,11 @@ mm-dd
 
 #. The comments under the headings :ref:`csv.root_node_sex@data_in.csv`
    in the csv.root_node_sex example where improved.
+   In addition, the
+
+#. A discussion about variation in the priors after freezing the
+   covariate multipliers was added to csv.root_node_sex; see
+   :ref:`csv.root_node_sex@mulcov.csv@root_mulcov_prior_constant` .
 
 #. Some occurrences of the following python warnings
    (which were inside comments) were fixed::

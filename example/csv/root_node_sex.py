@@ -188,14 +188,27 @@ mulcov.csv
 **********
 There is one covariate multiplier,
 it multiplies haqi and affects iota.
-The prior distribution for this multiplier is uniform\_-1,1.
+The root level prior for this multiplier is either uniform\_-1,1
+or constant and equal to the true value.
 {xrst_code py}"""
-csv_file['mulcov.csv'] = \
-'''covariate,type,effected,value_prior,const_value
-haqi,rate_value,iota,uniform_-1_1,
-'''
+true_mulcov_haqi           = 0.5
+root_mulcov_prior_constant = True
+csv_file['mulcov.csv']  = 'covariate,type,effected,value_prior,const_value\n'
+if root_mulcov_prior_constant :
+   csv_file['mulcov.csv'] += f'haqi,rate_value,iota,,{true_mulcov_haqi}\n'
+else :
+   csv_file['mulcov.csv'] += 'haqi,rate_value,iota,uniform_-1_1,\n'
 """{xrst_code}
 
+root_mulcov_prior_constant
+==========================
+If the root level prior is not constant ( uniform on [-1,+1] ),
+it is frozen (constant) for the n1 and n2 fits
+using the value found by the n0 fit.
+Hence the prior for the n1 and n2 fits has the covariate multiplier constant.
+On the other hand, the n1 and n2 fit priors for iota
+have random variation do to the root level fit for the covariate multiplier
+not being constant.
 
 
 data_in.csv
@@ -279,7 +292,6 @@ def main() :
    #
    # data_in.csv
    float_format      = '{0:.5g}'
-   true_mulcov_haqi  = 0.5
    no_effect_iota    = 0.1
    file_name         = f'{fit_dir}/data_in.csv'
    table             = at_cascade.csv.read_table( file_name )
@@ -318,14 +330,14 @@ def main() :
             # sample_list
             sample_list = list()
             for row in predict_table :
-               # 2DO: It seesm the prior samples do not work in this example
-               # This looks like a bug in sam_prior.csv that has been hidden.
                include = True
                include = include and row['integrand_name'] == 'Sincidence'
                include = include and row['node_name'] == node
                include = include and row['sex'] == sex
-               include = include and row['fit_node_name'] == node
-               include = include and row['fit_sex'] == sex
+               if not root_mulcov_prior_constant :
+                  # Do not include the samples corresponding to priors
+                  include = include and row['fit_node_name'] == node
+                  include = include and row['fit_sex'] == sex
                if include :
                   sample_list.append(row)
             if sex != 'female' :
