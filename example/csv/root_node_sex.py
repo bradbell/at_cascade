@@ -202,11 +202,11 @@ data_in.csv
 ***********
 The data_in.csv file has one point for each combination of node and sex.
 The integrand is Sincidence (a direct measurement of iota.)
-The age interval is [20, 30] and the time interval is [2000, 2010]
-for each data point. (These do not really matter because the true iota
-for this example is constant.)
-The measurement standard deviation is 1e-4 (during the fitting) and
-none of the data is held out.
+The age intervals do not really matter because the true iota
+for this example is constant.
+The measurement standard deviation is 1e-4 during the fitting.
+None of the data is held out.
+The zero values in the meas_value column below get replaced; see below
 {xrst_code py}"""
 header  = 'data_id, integrand_name, node_name, sex, age_lower, age_upper, '
 header += 'time_lower, time_upper, meas_value, meas_std, hold_out, '
@@ -222,8 +222,10 @@ csv_file['data_in.csv'] = header + \
 '''
 csv_file['data_in.csv'] = csv_file['data_in.csv'].replace(' ', '')
 """{xrst_code}
-The measurement value meas_value is 0.0000 above and gets replaced by
-the following code:
+The measurement value meas_value is 0.0000 above gets replaced
+the true value for iota with no measurement noise,
+even though the measurement standard deviation is modeled as 1e-4.
+See the following code:
 {xrst_literal
    # BEGIN_MEAS_VALUE
    # END_MEAS_VALUE

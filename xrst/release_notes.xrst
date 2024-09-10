@@ -40,6 +40,18 @@ Release Notes for 2024
 mm-dd
 *****
 
+09-10
+=====
+
+#. The comments under the headings :ref:`csv.root_node_sex@data_in.csv`
+   in the csv.root_node_sex example where improved.
+
+#. Some occurrences of the following python warnings
+   (which were inside comments) were fixed::
+
+      SyntaxWarning: invalid escape sequence
+
+
 09-09
 =====
 The development and install tools were extended to work well on
