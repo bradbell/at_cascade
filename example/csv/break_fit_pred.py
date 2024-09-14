@@ -300,7 +300,7 @@ def computation(fit_dir) :
       # n1.female, n1.male, n2.female, n2.male.
       # If max_number_cpu != 1, run them in parallel.
       sim_dir       = None
-      max_job_depth = 1
+      max_job_depth = 0
       for node_name in [ 'n1', 'n2' ] :
          for sex in [ 'female', 'male' ] :
             start_job_name = f'{node_name}.{sex}'

@@ -40,6 +40,20 @@ Release Notes for 2024
 mm-dd
 *****
 
+09-14
+=====
+There was an error in csv.predict when :ref:`csv.predict@start_job_name`
+did not correspond to the root node and :ref:`csv.predict@max_job_depth`
+was not ``None`` . The corresponding error message was of the form::
+
+   File "... ancestor_fit.py", line 123, in ancestor_fit
+   messages = at_cascade_log_dict[job_name]
+                ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+   KeyError: ...
+
+This has been fixed.
+
+
 09-10
 =====
 
