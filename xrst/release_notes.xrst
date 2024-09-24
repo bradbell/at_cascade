@@ -40,6 +40,18 @@ Release Notes for 2024
 mm-dd
 *****
 
+09-24
+=====
+The :ref:`create_shift_db-name` routine is used to create the priors
+for child jobs (given the fit for the parent job).
+There was a bug in this routine whereby it was possible for the mean
+of the age and time differences to not satisfy the constraint on the
+age and time differences. The corresponding error message was::
+
+   dismod_at error: mean greater than upper limit
+
+This has been fixed.
+
 09-14
 =====
 There was an error in csv.predict when :ref:`csv.predict@start_job_name`

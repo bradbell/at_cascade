@@ -341,7 +341,14 @@ def add_shift_grid_row(
       fit_prior_row      = fit_table['prior'][fit_prior_id]
       shift_prior_row    = copy.copy( fit_prior_row )
       if dage_fit_var is not None :
-         shift_prior_row['mean'] = dage_fit_var
+         mean = dage_fit_var
+         if shift_prior_row['lower'] != None :
+            if mean < shift_prior_row['lower']  :
+               mean = shift_prior_row['lower']
+         if shift_prior_row['upper'] != None :
+            if shift_prior_row['lower'] < mean :
+               mean = shift_prior_row['upper']
+         shift_prior_row['mean'] = mean
       shift_dage_prior_id  = len( shift_table['prior'] )
       shift_table['prior'].append( shift_prior_row )
       add_index_to_name( shift_table['prior'], 'prior_name' )
@@ -356,7 +363,14 @@ def add_shift_grid_row(
       shift_prior_row       = copy.copy( fit_prior_row )
       shift_dtime_prior_id  = len( shift_table['prior'] )
       if dtime_fit_var is not None :
-         shift_prior_row['mean'] = dtime_fit_var
+         mean = dtime_fit_var
+         if shift_prior_row['lower'] != None :
+            if mean < shift_prior_row['lower']  :
+               mean = shift_prior_row['lower']
+         if shift_prior_row['upper'] != None :
+            if shift_prior_row['lower'] < mean :
+               mean = shift_prior_row['upper']
+         shift_prior_row['mean'] = mean
       shift_table['prior'].append( shift_prior_row )
       add_index_to_name( shift_table['prior'], 'prior_name' )
    # -----------------------------------------------------------------------
