@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin create_job_table}
@@ -215,11 +215,11 @@ def get_child_job_table(
 # BEGIN DEF
 # at_cascade.create_job_table
 def create_job_table(
-   all_node_database          = None,
-   node_table                 = None,
-   start_node_id              = None,
-   start_split_reference_id   = None,
-   fit_goal_set               = None,
+   all_node_database                 ,
+   node_table                        ,
+   start_node_id                     ,
+   fit_goal_set                      ,
+   start_split_reference_id   = None ,
 # )
 ) :
    assert type(all_node_database) == str
