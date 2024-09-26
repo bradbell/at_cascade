@@ -30,6 +30,7 @@ Release Notes for at_cascade
    py
    haqi
    avg
+   sqlite
 }
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
@@ -42,8 +43,16 @@ mm-dd
 
 09-26
 =====
-The create_job_table documentation was improved; e.g.,
-see its :ref:`create_job_table@Summary` .
+#. The create_job_table documentation was improved; e.g.,
+   see its :ref:`create_job_table@Summary` .
+
+#. There was a bug (that was fixed) in create_job_table whereby jobs that were
+   :ref:`create_job_table@job_table@prior_only` was true would have
+   children in the job table.
+   This could cause :ref:`check_log-name` to terminate with the following error
+   (creation of priors is done during the parent fit)::
+
+      sqlite3.DatabaseError: file is not a database
 
 09-24
 =====

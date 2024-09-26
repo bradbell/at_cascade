@@ -41,7 +41,6 @@ fit_goal_set
 the elements of this set are of type ``int`` (``str``)
 specifying the node_id (node_name) for each element of the
 :ref:`glossary@fit_goal_set` .
-This argument can't be ``None``.
 
 start_job_id
 ************
@@ -140,7 +139,6 @@ def check_log(
    # root_node_id
    root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
    #
-   # root_split_reference_id
    if len(split_reference_table) == 0 :
       root_split_reference_id = None
    else :

@@ -28,18 +28,22 @@ This routine returns a list where each element corresponds to a job:
 
 #. All of these jobs that have
    :ref:`create_job_table@job_table@prior_only` false,
-   must be fit to fit all the jobs for the nodes in the *fit_goal_set*. 
+   must be fit to fit all the jobs for the nodes in the *fit_goal_set*.
 
-#. Each job has a link to the job that needs to be run before it,
+#. Each job has a *parent_job_id* for the job that needs to be fit before it,
    except for the first job which corresponds to the start node
    and start split reference id.
+   The *prior_only* field is false for any job that is a parent; i.e.,
+   all the parent jobs are fit.
 
 #. Each job also has a list of which jobs need be run after it
    (to fit the *fit_goal_set* ).
 
 #. If a job has *prior_only* true,
-   it does not need to be fit for this *fit_goal_set*, but its priors should 
-   be created so it could be the start job for a different *fit_goal_set* .
+   it does not need to be fit for this *fit_goal_set*, but its priors should
+   be created (when the corresponding parent job is fit)
+   so it could be the start job for a different *fit_goal_set* .
+
 
 
 all_node_database
@@ -281,14 +285,15 @@ def create_job_table(
       for row in all_table['fit_goal'] :
          prior_goal_set.add( row['node_id'] )
    #
-   # fit_node_set
-   fit_node_set = set()
+   # fit_goal_ancestor
+   fit_goal_ancestor = set()
    if len(all_table['fit_goal']) == 0 :
-      fit_node_set = set( range( len(node_table) ) )
+      fit_goal_ancestor = set( range( len(node_table) ) )
    else :
       for row in all_table['fit_goal'] :
          node_id = row['node_id']
-         fit_node_set = fit_node_set.union(ancestor_set(node_table, node_id ))
+         fit_goal_ancestor = \
+            fit_goal_ancestor.union( ancestor_set(node_table, node_id ) )
    #
    for node_id in fit_goal_set :
       if start_node_id not in ancestor_set(node_table, node_id) :
@@ -297,7 +302,7 @@ def create_job_table(
          msg  = f'create_job_table: node {node_name} is in fit_goal_set but\n'
          msg += 'it is not a descendant of the start node {start_node_name}'
          assert False, msg
-      if node_id not in fit_node_set :
+      if node_id not in fit_goal_ancestor :
          node_name = node_table[node_id]['node_name']
          msg  = f'create_job_table: node {node_name} is in fit_goal_set\n'
          msg += 'but it is not in the fit_goal table or the ancestor of'
@@ -375,33 +380,34 @@ def create_job_table(
    #
    while job_id < len(job_table) :
       #
-      # node_id, split_reference
+      # row, prior_only
       row                = job_table[job_id]
-      node_id            = row['fit_node_id']
-      split_reference_id = row['split_reference_id']
+      prior_only         = row['prior_only']
       #
-      # child_job_table
-      child_job_table  = get_child_job_table(
-         job_id,
-         node_id,
-         refit_split,
-         split_reference_id,
-         root_split_reference_id,
-         all_table['split_reference'],
-         node_split_set,
-         fit_children,
-         prior_children,
-         node_table,
-      )
-      #
-      # table[job_id]['start_child_job_id']
-      row['start_child_job_id'] = len(job_table)
-      #
-      # job_table
-      job_table += child_job_table
-      #
-      # table[job_id]['end_child_job_id']
-      row['end_child_job_id'] = len(job_table)
+      if not prior_only :
+         #
+         # node_id, split_reference
+         node_id            = row['fit_node_id']
+         split_reference_id = row['split_reference_id']
+         #
+         # child_job_table
+         child_job_table  = get_child_job_table(
+            job_id,
+            node_id,
+            refit_split,
+            split_reference_id,
+             root_split_reference_id,
+            all_table['split_reference'],
+            node_split_set,
+            fit_children,
+            prior_children,
+            node_table,
+         )
+         #
+         # job_table
+         row['start_child_job_id'] = len(job_table)
+         job_table                += child_job_table
+         row['end_child_job_id']   = len(job_table)
       #
       # job_id
       job_id += 1
@@ -413,5 +419,8 @@ def create_job_table(
    assert job_table[0]['fit_node_id'] == start_node_id
    assert job_table[0]['split_reference_id'] == start_split_reference_id
    assert job_table[0]['prior_only'] == False
+   for job_id in range(1, len(job_table) ) :
+      parent_job_id = job_table[job_id]['parent_job_id']
+      assert job_table[parent_job_id]['prior_only'] == False
    return job_table
    # END RETURN
