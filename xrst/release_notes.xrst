@@ -46,13 +46,19 @@ mm-dd
 #. The create_job_table documentation was improved; e.g.,
    see its :ref:`create_job_table@Summary` .
 
-#. There was a bug (that was fixed) in create_job_table whereby jobs that were
+#. There was a bug in create_job_table whereby jobs that were
    :ref:`create_job_table@job_table@prior_only` was true would have
-   children in the job table.
-   This could cause :ref:`check_log-name` to terminate with the following error
-   (creation of priors is done during the parent fit)::
+   children in the job table. This has been fixed.
+
+#. There was a similar bug in
+   :ref:`check_log-name` that caused it to check the logs for jobs
+   that only had priors; i.e., were not fit.
+   The error messages for both bugs ended with::
 
       sqlite3.DatabaseError: file is not a database
+
+   The *fit_goal_set* arguments to check_log was replaced by the
+   :ref:`check_log@job_table` and the bug was fixed.
 
 09-24
 =====

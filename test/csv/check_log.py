@@ -1,8 +1,11 @@
-#! /usr/bin/env python
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# ----------------------------------------------------------------------------
 # ----------------------------------------------------------------------------
 # This case was crashing because n3 was incuded in the job table.
 # The error messages ended with
-# AssertionError: get_name_type: table log does not exist in 
+# AssertionError: get_name_type: table log does not exist in
 #     .../at_cascade.git/build/test/csv/n0/female/n1/dismod.db
 #
 #  root_node :                n0
@@ -10,6 +13,9 @@
 #  prior_only:              n1   n2 : fit_goal_set = {n2}
 #                           |
 #  child_of_prior_only:     n3      : fit_goal_table = {n2, n3}
+#
+# Step 1: only fit n0 (create priors for n1, n2).
+# Step 2: only fit n2
 #
 # ----------------------------------------------------------------------------
 import os
@@ -41,14 +47,11 @@ n3,n1
 # option_fit.csv
 csv_file['option_fit.csv']  = \
 '''name,value
-max_number_cpu,1
 '''
 
 #
 # option_predict.csv
 csv_file['option_predict.csv']  = 'name,value\n'
-csv_file['option_predict.csv']  = 'max_number_cpu,1\n'
-
 #
 # covariate.csv
 csv_file['covariate.csv'] = \
@@ -138,14 +141,11 @@ def main() :
    #
    # csv.predict
    at_cascade.csv.predict(
-      fit_dir        = fit_dir, 
-      sim_dir        = None, 
-      start_job_name = 'n2.female', 
+      fit_dir        = fit_dir,
+      sim_dir        = None,
+      start_job_name = 'n2.female',
    )
-    
+
 if __name__ == '__main__' :
-   if False :
-      main()
-      print('check_log: ok')
-   else :
-      print('check_log: skiped')
+   main()
+   print('check_log: ok')

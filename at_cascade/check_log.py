@@ -36,11 +36,12 @@ root_node_database
 specifies the location of the dismod_at
 :ref:`glossary@root_node_database`.
 
-fit_goal_set
-************
-the elements of this set are of type ``int`` (``str``)
-specifying the node_id (node_name) for each element of the
-:ref:`glossary@fit_goal_set` .
+job_table
+*********
+This is the :ref:`create_job_table@job_table` that we are checking
+the log messages in.
+Only jobs for which :ref:`create_job_table@job_table@prior_only` is false
+are included; i.e., only jobs that correspond to fits.
 
 start_job_id
 ************
@@ -83,7 +84,7 @@ def check_log(
    message_type                  ,
    all_node_database             ,
    root_node_database            ,
-   fit_goal_set                  ,
+   job_table                     ,
    start_job_id           = None ,
    max_job_depth          = None ,
 # )
@@ -91,7 +92,6 @@ def check_log(
    assert type(message_type)        == str
    assert type(all_node_database)   == str
    assert type(root_node_database)  == str
-   assert type(fit_goal_set)        == set
    if start_job_id == None :
       start_job_id = 0
    assert max_job_depth == None or type(max_job_depth) == int
@@ -147,15 +147,6 @@ def check_log(
       )
       root_split_reference_id = cov_info['split_reference_id']
    #
-   # job_table
-   job_table = at_cascade.create_job_table(
-      all_node_database          = all_node_database,
-      node_table                 = node_table,
-      start_node_id              = root_node_id,
-      start_split_reference_id   = root_split_reference_id,
-      fit_goal_set               = fit_goal_set,
-   )
-   #
    # node_split_set
    node_split_set = set()
    for row in node_split_table :
@@ -175,6 +166,8 @@ def check_log(
          include_this_job = True
       else :
          include_this_job = job_depth <= max_job_depth
+      if include_this_job :
+         include_this_job = not job_table[job_id]['prior_only']
       if include_this_job :
          #
          # job_name

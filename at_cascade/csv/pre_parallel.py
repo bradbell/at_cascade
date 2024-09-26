@@ -192,7 +192,7 @@ def pre_parallel(
       message_type       = 'at_cascade'         ,
       all_node_database  = all_node_db          ,
       root_node_database = root_node_database   ,
-      fit_goal_set       = fit_goal_set         ,
+      job_table          = job_table            ,
       start_job_id       = log_start_job_id     ,
       max_job_depth      = log_max_job_depth    ,
    )
