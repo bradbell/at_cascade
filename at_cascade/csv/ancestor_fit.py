@@ -51,8 +51,8 @@ allow_same_job
 **************
 If this is true (false) the a job corresponding to the ancestor fit
 can be the same as the job for the prediction; i.e., the predict job
-is the closes ancestor job. Otherwise, the parent of the predict job
-is the closes ancestor job.
+is the closest ancestor job. Otherwise, the parent of the predict job
+is the closest ancestor job.
 
 predict_job_dir
 ***************

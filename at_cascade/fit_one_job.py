@@ -102,7 +102,7 @@ In addition, the following entries are added to the log table:
    at_cascade,   no data: abort, abort fit because all the data is held out
    at_cascade,   fit: OK,        the maximum likelihood problem was solved
    at_cascade,   sample: OK,     the posterior samples were computed
-   at_cascade,   children: OK,   the child databases, with priors, were created
+   at_cascade,   children: OK,   the child databases with priors were created
 
 Exception
 *********
