@@ -4,6 +4,9 @@
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_fit_children}
+{xrst_spell
+   len
+}
 
 Determine the Set of Nodes to Fit
 #################################
@@ -34,10 +37,15 @@ containing the dismod_at node table.
 fit_children
 ************
 The return value *fit_children* is a python list of python sets.
-For each *node_id* in the node table,
+
+For each *node_id* 
 *fit_children* [ *node_id* ] is a the set of node ids that
-are children of *node_id* and are in the
-:ref:`glossary@fit_node_set` corresponding to this *fit_goal_set* .
+are children of *node_id* and must be fit in order to fit 
+all the nodes in *fit_goal_set*.
+
+Note that there must be at least one *node_id* in *fit_goal_set* ,
+that is not an ancestor of any node in *fit_goal_set* and hence
+len( *fit_children* [ *node_id* ] ) = 0 .
 
 {xrst_end get_fit_children}
 '''
@@ -87,5 +95,9 @@ def get_fit_children(
    # BEGIN RETURN
    # ...
    assert type(fit_children) == list
+   ok = False
+   for node_id in fit_goal_set :
+      ok = ok or len( fit_children[node_id] ) == 0
+   assert ok
    return fit_children
    # END RETURN
