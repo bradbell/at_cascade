@@ -2,7 +2,6 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
-# ----------------------------------------------------------------------------
 # This case was crashing because n3 was incuded in the job table.
 # The error messages ended with
 # AssertionError: get_name_type: table log does not exist in
@@ -145,6 +144,21 @@ def main() :
       sim_dir        = None,
       start_job_name = 'n2.female',
    )
+   #
+   # predict/fit_n2.female.csv
+   file_name    = f'{fit_dir}/predict/fit_n2.female.csv'
+   predict_data = at_cascade.csv.read_table(file_name)
+   for row in predict_data :
+      relerr = 1.0 - float( row['avg_integrand'] ) / iota_true 
+      if abs(relerr) > 1e-4 :
+         print( f'relerr = {relerr}' )
+         assert False
+      assert row['fit_node_name'] in { 'n0', 'n2' }
+      assert row['fit_sex'] == 'female'
+      assert row['integrand_name'] == 'Sincidence'
+      assert row['node_name'] == 'n2'
+      assert row['sex'] == 'female'
+
 
 if __name__ == '__main__' :
    main()
