@@ -8,8 +8,8 @@ r'''
    bool
 }
 
-Table of Jobs That Can Run in Parallel
-######################################
+Table of Job Parent Child Relationships
+#######################################
 
 Syntax
 ******
@@ -18,12 +18,29 @@ Syntax
    # BEGIN RETURN, END RETURN
 }
 
-Purpose
+Summary
 *******
-This routine returns a list of dict
-that specify all the dismod_at fits that need to be run.
-In addition, for each fit it specifies which job needs to run before,
-and which jobs can be run after.
+This routine returns a list where each element corresponds to a job:
+
+#. A job is a combination of a node and split reference value.
+   For example, if the node is n0 and we are splitting on
+   sex some possible jobs are n0.female, n0.male.
+
+#. All of these jobs that have
+   :ref:`create_job_table@job_table@prior_only` false,
+   must be fit to fit all the jobs for the nodes in the *fit_goal_set*. 
+
+#. Each job has a link to the job that needs to be run before it,
+   except for the first job which corresponds to the start node
+   and start split reference id.
+
+#. Each job also has a list of which jobs need be run after it
+   (to fit the *fit_goal_set* ).
+
+#. If a job has *prior_only* true,
+   it does not need to be fit for this *fit_goal_set*, but its priors should 
+   be created so it could be the start job for a different *fit_goal_set* .
+
 
 all_node_database
 *****************
@@ -41,6 +58,8 @@ start_node_id
 *************
 This, together with *start_split_reference_id*
 corresponds to a completed fit that we are starting from.
+We assume that the priors for this fit have been created; see prior_only below.
+The start node must be a descendant of the :ref:`glossary@root_node` .
 
 start_split_reference_id
 ************************
@@ -53,14 +72,13 @@ This is ``None`` if and only if
 
 fit_goal_set
 ************
-This is the :ref:`glossary@fit_goal_set`.
-Each such node must be the start node, or a descendant of the start node.
-In addition, it must be in the :ref:`fit_goal_table-name` ,
-or an ancestor of a node in the fit goal table.
+This is the a :ref:`glossary@fit_goal_set`.
+In addition,
+each such node must be the start node, or a descendant of the start node.
 
 job_table
 *********
-The return value *job_table* is a ``list``.
+The return value *job_table* is a ``list`` of ``dict`` :
 
 job_id
 ======
@@ -80,13 +98,15 @@ where *split_reference_name* is the split reference name corresponding to
 
 prior_only
 ==========
-If this ``bool`` is false, this job should be run.
-It will be false for if this is the start node;
-see:ref:`create_job_table@start_node_id` .
+If this ``bool`` is false, this job must be run to fit all the
+nodes in *fit_goal_set* .
+It will be false for if this is the start node; i.e,
+the start node must be fit to fit the nodes in *fit_goal_set*.
+
 If *prior_only* is true,
-this job will not be run and this job will not have any children.
-The priors for this job will be created if the parent job succeeds
-(*prior_only* cannot be true for the parent job).
+(*prior_only* cannot be true for the parent job.
+The priors for this job will be created if the parent job succeeds,
+but this job will not be run and it will not have any children.
 These priors are intended to be used by a subsequent call to
 :ref:`continue_cascade-name` where *prior_only* for this job is false.
 
@@ -390,5 +410,8 @@ def create_job_table(
    # ...
    assert type(job_table)      == list
    assert type( job_table[0] ) == dict
+   assert job_table[0]['fit_node_id'] == start_node_id
+   assert job_table[0]['split_reference_id'] == start_split_reference_id
+   assert job_table[0]['prior_only'] == False
    return job_table
    # END RETURN

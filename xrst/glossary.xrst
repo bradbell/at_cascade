@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 
 {xrst_begin glossary}
@@ -67,7 +67,8 @@ Note that this transformation is finite valued at :math:`x` equal to zero.
 fit_goal_set
 ************
 This is the set of nodes that we need a fit for.
-Each node in this set must be the *root_node* or a descendant of the root node.
+It must be a subset (which could be all) of the
+:ref:`fit_goal_table-name` .
 
 fit_node
 ********

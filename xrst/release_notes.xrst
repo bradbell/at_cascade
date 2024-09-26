@@ -40,6 +40,11 @@ Release Notes for 2024
 mm-dd
 *****
 
+09-26
+=====
+The create_job_table documentation was improved; e.g.,
+see its :ref:`create_job_table@Summary` .
+
 09-24
 =====
 The :ref:`create_shift_db-name` routine is used to create the priors
