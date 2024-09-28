@@ -108,7 +108,7 @@ if the corresponding event occurs:
    at_cascade,   sample: OK,     the posterior samples were computed
    at_cascade,   children: OK,   the child databases with priors were created
 
-Note that the OK events depend on each other in the following way:
+Note that the events depend on each other in the following way:
 
 #. If children: OK is present, then sample: OK is present.
 #. If sample: OK is present, then fit: OK is present.
