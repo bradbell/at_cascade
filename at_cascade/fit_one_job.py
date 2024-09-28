@@ -92,17 +92,28 @@ distribution for the model variables for the fit_node.
 
 log
 ===
-Upon return, a summary of the operations preformed by dismod.
-In addition, the following entries are added to the log table:
+The log table is initialized as empty when ``fit_one_job`` starts.
+Upon return or abort due to an exception,
+the log table contains a summary of the operations preformed by dismod.
+In addition,
+the following entries will be added to the log table
+if the corresponding event occurs:
 
 .. csv-table::
    :header-rows:1
 
-   message_type, message,        meaning
+   message_type, message,        event
    at_cascade,   no data: abort, abort fit because all the data is held out
    at_cascade,   fit: OK,        the maximum likelihood problem was solved
    at_cascade,   sample: OK,     the posterior samples were computed
    at_cascade,   children: OK,   the child databases with priors were created
+
+Note that the OK events depend on each other in the following way:
+
+#. If children: OK is present, then sample: OK is present.
+#. If sample: OK is present, then fit: OK is present.
+#. If fit: OK is present, then no data: abort is **not** present.
+
 
 Exception
 *********
@@ -268,20 +279,6 @@ def fit_one_job(
          msg += 'list with three elements'
          assert False, msg
    #
-   # perturb_optimization
-   perturb_optimization = dict()
-   for key in [ 'start', 'scale' ] :
-      long_key = f'perturb_optimization_{key}'
-      if long_key in option_all_dict :
-         sigma = option_all_dict[long_key]
-         if float(sigma) < 0.0 :
-            msg = f'fit_one_job: perturb_optimization_{key} = '
-            msg += sigma
-            msg += ' is less than zero'
-            assert False, msg
-         if float(sigma) > 0.0 :
-            perturb_optimization[key] = sigma
-   #
    # node_split_set
    node_split_set = set()
    for row in all_table['node_split'] :
@@ -311,6 +308,13 @@ def fit_one_job(
    integrand_table = fit_or_root.get_table('integrand')
    fit_or_root.close()
    #
+   # fit_node_database: log table
+   connection = dismod_at.create_connection(
+      fit_node_database, new = False, readonly = False
+   )
+   command = 'DROP TABLE IF EXISTS log'
+   dismod_at.sql_command(connection, command)
+   #
    # init
    command = [ 'dismod_at', fit_node_database, 'init' ]
    system_command(command, file_stdout)
@@ -339,6 +343,20 @@ def fit_one_job(
       system_command(command, file_stdout)
    #
    # perturb_optimization
+   perturb_optimization = dict()
+   for key in [ 'start', 'scale' ] :
+      long_key = f'perturb_optimization_{key}'
+      if long_key in option_all_dict :
+         sigma = option_all_dict[long_key]
+         if float(sigma) < 0.0 :
+            msg = f'fit_one_job: perturb_optimization_{key} = '
+            msg += sigma
+            msg += ' is less than zero'
+            assert False, msg
+         if float(sigma) > 0.0 :
+            perturb_optimization[key] = sigma
+   #
+   # fit_node_database: scale_var and start_var tables
    for key in perturb_optimization :
       sigma = perturb_optimization[key]
       table = f'{key}_var'

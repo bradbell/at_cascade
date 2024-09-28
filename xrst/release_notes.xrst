@@ -41,6 +41,14 @@ Release Notes for 2024
 mm-dd
 *****
 
+09-28
+=====
+The ``fit_one_job`` :ref:`fit_one_job@fit_node_database@log` table
+documentation was improved.
+In addition, fit_one_job was modified to initialize the log table as empty.
+This will make a difference if one fit aborts and then
+another fit is started.
+
 09-26
 =====
 #. The create_job_table documentation was improved; e.g.,
