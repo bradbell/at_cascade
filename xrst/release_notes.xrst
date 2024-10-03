@@ -44,7 +44,10 @@ mm-dd
 
 10-03
 =====
-The :ref:`wish_list-name` was modified in the following ways:
+The job table 
+:ref:`create_job_table@Summary` and
+:ref:`create_job_table@job_table@prior_only` discussion were improved. 
+In addition, the :ref:`wish_list-name` was modified in the following ways:
 
 #. The See Priors for Each Fit item and the No Data item 
    were removed because they have been completed.

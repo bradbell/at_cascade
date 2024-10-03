@@ -26,12 +26,12 @@ This routine returns a list where each element corresponds to a job:
    For example, if the node is n0 and we are splitting on
    sex some possible jobs are n0.female, n0.male.
 
-#. All of these jobs that have
+#. All of the jobs that have
    :ref:`create_job_table@job_table@prior_only` false,
    must be fit to fit all the jobs for the nodes in the *fit_goal_set*.
 
 #. Each job has a *parent_job_id* for the job that needs to be fit before it,
-   except for the first job which corresponds to the start node
+   except for the start job which corresponds to the start node
    and start split reference id.
    The *prior_only* field is false for any job that is a parent; i.e.,
    all the parent jobs are fit.
@@ -102,17 +102,18 @@ where *split_reference_name* is the split reference name corresponding to
 
 prior_only
 ==========
-If this ``bool`` is false, this job must be run to fit all the
-nodes in *fit_goal_set* .
-It will be false for if this is the start node; i.e,
-the start node must be fit to fit the nodes in *fit_goal_set*.
+If this ``bool`` is false, 
+this job must be run to fit all the nodes in *fit_goal_set* .
+It will be false if this is the start job; i.e,
+the start job must be fit to fit the nodes in *fit_goal_set*.
 
 If *prior_only* is true,
-(*prior_only* cannot be true for the parent job.
+*prior_only* cannot be true for the corresponding parent job.
 The priors for this job will be created if the parent job succeeds,
 but this job will not be run and it will not have any children.
 These priors are intended to be used by a subsequent call to
-:ref:`continue_cascade-name` where *prior_only* for this job is false.
+:ref:`continue_cascade-name` where this job is the start job
+( and *prior_only* is false because we have a different *fit_goal_set* ).
 
 fit_node_id
 ===========
