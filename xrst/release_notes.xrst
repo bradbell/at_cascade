@@ -47,7 +47,7 @@ mm-dd
 The :ref:`wish_list-name` was modified in the following ways:
 
 #. The See Priors for Each Fit item and the No Data item 
-   were removed because it has been completed.
+   were removed because they have been completed.
 
 #. The special csv version of Continue Cascade item
    and Retry Fit item were removed because
