@@ -31,6 +31,7 @@ Release Notes for at_cascade
    haqi
    avg
    sqlite
+   cov
 }
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
@@ -40,6 +41,30 @@ Release Notes for 2024
 
 mm-dd
 *****
+
+10-03
+=====
+The :ref:`wish_list-name` was modified in the following ways:
+
+#. The See Priors for Each Fit item and the No Data item 
+   were removed because it has been completed.
+
+#. The special csv version of Continue Cascade item
+   and Retry Fit item were removed because
+   :ref:`continue_cascade-name` seems be working fine for these purposes.
+
+#. The Estimate Standard Deviations item was removed because one can do
+   this using the posterior samples.
+
+#. The :ref:`wish_list@avgint Table` and 
+   csv.fit :ref:`wish_list@csv.fit@avgint Table` items were separated.
+
+#. The :ref:`wish_list@csv.fit@covariate.csv` item was changed to mention
+   that there is only one rate_eff_cov table and include a link
+   to the corresponding dismod_at documentation.
+
+#. The :ref:`wish_list@max_fit` item was changed to discuss
+   leaf nodes with lots of data.
 
 09-28
 =====
@@ -656,7 +681,7 @@ Add definition of *true value for the average integrand* to the discussion of
 #. Move the :ref:`wish_list@Meta Regression` item to a higher priority
    on the wish list; i.e., closer to the top of the list.
 
-#. Add :ref:`wish_list@csv.fit@See Priors for Each Fit` to the wish list.
+#. Add See Priors for Each Fit to the wish list.
 
 11-03
 =====
