@@ -585,16 +585,16 @@ def main(refit_split) :
          at_cascade.check_cascade_node(
             rate_true          = rate_true,
             all_node_database  = all_node_database,
-            fit_node_database  = goal_database,
+            fit_database       = goal_database,
             avgint_table       = avgint_table,
             relative_tolerance = 1e-5,
          )
    #
    #
    # fit_iota, fit_alpha, fit_reference_income
-   fit_node_database = f'{result_dir}/n0/dismod.db'
+   fit_database      = f'{result_dir}/n0/dismod.db'
    connection        = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+      fit_database, new = False, readonly = True
    )
    var_table         = dismod_at.get_table_dict(connection, 'var')
    fit_var_table     = dismod_at.get_table_dict(connection, 'fit_var')

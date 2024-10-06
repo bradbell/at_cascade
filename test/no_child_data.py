@@ -214,15 +214,15 @@ def root_node_db(file_name) :
 # ----------------------------------------------------------------------------
 def check_fit(result_dir, fit_node_name) :
    #
-   # fit_node_database
+   # fit_database
    if fit_node_name == 'n0' :
-      fit_node_database = f'{result_dir}/n0/dismod.db'
+      fit_database      = f'{result_dir}/n0/dismod.db'
    else :
-      fit_node_database = f'{result_dir}/n0/{fit_node_name}/dismod.db'
+      fit_database      = f'{result_dir}/n0/{fit_node_name}/dismod.db'
    #
-   # fit_node_database.log_table
+   # fit_database.log_table
    connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+      fit_database, new = False, readonly = True
    )
    log_table = dismod_at.get_table_dict(connection, 'log')
    connection.close()
@@ -246,7 +246,7 @@ def check_fit(result_dir, fit_node_name) :
    # age, var_table, fit_var_table
    new           = False
    fit_or_root   = at_cascade.fit_or_root_class(
-      fit_node_database, root_node_database
+      fit_database, root_node_database
    )
    age_table     = fit_or_root.get_table('age')
    var_table     = fit_or_root.get_table('var')

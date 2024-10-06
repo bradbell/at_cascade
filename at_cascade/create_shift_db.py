@@ -24,10 +24,10 @@ all_node_database
 *****************
 is a python string containing the name of the :ref:`all_node_db-name`.
 
-fit_node_database
-*****************
+fit_database
+************
 is a python string containing the name of a dismod_at database.
-This is a :ref:`glossary@fit_node_database` which
+This is a :ref:`glossary@fit_database` which
 has two predict tables (mentioned below).
 These tables are used to create priors in the child node databases.
 This argument can't be ``None``.
@@ -35,7 +35,7 @@ This argument can't be ``None``.
 fit_node
 ========
 We use *fit_node* to refer to the parent node in the
-dismod_at option table in the *fit_node_database*.
+dismod_at option table in the *fit_database*.
 
 sample Table
 ============
@@ -47,7 +47,7 @@ for both the fixed and random effects.
 c_shift_avgint Table
 ====================
 This is the :ref:`avgint_parent_grid-name` table corresponding
-to this fit_node_database.
+to this fit_database.
 
 c_shift_predict_sample Table
 ============================
@@ -98,7 +98,7 @@ the value priors in fit_database and the shift_databases
 are effectively the same.
 Otherwise the mean in the value priors
 are replaced using the corresponding values in the
-predict tables in the *fit_node_database*.
+predict tables in the *fit_database*.
 If *no_ode_fit* is true (false),
 the standard deviations in the value priors are not replaced (are replaced).
 Note that if the value prior is uniform,
@@ -109,15 +109,15 @@ dage and dtime Priors
 =====================
 The mean of the dage and dtime priors
 are replaced using the corresponding difference in the
-predict tables in the *fit_node_database*.
+predict tables in the *fit_database*.
 
 no_ode_fit
 **********
-If this argument is true (false) if the *fit_node_database*
+If this argument is true (false) if the *fit_database*
 is (is not) the result of a :ref:`no_ode_fit-name` .
 If *no_ode_fit* is false,
 the sample table and the c_shift_predict_sample
-table must be in the *fit_node_database*.
+table must be in the *fit_database*.
 In this case both the means and standard deviations in the value priors
 are replaced using the results of the fit.
 Otherwise, only the means are replaced.
@@ -389,13 +389,13 @@ def add_shift_grid_row(
 # at_cascade.create_shift_db
 def create_shift_db(
    all_node_database    ,
-   fit_node_database    ,
+   fit_database    ,
    shift_databases      ,
    no_ode_fit           = False,
 # )
 ) :
    assert type(all_node_database) == str
-   assert type(fit_node_database) == str
+   assert type(fit_database) == str
    assert type(shift_databases) == dict
    assert type(no_ode_fit) == bool
    # END syntax
@@ -437,7 +437,7 @@ def create_shift_db(
    #
    # fit_table
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_node_database, root_node_database
+      fit_database, root_node_database
    )
    fit_table  = dict()
    for name in [
@@ -598,9 +598,9 @@ def create_shift_db(
             if fit_split_reference_id == row['split_reference_id'] :
                mulcov_freeze_set.add( row['mulcov_id'] )
       #
-      # shift_database     = fit_node_database
+      # shift_database     = fit_database
       shift_database = shift_databases[shift_name]
-      shutil.copyfile(fit_node_database, shift_database)
+      shutil.copyfile(fit_database, shift_database)
       #
       # shift_table['option']
       # Set value for parent_node_name and other_database
@@ -618,7 +618,7 @@ def create_shift_db(
       # cov_reference_list
       cov_reference_list = at_cascade.get_cov_reference(
          all_node_database   = all_node_database,
-         fit_node_database   = fit_node_database,
+         fit_database        = fit_database,
          shift_node_id       = shift_node_id,
          split_reference_id  = shift_split_reference_id
       )

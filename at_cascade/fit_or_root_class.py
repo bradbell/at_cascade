@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin fit_or_root_class}
@@ -11,12 +11,12 @@ Get Tables Corresponding to a Fit Node
 fit_or_root_class
 *****************
 {xrst_code py}
-fit_or_root = fit_or_root_class(fit_node_database, root_node_database)
+fit_or_root = fit_or_root_class(fit_database, root_node_database)
 {xrst_code}
 
-fit_node_database
-=================
-This ``str`` is the name of a :ref:`glossary@fit_node_database` .
+fit_database
+============
+This ``str`` is the name of a :ref:`glossary@fit_database` .
 
 root_node_database
 ==================
@@ -72,12 +72,12 @@ import at_cascade
 class fit_or_root_class :
    #
    # __init__
-   def __init__(self, fit_node_database, root_node_database) :
-      assert type(fit_node_database) == str
+   def __init__(self, fit_database, root_node_database) :
+      assert type(fit_database) == str
       assert type(root_node_database) == str
       #
       self.fit_connection = dismod_at.create_connection(
-         fit_node_database, new = False, readonly = True
+         fit_database, new = False, readonly = True
       )
       self.root_connection = dismod_at.create_connection(
          root_node_database, new = False, readonly = True

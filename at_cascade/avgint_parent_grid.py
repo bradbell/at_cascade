@@ -29,9 +29,9 @@ all_node_database
 is a python string containing the name of the :ref:`all_node_db-name`.
 This argument can't be ``None``.
 
-fit_node_database
-*****************
-is a python string containing the name of the :ref:`glossary@fit_node_database`.
+fit_database
+************
+is a python string containing the name of the :ref:`glossary@fit_database`.
 A new avgint table will be placed in this database,
 the previous avgint table in this database is lost,
 and there are no other changes to the database.
@@ -42,19 +42,19 @@ job_table
 This is a :ref:`create_job_table@job_table` containing the jobs
 necessary to fit the :ref:`glossary@fit_goal_set`.
 If this is ``None`` , we are doing predictions for the same node and
-split reference id a in *fit_node_database*
+split reference id a in *fit_database*
 (This is used by :ref:`no_ode_fit-name` .)
 
 fit_job_id
 **********
 This is the :ref:`create_job_table@job_table@job_id`
-for the job fits the fit_node_database.
+for the job fits the fit_database.
 This is not used when *job_table* is ``None`` .
 
 parent_node
 ===========
 We use *parent_node* to refer to the parent node in the
-dismod_at option table in the fit_node_database.
+dismod_at option table in the fit_database.
 
 avgint Table
 ************
@@ -66,7 +66,7 @@ and all the rates. Note that the rates (covariate multipliers) depend
 
 1. If *job_table* is ``None`` , the avgint table enables predictions
    at the same covariate reference values as for the parent_node
-   in *fit_node_database* . Otherwise, see the cases below.
+   in *fit_database* . Otherwise, see the cases below.
 
 2. This avgint table enables predictions at the covariate reference values
    corresponding to each (node_id, split_reference_id) pair that are
@@ -75,12 +75,12 @@ and all the rates. Note that the rates (covariate multipliers) depend
 c_age_id
 ========
 This column identifies a row in the age table of the
-fit_node_database that this prediction is for.
+fit_database that this prediction is for.
 
 c_time_id
 =========
 This column identifies a row in the time table of the
-fit_node_database that this prediction is for.
+fit_database that this prediction is for.
 
 c_split_reference_id
 ====================
@@ -225,13 +225,13 @@ def possible_child_job_list(
 # at_cascade.avgint_parent_grid
 def avgint_parent_grid(
    all_node_database = None ,
-   fit_node_database = None ,
+   fit_database      = None ,
    job_table         = None ,
    fit_job_id        = None ,
 # )
 ) :
    assert type(all_node_database)  == str
-   assert type(fit_node_database) == str
+   assert type(fit_database) == str
    assert type(job_table) == list or job_table == None
    assert type(fit_job_id) == int or fit_job_id == None
    # END syntax
@@ -256,7 +256,7 @@ def avgint_parent_grid(
    #
    # fit_tables
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_node_database, root_node_database
+      fit_database, root_node_database
    )
    fit_tables = dict()
    for name in [
@@ -325,7 +325,7 @@ def avgint_parent_grid(
       # cov_reference_list
       cov_reference_list = at_cascade.get_cov_reference(
          all_node_database  = all_node_database,
-         fit_node_database  = fit_node_database,
+         fit_database       = fit_database,
          shift_node_id      = parent_node_id,
          split_reference_id = fit_split_reference_id,
       )
@@ -341,7 +341,7 @@ def avgint_parent_grid(
          # cov_reference_list
          cov_reference_list = at_cascade.get_cov_reference(
             all_node_database  = all_node_database,
-            fit_node_database  = fit_node_database,
+            fit_database       = fit_database,
             shift_node_id      = shift_node_id,
             split_reference_id = shift_split_reference_id,
          )
@@ -512,9 +512,9 @@ def avgint_parent_grid(
                   # add to row_list
                   row_list.append( row )
    #
-   # put new avgint table in fit_node_database
+   # put new avgint table in fit_database
    connection    = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
+      fit_database, new = False, readonly = False
    )
    command       = 'DROP TABLE IF EXISTS ' + tbl_name
    dismod_at.sql_command(connection, command)

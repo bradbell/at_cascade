@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin check_cascade_node}
@@ -59,11 +59,11 @@ is a python string specifying the location of the
 :ref:`all_node_db-name`
 relative to the current working directory.
 
-fit_node_database
-*****************
+fit_database
+************
 is a python string specifying the location of a
 dismod_at database relative to the current working directory.
-It is a :ref:`glossary@fit_node_database` with the
+It is a :ref:`glossary@fit_database` with the
 extra properties listed under
 :ref:`cascade_root_node@Output dismod.db`
 in the cascade_root_node documentation.
@@ -72,8 +72,8 @@ avgint_table
 ************
 This an avgint table specifying the predictions to check.
 The node_id in this table does not matter because the parent node
-in the fit_node_database is used in its place.
-The avgint table in the *fit_node_database* is replaced using this argument.
+in the fit_database is used in its place.
+The avgint table in the *fit_database* is replaced using this argument.
 
 relative_tolerance
 ******************
@@ -97,13 +97,13 @@ import at_cascade
 def check_cascade_node(
          rate_true          ,
          all_node_database  ,
-         fit_node_database  ,
+         fit_database  ,
          avgint_table       ,
          relative_tolerance = None,
 # )
 ) :
    assert type(all_node_database) == str
-   assert type(fit_node_database) == str
+   assert type(fit_database) == str
    assert type(avgint_table) == list
    assert relative_tolerance == None or type(relative_tolerance) == float
    # END DEF
@@ -121,7 +121,7 @@ def check_cascade_node(
    #
    # tables
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_node_database, root_node_database
+      fit_database, root_node_database
    )
    tables = dict()
    for name in [
@@ -135,14 +135,14 @@ def check_cascade_node(
    fit_or_root.close()
    #
    # fit_node_id
-   fit_node_name = at_cascade.get_parent_node( fit_node_database )
+   fit_node_name = at_cascade.get_parent_node( fit_database )
    fit_node_id   = at_cascade.table_name2id(
       tables['node'], 'node', fit_node_name
    )
    #
    # avgint table
    connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
+      fit_database, new = False, readonly = False
    )
    message         = 'check_cascade_node: replace avgint table'
    tbl_name        = 'avgint'
@@ -154,19 +154,19 @@ def check_cascade_node(
    connection.close()
    #
    # predict_fit_var_table
-   command = [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
+   command = [ 'dismod_at', fit_database, 'predict', 'fit_var' ]
    dismod_at.system_command_prc(command)
    connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+      fit_database, new = False, readonly = True
    )
    predict_fit_var_table = dismod_at.get_table_dict(connection, 'predict')
    connection.close()
    #
    # predict_sample_table
-   command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
+   command = [ 'dismod_at', fit_database, 'predict', 'sample' ]
    dismod_at.system_command_prc(command)
    connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+      fit_database, new = False, readonly = True
    )
    predict_sample_table = dismod_at.get_table_dict(connection, 'predict')
    connection.close()

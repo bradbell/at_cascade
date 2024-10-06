@@ -69,7 +69,7 @@ as the node and sex for the fit.
 Otherwise it is a fit for the closest ancestor that has a
 successful cascade fit.
 To be specific, ``sample: OK`` is in its
-:ref:`fit_one_job@fit_node_database@log`.
+:ref:`fit_one_job@fit_database@log`.
 
 db2csv
 ******

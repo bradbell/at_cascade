@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import csv
 import os
@@ -10,7 +10,7 @@ import dismod_at
 import at_cascade.ihme
 # -----------------------------------------------------------------------------
 def predict_csv_one_job(
-   fit_node_database ,
+   fit_database ,
    age_group_id_dict ,
    age_group_id_list ,
    one_age_group_dict ,
@@ -18,7 +18,7 @@ def predict_csv_one_job(
    max_plot ,
    all_node_database,
 ) :
-   assert type(fit_node_database) == str
+   assert type(fit_database) == str
    assert type(age_group_id_dict) == dict
    assert type(age_group_id_list) == list
    assert type(one_age_group_dict) == dict
@@ -31,7 +31,7 @@ def predict_csv_one_job(
    #
    # integrand_table, age_table, time_table
    new        = False
-   connection      = dismod_at.create_connection(fit_node_database, new)
+   connection      = dismod_at.create_connection(fit_database, new)
    integrand_table = dismod_at.get_table_dict(connection, 'integrand')
    age_table       = dismod_at.get_table_dict(connection, 'age')
    time_table      = dismod_at.get_table_dict(connection, 'time')
@@ -60,9 +60,9 @@ def predict_csv_one_job(
    node_table = at_cascade.csv.read_table(file_path)
    #
    # fit_node_dir
-   assert fit_node_database.endswith('/dismod.db')
-   index        = fit_node_database.rfind('/')
-   fit_node_dir = fit_node_database[0:index]
+   assert fit_database.endswith('/dismod.db')
+   index        = fit_database.rfind('/')
+   fit_node_dir = fit_database[0:index]
    #
    # fit_split_reference_id
    cov_info = at_cascade.get_cov_info(
@@ -83,7 +83,7 @@ def predict_csv_one_job(
    year_grid = [ 1990.5, 1995.5, 2000.5, 2005.5, 2010.5, 2015.5, 2019.5 ]
    #
    # fit_node_name
-   fit_node_name   = at_cascade.get_parent_node(fit_node_database)
+   fit_node_name   = at_cascade.get_parent_node(fit_database)
    #
    # fit_node_id, location_id
    fit_node_id = None
@@ -203,40 +203,40 @@ def predict_csv_one_job(
    #
    # avgint_table
    new        = False
-   connection = dismod_at.create_connection(fit_node_database, new)
+   connection = dismod_at.create_connection(fit_database, new)
    dismod_at.replace_table(connection, 'avgint', avgint_table)
    connection.close()
    #
    # predict_fit_table
-   command = [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
+   command = [ 'dismod_at', fit_database, 'predict', 'fit_var' ]
    dismod_at.system_command_prc(command, print_command = False )
    new                  = False
-   connection           = dismod_at.create_connection(fit_node_database, new)
+   connection           = dismod_at.create_connection(fit_database, new)
    predict_fit_table    = dismod_at.get_table_dict(connection, 'predict')
    assert len(predict_fit_table) == len(avgint_table)
    connection.close()
    #
    # predict sample
-   command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
+   command = [ 'dismod_at', fit_database, 'predict', 'sample' ]
    dismod_at.system_command_prc(command, print_command = False )
    #
    # db2csv
    # print( 'db2csv' )
-   dismod_at.db2csv_command(fit_node_database)
+   dismod_at.db2csv_command(fit_database)
    #
    # rate.pdf
    pdf_file = f'{fit_node_dir}/rate.pdf'
    plot_title = f'{fit_node_name}.{sex_name}'
    rate_set   = { 'iota', 'chi', 'omega' }
    dismod_at.plot_rate_fit(
-      fit_node_database, pdf_file, plot_title, rate_set
+      fit_database, pdf_file, plot_title, rate_set
    )
    #
    # data.pdf
    pdf_file = f'{fit_node_dir}/data.pdf'
    plot_title = f'{fit_node_name}.{sex_name}'
    dismod_at.plot_data_fit(
-      database   = fit_node_database,
+      database   = fit_database,
       pdf_file   = pdf_file,
       plot_title = plot_title,
       max_plot   = max_plot,
@@ -244,7 +244,7 @@ def predict_csv_one_job(
    #
    # predict_sample_table
    new                  = False
-   connection           = dismod_at.create_connection(fit_node_database, new)
+   connection           = dismod_at.create_connection(fit_database, new)
    predict_sample_table = dismod_at.get_table_dict(connection, 'predict')
    connection.close()
    #
@@ -555,12 +555,12 @@ def predict_csv(
       else :
          print( f'{job_id+1}/{n_job} Creating files for {job_name}' )
          #
-         # fit_node_database
-         fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
+         # fit_database
+         fit_database      = f'{result_dir}/{database_dir}/dismod.db'
          #
          if max_number_cpu == 1 :
             predict_csv_one_job (
-               fit_node_database         ,
+               fit_database         ,
                age_group_id_dict         ,
                age_group_id_list         ,
                one_age_group_dict        ,
@@ -575,7 +575,7 @@ def predict_csv(
             #
             # args
             args = (
-               fit_node_database         ,
+               fit_database         ,
                age_group_id_dict         ,
                age_group_id_list         ,
                one_age_group_dict        ,

@@ -23,8 +23,8 @@ Prototype
 Purpose
 *******
 This routine copies all the dismod_at other tables from the other database
-to the dismod_at *fit_node_database* .
-In addition, it changes the option table in the *fit_node_database*
+to the dismod_at *fit_database* .
+In addition, it changes the option table in the *fit_database*
 so that it does not require any tables in another database.
 
 {xrst_end copy_other_tbl}
@@ -37,13 +37,13 @@ import dismod_at
 #
 # BEGIN_PROTOTYPE
 # at_cascade.copy_other_tbl
-def copy_other_tbl(fit_node_database) :
-   assert type(fit_node_database) == str
+def copy_other_tbl(fit_database) :
+   assert type(fit_database) == str
    # END_PROTOTYPE
    #
    # fit_connection
    fit_connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
+      fit_database, new = False, readonly = False
    )
    #
    # option_table
@@ -67,9 +67,9 @@ def copy_other_tbl(fit_node_database) :
    dismod_at.replace_table(fit_connection, 'option', option_table)
    #
    # other_database
-   index = fit_node_database.rindex('/')
+   index = fit_database.rindex('/')
    if 0 <= index :
-      fit_dir        = fit_node_database[0 : index]
+      fit_dir        = fit_database[0 : index]
       other_database = f'{fit_dir}/{other_database}'
    #
    # other_connection

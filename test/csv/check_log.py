@@ -134,7 +134,7 @@ def main() :
    at_cascade.csv.fit(fit_dir, max_node_depth=0)
    at_cascade.continue_cascade(
       all_node_database = f'{fit_dir}/all_node.db'  ,
-      fit_node_database = f'{fit_dir}/n0/dismod.db' ,
+      fit_database      = f'{fit_dir}/n0/dismod.db' ,
       fit_goal_set      = { 'n2' }                  ,
    )
    #

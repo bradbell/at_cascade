@@ -291,9 +291,9 @@ def main() :
    )
    #
    # var_table, fit_var_table, rate_table, age_table
-   fit_node_database = f'{result_dir}/n0/dismod.db'
+   fit_database      = f'{result_dir}/n0/dismod.db'
    connection        = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+      fit_database, new = False, readonly = True
    )
    var_table         = dismod_at.get_table_dict(connection, 'var')
    rate_table        = dismod_at.get_table_dict(connection, 'rate')

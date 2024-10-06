@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import sys
 import os
@@ -185,18 +185,18 @@ def main(
       if not database.endswith( '/dismod.db' ) :
          msg  = f'{command}: database does not end with /dismod.db'
          assert False, msg
-      fit_node_database = f'{result_dir}/{database}'
-      if not os.path.exists(fit_node_database) :
-         msg  = f'{command}: result_dir/database = {fit_node_database}'
+      fit_database      = f'{result_dir}/{database}'
+      if not os.path.exists(fit_database) :
+         msg  = f'{command}: result_dir/database = {fit_database}'
          msg += f'\nfile does not exist'
          assert False, msg
       if command == 'display' :
-         display(fit_node_database, max_plot)
+         display(fit_database, max_plot)
       else :
          all_node_database = f'{result_dir}/all_node.db'
          at_cascade.continue_cascade(
             all_node_database = all_node_database,
-            fit_node_database = fit_node_database,
+            fit_database      = fit_database,
             fit_goal_set      = fit_goal_set,
             fit_type_list     = fit_type_list,
          )

@@ -252,7 +252,7 @@ def no_ode_fit(
    # avgint_parent_grid
    at_cascade.avgint_parent_grid(
       all_node_database = all_node_database ,
-      fit_node_database = no_ode_database   ,
+      fit_database      = no_ode_database   ,
    )
    at_cascade.add_log_entry(connection, 'avgint_parent_grid')
    #
@@ -334,7 +334,7 @@ def no_ode_fit(
    shift_databases = { root_node_name : root_fit_database }
    at_cascade.create_shift_db(
       all_node_database = all_node_database ,
-      fit_node_database = no_ode_database   ,
+      fit_database      = no_ode_database   ,
       shift_databases   = shift_databases   ,
       no_ode_fit        = True              ,
    )

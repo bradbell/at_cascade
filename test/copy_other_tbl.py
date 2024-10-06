@@ -143,22 +143,22 @@ def main() :
    root_node_database  = f'{result_dir}/root_node.db'
    root_node_db(root_node_database)
    #
-   # fit_node_database
-   fit_node_database  = f'{result_dir}/fit_node.db'
-   at_cascade.copy_root_db(root_node_database, fit_node_database)
+   # fit_database
+   fit_database       = f'{result_dir}/fit_node.db'
+   at_cascade.copy_root_db(root_node_database, fit_database)
    #
-   # fit_node_database
-   at_cascade.copy_other_tbl(fit_node_database)
+   # fit_database
+   at_cascade.copy_other_tbl(fit_database)
    #
    # root_node_database
    os.remove( root_node_database )
    #
-   # fit_node_database
-   command = [ 'dismod_at' , fit_node_database, 'init' ]
+   # fit_database
+   command = [ 'dismod_at' , fit_database, 'init' ]
    dismod_at.system_command_prc( command, print_command = False )
    #
    # db2csv_command
-   dismod_at.db2csv_command( fit_node_database )
+   dismod_at.db2csv_command( fit_database )
    #
    # data_table
    file_obj   = open( f'{result_dir}/data.csv' , 'r' )

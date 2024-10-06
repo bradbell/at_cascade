@@ -46,7 +46,7 @@ mm-dd
 =====
 The ``pre_one_job`` argument *fit_database* was changed to
 :ref:`csv.pre_one_job@pre_database` to emphasize the fact that it is a
-copy of the :ref:`fit_one_job@fit_node_database` .
+copy of the :ref:`fit_one_job@fit_database` .
 
 10-03
 =====
@@ -77,7 +77,7 @@ In addition, the :ref:`wish_list-name` was modified in the following ways:
 
 09-28
 =====
-The ``fit_one_job`` :ref:`fit_one_job@fit_node_database@log` table
+The ``fit_one_job`` :ref:`fit_one_job@fit_database@log` table
 documentation was improved.
 In addition, fit_one_job was modified to initialize the log table as empty.
 This will make a difference if one fit aborts and then
@@ -180,9 +180,9 @@ instead of the root node. This has been fixed.
 08-18
 =====
 #. Add special ``at_cascade`` log messages to mark the progress of the fitting
-   operation; see :ref:`fit_one_job@fit_node_database@log` for ``fit_one_job`` .
+   operation; see :ref:`fit_one_job@fit_database@log` for ``fit_one_job`` .
 #. Change fit_one_job so that it aborts the fit when there is no data;
-   see :ref:`fit_one_job@fit_node_database@log` .
+   see :ref:`fit_one_job@fit_database@log` .
 
 07-30
 =====
@@ -439,7 +439,7 @@ of the covariate.csv file.
 =====
 If there was a :ref:`split_reference_table-name` ,
 :ref:`option_all_table@refit_split` was false,  and
-:ref:`continue_cascade@fit_node_database` in continue_cascade
+:ref:`continue_cascade@fit_database` in continue_cascade
 was the node just before the split, continue_cascade would crash with
 a python dictionary key error.
 For example, this error occurred when using continue_cascade
@@ -879,7 +879,7 @@ Merge in other_database branch:
    :ref:`constant tables <module@at_cascade.constant_table_list>` from the
    :ref:`glossary@root_node_database` .
 #. Use :ref:`copy_root_db-name` to remove the constant tables from the
-   :ref:`fit node databases <glossary@fit_node_database>` .
+   :ref:`fit node databases <glossary@fit_database>` .
    This avoids multiple copies of these tables and thereby saves disk space.
 
 05-16
@@ -1699,7 +1699,7 @@ below a certain point.
    This has been fixed and the option table setting is now used for all fits.
 
 2. Move cascade_fit_node to :ref:`cascade_root_node-name` (better name now that
-   the routine is not recursive. In addition, change the fit_node_database
+   the routine is not recursive. In addition, change the fit_database
    argument name to root_node_database.
 
 12-01
@@ -1707,7 +1707,7 @@ below a certain point.
 1. Add :ref:`get_database_dir-name`.
    This routine is for use with parallel processing.
 
-2. Change fit_node_database base create_job_table argument to
+2. Change fit_database base create_job_table argument to
    :ref:`create_job_table@node_table`.
 
 3. Add :ref:`create_job_table@job_table@start_child_job_id` and
@@ -1725,7 +1725,7 @@ Change the name get_job_table to
 
 2. Add :ref:`option_all_table@root_split_reference_name`
    to the option_all table (so that get_job_table can use any
-   fit_node_database).
+   fit_database).
 
 11-28
 =====

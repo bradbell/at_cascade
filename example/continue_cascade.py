@@ -379,10 +379,10 @@ def two_fit_goal_set_example(result_dir, avgint_table) :
    )
    #
    # continue starting at at n2
-   fit_node_database =  root_fit_dir + '/n2/dismod.db'
+   fit_database      =  root_fit_dir + '/n2/dismod.db'
    at_cascade.continue_cascade(
       all_node_database = all_node_database   ,
-      fit_node_database = fit_node_database   ,
+      fit_database      = fit_database   ,
       fit_goal_set      = second_fit_goal_set ,
    )
    #
@@ -393,7 +393,7 @@ def two_fit_goal_set_example(result_dir, avgint_table) :
       at_cascade.check_cascade_node(
          rate_true          = rate_true,
          all_node_database  = all_node_database,
-         fit_node_database  = leaf_database,
+         fit_database       = leaf_database,
          avgint_table       = avgint_table,
          relative_tolerance = 1e-7,
       )
@@ -424,7 +424,7 @@ def one_fit_goal_set_example(result_dir, avgint_table) :
       at_cascade.check_cascade_node(
          rate_true          = rate_true,
          all_node_database  = all_node_database,
-         fit_node_database  = leaf_database,
+         fit_database       = leaf_database,
          avgint_table       = avgint_table,
          relative_tolerance = 1e-7,
       )

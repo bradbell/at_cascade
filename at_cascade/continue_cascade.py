@@ -29,15 +29,15 @@ is a python string specifying the location of the
 relative to the current working directory.
 This argument can't be ``None``.
 
-fit_node_database
-*****************
+fit_database
+************
 is a python string specifying the location of a dismod_at database
 relative to the current working directory.
-This is a :ref:`glossary@fit_node_database` with the
+This is a :ref:`glossary@fit_database` with the
 final state after a run of
 :ref:`cascade_root_node-name` or :ref:`continue_cascade-name`
 that includes fitting this database.
-The *fit_node_database* is not changed, it is only used
+The *fit_database* is not changed, it is only used
 to identify which child jobs to fit.
 
 fit_goal_set
@@ -67,7 +67,7 @@ for this parameter.
    see :ref:`fit_parallel@shared_unique` .
 
 #. The *shared_unique* special case is where you are running (in parallel)
-   continue_cascade with the same *fit_node_database*, and disjoint
+   continue_cascade with the same *fit_database*, and disjoint
    *fit_goal_set* . (The intersection of disjoint sets is empty.)
 
 #. In the special case above, the suggested value for *shared_unique*
@@ -88,14 +88,14 @@ import at_cascade
 # at_cascade.continue_cascade
 def continue_cascade(
    all_node_database = None,
-   fit_node_database = None,
+   fit_database      = None,
    fit_goal_set      = None,
    fit_type_list     = [ 'both', 'fixed' ],
    shared_unique     = '',
 # )
 ) :
    assert type(all_node_database) == str
-   assert type(fit_node_database) == str
+   assert type(fit_database) == str
    assert type(fit_goal_set)      == set
    assert type(fit_type_list)     == list
    assert type(shared_unique)     == str
@@ -135,7 +135,7 @@ def continue_cascade(
    #
    # node_table, covariate_table, fit_integrand
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_node_database, root_node_database
+      fit_database, root_node_database
    )
    node_table      = fit_or_root.get_table('node')
    covariate_table = fit_or_root.get_table('covariate')
@@ -157,7 +157,7 @@ def continue_cascade(
          )
    #
    # fit_node_id
-   fit_node_name = at_cascade.get_parent_node(fit_node_database)
+   fit_node_name = at_cascade.get_parent_node(fit_database)
    fit_node_id   = at_cascade.table_name2id(node_table, 'node', fit_node_name)
    #
    # fit_split_reference_id

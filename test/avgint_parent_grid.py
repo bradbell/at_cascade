@@ -255,7 +255,7 @@ def main() :
    # replace avgint table
    at_cascade.avgint_parent_grid(
       all_node_database = all_node_database  ,
-      fit_node_database = root_node_database ,
+      fit_database      = root_node_database ,
       job_table         = job_table          ,
       fit_job_id        = 0                  ,
    )

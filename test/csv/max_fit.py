@@ -132,8 +132,8 @@ def main() :
    connection.close()
    #
    # data_subset_table
-   fit_node_database = f'{fit_dir}/n0/dismod.db'
-   connection        = dismod_at.create_connection(fit_node_database)
+   fit_database      = f'{fit_dir}/n0/dismod.db'
+   connection        = dismod_at.create_connection(fit_database)
    data_subset_table = dismod_at.get_table_dict(connection, 'data_subset')
    connection.close()
    #

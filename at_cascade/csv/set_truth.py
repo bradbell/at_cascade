@@ -30,8 +30,8 @@ sim_dir
 Is the :ref:`csv.simulate@sim_dir` for the simulation
 of this cascade data set.
 
-fit_node_database
-*****************
+fit_database
+************
 Is the name of a database, relative to the current directory,
 that corresponds to a fit.
 
@@ -54,19 +54,19 @@ is the :ref:`glossary@root_node_database` .
 """
 # BEGIN_SET_TRUTH
 # at_cascade.csv.set_truth
-def set_truth(sim_dir, fit_node_database, root_node_database) :
+def set_truth(sim_dir, fit_database, root_node_database) :
    assert type(sim_dir) == str
-   assert type(fit_node_database) == str
+   assert type(fit_database) == str
    assert type(root_node_database) == str
    # END_SET_TRUTH
    #
    # fit_node_dir
-   index        = fit_node_database.rfind('/')
-   fit_node_dir = fit_node_database[: index]
+   index        = fit_database.rfind('/')
+   fit_node_dir = fit_database[: index]
    #
    # fit_table
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_node_database, root_node_database
+      fit_database, root_node_database
    )
    fit_table = dict()
    for table_name in [
@@ -76,7 +76,7 @@ def set_truth(sim_dir, fit_node_database, root_node_database) :
    fit_or_root.close()
    #
    # fit_node_name
-   fit_node_name = at_cascade.get_parent_node(fit_node_database)
+   fit_node_name = at_cascade.get_parent_node(fit_database)
    fit_node_id   = at_cascade.table_name2id(
       table    = fit_table['node'] ,
       tbl_name = 'node'            ,
@@ -276,10 +276,10 @@ def set_truth(sim_dir, fit_node_database, root_node_database) :
       assert truth_var_value != None
       truth_var_table.append( { 'truth_var_value' : truth_var_value} )
    #
-   # fit_node_database
+   # fit_database
    # add the truth_var table
    connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
+      fit_database, new = False, readonly = False
    )
    if at_cascade.table_exists(connection, table_name='truth_var') :
       dismod_at.replace_table(

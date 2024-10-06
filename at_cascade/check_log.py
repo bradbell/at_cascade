@@ -180,7 +180,7 @@ def check_log(
          # fit_split_reference_id
          fit_split_reference_id = job_table[job_id]['split_reference_id']
          #
-         # fit_node_database
+         # fit_database
          database_dir = at_cascade.get_database_dir(
             node_table              = node_table,
             split_reference_table   = split_reference_table,
@@ -190,15 +190,15 @@ def check_log(
             fit_node_id             = fit_node_id ,
             fit_split_reference_id  = fit_split_reference_id,
          )
-         fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
+         fit_database      = f'{result_dir}/{database_dir}/dismod.db'
          #
          # log_table
-         if not os.path.exists(fit_node_database) :
-            message = f'Missing fit_node_database {fit_node_database}'
+         if not os.path.exists(fit_database) :
+            message = f'Missing fit_database {fit_database}'
             message_dict[job_name] = [ message ]
          else :
             connection = dismod_at.create_connection(
-                     fit_node_database, new = False, readonly = True
+                     fit_database, new = False, readonly = True
             )
             log_table  = dismod_at.get_table_dict(connection, 'log')
             connection.close()

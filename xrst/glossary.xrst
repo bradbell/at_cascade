@@ -82,8 +82,8 @@ This is the set of nodes that need to be fit in order to fit the
 This includes all the nodes between the root node and the goal nodes
 (including the root node and he goal nodes).
 
-fit_node_database
-*****************
+fit_database
+************
 This is a dismod_at database with the following properties:
 
 Constant Tables
@@ -92,7 +92,7 @@ see :ref:`module@at_cascade.constant_table_list`.
 
 Option Table
 ============
-The *fit_node_database* option table is the same as in the
+The *fit_database* option table is the same as in the
 *root_node_database* except for the value of *parent_node_name*.
 This node is called the fit_node for the database.
 The value of *parent_node_id* does not appear in the option table.
@@ -139,11 +139,11 @@ For each value covariate multiplier index *mulcov_id*, the integrand name
 
 input_node_database
 *******************
-This is a fit_node_database with the following extra properties:
+This is a fit_database with the following extra properties:
 
 Input Tables
 ============
-Only the dismod_at input tables are significant in a fit_node_databases;
+Only the dismod_at input tables are significant in a fit_databases;
 e.g., an init command should be executed before any other dismod_at
 commands (except possibly a set command).
 

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin omega_constraint}
@@ -32,14 +32,14 @@ the data for the closest ancestor is used.
 If a node does not have an ancestor with *omega* data,
 zero is used for the *omega* constraint for that node.
 
-fit_node_database
-*****************
-is a python string containing the name of a :ref:`glossary@fit_node_database`.
+fit_database
+************
+is a python string containing the name of a :ref:`glossary@fit_database`.
 
 parent_node
 ===========
 We use *parent_node* to refer to the parent node in the
-dismod_at option table in the *fit_node_database*; i.e.,
+dismod_at option table in the *fit_database*; i.e.,
 the :ref:`glossary@fit_node` .
 
 rate_table
@@ -93,11 +93,11 @@ def child_node_id_list(node_table, parent_node_id) :
 def omega_constraint(
 # at_cascade.omega_constraint(
    all_node_database ,
-   fit_node_database ,
+   fit_database ,
 # )
 ) :
    assert type(all_node_database) == str
-   assert type(fit_node_database) == str
+   assert type(fit_database) == str
    # END DEF
    #
    # all_tables
@@ -136,7 +136,7 @@ def omega_constraint(
    #
    # fit_tables
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_node_database, root_node_database
+      fit_database, root_node_database
    )
    fit_tables   = dict()
    fit_null_row = dict()
@@ -156,7 +156,7 @@ def omega_constraint(
       fit_null_row[name] = fit_or_root.null_row(name)
    fit_or_root.close()
    #
-   # check some fit_node_database assumptions
+   # check some fit_database assumptions
    assert len( fit_tables['nslist'] ) == 0
    assert len( fit_tables['nslist_pair'] ) == 0
    for row in fit_tables['rate'] :
@@ -337,7 +337,7 @@ def omega_constraint(
    #
    # replace these fit tables
    connection    = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
+      fit_database, new = False, readonly = False
    )
    #
    for name in [

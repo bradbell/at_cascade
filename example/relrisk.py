@@ -400,7 +400,7 @@ def main() :
       at_cascade.check_cascade_node(
          rate_true          = rate_fun,
          all_node_database  = all_node_database,
-         fit_node_database  = goal_database,
+         fit_database       = goal_database,
          avgint_table       = avgint_table,
          relative_tolerance = float( numpy.finfo(float).eps * 100.0 ),
       )

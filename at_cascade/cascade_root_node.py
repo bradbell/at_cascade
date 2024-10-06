@@ -59,7 +59,7 @@ If *no_ode_fit* is ``True`` ( ``False`` ) the priors in the
 *root_node_database* are modified (are not modified)
 before the root node is fit;
 see :ref:`option_all_table@root_node_database` .
-Upon return, this is a :ref:`glossary@fit_node_database` with the
+Upon return, this is a :ref:`glossary@fit_database` with the
 extra properties listed below:
 
 Version

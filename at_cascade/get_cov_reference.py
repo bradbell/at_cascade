@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_cov_reference}}
@@ -15,8 +15,8 @@ Syntax
    # BEGIN RETURN, # END RETURN
 }
 
-fit_node_database
-*****************
+fit_database
+************
 is an :ref:`glossary@input_node_database`.
 Only the following tables in this database are used:
 option, data, node, and covariate.
@@ -61,7 +61,7 @@ cov_reference_list
 1. The return value is a ``list`` with length equal to the
    length of the covariate table.
 2. The :ref:`option_all_table@absolute_covariates` have the same
-   reference value as in the *fit_node_database* covariate table.
+   reference value as in the *fit_database* covariate table.
 3. The splitting covariate has reference value corresponding to
    *split_reference_id* in the split_reference table.
 4. The :ref:`glossary@Relative Covariate` reference values are equal to
@@ -72,7 +72,7 @@ cov_reference_list
    covariate for this *split_reference_id* are included in the average.
 7. null values for a covariate are not included in the average.
 8. If there are no values to average for a relative covariate, the reference
-   in the *fit_node_database* covariate table is used for that covariate.
+   in the *fit_database* covariate table is used for that covariate.
 
 
 
@@ -86,13 +86,13 @@ import math
 # at_cascade.get_cov_reference
 def get_cov_reference(
    all_node_database  ,
-   fit_node_database  ,
+   fit_database  ,
    shift_node_id      ,
    split_reference_id = None,
 # )
 ) :
    assert type(all_node_database) == str
-   assert type(fit_node_database) == str
+   assert type(fit_database) == str
    assert type(shift_node_id) == int
    # END DEF
    #
@@ -120,7 +120,7 @@ def get_cov_reference(
    #
    # fit_table
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_node_database, root_node_database
+      fit_database, root_node_database
    )
    fit_table = dict()
    for tbl_name in [ 'option', 'data', 'node', 'covariate', ] :

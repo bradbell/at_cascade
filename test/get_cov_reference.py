@@ -154,7 +154,7 @@ def main() :
          # cov_reference_list
          cov_reference_list = at_cascade.get_cov_reference(
             all_node_database  = all_node_database,
-            fit_node_database  = root_node_database,
+            fit_database       = root_node_database,
             shift_node_id      = node_id,
             split_reference_id = split_reference_id,
          )

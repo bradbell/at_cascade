@@ -820,15 +820,15 @@ def main() :
       at_cascade.check_cascade_node(
          rate_true          = rate_true,
          all_node_database  = all_node_database,
-         fit_node_database  = goal_database,
+         fit_database       = goal_database,
          avgint_table       = avgint_table,
          relative_tolerance = 1e-2,
       )
    #
    # var_table, rate_table, smooth_grid_table
-   fit_node_database = f'{result_dir}/n0/dismod.db'
+   fit_database      = f'{result_dir}/n0/dismod.db'
    connection        = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+      fit_database, new = False, readonly = True
    )
    var_table         = dismod_at.get_table_dict(connection, 'var')
    rate_table        = dismod_at.get_table_dict(connection, 'rate')

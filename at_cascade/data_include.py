@@ -14,8 +14,8 @@ Prototype
    # BEGIN RETURN, # END RETURN
 }
 
-fit_node_database
-*****************
+fit_database
+************
 This is the database for the job that we will be fitting.
 All of the dismod_at hold out commands that will be used for the fit
 must be executed; i.e., the hold_out column in the data_subset table
@@ -44,16 +44,16 @@ import at_cascade
 # BEGIN DEF
 # at_cascade.data_include
 def data_include(
-   fit_node_database,
+   fit_database,
    root_node_database
 ) :
-   assert type( fit_node_database ) == str
+   assert type( fit_database ) == str
    assert type( root_node_database ) == str
    # END DEF
    #
    # fit_or_root
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_node_database, root_node_database
+      fit_database, root_node_database
    )
    #
    # data_subset_table
