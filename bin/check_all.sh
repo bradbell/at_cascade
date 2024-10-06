@@ -60,7 +60,10 @@ then
    echo_eval bin/run_xrst.sh
 fi
 # -----------------------------------------------------------------------------
-list=$(ls example/*.py example/csv/*.py test/*.py test/csv/*.py)
+list=$(\
+   ls example/*.py example/csv/*.py test/*.py test/csv/*.py | \
+   sed -e '/.*[/]temp.py/d' -e '/.*[/]temp.[0-9]*.py/d'  \
+)
 for script in $list
 do
    echo_eval bin/run_test.sh $script
