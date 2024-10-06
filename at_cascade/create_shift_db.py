@@ -416,12 +416,12 @@ def create_shift_db(
       all_table[name] =  dismod_at.get_table_dict(connection, name)
    connection.close()
    #
-   # root_node_database
-   root_node_database = None
+   # root_database
+   root_database      = None
    for row in all_table['option_all'] :
-      if row['option_name'] == 'root_node_database' :
-         root_node_database = row['option_value']
-   assert root_node_database != None
+      if row['option_name'] == 'root_database' :
+         root_database      = row['option_value']
+   assert root_database != None
    #
    # shift_prior_std_factor
    shift_prior_std_factor = 1.0
@@ -437,7 +437,7 @@ def create_shift_db(
    #
    # fit_table
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_database, root_node_database
+      fit_database, root_database
    )
    fit_table  = dict()
    for name in [
@@ -608,11 +608,11 @@ def create_shift_db(
          if row['option_name'] == 'parent_node_name' :
             row['option_value'] = shift_node_name
          if row['option_name'] == 'other_database' :
-            if os.path.isabs( root_node_database ) :
-               row['option_value'] = root_node_database
+            if os.path.isabs( root_database ) :
+               row['option_value'] = root_database
             else :
                dirname       = os.path.dirname( shift_database )
-               relative_path = os.path.relpath( root_node_database, dirname)
+               relative_path = os.path.relpath( root_database, dirname)
                row['option_value'] = str( relative_path )
          #
       # cov_reference_list

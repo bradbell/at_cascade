@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import shutil
 import datetime
@@ -10,7 +10,7 @@ import dismod_at
 import at_cascade.ihme
 # ------------------------------------------------------------------------------
 def write_message_type_file(
-   summary_dir, result_dir, message_type, fit_goal_set, root_node_database
+   summary_dir, result_dir, message_type, fit_goal_set, root_database
 ) :
    #
    # all_node_database
@@ -20,7 +20,7 @@ def write_message_type_file(
    message_dict = at_cascade.check_log(
       message_type       = message_type,
       all_node_database  = all_node_database,
-      root_node_database = root_node_database,
+      root_database      = root_database,
       fit_goal_set       = fit_goal_set,
    )
    #
@@ -45,7 +45,7 @@ def write_message_type_file(
    file_ptr.close()
 # ------------------------------------------------------------------------------
 def get_path_table_to_file_name(
-   file_name, result_dir, fit_goal_set, root_node_database
+   file_name, result_dir, fit_goal_set, root_database
 ) :
    #
    # all_node_database
@@ -54,7 +54,7 @@ def get_path_table_to_file_name(
    #
    # node_table, covariate_table
    new        = False
-   connection      = dismod_at.create_connection(root_node_database, new)
+   connection      = dismod_at.create_connection(root_database, new)
    node_table      = dismod_at.get_table_dict(connection, 'node')
    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
    connection.close()
@@ -74,7 +74,7 @@ def get_path_table_to_file_name(
       node_split_set.add( row['node_id'] )
    #
    # root_node_id
-   root_node_name = at_cascade.get_parent_node(root_node_database)
+   root_node_name = at_cascade.get_parent_node(root_database)
    root_node_id   = at_cascade.table_name2id(
          node_table, 'node', root_node_name
    )
@@ -135,13 +135,13 @@ def get_path_table_to_file_name(
    return path_table
 # ------------------------------------------------------------------------------
 def combine_predict_files(
-   summary_dir, result_dir, fit_goal_set, root_node_database
+   summary_dir, result_dir, fit_goal_set, root_database
 ) :
    #
    # path_table
    file_name = 'predict.csv'
    path_table = get_path_table_to_file_name(
-      file_name, result_dir, fit_goal_set, root_node_database
+      file_name, result_dir, fit_goal_set, root_database
    )
    #
    # precict file
@@ -162,7 +162,7 @@ def combine_predict_files(
    file_obj_out.close()
 # ------------------------------------------------------------------------------
 def combine_variable_files(
-   summary_dir, result_dir, fit_goal_set, root_node_database
+   summary_dir, result_dir, fit_goal_set, root_database
 ) :
    #
    # node_table
@@ -172,7 +172,7 @@ def combine_variable_files(
    # path_table
    file_name = 'variable.csv'
    path_table = get_path_table_to_file_name(
-      file_name, result_dir, fit_goal_set, root_node_database
+      file_name, result_dir, fit_goal_set, root_database
    )
    #
    # variable file
@@ -210,11 +210,11 @@ def combine_variable_files(
 # ------------------------------------------------------------------------------
 def summary(
    result_dir         = None,
-   root_node_database = None,
+   root_database      = None,
    fit_goal_set       = None
 ) :
    assert type(result_dir) == str
-   assert type(root_node_database) == str
+   assert type(root_database) == str
    assert type(fit_goal_set) == set
    #
    # summary_dir
@@ -231,27 +231,27 @@ def summary(
    # error
    message_type = 'error'
    write_message_type_file(
-      summary_dir, result_dir, message_type, fit_goal_set, root_node_database
+      summary_dir, result_dir, message_type, fit_goal_set, root_database
    )
    #
    # warning
    message_type = 'warning'
    write_message_type_file(
-      summary_dir, result_dir, message_type, fit_goal_set, root_node_database
+      summary_dir, result_dir, message_type, fit_goal_set, root_database
    )
    #
    # data.csv
-   root_node_name = at_cascade.get_parent_node(root_node_database)
+   root_node_name = at_cascade.get_parent_node(root_database)
    src = f'{result_dir}/{root_node_name}/data.csv'
    dst = f'{summary_dir}/data.csv'
    shutil.copyfile(src, dst)
    #
    # predict.csv
    combine_predict_files(
-      summary_dir, result_dir, fit_goal_set, root_node_database
+      summary_dir, result_dir, fit_goal_set, root_database
    )
    #
    # variable.csv
    combine_variable_files(
-      summary_dir, result_dir, fit_goal_set, root_node_database
+      summary_dir, result_dir, fit_goal_set, root_database
    )

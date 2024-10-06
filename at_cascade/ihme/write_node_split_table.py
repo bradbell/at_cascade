@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import csv
@@ -9,7 +9,7 @@ import at_cascade.ihme
 # -----------------------------------------------------------------------------
 #
 def write_node_split_table(
-   results_dur, node_split_name_set, root_node_database
+   results_dur, node_split_name_set, root_database
 ) :
    #
    # node_split_table_file
@@ -19,7 +19,7 @@ def write_node_split_table(
    #
    # root_table
    new        = False
-   connection = dismod_at.create_connection(root_node_database, new)
+   connection = dismod_at.create_connection(root_database, new)
    node_table = dismod_at.get_table_dict(connection, 'node')
    connection.close()
    #

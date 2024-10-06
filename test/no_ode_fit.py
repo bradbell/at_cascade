@@ -236,9 +236,9 @@ def main() :
    result_dir = 'build/test'
    at_cascade.empty_directory(result_dir)
    #
-   # root_node_database
-   root_node_database  = f'{result_dir}/root_node.db'
-   root_node_db(root_node_database)
+   # root_database
+   root_database       = f'{result_dir}/root_node.db'
+   root_node_db(root_database)
    #
    # omega_grid
    omega_grid = dict()
@@ -266,7 +266,7 @@ def main() :
    option_all        = {
       'result_dir'                : result_dir,
       'root_node_name'            : 'n0',
-      'root_node_database'        : root_node_database,
+      'root_database'        : root_database,
       'perturb_optimization_scale': .2,
       'perturb_optimization_start': .2,
 
@@ -300,7 +300,7 @@ def main() :
    fit_var_table     = dismod_at.get_table_dict(connection, 'fit_var')
    connection.close()
    connection        = dismod_at.create_connection(
-      root_node_database, new = False, readonly = True
+      root_database, new = False, readonly = True
    )
    age_table         = dismod_at.get_table_dict(connection, 'age')
    connection.close()

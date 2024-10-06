@@ -273,16 +273,16 @@ def pre_one_job(
    option_all_table = dismod_at.get_table_dict(connection, 'option_all')
    connection.close()
    #
-   # root_node_database
-   root_node_database = None
+   # root_database
+   root_database      = None
    for row in option_all_table :
-      if row['option_name'] == 'root_node_database' :
-         root_node_database = row['option_value']
-   assert root_node_database != None
+      if row['option_name'] == 'root_database' :
+         root_database      = row['option_value']
+   assert root_database != None
    #
    # fit_covariate_table, integrand_table, node_table
    fit_or_root = at_cascade.fit_or_root_class(
-      pre_database, root_node_database
+      pre_database, root_database
    )
    fit_covariate_table      = fit_or_root.get_table('covariate')
    integrand_table          = fit_or_root.get_table('integrand')
@@ -293,7 +293,7 @@ def pre_one_job(
    # add the truth_var table to this database
    if type(sim_dir) == str :
       at_cascade.csv.set_truth(
-         sim_dir, pre_database, root_node_database
+         sim_dir, pre_database, root_database
       )
    #
    # integrand_id_list

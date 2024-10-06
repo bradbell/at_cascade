@@ -658,13 +658,13 @@ def display_no_ode_fit(root_node_dir) :
    # db2csv
    dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
 # ----------------------------------------------------------------------------
-def check_no_ode_fit(root_node_database) :
+def check_no_ode_fit(root_database) :
    #
    # root_node_dir
    root_node_dir = 'n0'
-   index         = root_node_database.rfind('/')
+   index         = root_database.rfind('/')
    if 0 <= index :
-      root_node_dir = root_node_database[0 : index] + '/n0'
+      root_node_dir = root_database[0 : index] + '/n0'
    #
    # no_ode_database
    no_ode_database = root_node_dir + '/no_ode/dismod.db'
@@ -676,7 +676,7 @@ def check_no_ode_fit(root_node_database) :
    #
    # table
    fit_or_root = at_cascade.fit_or_root_class(
-      no_ode_database, root_node_database
+      no_ode_database, root_database
    )
    table = dict()
    for tbl_name in [
@@ -750,8 +750,8 @@ def main() :
    at_cascade.empty_directory(result_dir)
    #
    # Create root_node.db
-   root_node_database  = f'{result_dir}/root_node.db'
-   root_node_db(root_node_database)
+   root_database       = f'{result_dir}/root_node.db'
+   root_node_db(root_database)
    #
    # omega_grid
    omega_grid = dict()
@@ -783,7 +783,7 @@ def main() :
    option_all        = {
       'result_dir'         : result_dir,
       'root_node_name'     : 'n0',
-      'root_node_database' : root_node_database,
+      'root_database' : root_database,
    }
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
@@ -798,8 +798,8 @@ def main() :
    os.mkdir(root_node_dir)
    #
    # avgint_table
-   # This also erases the avgint table from root_node_database
-   avgint_table = at_cascade.extract_avgint( root_node_database )
+   # This also erases the avgint table from root_database
+   avgint_table = at_cascade.extract_avgint( root_database )
    #
    # cascade starting at root node
    at_cascade.cascade_root_node(
@@ -809,7 +809,7 @@ def main() :
    )
    #
    # check_no_ode_fit
-   check_no_ode_fit(root_node_database)
+   check_no_ode_fit(root_database)
    #
    # display_no_ode_fit
    display_no_ode_fit(root_node_dir)

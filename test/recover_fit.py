@@ -190,8 +190,8 @@ def check_fit(result_dir, fit_node_name) :
    else :
       fit_database      = f'{result_dir}/n0/{fit_node_name}/dismod.db'
    #
-   # root_node_database
-   root_node_database  = f'{result_dir}/root_node.db'
+   # root_database
+   root_database       = f'{result_dir}/root_node.db'
    #
    # fit_node_id
    fit_node_id = int( fit_node_name[-1] )
@@ -199,7 +199,7 @@ def check_fit(result_dir, fit_node_name) :
    # age, var_table, fit_var_table
    new           = False
    fit_or_root   = at_cascade.fit_or_root_class(
-      fit_database, root_node_database
+      fit_database, root_database
    )
    age_table     = fit_or_root.get_table('age')
    var_table     = fit_or_root.get_table('var')
@@ -230,8 +230,8 @@ def main() :
    at_cascade.empty_directory(result_dir)
    #
    # root_node.db
-   root_node_database  = f'{result_dir}/root_node.db'
-   root_node_db(root_node_database)
+   root_database       = f'{result_dir}/root_node.db'
+   root_node_db(root_database)
    #
    # mulcov_freeze_table
    mulcov_freeze_table = list()
@@ -240,7 +240,7 @@ def main() :
    option_all        = {
       'result_dir':     result_dir,
       'root_node_name': 'n0',
-      'root_node_database': root_node_database,
+      'root_database': root_database,
    }
    #
    # all_node.db

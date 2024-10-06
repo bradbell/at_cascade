@@ -141,8 +141,8 @@ def main() :
    os.chdir('build/test')
    #
    # Create root_node.db
-   root_node_database  = 'root_node.db'
-   root_node_db(root_node_database)
+   root_database       = 'root_node.db'
+   root_node_db(root_database)
    #
    # n_omega_age
    n_omega_age = len(age_grid)
@@ -174,7 +174,7 @@ def main() :
       'refit_split':     'true',
       'result_dir':      '.',
       'root_node_name': 'n0',
-      'root_node_database': root_node_database,
+      'root_database': root_database,
    }
    at_cascade.create_all_node_db(
       all_node_database      = all_node_database,
@@ -185,24 +185,24 @@ def main() :
    )
    #
    # set omega constraints
-   at_cascade.omega_constraint(all_node_database, root_node_database)
+   at_cascade.omega_constraint(all_node_database, root_database)
    #
    # init
-   dismod_at.system_command_prc( [ 'dismod_at', root_node_database, 'init' ] )
+   dismod_at.system_command_prc( [ 'dismod_at', root_database, 'init' ] )
    #
    # truth_var = prior_mean
    dismod_at.system_command_prc(
-      [ 'dismod_at', root_node_database, 'set', 'truth_var', 'prior_mean' ]
+      [ 'dismod_at', root_database, 'set', 'truth_var', 'prior_mean' ]
    )
    #
    # predict
    dismod_at.system_command_prc(
-      [ 'dismod_at', root_node_database, 'predict', 'truth_var' ]
+      [ 'dismod_at', root_database, 'predict', 'truth_var' ]
    )
    #
    # tables
    new        = False
-   connection = dismod_at.create_connection(root_node_database, new)
+   connection = dismod_at.create_connection(root_database, new)
    table      = dict()
    for table_name in [
       'avgint',

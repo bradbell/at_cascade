@@ -101,14 +101,14 @@ age
 The value *omega*\ [``age``] is a list containing the
 age_id values for the omega_grid.
 These are indices in the
-:ref:`glossary@root_node_database` age table.
+:ref:`glossary@root_database` age table.
 We use the notation *n_omega_age* for the length of the age list.
 
 time
 ====
 The value *omega*\ [``time``] is a list containing the
 time_id values for the omega_grid.
-These are indices in the *root_node_database* time table.
+These are indices in the *root_database* time table.
 We use the notation *n_omega_time* for the length of the time list.
 
 omega_data
@@ -190,7 +190,7 @@ def create_all_node_db(
       assert type(omega_grid) is dict
       assert type(omega_data) is dict
    #
-   assert 'root_node_database' in option_all
+   assert 'root_database' in option_all
    assert 'root_node_name'     in option_all
    assert 'result_dir'         in option_all
    #
@@ -204,8 +204,8 @@ def create_all_node_db(
    # -------------------------------------------------------------------------
    # root_connection
    new                = False
-   root_node_database = option_all['root_node_database']
-   root_connection    = dismod_at.create_connection(root_node_database, new)
+   root_database      = option_all['root_database']
+   root_connection    = dismod_at.create_connection(root_database, new)
    #
    # age_table
    tbl_name  = 'age'

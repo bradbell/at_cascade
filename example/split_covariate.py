@@ -229,7 +229,7 @@ option_all            = {
    'split_covariate_name':       'sex',
    'shift_prior_std_factor':      1e3,
 }
-option_all['root_node_database'] = option_all['result_dir'] + '/root_node.db'
+option_all['root_database'] = option_all['result_dir'] + '/root_node.db'
 # END option_all_table
 #
 #
@@ -520,12 +520,12 @@ def main(refit_split) :
    at_cascade.empty_directory(result_dir)
    #
    # Create root_node.db
-   root_node_database  = option_all['root_node_database']
-   root_node_db(root_node_database)
+   root_database       = option_all['root_database']
+   root_node_db(root_database)
    #
    # omega_grid
    connection   = dismod_at.create_connection(
-      root_node_database, new = False, readonly = True
+      root_database, new = False, readonly = True
    )
    age_table    = dismod_at.get_table_dict(connection, 'age')
    time_table   = dismod_at.get_table_dict(connection, 'time')
@@ -569,8 +569,8 @@ def main(refit_split) :
    os.mkdir(root_node_dir)
    #
    # avgint_table
-   # This also erases the avgint table from root_node_database
-   avgint_table = at_cascade.extract_avgint( root_node_database )
+   # This also erases the avgint table from root_database
+   avgint_table = at_cascade.extract_avgint( root_database )
    #
    # cascade starting at root node
    at_cascade.cascade_root_node(

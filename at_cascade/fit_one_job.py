@@ -301,9 +301,9 @@ def fit_one_job(
    assert parent_node_name == node_table[fit_node_id]['node_name']
    #
    # integrand_table
-   root_node_database = option_all_dict['root_node_database']
+   root_database      = option_all_dict['root_database']
    fit_or_root        = at_cascade.fit_or_root_class(
-      fit_database, root_node_database
+      fit_database, root_database
    )
    integrand_table = fit_or_root.get_table('integrand')
    fit_or_root.close()
@@ -368,7 +368,7 @@ def fit_one_job(
    # fit_node_datase.log_table
    # if fit has no data, abort with 'fit: error: no data abort' in log_table
    data_include_table = at_cascade.data_include(
-      fit_database, root_node_database
+      fit_database, root_database
    )
    if len( data_include_table )  == 0 :
       msg        = 'no data: abort'

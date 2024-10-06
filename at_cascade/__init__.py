@@ -22,7 +22,7 @@ at_cascade.constant_table_list
 ******************************
 Some of the dismod_at input tables are the same for every fit of a cascade.
 The :ref:`fit_or_root_class-name` uses the
-:ref:`glossary@root_node_database` to get the value for these tables:
+:ref:`glossary@root_database` to get the value for these tables:
 {xrst_code py} '''
 constant_table_list = [
    'age',

@@ -127,16 +127,16 @@ def omega_constraint(
    n_omega_age  = len( all_tables['omega_age_grid'] )
    n_omega_time = len( all_tables['omega_time_grid'] )
    #
-   # root_node_database
-   root_node_database = None
+   # root_database
+   root_database      = None
    for row in all_tables['option_all'] :
-      if row['option_name'] == 'root_node_database' :
-         root_node_database = row['option_value']
-   assert root_node_database != None
+      if row['option_name'] == 'root_database' :
+         root_database      = row['option_value']
+   assert root_database != None
    #
    # fit_tables
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_database, root_node_database
+      fit_database, root_database
    )
    fit_tables   = dict()
    fit_null_row = dict()
@@ -167,14 +167,14 @@ def omega_constraint(
    for row in all_tables['omega_age_grid'] :
       age_id = row['age_id']
       if age_id >= len( fit_tables['age'] ) :
-         msg  = f'The age_id {age_id} not valid for the root_node_database'
+         msg  = f'The age_id {age_id} not valid for the root_database'
          msg += f'\nbut it appears in the omega_age_grid table '
          msg += f'of the all_node_database'
          assert False, msg
    for row in all_tables['omega_time_grid'] :
       time_id = row['time_id']
       if time_id >= len( fit_tables['time'] ) :
-         msg  = f'The time_id {time_id} not valid for the root_node_database'
+         msg  = f'The time_id {time_id} not valid for the root_database'
          msg += f'\nbut it appears in the omega_time_grid table '
          msg += f'of the all_node_database'
          assert False, msg

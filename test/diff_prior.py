@@ -177,16 +177,16 @@ def main() :
    result_dir = 'build/test'
    at_cascade.empty_directory(result_dir)
    #
-   # root_node_database
-   root_node_database  = f'{result_dir}/root_node.db'
-   root_node_db(root_node_database)
+   # root_database
+   root_database       = f'{result_dir}/root_node.db'
+   root_node_db(root_database)
    #
    # Create all_node.db
    all_node_database = f'{result_dir}/all_node.db'
    option_all        = {
       'result_dir'                : result_dir,
       'root_node_name'            : 'n0',
-      'root_node_database'        : root_node_database,
+      'root_database'        : root_database,
    }
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
@@ -214,7 +214,7 @@ def main() :
    fit_var_table     = dismod_at.get_table_dict(connection, 'fit_var')
    connection.close()
    connection        = dismod_at.create_connection(
-      root_node_database, new = False, readonly = True
+      root_database, new = False, readonly = True
    )
    age_table         = dismod_at.get_table_dict(connection, 'age')
    connection.close()

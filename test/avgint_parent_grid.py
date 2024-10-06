@@ -221,15 +221,15 @@ def main() :
    os.chdir('build/test')
    #
    # Create root_node.db
-   root_node_database  = 'root_node.db'
-   root_node_db(root_node_database)
+   root_database       = 'root_node.db'
+   root_node_db(root_database)
    #
    # Create all_node.db
    all_node_database = 'all_node.db'
    option_all        = {
       'result_dir':     '.',
       'root_node_name': 'n0',
-      'root_node_database': root_node_database,
+      'root_database': root_database,
    }
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
@@ -239,7 +239,7 @@ def main() :
    #
    # node_table
    new        = False
-   connection = dismod_at.create_connection(root_node_database, new)
+   connection = dismod_at.create_connection(root_database, new)
    node_table = dismod_at.get_table_dict(connection, 'node')
    connection.close()
    #
@@ -255,27 +255,27 @@ def main() :
    # replace avgint table
    at_cascade.avgint_parent_grid(
       all_node_database = all_node_database  ,
-      fit_database      = root_node_database ,
+      fit_database      = root_database ,
       job_table         = job_table          ,
       fit_job_id        = 0                  ,
    )
    #
    # init
-   dismod_at.system_command_prc( [ 'dismod_at', root_node_database, 'init' ] )
+   dismod_at.system_command_prc( [ 'dismod_at', root_database, 'init' ] )
    #
    # fit both
    dismod_at.system_command_prc(
-      [ 'dismod_at', root_node_database, 'fit', 'both' ]
+      [ 'dismod_at', root_database, 'fit', 'both' ]
    )
    #
    # predict
    dismod_at.system_command_prc(
-      [ 'dismod_at', root_node_database, 'predict', 'fit_var' ]
+      [ 'dismod_at', root_database, 'predict', 'fit_var' ]
    )
    #
    # tables
    new        = False
-   connection = dismod_at.create_connection(root_node_database, new)
+   connection = dismod_at.create_connection(root_database, new)
    table      = dict()
    for table_name in [
       'avgint',

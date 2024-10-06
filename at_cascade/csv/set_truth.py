@@ -46,18 +46,18 @@ that corresponds to a fit.
    :ref:`csv.fit@fit_dir` is used to determine the node and sex for
    the truth. In fact, this routine does not know what the *fit_dir* is.
 
-root_node_database
-******************
-is the :ref:`glossary@root_node_database` .
+root_database
+*************
+is the :ref:`glossary@root_database` .
 
 {xrst_end csv.set_truth}
 """
 # BEGIN_SET_TRUTH
 # at_cascade.csv.set_truth
-def set_truth(sim_dir, fit_database, root_node_database) :
+def set_truth(sim_dir, fit_database, root_database) :
    assert type(sim_dir) == str
    assert type(fit_database) == str
-   assert type(root_node_database) == str
+   assert type(root_database) == str
    # END_SET_TRUTH
    #
    # fit_node_dir
@@ -66,7 +66,7 @@ def set_truth(sim_dir, fit_database, root_node_database) :
    #
    # fit_table
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_database, root_node_database
+      fit_database, root_database
    )
    fit_table = dict()
    for table_name in [

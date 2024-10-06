@@ -15,9 +15,9 @@ Prototype
    # END_COPY_ROOT_DB
 }
 
-root_node_database
-******************
-This is the :ref:`glossary@root_node_database` .
+root_database
+*************
+This is the :ref:`glossary@root_database` .
 It must exist when this routine is called.
 
 fit_database
@@ -64,13 +64,13 @@ def create_empty_log_table(connection) :
 # -----------------------------------------------------------------------------
 # BEGIN_COPY_ROOT_DB
 # at_cascade.copy_root_db
-def copy_root_db(root_node_database, fit_database) :
-   assert type(root_node_database) == str
+def copy_root_db(root_database, fit_database) :
+   assert type(root_database) == str
    assert type(fit_database) == str
    # END_COPY_ROOT_DB
    #
    # fit_database
-   shutil.copyfile(root_node_database, fit_database)
+   shutil.copyfile(root_database, fit_database)
    #
    # connection
    connection = dismod_at.create_connection(
@@ -99,11 +99,11 @@ def copy_root_db(root_node_database, fit_database) :
       assert row['option_name'] != 'other_input_table'
    row = dict()
    row['option_name']  = 'other_database'
-   if os.path.isabs( root_node_database ) :
-      row['option_value'] = root_node_database
+   if os.path.isabs( root_database ) :
+      row['option_value'] = root_database
    else :
       fit_node_dirname = os.path.dirname( fit_database )
-      relative_path    = os.path.relpath(root_node_database, fit_node_dirname)
+      relative_path    = os.path.relpath(root_database, fit_node_dirname)
       row['option_value'] = str( relative_path )
    option_table.append(row)
    row = dict()

@@ -26,10 +26,10 @@ all_node_database
 *****************
 is a python string containing the name of the :ref:`all_node_db-name`.
 
-root_node_database
-******************
+root_database
+*************
 is a python string specifying the location of the
-:ref:`glossary@root_node_database`.
+:ref:`glossary@root_database`.
 
 option_all_dict
 ***************
@@ -77,8 +77,8 @@ The return value *root_fit_database* is equal to
 
    *result_dir*\ /\ *root_node_name*\ /dismod.db
 
-which can't be the same file name as *root_node_database*.
-This is an input_node_database similar to *root_node_database*.
+which can't be the same file name as *root_database*.
+This is an input_node_database similar to *root_database*.
 The difference is that the mean value in the priors for the fixed effects
 have been replace by the optimal estimate for fitting with out the integrands
 that use the ODE.
@@ -131,12 +131,12 @@ def add_index_to_name(table, name_col) :
 # at_cascade.no_ode_fit
 def no_ode_fit(
    all_node_database   ,
-   root_node_database  ,
+   root_database  ,
    option_all_dict     ,
    fit_type            ,
 ) :
    assert type(all_node_database) == str
-   assert type(root_node_database) == str
+   assert type(root_database) == str
    assert type(option_all_dict) == dict
    assert fit_type == 'fixed' or fit_type == 'both'
    # END DEF
@@ -169,7 +169,7 @@ def no_ode_fit(
    #
    # root_table
    connection = dismod_at.create_connection(
-      root_node_database, new = False, readonly = True
+      root_database, new = False, readonly = True
    )
    root_table = dict()
    for name in [
@@ -187,11 +187,11 @@ def no_ode_fit(
       root_table[name] = dismod_at.get_table_dict(connection, name)
    connection.close()
    if len( root_table['avgint'] ) > 0 :
-      msg = 'no_ode_fit: root_node_database: avgint table is not empty'
+      msg = 'no_ode_fit: root_database: avgint table is not empty'
       assert False, msg
    #
    # root_node_name
-   root_node_name = at_cascade.get_parent_node(root_node_database)
+   root_node_name = at_cascade.get_parent_node(root_database)
    #
    # root_node_id
    root_node_id   = at_cascade.table_name2id(
@@ -220,8 +220,8 @@ def no_ode_fit(
    root_fit_database    = f'{result_dir}/{root_node_name}/dismod.db'
    no_ode_database      = f'{result_dir}/{root_node_name}/no_ode/dismod.db'
    os.makedirs(f'{result_dir}/{root_node_name}/no_ode')
-   if root_node_database == root_fit_database :
-      msg   = f'root_node_database and root_fit_database are equal'
+   if root_database      == root_fit_database :
+      msg   = f'root_database and root_fit_database are equal'
       assert False, msg
    #
    # trace_file_name, file_stdout
@@ -236,7 +236,7 @@ def no_ode_fit(
    # ------------------------------------------------------------------------
    # no_ode_database
    # ------------------------------------------------------------------------
-   at_cascade.copy_root_db(root_node_database, no_ode_database)
+   at_cascade.copy_root_db(root_database, no_ode_database)
    #
    # connection
    connection = dismod_at.create_connection(
@@ -286,7 +286,7 @@ def no_ode_fit(
    fit_integrand = set()
    if not max_fit is None :
       fit_or_root   = at_cascade.fit_or_root_class(
-         root_node_database, root_node_database
+         root_database, root_database
       )
       fit_integrand = at_cascade.get_fit_integrand(fit_or_root)
       fit_or_root.close()

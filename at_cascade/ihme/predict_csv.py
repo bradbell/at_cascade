@@ -185,7 +185,7 @@ def predict_csv_one_job(
             #
             # row
             # Covariates are in same order as covariate_table in the
-            # create_root_node_database routine above.
+            # create_root_database routine above.
             row = {
                'integrand_id'    : integrand_id,
                'node_id'         : fit_node_id,
@@ -400,14 +400,14 @@ def predict_csv(
    covariate_csv_file_dict = None,
    scale_covariate_dict    = None,
    fit_goal_set            = None,
-   root_node_database      = None,
+   root_database           = None,
    max_plot                = None,
 ) :
    assert type(result_dir) == str
    assert type(covariate_csv_file_dict) == dict
    assert type(scale_covariate_dict) == dict
    assert type(fit_goal_set) == set
-   assert type(root_node_database) == str
+   assert type(root_database) == str
    assert type(max_plot) == int
    #
    # all_node_database
@@ -416,7 +416,7 @@ def predict_csv(
    #
    # node_table, covariate_table
    new        = False
-   connection      = dismod_at.create_connection(root_node_database, new)
+   connection      = dismod_at.create_connection(root_database, new)
    node_table      = dismod_at.get_table_dict(connection, 'node')
    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
    connection.close()
@@ -447,7 +447,7 @@ def predict_csv(
       node_split_set.add( row['node_id'] )
    #
    # root_node_id
-   root_node_name = at_cascade.get_parent_node(root_node_database)
+   root_node_name = at_cascade.get_parent_node(root_database)
    root_node_id   = at_cascade.table_name2id(
          node_table, 'node', root_node_name
    )
@@ -502,7 +502,7 @@ def predict_csv(
    error_message_dict = at_cascade.check_log(
       message_type = 'error',
       all_node_database = all_node_database,
-      root_node_database = root_node_database,
+      root_database      = root_database,
       fit_goal_set       = fit_goal_set,
    )
    #

@@ -32,10 +32,10 @@ specifies the location of the
 relative to the current working directory.
 This argument can't be ``None``.
 
-root_node_database
-******************
+root_database
+*************
 specifies the location of the dismod_at
-:ref:`glossary@root_node_database`.
+:ref:`glossary@root_database`.
 
 job_table
 *********
@@ -84,7 +84,7 @@ import at_cascade
 def check_log(
    message_type                  ,
    all_node_database             ,
-   root_node_database            ,
+   root_database            ,
    job_table                     ,
    start_job_id           = None ,
    max_job_depth          = None ,
@@ -92,7 +92,7 @@ def check_log(
 ) :
    assert type(message_type)        == str
    assert type(all_node_database)   == str
-   assert type(root_node_database)  == str
+   assert type(root_database)  == str
    if start_job_id == None :
       start_job_id = 0
    assert max_job_depth == None or type(max_job_depth) == int
@@ -102,7 +102,7 @@ def check_log(
    #
    # node_table, covariate_table
    connection      = dismod_at.create_connection(
-      root_node_database, new = False, readonly = True
+      root_database, new = False, readonly = True
    )
    node_table      = dismod_at.get_table_dict(connection, 'node')
    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
@@ -131,9 +131,9 @@ def check_log(
    assert root_node_name is not None
    #
    # check root_node_name
-   parent_node_name = at_cascade.get_parent_node(root_node_database)
+   parent_node_name = at_cascade.get_parent_node(root_database)
    if parent_node_name != root_node_name :
-      msg  = f'{root_node_database} parent_node_name = {parent_node_name}\n'
+      msg  = f'{root_database} parent_node_name = {parent_node_name}\n'
       msg  = f'{all_node_database} root_node_name = {root_node_name}'
       assert False, msg
    #

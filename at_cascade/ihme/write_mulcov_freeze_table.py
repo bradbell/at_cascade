@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import csv
@@ -10,12 +10,12 @@ import at_cascade.ihme
 #
 def write_mulcov_freeze_table(
    result_dir         = None,
-   root_node_database = None,
+   root_database      = None,
    mulcov_list_dict   = None,
    mulcov_freeze_list = None,
 ) :
    assert type(result_dir) == str
-   assert type(root_node_database) == str
+   assert type(root_database) == str
    assert type(mulcov_list_dict) == list
    assert type(mulcov_freeze_list) == list
    #
@@ -26,7 +26,7 @@ def write_mulcov_freeze_table(
    #
    # root_table
    new        = False
-   connection = dismod_at.create_connection(root_node_database, new)
+   connection = dismod_at.create_connection(root_database, new)
    root_table = dict()
    for tbl_name in [ 'covariate', 'mulcov', 'node', 'rate' ] :
       root_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)

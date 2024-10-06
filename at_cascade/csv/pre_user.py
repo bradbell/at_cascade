@@ -55,10 +55,10 @@ root_split_reference_id
 ***********************
 is the split_reference table id for the root job of the cascade
 
-root_node_database
-******************
+root_database
+*************
 specifies the location of the dismod_at
-:ref:`glossary@root_node_database`.
+:ref:`glossary@root_database`.
 
 Input Prediction Files
 **********************
@@ -181,7 +181,7 @@ def pre_user(
    node_table,
    root_node_id,
    root_split_reference_id,
-   root_node_database,
+   root_database,
 ) :
    assert type(fit_dir)                    == str
    assert None == sim_dir or \
@@ -196,7 +196,7 @@ def pre_user(
    assert type( node_table[0] )            == dict
    assert type(root_node_id)               == int
    assert type(root_split_reference_id)    == int
-   assert type(root_node_database)         == str
+   assert type(root_database)         == str
    # END DEF
    #
    # split_reference_table
@@ -205,7 +205,7 @@ def pre_user(
    # integrand_table
    assert 'integrand' in at_cascade.constant_table_list
    connection = dismod_at.create_connection(
-      root_node_database, new = False, readonly = True
+      root_database, new = False, readonly = True
    )
    integrand_table = dismod_at.get_table_dict(connection, 'integrand')
    connection.close()

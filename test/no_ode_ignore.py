@@ -283,8 +283,8 @@ def main() :
    at_cascade.empty_directory(result_dir)
    #
    # Create root_node.db
-   root_node_database  = f'{result_dir}/root_node.db'
-   root_node_db(root_node_database)
+   root_database       = f'{result_dir}/root_node.db'
+   root_node_db(root_database)
    #
    # no_ode_ignore
    no_ode_ignore = 'iota mtexcess'
@@ -294,7 +294,7 @@ def main() :
    option_all        = {
       'result_dir'         : result_dir,
       'root_node_name'     : 'n0',
-      'root_node_database' : root_node_database,
+      'root_database' : root_database,
       'no_ode_ignore'      : no_ode_ignore,
    }
    at_cascade.create_all_node_db(
@@ -309,7 +309,7 @@ def main() :
    # no_ode_fit
    at_cascade.no_ode_fit(
       all_node_database  = all_node_database ,
-      root_node_database = root_node_database,
+      root_database      = root_database,
       option_all_dict    = option_all,
       fit_type           = 'fixed',
    )

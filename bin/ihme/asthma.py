@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -42,8 +42,8 @@ csmr_inp_file   = f'{data_dir}/gbd2019_asthma_csmr.csv'
 # result_dir
 result_dir = 'ihme_db/DisMod_AT/results/asthma'
 #
-# root_node_database
-root_node_database = f'{result_dir}/root_node.db'
+# root_database
+root_database      = f'{result_dir}/root_node.db'
 #
 # no_ode_fit
 # This bool controls whether a no_ode fit is used to initialize root level
@@ -388,10 +388,10 @@ def setup_function() :
    # write_mtall_tables
    at_cascade.ihme.write_mtall_tables(result_dir)
    #
-   # write_root_node_database
-   at_cascade.ihme.write_root_node_database(
+   # write_root_database
+   at_cascade.ihme.write_root_database(
       result_dir              = result_dir,
-      root_node_database      = root_node_database,
+      root_database           = root_database,
       hold_out_integrand      = hold_out_integrand,
       hold_out_nid_set        = hold_out_nid_set,
       covariate_csv_file_dict = covariate_csv_file_dict,
@@ -428,16 +428,16 @@ def setup_function() :
    #
    # write_mulcov_freeze_table
    at_cascade.ihme.write_mulcov_freeze_table(
-      result_dir, root_node_database, mulcov_list_dict, mulcov_freeze_list
+      result_dir, root_database, mulcov_list_dict, mulcov_freeze_list
    )
    #
    # write_node_split_table
    at_cascade.ihme.write_node_split_table(
-      result_dir, node_split_name_set, root_node_database
+      result_dir, node_split_name_set, root_database
    )
    #
    # write_all_node_database
-   at_cascade.ihme.write_all_node_database(result_dir, root_node_database)
+   at_cascade.ihme.write_all_node_database(result_dir, root_database)
 # ----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :
@@ -449,7 +449,7 @@ if __name__ == '__main__' :
       max_plot                = max_plot,
       covariate_csv_file_dict = covariate_csv_file_dict,
       scale_covariate_dict    = scale_covariate_dict,
-      root_node_database      = root_node_database,
+      root_database           = root_database,
       no_ode_fit              = no_ode_fit,
       fit_type_list           = fit_type_list,
       random_seed             = random_seed,

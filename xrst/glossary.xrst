@@ -93,7 +93,7 @@ see :ref:`module@at_cascade.constant_table_list`.
 Option Table
 ============
 The *fit_database* option table is the same as in the
-*root_node_database* except for the value of *parent_node_name*.
+*root_database* except for the value of *parent_node_name*.
 This node is called the fit_node for the database.
 The value of *parent_node_id* does not appear in the option table.
 
@@ -106,20 +106,20 @@ The split covariate reference value is one of the
 :ref:`split_reference_table@split_reference_value`
 in the split_reference table.
 The other columns in the covariate table are the same
-as in the root_node_database.
+as in the root_database.
 
 Fixed Effects Smoothings
 ========================
 The age and time points corresponding to the smoothing for the
 parent rates (except omega)
-and the covariate multipliers are the same as in the *root_node_database*.
+and the covariate multipliers are the same as in the *root_database*.
 In addition, the age and time difference prior corresponding to each
-age and time point is the same as in the *root_node_database*.
+age and time point is the same as in the *root_database*.
 
 Random Effects Smoothing
 ========================
 The smoothing for the child rates (except omega) are the same as in the
-*root_node_database*.
+*root_database*.
 
 Rate Table
 ==========
@@ -197,7 +197,7 @@ The abbreviation used for cause specific mortality data.
 
 node_name
 *********
-Is the *node_name* for a node in the *root_node_database* node table.
+Is the *node_name* for a node in the *root_database* node table.
 
 node_split_set
 **************
@@ -268,8 +268,8 @@ root_node
 The top level node for this cascade; see
 :ref:`option_all_table@root_node_name`.
 
-root_node_database
-******************
+root_database
+*************
 This is a dismod_at database where the *root_node* is the
 parent node in the dismod_at option table.
 It must satisfy all the conditions for an

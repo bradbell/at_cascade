@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-22 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import copy
 import math
@@ -14,9 +14,9 @@ def get_file_path(csv_file_key, result_dir) :
    file_name = f'{result_dir}/{file_name}'
    return file_name
 # -----------------------------------------------------------------------------
-def write_root_node_database(
+def write_root_database(
    result_dir              = None,
-   root_node_database      = None,
+   root_database           = None,
    hold_out_integrand      = None,
    hold_out_nid_set        = None,
    covariate_csv_file_dict = None,
@@ -38,7 +38,7 @@ def write_root_node_database(
    max_num_iter_fixed      = None,
 ) :
    assert type(result_dir) == str
-   assert type(root_node_database) == str
+   assert type(root_database) == str
    assert type(hold_out_integrand) == str
    assert type(hold_out_nid_set) == set
    assert type(covariate_csv_file_dict) == dict
@@ -58,7 +58,7 @@ def write_root_node_database(
    assert type(tolerance_fixed) == float
    assert type(max_num_iter_fixed) == int
    #
-   print( 'Creating ' + root_node_database )
+   print( 'Creating ' + root_database )
    #
    data_table_file       = get_file_path('data', result_dir)
    node_table_file       = get_file_path('node', result_dir)
@@ -370,7 +370,7 @@ def write_root_node_database(
    ]
    #
    # create_database
-   file_name      = root_node_database
+   file_name      = root_database
    nslist_table   = list()
    avgint_table   = list()
    weight_table   = list()

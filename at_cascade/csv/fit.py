@@ -1104,7 +1104,7 @@ class weighting_function :
 # Writes the root node data base
 #
 # root_node.db
-# this database is created by create_root_node_database.
+# this database is created by create_root_database.
 # If there is an existing version of this file it is overwrittern.
 #
 # fit_dir
@@ -1123,7 +1123,7 @@ class weighting_function :
 # This routine assues that global_option_value has been set.
 #
 # age_grid, time_grid, covariate_table =
-def create_root_node_database(fit_dir) :
+def create_root_database(fit_dir) :
    assert type(fit_dir) == str
    #
    # name_rate2integrand
@@ -1699,7 +1699,7 @@ def create_all_node_database(
    assert root_node_name == global_option_value['root_node_name']
    #
    # option_all
-   root_node_database     = f'{fit_dir}/root_node.db'
+   root_database          = f'{fit_dir}/root_node.db'
    child_prior_std_factor = global_option_value['child_prior_std_factor']
    shared_memory_prefix   = global_option_value['shared_memory_prefix']
    absolute_covariates    = global_option_value['absolute_covariates']
@@ -1726,7 +1726,7 @@ def create_all_node_database(
       'shared_memory_prefix'         : shared_memory_prefix,
       'refit_split'                  : refit_split,
       'result_dir'                   : fit_dir,
-      'root_node_database'           : root_node_database,
+      'root_database'           : root_database,
       'root_node_name'               : root_node_name,
       'root_split_reference_name'    : 'both',
       'split_covariate_name'         : 'sex',
@@ -1878,7 +1878,7 @@ def fit(fit_dir, max_node_depth = None) :
       row['node_id'] = node_id
    #
    # root_node.db
-   age_grid, time_grid, covariate_table = create_root_node_database(fit_dir)
+   age_grid, time_grid, covariate_table = create_root_database(fit_dir)
    #
    # all_node.db
    create_all_node_database(

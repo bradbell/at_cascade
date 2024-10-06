@@ -50,7 +50,7 @@ def drill(
    result_dir,
    root_node_name,
    fit_goal_set,
-   root_node_database,
+   root_database,
    no_ode_fit,
    fit_type_list,
 ) :
@@ -61,7 +61,7 @@ def drill(
    # cascade_root_node
    at_cascade.cascade_root_node(
       all_node_database  = all_node_database,
-      root_node_database = root_node_database,
+      root_database      = root_database,
       fit_goal_set       = fit_goal_set,
       no_ode_fit         = no_ode_fit,
       fit_type_list      = fit_type_list,
@@ -75,7 +75,7 @@ def main(
    max_plot                = None,
    covariate_csv_file_dict = None,
    scale_covariate_dict    = None,
-   root_node_database      = None,
+   root_database           = None,
    no_ode_fit              = None,
    fit_type_list           = None,
    random_seed             = None,
@@ -87,7 +87,7 @@ def main(
    assert type(max_plot) == int
    assert type(covariate_csv_file_dict) == dict
    assert type(scale_covariate_dict) == dict
-   assert type(root_node_database) == str
+   assert type(root_database) == str
    assert type(no_ode_fit) == bool
    assert type(fit_type_list) == list
    assert type(random_seed) == int
@@ -156,7 +156,7 @@ def main(
    # drill
    elif command == 'drill' :
       dismod_at.system_command_prc([
-         'dismod_at', root_node_database,
+         'dismod_at', root_database,
          'set', 'option', 'random_seed', str(random_seed)
       ])
       if os.path.exists( root_node_dir ) :
@@ -171,7 +171,7 @@ def main(
          result_dir,
          root_node_name,
          fit_goal_set,
-         root_node_database,
+         root_database,
          no_ode_fit,
          fit_type_list,
          )
@@ -206,14 +206,14 @@ def main(
          covariate_csv_file_dict = covariate_csv_file_dict,
          scale_covariate_dict    = scale_covariate_dict,
          fit_goal_set            = fit_goal_set,
-         root_node_database      = root_node_database,
+         root_database           = root_database,
          max_plot                = max_plot,
       )
    elif command == 'summary' :
       at_cascade.ihme.summary(
          result_dir         = result_dir,
          fit_goal_set       = fit_goal_set,
-         root_node_database = root_node_database
+         root_database      = root_database
       )
    #
    else :

@@ -615,8 +615,8 @@ def main() :
    at_cascade.empty_directory(result_dir)
    #
    # Create root_node.db
-   root_node_database  = f'{result_dir}/root_node.db'
-   root_node_db(root_node_database)
+   root_database       = f'{result_dir}/root_node.db'
+   root_node_db(root_database)
    #
    # omega_grid
    omega_grid = dict()
@@ -641,7 +641,7 @@ def main() :
    option_all        = {
       'result_dir'          : result_dir,
       'root_node_name'      : 'n0',
-      'root_node_database'  : root_node_database,
+      'root_database'  : root_database,
       'absolute_covariates' : 'one',
    }
    at_cascade.create_all_node_db(
@@ -656,8 +656,8 @@ def main() :
    os.mkdir(root_node_dir)
    #
    # avgint_table
-   # This also erases the avgint table from root_node_database
-   avgint_table = at_cascade.extract_avgint( root_node_database )
+   # This also erases the avgint table from root_database
+   avgint_table = at_cascade.extract_avgint( root_database )
    #
    # cascade starting at root node
    at_cascade.cascade_root_node(

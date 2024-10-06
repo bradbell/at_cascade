@@ -139,19 +139,19 @@ def main() :
    result_dir = 'build/test'
    at_cascade.empty_directory(result_dir)
    #
-   # root_node_database
-   root_node_database  = f'{result_dir}/root_node.db'
-   root_node_db(root_node_database)
+   # root_database
+   root_database       = f'{result_dir}/root_node.db'
+   root_node_db(root_database)
    #
    # fit_database
    fit_database       = f'{result_dir}/fit_node.db'
-   at_cascade.copy_root_db(root_node_database, fit_database)
+   at_cascade.copy_root_db(root_database, fit_database)
    #
    # fit_database
    at_cascade.copy_other_tbl(fit_database)
    #
-   # root_node_database
-   os.remove( root_node_database )
+   # root_database
+   os.remove( root_database )
    #
    # fit_database
    command = [ 'dismod_at' , fit_database, 'init' ]

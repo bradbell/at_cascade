@@ -116,15 +116,15 @@ def pre_parallel(
    # all_node_db
    all_node_db = f'{fit_dir}/all_node.db'
    #
-   # root_node_database
-   root_node_database = f'{fit_dir}/root_node.db'
+   # root_database
+   root_database      = f'{fit_dir}/root_node.db'
    #
    # root_node_name
-   root_node_name = at_cascade.get_parent_node(root_node_database)
+   root_node_name = at_cascade.get_parent_node(root_database)
    #
    # node_table, covariate_table
    connection      = dismod_at.create_connection(
-      root_node_database, new = False, readonly = True
+      root_database, new = False, readonly = True
    )
    node_table      = dismod_at.get_table_dict(connection, 'node')
    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
@@ -191,7 +191,7 @@ def pre_parallel(
    at_cascade_log_dict = at_cascade.check_log(
       message_type       = 'at_cascade'         ,
       all_node_database  = all_node_db          ,
-      root_node_database = root_node_database   ,
+      root_database      = root_database   ,
       job_table          = job_table            ,
       start_job_id       = log_start_job_id     ,
       max_job_depth      = log_max_job_depth    ,
@@ -310,7 +310,7 @@ def pre_parallel(
       node_table,
       root_node_id,
       root_split_reference_id,
-      root_node_database,
+      root_database,
    )
    #
    # shm_job_status

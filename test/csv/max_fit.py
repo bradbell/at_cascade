@@ -125,8 +125,8 @@ def main() :
    at_cascade.csv.fit(fit_dir)
    #
    # data_table, integrand_table
-   root_node_database = f'{fit_dir}/root_node.db'
-   connection         = dismod_at.create_connection(root_node_database)
+   root_database      = f'{fit_dir}/root_node.db'
+   connection         = dismod_at.create_connection(root_database)
    data_table         = dismod_at.get_table_dict(connection, 'data')
    integrand_table    = dismod_at.get_table_dict(connection, 'integrand')
    connection.close()

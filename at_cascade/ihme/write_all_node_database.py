@@ -31,7 +31,7 @@ def write_table(connection, table, tbl_name, col_list) :
    )
 # -----------------------------------------------------------------------------
 # write_all_node_database
-def write_all_node_database(result_dir, root_node_database) :
+def write_all_node_database(result_dir, root_database) :
    #
    # all_node_database
    all_node_database = f'{result_dir}/all_node.db'
@@ -51,7 +51,7 @@ def write_all_node_database(result_dir, root_node_database) :
    # root_table
    root_table = dict()
    new        = False
-   connection = dismod_at.create_connection(root_node_database, new)
+   connection = dismod_at.create_connection(root_database, new)
    root_table['covariate'] = dismod_at.get_table_dict(connection, 'covariate')
    root_table['node']      = dismod_at.get_table_dict(connection, 'node')
    root_table['age']       = dismod_at.get_table_dict(connection, 'age')

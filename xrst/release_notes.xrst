@@ -869,7 +869,7 @@ the standard deviation of the random effects,
 Merge in other_database branch:
 
 #. **API Change** :
-   The :ref:`option_all_table@root_node_database` was added to the
+   The :ref:`option_all_table@root_database` was added to the
    option_all table.
    In addition it was removed as an argument to
    :ref:`cascade_root_node-name` and :ref:`create_all_node_db-name` .
@@ -877,7 +877,7 @@ Merge in other_database branch:
    of the fit node database to a :ref:`fit_or_root_class-name` object.
 #. Read the
    :ref:`constant tables <module@at_cascade.constant_table_list>` from the
-   :ref:`glossary@root_node_database` .
+   :ref:`glossary@root_database` .
 #. Use :ref:`copy_root_db-name` to remove the constant tables from the
    :ref:`fit node databases <glossary@fit_database>` .
    This avoids multiple copies of these tables and thereby saves disk space.
@@ -959,12 +959,12 @@ In the examples, move the assignment to ``new`` from just before a call to
 in :ref:`absolute_covariates.py-name` the text ::
 
    new          = False
-   connection   = dismod_at.create_connection(root_node_database, new)
+   connection   = dismod_at.create_connection(root_database, new)
 
 was changed to ::
 
    connection   = dismod_at.create_connection(
-      root_node_database, new = False, readonly = False
+      root_database, new = False, readonly = False
    )
 
 04-12
@@ -1651,7 +1651,7 @@ mm-dd
 3. Replace :ref:`no_ode_fit-name` max_fit and max_abs_effect arguments by
    :ref:`no_ode_fit@option_all_dict`.
 
-4. In no_ode_fit, change in_database to :ref:`no_ode_fit@root_node_database`,
+4. In no_ode_fit, change in_database to :ref:`no_ode_fit@root_database`,
    and change out_database to :ref:`no_ode_fit@root_fit_database`.
 
 12-21
@@ -1700,7 +1700,7 @@ below a certain point.
 
 2. Move cascade_fit_node to :ref:`cascade_root_node-name` (better name now that
    the routine is not recursive. In addition, change the fit_database
-   argument name to root_node_database.
+   argument name to root_database.
 
 12-01
 =====

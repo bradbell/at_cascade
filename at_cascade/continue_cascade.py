@@ -19,7 +19,7 @@ Purpose
 *******
 Sometimes when running the cascade, the fit or statistics for a node fails.
 This may be because of something that happened on the system,
-or because of some of the settings in the :ref:`glossary@root_node_database`.
+or because of some of the settings in the :ref:`glossary@root_database`.
 This routine enables you to continue the cascade from such a node.
 
 all_node_database
@@ -111,11 +111,11 @@ def continue_cascade(
       dismod_at.get_table_dict(connection, 'split_reference')
    connection.close()
    #
-   # result_dir, root_node_name, root_node_database,
+   # result_dir, root_node_name, root_database,
    # max_number_cpu, refit_split
    result_dir         = None
    root_node_name     = None
-   root_node_database = None
+   root_database      = None
    max_number_cpu     = 1
    refit_split        = False
    for row in option_all_table :
@@ -123,19 +123,19 @@ def continue_cascade(
          result_dir = row['option_value']
       if row['option_name'] == 'root_node_name' :
          root_node_name = row['option_value']
-      if row['option_name'] == 'root_node_database' :
-         root_node_database = row['option_value']
+      if row['option_name'] == 'root_database' :
+         root_database      = row['option_value']
       if row['option_name'] == 'max_number_cpu' :
          max_number_cpu = int( row['option_value'] )
       if row['option_name'] == 'refit_split' :
          refit_split = row['option_value'] == 'true'
    assert result_dir is not None
    assert root_node_name is not None
-   assert root_node_database is not None
+   assert root_database is not None
    #
    # node_table, covariate_table, fit_integrand
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_database, root_node_database
+      fit_database, root_database
    )
    node_table      = fit_or_root.get_table('node')
    covariate_table = fit_or_root.get_table('covariate')

@@ -105,12 +105,12 @@ def get_cov_reference(
       all_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
    connection.close()
    #
-   # root_node_database
-   root_node_database = None
+   # root_database
+   root_database      = None
    for row in all_table['option_all'] :
-      if row['option_name'] == 'root_node_database' :
-         root_node_database = row['option_value']
-   assert root_node_database != None
+      if row['option_name'] == 'root_database' :
+         root_database      = row['option_value']
+   assert root_database != None
    #
    # check split_reference_id
    if len( all_table['split_reference'] ) == 0 :
@@ -120,7 +120,7 @@ def get_cov_reference(
    #
    # fit_table
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_database, root_node_database
+      fit_database, root_database
    )
    fit_table = dict()
    for tbl_name in [ 'option', 'data', 'node', 'covariate', ] :

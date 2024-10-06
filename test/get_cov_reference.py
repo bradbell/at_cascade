@@ -26,8 +26,8 @@ def main() :
    # all_node_database
    all_node_database = 'all_node.db'
    #
-   # root_node_database
-   root_node_database  = 'root_node.db'
+   # root_database
+   root_database       = 'root_node.db'
    #
    # connection
    new        = True
@@ -47,7 +47,7 @@ def main() :
    row_list = [
       [ 'result_dir',           '.'  ],
       [ 'root_node_name',       'n0' ],
-      [ 'root_node_database',   root_node_database ],
+      [ 'root_database',   root_database ],
       [ 'split_covariate_name', split_covariate_name ],
       [ 'absolute_covariates',  absolute_covariates ],
    ]
@@ -69,7 +69,7 @@ def main() :
    #
    # connection
    new        = True
-   connection = dismod_at.create_connection(root_node_database, new)
+   connection = dismod_at.create_connection(root_database, new)
    #
    # option table
    tbl_name = 'option'
@@ -154,7 +154,7 @@ def main() :
          # cov_reference_list
          cov_reference_list = at_cascade.get_cov_reference(
             all_node_database  = all_node_database,
-            fit_database       = root_node_database,
+            fit_database       = root_database,
             shift_node_id      = node_id,
             split_reference_id = split_reference_id,
          )

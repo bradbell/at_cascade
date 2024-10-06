@@ -247,16 +247,16 @@ def avgint_parent_grid(
    )
    connection.close()
    #
-   # root_node_database
-   root_node_database = None
+   # root_database
+   root_database      = None
    for row in option_all_table :
-      if row['option_name'] == 'root_node_database' :
-         root_node_database = row['option_value']
-   assert root_node_database != None
+      if row['option_name'] == 'root_database' :
+         root_database      = row['option_value']
+   assert root_database != None
    #
    # fit_tables
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_database, root_node_database
+      fit_database, root_database
    )
    fit_tables = dict()
    for name in [
