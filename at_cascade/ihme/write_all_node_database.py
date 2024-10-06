@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import csv
@@ -39,13 +39,13 @@ def write_all_node_database(result_dir, root_node_database) :
    #
    # intermediate files
    # BEGIN_SORT_THIS_LINE_PLUS_1
-   omega_all_table_file     = get_file_path(result_dir, 'omega_all')
-   option_all_table_file    = get_file_path(result_dir, 'option_all')
-   omega_index_table_file   = get_file_path(result_dir, 'omega_index')
    mulcov_freeze_table_file = get_file_path(result_dir, 'mulcov_freeze')
    node_split_table_file    = get_file_path(result_dir, 'node_split')
    omega_age_table_file     = get_file_path(result_dir, 'omega_age')
+   omega_all_table_file     = get_file_path(result_dir, 'omega_all')
+   omega_index_table_file   = get_file_path(result_dir, 'omega_index')
    omega_time_table_file    = get_file_path(result_dir, 'omega_time')
+   option_all_table_file    = get_file_path(result_dir, 'option_all')
    # END_SORT_THIS_LINE_MINUS_1
    #
    # root_table

@@ -149,7 +149,7 @@ def main() :
    file_name    = f'{fit_dir}/predict/fit_n2.female.csv'
    predict_data = at_cascade.csv.read_table(file_name)
    for row in predict_data :
-      relerr = 1.0 - float( row['avg_integrand'] ) / iota_true 
+      relerr = 1.0 - float( row['avg_integrand'] ) / iota_true
       if abs(relerr) > 1e-4 :
          print( f'relerr = {relerr}' )
          assert False

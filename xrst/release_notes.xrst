@@ -50,12 +50,12 @@ copy of the :ref:`fit_one_job@fit_node_database` .
 
 10-03
 =====
-The job table 
+The job table
 :ref:`create_job_table@Summary` and
-:ref:`create_job_table@job_table@prior_only` discussion were improved. 
+:ref:`create_job_table@job_table@prior_only` discussion were improved.
 In addition, the :ref:`wish_list-name` was modified in the following ways:
 
-#. The See Priors for Each Fit item and the No Data item 
+#. The See Priors for Each Fit item and the No Data item
    were removed because they have been completed.
 
 #. The special csv version of Continue Cascade item
@@ -65,7 +65,7 @@ In addition, the :ref:`wish_list-name` was modified in the following ways:
 #. The Estimate Standard Deviations item was removed because one can do
    this using the posterior samples.
 
-#. The :ref:`wish_list@avgint Table` and 
+#. The :ref:`wish_list@avgint Table` and
    csv.fit :ref:`wish_list@csv.fit@avgint Table` items were separated.
 
 #. The :ref:`wish_list@csv.fit@covariate.csv` item was changed to mention

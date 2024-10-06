@@ -102,7 +102,7 @@ where *split_reference_name* is the split reference name corresponding to
 
 prior_only
 ==========
-If this ``bool`` is false, 
+If this ``bool`` is false,
 this job must be run to fit all the nodes in *fit_goal_set* .
 It will be false if this is the start job; i.e,
 the start job must be fit to fit the nodes in *fit_goal_set*.

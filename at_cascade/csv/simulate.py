@@ -474,10 +474,10 @@ def set_global_option_value(sim_dir, option_table) :
       'new_random_effects'               : (bool,  True)       ,
       'random_depend_sex'                : (bool,  False)      ,
       'random_seed'                      : (int, random_seed)  ,
-      'std_random_effects_pini'          : (float, 0.0)        ,
-      'std_random_effects_iota'          : (float, 0.0)        ,
-      'std_random_effects_rho'           : (float, 0.0)        ,
       'std_random_effects_chi'           : (float, 0.0)        ,
+      'std_random_effects_iota'          : (float, 0.0)        ,
+      'std_random_effects_pini'          : (float, 0.0)        ,
+      'std_random_effects_rho'           : (float, 0.0)        ,
       'trace'                            : (bool,  True)       ,
    }
    # END_SORT_THIS_LINE_MINUS_2

@@ -38,9 +38,9 @@ fit_children
 ************
 The return value *fit_children* is a python list of python sets.
 
-For each *node_id* 
+For each *node_id*
 *fit_children* [ *node_id* ] is a the set of node ids that
-are children of *node_id* and must be fit in order to fit 
+are children of *node_id* and must be fit in order to fit
 all the nodes in *fit_goal_set*.
 
 Note that there must be at least one *node_id* in *fit_goal_set* ,

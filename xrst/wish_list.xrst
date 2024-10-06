@@ -15,7 +15,7 @@ Wish List for at_cascade
 
 avgint Table
 ************
-Document the state of the ``dismod_at.db`` avgint table at the end of 
+Document the state of the ``dismod_at.db`` avgint table at the end of
 :ref:`fit_one_job-name` .
 
 Covariate Reference Values
@@ -40,7 +40,7 @@ csv.fit
 
 avgint Table
 ============
-Document the state of the ``ancestor.db`` avgint table at the end of 
+Document the state of the ``ancestor.db`` avgint table at the end of
 :ref:`csv.pre_one_job-name` .
 
 Measurement Value Covariate
@@ -66,7 +66,7 @@ instead of covariate values to data points.
 This may use a lot of memory and take a while to set up; i.e.,
 slow down each run of dismod_at.
 On the other hand, there is only one copy of this table
-for each cascade (in the :ref:`glossary@root_node_database` ) 
+for each cascade (in the :ref:`glossary@root_node_database` )
 so it should not use a lot of disk space.
 One partial solution would be to not put all the nodes in the
 :ref:`csv.simulate@Input Files@covariate.csv` file.
