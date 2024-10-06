@@ -44,9 +44,16 @@ mm-dd
 
 10-06
 =====
-The ``pre_one_job`` argument *fit_database* was changed to
-:ref:`csv.pre_one_job@pre_database` to emphasize the fact that it is a
-copy of the :ref:`fit_one_job@fit_database` .
+#. The ``pre_one_job`` argument *fit_database* was changed to
+   :ref:`csv.pre_one_job@pre_database` to emphasize the fact that it is a
+   copy of the :ref:`fit_one_job@fit_database` .
+#. The term ``fit_node_database`` was replaced by
+   :ref:`glossary@fit_database` because it not only determines the 
+   fit node but also the fit split reference value (sex in the csv module).
+#. The term ``root_node_database`` was replaced by 
+   :ref:`glossary@root_database` and
+   the file name ``root_node.db`` was changed to ``root.db``
+   for the same reason.
 
 10-03
 =====
