@@ -42,6 +42,12 @@ Release Notes for 2024
 mm-dd
 *****
 
+10-06
+=====
+The ``pre_one_job`` argument *fit_database* was changed to
+:ref:`csv.pre_one_job@pre_database` to emphasize the fact that it is a
+copy of the :ref:`fit_one_job@fit_node_database` .
+
 10-03
 =====
 The job table 

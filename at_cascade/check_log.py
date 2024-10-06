@@ -17,7 +17,8 @@ Prototype
 
 Purpose
 *******
-Read all the logs for a cascade and return any warning or error messages.
+Read the logs for a cascade and return all the messages of a certain type.
+The databases are not modified (are opened in a read only fashion).
 
 message_type
 ************

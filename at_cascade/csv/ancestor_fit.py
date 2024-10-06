@@ -65,6 +65,8 @@ ancestor_job_dir
 This is the directory, relative to the *fit_dir*,
 that corresponds to the closest ancestor of *predict_job_id*
 that had a successful fit and posterior sampling.
+To be specific, ``sample: OK`` is in its
+:ref:`fit_one_job@fit_node_database@log` .
 
 
 {xrst_end csv.ancestor_fit}
