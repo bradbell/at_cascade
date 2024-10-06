@@ -831,8 +831,8 @@ from the fit.
 Output Files
 ************
 
-root_node.db
-============
+root.db
+=======
 This is the dismod_at sqlite database corresponding to the root node for
 the cascade.
 
@@ -1103,7 +1103,7 @@ class weighting_function :
 # ----------------------------------------------------------------------------
 # Writes the root node data base
 #
-# root_node.db
+# root.db
 # this database is created by create_root_database.
 # If there is an existing version of this file it is overwrittern.
 #
@@ -1135,7 +1135,7 @@ def create_root_database(fit_dir) :
    }
    #
    # output_file
-   output_file = f'{fit_dir}/root_node.db'
+   output_file = f'{fit_dir}/root.db'
    #
    # input_table
    input_table = dict()
@@ -1629,7 +1629,7 @@ def create_root_database(fit_dir) :
 # this database is created by create_all_node_database.
 # If there is an existing version of this file it is overwrittern.
 #
-# root_node.db
+# root.db
 # is the name of the root node database
 # This data base must exist and is not modified.
 #
@@ -1668,7 +1668,7 @@ def create_all_node_database(
    #
    # root_node_table
    root_node_table = dict()
-   database     = f'{fit_dir}/root_node.db'
+   database     = f'{fit_dir}/root.db'
    connection   = dismod_at.create_connection(
       database, new = False, readonly = True
    )
@@ -1699,7 +1699,7 @@ def create_all_node_database(
    assert root_node_name == global_option_value['root_node_name']
    #
    # option_all
-   root_database          = f'{fit_dir}/root_node.db'
+   root_database          = f'{fit_dir}/root.db'
    child_prior_std_factor = global_option_value['child_prior_std_factor']
    shared_memory_prefix   = global_option_value['shared_memory_prefix']
    absolute_covariates    = global_option_value['absolute_covariates']
@@ -1877,7 +1877,7 @@ def fit(fit_dir, max_node_depth = None) :
       node_id        = at_cascade.table_name2id(node_table, 'node', node_name)
       row['node_id'] = node_id
    #
-   # root_node.db
+   # root.db
    age_grid, time_grid, covariate_table = create_root_database(fit_dir)
    #
    # all_node.db
@@ -1886,7 +1886,7 @@ def fit(fit_dir, max_node_depth = None) :
    )
    #
    # node_table
-   database     = f'{fit_dir}/root_node.db'
+   database     = f'{fit_dir}/root.db'
    connection   = dismod_at.create_connection(
       database, new = False, readonly = True
    )

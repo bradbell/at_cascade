@@ -43,7 +43,7 @@ csmr_inp_file   = f'{data_dir}/gbd2019_asthma_csmr.csv'
 result_dir = 'ihme_db/DisMod_AT/results/asthma'
 #
 # root_database
-root_database      = f'{result_dir}/root_node.db'
+root_database      = f'{result_dir}/root.db'
 #
 # no_ode_fit
 # This bool controls whether a no_ode fit is used to initialize root level

@@ -177,7 +177,7 @@ option_all  = {
    'root_node_name': 'n0',
    'max_number_cpu':  '2',
 }
-option_all['root_database'] = option_all['result_dir'] + '/root_node.db'
+option_all['root_database'] = option_all['result_dir'] + '/root.db'
 # END option_all
 # ----------------------------------------------------------------------------
 # functions

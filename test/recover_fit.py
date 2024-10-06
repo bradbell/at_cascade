@@ -191,7 +191,7 @@ def check_fit(result_dir, fit_node_name) :
       fit_database      = f'{result_dir}/n0/{fit_node_name}/dismod.db'
    #
    # root_database
-   root_database       = f'{result_dir}/root_node.db'
+   root_database       = f'{result_dir}/root.db'
    #
    # fit_node_id
    fit_node_id = int( fit_node_name[-1] )
@@ -229,8 +229,8 @@ def main() :
    result_dir = 'build/test'
    at_cascade.empty_directory(result_dir)
    #
-   # root_node.db
-   root_database       = f'{result_dir}/root_node.db'
+   # root.db
+   root_database       = f'{result_dir}/root.db'
    root_node_db(root_database)
    #
    # mulcov_freeze_table

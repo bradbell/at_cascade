@@ -220,8 +220,8 @@ def main() :
    at_cascade.empty_directory('build/test')
    os.chdir('build/test')
    #
-   # Create root_node.db
-   root_database       = 'root_node.db'
+   # Create root.db
+   root_database       = 'root.db'
    root_node_db(root_database)
    #
    # Create all_node.db

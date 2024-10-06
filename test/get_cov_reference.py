@@ -27,7 +27,7 @@ def main() :
    all_node_database = 'all_node.db'
    #
    # root_database
-   root_database       = 'root_node.db'
+   root_database       = 'root.db'
    #
    # connection
    new        = True

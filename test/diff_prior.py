@@ -178,7 +178,7 @@ def main() :
    at_cascade.empty_directory(result_dir)
    #
    # root_database
-   root_database       = f'{result_dir}/root_node.db'
+   root_database       = f'{result_dir}/root.db'
    root_node_db(root_database)
    #
    # Create all_node.db

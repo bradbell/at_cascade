@@ -444,7 +444,7 @@ def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
    # END_PREDICT
    #
    # dismod_node_table, dismod_option_table
-   database     = f'{fit_dir}/root_node.db'
+   database     = f'{fit_dir}/root.db'
    connection   = dismod_at.create_connection(
       database, new = False, readonly = True
    )
@@ -457,11 +457,11 @@ def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
    for row in dismod_node_table :
       if row['parent'] == None :
          if top_node_name != None :
-            msg = 'root_node.db: node table: more than one node has no parent'
+            msg = 'root.db: node table: more than one node has no parent'
             assert False, msg
          top_node_name = row['node_name']
    if top_node_name == None :
-      msg = 'root_node.db: node_table: no node has None for parent'
+      msg = 'root.db: node_table: no node has None for parent'
       assert False, msg
    #
    # refit_split

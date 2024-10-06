@@ -213,7 +213,7 @@ option_all            = {
    'split_covariate_name':      'sex',
    'max_numbwr_cpu':            '1',
 }
-option_all['root_database'] = option_all['result_dir'] + '/root_node.db'
+option_all['root_database'] = option_all['result_dir'] + '/root.db'
 split_reference_table = [
    {'split_reference_name': 'female', 'split_reference_value': 1.0},
    {'split_reference_name': 'both',   'split_reference_value': 2.0},
@@ -507,7 +507,7 @@ def main() :
    result_dir = option_all['result_dir']
    at_cascade.empty_directory(result_dir)
    #
-   # Create root_node.db
+   # Create root.db
    root_database       = option_all['root_database']
    root_node_db(root_database)
    #

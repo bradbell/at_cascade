@@ -427,7 +427,7 @@ def pre_one_process(
          #
          # pre_database
          level             = predict_job_dir.count('/') + 1
-         path2root_node_db = level * '../' + 'root_node.db'
+         path2root_node_db = level * '../' + 'root.db'
          command = [
             'dismod_at', pre_database,
             'set', 'option', 'other_database', path2root_node_db

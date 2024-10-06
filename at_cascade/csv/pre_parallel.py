@@ -117,7 +117,7 @@ def pre_parallel(
    all_node_db = f'{fit_dir}/all_node.db'
    #
    # root_database
-   root_database      = f'{fit_dir}/root_node.db'
+   root_database      = f'{fit_dir}/root.db'
    #
    # root_node_name
    root_node_name = at_cascade.get_parent_node(root_database)
