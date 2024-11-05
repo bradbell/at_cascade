@@ -33,11 +33,12 @@ is the job that fits the :ref:`glossary@root_node` .
 If refit_split is true, csv.fit has two freeze jobs
 corresponding the female and male fits for the root_node.
 
-
 avgint Table
 ************
 Document the state of the ``dismod_at.db`` avgint table at the end of
 :ref:`fit_one_job-name` .
+(Note that the avgint table in ``ancestor.db`` and ``this.db``
+are different; see :ref:`wish_list@csv.fit@avgint Table` below.)
 
 Covariate Reference Values
 **************************

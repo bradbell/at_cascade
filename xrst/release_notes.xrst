@@ -46,8 +46,10 @@ mm-dd
 =====
 #. The :ref:`wish_list@Freezing Covariate Multipliers` entry was
    added to the wish list.
-#. The :ref:`wish_list@avgint Table` wish list entry was edited
-   to include the ``this.db`` database.
+#. The csv.fit :ref:`wish_list@csv.fit@avgint Table` 
+   wish list entry was edited to include the ``this.db`` database.
+   In addition, a link was added from the ``dismod.db`` 
+   :ref:`wish_list@avgint table` to the csv.fit avgint table entries.
 
 10-06
 =====
