@@ -32,6 +32,7 @@ Release Notes for at_cascade
    avg
    sqlite
    cov
+   meta
 }
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
@@ -42,13 +43,25 @@ Release Notes for 2024
 mm-dd
 *****
 
+11-07
+=====
+#. Remove the Meta Regression wish list item because it can be accomplished
+   using a :ref:`csv.fit@Input Files@mulcov.csv@type@meas_noise`
+   covariate multiplier on a covariate that changes with location.
+   For example, the covariate could be one at the root location
+   and smaller the further down the node tree a location is.
+
+#. Add the :ref:`wish_list@csv.fit@Covariate Table Size` entry to the
+   wish list.
+
+
 11-05
 =====
 #. The :ref:`wish_list@Freezing Covariate Multipliers` entry was
    added to the wish list.
-#. The csv.fit :ref:`wish_list@csv.fit@avgint Table` 
+#. The csv.fit :ref:`wish_list@csv.fit@avgint Table`
    wish list entry was edited to include the ``this.db`` database.
-   In addition, a link was added from the ``dismod.db`` 
+   In addition, a link was added from the ``dismod.db``
    :ref:`wish_list@avgint table` to the csv.fit avgint table entries.
 
 10-06
@@ -575,6 +588,7 @@ comment as part of csv.fit.ode_method.no_ode.
 -----------------------------------------------------------------------------
 {xrst_begin 2023}
 {xrst_spell
+   meta
    cen
    copyfileobj
    cv
@@ -703,7 +717,7 @@ Add definition of *true value for the average integrand* to the discussion of
 =====
 #. Add the :ref:`wish_list@Duration` item to the wish list.
 
-#. Move the :ref:`wish_list@Meta Regression` item to a higher priority
+#. Move the Meta Regression item to a higher priority
    on the wish list; i.e., closer to the top of the list.
 
 #. Add See Priors for Each Fit to the wish list.
@@ -1144,6 +1158,7 @@ See the dismod_at documentation for the rate_eff_cov table for more details.
 -----------------------------------------------------------------------------
 {xrst_begin 2022}
 {xrst_spell
+   meta
    const
    dage
    dd
@@ -1339,7 +1354,7 @@ Add :ref:`option_all_table@number_sample` to the option all table.
 10-28
 =====
 1. Remove the packaging wish list item because it was completed.
-2. Add the :ref:`wish_list@Meta Regression` wish list item.
+2. Add the Meta Regression wish list item.
 
 10-27
 =====

@@ -7,7 +7,6 @@
    avgint
    attaches
    meas
-   meta
 }
 
 Wish List for at_cascade
@@ -48,17 +47,23 @@ It is currently averaging the covariate values for all the data
 that correspond to each job (node, sex) pair.
 This is probably not ideal because a job might have very few data point.
 
-Meta Regression
-***************
-The extra measurement noise added for the mismatch between the model and the
-data should decrease as one goes down the cascade.
-One reason is, there are fewer levels of random effects
-that are not modeled.
-Another reason is, there is less variation due to covariates
-that are not modeled.
-
 csv.fit
 *******
+
+Covariate Table Size
+====================
+The number of rows and columns in the
+:ref:`csv.fit@Input Files@covariate.csv` keeps increasing
+(as we find new uses for covariates).
+This in turn increases the size of the dismod_at weight grid table; see
+`Rate Effect Covariate Table
+<https://dismod-at.readthedocs.io/rate_eff_cov_table.html>`_ .
+If a covariate does not depend on sex (location),
+that covariate should use one weight table for both sexes (all locations).
+If a covariate does not depend on age (time),
+the corresponding weight grid table should have one age point (one time point).
+A similar compression should be done by the
+:ref:`csv.covariate_spline-name` routine.
 
 avgint Table
 ============

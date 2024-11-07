@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------
 import at_cascade
 '''
-{xrst_begin covariate_spline}
+{xrst_begin csv.covariate_spline}
 {xrst_spell
    cov
 }
@@ -64,7 +64,7 @@ This routine aborts with an assert if covariate.csv does not have the
 same rectangular grid in age and time for each (node_name, sex) pair.
 
 
-{xrst_end covariate_spline}
+{xrst_end csv.covariate_spline}
 '''
 # BEGIN_SYNTAX
 # at_casade.csv.covariate_spline
