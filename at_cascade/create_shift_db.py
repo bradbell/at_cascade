@@ -111,6 +111,10 @@ The mean of the dage and dtime priors
 are replaced using the corresponding difference in the
 predict tables in the *fit_database*.
 
+Log Table
+=========
+There is no log table in the shifted databases.
+
 no_ode_fit
 **********
 If this argument is true (false) if the *fit_database*
@@ -122,9 +126,10 @@ In this case both the means and standard deviations in the value priors
 are replaced using the results of the fit.
 Otherwise, only the means are replaced.
 
-Log Table
-=========
-There is no log table in the shifted databases.
+job_table
+*********
+If *no_ode_fit* is true this argument must be None.
+Otherwise it is the :ref:`create_job_table@job_table` for this cascade.
 
 {xrst_end create_shift_db}
 '''
@@ -267,7 +272,7 @@ def add_shift_grid_row(
       if upper is None :
          upper = + math.inf
       #
-      # shift_const_value, shift_value_prior_id, shif_table['prior']
+      # shift_const_value, shift_value_prior_id, shift_table['prior']
       if lower == upper :
          shift_const_value  = lower
          assert shift_value_prior_id is None
@@ -389,15 +394,20 @@ def add_shift_grid_row(
 # at_cascade.create_shift_db
 def create_shift_db(
    all_node_database    ,
-   fit_database    ,
+   fit_database         ,
    shift_databases      ,
    no_ode_fit           = False,
+   job_table            = None,
 # )
 ) :
    assert type(all_node_database) == str
    assert type(fit_database) == str
    assert type(shift_databases) == dict
    assert type(no_ode_fit) == bool
+   if no_ode_fit :
+      assert job_table == None
+   else :
+      assert type(job_table) == list
    # END syntax
    #
    # predict_sample
@@ -592,11 +602,13 @@ def create_shift_db(
       )
       #
       # mulcov_freeze_set
-      mulcov_freeze_set = set()
-      for row in all_table['mulcov_freeze'] :
-         if fit_node_id == row['fit_node_id'] :
-            if fit_split_reference_id == row['split_reference_id'] :
-               mulcov_freeze_set.add( row['mulcov_id'] )
+      if no_ode_fit :
+         mulcov_freeze_set = set()
+      else :
+         mulcov_freeze_table = all_table['mulcov_freeze']
+         mulcov_freeze_set = at_cascade.get_freeze_set(
+            job_table, fit_node_id, fit_split_reference_id, mulcov_freeze_table
+         )
       #
       # shift_database     = fit_database
       shift_database = shift_databases[shift_name]
@@ -673,10 +685,8 @@ def create_shift_db(
             shift_mulcov_row['group_smooth_id'] = shift_smooth_id
             #
             # freeze
-            if no_ode_fit :
-               freeze = False
-            else :
-               freeze = mulcov_id in mulcov_freeze_set
+            assert len(mulcov_freeze_set) == 0 or not no_ode_fit
+            freeze = mulcov_id in mulcov_freeze_set
             #
             # copy_row
             copy_row = False

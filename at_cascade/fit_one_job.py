@@ -506,9 +506,11 @@ def fit_one_job(
    #
    # create shifted databases
    at_cascade.create_shift_db(
-      all_node_database,
-      fit_database,
-      shift_databases,
+      all_node_database = all_node_database,
+      fit_database      = fit_database,
+      shift_databases   = shift_databases,
+      no_ode_fit        = False,
+      job_table         = job_table,
    )
    #
    # empty_avgint_table

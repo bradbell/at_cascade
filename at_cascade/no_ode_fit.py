@@ -337,6 +337,7 @@ def no_ode_fit(
       fit_database      = no_ode_database   ,
       shift_databases   = shift_databases   ,
       no_ode_fit        = True              ,
+      job_table         = None              ,
    )
    #
    # move c_root_avgint -> avgint

@@ -15,7 +15,7 @@ at_cascade.version
 ******************
 The version number for this copy of at_cascade.
 {xrst_code py}'''
-version = '2024.11.7'
+version = '2024.11.17'
 '''{xrst_code}
 
 at_cascade.constant_table_list
@@ -66,6 +66,7 @@ constant_table_list = [
    at_cascade/get_database_dir.py
    at_cascade/get_fit_children.py
    at_cascade/get_fit_integrand.py
+   at_cascade/get_freeze_set.py
    at_cascade/get_parent_node.py
    at_cascade/get_var_id.py
    at_cascade/job_descendent.py
@@ -112,6 +113,7 @@ from .get_cov_reference     import get_cov_reference
 from .get_database_dir      import get_database_dir
 from .get_fit_children      import get_fit_children
 from .get_fit_integrand     import get_fit_integrand
+from .get_freeze_set        import get_freeze_set
 from .get_parent_node       import get_parent_node
 from .get_var_id            import get_var_id
 from .job_descendent        import job_descendent
