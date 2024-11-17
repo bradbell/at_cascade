@@ -234,6 +234,7 @@ def add_shift_grid_row(
    age_id_next,
    time_id_next,
 ) :
+   assert freeze in { 'prior', 'posterior', 'mean', 'no' }
    # -----------------------------------------------------------------------
    # value_prior
    # -----------------------------------------------------------------------
@@ -261,7 +262,7 @@ def add_shift_grid_row(
       key       = (integrand_id, shift_node_id, split_id, age_id, time_id)
       #
       # lower, upper
-      if freeze :
+      if freeze == 'mean' :
          lower = fit_fit_var[key]
          upper = fit_fit_var[key]
       else :
@@ -276,11 +277,17 @@ def add_shift_grid_row(
       if lower == upper :
          shift_const_value  = lower
          assert shift_value_prior_id is None
+      elif freeze == 'prior' :
+         assert shift_const_value is None
+         #
+         # shift_value_prior_id, shift_prior_row
+         shift_value_prior_id  = len( shift_table['prior'] )
+         shift_prior_row = copy.copy( fit_prior_row )
       else :
          assert shift_const_value is None
-         shift_value_prior_id  = len( shift_table['prior'] )
          #
-         # shift_prior_row
+         # shift_value_prior_id, shift_prior_row
+         shift_value_prior_id  = len( shift_table['prior'] )
          shift_prior_row = copy.copy( fit_prior_row )
          if not copy_row :
             #
@@ -445,6 +452,16 @@ def create_shift_db(
       if row['option_name'] == 'no_ode_ignore' :
          no_ode_ignore = row['option_value'].strip()
    #
+   # freeze_type
+   freeze_type = 'mean'
+   for row in all_table['option_all'] :
+      if row['option_name'] == 'freeze_type' :
+         freeze_type = row['option_value'].strip()
+   if freeze_type not in [ 'mean', 'posterior' ] :
+      msg  = f'option_all table: freeze_type = {freeze_type} '
+      msg += 'is not "mean" or "posterior"'
+      assert False, msg
+   #
    # fit_table
    fit_or_root = at_cascade.fit_or_root_class(
       fit_database, root_database
@@ -601,12 +618,12 @@ def create_shift_db(
          fit_table['node'], 'node', shift_node_name
       )
       #
-      # mulcov_freeze_set
+      # mulcov_freeze_dict
       if no_ode_fit :
-         mulcov_freeze_set = set()
+         mulcov_freeze_dict = dict()
       else :
          mulcov_freeze_table = all_table['mulcov_freeze']
-         mulcov_freeze_set = at_cascade.get_freeze_set(
+         mulcov_freeze_dict = at_cascade.get_freeze_dict(
             job_table, fit_node_id, fit_split_reference_id, mulcov_freeze_table
          )
       #
@@ -685,8 +702,14 @@ def create_shift_db(
             shift_mulcov_row['group_smooth_id'] = shift_smooth_id
             #
             # freeze
-            assert len(mulcov_freeze_set) == 0 or not no_ode_fit
-            freeze = mulcov_id in mulcov_freeze_set
+            assert len(mulcov_freeze_dict) == 0 or not no_ode_fit
+            if mulcov_id in mulcov_freeze_dict :
+               if freeze_type == 'mean' :
+                  freeze = 'mean'
+               else :
+                  freeze = mulcov_freeze_dict[mulcov_id]
+            else :
+               freeze = 'no'
             #
             # copy_row
             copy_row = False
@@ -771,7 +794,7 @@ def create_shift_db(
             shift_rate_row['parent_smooth_id'] = shift_smooth_id
             #
             # freeze
-            freeze = False
+            freeze = 'no'
             #
             # copy_row
             copy_row = False
