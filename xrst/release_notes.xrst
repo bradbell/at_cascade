@@ -43,6 +43,10 @@ Release Notes for 2024
 mm-dd
 *****
 
+11-17
+=====
+Add the :ref:`option_all_table@freeze_type` option.
+
 11-07
 =====
 #. Remove the Meta Regression wish list item because it can be accomplished

@@ -71,8 +71,8 @@ The true value for *alpha* (used which simulating the data) is
 
 Freeze
 ======
-For this example we freeze *alpha* at node n1 to its prior mean
-(which is its fit value in node n0).
+For this example we freeze *alpha* at node n1 to its posterior mean
+(which is the optimal value for the fit at node n1).
 {xrst_literal
    # BEGIN mulcov_freeze_table
    # END mulcov_freeze_table

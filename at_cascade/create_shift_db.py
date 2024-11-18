@@ -234,7 +234,9 @@ def add_shift_grid_row(
    age_id_next,
    time_id_next,
 ) :
-   assert freeze in { 'prior', 'posterior', 'mean', 'no' }
+   assert freeze in { 'prior', 'mean', 'no' }
+   if freeze == 'prior' :
+      assert copy_row == True
    # -----------------------------------------------------------------------
    # value_prior
    # -----------------------------------------------------------------------
@@ -277,12 +279,6 @@ def add_shift_grid_row(
       if lower == upper :
          shift_const_value  = lower
          assert shift_value_prior_id is None
-      elif freeze == 'prior' :
-         assert shift_const_value is None
-         #
-         # shift_value_prior_id, shift_prior_row
-         shift_value_prior_id  = len( shift_table['prior'] )
-         shift_prior_row = copy.copy( fit_prior_row )
       else :
          assert shift_const_value is None
          #
@@ -706,13 +702,16 @@ def create_shift_db(
             if mulcov_id in mulcov_freeze_dict :
                if freeze_type == 'mean' :
                   freeze = 'mean'
+               elif mulcov_freeze_dict[mulcov_id] == 'posterior' :
+                  freeze = 'no'
                else :
-                  freeze = mulcov_freeze_dict[mulcov_id]
+                  assert mulcov_freeze_dict[mulcov_id] == 'prior'
+                  freeze = 'prior'
             else :
                freeze = 'no'
             #
             # copy_row
-            copy_row = False
+            copy_row = freeze == 'prior'
             if no_ode_fit :
                mulcov_type = shift_mulcov_row['mulcov_type']
                if mulcov_type == 'rate_value' :

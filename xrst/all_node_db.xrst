@@ -203,8 +203,24 @@ must also appear.
 freeze_type
 ***********
 This options specifies the type of freeze corresponding to the rows of the
-mulcov_freeze table; see :ref:`mulcov_freeze_table@freeze_type`
+:ref:`mulcov_freeze_table-name` .
 It is either ``mean`` or ``posterior`` and its default is ``mean`` .
+Each for of the mulcov_freeze table specifies a freeze job
+and a freeze covariate multiplier.
+
+mean
+====
+If the freeze_type is ``mean`` ,
+the mean (optimal value) for the freeze covariate multiplier
+determined by the freeze job will be the lower and upper limit
+for the covariate multiplier in descendants of the freeze job;
+see :ref:`create_job_table@job_table@parent_job_id` in the job table.
+
+posterior
+=========
+If the freeze_type is ``posterior`` ,
+the freeze covariate multiplier posterior, determined by the freeze job,
+will be its prior distribution for all the descendants of the freeze job.
 
 max_abs_effect
 **************
@@ -422,22 +438,11 @@ The set of values in this column determine the
 
 Mulcov Freeze Table
 ###################
-This table specifies the :ref:`jobs<glossary@job>`
-at which the cascade will freeze the value or prior of covariate multipliers
-for its descendants; i.e, starting with its :ref:`glossary@child jobs` .
-Each row of this table corresponds to a job and covariate multiplier.
-
-freeze_type
-***********
-The freeze type is an option in the all_option table; see
-ref:`option_all_table@freeze_type`
-If the freeze_type is ``mean`` ,
-the lower and upper limit for the covariate multiplier in
-descendants of this job will be mean (optimal value) determined by this job;
-see :ref:`create_job_table@job_table@parent_job_id` in the job table.
-If the freeze_type is ``posterior`` ,
-the prior distribution for the covariate multiplier for all the
-descendants of this job will be posterior determined by this job.
+Each row of this table specifies a :ref:`glossary@job`
+and a covariate multiplier.
+The cascade will freeze the value or the prior distribution
+for this covariate multiplier for all descendants of this job;
+see :ref:`glossary@child jobs` and :ref:`option_all_table@freeze_type`
 
 mulcov_freeze_id
 ****************
