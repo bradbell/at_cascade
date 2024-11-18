@@ -205,7 +205,7 @@ freeze_type
 This options specifies the type of freeze corresponding to the rows of the
 :ref:`mulcov_freeze_table-name` .
 It is either ``mean`` or ``posterior`` and its default is ``mean`` .
-Each for of the mulcov_freeze table specifies a freeze job
+Each row of the mulcov_freeze table specifies a freeze job
 and a freeze covariate multiplier.
 
 mean
@@ -215,12 +215,15 @@ the mean (optimal value) for the freeze covariate multiplier
 determined by the freeze job will be the lower and upper limit
 for the covariate multiplier in descendants of the freeze job;
 see :ref:`create_job_table@job_table@parent_job_id` in the job table.
+Note that if the lower and upper limits are equal, the corresponding
+model variable is treated as if it has no uncertainty.
 
 posterior
 =========
 If the freeze_type is ``posterior`` ,
 the freeze covariate multiplier posterior, determined by the freeze job,
 will be its prior distribution for all the descendants of the freeze job.
+This enables one to account for the uncertainty of covariate multiplier values.
 
 max_abs_effect
 **************

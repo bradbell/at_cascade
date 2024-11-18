@@ -12,26 +12,6 @@
 Wish List for at_cascade
 ########################
 
-Freezing Covariate Multipliers
-******************************
-Currently the :ref:`mulcov_freeze_table-name`
-specifies the :ref:`jobs <glossary@job>` below which
-a covariate multiplier is frozen at its freeze job's optimal value.
-In other words, for the descendants of a job in the freeze table
-the upper and lower limits for a covariate multiplier is set to the
-freeze job's optimal value.
-Perhaps it would be good to have an option where the posterior,
-for the job in the freeze table, is used for all the descendants.
-This would include the uncertainty in the covariate multiplier
-in all posterior distribution for all the descendants.
-
-If the csv.fit :ref:`csv.fit@Input Files@option_fit.csv@refit_split`
-option is false,
-the freeze job for all covariate multipliers
-is the job that fits the :ref:`glossary@root_node` .
-If refit_split is true, csv.fit has two freeze jobs
-corresponding the female and male fits for the root_node.
-
 avgint Table
 ************
 Document the state of the ``dismod_at.db`` avgint table at the end of

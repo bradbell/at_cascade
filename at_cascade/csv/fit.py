@@ -156,11 +156,14 @@ freeze_type
 -----------
 This options specifies the type of covariate multiplier freeze that is done.
 It is either ``mean`` or ``posterior`` and its default is ``mean`` .
-If :ref:`csv.fit@Input Files@option_fit.csv@refit_split` is true,
+If :ref:`csv.fit@Input Files@option_fit.csv@refit_split` is false,
 the freeze fit is the only fit at the root level.
-If *refit_split* is false,
+If *refit_split* is true,
 the freeze fit is the second fit at the root level; i.e,
 the fit directly after the sex split.
+Note that in general the cascade can freeze the covariate multipliers
+at any level; see :ref:`option_all_table@freeze_type`
+in the option_all table.
 
 mean
 ....
@@ -169,6 +172,9 @@ the mean (optimal value) for the covariate multipliers,
 determined by the freeze fit,
 is used as the lower and upper limit
 for fits that are descendant of the freeze fit.
+Note that if the lower and upper limits are equal, the corresponding
+model variable is treated as if it has no uncertainty.
+
 
 posterior
 .........
@@ -176,6 +182,8 @@ If the freeze_type is ``posterior`` ,
 the posterior distribution for the covariate multipliers,
 determined by the freeze fit,
 is used as the prior for all the descendants of the freeze fit.
+This enables one to account for the uncertainty of covariate multiplier values.
+
 
 hold_out_integrand
 ------------------

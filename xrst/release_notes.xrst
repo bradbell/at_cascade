@@ -47,6 +47,8 @@ mm-dd
 =====
 Add :ref:`csv.fit@Input Files@option_fit.csv@freeze_type`
 to the option_fit.csv file.
+This completes the Freezing Covariate Multiplier wish list item 
+which was removed from the wish list.
 
 11-17
 =====
@@ -66,7 +68,7 @@ Add :ref:`option_all_table@freeze_type` to the option_all table.
 
 11-05
 =====
-#. The :ref:`wish_list@Freezing Covariate Multipliers` entry was
+#. The Freezing Covariate Multipliers entry was
    added to the wish list.
 #. The csv.fit :ref:`wish_list@csv.fit@avgint Table`
    wish list entry was edited to include the ``this.db`` database.
