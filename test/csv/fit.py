@@ -87,7 +87,7 @@ mulcov_1
 # prior.csv
 csv_file['prior.csv'] = \
 '''name,lower,upper,mean,std,density
-gaussian_0_10,-1.0,1.0,0.5,10.0,gaussian
+gaussian_0_10,-1.0,1.0,0.0,10.0,gaussian
 gaussian_eps_10,1e-6,1.0,0.5,10.0,gaussian
 gauss_01,,,0.0,1.0,gaussian
 '''

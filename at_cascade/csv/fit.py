@@ -152,6 +152,31 @@ The default value for this option is both *age_size* and *time_size* are 100.
    the time average for that data is approximated by its value at time
    ( *age_upper* - *age_lower* ) / 2.
 
+freeze_type
+-----------
+This options specifies the type of covariate multiplier freeze that is done.
+It is either ``mean`` or ``posterior`` and its default is ``mean`` .
+If :ref:`csv.fit@Input Files@option_fit.csv@refit_split` is true,
+the freeze fit is the only fit at the root level.
+If *refit_split* is false,
+the freeze fit is the second fit at the root level; i.e,
+the fit directly after the sex split.
+
+mean
+....
+If the freeze_type is ``mean`` ,
+the mean (optimal value) for the covariate multipliers,
+determined by the freeze fit,
+is used as the lower and upper limit
+for fits that are descendant of the freeze fit.
+
+posterior
+.........
+If the freeze_type is ``posterior`` ,
+the posterior distribution for the covariate multipliers,
+determined by the freeze fit,
+is used as the prior for all the descendants of the freeze fit.
+
 hold_out_integrand
 ------------------
 This string contains a space separate list of integrand names.
@@ -982,6 +1007,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'bound_random'          : (float, float('inf'))       ,
       'child_prior_std_factor': (float,  2.0)               ,
       'compress_interval'     : (str,   '100.0 100.0')      ,
+      'freeze_type'           : (str,   'mean')             ,
       'hold_out_integrand'    : (str,   None)               ,
       'max_abs_effect'        : (float, 2.0)                ,
       'max_fit'               : (int,   250)                ,
@@ -1716,6 +1742,7 @@ def create_all_node_database(
       absolute_covariates += ' one'
    option_all = {
       'absolute_covariates'          : absolute_covariates ,
+      'freeze_type'                  : global_option_value['freeze_type'],
       'max_abs_effect'               : global_option_value['max_abs_effect'],
       'max_fit'                      : global_option_value['max_fit'],
       'max_number_cpu'               : global_option_value['max_number_cpu'],
