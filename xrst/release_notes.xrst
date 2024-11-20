@@ -43,11 +43,17 @@ Release Notes for 2024
 mm-dd
 *****
 
+11-20
+=====
+The description of csv
+:ref:`csv.predict@Output Files@fit_predict.csv@fit_sex@prior`
+and posterior predictions was improved.
+
 11-18
 =====
 Add :ref:`csv.fit@Input Files@option_fit.csv@freeze_type`
 to the option_fit.csv file.
-This completes the Freezing Covariate Multiplier wish list item 
+This completes the Freezing Covariate Multiplier wish list item
 which was removed from the wish list.
 
 11-17
@@ -204,7 +210,7 @@ were not tested and may have trouble on other systems.
 
 #. **API Change** The :ref:`csv.predict-name` routine now includes priors
    even when posteriors are also available; see the discussion about
-   :ref:`priors <csv.predict@Output Files@fit_predict.csv@fit_node_name@prior>`
+   :ref:`priors <csv.predict@Output Files@fit_predict.csv@fit_sex@prior>`
    for the csv.predict output files.
 
 #. Some of the example and tests had to be changed because the number of

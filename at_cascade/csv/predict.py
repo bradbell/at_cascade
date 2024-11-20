@@ -224,31 +224,34 @@ node_name
 is the node name for this sample is predicting for.
 This cycles through all the nodes in covariate.csv.
 
+sex
+---
+is the sex, female, both, or male, that the predictions are for.
+
 fit_node_name
 -------------
 is the node name corresponding to the fit, and samples, that was used
 to do these predictions.
 This identifies the nearest ancestor that had a successful fit and samples.
 
-posterior
-.........
-If *fit_node_name* and *fit_sex* are the same as *node_name* and *sex* ,
-the fit and samples succeeded for this *node_name* and *sex* and
-these are the corresponding posterior predictions.
-
-prior
-.....
-If *fit_node_name* and *fit_sex* are the same as *node_name* and *sex* ,
-these are prior predictions for this *node*  and *sex* value.
-
-sex
----
-is the sex, female, both, or male, that the predictions are for.
-
 fit_sex
 -------
 is the sex corresponding to the fit, and samples, that were used
 to do these prediction.
+
+posterior
+.........
+If *fit_node_name* and *fit_sex* are the same as *node_name* and *sex* ,
+the fit and samples succeeded for this *node_name* and *sex* and
+this row contains a posterior prediction for this *node_name* and *sex* .
+
+prior
+.....
+If *fit_node_name* is not the same as *node_name* ,
+or *fit_sex* is not the same as *sex* ,
+this row contains a prior prediction for this *node_name* and *sex* .
+The pair ( *fit_node_name* , *fit_sex* ) correspond to
+the closest ancestor fit that was successful.
 
 age
 ---
