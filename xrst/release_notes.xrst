@@ -31,8 +31,8 @@ Release Notes for at_cascade
    haqi
    avg
    sqlite
-   cov
    meta
+   def
 }
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
@@ -53,6 +53,26 @@ mm-dd
    *omega*\ [``age`` ] and *omega*\ [``time`` ]
    have been replaced by
    *omega_grid*\ [``age`` ] and *omega_grid*\ [``time`` ] .
+#. The :ref:`get_cov_reference-name` arguments were changed;
+   old::
+
+      def get_cov_reference(
+         all_node_database  ,
+         fit_database       ,
+         shift_node_id      ,
+         split_reference_id = None
+      )
+
+   new::
+
+      def get_cov_reference(
+         node_table           ,
+         fit_covariate_table  ,
+         all_node_database    ,
+         shift_node_id        ,
+         split_reference_id   = None
+      )
+
 
 11-20
 =====

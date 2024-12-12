@@ -137,6 +137,10 @@ def main() :
    assert len( option_table ) == 1
    assert option_table[0]['option_name'] == 'parent_node_name'
    #
+   # node_table, covariatetable
+   node_table      = dismod_at.get_table_dict(connection, 'node')
+   covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+   #
    # bmi_covariate_id
    # bmi is the only relative covariate
    bmi_covariate_id = 2
@@ -153,8 +157,9 @@ def main() :
          #
          # cov_reference_list
          cov_reference_list = at_cascade.get_cov_reference(
+            node_table          = node_table,
+            fit_covariate_table = covariate_table,
             all_node_database  = all_node_database,
-            fit_database       = root_database,
             shift_node_id      = node_id,
             split_reference_id = split_reference_id,
          )

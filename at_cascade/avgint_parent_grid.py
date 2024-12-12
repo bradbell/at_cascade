@@ -43,7 +43,7 @@ This is a :ref:`create_job_table@job_table` containing the jobs
 necessary to fit the :ref:`glossary@fit_goal_set`.
 If this is ``None`` , we are doing predictions for the same node and
 split reference id a in *fit_database*
-(This is used by :ref:`no_ode_fit-name` .)
+(This is only used by :ref:`no_ode_fit-name` .)
 
 fit_job_id
 **********
@@ -324,10 +324,11 @@ def avgint_parent_grid(
       #
       # cov_reference_list
       cov_reference_list = at_cascade.get_cov_reference(
-         all_node_database  = all_node_database,
-         fit_database       = fit_database,
-         shift_node_id      = parent_node_id,
-         split_reference_id = fit_split_reference_id,
+         node_table           = fit_tables['node'],
+         fit_covariate_table  = fit_tables['covariate'],
+         all_node_database    = all_node_database,
+         shift_node_id        = parent_node_id,
+         split_reference_id   = fit_split_reference_id,
       )
       # cov_reference[ (parent_node_id, fit_split_reference_id) ]
       key                     = (parent_node_id, fit_split_reference_id)
@@ -339,11 +340,14 @@ def avgint_parent_grid(
          (shift_node_id, shift_split_reference_id) = child_job
          #
          # cov_reference_list
+         node_id = fit_tables['node'][shift_node_id]['parent']
+         assert shift_node_id == parent_node_id or node_id == parent_node_id
          cov_reference_list = at_cascade.get_cov_reference(
-            all_node_database  = all_node_database,
-            fit_database       = fit_database,
-            shift_node_id      = shift_node_id,
-            split_reference_id = shift_split_reference_id,
+            node_table           = fit_tables['node'],
+            fit_covariate_table  = fit_tables['covariate'],
+            all_node_database    = all_node_database,
+            shift_node_id        = shift_node_id,
+            split_reference_id   = shift_split_reference_id,
          )
          #
          # cov_reference[ (shift_node_id, shift_split_reference_id) ]

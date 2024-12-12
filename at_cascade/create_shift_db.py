@@ -641,9 +641,12 @@ def create_shift_db(
                row['option_value'] = str( relative_path )
          #
       # cov_reference_list
+      node_id = fit_table['node'][shift_node_id]['parent']
+      assert shift_node_id == fit_node_id or node_id == fit_node_id
       cov_reference_list = at_cascade.get_cov_reference(
+         node_table          = fit_table['node'],
+         fit_covariate_table = fit_table['covariate'],
          all_node_database   = all_node_database,
-         fit_database        = fit_database,
          shift_node_id       = shift_node_id,
          split_reference_id  = shift_split_reference_id
       )
