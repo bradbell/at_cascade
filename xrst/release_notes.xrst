@@ -43,6 +43,17 @@ Release Notes for 2024
 mm-dd
 *****
 
+12-12
+=====
+#. The create_all_node_db :ref:`create_all_node_db@mulcov_freeze_table`
+   documentation had *mulcov_freeze_table*\ ``["fit_node_name"]`` .
+   This was replace by *row*\ ``["fit_node_name"]`` where
+   row is an entry in the *mulcov_freeze_table* list.
+#. In the ref:`create_all_node_db@omega_grid` documentation,
+   *omega*\ [``age`` ] and *omega*\ [``time`` ]
+   have been replaced by
+   *omega_grid*\ [``age`` ] and *omega_grid*\ [``time`` ] .
+
 11-20
 =====
 The description of csv

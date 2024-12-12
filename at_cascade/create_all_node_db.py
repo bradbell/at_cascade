@@ -65,27 +65,28 @@ This specifies the jobs at which the cascade will freeze specific
 covariate multipliers.
 If this argument is ``None``, the node_split table is empty.
 Otherwise, it must be a ``list`` of ``dict`` representation of the
-:ref:`mulcov_freeze_table-name` with the following keys for each ``dict``:
+:ref:`mulcov_freeze_table-name` .
+We use *row* below to refer to a ``dict`` that is an entry in this ``list`` .
 
 fit_node_id, fit_node_name
 ==========================
-The value *mulcov_freeze_table*\ ``["fit_node_id"]`` is an
-``int`` representation of the fit_node_id for this job or
-*mulcov_freeze_table*\ ``["fit_node_name"]`` is a
-``str`` representation of the corresponding node name.
-This value is ``None`` if and only if the
-:ref:`split_reference_table-name` is empty.
+#. If *row*\ ``["fit_node_id"]`` must be ``None``
+   if and only if the :ref:`split_reference_table-name` is empty.
+#. Otherwise if *row*\ ``["fit_node_id"]`` exists it must be an
+   ``int`` representation of the fit_node_id for this job.
+#. Otherwise *row*\ ``["fit_node_name"]`` is a
+   ``str`` representation of the corresponding node name.
 
 split_reference_id
 ==================
-The value *mulcov_freeze_table*\ ``["split_reference_id"]`` is an
+The value *row*\ ``["split_reference_id"]`` is an
 ``int`` representation of the split_reference_id for this job or
-*mulcov_freeze_table*\ ``["split_reference_name"]`` is a
+*row*\ ``["split_reference_name"]`` is a
 ``str`` representation of the corresponding split reference name.
 
 mulcov_id
 =========
-The value *mulcov_freeze_table*\ ``["mulcov_id"]`` is an
+The value *row*\ ``["mulcov_id"]`` is an
 ``int`` representation of the mulcov_id for the covariate multiplier
 that is frozen.
 
@@ -98,7 +99,7 @@ the :ref:`omega_grid@omega_time_grid Table` are empty.
 
 age
 ===
-The value *omega*\ [``age``] is a list containing the
+The value *omega_grid*\ [``age``] is a list containing the
 age_id values for the omega_grid.
 These are indices in the
 :ref:`glossary@root_database` age table.
@@ -106,7 +107,7 @@ We use the notation *n_omega_age* for the length of the age list.
 
 time
 ====
-The value *omega*\ [``time``] is a list containing the
+The value *omega_grid*\ [``time``] is a list containing the
 time_id values for the omega_grid.
 These are indices in the *root_database* time table.
 We use the notation *n_omega_time* for the length of the time list.
