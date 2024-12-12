@@ -324,11 +324,12 @@ def avgint_parent_grid(
       #
       # cov_reference_list
       cov_reference_list = at_cascade.get_cov_reference(
-         node_table           = fit_tables['node'],
-         fit_covariate_table  = fit_tables['covariate'],
-         all_node_database    = all_node_database,
-         shift_node_id        = parent_node_id,
-         split_reference_id   = fit_split_reference_id,
+         option_all_table      = option_all_table,
+         split_reference_table = split_reference_table,
+         node_table            = fit_tables['node'],
+         fit_covariate_table   = fit_tables['covariate'],
+         shift_node_id         = parent_node_id,
+         split_reference_id    = fit_split_reference_id,
       )
       # cov_reference[ (parent_node_id, fit_split_reference_id) ]
       key                     = (parent_node_id, fit_split_reference_id)
@@ -343,11 +344,12 @@ def avgint_parent_grid(
          node_id = fit_tables['node'][shift_node_id]['parent']
          assert shift_node_id == parent_node_id or node_id == parent_node_id
          cov_reference_list = at_cascade.get_cov_reference(
-            node_table           = fit_tables['node'],
-            fit_covariate_table  = fit_tables['covariate'],
-            all_node_database    = all_node_database,
-            shift_node_id        = shift_node_id,
-            split_reference_id   = shift_split_reference_id,
+            option_all_table      = option_all_table,
+            split_reference_table = split_reference_table,
+            node_table            = fit_tables['node'],
+            fit_covariate_table   = fit_tables['covariate'],
+            shift_node_id         = shift_node_id,
+            split_reference_id    = shift_split_reference_id,
          )
          #
          # cov_reference[ (shift_node_id, shift_split_reference_id) ]

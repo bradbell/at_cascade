@@ -244,6 +244,11 @@ def create_all_node_db(
    #
    # root_node_name
    root_node_name = node_table[root_node_id]['node_name']
+   if root_node_name != option_all['root_node_name' ] :
+      tmp  = option_all['root_node_name']
+      msg  = f'root_node_name in option_all is {tmp} '
+      msg += f'while in the option table it is {root_node_name}'
+      assert False, msg
    #
    # rel_covariate_id_set
    rel_covariate_id_set = set( range(len(covariate_table)) )
@@ -347,11 +352,6 @@ def create_all_node_db(
    )
    #
    # option_all table
-   if root_node_name != option_all['root_node_name' ] :
-      tmp  = option_all['root_node_name']
-      msg  = f'root_node_name in option_all is {tmp} '
-      msg += f'while in the option table it is {root_node_name}'
-      assert False, msg
    tbl_name = 'option_all'
    col_name = [ 'option_name', 'option_value' ]
    col_type = [ 'text',        'text']

@@ -17,6 +17,17 @@ Syntax
    # BEGIN RETURN, # END RETURN
 }
 
+option_all_table
+****************
+The :ref:`option_all_table@split_covariate_name` and
+:ref:`option_all_table@absolute_covariates` rows of this table
+(if they exist) are the only rows of this table that are used.
+
+split_reference_table
+*********************
+is the :ref:`split_reference_table-name` as a ``list``
+of ``dict`` .
+
 node_table
 **********
 This is a list of dict representing the node table in the
@@ -25,18 +36,6 @@ This is a list of dict representing the node table in the
 fit_covariate_table
 *******************
 This is the covariate table for any fit.
-The reference values in this table do not matter.
-
-all_node_database
-*****************
-is the :ref:all_node_db`.
-Only the :ref:`option_all_table-name` and :ref:`split_reference_table-name` are used.
-
-option_all Table
-================
-The :ref:`option_all_table@split_covariate_name` and
-:ref:`option_all_table@absolute_covariates` rows of this table
-(if they exist) are the only rows of this table that are used.
 
 shift_node_id
 *************
@@ -75,38 +74,31 @@ import math
 # BEGIN DEF
 # at_cascade.get_cov_reference
 def get_cov_reference(
-   node_table          ,
-   fit_covariate_table ,
-   all_node_database   ,
-   shift_node_id       ,
+   option_all_table      ,
+   split_reference_table ,
+   node_table            ,
+   fit_covariate_table   ,
+   shift_node_id         ,
    split_reference_id = None,
 # )
 ) :
+   assert type(option_all_table) == list
+   assert type(split_reference_table) == list
    assert type(node_table) == list
    assert type(fit_covariate_table) == list
-   assert type(all_node_database) == str
    assert type(shift_node_id) == int
    assert type(split_reference_id) == int or split_reference_id == None
    # END DEF
    #
-   # all_table
-   connection       = dismod_at.create_connection(
-      all_node_database, new = False, readonly = True
-   )
-   all_table        = dict()
-   for tbl_name in [ 'option_all', 'split_reference' ] :
-      all_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
-   connection.close()
-   #
    # root_database
    root_database      = None
-   for row in all_table['option_all'] :
+   for row in option_all_table :
       if row['option_name'] == 'root_database' :
          root_database      = row['option_value']
    assert root_database != None
    #
    # check split_reference_id
-   if len( all_table['split_reference'] ) == 0 :
+   if len( split_reference_table ) == 0 :
       assert split_reference_id == None
    else :
       assert type(split_reference_id) == int
@@ -120,9 +112,9 @@ def get_cov_reference(
    #
    # cov_info
    cov_info = at_cascade.get_cov_info(
-      all_table['option_all'],
+      option_all_table,
       fit_covariate_table,
-      all_table['split_reference']
+      split_reference_table
    )
    #
    # rel_covariate_id_set
@@ -130,7 +122,7 @@ def get_cov_reference(
    #
    # split_covariate_id
    split_covariate_id = None
-   if len( all_table['split_reference'] ) > 0 :
+   if len( split_reference_table ) > 0 :
       split_covariate_id = cov_info['split_covariate_id']
    #
    # check max_difference
@@ -165,8 +157,8 @@ def get_cov_reference(
          is_descendant.add( node_id )
    #
    # split_reference_value
-   if len( all_table['split_reference'] ) > 0 :
-      row  = all_table['split_reference'][split_reference_id]
+   if len( split_reference_table ) > 0 :
+      row  = split_reference_table[split_reference_id]
       split_reference_value = row['split_reference_value']
    #
    # data_subset_list

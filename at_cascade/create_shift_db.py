@@ -644,11 +644,12 @@ def create_shift_db(
       node_id = fit_table['node'][shift_node_id]['parent']
       assert shift_node_id == fit_node_id or node_id == fit_node_id
       cov_reference_list = at_cascade.get_cov_reference(
-         node_table          = fit_table['node'],
-         fit_covariate_table = fit_table['covariate'],
-         all_node_database   = all_node_database,
-         shift_node_id       = shift_node_id,
-         split_reference_id  = shift_split_reference_id
+         option_all_table       = all_table['option_all'],
+         split_reference_table  = all_table['split_reference'],
+         node_table             = fit_table['node'],
+         fit_covariate_table    = fit_table['covariate'],
+         shift_node_id          = shift_node_id,
+         split_reference_id     = shift_split_reference_id
       )
       #
       # shift_table['covariate']
