@@ -152,6 +152,19 @@ The default value for this option is both *age_size* and *time_size* are 100.
    the time average for that data is approximated by its value at time
    ( *age_upper* - *age_lower* ) / 2.
 
+covariate_reference
+-------------------
+This string is either ``data_in.csv`` or ``covariate.csv`` .
+If it is ``data_in.csv`` the reference value for each
+(sex, node, covariate) is the average of the covariate
+corresponding to the data that is fit for that (sex, node) .
+If it is ``covariate.csv`` the reference value for each
+(sex, node, covariate) is the average of the
+values in covariate.csv that are for that sex, node, and covariate.
+The default value for this option is ``data_in.csv`` .
+See :ref:`csv.shock_cov@covariate_reference` in the csv.shock
+for an example use of this option.
+
 freeze_type
 -----------
 This options specifies the type of covariate multiplier freeze that is done.
@@ -752,7 +765,7 @@ meas_std, eta, nu, sample_size.
 
 data_id
 -------
-is an :ref:`csv.module@Notation@Index Column` for data.csv.
+is an :ref:`csv.module@Notation@Index Column` for data_in.csv.
 This is necessary so that the dismod_at data table data_id values correspond
 to the data_in.csv data_id values.
 
@@ -1015,6 +1028,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'bound_random'          : (float, float('inf'))       ,
       'child_prior_std_factor': (float,  2.0)               ,
       'compress_interval'     : (str,   '100.0 100.0')      ,
+      'covariate_reference'   : (str,   'data_in.csv')      ,
       'freeze_type'           : (str,   'mean')             ,
       'hold_out_integrand'    : (str,   None)               ,
       'max_abs_effect'        : (float, 2.0)                ,
@@ -1150,13 +1164,13 @@ class weighting_function :
 # time_grid
 # is a sorted list of the time values in the covariae.csv file.
 #
-# covariate_table
+# csv_covariate_table
 # is the list of dict corresponding to the covariate.csv file
 #
 # global_option_value
 # This routine assues that global_option_value has been set.
 #
-# age_grid, time_grid, covariate_table =
+# age_grid, time_grid, csv_covariate_table =
 def create_root_database(fit_dir) :
    assert type(fit_dir) == str
    #
@@ -1191,9 +1205,9 @@ def create_root_database(fit_dir) :
       at_cascade.csv.check_table(file_name, input_table[name])
    print('begin creating root node database' )
    #
-   # covariate_table
+   # csv_covariate_table
    # This is different from dismod_at_covariate table created below
-   covariate_table = input_table['covariate']
+   csv_covariate_table = input_table['covariate']
    #
    # node_set
    node_set       = set()
@@ -1208,7 +1222,7 @@ def create_root_database(fit_dir) :
    #
    # root_covariate_ref
    root_covariate_ref = at_cascade.csv.covariate_avg(
-      covariate_table, root_node_name, root_node_sex
+      csv_covariate_table, root_node_name, root_node_sex
    )
    #
    # covariate_list
@@ -1287,7 +1301,7 @@ def create_root_database(fit_dir) :
    #
    # spline_cov
    age_grid, time_grid, spline_cov = at_cascade.csv.covariate_spline(
-      covariate_table, node_set
+      csv_covariate_table, node_set
    )
    #
    # data_table
@@ -1411,7 +1425,7 @@ def create_root_database(fit_dir) :
    weight_index   = 0
    check_node_set = set()
    check_sex_set  = set()
-   for row in covariate_table :
+   for row in csv_covariate_table :
       age  = float( row['age'] )
       time = float( row['time'] )
       #
@@ -1653,9 +1667,9 @@ def create_root_database(fit_dir) :
    #
    assert type(age_grid) == list
    assert type(time_grid) == list
-   assert type(covariate_table) == list
-   assert type( covariate_table[0] ) == dict
-   return age_grid, time_grid, covariate_table
+   assert type(csv_covariate_table) == list
+   assert type( csv_covariate_table[0] ) == dict
+   return age_grid, time_grid, csv_covariate_table
 # ----------------------------------------------------------------------------
 # Writes the all node data base.
 #
@@ -1676,7 +1690,7 @@ def create_root_database(fit_dir) :
 # time_grid
 # is a sorted list of the time values in the covariae.csv file.
 #
-# covariate_table
+# csv_covariate_table
 # is the list of dict corresponding to the covariate.csv file.
 #
 # fit_goal_table
@@ -1687,26 +1701,28 @@ def create_root_database(fit_dir) :
 # This routine assues that global_option_value has been set.
 #
 def create_all_node_database(
-   fit_dir, age_grid, time_grid, covariate_table, fit_goal_table
+   fit_dir, age_grid, time_grid, csv_covariate_table, fit_goal_table
 ) :
    assert type(fit_dir) == str
    assert type(age_grid) == list
    assert type(time_grid) == list
    #
-   assert type(covariate_table) == list
-   assert type( covariate_table[0] ) == dict
+   assert type(csv_covariate_table) == list
+   assert type( csv_covariate_table[0] ) == dict
    #
    assert type(fit_goal_table) == list
    if len( fit_goal_table ) > 0 :
       assert type( fit_goal_table[0] ) == dict
    #
+   # root_database
+   root_database     = f'{fit_dir}/root.db'
+   #
    # root_node_table
    root_node_table = dict()
-   database     = f'{fit_dir}/root.db'
    connection   = dismod_at.create_connection(
-      database, new = False, readonly = True
+      root_database, new = False, readonly = True
    )
-   for name in [ 'mulcov', 'age', 'time', 'covariate' ] :
+   for name in [ 'mulcov', 'age', 'time', 'covariate', 'node' ] :
       root_node_table[name] = dismod_at.get_table_dict(
          connection = connection, tbl_name = name)
    connection.close()
@@ -1728,12 +1744,14 @@ def create_all_node_database(
       row_name = root_node_sex         ,
    )
    #
-   # root_node_name
-   root_node_name = at_cascade.get_parent_node(database)
+   # root_node_name, root_node_id
+   root_node_name = at_cascade.get_parent_node(root_database)
    assert root_node_name == global_option_value['root_node_name']
+   root_node_id   = at_cascade.table_name2id(
+      root_node_table['node'], 'node', root_node_name
+   )
    #
    # option_all
-   root_database          = f'{fit_dir}/root.db'
    child_prior_std_factor = global_option_value['child_prior_std_factor']
    shared_memory_prefix   = global_option_value['shared_memory_prefix']
    absolute_covariates    = global_option_value['absolute_covariates']
@@ -1822,7 +1840,7 @@ def create_all_node_database(
    n_time     = len( time_grid )
    none_list  = (n_age * n_time)  * [ None ]
    omega_data = dict()
-   for row in covariate_table :
+   for row in csv_covariate_table :
       node_name          = row['node_name']
       sex                = row['sex']
       age                = float( row['age'] )
@@ -1858,6 +1876,49 @@ def create_all_node_database(
             both   = (female + male) / 2.0
             omega_data[node_name][1][i * n_time + j] = both
    #
+   # cov_reference_table
+   cov_reference_table = None
+   covariate_reference = global_option_value['covariate_reference']
+   if covariate_reference not in [ 'data_in.csv', 'covariate.csv' ] :
+      msg  = f'option_all table: covariate_reference = {covariate_reference} '
+      msg += 'is not data_in.csv or covariate.csv'
+      assert False, msg
+   if covariate_reference == 'covariate.csv' :
+      cov_reference_table = list()
+      n_covariate         = len(  root_node_table['covariate'] )
+      n_split             = len( at_cascade.csv.split_reference_table )
+      node_table          = root_node_table['node']
+      for node_id in range( len(node_table) ) :
+         ancestor      = node_id
+         while ancestor != root_node_id and ancestor != None :
+            ancestor = node_table[ancestor]['parent']
+         if ancestor == root_node_id :
+            for split_reference_id in range(n_split) :
+               row           = split_reference_table[split_reference_id]
+               sex           = row['split_reference_name']
+               sex_reference = row['split_reference_value']
+               node_name     = node_table[node_id]['node_name']
+               cov_average = at_cascade.csv.covariate_avg(
+                  csv_covariate_table, node_name, sex
+               )
+               reference_list = list()
+               for covariate_id in range( n_covariate ) :
+                  row             =  root_node_table['covariate'][covariate_id]
+                  covariate_name  = row['covariate_name']
+                  if covariate_name == 'sex' :
+                     reference_value = sex_reference
+                  elif covariate_name in cov_average :
+                     reference_value = cov_average[covariate_name]
+                  else :
+                     reference_value = 0.0
+                  row = {
+                     'node_id'            : node_id ,
+                     'split_reference_id' : split_reference_id,
+                     'covariate_id'       : covariate_id,
+                     'reference_value'    : reference_value,
+                  }
+                  cov_reference_table.append(row)
+   #
    # create_all_node_db
    at_cascade.create_all_node_db(
       all_node_database         = f'{fit_dir}/all_node.db'  ,
@@ -1868,6 +1929,7 @@ def create_all_node_database(
       mulcov_freeze_table       = mulcov_freeze_table       ,
       omega_grid                = omega_grid                ,
       omega_data                = omega_data                ,
+      cov_reference_table       = cov_reference_table       ,
    )
 # ----------------------------------------------------------------------------
 # BEGIN_FIT

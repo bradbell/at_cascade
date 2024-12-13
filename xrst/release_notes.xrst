@@ -45,34 +45,38 @@ mm-dd
 
 12-13
 =====
-The ``com_cov_reference`` routine was changed to
-:ref:`com_cov_reference-name` and its arguments were changed so that
-it could be called before the all_node database was created.
+#. The :ref:`cov_reference_table-name` was added to the
+   all node data base; see :ref:`one_at_function@cov_reference Table` .
+   The csv.fit :ref:`csv.fit@Input Files@option_fit.csv@covariate_reference`
+   option enables one to choose different ways to set this table.
+   See :ref:`one_at_function@cov_reference Table` for
+   an example that directly sets this table.
+   This completed the Covariate Reference Values wish list which was removed.
 
-old::
+#. The ``com_cov_reference`` routine was changed to
+   :ref:`com_cov_reference-name` and its arguments were changed so that
+   it could be called before the all_node database was created.
 
-   def com_cov_reference(
-      all_node_database  ,
-      fit_database       ,
-      shift_node_id      ,
-      split_reference_id = None
-   )
+   old::
+   
+      def com_cov_reference(
+         all_node_database  ,
+         fit_database       ,
+         shift_node_id      ,
+         split_reference_id = None
+      )
+   
+   new::
+   
+      def com_cov_reference(
+         option_all_table      ,
+         split_reference_table ,
+         node_table            ,
+         covariate_table       ,
+         shift_node_id         ,
+         split_reference_id = None,
+      )
 
-new::
-
-   def com_cov_reference(
-      option_all_table      ,
-      split_reference_table ,
-      node_table            ,
-      covariate_table       ,
-      shift_node_id         ,
-      split_reference_id = None,
-   )
-
-In addition, the :ref:`cov_reference_table-name` was added to the
-all node data base; see :ref:`one_at_function@cov_reference Table`
-for an example directly sets this table instead of using
-``com_cov_reference`` to compute it.
 
 12-12
 =====
@@ -423,7 +427,8 @@ population weighting for data that corresponds to
    was added to the csv.fit routine.
    The new :ref:`csv.root_node_sex-name` example was uses this option,
    and the root_node_name option.
-#. Add the :ref:`wish_list@Covariate Reference Values` wish list item.
+#. Add the Covariate Reference Values wish list item,
+   which was completed on :ref:`2024@mm-dd@12-13` .
 
 05-11
 =====

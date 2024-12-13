@@ -7,6 +7,7 @@
    avgint
    attaches
    meas
+   cov
 }
 
 Wish List for at_cascade
@@ -18,14 +19,6 @@ Document the state of the ``dismod_at.db`` avgint table at the end of
 :ref:`fit_one_job-name` .
 (Note that the avgint table in ``ancestor.db`` and ``this.db``
 are different; see :ref:`wish_list@csv.fit@avgint Table` below.)
-
-Covariate Reference Values
-**************************
-The cascade uses :ref:`com_cov_reference-name` to determines to covariate
-reference values for jobs below the root job.
-It is currently averaging the covariate values for all the data
-that correspond to each job (node, sex) pair.
-This is probably not ideal because a job might have very few data point.
 
 csv.fit
 *******
