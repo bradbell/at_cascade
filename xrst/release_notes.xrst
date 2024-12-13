@@ -71,7 +71,7 @@ mm-dd
          option_all_table      ,
          split_reference_table ,
          node_table            ,
-         fit_covariate_table   ,
+         covariate_table       ,
          shift_node_id         ,
          split_reference_id = None,
       )

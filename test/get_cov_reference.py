@@ -146,7 +146,7 @@ def main() :
             option_all_table      = option_all_table,
             split_reference_table = split_reference_table,
             node_table            = node_table,
-            fit_covariate_table   = covariate_table,
+            covariate_table       = covariate_table,
             shift_node_id         = node_id,
             split_reference_id    = split_reference_id,
          )

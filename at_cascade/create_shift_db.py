@@ -647,7 +647,7 @@ def create_shift_db(
          option_all_table       = all_table['option_all'],
          split_reference_table  = all_table['split_reference'],
          node_table             = fit_table['node'],
-         fit_covariate_table    = fit_table['covariate'],
+         covariate_table        = fit_table['covariate'],
          shift_node_id          = shift_node_id,
          split_reference_id     = shift_split_reference_id
       )

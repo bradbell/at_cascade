@@ -33,9 +33,10 @@ node_table
 This is a list of dict representing the node table in the
 :ref:`glossary@root_database` .
 
-fit_covariate_table
-*******************
-This is the covariate table for any fit.
+covariate_table
+***************
+This is the covariate table for any fit or the one in the
+root node database.
 
 shift_node_id
 *************
@@ -77,7 +78,7 @@ def get_cov_reference(
    option_all_table      ,
    split_reference_table ,
    node_table            ,
-   fit_covariate_table   ,
+   covariate_table       ,
    shift_node_id         ,
    split_reference_id = None,
 # )
@@ -85,7 +86,7 @@ def get_cov_reference(
    assert type(option_all_table) == list
    assert type(split_reference_table) == list
    assert type(node_table) == list
-   assert type(fit_covariate_table) == list
+   assert type(covariate_table) == list
    assert type(shift_node_id) == int
    assert type(split_reference_id) == int or split_reference_id == None
    # END DEF
@@ -113,7 +114,7 @@ def get_cov_reference(
    # cov_info
    cov_info = at_cascade.get_cov_info(
       option_all_table,
-      fit_covariate_table,
+      covariate_table,
       split_reference_table
    )
    #
@@ -127,7 +128,7 @@ def get_cov_reference(
    #
    # check max_difference
    for covariate_id in rel_covariate_id_set :
-      covariate_row  = fit_covariate_table[covariate_id]
+      covariate_row  = covariate_table[covariate_id]
       max_difference = covariate_row['max_difference']
       if not max_difference in [ None, math.inf ] :
          msg  = f'get_cov_reference: covariate_id = {covariate_id}\n'
@@ -136,7 +137,7 @@ def get_cov_reference(
          assert False, msg
    #
    # n_covariate
-   n_covariate = len( fit_covariate_table )
+   n_covariate = len( covariate_table )
    #
    # covariate_label
    covariate_label = list()
@@ -172,7 +173,7 @@ def get_cov_reference(
          # in_bnd
          in_bnd = True
          for covariate_id in range( n_covariate ) :
-            covariate_row   = fit_covariate_table[covariate_id]
+            covariate_row   = covariate_table[covariate_id]
             reference       = covariate_row['reference']
             if covariate_id == split_covariate_id :
                reference = split_reference_value
@@ -197,14 +198,14 @@ def get_cov_reference(
    for covariate_id in range( n_covariate) :
       #
       # reference
-      reference = fit_covariate_table[covariate_id]['reference']
+      reference = covariate_table[covariate_id]['reference']
       if covariate_id == split_covariate_id :
          reference = split_reference_value
       #
       if covariate_id in rel_covariate_id_set :
          #
          # covariate_list
-         covariate_row  = fit_covariate_table[covariate_id]
+         covariate_row  = covariate_table[covariate_id]
          covariate_list = list()
          for data_id in data_subset_list :
             data_row  = data_table[data_id]

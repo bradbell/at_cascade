@@ -327,7 +327,7 @@ def avgint_parent_grid(
          option_all_table      = option_all_table,
          split_reference_table = split_reference_table,
          node_table            = fit_tables['node'],
-         fit_covariate_table   = fit_tables['covariate'],
+         covariate_table       = fit_tables['covariate'],
          shift_node_id         = parent_node_id,
          split_reference_id    = fit_split_reference_id,
       )
@@ -347,7 +347,7 @@ def avgint_parent_grid(
             option_all_table      = option_all_table,
             split_reference_table = split_reference_table,
             node_table            = fit_tables['node'],
-            fit_covariate_table   = fit_tables['covariate'],
+            covariate_table       = fit_tables['covariate'],
             shift_node_id         = shift_node_id,
             split_reference_id    = shift_split_reference_id,
          )
