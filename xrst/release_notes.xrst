@@ -45,13 +45,13 @@ mm-dd
 
 12-13
 =====
-The ``get_cov_reference`` routine was changed to
+The ``com_cov_reference`` routine was changed to
 :ref:`com_cov_reference-name` and its arguments were changed so that
 it could be called before the all_node database was created.
 
 old::
 
-   def get_cov_reference(
+   def com_cov_reference(
       all_node_database  ,
       fit_database       ,
       shift_node_id      ,
@@ -68,6 +68,11 @@ new::
       shift_node_id         ,
       split_reference_id = None,
    )
+
+In addition, the :ref:`cov_reference_table-name` was added to the
+all node data base; see :ref:`one_at_function@cov_reference Table`
+for an example directly sets this table instead of using
+``com_cov_reference`` to compute it.
 
 12-12
 =====

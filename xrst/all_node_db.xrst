@@ -21,6 +21,47 @@ initial value is zero, and it must increment by one for each row.
 
 {xrst_end all_node_db}
 ------------------------------------------------------------------------------
+{xrst_begin cov_reference_table}
+
+Covariate Reference Table
+#########################
+This table specifies the covariate reference value for every possible
+:ref:`glossary@job` ; i.e., node_id , split_reference_id pair.
+
+cov_reference_id
+****************
+is the :ref:`all_node_db@Primary Key` for this table.
+
+node_id
+*******
+This column has type ``integer`` and specifies a node by its index
+in the root node database node table.
+The root node and all its descendants will appear in this column.
+
+split_reference_id
+******************
+This column has type ``integer`` and it specifies the
+index of a value in
+:ref:`split_reference_table-name`.
+If split_reference_table is empty (is not empty),
+the values in this column must be (must not be) null.
+All the possible *split_reference_id* values will appear for each
+*node_id* value.
+
+covariate_id
+************
+This column has type ``integer`` and it specifies the
+covariate by its index in the :ref:`glossary@root_database` covariate table.
+All the possible *covariate_id* values will appear for each
+( *node_id* , *split_reference* ) pair.
+
+reference_value
+***************
+This column has type ``real`` and is the reference value for this covariate
+for the job corresponding to this (node_id, split_reference_id) .
+
+{xrst_end cov_reference_table}
+------------------------------------------------------------------------------
 {xrst_begin omega_grid}
 
 Omega Grid

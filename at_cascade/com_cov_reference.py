@@ -80,7 +80,8 @@ def com_cov_reference(
    node_table            ,
    covariate_table       ,
    shift_node_id         ,
-   split_reference_id = None,
+   split_reference_id    = None,
+   data_table            = None,
 # )
 ) :
    assert type(option_all_table) == list
@@ -89,6 +90,7 @@ def com_cov_reference(
    assert type(covariate_table) == list
    assert type(shift_node_id) == int
    assert type(split_reference_id) == int or split_reference_id == None
+   assert type(data_table) == list or data_table == None
    # END DEF
    #
    # root_database
@@ -105,11 +107,12 @@ def com_cov_reference(
       assert type(split_reference_id) == int
    #
    # data_table
-   connection = dismod_at.create_connection(
-      root_database, new = False, readonly = True
-   );
-   data_table = dismod_at.get_table_dict(connection, 'data')
-   connection.close()
+   if data_table == None :
+      connection = dismod_at.create_connection(
+         root_database, new = False, readonly = True
+      );
+      data_table = dismod_at.get_table_dict(connection, 'data')
+      connection.close()
    #
    # cov_info
    cov_info = at_cascade.get_cov_info(

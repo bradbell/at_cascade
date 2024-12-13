@@ -142,6 +142,30 @@ import statistics
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
+# cov_reference_list =
+def get_cov_reference_list(
+   n_covariate, cov_reference_table, node_id, split_reference_id
+) :
+   #
+   #
+   cov_reference_list = n_covariate * [None]
+   for row in cov_reference_table :
+      if row['node_id'] == node_id :
+         if row['split_reference_id'] == split_reference_id :
+            covariate_id = row['covariate_id']
+            if covariate_id < len(cov_reference_list) :
+               cov_reference_list[covariate_id] = row['reference_value']
+   if None in cov_reference_list :
+      covariate_id = cov_reference_list.index(None)
+      msg  = 'all_node database: cov_reference table: '
+      msg += 'No row has the following values:\n'
+      msg += f'node_id = {node_id}, '
+      msg += f'split_reference_id = {split_reference_id}, '
+      msg += f'covariate_id = {covariate_id}'
+      assert False, msg
+   #
+   return cov_reference_list
+# ----------------------------------------------------------------------------
 def add_index_to_name(table, name_col) :
    row   = table[-1]
    name  = row[name_col]
@@ -425,6 +449,7 @@ def create_shift_db(
       'option_all',
       'split_reference',
       'mulcov_freeze',
+      'cov_reference',
    ] :
       all_table[name] =  dismod_at.get_table_dict(connection, name)
    connection.close()
@@ -643,13 +668,12 @@ def create_shift_db(
       # cov_reference_list
       node_id = fit_table['node'][shift_node_id]['parent']
       assert shift_node_id == fit_node_id or node_id == fit_node_id
-      cov_reference_list = at_cascade.com_cov_reference(
-         option_all_table       = all_table['option_all'],
-         split_reference_table  = all_table['split_reference'],
-         node_table             = fit_table['node'],
-         covariate_table        = fit_table['covariate'],
-         shift_node_id          = shift_node_id,
-         split_reference_id     = shift_split_reference_id
+      n_covariate = len( fit_table['covariate'] )
+      cov_reference_list = get_cov_reference_list(
+         n_covariate,
+         all_table['cov_reference'],
+         shift_node_id,
+         shift_split_reference_id
       )
       #
       # shift_table['covariate']

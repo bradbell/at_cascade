@@ -106,6 +106,30 @@ import copy
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
+# cov_reference_list =
+def get_cov_reference_list(
+   n_covariate, cov_reference_table, node_id, split_reference_id
+) :
+   #
+   #
+   cov_reference_list = n_covariate * [None]
+   for row in cov_reference_table :
+      if row['node_id'] == node_id :
+         if row['split_reference_id'] == split_reference_id :
+            covariate_id = row['covariate_id']
+            if covariate_id < len(cov_reference_list) :
+               cov_reference_list[covariate_id] = row['reference_value']
+   if None in cov_reference_list :
+      covariate_id = cov_reference_list.index(None)
+      msg  = 'all_node database: cov_reference table: '
+      msg += 'No row has the following values:\n'
+      msg += f'node_id = {node_id}, '
+      msg += f'split_reference_id = {split_reference_id}, '
+      msg += f'covariate_id = {covariate_id}'
+      assert False, msg
+   #
+   return cov_reference_list
+# ----------------------------------------------------------------------------
 # This routine is very similar to get_child_job_table in create_job_table.
 # Perhaps there is a good way to combine these two routines.
 #
@@ -240,11 +264,11 @@ def avgint_parent_grid(
    connection = dismod_at.create_connection(
       all_node_database, new = False, readonly = True
    )
-   option_all_table       = dismod_at.get_table_dict(connection, 'option_all')
-   node_split_table       = dismod_at.get_table_dict(connection, 'node_split')
-   split_reference_table  = dismod_at.get_table_dict(
-      connection, 'split_reference'
-   )
+   get_table             = dismod_at.get_table_dict
+   option_all_table      = get_table(connection, 'option_all')
+   node_split_table      = get_table(connection, 'node_split')
+   split_reference_table = get_table(connection, 'split_reference')
+   cov_reference_table   = get_table(connection, 'cov_reference')
    connection.close()
    #
    # root_database
@@ -319,17 +343,16 @@ def avgint_parent_grid(
    )
    #
    # cov_reference_dict
+   n_covariate  = len( fit_tables['covariate'] )
    cov_reference_dict = dict()
    if job_table == None :
       #
       # cov_reference_list
-      cov_reference_list = at_cascade.com_cov_reference(
-         option_all_table      = option_all_table,
-         split_reference_table = split_reference_table,
-         node_table            = fit_tables['node'],
-         covariate_table       = fit_tables['covariate'],
-         shift_node_id         = parent_node_id,
-         split_reference_id    = fit_split_reference_id,
+      cov_reference_list = get_cov_reference_list(
+         n_covariate,
+         cov_reference_table,
+         parent_node_id,
+         fit_split_reference_id
       )
       # cov_reference[ (parent_node_id, fit_split_reference_id) ]
       key                     = (parent_node_id, fit_split_reference_id)
@@ -343,13 +366,11 @@ def avgint_parent_grid(
          # cov_reference_list
          node_id = fit_tables['node'][shift_node_id]['parent']
          assert shift_node_id == parent_node_id or node_id == parent_node_id
-         cov_reference_list = at_cascade.com_cov_reference(
-            option_all_table      = option_all_table,
-            split_reference_table = split_reference_table,
-            node_table            = fit_tables['node'],
-            covariate_table       = fit_tables['covariate'],
-            shift_node_id         = shift_node_id,
-            split_reference_id    = shift_split_reference_id,
+         cov_reference_list = get_cov_reference_list(
+            n_covariate,
+            cov_reference_table,
+            shift_node_id,
+            shift_split_reference_id
          )
          #
          # cov_reference[ (shift_node_id, shift_split_reference_id) ]
