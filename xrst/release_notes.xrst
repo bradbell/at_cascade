@@ -53,13 +53,13 @@ mm-dd
    an example that directly sets this table.
    This completed the Covariate Reference Values wish list which was removed.
 
-#. The ``com_cov_reference`` routine was changed to
+#. The ``get_cov_reference`` routine was changed to
    :ref:`com_cov_reference-name` and its arguments were changed so that
    it could be called before the all_node database was created.
 
    old::
    
-      def com_cov_reference(
+      def get_cov_reference(
          all_node_database  ,
          fit_database       ,
          shift_node_id      ,
