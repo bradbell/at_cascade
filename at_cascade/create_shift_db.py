@@ -643,7 +643,7 @@ def create_shift_db(
       # cov_reference_list
       node_id = fit_table['node'][shift_node_id]['parent']
       assert shift_node_id == fit_node_id or node_id == fit_node_id
-      cov_reference_list = at_cascade.get_cov_reference(
+      cov_reference_list = at_cascade.com_cov_reference(
          option_all_table       = all_table['option_all'],
          split_reference_table  = all_table['split_reference'],
          node_table             = fit_table['node'],

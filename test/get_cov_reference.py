@@ -142,7 +142,7 @@ def main() :
       for split_reference_id in range(3) :
          #
          # cov_reference_list
-         cov_reference_list = at_cascade.get_cov_reference(
+         cov_reference_list = at_cascade.com_cov_reference(
             option_all_table      = option_all_table,
             split_reference_table = split_reference_table,
             node_table            = node_table,

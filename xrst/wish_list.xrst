@@ -21,7 +21,7 @@ are different; see :ref:`wish_list@csv.fit@avgint Table` below.)
 
 Covariate Reference Values
 **************************
-The cascade uses :ref:`get_cov_reference-name` to determines to covariate
+The cascade uses :ref:`com_cov_reference-name` to determines to covariate
 reference values for jobs below the root job.
 It is currently averaging the covariate values for all the data
 that correspond to each job (node, sex) pair.

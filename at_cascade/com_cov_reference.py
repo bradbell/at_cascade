@@ -3,10 +3,10 @@
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
-{xrst_begin get_cov_reference}}
+{xrst_begin com_cov_reference}}
 
-Get Covariate Reference Values
-##############################
+Compute Covariate Reference Values
+##################################
 Compute covariate references by averaging values in the data table
 for a specific node and split reference value.
 
@@ -66,15 +66,15 @@ cov_reference_list
 8. If there are no values to average for a relative covariate, the reference
    in the root_database covariate table is used for that covariate.
 
-{xrst_end get_cov_reference}}
+{xrst_end com_cov_reference}}
 '''
 import at_cascade
 import dismod_at
 import math
 #
 # BEGIN DEF
-# at_cascade.get_cov_reference
-def get_cov_reference(
+# at_cascade.com_cov_reference
+def com_cov_reference(
    option_all_table      ,
    split_reference_table ,
    node_table            ,
@@ -131,7 +131,7 @@ def get_cov_reference(
       covariate_row  = covariate_table[covariate_id]
       max_difference = covariate_row['max_difference']
       if not max_difference in [ None, math.inf ] :
-         msg  = f'get_cov_reference: covariate_id = {covariate_id}\n'
+         msg  = f'com_cov_reference: covariate_id = {covariate_id}\n'
          msg += 'is a relative covariate and '
          msg += f'max_difference = {max_difference} is not None or infinity'
          assert False, msg

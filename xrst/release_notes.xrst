@@ -43,6 +43,32 @@ Release Notes for 2024
 mm-dd
 *****
 
+12-13
+=====
+The ``get_cov_reference`` routine was changed to
+:ref:`com_cov_reference-name` and its arguments were changed so that
+it could be called before the all_node database was created.
+
+old::
+
+   def get_cov_reference(
+      all_node_database  ,
+      fit_database       ,
+      shift_node_id      ,
+      split_reference_id = None
+   )
+
+new::
+
+   def com_cov_reference(
+      option_all_table      ,
+      split_reference_table ,
+      node_table            ,
+      covariate_table       ,
+      shift_node_id         ,
+      split_reference_id = None,
+   )
+
 12-12
 =====
 #. The create_all_node_db :ref:`create_all_node_db@mulcov_freeze_table`
@@ -53,28 +79,6 @@ mm-dd
    *omega*\ [``age`` ] and *omega*\ [``time`` ]
    have been replaced by
    *omega_grid*\ [``age`` ] and *omega_grid*\ [``time`` ] .
-#. The :ref:`get_cov_reference-name` arguments were changed so that
-   it could be called before the all_node database was created.
-
-   old::
-
-      def get_cov_reference(
-         all_node_database  ,
-         fit_database       ,
-         shift_node_id      ,
-         split_reference_id = None
-      )
-
-   new::
-
-      def get_cov_reference(
-         option_all_table      ,
-         split_reference_table ,
-         node_table            ,
-         covariate_table       ,
-         shift_node_id         ,
-         split_reference_id = None,
-      )
 
 
 11-20
@@ -1625,7 +1629,7 @@ Change :ref:`no_ode_fit-name` to always use Gaussian data densities.
 
 02-05
 =====
-Use :ref:`get_cov_reference-name` to compute references for relative covariates
+Use :ref:`com_cov_reference-name` to compute references for relative covariates
 and remove the all_cov_reference table from the :ref:`all_node_db-name`.
 
 02-04

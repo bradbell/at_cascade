@@ -323,7 +323,7 @@ def avgint_parent_grid(
    if job_table == None :
       #
       # cov_reference_list
-      cov_reference_list = at_cascade.get_cov_reference(
+      cov_reference_list = at_cascade.com_cov_reference(
          option_all_table      = option_all_table,
          split_reference_table = split_reference_table,
          node_table            = fit_tables['node'],
@@ -343,7 +343,7 @@ def avgint_parent_grid(
          # cov_reference_list
          node_id = fit_tables['node'][shift_node_id]['parent']
          assert shift_node_id == parent_node_id or node_id == parent_node_id
-         cov_reference_list = at_cascade.get_cov_reference(
+         cov_reference_list = at_cascade.com_cov_reference(
             option_all_table      = option_all_table,
             split_reference_table = split_reference_table,
             node_table            = fit_tables['node'],
