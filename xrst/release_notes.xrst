@@ -45,10 +45,12 @@ mm-dd
 
 12-14
 =====
+The :ref:`csv.shock_cov-name` example was extended to include
+the shock as both a relative and absolute covariate.
 When csv.fit :ref:`csv.fit@Input Files@option_fit.csv@covariate_reference`
 was covariate.csv and
 :ref:`csv.fit@Input Files@option_fit.csv@absolute_covariates` was non empty,
-the absolute covariates might have non-zero reference.
+absolute covariates might have non-zero reference.
 This has been fixed.
 In addition, the option_all documentation for
 :ref:`option_all_table@absolute_covariates`
