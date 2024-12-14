@@ -31,6 +31,7 @@ import dismod_at
    sincidence
    std
    tim
+   rel
 }
 
 Simulate and Fit Incidence Using Prevalence Data and a Shock Covariate
@@ -55,7 +56,7 @@ random_seed = str( int( time.time() ) )
 covariate_reference
 *******************
 This can be either data_in.csv or covariate.csv .
-This tells fit to set the reference for each covariate
+This tells fit to set the reference for each relative covariate
 to the average of the covariate
 corresponding to data_in.csv or covariate.csv .
 Note that if we average the values for the data_in.csv
@@ -87,9 +88,9 @@ age_grid   = [0.0, 1.0, 25.0, 50.0, 75.0, 100.0]
 time_grid  = [1980.0, 2000.0, 2020.0]
 '''{xrst_code}
 
-shock_covariate
-===============
-The shock covariate is zero at each age time grid point except for
+shock
+=====
+The shock is zero at each age time grid point except for
 age equal 50. and time equal 2000.0 where it is one.
 Bilinear interpolation is used to evaluate the shock between grid points.
 Thus the closer the other grid points are to (50,2000),
@@ -110,10 +111,11 @@ option_sim.csv
    (This seems to require fitting after the female male split.)
 #. Only iota has random effects. Note that effects are in log space.
 #. Use the random seed chosen above.
+#. abs_shock (rel_shock) is an absolute (relative) covariate.
 {xrst_code py}'''
 sim_file['option_sim.csv'] = \
 '''name,value
-absolute_covariates,shock
+absolute_covariates,abs_shock
 float_precision,4
 random_depend_sex,true
 std_random_effects_iota,.2
@@ -137,29 +139,32 @@ n2,n0
 covariate.csv
 =============
 #. This sets omega to be constant and equal to *omega_truth* .
-#. It also sets the values of the shock covariate on the age-tim grid.
+#. It also sets the values of the
+   absolute and relative shock covariates on the age-tim grid.
 {xrst_code py}'''
 omega_truth      = 0.01
-sim_file['covariate.csv'] = 'node_name,sex,age,time,omega,shock\n'
+sim_file['covariate.csv'] = \
+   'node_name,sex,age,time,omega,abs_shock,rel_shock\n'
 for node_name in [ 'n0', 'n1', 'n2' ] :
    for sex in [ 'female', 'male' ] :
       for age in age_grid :
          for time in time_grid :
             shock = shock_covariate(age, time)
-            row   = f'{node_name},{sex},{age},{time},{omega_truth},{shock}\n'
+            row   = \
+            f'{node_name},{sex},{age},{time},{omega_truth},{shock},{shock}\n'
             sim_file['covariate.csv'] += row
 '''{xrst_code}
 
 multiplier_sim.csv
 ==================
 #. This defines one covariate multiplier that multiplies the
-   shock covariate and affects iota.
+   abs_shock covariate and affects iota.
 #. The value of multiplier used during the simulation is *multiplier_truth* .
 {xrst_code py}'''
 multiplier_truth = 1.0
 sim_file['multiplier_sim.csv'] = \
 'multiplier_id,rate_name,covariate_or_sex,multiplier_truth\n' + \
-f'0,iota,shock,{multiplier_truth}\n'
+f'0,iota,abs_shock,{multiplier_truth}\n'
 '''{xrst_code}
 
 simulate.csv
@@ -234,8 +239,9 @@ This is a copy of the
 
 option_fit.csv
 ==============
-#. The shock is a relative covariate; if *covariate_reference* is
-   ``data_in.csv`` its reference value is zero.
+#. The rel_shock is a relative covariate; if *covariate_reference* is
+   ``data_in.csv`` its reference value is zero
+   (because the shock is zero at all the data (age,time) points.
    Otherwise, its reference value is non-zero.
 #. We are holding out the Sincidence data except during the no_ode fit,
    where it is used to initialize iota for the optimization.
@@ -255,6 +261,7 @@ option_fit.csv
 {xrst_code py}'''
 fit_file['option_fit.csv']  =  \
 '''name,value
+absolute_covariates,abs_shock
 hold_out_integrand,Sincidence
 refit_split,true
 ode_step_size,5.0
@@ -363,10 +370,12 @@ In csv.fit,  covariate multipliers are constant in age and time.
 As in the data simulation, there is one covariate multiplier.
 It multiplies the shock covariate and affects the iota rate.
 It prior is the uniform\_-1_1 density defined above.
+You can use either the absolute or relative shock covariate here; i.e.
+abs_shock or rel_shock.
 {xrst_code py}'''
 fit_file['mulcov.csv'] = \
 'covariate,type,effected,value_prior,const_value\n' + \
-'shock,rate_value,iota,uniform_-1_1,,'
+'abs_shock,rate_value,iota,uniform_-1_1,,'
 '''{xrst_code}
 
 predict_integrand.csv
@@ -577,7 +586,9 @@ def fit(sim_dir, fit_dir) :
       reference_value = row['reference_value']
       covariate_id    = row['covariate_id']
       covariate_name  = covariate_table[covariate_id]['covariate_name']
-      if covariate_name == 'shock' :
+      if covariate_name == 'abs_shock' :
+         assert reference_value == 0.0
+      elif covariate_name == 'rel_shock' :
          if covariate_reference == 'data_in.csv' :
             assert  reference_value == 0.0
          else :

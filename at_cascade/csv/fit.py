@@ -1907,10 +1907,14 @@ def create_all_node_database(
                   covariate_name  = row['covariate_name']
                   if covariate_name == 'sex' :
                      reference_value = sex_reference
+                  elif covariate_name in absolute_covariates :
+                     reference_value = 0.0
                   elif covariate_name in cov_average :
                      reference_value = cov_average[covariate_name]
                   else :
-                     reference_value = 0.0
+                     msg = f'{covariate_name} is not "one" or in covariate.csv'
+                     msg += '\nThis looks like an bug in csv.fit'
+                     assert False, msg
                   row = {
                      'node_id'            : node_id ,
                      'split_reference_id' : split_reference_id,

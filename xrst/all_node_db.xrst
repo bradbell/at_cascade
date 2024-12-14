@@ -189,7 +189,6 @@ split_reference value).
 {xrst_begin option_all_table}
 {xrst_spell
    bnd
-   cov
    cpus
    mul
    std
@@ -219,8 +218,13 @@ It specifies a value that is attached to each option name.
 absolute_covariates
 *******************
 This is a space separated list of the names for the
-covariates that do not change their reference value.
+covariates that always have reference value zero.
 If this option does not appear, there are no absolute covariates.
+This option is only used when
+:ref:`create_all_node_db@cov_reference_table` is None in a
+call to create_all_node_db.
+In any event, it is overridden by the final values in
+:ref:`cov_reference_table-name` .
 
 balance_fit
 ***********
