@@ -82,11 +82,11 @@ Example
 {xrst_end bilinear}
 """
 class spline_wrapper :
-   def __init__(self, spline, box, n_x, n_y) :
-      self.spline = spline
-      self.box    = box
-      self.n_x    = n_x
-      self.n_y    = n_y
+   def __init__(self, spline, box, const_x, const_y) :
+      self.spline  = spline
+      self.box     = box
+      self.const_x = const_x
+      self.const_y = const_y
    def __call__(self, x, y) :
       #
       # x, y
@@ -107,11 +107,11 @@ class spline_wrapper :
       y = min(y, self.box['y_max'])
       #
       # result
-      if self.n_x == 1 and self.n_y == 1 :
+      if self.const_x and self.const_y :
          result = self.spline
-      elif self.n_x == 1 :
+      elif self.const_x :
          result = self.spline(y)
-      elif self.n_y == 1 :
+      elif self.const_y :
          result = self.spline(x)
       else :
          result = self.spline(x, y)
@@ -199,14 +199,26 @@ def bilinear(
          value                    = float( row[z_name] )
          z_grid[x_index, y_index] =  value
       #
+      # const_x
+      const_x = True
+      for y_index in range(n_y) :
+         const_col = numpy.all( z_grid[0, y_index] == z_grid[:, y_index] )
+         const_x   = const_x and const_col
+      #
+      # const_y
+      const_y = True
+      for x_index in range(n_x) :
+         const_row = numpy.all( z_grid[x_index, 0] == z_grid[x_index, :] )
+         const_y   = const_y and const_row
+      #
       # spline
-      if n_x == 1 and n_y == 1 :
-         spline = z_grid
-      elif n_x == 1 :
+      if const_x and const_y :
+         spline = numpy.array( z_grid[0, 0] )
+      elif const_x :
          spline = scipy.interpolate.UnivariateSpline(
             y_grid, z_grid[0,:], k=1, s=0
          )
-      elif n_y == 1 :
+      elif const_y :
          spline = scipy.interpolate.UnivariateSpline(
             x_grid, z_grid[:,0], k=1, s=0
          )
@@ -220,7 +232,7 @@ def bilinear(
          'y_min' : y_grid[0],
          'y_max' : y_grid[-1],
       }
-      spline_dict[z_name] = spline_wrapper(spline , box, n_x, n_y)
+      spline_dict[z_name] = spline_wrapper(spline , box, const_x, const_y)
    #
    # BEGIN_RETURN
    # ...

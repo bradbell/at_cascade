@@ -45,7 +45,7 @@ mm-dd
 
 12-20
 =====
-#. The bilinear spline documentation was extended to include the
+#. The bilinear spline documentation was improved to include the
    fact that :ref:`bilinear@spline_dict` is constant w.r.t x (y)
    for values of x (y) outside the limits of the grid.
 
@@ -56,11 +56,11 @@ mm-dd
    but its documentation is not clear on this.
    The ref:`bilinear-name` routine was modified to ensure this condition.
 
-#. If the grid only has one x point (one y point),
-   a linear interpolation in just y (just x) is done,
-   as apposed to bilinear interpolation on an extended grid.
-   In the special case where the grid has only one point,
-   no interpolation is done and the value at that one point is returned.
+#. If the function values are constant with respect to x (y)
+   a linear interpolation in just y (just x) is used
+   (as apposed to bilinear interpolation).
+   In the special case where the function is constant in both x and y
+   no interpolation is done and the value at one point is returned.
 
 12-14
 =====

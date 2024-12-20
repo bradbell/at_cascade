@@ -44,48 +44,54 @@ def test_grid(n_age, n_time) :
    else :
       assert n_time == 2
    #
-   # limit_age_time
-   def limit_age_time(age, time) :
-      #
-      # age
+   # limit_age
+   def limit_age(age) :
       age = min( max(age_list), age )
       age = max( min(age_list), age )
-      #
-      # time
+      return age
+   #
+   # limit_time
+   def limit_time(time) :
       time = min( max(time_list), time )
       time = max( min(time_list), time )
-      #
-      return (age, time)
+      return time
    #
    # iota_fun
-   def iota_fun(age, time) :
-      age, time  = limit_age_time(age, time)
+   def iota_fun(age) :
+      age        = limit_age(age)
       age_ratio  = (age - 50.0) / 50.0
-      time_ratio = (time - 2000.0) / 20.0
-      iota       = 0.02 * age_ratio + 0.03 * time_ratio
-      iota      += 0.04 * age_ratio * time_ratio + 0.05
+      iota       = 0.02 * age_ratio  + 0.05
       return iota
    #
    # rho_fun
-   def rho_fun(age, time) :
-      age, time  = limit_age_time(age, time)
+   def rho_fun(time) :
+      time       = limit_time(time)
+      time_ratio = (time - 2000.0) / 20.0
+      rho        = 0.02 * time_ratio + 0.04
+      return rho
+   #
+   # chi_fun
+   def chi_fun(age, time) :
+      age        = limit_age(age)
+      time       = limit_time(time)
       age_ratio  = (age - 50.0) / 50.0
       time_ratio = (time - 2000.0) / 20.0
-      rho        = 0.01 * age_ratio + 0.02 * time_ratio
-      rho       += 0.03 * age_ratio * time_ratio + 0.04
-      return rho
+      chi        = 0.01 * age_ratio + 0.02 * time_ratio + 0.03
+      return chi
    #
    # table
    table = list()
    for age in age_list :
       for time in time_list :
-         iota = iota_fun(age, time)
-         rho  = rho_fun(age, time)
+         iota = iota_fun(age)
+         rho  = rho_fun(time)
+         chi  = chi_fun(age, time)
          row  = {
             'age'  : age ,
             'time' : time ,
             'iota' : iota ,
             'rho'  : rho ,
+            'chi'  : chi ,
          }
          table.append(row)
    #
@@ -94,7 +100,7 @@ def test_grid(n_age, n_time) :
       table     = table ,
       x_name    = 'age' ,
       y_name    = 'time' ,
-      z_list    = [ 'iota', 'rho' ]
+      z_list    = [ 'iota', 'rho', 'chi' ]
    )
    #
    # age_grid, time_grid
@@ -108,12 +114,16 @@ def test_grid(n_age, n_time) :
    for age in age_test :
       for time in time_test :
          iota  = spline_dict['iota'](age, time)
-         check = iota_fun(age, time)
+         check = iota_fun(age)
          assert math.isclose(iota, check)
          #
          rho   = spline_dict['rho'](age, time)
-         check = rho_fun(age, time)
+         check = rho_fun(time)
          assert math.isclose(rho, check)
+         #
+         chi   = spline_dict['chi'](age, time)
+         check = chi_fun(age, time)
+         assert math.isclose(chi, check)
 #
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :
