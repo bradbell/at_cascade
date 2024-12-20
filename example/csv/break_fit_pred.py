@@ -262,14 +262,14 @@ def computation(fit_dir) :
       # If max_number_cpu != 1, run them in parallel.
       # p_fit
       p_fit = dict()
-      fit_node_database = f'{fit_dir}/n0/dismod.db'
+      fit_database      = f'{fit_dir}/n0/dismod.db'
       fit_type          = [ 'both', 'fixed']
       for node_name in [ 'n1' , 'n2' ] :
          fit_goal_set  = { node_name }
          shared_unique = '_' + node_name
          args          = (
             all_node_database,
-            fit_node_database,
+            fit_database,
             fit_goal_set,
             fit_type,
             shared_unique,
@@ -300,7 +300,7 @@ def computation(fit_dir) :
       # n1.female, n1.male, n2.female, n2.male.
       # If max_number_cpu != 1, run them in parallel.
       sim_dir       = None
-      max_job_depth = 1
+      max_job_depth = 0
       for node_name in [ 'n1', 'n2' ] :
          for sex in [ 'female', 'male' ] :
             start_job_name = f'{node_name}.{sex}'

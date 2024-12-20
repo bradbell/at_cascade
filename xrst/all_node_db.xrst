@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 {xrst_begin_parent all_node_db}
 {xrst_spell
@@ -20,6 +20,47 @@ This must be the first column, have type ``integer`` ,
 initial value is zero, and it must increment by one for each row.
 
 {xrst_end all_node_db}
+------------------------------------------------------------------------------
+{xrst_begin cov_reference_table}
+
+Covariate Reference Table
+#########################
+This table specifies the covariate reference value for every possible
+:ref:`glossary@job` ; i.e., node_id , split_reference_id pair.
+
+cov_reference_id
+****************
+is the :ref:`all_node_db@Primary Key` for this table.
+
+node_id
+*******
+This column has type ``integer`` and specifies a node by its index
+in the root node database node table.
+The root node and all its descendants will appear in this column.
+
+split_reference_id
+******************
+This column has type ``integer`` and it specifies the
+index of a value in
+:ref:`split_reference_table-name`.
+If split_reference_table is empty (is not empty),
+the values in this column must be (must not be) null.
+All the possible *split_reference_id* values will appear for each
+*node_id* value.
+
+covariate_id
+************
+This column has type ``integer`` and it specifies the
+covariate by its index in the :ref:`glossary@root_database` covariate table.
+All the possible *covariate_id* values will appear for each
+( *node_id* , *split_reference* ) pair.
+
+reference_value
+***************
+This column has type ``real`` and is the reference value for this covariate
+for the job corresponding to this (node_id, split_reference_id) .
+
+{xrst_end cov_reference_table}
 ------------------------------------------------------------------------------
 {xrst_begin omega_grid}
 
@@ -44,7 +85,7 @@ is the :ref:`all_node_db@Primary Key` for this table.
 age_id
 ======
 This column has type ``integer`` and specifies the age grid points
-by their index in the :ref:`glossary@root_node_database` age table.
+by their index in the :ref:`glossary@root_database` age table.
 
 omega_time_grid Table
 *********************
@@ -62,7 +103,7 @@ is the :ref:`all_node_db@Primary Key` for this table.
 time_id
 =======
 This column has type ``integer`` and specifies the time grid points
-by their index in the root_node_database time table.
+by their index in the root_database time table.
 
 {xrst_end omega_grid}
 ------------------------------------------------------------------------------
@@ -148,7 +189,6 @@ split_reference value).
 {xrst_begin option_all_table}
 {xrst_spell
    bnd
-   cov
    cpus
    mul
    std
@@ -178,8 +218,13 @@ It specifies a value that is attached to each option name.
 absolute_covariates
 *******************
 This is a space separated list of the names for the
-covariates that do not change their reference value.
+covariates that always have reference value zero.
 If this option does not appear, there are no absolute covariates.
+This option is only used when
+:ref:`create_all_node_db@cov_reference_table` is None in a
+call to create_all_node_db.
+In any event, it is overridden by the final values in
+:ref:`cov_reference_table-name` .
 
 balance_fit
 ***********
@@ -199,6 +244,31 @@ in the following order:
 
 If this option appears, the :ref:`option_all_table@max_fit` option
 must also appear.
+
+freeze_type
+***********
+This options specifies the type of freeze corresponding to the rows of the
+:ref:`mulcov_freeze_table-name` .
+It is either ``mean`` or ``posterior`` and its default is ``mean`` .
+Each row of the mulcov_freeze table specifies a freeze job
+and a freeze covariate multiplier.
+
+mean
+====
+If the freeze_type is ``mean`` ,
+the mean (optimal value) for the freeze covariate multiplier
+determined by the freeze job will be the lower and upper limit
+for the covariate multiplier in descendants of the freeze job;
+see :ref:`create_job_table@job_table@parent_job_id` in the job table.
+Note that if the lower and upper limits are equal, the corresponding
+model variable is treated as if it has no uncertainty.
+
+posterior
+=========
+If the freeze_type is ``posterior`` ,
+the freeze covariate multiplier posterior, determined by the freeze job,
+will be its prior distribution for all the descendants of the freeze job.
+This enables one to account for the uncertainty of covariate multiplier values.
 
 max_abs_effect
 **************
@@ -324,24 +394,24 @@ root_node_name
 **************
 This option_name must appear and the corresponding option_value
 is the name of the :ref:`glossary@root_node` in the node table of the
-:ref:`glossary@root_node_database` .
+:ref:`glossary@root_database` .
 (The node table is the same in all the dismod_at databases.)
 
-root_node_database
-******************
+root_database
+*************
 This option_name must appear and the corresponding option_value
 
 root_split_reference_name
 *************************
 This is the `split_reference_table.split_reference_name`
-corresponding to the root_node_database.
+corresponding to the root_database.
 If :ref:`split_reference_table-name` is empty (is not empty)
 this option must not (must) appear.
-is the name of the :ref:`glossary@root_node_database` .
+is the name of the :ref:`glossary@root_database` .
 
 split_covariate_name
 ********************
-is the name, in the root_node_database covariate table, of the splitting
+is the name, in the root_database covariate table, of the splitting
 covariate.
 If :ref:`split_reference_table-name` is empty (is not empty)
 this option must not (must) appear.
@@ -416,12 +486,11 @@ The set of values in this column determine the
 
 Mulcov Freeze Table
 ###################
-This table specifies the :ref:`jobs<glossary@job>`
-at which the cascade will freeze the value of covariate multipliers
-for its descendants; i.e, starting with its :ref:`glossary@child jobs` .
-To be specific, the lower and upper limit for the covariate
-multiplier in descendants of the job will be optimal value determined by job;
-see :ref:`create_job_table@job_table@parent_job_id` in the job table.
+Each row of this table specifies a :ref:`glossary@job`
+and a covariate multiplier.
+The cascade will freeze the value or the prior distribution
+for this covariate multiplier for all descendants of this job;
+see :ref:`glossary@child jobs` and :ref:`option_all_table@freeze_type`
 
 mulcov_freeze_id
 ****************

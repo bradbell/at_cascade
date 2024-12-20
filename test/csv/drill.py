@@ -183,19 +183,26 @@ def main() :
             sample_list = list()
             for row in predict_table :
                if row['integrand_name'] == 'Sincidence' and \
-                     row['node_name'] == node and \
-                        row['sex'] == sex_name :
-                  #
+               row['node_name'] == node and \
+               row['sex'] == sex_name :
                   sample_list.append(row)
             #
             # check sample_list
             if node in [ 'n-1', 'n1' , 'n3' ] :
                assert len(sample_list) == 0
-            elif node == 'n0' or sex_name != 'both' :
+            elif node != 'n0' and sex_name == 'both' :
+               assert len(sample_list) == 0
+            elif node == 'n0' and sex_name == 'both' :
                if prefix == 'fit' :
                   assert len(sample_list) == 1
                else :
                   assert len(sample_list) == number_sample
+            else :
+               if prefix == 'fit' :
+                  assert len(sample_list) == 2
+               else :
+                  assert len(sample_list) == 2 * number_sample
+            if len(sample_list) > 0 :
                sum_avgint = 0.0
                for row in sample_list :
                   sum_avgint   += float( row['avg_integrand'] )

@@ -77,7 +77,7 @@ option_all            = {
    'split_covariate_name':        'sex',
    'shift_prior_std_factor':       1e3,
 }
-option_all['root_node_database'] = option_all['result_dir'] + '/root_node.db'
+option_all['root_database'] = option_all['result_dir'] + '/root.db'
 # END option_all_table
 #
 #
@@ -347,13 +347,13 @@ def main() :
    at_cascade.empty_directory(work_dir)
    os.chdir(work_dir)
    #
-   # Create root_node.db
-   root_node_database  = option_all['root_node_database']
-   root_node_db(root_node_database)
+   # Create root.db
+   root_database       = option_all['root_database']
+   root_node_db(root_database)
    #
    # node_table, age_table, time_table
    new          = False
-   connection   = dismod_at.create_connection(root_node_database, new)
+   connection   = dismod_at.create_connection(root_database, new)
    node_table   = dismod_at.get_table_dict(connection, 'node')
    age_table    = dismod_at.get_table_dict(connection, 'age')
    time_table   = dismod_at.get_table_dict(connection, 'time')

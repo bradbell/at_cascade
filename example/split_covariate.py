@@ -229,7 +229,7 @@ option_all            = {
    'split_covariate_name':       'sex',
    'shift_prior_std_factor':      1e3,
 }
-option_all['root_node_database'] = option_all['result_dir'] + '/root_node.db'
+option_all['root_database'] = option_all['result_dir'] + '/root.db'
 # END option_all_table
 #
 #
@@ -519,13 +519,13 @@ def main(refit_split) :
    result_dir = option_all['result_dir']
    at_cascade.empty_directory(result_dir)
    #
-   # Create root_node.db
-   root_node_database  = option_all['root_node_database']
-   root_node_db(root_node_database)
+   # Create root.db
+   root_database       = option_all['root_database']
+   root_node_db(root_database)
    #
    # omega_grid
    connection   = dismod_at.create_connection(
-      root_node_database, new = False, readonly = True
+      root_database, new = False, readonly = True
    )
    age_table    = dismod_at.get_table_dict(connection, 'age')
    time_table   = dismod_at.get_table_dict(connection, 'time')
@@ -569,8 +569,8 @@ def main(refit_split) :
    os.mkdir(root_node_dir)
    #
    # avgint_table
-   # This also erases the avgint table from root_node_database
-   avgint_table = at_cascade.extract_avgint( root_node_database )
+   # This also erases the avgint table from root_database
+   avgint_table = at_cascade.extract_avgint( root_database )
    #
    # cascade starting at root node
    at_cascade.cascade_root_node(
@@ -585,16 +585,16 @@ def main(refit_split) :
          at_cascade.check_cascade_node(
             rate_true          = rate_true,
             all_node_database  = all_node_database,
-            fit_node_database  = goal_database,
+            fit_database       = goal_database,
             avgint_table       = avgint_table,
             relative_tolerance = 1e-5,
          )
    #
    #
    # fit_iota, fit_alpha, fit_reference_income
-   fit_node_database = f'{result_dir}/n0/dismod.db'
+   fit_database      = f'{result_dir}/n0/dismod.db'
    connection        = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+      fit_database, new = False, readonly = True
    )
    var_table         = dismod_at.get_table_dict(connection, 'var')
    fit_var_table     = dismod_at.get_table_dict(connection, 'fit_var')

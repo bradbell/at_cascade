@@ -8,6 +8,8 @@ r'''
    pdf
    sam
    tru
+   avgint
+   avg
 }
 
 Calculate the predictions for One Fit
@@ -33,14 +35,13 @@ sim_dir
 *******
 is the directory name where the csv simulation files are located.
 
-fit_database
+pre_database
 ************
-This string is the location, relative to fit_dir, of the dismod_at
-database for the fit for this prediction.
-It is either the fit corresponding to this prediction,
-or an ancestor of the fit for this prediction.
-If it is an ancestor, it has been copied from the original
-ancestor fit directory to the prediction directory.
+The directory where *pre_database* is located identifies the
+node and sex for this prediction.
+The file *pre_database* is a copy of the fit database used for this prediction.
+The node and sex for the fit is either the same as for the prediction,
+or an ancestor of the node and ex for the prediction.
 
 predict_node_id
 ***************
@@ -63,14 +64,18 @@ see below.
 
 fit_same_as_predict
 *******************
-If true, the fit in *fit_database* corresponds to this prediction,
-otherwise it is a fit for the closest ancestor that has a fit.
+If true, the node and sex for this prediction is the same
+as the node and sex for the fit.
+Otherwise it is a fit for the closest ancestor that has a
+successful cascade fit.
+To be specific, ``sample: OK`` is in its
+:ref:`fit_one_job@fit_database@log`.
 
 db2csv
 ******
 If fit_same_as_predict and db2csv,
 the `db2csv_command`_ is used to generate the csv files
-corresponding to the *fit_database* .
+corresponding to the *pre_database* .
 
 .. _db2csv_command: https://dismod-at.readthedocs.io/db2csv_command.html
 
@@ -78,27 +83,49 @@ plot
 ****
 If fit_same_as_predict and plot,
 ``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
-to *fit_database* are generated, in the same directory as *fit_database* ;
+to *pre_database* are generated, in the same directory as *pre_database* ;
 i.e., the prediction directory
 
 Csv Output Files
 ****************
-#. These files are located in the prediction directory; i.e.,
+#. The csv output files are located in the prediction directory; i.e.,
    the directory corresponding to the predictions for this location, sex.
 #. The predictions are on the same age, time grid as the covariate file.
-#. If *fit_same_as_predict* is true (false), the posterior (prior) prediction
-   files are written.
+#. If *fit_same_as_predict* is true, the following files are created
+   (the tru_posterior.csv file is not created when *sim_dir* is None):
 
-.. csv-table::
-   :header-rows: 1
+   .. csv-table::
 
-   File Name,         Description
-   fit_prior.csv,     uses optimal prior variable values
-   fit_posterior.csv, uses optimal posterior variable values
-   sam_prior.csv,     uses samples from the prior
-   sam_posterior.csv, uses samples from the posterior
-   tru_prior.csv,     uses simulation variable values for an ancestor
-   tru_posterior.csv, uses simulation variable values for this location,sex
+      fit_posterior.csv, uses optimal posterior variable values
+      sam_posterior.csv, uses samples from the posterior
+      tru_posterior.csv, uses simulation variable values for this location,sex
+
+#. If *fit_same_as_predict* is false, the following files are created
+   (the tru_prior.csv file is not created when *sim_dir* is None):
+
+   .. csv-table::
+
+      fit_prior.csv,     uses optimal prior variable values
+      sam_prior.csv,     uses samples from the prior
+      tru_prior.csv,     uses simulation variable values for an ancestor
+
+
+#. The following columns are included in these files
+   (the sample_index column is only included in the sample files):
+
+   .. csv-table::
+      :header-rows: 1
+
+      Column,        Meaning
+      avgint_id,     This index the value we are predicting
+      sample_index,  This index the random samples for each value
+      avg_integrand, This is the model value for the prediction
+      age_lower,     Lower age limit for averaging this integrand
+      age_upper,     Upper age limit for averaging (must equal lower).
+      time_lower,    Lower time limit for averaging this integrand
+      time_upper,    Upper time limit for averaging (must equal lower).
+      node_id,       Identifies the node for this prediction.
+      x_j,           Value of the j-th covariate
 
 {xrst_end csv.pre_one_job}
 r'''
@@ -119,7 +146,7 @@ import copy
 # This string is the directory name where the input and output csv files
 # are located.
 #
-# fit_database
+# pre_database
 # ************
 # This string is the location, relative to fit_dir, of the dismod_at
 # database for a fit.
@@ -133,7 +160,7 @@ import copy
 # ******
 # If fit_same_as_predict and db2csv,
 # the `db2csv_command`_ is used to generate the csv files
-# corresponding to the *fit_database* .
+# corresponding to the *pre_database* .
 #
 # .. _db2csv_command: https://dismod-at.readthedocs.io/db2csv_command.html
 #
@@ -141,8 +168,8 @@ import copy
 # ****
 # If fit_same_as_predict and plot,
 # ``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
-# to *fit_database* are generated, in the same directory as the
-# *fit_database* ; i.e., the prediction directory.
+# to *pre_database* are generated, in the same directory as the
+# *pre_database* ; i.e., the prediction directory.
 #
 import dismod_at
 import at_cascade
@@ -151,14 +178,14 @@ import copy
 def diagonse_one(
    predict_job_name       ,
    fit_dir                ,
-   fit_database           ,
+   pre_database           ,
    fit_same_as_predict    ,
    db2csv                 ,
    plot                   ,
 ) :
    assert type(predict_job_name) == str
    assert type(fit_dir) == str
-   assert type(fit_database) == str
+   assert type(pre_database) == str
    assert type( fit_same_as_predict ) == bool
    assert type( db2csv ) == bool
    assert type( plot ) == bool
@@ -169,13 +196,13 @@ def diagonse_one(
    )
    #
    # predict_node_dir
-   index            = fit_database.rfind('/')
-   predict_node_dir = fit_database[: index]
+   index            = pre_database.rfind('/')
+   predict_node_dir = pre_database[: index]
    #
    if fit_same_as_predict and db2csv :
       #
       # db2csv output files
-      command = [ 'dismodat.py', fit_database, 'db2csv' ]
+      command = [ 'dismodat.py', pre_database, 'db2csv' ]
       dismod_at.system_command_prc(
          command, print_command = False, return_stdout = True
       )
@@ -189,7 +216,7 @@ def diagonse_one(
          if not integrand_name.startswith('mulcov_') :
             integrand_list.append( integrand_name )
       dismod_at.plot_data_fit(
-         database       = fit_database           ,
+         database       = pre_database           ,
          pdf_file       = pdf_file               ,
          plot_title     = predict_job_name       ,
          max_plot       = 1000                   ,
@@ -200,7 +227,7 @@ def diagonse_one(
       pdf_file = f'{predict_node_dir}/rate_plot.pdf'
       rate_set = { 'pini', 'iota', 'chi', 'omega' }
       dismod_at.plot_rate_fit(
-         database       = fit_database           ,
+         database       = pre_database           ,
          pdf_file       = pdf_file               ,
          plot_title     = predict_job_name       ,
          rate_set       = rate_set               ,
@@ -213,7 +240,7 @@ def pre_one_job(
    predict_job_name      ,
    fit_dir               ,
    sim_dir               ,
-   fit_database          ,
+   pre_database          ,
    predict_node_id       ,
    predict_sex_id        ,
    all_node_database     ,
@@ -227,7 +254,7 @@ def pre_one_job(
    assert type(predict_job_name) == str
    assert type(fit_dir) == str
    assert sim_dir == None or type(sim_dir) == str
-   assert type(fit_database) == str
+   assert type(pre_database) == str
    assert type(predict_node_id) == int
    assert type(all_node_database) == str
    assert type(all_covariate_table) == list
@@ -246,27 +273,27 @@ def pre_one_job(
    option_all_table = dismod_at.get_table_dict(connection, 'option_all')
    connection.close()
    #
-   # root_node_database
-   root_node_database = None
+   # root_database
+   root_database      = None
    for row in option_all_table :
-      if row['option_name'] == 'root_node_database' :
-         root_node_database = row['option_value']
-   assert root_node_database != None
+      if row['option_name'] == 'root_database' :
+         root_database      = row['option_value']
+   assert root_database != None
    #
    # fit_covariate_table, integrand_table, node_table
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_database, root_node_database
+      pre_database, root_database
    )
    fit_covariate_table      = fit_or_root.get_table('covariate')
    integrand_table          = fit_or_root.get_table('integrand')
    node_table               = fit_or_root.get_table('node')
    fit_or_root.close()
    #
-   # fit_database
+   # pre_database
    # add the truth_var table to this database
    if type(sim_dir) == str :
       at_cascade.csv.set_truth(
-         sim_dir, fit_database, root_node_database
+         sim_dir, pre_database, root_database
       )
    #
    # integrand_id_list
@@ -366,7 +393,7 @@ def pre_one_job(
    #
    # connection
    connection = dismod_at.create_connection(
-      fit_database, new = False, readonly = False
+      pre_database, new = False, readonly = False
    )
    #
    # avgint table
@@ -389,8 +416,8 @@ def pre_one_job(
       suffix = 'prior'
    #
    # predict_node_dir
-   index            = fit_database.rfind('/')
-   predict_node_dir = fit_database[: index]
+   index            = pre_database.rfind('/')
+   predict_node_dir = pre_database[: index]
    #
    # float_format
    n_digits = str( float_precision )
@@ -400,7 +427,7 @@ def pre_one_job(
    for prefix in prefix_list :
       #
       # command
-      command = [ 'dismod_at', fit_database, 'predict' ]
+      command = [ 'dismod_at', pre_database, 'predict' ]
       if prefix == 'fit' :
          command.append( 'fit_var' )
       elif prefix == 'tru' :
@@ -414,7 +441,7 @@ def pre_one_job(
       #
       # predict_table, covariate_table
       connection    = dismod_at.create_connection(
-            fit_database, new = False, readonly = True
+            pre_database, new = False, readonly = True
       )
       predict_table   = dismod_at.get_table_dict(connection, 'predict')
       covariate_table = dismod_at.get_table_dict(connection, 'covariate')
@@ -452,7 +479,7 @@ def pre_one_job(
    diagonse_one(
       predict_job_name     = predict_job_name ,
       fit_dir              = fit_dir ,
-      fit_database         = fit_database ,
+      pre_database         = pre_database ,
       fit_same_as_predict  = fit_same_as_predict ,
       db2csv               = db2csv ,
       plot                 = plot ,

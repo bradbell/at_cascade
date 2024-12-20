@@ -15,7 +15,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 """
-{xrst_begin csv.start_node_sex}
+{xrst_begin csv.root_node_sex}
 {xrst_spell
    const
    dage
@@ -75,6 +75,7 @@ csv_file['option_fit.csv']  = \
 root_node_name,n1
 root_node_sex,female
 refit_split,false
+tolerance_fixed,1e-8
 '''
 random_seed    = str( int( time.time() ) )
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
@@ -187,42 +188,57 @@ mulcov.csv
 **********
 There is one covariate multiplier,
 it multiplies haqi and affects iota.
-The prior distribution for this multiplier is uniform\_-1,1.
+The root level prior for this multiplier is either uniform\_-1,1
+or constant and equal to the true value.
 {xrst_code py}"""
-csv_file['mulcov.csv'] = \
-'''covariate,type,effected,value_prior,const_value
-haqi,rate_value,iota,uniform_-1_1,
-'''
+true_mulcov_haqi           = 0.5
+root_mulcov_prior_constant = True
+csv_file['mulcov.csv']  = 'covariate,type,effected,value_prior,const_value\n'
+if root_mulcov_prior_constant :
+   csv_file['mulcov.csv'] += f'haqi,rate_value,iota,,{true_mulcov_haqi}\n'
+else :
+   csv_file['mulcov.csv'] += 'haqi,rate_value,iota,uniform_-1_1,\n'
 """{xrst_code}
 
+root_mulcov_prior_constant
+==========================
+If the root level prior is not constant ( uniform on [-1,+1] ),
+it is frozen (constant) for the n1 and n2 fits
+using the value found by the n0 fit.
+Hence the prior for the n1 and n2 fits has the covariate multiplier constant.
+On the other hand, the n1 and n2 fit priors for iota
+have random variation do to the root level fit for the covariate multiplier
+not being constant.
 
 
 data_in.csv
 ***********
 The data_in.csv file has one point for each combination of node and sex.
 The integrand is Sincidence (a direct measurement of iota.)
-The age interval is [20, 30] and the time interval is [2000, 2010]
-for each data point. (These do not really matter because the true iota
-for this example is constant.)
-The measurement standard deviation is 0.001 (during the fitting) and
-none of the data is held out.
+The age intervals do not really matter because the true iota
+for this example is constant.
+The measurement standard deviation is 1e-4 during the fitting.
+None of the data is held out.
+The zero values in the meas_value column below get replaced; see below
 {xrst_code py}"""
 header  = 'data_id, integrand_name, node_name, sex, age_lower, age_upper, '
 header += 'time_lower, time_upper, meas_value, meas_std, hold_out, '
 header += 'density_name, eta, nu'
 csv_file['data_in.csv'] = header + \
 '''
-0, Sincidence, n1, female, 0,  10, 1990, 2000, 0.0000, 0.001, 0, gaussian, ,
-1, Sincidence, n1, male,   0,  10, 1990, 2000, 0.0000, 0.001, 0, gaussian, ,
-2, Sincidence, n2, female, 10, 20, 2000, 2010, 0.0000, 0.001, 0, gaussian, ,
-3, Sincidence, n2, male,   10, 20, 2000, 2010, 0.0000, 0.001, 0, gaussian, ,
-4, Sincidence, n3, female, 20, 30, 2010, 2020, 0.0000, 0.001, 0, gaussian, ,
-5, Sincidence, n3, male,   20, 30, 2010, 2020, 0.0000, 0.001, 0, gaussian, ,
+0, Sincidence, n1, female, 0,  10, 1990, 2000, 0.0000,  1e-4, 0, gaussian, ,
+1, Sincidence, n1, male,   0,  10, 1990, 2000, 0.0000,  1e-4, 0, gaussian, ,
+2, Sincidence, n2, female, 10, 20, 2000, 2010, 0.0000,  1e-4, 0, gaussian, ,
+3, Sincidence, n2, male,   10, 20, 2000, 2010, 0.0000,  1e-4, 0, gaussian, ,
+4, Sincidence, n3, female, 20, 30, 2010, 2020, 0.0000,  1e-4, 0, gaussian, ,
+5, Sincidence, n3, male,   20, 30, 2010, 2020, 0.0000,  1e-4, 0, gaussian, ,
 '''
 csv_file['data_in.csv'] = csv_file['data_in.csv'].replace(' ', '')
 """{xrst_code}
-The measurement value meas_value is 0.0000 above and gets replaced by
-the following code:
+The measurement value meas_value is 0.0000 above gets replaced
+the true value for iota with no measurement noise,
+even though the measurement standard deviation is modeled as 1e-4.
+See the following code:
 {xrst_literal
    # BEGIN_MEAS_VALUE
    # END_MEAS_VALUE
@@ -235,7 +251,7 @@ Source Code
    END_PROGRAM
 }
 
-{xrst_end csv.start_node_sex}
+{xrst_end csv.root_node_sex}
 """
 # BEGIN_PROGRAM
 #
@@ -267,7 +283,7 @@ def main() :
       node_sex2haqi[key].append( haqi )
    #
    # haqi_avg
-   haqi_sum = 8.0
+   haqi_sum = 0.0
    for key in node_sex2haqi :
       value              = node_sex2haqi[key]
       node_sex2haqi[key] = sum(value) / len(value)
@@ -276,7 +292,6 @@ def main() :
    #
    # data_in.csv
    float_format      = '{0:.5g}'
-   true_mulcov_haqi  = 0.5
    no_effect_iota    = 0.1
    file_name         = f'{fit_dir}/data_in.csv'
    table             = at_cascade.csv.read_table( file_name )
@@ -315,10 +330,15 @@ def main() :
             # sample_list
             sample_list = list()
             for row in predict_table :
-               if row['integrand_name'] == 'Sincidence' and \
-                     row['node_name'] == node and \
-                        row['sex'] == sex :
-                  #
+               include = True
+               include = include and row['integrand_name'] == 'Sincidence'
+               include = include and row['node_name'] == node
+               include = include and row['sex'] == sex
+               if not root_mulcov_prior_constant :
+                  # Do not include the samples corresponding to priors
+                  include = include and row['fit_node_name'] == node
+                  include = include and row['fit_sex'] == sex
+               if include :
                   sample_list.append(row)
             if sex != 'female' :
                assert len(sample_list) == 0
@@ -336,13 +356,15 @@ def main() :
                rel_error = (avgint - iota) / iota
                #
                assert haqi == node_sex2haqi[ (node, sex) ]
-               if prefix == 'sam' :
-                  assert abs(rel_error) < 1e-2
+               if False :
+                  print( node, prefix, rel_error )
                else :
-                  assert abs(rel_error) < 1e-4
-
+                  if prefix == 'sam' :
+                     assert abs(rel_error) < 1e-2
+                  else :
+                     assert abs(rel_error) < 1e-4
 #
 if __name__ == '__main__' :
    main()
-   print('start_node_sex.py: OK')
+   print('root_node_sex.py: OK')
 # END_PROGRAM

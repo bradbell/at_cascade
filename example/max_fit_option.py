@@ -390,16 +390,16 @@ def main() :
    result_dir = 'build/example'
    at_cascade.empty_directory(result_dir)
    #
-   # Create root_node.db
-   root_node_database  = f'{result_dir}/root_node.db'
-   root_node_db(root_node_database)
+   # Create root.db
+   root_database       = f'{result_dir}/root.db'
+   root_node_db(root_database)
    #
    # Create all_node.db
    all_node_database = f'{result_dir}/all_node.db'
    option_all        = {
       'result_dir'                   : result_dir,
       'root_node_name'               : 'n0',
-      'root_node_database'           : root_node_database,
+      'root_database'           : root_database,
       'max_fit'                      : max_fit_option,
       'perturb_optimization_scale'   : perturb_optimization_scale,
    }
@@ -413,8 +413,8 @@ def main() :
    os.mkdir(root_node_dir)
    #
    # avgint_table
-   # This also erases the avgint table from root_node_database
-   avgint_table = at_cascade.extract_avgint( root_node_database )
+   # This also erases the avgint table from root_database
+   avgint_table = at_cascade.extract_avgint( root_database )
    #
    # cascade starting at root node
    at_cascade.cascade_root_node(
@@ -429,7 +429,7 @@ def main() :
       at_cascade.check_cascade_node(
          rate_true          = rate_true,
          all_node_database  = all_node_database,
-         fit_node_database  = leaf_database,
+         fit_database       = leaf_database,
          avgint_table       = avgint_table,
          relative_tolerance = 1e-8,
       )

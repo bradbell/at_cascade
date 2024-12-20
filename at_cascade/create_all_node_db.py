@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
-'''
+r'''
 {xrst_begin create_all_node_db}
 
 Create an All Node Database
@@ -65,27 +65,28 @@ This specifies the jobs at which the cascade will freeze specific
 covariate multipliers.
 If this argument is ``None``, the node_split table is empty.
 Otherwise, it must be a ``list`` of ``dict`` representation of the
-:ref:`mulcov_freeze_table-name` with the following keys for each ``dict``:
+:ref:`mulcov_freeze_table-name` .
+We use *row* below to refer to a ``dict`` that is an entry in this ``list`` .
 
 fit_node_id, fit_node_name
 ==========================
-The value *mulcov_freeze_table*\ ``["fit_node_id"]`` is an
-``int`` representation of the fit_node_id for this job or
-*mulcov_freeze_table*\ ``["fit_node_name"]`` is a
-``str`` representation of the corresponding node name.
-This value is ``None`` if and only if the
-:ref:`split_reference_table-name` is empty.
+#. If *row*\ ``["fit_node_id"]`` must be ``None``
+   if and only if the :ref:`split_reference_table-name` is empty.
+#. Otherwise if *row*\ ``["fit_node_id"]`` exists it must be an
+   ``int`` representation of the fit_node_id for this job.
+#. Otherwise *row*\ ``["fit_node_name"]`` is a
+   ``str`` representation of the corresponding node name.
 
 split_reference_id
 ==================
-The value *mulcov_freeze_table*\ ``["split_reference_id"]`` is an
+The value *row*\ ``["split_reference_id"]`` is an
 ``int`` representation of the split_reference_id for this job or
-*mulcov_freeze_table*\ ``["split_reference_name"]`` is a
+*row*\ ``["split_reference_name"]`` is a
 ``str`` representation of the corresponding split reference name.
 
 mulcov_id
 =========
-The value *mulcov_freeze_table*\ ``["mulcov_id"]`` is an
+The value *row*\ ``["mulcov_id"]`` is an
 ``int`` representation of the mulcov_id for the covariate multiplier
 that is frozen.
 
@@ -98,17 +99,17 @@ the :ref:`omega_grid@omega_time_grid Table` are empty.
 
 age
 ===
-The value *omega*\ [``age``] is a list containing the
+The value *omega_grid*\ [``age``] is a list containing the
 age_id values for the omega_grid.
 These are indices in the
-:ref:`glossary@root_node_database` age table.
+:ref:`glossary@root_database` age table.
 We use the notation *n_omega_age* for the length of the age list.
 
 time
 ====
-The value *omega*\ [``time``] is a list containing the
+The value *omega_grid*\ [``time``] is a list containing the
 time_id values for the omega_grid.
-These are indices in the *root_node_database* time table.
+These are indices in the *root_database* time table.
 We use the notation *n_omega_time* for the length of the time list.
 
 omega_data
@@ -137,6 +138,12 @@ If *omega_data* is ``None`` the
 :ref:`omega_all@omega_all Table` and
 :ref:`omega_all@omega_index Table` will be empty.
 
+cov_reference_table
+*******************
+This must be ``None`` or a ``list`` of ``dict`` representation of the
+:ref:`cov_reference_table-name`.
+If it `None``, the :ref:`com_cov_reference-name` routine
+is used to create the cov_reference table.
 
 {xrst_end create_all_node_db}
 '''
@@ -164,6 +171,7 @@ def create_all_node_db(
    mulcov_freeze_table       = None,
    omega_grid                = None,
    omega_data                = None,
+   cov_reference_table       = None,
 # )
 ) :
    if fit_goal_table is None :
@@ -181,6 +189,7 @@ def create_all_node_db(
    assert type(split_reference_table)  == list
    assert type(node_split_table)       == list
    assert type(mulcov_freeze_table)    == list
+   assert type(cov_reference_table)    == list or cov_reference_table == None
    # END syntax
    #
    # some asserts
@@ -190,7 +199,7 @@ def create_all_node_db(
       assert type(omega_grid) is dict
       assert type(omega_data) is dict
    #
-   assert 'root_node_database' in option_all
+   assert 'root_database'      in option_all
    assert 'root_node_name'     in option_all
    assert 'result_dir'         in option_all
    #
@@ -204,8 +213,8 @@ def create_all_node_db(
    # -------------------------------------------------------------------------
    # root_connection
    new                = False
-   root_node_database = option_all['root_node_database']
-   root_connection    = dismod_at.create_connection(root_node_database, new)
+   root_database      = option_all['root_database']
+   root_connection    = dismod_at.create_connection(root_database, new)
    #
    # age_table
    tbl_name  = 'age'
@@ -227,6 +236,15 @@ def create_all_node_db(
    tbl_name     = 'option'
    option_table = dismod_at.get_table_dict(root_connection, tbl_name)
    #
+   # data_table
+   if cov_reference_table == None :
+      tbl_name   = 'data'
+      data_table = dismod_at.get_table_dict(root_connection, tbl_name)
+
+   #
+   # root_connection
+   root_connection.close()
+   #
    # node_name2id
    node_name2id = dict()
    for (node_id, row) in enumerate(node_table) :
@@ -243,6 +261,11 @@ def create_all_node_db(
    #
    # root_node_name
    root_node_name = node_table[root_node_id]['node_name']
+   if root_node_name != option_all['root_node_name' ] :
+      tmp  = option_all['root_node_name']
+      msg  = f'root_node_name in option_all is {tmp} '
+      msg += f'while in the option table it is {root_node_name}'
+      assert False, msg
    #
    # rel_covariate_id_set
    rel_covariate_id_set = set( range(len(covariate_table)) )
@@ -261,14 +284,64 @@ def create_all_node_db(
          )
       rel_covariate_id_set.remove(covariate_id)
    #
-   # close
-   root_connection.close()
+   # option_all_table
+   option_all_table = list()
+   for key in option_all :
+      value = option_all[key]
+      row   = { 'option_name' : key , 'option_value' : value }
+      option_all_table.append( row )
+   #
+   # cov_reference_table
+   if cov_reference_table == None :
+      cov_reference_table = list()
+      for node_id in range( len(node_table) ) :
+         ancestor      = node_id
+         while ancestor != root_node_id and ancestor != None :
+            ancestor = node_table[ancestor]['parent']
+         if ancestor == root_node_id :
+            if len(split_reference_table) == 0 :
+               split_reference_list = [ None ]
+            else :
+               split_reference_list = range( len(split_reference_table) )
+            for split_reference_id in split_reference_list :
+               reference_list = at_cascade.com_cov_reference(
+                  option_all_table      = option_all_table,
+                  split_reference_table = split_reference_table,
+                  node_table            = node_table,
+                  covariate_table       = covariate_table,
+                  shift_node_id         = node_id,
+                  split_reference_id    = split_reference_id,
+                  data_table            = data_table,
+               )
+               for (covariate_id, reference) in enumerate(reference_list) :
+                  row = {
+                     'node_id'            : node_id ,
+                     'split_reference_id' : split_reference_id,
+                     'covariate_id'       : covariate_id,
+                     'reference_value'    : reference_list[covariate_id],
+                  }
+                  cov_reference_table.append(row)
    # -------------------------------------------------------------------------
    # Write all node database
    # -------------------------------------------------------------------------
    # all_connection
    new             = True
    all_connection  = dismod_at.create_connection(all_node_database, new)
+   #
+   # cov_reference table
+   tbl_name  = 'cov_reference'
+   col_name  = [ 'node_id', 'split_reference_id', 'covariate_id' ]
+   col_name += [ 'reference_value' ]
+   col_type  = [ 'integer',            'integer',      'integer', 'real' ]
+   row_list  = list()
+   for row_table in cov_reference_table :
+      row    = list()
+      for key in col_name :
+         row.append( row_table[key] )
+      row_list.append( row )
+   dismod_at.create_table(
+      all_connection, tbl_name, col_name, col_type, row_list
+   )
    #
    # omega_age_grid table
    tbl_name    = 'omega_age_grid'
@@ -346,11 +419,6 @@ def create_all_node_db(
    )
    #
    # option_all table
-   if root_node_name != option_all['root_node_name' ] :
-      tmp  = option_all['root_node_name']
-      msg  = f'root_node_name in option_all is {tmp} '
-      msg += f'while in the option table it is {root_node_name}'
-      assert False, msg
    tbl_name = 'option_all'
    col_name = [ 'option_name', 'option_value' ]
    col_type = [ 'text',        'text']

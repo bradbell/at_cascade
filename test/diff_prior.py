@@ -2,12 +2,12 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
-# BEGIN no_ode_xam source code
+# Test case where no_ode does not converge and the approximatte solution
+# does not satisfy does not satisfiy age difference constraint.
+# This makes sure that the mean used for the differnce prior
+# satisfies the constraint for the difference prior.
 # ----------------------------------------------------------------------------
 # imports
-# ----------------------------------------------------------------------------
-# Test no_ode fit for iota with data and chi without data
-# ----------------------------------------------------------------------------
 import sys
 import os
 import copy
@@ -41,43 +41,14 @@ random.seed(random_seed)
 # age_grid
 age_grid = [0.0, 100.0 ]
 #
+# iota_true
+iota_true = [ 0.01, 0.02 ]
+iota_avg  = sum(iota_true) / len(iota_true)
+#
 # ----------------------------------------------------------------------------
 # functions
 # ----------------------------------------------------------------------------
-#
-# rate_true
-def rate_true(rate, a, t) :
-   if rate in [ 'pini', 'rho' ] :
-      return 0.0
-   if rate == 'iota' :
-      return (1 + a / 100) * 1e-3
-   if rate == 'chi' :
-      return (1 + a / 100) * 2e-2
-   if rate == 'omega' :
-      return (1 + a / 100) * 1e-2
-   assert False
-# END rate_true
-# ----------------------------------------------------------------------------
-def average_integrand(integrand_name, age, node_name) :
-   def iota(a, t) :
-      return rate_true('iota', a, t)
-   def chi(a, t) :
-      return rate_true('chi', a, t)
-   def omega(a, t) :
-      return rate_true('omega', a, t)
-   rate           = { 'iota': iota,  'chi': chi, 'omega': omega }
-   grid           = { 'age' : [age], 'time': [2000.0] }
-   abs_tol        = 1e-6
-   avg_integrand   = dismod_at.average_integrand(
-      rate, integrand_name, grid,  abs_tol
-   )
-   return avg_integrand
-# ----------------------------------------------------------------------------
 def root_node_db(file_name) :
-   #
-   # iota_50, chi_50
-   iota_50        = rate_true('iota', 50.0, None )
-   chi_50         = rate_true('chi',  50.0, None )
    #
    # prior_table
    prior_table = list()
@@ -85,30 +56,19 @@ def root_node_db(file_name) :
    prior_table.append(
       # parent_iota_value_prior
       {  'name':    'parent_iota_value_prior',
-         'density': 'gaussian',
-         'lower':   iota_50 / 10.0,
-         'upper':   iota_50 * 10.0,
-         'mean':    iota_50,
-         'std' :    iota_50 * 10,
+         'density': 'uniform',
+         'lower':   1e-5,
+         'upper':   1.0,
+         'mean':    iota_avg,
       }
    )
-   prior_table.append(
-      # parent_chi_value_prior
-      {  'name':    'parent_chi_value_prior',
-         'density': 'gaussian',
-         'lower':   chi_50 / 10.0,
-         'upper':   chi_50 * 10.0,
-         'mean':    chi_50,
-         'std':     chi_50 * 10.0,
-      }
-   )
-   #
    prior_table.append(
       # parent_dage_prior
       {  'name':    'parent_dage_prior',
-         'density': 'gaussian',
-         'mean':    0.0,
-         'std':     1.0,
+         'density': 'uniform',
+         'lower':   iota_avg,
+         'upper':   1.0,
+         'mean':    iota_avg,
       }
    )
    #
@@ -123,16 +83,6 @@ def root_node_db(file_name) :
       'time_id':    [0],
       'fun':        fun,
    })
-   #
-   # parent_chi_smooth
-   fun = lambda a, t : ('parent_chi_value_prior', 'parent_dage_prior', None)
-   smooth_table.append({
-      'name':       'parent_chi_smooth',
-      'age_id':     range( len(age_grid) ),
-      'time_id':    [0],
-      'fun':        fun,
-   })
-   #
    # node_table
    node_table = [
       { 'name':'n0',        'parent':''   },
@@ -142,9 +92,6 @@ def root_node_db(file_name) :
    rate_table = [ {
          'name':           'iota',
          'parent_smooth':  'parent_iota_smooth',
-      },{
-         'name':           'chi',
-         'parent_smooth':  'parent_chi_smooth',
    } ]
    #
    # covariate_table
@@ -159,7 +106,6 @@ def root_node_db(file_name) :
    # integrand_table
    integrand_table = [
       {'name': 'Sincidence'},
-      {'name': 'mtexcess' },
    ]
    for mulcov_id in range( len(mulcov_table) ) :
       integrand_table.append( { 'name': f'mulcov_{mulcov_id}' } )
@@ -177,14 +123,13 @@ def root_node_db(file_name) :
       'density':      'gaussian',
       'hold_out':     False,
       'integrand':    'Sincidence',
-      'meas_std':     iota_50 * 1e-3,
+      'meas_std':     iota_avg * 1e-3,
       'node':         'n0',
    }
-   for age in age_grid :
+   for (index, age) in enumerate(age_grid) :
       row['age_lower']  = age
       row['age_upper']  = age
-      row['meas_value'] = rate_true('iota', age, None)
-      row['meas_std']   = row['meas_value'] * 1e-2
+      row['meas_value'] = iota_true[index]
       #
       data_table.append( copy.copy(row) )
    #
@@ -201,11 +146,7 @@ def root_node_db(file_name) :
    option_table = [
       { 'name':'parent_node_name',      'value':'n0'},
       { 'name':'rate_case',             'value':'iota_pos_rho_zero'},
-      { 'name':'quasi_fixed',           'value':'false'},
-      { 'name':'max_num_iter_fixed',    'value':'50'},
-      { 'name':'max_num_iter_random',   'value':'200'},
-      { 'name':'tolerance_fixed',       'value':'1e-15'},
-      { 'name':'random_seed',           'value':str(random_seed)},
+      { 'name':'max_num_iter_fixed',    'value':'0'},
    ]
    # ----------------------------------------------------------------------
    # create database
@@ -240,43 +181,16 @@ def main() :
    root_database       = f'{result_dir}/root.db'
    root_node_db(root_database)
    #
-   # omega_grid
-   omega_grid = dict()
-   omega_grid['age']  = range( len(age_grid) )
-   omega_grid['time'] = [ 0 ]
-   #
-   # mulcov_freeze_table
-   mulcov_freeze_table =  list()
-   #
-   # omega_all_data
-   omega_all_data     = dict()
-   for node_name in [ 'n0' ] :
-      omega_list = list()
-      for age_id in omega_grid['age'] :
-         age            = age_grid[age_id]
-         time           = 2000.0
-         integrand_name = 'mtother'
-         mtother        = \
-            average_integrand(integrand_name, age, node_name)
-         omega_list.append(mtother)
-      omega_all_data[node_name] = [ omega_list ]
-   #
    # Create all_node.db
    all_node_database = f'{result_dir}/all_node.db'
    option_all        = {
       'result_dir'                : result_dir,
       'root_node_name'            : 'n0',
       'root_database'        : root_database,
-      'perturb_optimization_scale': .2,
-      'perturb_optimization_start': .2,
-
    }
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
       option_all              = option_all,
-      omega_grid              = omega_grid,
-      omega_data              = omega_all_data,
-      mulcov_freeze_table     = mulcov_freeze_table,
    )
    #
    # root_node_dir
@@ -312,27 +226,18 @@ def main() :
       # rate_name
       rate_id   = var_row['rate_id']
       rate_name = rate_table[rate_id]['rate_name']
+      assert rate_name == 'iota'
       #
       # fit_value
       fit_value = fit_var_table[var_id]['fit_var_value']
       #
-      # true_value
-      age        = age_table[ var_row['age_id' ] ]['age']
-      true_value = rate_true(rate_name, age, None)
+      # initial_value
+      # max_num_iter_fixed and perturp_optimixzation_start are zero
+      # hence the initial mean is the final fit value.
+      initial_value = iota_avg
       #
-      if rate_name == 'omega' :
-         assert fit_value == true_value
-      elif rate_name == 'iota' :
-         assert abs( 1.0 - fit_value / true_value ) < 1e-6
-      else :
-         # no data so should match mean
-         assert rate_name == 'chi'
-         chi_50  = rate_true('chi',  50.0, None )
-         assert abs( 1.0 - fit_value / chi_50 ) < 1e-6
-
-
+      assert abs( 1.0 - fit_value / initial_value ) < 1e-6
 #
 if __name__ == '__main__' :
    main()
-   print('no_ode_xam: OK')
-# END no_ode_xam source code
+   print('diff_prior: OK')

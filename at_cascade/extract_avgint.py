@@ -15,14 +15,14 @@ Syntax
    # BEGIN_RETURN , # END_RETURN
 }
 
-root_node_database
-******************
+root_database
+*************
 On input this database contains a non-empty avgint table.
 Upon return the avgint table in this database is empty.
 
 avgint_table
 ************
-This is the avgint table that was in the root_node_database on input.
+This is the avgint table that was in the root_database on input.
 
 
 {xrst_end extract_avgint}
@@ -33,19 +33,19 @@ import at_cascade
 #
 # BEGIN_DEF
 # at_cascade.extract_avgint
-def extract_avgint(root_node_database) :
-   assert type(root_node_database) == str
+def extract_avgint(root_database) :
+   assert type(root_database) == str
    # END_DEF
    #
    # connection
    connection = dismod_at.create_connection(
-      root_node_database, new = False, readonly = False
+      root_database, new = False, readonly = False
    )
    #
    # avgint_table
    avgint_table = dismod_at.get_table_dict(connection, 'avgint')
    #
-   # root_node_database
+   # root_database
    empty_table = list()
    message     = 'erase avgint table'
    tbl_name    = 'avgint'

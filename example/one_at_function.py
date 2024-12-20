@@ -15,6 +15,20 @@ Example That Directly Measures One Age Time Function
 For this example everything is constant in time so the
 functions below do not depend on time.
 
+cov_reference Table
+*******************
+This example specifies the :ref:`cov_reference_table-name` in its call to
+:ref:`create_all_node_db <create_all_node_db@cov_reference_table>` ; using
+{xrst_literal
+   # BEGIN_CREATE_ALL_NODE_DB
+   # END_CREATE_ALL_NODE_DB
+}
+It also checks that the table has been set properly using
+{xrst_literal
+   # BEGIN_CHECK_COV_REFERENCE_TABLE
+   # END_CHECK_COV_REFERENCE_TABLE
+}
+
 Nodes
 *****
 The following is a diagram of the node tree for this example.
@@ -540,25 +554,41 @@ def main() :
    result_dir = 'build/example'
    at_cascade.empty_directory(result_dir)
    #
-   # Create root_node.db
-   root_node_database  = f'{result_dir}/root_node.db'
-   root_node_db(root_node_database)
+   # Create root.db
+   root_database       = f'{result_dir}/root.db'
+   root_node_db(root_database)
    #
-   # Create all_node.db
-   all_node_database = f'{result_dir}/all_node.db'
+   # option_all
    option_all        = {
       'result_dir':     result_dir,
       'root_node_name': 'n1',
-      'root_node_database': root_node_database,
+      'root_database':  root_database,
    }
+   #
+   # cov_reference_table
+   # only need to specify for the root node and its descendants
+   row = {
+      'split_reference_id' : None ,
+      'reference_value'    : avg_income['n0'] ,
+      'covariate_id'       : 0,
+   }
+   cov_reference_table = list()
+   for node_id in [ 1, 3,  4 ] :
+      row['node_id'] = node_id
+      cov_reference_table.append( copy.copy(row) )
+   #
+   # BEGIN_CREATE_ALL_NODE_DB
+   all_node_database = f'{result_dir}/all_node.db'
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
       option_all              = option_all,
+      cov_reference_table     = cov_reference_table,
    )
+   # END_CREATE_ALL_NODE_DB
    #
    # avgint_table
-   # This also erases the avgint table from root_node_database
-   avgint_table = at_cascade.extract_avgint( root_node_database )
+   # This also erases the avgint table from root_database
+   avgint_table = at_cascade.extract_avgint( root_database )
    #
    # cascade starting at root node
    at_cascade.cascade_root_node(
@@ -572,7 +602,7 @@ def main() :
       at_cascade.check_cascade_node(
          rate_true = rate_true,
          all_node_database  = all_node_database,
-         fit_node_database  = goal_database,
+         fit_database       = goal_database,
          avgint_table       = avgint_table,
          relative_tolerance = 2e-3,
       )
@@ -580,6 +610,19 @@ def main() :
    # check that fits were not run for n5 and n6
    for not_fit_dir in [ f'{result_dir}/n0', '{result_dir}/n2' ] :
       assert not os.path.exists( not_fit_dir )
+   #
+   # BEGIN_CHECK_COV_REFERENCE_TABLE
+   connection = dismod_at.create_connection(
+      all_node_database, new = False, readonly = True
+   )
+   check_table = dismod_at.get_table_dict(connection, 'cov_reference')
+   connection.close()
+   assert len(check_table) == len(cov_reference_table)
+   for check_id in range( len(check_table) ) :
+      row       = cov_reference_table[check_id]
+      check_row = check_table[check_id]
+      assert row == check_row
+   # END_CHECK_COV_REFERENCE_TABLE
 #
 if __name__ == '__main__' :
    main()

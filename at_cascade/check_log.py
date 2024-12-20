@@ -17,7 +17,8 @@ Prototype
 
 Purpose
 *******
-Read all the logs for a cascade and return any warning or error messages.
+Read the logs for a cascade and return all the messages of a certain type.
+The databases are not modified (are opened in a read only fashion).
 
 message_type
 ************
@@ -31,17 +32,17 @@ specifies the location of the
 relative to the current working directory.
 This argument can't be ``None``.
 
-root_node_database
-******************
+root_database
+*************
 specifies the location of the dismod_at
-:ref:`glossary@root_node_database`.
+:ref:`glossary@root_database`.
 
-fit_goal_set
-************
-the elements of this set are of type ``int`` (``str``)
-specifying the node_id (node_name) for each element of the
-:ref:`glossary@fit_goal_set` .
-This argument can't be ``None``.
+job_table
+*********
+This is the :ref:`create_job_table@job_table` that we are checking
+the log messages in.
+Only jobs for which :ref:`create_job_table@job_table@prior_only` is false
+are included; i.e., only jobs that correspond to fits.
 
 start_job_id
 ************
@@ -83,16 +84,15 @@ import at_cascade
 def check_log(
    message_type                  ,
    all_node_database             ,
-   root_node_database            ,
-   fit_goal_set                  ,
+   root_database            ,
+   job_table                     ,
    start_job_id           = None ,
    max_job_depth          = None ,
 # )
 ) :
    assert type(message_type)        == str
    assert type(all_node_database)   == str
-   assert type(root_node_database)  == str
-   assert type(fit_goal_set)        == set
+   assert type(root_database)  == str
    if start_job_id == None :
       start_job_id = 0
    assert max_job_depth == None or type(max_job_depth) == int
@@ -102,7 +102,7 @@ def check_log(
    #
    # node_table, covariate_table
    connection      = dismod_at.create_connection(
-      root_node_database, new = False, readonly = True
+      root_database, new = False, readonly = True
    )
    node_table      = dismod_at.get_table_dict(connection, 'node')
    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
@@ -131,16 +131,15 @@ def check_log(
    assert root_node_name is not None
    #
    # check root_node_name
-   parent_node_name = at_cascade.get_parent_node(root_node_database)
+   parent_node_name = at_cascade.get_parent_node(root_database)
    if parent_node_name != root_node_name :
-      msg  = f'{root_node_database} parent_node_name = {parent_node_name}\n'
+      msg  = f'{root_database} parent_node_name = {parent_node_name}\n'
       msg  = f'{all_node_database} root_node_name = {root_node_name}'
       assert False, msg
    #
    # root_node_id
    root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
    #
-   # root_split_reference_id
    if len(split_reference_table) == 0 :
       root_split_reference_id = None
    else :
@@ -148,15 +147,6 @@ def check_log(
          option_all_table, covariate_table, split_reference_table
       )
       root_split_reference_id = cov_info['split_reference_id']
-   #
-   # job_table
-   job_table = at_cascade.create_job_table(
-      all_node_database          = all_node_database,
-      node_table                 = node_table,
-      start_node_id              = root_node_id,
-      start_split_reference_id   = root_split_reference_id,
-      fit_goal_set               = fit_goal_set,
-   )
    #
    # node_split_set
    node_split_set = set()
@@ -178,6 +168,8 @@ def check_log(
       else :
          include_this_job = job_depth <= max_job_depth
       if include_this_job :
+         include_this_job = not job_table[job_id]['prior_only']
+      if include_this_job :
          #
          # job_name
          job_name = job_table[job_id]['job_name']
@@ -188,7 +180,7 @@ def check_log(
          # fit_split_reference_id
          fit_split_reference_id = job_table[job_id]['split_reference_id']
          #
-         # fit_node_database
+         # fit_database
          database_dir = at_cascade.get_database_dir(
             node_table              = node_table,
             split_reference_table   = split_reference_table,
@@ -198,15 +190,15 @@ def check_log(
             fit_node_id             = fit_node_id ,
             fit_split_reference_id  = fit_split_reference_id,
          )
-         fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
+         fit_database      = f'{result_dir}/{database_dir}/dismod.db'
          #
          # log_table
-         if not os.path.exists(fit_node_database) :
-            message = f'Missing fit_node_database {fit_node_database}'
+         if not os.path.exists(fit_database) :
+            message = f'Missing fit_database {fit_database}'
             message_dict[job_name] = [ message ]
          else :
             connection = dismod_at.create_connection(
-                     fit_node_database, new = False, readonly = True
+                     fit_database, new = False, readonly = True
             )
             log_table  = dismod_at.get_table_dict(connection, 'log')
             connection.close()

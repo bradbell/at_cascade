@@ -48,7 +48,7 @@ option_all            = {
    'split_covariate_name':       'sex',
    'shift_prior_std_factor':      1e3,
 }
-option_all['root_node_database'] = option_all['result_dir'] + '/root_node.db'
+option_all['root_database'] = option_all['result_dir'] + '/root.db'
 # END option_all_table
 #
 #
@@ -298,13 +298,13 @@ def main() :
    result_dir = option_all['result_dir']
    at_cascade.empty_directory(result_dir)
    #
-   # Create root_node.db
-   root_node_database  = option_all['root_node_database']
-   root_node_db(root_node_database)
+   # Create root.db
+   root_database       = option_all['root_database']
+   root_node_db(root_database)
    #
    # omega_grid
    connection   = dismod_at.create_connection(
-      root_node_database, new = False, readonly = True
+      root_database, new = False, readonly = True
    )
    age_table    = dismod_at.get_table_dict(connection, 'age')
    time_table   = dismod_at.get_table_dict(connection, 'time')
@@ -349,7 +349,7 @@ def main() :
    # avgint_table
    # also erase avgint table in root node database
    connection      = dismod_at.create_connection(
-      root_node_database, new = False, readonly = False
+      root_database, new = False, readonly = False
    )
    avgint_table    = dismod_at.get_table_dict(connection, 'avgint')
    empty_table     = list()
@@ -368,7 +368,7 @@ def main() :
    # complete the cascade
    at_cascade.continue_cascade(
       all_node_database  = all_node_database ,
-      fit_node_database  = f'{root_node_dir}/dismod.db' ,
+      fit_database       = f'{root_node_dir}/dismod.db' ,
       fit_goal_set       = fit_goal_set ,
    )
    #
@@ -379,15 +379,15 @@ def main() :
          at_cascade.check_cascade_node(
             rate_true          = rate_true,
             all_node_database  = all_node_database,
-            fit_node_database  = goal_database,
+            fit_database       = goal_database,
             avgint_table       = avgint_table,
             relative_tolerance = 1e-5,
          )
    #
    # fit_iota, fit_alpha
-   fit_node_database = f'{result_dir}/n0/dismod.db'
+   fit_database      = f'{result_dir}/n0/dismod.db'
    connection        = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+      fit_database, new = False, readonly = True
    )
    var_table         = dismod_at.get_table_dict(connection, 'var')
    fit_var_table     = dismod_at.get_table_dict(connection, 'fit_var')

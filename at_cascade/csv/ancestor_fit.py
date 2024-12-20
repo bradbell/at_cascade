@@ -51,8 +51,8 @@ allow_same_job
 **************
 If this is true (false) the a job corresponding to the ancestor fit
 can be the same as the job for the prediction; i.e., the predict job
-is the closes ancestor job. Otherwise, the parent of the predict job
-is the closes ancestor job.
+is the closest ancestor job. Otherwise, the parent of the predict job
+is the closest ancestor job.
 
 predict_job_dir
 ***************
@@ -65,6 +65,8 @@ ancestor_job_dir
 This is the directory, relative to the *fit_dir*,
 that corresponds to the closest ancestor of *predict_job_id*
 that had a successful fit and posterior sampling.
+To be specific, ``sample: OK`` is in its
+:ref:`fit_one_job@fit_database@log` .
 
 
 {xrst_end csv.ancestor_fit}

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import numpy
 import scipy.interpolate
@@ -13,29 +13,29 @@ Bilinear Spline Interpolation
 Syntax
 ******
 {xrst_literal ,
-   BEGIN_SYNTAX, END_SYNTAX
+   BEGIN_PROTOTYPE, END_PROTOTYPE
    BEGIN_RETURN, END_RETURN
 }
 
 x_name
 ******
-Is a ``str`` containing the name in *table* for the x
+is the name in *table* for the x
 variable in the interpolation.
 
 y_name
 ******
-Is a ``str`` containing the name in *table* for the y
+is the name in *table* for the y
 variable in the interpolation.
 
 z_list
 ******
-Is a ``list`` of ``str`` .
-Each element of *z_list*  contains the name in *table* for a z
+Each element of  *z_list* is a ``str`` specifying
+the name in *table* for a z
 variable in the interpolation.
 
 table
 *****
-This is a ``list`` of ``dict``.
+Each element of *table* is a ``dict``.
 The values *x_name* , *y_name* and each element of *z_list*
 must be a key in each of the dictionaries.
 Furthermore, the corresponding dictionary values must be ``str`` or ``float`` .
@@ -62,14 +62,18 @@ Duplicates are not included in this list.
 
 spline_dict
 ***********
-Is a ``dict`` of spline functions.
-This for each *z_name* in  *z_list* .
+Is a ``dict`` of spline functions with keys equal to
+each *z_name* in  *z_list* .
 The function call
 {xrst_code py}
    z = spline_dict[z_name](x, y)
 {xrst_code}
-sets z to the value of the spline for *z_name*
-where the values x, y, and z are ``float`` ,
+sets z to the value of the spline for *z_name* .
+
+#. The values x and y are ``float`` or ``int`` .
+#. The value z is a  ``float`` .
+#. The function is extended as constant with respect to x (y)
+   for values of x (y) outside the limits of x_grid (y_grid).
 
 Example
 *******
@@ -78,31 +82,59 @@ Example
 {xrst_end bilinear}
 """
 class spline_wrapper :
-   def __init__(self, spline) :
-      self.spline = spline
+   def __init__(self, spline, box, const_x, const_y) :
+      self.spline  = spline
+      self.box     = box
+      self.const_x = const_x
+      self.const_y = const_y
    def __call__(self, x, y) :
+      #
+      # x, y
       if type(x) == int :
          x = float(x)
       if type(y) == int :
          y = float(y)
       assert type(x) == float
       assert type(y) == float
-      result = self.spline(x, y)
+      #
+      # x, y
+      # The documentation for RectBivariateSpline says
+      # 'Evaluated points outside the data range will be extrapolated.' .
+      # but testing indicates the following is not necessary
+      x = max(x, self.box['x_min'])
+      x = min(x, self.box['x_max'])
+      y = max(y, self.box['y_min'])
+      y = min(y, self.box['y_max'])
+      #
+      # result
+      if self.const_x and self.const_y :
+         result = self.spline
+      elif self.const_x :
+         result = self.spline(y)
+      elif self.const_y :
+         result = self.spline(x)
+      else :
+         result = self.spline(x, y)
       assert type(result) == numpy.ndarray
       assert result.size == 1
-      return float(result)
+      #
+      result = float(result)
+      return result
 
-# BEGIN_SYNTAX
+# BEGIN_PROTOTYPE
 # at_cascade.bilinear
 def bilinear(
-# x_grid, y_grid, spline_dict = bilinear(
    table,
    x_name,
    y_name,
    z_list
 # )
-# END_SYNTAX
 ) :
+   assert type(table) == list
+   assert type(x_name) == str
+   assert type(y_name) == str
+   assert type(z_list) == list
+   # END_PROTOTYPE
    #
    if len(table) == 0 :
       return (list(), list(), None)
@@ -116,15 +148,7 @@ def bilinear(
       x_set.add(x)
       y_set.add(y)
    #
-   # n_x, n_y
-   n_x = len(x_set)
-   n_y = len(y_set)
-   #
-   # x_grid_in, y_grid_in
-   x_grid_in = sorted(x_set)
-   y_grid_in = sorted(y_set)
-   #
-   # triple_list, x_set, y_set
+   # triple_list
    triple_list = list()
    for row in table :
       x      = float( row[x_name] )
@@ -132,27 +156,6 @@ def bilinear(
       triple = (x, y, row)
       triple_list.append( triple )
       #
-      if n_x == 1 :
-         if x == 0.0 :
-            x_other = 1.0
-         else :
-            x_other = 2.0 * x
-         triple = (x_other, y, row)
-         triple_list.append( triple )
-         x_set.add(x_other)
-      #
-      if n_y == 1 :
-         if y == 0.0 :
-            y_other = 1.0
-         else :
-            y_other = 2.0 * y
-         triple = (x, y_other, row)
-         triple_list.append( triple )
-         y_set.add(y_other)
-      #
-      if n_x == 1 and n_y == 1 :
-         triple = (x_other, y_other, row)
-         triple_list.append( triple )
    #
    # n_x, n_y
    n_x = len(x_set)
@@ -163,7 +166,7 @@ def bilinear(
    y_grid = sorted(y_set)
    #
    if len(triple_list) != n_x * n_y :
-      return (x_grid_in, y_grid_in, None)
+      return (x_grid, y_grid, None)
    #
    # triple_list
    triple_list = sorted(triple_list)
@@ -171,13 +174,11 @@ def bilinear(
    # spline_dict
    spline_dict = dict()
    #
-   # z_grid
-   z_grid = numpy.empty( (n_x, n_y) )
-   #
    # z_name
    for z_name in z_list :
       #
       # z_grid
+      z_grid    = numpy.empty( (n_x, n_y) )
       z_grid[:] = numpy.nan
       #
       # index, triple
@@ -189,25 +190,54 @@ def bilinear(
          x_index  = int( index / n_y )
          y_index  = index % n_y
          if x != x_grid[x_index] :
-            return(x_grid_in, y_grid_in, None)
+            return(x_grid, y_grid, None)
          if y != y_grid[y_index] :
-            return(x_grid_in, y_grid_in, None)
+            return(x_grid, y_grid, None)
          #
          # z_grid
-         row   = triple[2]
-         value = float( row[z_name] )
-         z_grid[x_index][y_index] =  value
+         row                      = triple[2]
+         value                    = float( row[z_name] )
+         z_grid[x_index, y_index] =  value
       #
-      # spline_dict
-      spline = scipy.interpolate.RectBivariateSpline(
-         x_grid, y_grid, z_grid, kx=1, ky=1, s=0
-      )
-      spline_dict[z_name] = spline_wrapper( spline )
+      # const_x
+      const_x = True
+      for y_index in range(n_y) :
+         const_col = numpy.all( z_grid[0, y_index] == z_grid[:, y_index] )
+         const_x   = const_x and const_col
+      #
+      # const_y
+      const_y = True
+      for x_index in range(n_x) :
+         const_row = numpy.all( z_grid[x_index, 0] == z_grid[x_index, :] )
+         const_y   = const_y and const_row
+      #
+      # spline
+      if const_x and const_y :
+         spline = numpy.array( z_grid[0, 0] )
+      elif const_x :
+         spline = scipy.interpolate.UnivariateSpline(
+            y_grid, z_grid[0,:], k=1, s=0
+         )
+      elif const_y :
+         spline = scipy.interpolate.UnivariateSpline(
+            x_grid, z_grid[:,0], k=1, s=0
+         )
+      else :
+         spline = scipy.interpolate.RectBivariateSpline(
+            x_grid, y_grid, z_grid, kx=1, ky=1, s=0
+         )
+      box = {
+         'x_min' : x_grid[0],
+         'x_max' : x_grid[-1],
+         'y_min' : y_grid[0],
+         'y_max' : y_grid[-1],
+      }
+      spline_dict[z_name] = spline_wrapper(spline , box, const_x, const_y)
    #
    # BEGIN_RETURN
    # ...
-   assert type(x_grid_in) == list
-   assert type(y_grid_in) == list
+   assert type(x_grid) == list
+   assert type(y_grid) == list
    assert type(spline_dict) == dict
-   return (x_grid_in, y_grid_in, spline_dict)
+   return (x_grid, y_grid, spline_dict)
    # END_RETURN

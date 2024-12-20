@@ -170,21 +170,19 @@ filled in for missing values.
 
 fit_predict.csv
 ===============
-If :ref:`csv.predict@start_job_name` is None,
-this file contains the predictions for all the fits.
-These predictions for all of the nodes at the age, time and
-covariate values specified in covariate.csv.
-The prediction is done using the optimal variable values.
+#. If :ref:`csv.predict@start_job_name` is None,
+   ``fit_predict.csv`` contains the predictions for all the fits.
+   These predictions for all of the nodes at the age, time and
+   covariate values specified in covariate.csv.
+   The prediction is done using the optimal variable values.
 
-start_job_name
---------------
-If *start_job_name* is not None,
-the predictions are only for jobs at or below the starting job.
-In addition, the predictions are stored below *fit_dir* in the file
+#. If :ref:`csv.predict@start_job_name` is not None,
+   the predictions are only for jobs at or below the starting job.
+   In addition, the predictions are stored below *fit_dir* in the file
 
-   ``predict/fit_``\ *start_job_name*\ ``.csv``
+      ``predict/fit_``\ *start_job_name*\ ``.csv``
 
-and not in ``fit_predict.csv`` .
+   and not in ``fit_predict.csv`` .
 
 
 avgint_id
@@ -226,23 +224,34 @@ node_name
 is the node name for this sample is predicting for.
 This cycles through all the nodes in covariate.csv.
 
+sex
+---
+is the sex, female, both, or male, that the predictions are for.
+
 fit_node_name
 -------------
 is the node name corresponding to the fit, and samples, that was used
 to do these predictions.
 This identifies the nearest ancestor that had a successful fit and samples.
-If *fit_node_name* and *fit_sex* are the same as *node_name* and *sex* ,
-the fit and samples succeeded for this *node_name* and *sex* .
-Otherwise fit or samples failed for this *node_name* and *sex* .
-
-sex
----
-is the sex, female, both, or male, that the predictions are for.
 
 fit_sex
 -------
 is the sex corresponding to the fit, and samples, that were used
 to do these prediction.
+
+posterior
+.........
+If *fit_node_name* and *fit_sex* are the same as *node_name* and *sex* ,
+the fit and samples succeeded for this *node_name* and *sex* and
+this row contains a posterior prediction for this *node_name* and *sex* .
+
+prior
+.....
+If *fit_node_name* is not the same as *node_name* ,
+or *fit_sex* is not the same as *sex* ,
+this row contains a prior prediction for this *node_name* and *sex* .
+The pair ( *fit_node_name* , *fit_sex* ) correspond to
+the closest ancestor fit that was successful.
 
 age
 ---
@@ -438,7 +447,7 @@ def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
    # END_PREDICT
    #
    # dismod_node_table, dismod_option_table
-   database     = f'{fit_dir}/root_node.db'
+   database     = f'{fit_dir}/root.db'
    connection   = dismod_at.create_connection(
       database, new = False, readonly = True
    )
@@ -451,11 +460,11 @@ def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
    for row in dismod_node_table :
       if row['parent'] == None :
          if top_node_name != None :
-            msg = 'root_node.db: node table: more than one node has no parent'
+            msg = 'root.db: node table: more than one node has no parent'
             assert False, msg
          top_node_name = row['node_name']
    if top_node_name == None :
-      msg = 'root_node.db: node_table: no node has None for parent'
+      msg = 'root.db: node_table: no node has None for parent'
       assert False, msg
    #
    # refit_split

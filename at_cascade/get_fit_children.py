@@ -1,9 +1,12 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_fit_children}
+{xrst_spell
+   len
+}
 
 Determine the Set of Nodes to Fit
 #################################
@@ -34,12 +37,15 @@ containing the dismod_at node table.
 fit_children
 ************
 The return value *fit_children* is a python list of python sets.
-For each *node_id* in the node table,
-*fit_children[node_id]* is a the set of child node ids that
-satisfy the following condition:
 
-The child node id is in the :ref:`glossary@fit_node_set`
-corresponding to this *fit_goal_set* .
+For each *node_id*
+*fit_children* [ *node_id* ] is a the set of node ids that
+are children of *node_id* and must be fit in order to fit
+all the nodes in *fit_goal_set*.
+
+Note that there must be at least one *node_id* in *fit_goal_set* ,
+that is not an ancestor of any node in *fit_goal_set* and hence
+len( *fit_children* [ *node_id* ] ) = 0 .
 
 {xrst_end get_fit_children}
 '''
@@ -50,9 +56,9 @@ import at_cascade
 # BEGIN DEF
 # at_cascade.get_fit_children
 def get_fit_children(
-   root_node_id  = None ,
-   fit_goal_set  = None ,
-   node_table    = None ,
+   root_node_id  ,
+   fit_goal_set  ,
+   node_table    ,
 ) :
    assert type( root_node_id ) == int
    assert type( fit_goal_set ) == set
@@ -89,5 +95,9 @@ def get_fit_children(
    # BEGIN RETURN
    # ...
    assert type(fit_children) == list
+   ok = False
+   for node_id in fit_goal_set :
+      ok = ok or len( fit_children[node_id] ) == 0
+   assert ok
    return fit_children
    # END RETURN

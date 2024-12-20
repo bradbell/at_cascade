@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_fit_integrand}
@@ -23,7 +23,7 @@ for the node we are fitting.
 fit_integrand
 *************
 The return value *fit_integrand* is a python set of integrand_id
-that appear in the data table in the *fit_node_database*.
+that appear in the data table in the *fit_database*.
 Furthermore there is a row in the data table
 where each such integrand_id is not held out.
 

@@ -56,10 +56,10 @@ This database is located at
 see :ref:`option_all_table@result_dir`
 and :ref:`option_all_table@root_node_name`.
 If *no_ode_fit* is ``True`` ( ``False`` ) the priors in the
-*root_node_database* are modified (are not modified)
+*root_database* are modified (are not modified)
 before the root node is fit;
-see :ref:`option_all_table@root_node_database` .
-Upon return, this is a :ref:`glossary@fit_node_database` with the
+see :ref:`option_all_table@root_database` .
+Upon return, this is a :ref:`glossary@fit_database` with the
 extra properties listed below:
 
 Version
@@ -145,18 +145,18 @@ def cascade_root_node(
    for row in option_all_table :
       option_all_dict[ row['option_name'] ] = row['option_value']
    #
-   # root_node_name, root_node_database, max_number_cpu, result_dir
+   # root_node_name, root_database, max_number_cpu, result_dir
    root_node_name     = option_all_dict['root_node_name']
-   root_node_database = option_all_dict['root_node_database']
+   root_database      = option_all_dict['root_database']
    result_dir         = option_all_dict['result_dir']
    max_number_cpu     = 1
    if 'max_number_cpu' in option_all_dict :
       max_number_cpu = int( option_all_dict['max_number_cpu'] )
    #
    # check root_node_name
-   parent_node_name = at_cascade.get_parent_node(root_node_database)
+   parent_node_name = at_cascade.get_parent_node(root_database)
    if parent_node_name != root_node_name :
-      msg  = f'{root_node_database} parent_node_name = {parent_node_name}\n'
+      msg  = f'{root_database} parent_node_name = {parent_node_name}\n'
       msg += f'{all_node_database} root_node_name = {root_node_name}'
       assert False, msg
    #
@@ -165,12 +165,12 @@ def cascade_root_node(
    if not os.path.exists( f'{result_dir}/{root_node_name}' ) :
       os.makedirs( f'{result_dir}/{root_node_name}' )
    if not no_ode_fit :
-      at_cascade.copy_root_db(root_node_database, root_fit_database)
+      at_cascade.copy_root_db(root_database, root_fit_database)
       at_cascade.omega_constraint(all_node_database, root_fit_database)
    else :
       at_cascade.no_ode_fit(
          all_node_database  = all_node_database,
-         root_node_database = root_node_database,
+         root_database      = root_database,
          option_all_dict    = option_all_dict,
          fit_type           = fit_type_list[0],
       )
@@ -197,7 +197,7 @@ def cascade_root_node(
    #
    # node_table, covariate_table, fit_integrand
    fit_or_root = at_cascade.fit_or_root_class(
-      root_fit_database, root_node_database
+      root_fit_database, root_database
    )
    node_table      = fit_or_root.get_table('node')
    covariate_table = fit_or_root.get_table('covariate')

@@ -12,6 +12,7 @@ current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
+import dismod_at
 # --------------------------------------------------------------------------
 '''
 {xrst_begin csv.shock_cov}
@@ -30,6 +31,7 @@ import at_cascade
    sincidence
    std
    tim
+   rel
 }
 
 Simulate and Fit Incidence Using Prevalence Data and a Shock Covariate
@@ -51,6 +53,24 @@ Get the random seed before we use time as a float variable.
 random_seed = str( int( time.time() ) )
 '''{xrst_code}
 
+covariate_reference
+*******************
+This can be either data_in.csv or covariate.csv .
+This tells fit to set the reference for each relative covariate
+to the average of the covariate
+corresponding to data_in.csv or covariate.csv .
+Note that if we average the values for the data_in.csv
+the shock is not included and we get zero for the shock covariate.
+Otherwise the shock is include and we get a non-zero value.
+{xrst_code py}'''
+covariate_reference = 'covariate.csv'
+'''{xrst_code}
+The following code, at the end of this example, checks the cov_reference table
+{xrst_literal
+   # BEGIN_CHECK_COV_REFERENCE
+   # END_CHECK_COV_REFERENCE
+}
+
 Simulation
 **********
 The setting below are used by :ref:`csv.simulate-name` to
@@ -68,16 +88,18 @@ age_grid   = [0.0, 1.0, 25.0, 50.0, 75.0, 100.0]
 time_grid  = [1980.0, 2000.0, 2020.0]
 '''{xrst_code}
 
-shock_covariate
-===============
-The shock covariate is zero at each age time grid point except for
+shock
+=====
+The shock is zero at each age time grid point except for
 age equal 50. and time equal 2000.0 where it is one.
 Bilinear interpolation is used to evaluate the shock between grid points.
 Thus the closer the other grid points are to (50,2000),
 the narrower the shock.
 {xrst_code py}'''
+shock_age  = age_grid[3]
+shock_time = time_grid[1]
 def shock_covariate(age, time) :
-   if age == 50.0 and time == 2000.0 :
+   if age == shock_age and time == shock_time :
       return 1.0
    return 0.0
 '''{xrst_code}
@@ -89,10 +111,11 @@ option_sim.csv
    (This seems to require fitting after the female male split.)
 #. Only iota has random effects. Note that effects are in log space.
 #. Use the random seed chosen above.
+#. abs_shock (rel_shock) is an absolute (relative) covariate.
 {xrst_code py}'''
 sim_file['option_sim.csv'] = \
 '''name,value
-absolute_covariates,shock
+absolute_covariates,abs_shock
 float_precision,4
 random_depend_sex,true
 std_random_effects_iota,.2
@@ -116,29 +139,32 @@ n2,n0
 covariate.csv
 =============
 #. This sets omega to be constant and equal to *omega_truth* .
-#. It also sets the values of the shock covariate on the age-tim grid.
+#. It also sets the values of the
+   absolute and relative shock covariates on the age-tim grid.
 {xrst_code py}'''
 omega_truth      = 0.01
-sim_file['covariate.csv'] = 'node_name,sex,age,time,omega,shock\n'
+sim_file['covariate.csv'] = \
+   'node_name,sex,age,time,omega,abs_shock,rel_shock\n'
 for node_name in [ 'n0', 'n1', 'n2' ] :
    for sex in [ 'female', 'male' ] :
       for age in age_grid :
          for time in time_grid :
             shock = shock_covariate(age, time)
-            row   = f'{node_name},{sex},{age},{time},{omega_truth},{shock}\n'
+            row   = \
+            f'{node_name},{sex},{age},{time},{omega_truth},{shock},{shock}\n'
             sim_file['covariate.csv'] += row
 '''{xrst_code}
 
 multiplier_sim.csv
 ==================
 #. This defines one covariate multiplier that multiplies the
-   shock covariate and affects iota.
+   abs_shock covariate and affects iota.
 #. The value of multiplier used during the simulation is *multiplier_truth* .
 {xrst_code py}'''
 multiplier_truth = 1.0
 sim_file['multiplier_sim.csv'] = \
 'multiplier_id,rate_name,covariate_or_sex,multiplier_truth\n' + \
-f'0,iota,shock,{multiplier_truth}\n'
+f'0,iota,abs_shock,{multiplier_truth}\n'
 '''{xrst_code}
 
 simulate.csv
@@ -170,12 +196,13 @@ for integrand_name in [ 'Sincidence', 'prevalence' ] :
       for sex in [ 'female', 'male' ] :
          for age in age_grid :
             for time in time_grid :
-               for i in range(n_repeat) :
-                  row  = f'{simulate_id},{integrand_name},{node_name},{sex},'
-                  row += f'{age},{age},{time},{time},'
-                  row += f'{meas_std_cv},{meas_std_min}\n'
-                  sim_file['simulate.csv'] += row
-                  simulate_id += 1
+               if (age, time) != (shock_age, shock_time) :
+                  for i in range(n_repeat) :
+                     row  = f'{simulate_id},{integrand_name},{node_name},{sex},'
+                     row += f'{age},{age},{time},{time},'
+                     row += f'{meas_std_cv},{meas_std_min}\n'
+                     sim_file['simulate.csv'] += row
+                     simulate_id += 1
 '''{xrst_code}
 
 no_effect_rate.csv
@@ -212,9 +239,10 @@ This is a copy of the
 
 option_fit.csv
 ==============
-#. The shock is a absolute covariate; i.e., its reference value is always zero.
-   (The reference value for a relative covariate is its average for
-   the particular node and sex being fit.)
+#. The rel_shock is a relative covariate; if *covariate_reference* is
+   ``data_in.csv`` its reference value is zero
+   (because the shock is zero at all the data (age,time) points.
+   Otherwise, its reference value is non-zero.
 #. We are holding out the Sincidence data except during the no_ode fit,
    where it is used to initialize iota for the optimization.
 #. We are refitting after the split by sex at node zero.
@@ -233,7 +261,7 @@ option_fit.csv
 {xrst_code py}'''
 fit_file['option_fit.csv']  =  \
 '''name,value
-absolute_covariates,shock
+absolute_covariates,abs_shock
 hold_out_integrand,Sincidence
 refit_split,true
 ode_step_size,5.0
@@ -243,6 +271,7 @@ tolerance_fixed,1e-8
 ode_method,trapezoidal
 '''
 fit_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
+fit_file['option_fit.csv'] += f'covariate_reference,{covariate_reference}\n'
 '''{xrst_code}
 
 option_predict.csv
@@ -267,7 +296,7 @@ fit_file['fit_goal.csv'] = \
 n1
 n2
 '''
-'''{xrst_code}
+r'''{xrst_code}
 
 prior.csv
 =========
@@ -333,7 +362,7 @@ fit_file['child_rate.csv'] = \
 '''rate_name,value_prior
 iota,random_prior
 '''
-'''{xrst_code}
+r'''{xrst_code}
 
 mulcov.csv
 ==========
@@ -341,10 +370,12 @@ In csv.fit,  covariate multipliers are constant in age and time.
 As in the data simulation, there is one covariate multiplier.
 It multiplies the shock covariate and affects the iota rate.
 It prior is the uniform\_-1_1 density defined above.
+You can use either the absolute or relative shock covariate here; i.e.
+abs_shock or rel_shock.
 {xrst_code py}'''
 fit_file['mulcov.csv'] = \
 'covariate,type,effected,value_prior,const_value\n' + \
-'shock,rate_value,iota,uniform_-1_1,,'
+'abs_shock,rate_value,iota,uniform_-1_1,,'
 '''{xrst_code}
 
 predict_integrand.csv
@@ -532,6 +563,37 @@ def fit(sim_dir, fit_dir) :
       msg  = f'cov_shock.py: the file {fit_dir}/predict.csv\n'
       msg += f'missing resutls for the fit gloal node.sex = {node}.{sex}'
       assert False, msg
+   #
+   # cov_reference_table
+   file_name =  f'{fit_dir}/all_node.db'
+   connection = dismod_at.create_connection(
+      file_name, new = False, readonly = True
+   )
+   cov_reference_table = dismod_at.get_table_dict(connection, 'cov_reference')
+   connection.close()
+   #
+   # covariate_table
+   file_name =  f'{fit_dir}/root.db'
+   connection = dismod_at.create_connection(
+      file_name, new = False, readonly = True
+   )
+   covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+   connection.close()
+   #
+   # BEGIN_CHECK_COV_REFERENCE_TABLE
+   for cov_reference_id in range( len(cov_reference_table) ) :
+      row             = cov_reference_table[cov_reference_id]
+      reference_value = row['reference_value']
+      covariate_id    = row['covariate_id']
+      covariate_name  = covariate_table[covariate_id]['covariate_name']
+      if covariate_name == 'abs_shock' :
+         assert reference_value == 0.0
+      elif covariate_name == 'rel_shock' :
+         if covariate_reference == 'data_in.csv' :
+            assert  reference_value == 0.0
+         else :
+            assert  reference_value > 0.0
+   # END_CHECK_COV_REFERENCE_TABLE
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :

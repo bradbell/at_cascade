@@ -15,14 +15,14 @@ at_cascade.version
 ******************
 The version number for this copy of at_cascade.
 {xrst_code py}'''
-version = '2024.8.21'
+version = '2024.12.20'
 '''{xrst_code}
 
 at_cascade.constant_table_list
 ******************************
 Some of the dismod_at input tables are the same for every fit of a cascade.
 The :ref:`fit_or_root_class-name` uses the
-:ref:`glossary@root_node_database` to get the value for these tables:
+:ref:`glossary@root_database` to get the value for these tables:
 {xrst_code py} '''
 constant_table_list = [
    'age',
@@ -47,6 +47,7 @@ constant_table_list = [
    at_cascade/check_cascade_node.py
    at_cascade/check_log.py
    at_cascade/clear_shared.py
+   at_cascade/com_cov_reference.py
    at_cascade/continue_cascade.py
    at_cascade/copy_other_tbl.py
    at_cascade/copy_root_db.py
@@ -62,10 +63,10 @@ constant_table_list = [
    at_cascade/fit_or_root_class.py
    at_cascade/fit_parallel.py
    at_cascade/get_cov_info.py
-   at_cascade/get_cov_reference.py
    at_cascade/get_database_dir.py
    at_cascade/get_fit_children.py
    at_cascade/get_fit_integrand.py
+   at_cascade/get_freeze_dict.py
    at_cascade/get_parent_node.py
    at_cascade/get_var_id.py
    at_cascade/job_descendent.py
@@ -93,6 +94,7 @@ from .cascade_root_node     import cascade_root_node
 from .check_cascade_node    import check_cascade_node
 from .check_log             import check_log
 from .clear_shared          import clear_shared
+from .com_cov_reference     import com_cov_reference
 from .continue_cascade      import continue_cascade
 from .copy_other_tbl        import copy_other_tbl
 from .copy_root_db          import copy_root_db
@@ -108,10 +110,10 @@ from .fit_one_process       import fit_one_process
 from .fit_or_root_class     import fit_or_root_class
 from .fit_parallel          import fit_parallel
 from .get_cov_info          import get_cov_info
-from .get_cov_reference     import get_cov_reference
 from .get_database_dir      import get_database_dir
 from .get_fit_children      import get_fit_children
 from .get_fit_integrand     import get_fit_integrand
+from .get_freeze_dict       import get_freeze_dict
 from .get_parent_node       import get_parent_node
 from .get_var_id            import get_var_id
 from .job_descendent        import job_descendent

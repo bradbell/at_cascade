@@ -15,16 +15,16 @@ Prototype
    # END_COPY_ROOT_DB
 }
 
-root_node_database
-******************
-This is the :ref:`glossary@root_node_database` .
+root_database
+*************
+This is the :ref:`glossary@root_database` .
 It must exist when this routine is called.
 
-fit_node_database
-*****************
-This is a :ref:`glossary@fit_node_database` that
+fit_database
+************
+This is a :ref:`glossary@fit_database` that
 can be used to fit the root node.
-The directory where the *fit_node_database* will be located must exist
+The directory where the *fit_database* will be located must exist
 when this routine is called.
 This database is created as follows:
 
@@ -64,20 +64,20 @@ def create_empty_log_table(connection) :
 # -----------------------------------------------------------------------------
 # BEGIN_COPY_ROOT_DB
 # at_cascade.copy_root_db
-def copy_root_db(root_node_database, fit_node_database) :
-   assert type(root_node_database) == str
-   assert type(fit_node_database) == str
+def copy_root_db(root_database, fit_database) :
+   assert type(root_database) == str
+   assert type(fit_database) == str
    # END_COPY_ROOT_DB
    #
-   # fit_node_database
-   shutil.copyfile(root_node_database, fit_node_database)
+   # fit_database
+   shutil.copyfile(root_database, fit_database)
    #
    # connection
    connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
+      fit_database, new = False, readonly = False
    )
    #
-   # fit_node_database
+   # fit_database
    for table_name in at_cascade.constant_table_list :
       if table_name == 'rate_eff_cov' :
          command = f'DROP TABLE IF EXISTS {table_name}'
@@ -99,11 +99,11 @@ def copy_root_db(root_node_database, fit_node_database) :
       assert row['option_name'] != 'other_input_table'
    row = dict()
    row['option_name']  = 'other_database'
-   if os.path.isabs( root_node_database ) :
-      row['option_value'] = root_node_database
+   if os.path.isabs( root_database ) :
+      row['option_value'] = root_database
    else :
-      fit_node_dirname = os.path.dirname( fit_node_database )
-      relative_path    = os.path.relpath(root_node_database, fit_node_dirname)
+      fit_node_dirname = os.path.dirname( fit_database )
+      relative_path    = os.path.relpath(root_database, fit_node_dirname)
       row['option_value'] = str( relative_path )
    option_table.append(row)
    row = dict()
@@ -111,7 +111,7 @@ def copy_root_db(root_node_database, fit_node_database) :
    row['option_value'] = other_input_table
    option_table.append(row)
    #
-   # fit_node_database
+   # fit_database
    dismod_at.replace_table(
       connection, tbl_name = 'option', table_dict = option_table
    )

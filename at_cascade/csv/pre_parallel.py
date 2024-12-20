@@ -44,7 +44,8 @@ If this argument is None, all of the jobs (fits) will be included.
 
 max_job_depth
 *************
-This is the number of generations below start_job_name are.
+This is the number of generations below start_job_name that are included
+in the predictions.
 If max_job_depth is zero,  only the start job will be included.
 If max_job_depth is None,  start job and all its descendants are included.
 
@@ -115,15 +116,15 @@ def pre_parallel(
    # all_node_db
    all_node_db = f'{fit_dir}/all_node.db'
    #
-   # root_node_database
-   root_node_database = f'{fit_dir}/root_node.db'
+   # root_database
+   root_database      = f'{fit_dir}/root.db'
    #
    # root_node_name
-   root_node_name = at_cascade.get_parent_node(root_node_database)
+   root_node_name = at_cascade.get_parent_node(root_database)
    #
    # node_table, covariate_table
    connection      = dismod_at.create_connection(
-      root_node_database, new = False, readonly = True
+      root_database, new = False, readonly = True
    )
    node_table      = dismod_at.get_table_dict(connection, 'node')
    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
@@ -179,15 +180,21 @@ def pre_parallel(
       assert False, msg
    #
    # at_cascade_log_dict
-   # get log for all jobs so that can find ancestor jobs that completed
+   # get log for all jobs so that we can find ancestor jobs that completed
    log_start_job_id = 0
+   if max_job_depth == None :
+      log_max_job_depth = None
+   elif start_job_id == None :
+      log_max_job_depth = max_job_depts
+   else :
+      log_max_job_depth = max_job_depth + start_job_id
    at_cascade_log_dict = at_cascade.check_log(
       message_type       = 'at_cascade'         ,
       all_node_database  = all_node_db          ,
-      root_node_database = root_node_database   ,
-      fit_goal_set       = fit_goal_set         ,
+      root_database      = root_database   ,
+      job_table          = job_table            ,
       start_job_id       = log_start_job_id     ,
-      max_job_depth      = max_job_depth        ,
+      max_job_depth      = log_max_job_depth    ,
    )
    #
    # n_job
@@ -303,7 +310,7 @@ def pre_parallel(
       node_table,
       root_node_id,
       root_split_reference_id,
-      root_node_database,
+      root_database,
    )
    #
    # shm_job_status

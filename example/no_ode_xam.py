@@ -658,13 +658,13 @@ def display_no_ode_fit(root_node_dir) :
    # db2csv
    dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
 # ----------------------------------------------------------------------------
-def check_no_ode_fit(root_node_database) :
+def check_no_ode_fit(root_database) :
    #
    # root_node_dir
    root_node_dir = 'n0'
-   index         = root_node_database.rfind('/')
+   index         = root_database.rfind('/')
    if 0 <= index :
-      root_node_dir = root_node_database[0 : index] + '/n0'
+      root_node_dir = root_database[0 : index] + '/n0'
    #
    # no_ode_database
    no_ode_database = root_node_dir + '/no_ode/dismod.db'
@@ -676,7 +676,7 @@ def check_no_ode_fit(root_node_database) :
    #
    # table
    fit_or_root = at_cascade.fit_or_root_class(
-      no_ode_database, root_node_database
+      no_ode_database, root_database
    )
    table = dict()
    for tbl_name in [
@@ -749,9 +749,9 @@ def main() :
    result_dir = 'build/example'
    at_cascade.empty_directory(result_dir)
    #
-   # Create root_node.db
-   root_node_database  = f'{result_dir}/root_node.db'
-   root_node_db(root_node_database)
+   # Create root.db
+   root_database       = f'{result_dir}/root.db'
+   root_node_db(root_database)
    #
    # omega_grid
    omega_grid = dict()
@@ -783,7 +783,7 @@ def main() :
    option_all        = {
       'result_dir'         : result_dir,
       'root_node_name'     : 'n0',
-      'root_node_database' : root_node_database,
+      'root_database' : root_database,
    }
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
@@ -798,8 +798,8 @@ def main() :
    os.mkdir(root_node_dir)
    #
    # avgint_table
-   # This also erases the avgint table from root_node_database
-   avgint_table = at_cascade.extract_avgint( root_node_database )
+   # This also erases the avgint table from root_database
+   avgint_table = at_cascade.extract_avgint( root_database )
    #
    # cascade starting at root node
    at_cascade.cascade_root_node(
@@ -809,7 +809,7 @@ def main() :
    )
    #
    # check_no_ode_fit
-   check_no_ode_fit(root_node_database)
+   check_no_ode_fit(root_database)
    #
    # display_no_ode_fit
    display_no_ode_fit(root_node_dir)
@@ -820,15 +820,15 @@ def main() :
       at_cascade.check_cascade_node(
          rate_true          = rate_true,
          all_node_database  = all_node_database,
-         fit_node_database  = goal_database,
+         fit_database       = goal_database,
          avgint_table       = avgint_table,
          relative_tolerance = 1e-2,
       )
    #
    # var_table, rate_table, smooth_grid_table
-   fit_node_database = f'{result_dir}/n0/dismod.db'
+   fit_database      = f'{result_dir}/n0/dismod.db'
    connection        = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = True
+      fit_database, new = False, readonly = True
    )
    var_table         = dismod_at.get_table_dict(connection, 'var')
    rate_table        = dismod_at.get_table_dict(connection, 'rate')

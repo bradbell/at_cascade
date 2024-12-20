@@ -23,15 +23,8 @@ def main() :
    at_cascade.empty_directory('build/test')
    os.chdir('build/test')
    # ------------------------------------------------------------------------
-   # all_node_database
-   all_node_database = 'all_node.db'
-   #
-   # root_node_database
-   root_node_database  = 'root_node.db'
-   #
-   # connection
-   new        = True
-   connection = dismod_at.create_connection(all_node_database, new)
+   # root_database
+   root_database       = 'root.db'
    #
    # split_reference_list
    split_reference_list = [ -0.5, 0.0, 0.5 ]
@@ -39,37 +32,30 @@ def main() :
    # absolute_covariates
    absolute_covariates = 'vaccine'
    #
-   # option_all table
-   tbl_name = 'option_all'
-   col_name = [ 'option_name', 'option_value' ]
-   col_type = [ 'text',        'text'         ]
-   split_covariate_name = 'sex'
+   # option_all_table
    row_list = [
       [ 'result_dir',           '.'  ],
       [ 'root_node_name',       'n0' ],
-      [ 'root_node_database',   root_node_database ],
-      [ 'split_covariate_name', split_covariate_name ],
+      [ 'root_database',        root_database ],
+      [ 'split_covariate_name', 'sex' ],
       [ 'absolute_covariates',  absolute_covariates ],
    ]
-   dismod_at.create_table(
-      connection, tbl_name, col_name, col_type, row_list
-   )
+   option_all_table = list()
+   for row in row_list :
+      option_all_table.append( {'option_name':row[0], 'option_value':row[1]} )
    #
    # split_reference table
-   tbl_name = 'split_reference'
-   col_name = [ 'split_reference_name', 'split_reference_value' ]
-   col_type = [ 'text',                 'real']
    row_list = [ ['female', -0.5], ['both', 0.0], ['male', 0.5] ]
-   dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
-   #
-   # connection
-   connection.close()
+   split_reference_table = list()
+   for row in row_list :
+      tmp = { 'split_reference_name':row[0], 'split_reference_value':row[1] }
+      split_reference_table.append( tmp )
    #
    # ------------------------------------------------------------------------
    #
    # connection
    new        = True
-   connection = dismod_at.create_connection(root_node_database, new)
+   connection = dismod_at.create_connection(root_database, new)
    #
    # option table
    tbl_name = 'option'
@@ -137,6 +123,10 @@ def main() :
    assert len( option_table ) == 1
    assert option_table[0]['option_name'] == 'parent_node_name'
    #
+   # node_table, covariatetable
+   node_table      = dismod_at.get_table_dict(connection, 'node')
+   covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+   #
    # bmi_covariate_id
    # bmi is the only relative covariate
    bmi_covariate_id = 2
@@ -152,11 +142,13 @@ def main() :
       for split_reference_id in range(3) :
          #
          # cov_reference_list
-         cov_reference_list = at_cascade.get_cov_reference(
-            all_node_database  = all_node_database,
-            fit_node_database  = root_node_database,
-            shift_node_id      = node_id,
-            split_reference_id = split_reference_id,
+         cov_reference_list = at_cascade.com_cov_reference(
+            option_all_table      = option_all_table,
+            split_reference_table = split_reference_table,
+            node_table            = node_table,
+            covariate_table       = covariate_table,
+            shift_node_id         = node_id,
+            split_reference_id    = split_reference_id,
          )
          sex      = split_reference_list[split_reference_id]
          bmi_list = list()

@@ -7,8 +7,7 @@
    avgint
    attaches
    meas
-   meta
-   std
+   cov
 }
 
 Wish List for at_cascade
@@ -29,32 +28,35 @@ to the AT_Cascade docs for better visibility for end users of AT-Cascade
 
 avgint Table
 ************
-Change :ref:`cascade_root_node-name` so that upon return
-the avgint table in each dismod.db database corresponds to the predictions
-for all the possible child jobs corresponding to that database.
-In addition, change :ref:`csv.predict-name` so that upon return
-the avgint table in each ancestor.db database corresponds to the prediction
-for the corresponding job; i.e., (node, sex) pair.
-
-Covariate Reference Values
-**************************
-The cascade uses :ref:`get_cov_reference-name` to set to covariate
-reference values for jobs below the root job.
-It is currently averaging the covariate values in the data table
-that correspond to each job.
-This is probably not ideal because a job might have very few data point.
-
-Meta Regression
-***************
-The extra measurement noise added for the mismatch between the model and the
-data should decrease as one goes down the cascade.
-One reason is, there are fewer levels of random effects
-that are not modeled.
-Another reason is, there is less variation due to covariates
-that are not modeled.
+Document the state of the ``dismod_at.db`` avgint table at the end of
+:ref:`fit_one_job-name` .
+(Note that the avgint table in ``ancestor.db`` and ``this.db``
+are different; see :ref:`wish_list@csv.fit@avgint Table` below.)
 
 csv.fit
 *******
+
+Covariate Table Size
+====================
+The number of rows and columns in the
+:ref:`csv.fit@Input Files@covariate.csv` keeps increasing
+(as we find new uses for covariates).
+This in turn increases the size of the dismod_at weight grid table; see
+`Rate Effect Covariate Table
+<https://dismod-at.readthedocs.io/rate_eff_cov_table.html>`_ .
+If a covariate does not depend on sex (location),
+that covariate should use one weight table for both sexes (all locations).
+If a covariate does not depend on age (time),
+the corresponding weight grid table should have one age point (one time point).
+A similar compression should be done by the
+:ref:`csv.covariate_spline-name` routine.
+
+avgint Table
+============
+Document the state of the avgint table in
+``ancestor.db`` and ``this.db`` at the end of :ref:`csv.pre_one_job-name` .
+These are the dismod_at databases used by :ref:`csv.predict-name`
+to predict using the prior and posterior distributions respectively.
 
 Measurement Value Covariate
 ===========================
@@ -64,38 +66,23 @@ If we also automatically created a covariate
 called ``meas_value`` , we could use it with a meas_value
 covariate multiplier to expand or contract measurements values.
 
-Continue Cascade
-================
-There should be a separate csv routine that continues a cascade from a
-goal node of a previous :ref:`csv.fit-name`; i.e.
-a special version of :ref:`continue_cascade-name` for csv.fit.
-
 Prediction Grid
 ===============
-It would be good to specify a prediction grid that may be different for
+It would be good to specify a prediction grid that may be different from
 the covariate age-time grid.
 
-See Priors for Each Fit
-=======================
-Outputting prior std or samples so we have uncertainty of the priors.
-
-Retry Fit
-=========
-Sometimes a particular fit fails due to insufficient memory or similar problem.
-It would be good to have a retry fit command that continues the cascade
-does not redo all the fits.
-
-Estimate Standard Deviations
-============================
-Output the standard deviation for each fit value; i.e., the square root
-of the diagonal of corresponding covariance matrix entry.
+.. _rate_eff_cov: https://dismod-at.readthedocs.io/rate_eff_cov_table.html
 
 covariate.csv
 =============
-The covariate quick fix in dismod_at that attaches
+The `rate_eff_cov`_ table is a dismod_at quick fix that attaches
 covariate functions to locations,
 instead of covariate values to data points.
-This may use a lot of memory and take a while to set up.
+This may use a lot of memory and take a while to set up; i.e.,
+slow down each run of dismod_at.
+On the other hand, there is only one copy of this table
+for each cascade (in the :ref:`glossary@root_database` )
+so it should not use a lot of disk space.
 One partial solution would be to not put all the nodes in the
 :ref:`csv.simulate@Input Files@covariate.csv` file.
 We could use the closest ancestor's covariate and omega values
@@ -112,18 +99,15 @@ equations in :ref:`bib@Barendregt et al. (2003)`.
 max_fit
 *******
 Add an option to ignore the :ref:`csv.fit@Input Files@option_fit.csv@max_fit`
-option when fitting a leaf node; i.e., a node that has no children. (This is
+option when fitting a leaf node; i.e., a node that has no children. This is
 actually for leaf jobs not leaf nodes in the special case where the splitting
-covariate is split at a leaf node.)
+covariate is split at a leaf node.
+On the other hand, perhaps the node tree should be extended so that
+leaf nodes with lots of data are split into sub-nodes.
 
 ode_step_size
 *************
 Want to be able to use a bigger ode step size when there is a shock
 or other rapid change for a particular age or time.
-
-No Data
-*******
-A fit is not necessary, and should be skipped,
-when there is no data for the fit.
 
 {xrst_end wish_list}

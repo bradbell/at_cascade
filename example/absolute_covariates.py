@@ -211,8 +211,9 @@ option_all            = {
    'root_node_name':            'n0',
    'root_split_reference_name': 'both',
    'split_covariate_name':      'sex',
+   'max_numbwr_cpu':            '1',
 }
-option_all['root_node_database'] = option_all['result_dir'] + '/root_node.db'
+option_all['root_database'] = option_all['result_dir'] + '/root.db'
 split_reference_table = [
    {'split_reference_name': 'female', 'split_reference_value': 1.0},
    {'split_reference_name': 'both',   'split_reference_value': 2.0},
@@ -506,17 +507,17 @@ def main() :
    result_dir = option_all['result_dir']
    at_cascade.empty_directory(result_dir)
    #
-   # Create root_node.db
-   root_node_database  = option_all['root_node_database']
-   root_node_db(root_node_database)
+   # Create root.db
+   root_database       = option_all['root_database']
+   root_node_db(root_database)
    #
    # avgint_table
-   # This also erases the avgint table from root_node_database
-   avgint_table = at_cascade.extract_avgint( root_node_database )
+   # This also erases the avgint table from root_database
+   avgint_table = at_cascade.extract_avgint( root_database )
    #
    # connection
    connection   = dismod_at.create_connection(
-      root_node_database, new = False, readonly = False
+      root_database, new = False, readonly = False
    )
    #
    # omega_grid
@@ -572,7 +573,7 @@ def main() :
       at_cascade.check_cascade_node(
          rate_true          = rate_true,
          all_node_database  = all_node_database,
-         fit_node_database  = goal_database,
+         fit_database       = goal_database,
          avgint_table       = avgint_table,
          relative_tolerance = 1e-2
       )

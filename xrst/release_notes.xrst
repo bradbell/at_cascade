@@ -15,8 +15,10 @@ Release Notes for at_cascade
    multi
    dd
    mm
+   grep
+   homebrew
+   sed
    inuse
-   py
    nfs
    Errno
    xam
@@ -25,6 +27,12 @@ Release Notes for at_cascade
    mtstandard
    args
    darwin
+   py
+   haqi
+   avg
+   sqlite
+   meta
+   def
 }
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
@@ -35,19 +43,272 @@ Release Notes for 2024
 mm-dd
 *****
 
+12-20
+=====
+#. The bilinear spline documentation was improved to include the
+   fact that :ref:`bilinear@spline_dict` is constant w.r.t x (y)
+   for values of x (y) outside the limits of the grid.
+
+#. Testing indicates that the condition above is true for
+   {xrst_spell_off}
+   scipy.RectBivariateSpline
+   {xrst_spell_on}
+   but its documentation is not clear on this.
+   The ref:`bilinear-name` routine was modified to ensure this condition.
+
+#. If the function values are constant with respect to x (y)
+   a linear interpolation in just y (just x) is used
+   (as apposed to bilinear interpolation).
+   In the special case where the function is constant in both x and y
+   no interpolation is done and the value at one point is returned.
+
+12-14
+=====
+The :ref:`csv.shock_cov-name` example was extended to include
+the shock as both a relative and absolute covariate.
+When csv.fit :ref:`csv.fit@Input Files@option_fit.csv@covariate_reference`
+was covariate.csv and
+:ref:`csv.fit@Input Files@option_fit.csv@absolute_covariates` was non empty,
+absolute covariates might have non-zero reference.
+This has been fixed.
+In addition, the option_all documentation for
+:ref:`option_all_table@absolute_covariates`
+was corrected.
+
+
+12-13
+=====
+#. The :ref:`cov_reference_table-name` was added to the
+   all node data base; see :ref:`one_at_function@cov_reference Table` .
+   The csv.fit :ref:`csv.fit@Input Files@option_fit.csv@covariate_reference`
+   option enables one to choose different ways to set this table.
+   See :ref:`one_at_function@cov_reference Table` for
+   an example that directly sets this table.
+   This completed the Covariate Reference Values wish list which was removed.
+
+#. The ``get_cov_reference`` routine was changed to
+   :ref:`com_cov_reference-name` and its arguments were changed so that
+   it could be called before the all_node database was created.
+
+   old::
+
+      def get_cov_reference(
+         all_node_database  ,
+         fit_database       ,
+         shift_node_id      ,
+         split_reference_id = None
+      )
+
+   new::
+
+      def com_cov_reference(
+         option_all_table      ,
+         split_reference_table ,
+         node_table            ,
+         covariate_table       ,
+         shift_node_id         ,
+         split_reference_id = None,
+      )
+
+
+12-12
+=====
+#. The create_all_node_db :ref:`create_all_node_db@mulcov_freeze_table`
+   documentation had *mulcov_freeze_table*\ ``["fit_node_name"]`` .
+   This was replace by *row*\ ``["fit_node_name"]`` where
+   row is an entry in the *mulcov_freeze_table* list.
+#. In the ref:`create_all_node_db@omega_grid` documentation,
+   *omega*\ [``age`` ] and *omega*\ [``time`` ]
+   have been replaced by
+   *omega_grid*\ [``age`` ] and *omega_grid*\ [``time`` ] .
+
+
+11-20
+=====
+The description of csv
+:ref:`csv.predict@Output Files@fit_predict.csv@fit_sex@prior`
+and posterior predictions was improved.
+
+11-18
+=====
+Add :ref:`csv.fit@Input Files@option_fit.csv@freeze_type`
+to the option_fit.csv file.
+This completes the Freezing Covariate Multiplier wish list item
+which was removed from the wish list.
+
+11-17
+=====
+Add :ref:`option_all_table@freeze_type` to the option_all table.
+
+11-07
+=====
+#. Remove the Meta Regression wish list item because it can be accomplished
+   using a :ref:`csv.fit@Input Files@mulcov.csv@type@meas_noise`
+   covariate multiplier on a covariate that changes with location.
+   For example, the covariate could be one at the root location
+   and smaller the further down the node tree a location is.
+
+#. Add the :ref:`wish_list@csv.fit@Covariate Table Size` entry to the
+   wish list.
+
+
+11-05
+=====
+#. The Freezing Covariate Multipliers entry was
+   added to the wish list.
+#. The csv.fit :ref:`wish_list@csv.fit@avgint Table`
+   wish list entry was edited to include the ``this.db`` database.
+   In addition, a link was added from the ``dismod.db``
+   :ref:`wish_list@avgint table` to the csv.fit avgint table entries.
+
+10-06
+=====
+#. The ``pre_one_job`` argument *fit_database* was changed to
+   :ref:`csv.pre_one_job@pre_database` to emphasize the fact that it is a
+   copy of the :ref:`fit_one_job@fit_database` .
+#. The term ``fit_node_database`` was replaced by
+   :ref:`glossary@fit_database` because it not only determines the
+   fit node but also the fit split reference value (sex in the csv module).
+#. The term ``root_node_database`` was replaced by
+   :ref:`glossary@root_database` and
+   the file name ``root_node.db`` was changed to ``root.db``
+   for the same reason.
+
+10-03
+=====
+The job table
+:ref:`create_job_table@Summary` and
+:ref:`create_job_table@job_table@prior_only` discussion were improved.
+In addition, the :ref:`wish_list-name` was modified in the following ways:
+
+#. The See Priors for Each Fit item and the No Data item
+   were removed because they have been completed.
+
+#. The special csv version of Continue Cascade item
+   and Retry Fit item were removed because
+   :ref:`continue_cascade-name` seems be working fine for these purposes.
+
+#. The Estimate Standard Deviations item was removed because one can do
+   this using the posterior samples.
+
+#. The :ref:`wish_list@avgint Table` and
+   csv.fit :ref:`wish_list@csv.fit@avgint Table` items were separated.
+
+#. The :ref:`wish_list@csv.fit@covariate.csv` item was changed to mention
+   that there is only one rate_eff_cov table and include a link
+   to the corresponding dismod_at documentation.
+
+#. The :ref:`wish_list@max_fit` item was changed to discuss
+   leaf nodes with lots of data.
+
+09-28
+=====
+The ``fit_one_job`` :ref:`fit_one_job@fit_database@log` table
+documentation was improved.
+In addition, fit_one_job was modified to initialize the log table as empty.
+This will make a difference if one fit aborts and then
+another fit is started.
+
+09-26
+=====
+#. The create_job_table documentation was improved; e.g.,
+   see its :ref:`create_job_table@Summary` .
+
+#. There was a bug in create_job_table whereby jobs that were
+   :ref:`create_job_table@job_table@prior_only` was true would have
+   children in the job table. This has been fixed.
+
+#. There was a similar bug in
+   :ref:`check_log-name` that caused it to check the logs for jobs
+   that only had priors; i.e., were not fit.
+   The error messages for both bugs ended with::
+
+      sqlite3.DatabaseError: file is not a database
+
+   The *fit_goal_set* arguments to check_log was replaced by the
+   :ref:`check_log@job_table` and the bug was fixed.
+
+09-24
+=====
+The :ref:`create_shift_db-name` routine is used to create the priors
+for child jobs (given the fit for the parent job).
+There was a bug in this routine whereby it was possible for the mean
+of the age and time differences to not satisfy the constraint on the
+age and time differences. The corresponding error message was::
+
+   dismod_at error: mean greater than upper limit
+
+This has been fixed.
+
+09-14
+=====
+There was an error in csv.predict when :ref:`csv.predict@start_job_name`
+did not correspond to the root node and :ref:`csv.predict@max_job_depth`
+was not ``None`` . The corresponding error message was of the form::
+
+   File "... ancestor_fit.py", line 123, in ancestor_fit
+   messages = at_cascade_log_dict[job_name]
+                ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+   KeyError: ...
+
+This has been fixed.
+
+
+09-10
+=====
+
+#. The comments under the headings :ref:`csv.root_node_sex@data_in.csv`
+   in the csv.root_node_sex example where improved.
+   In addition, the
+
+#. A discussion about variation in the priors after freezing the
+   covariate multipliers was added to csv.root_node_sex; see
+   :ref:`csv.root_node_sex@mulcov.csv@root_mulcov_prior_constant` .
+
+#. Some occurrences of the following python warnings
+   (which were inside comments) were fixed::
+
+      SyntaxWarning: invalid escape sequence
+
+
+09-09
+=====
+The development and install tools were extended to work well on
+MacOS with homebrew.
+The versions between 08-25 and 09-08
+were not tested and may have trouble on other systems.
+(There was a problem with the new ``bin/grep_and_sed.sh`` script.)
+
+08-22
+=====
+#. The example ``csv.start_node_sex.py`` was moved to
+   :ref:`csv.root_node_sex-name` ,
+   the computation of ``haqi_avg`` was corrected,
+   and indent level of the following line was corrected::
+
+      sample_list.append(row)
+
+#. **API Change** The :ref:`csv.predict-name` routine now includes priors
+   even when posteriors are also available; see the discussion about
+   :ref:`priors <csv.predict@Output Files@fit_predict.csv@fit_sex@prior>`
+   for the csv.predict output files.
+
+#. Some of the example and tests had to be changed because the number of
+   rows in the csv.predict Output files is now larger.
+
 08-21
 =====
 There was a problem in the parallel predictions when
-:ref:`csv.predict@start_job_name` was not None. 
-The logs were only being checked starting at the start job 
+:ref:`csv.predict@start_job_name` was not None.
+The logs were only being checked starting at the start job
 instead of the root node. This has been fixed.
 
 08-18
 =====
 #. Add special ``at_cascade`` log messages to mark the progress of the fitting
-   operation; see :ref:`fit_one_job@fit_node_database@log` for ``fit_one_job`` .
+   operation; see :ref:`fit_one_job@fit_database@log` for ``fit_one_job`` .
 #. Change fit_one_job so that it aborts the fit when there is no data;
-   see :ref:`fit_one_job@fit_node_database@log` .
+   see :ref:`fit_one_job@fit_database@log` .
 
 07-30
 =====
@@ -197,9 +458,10 @@ population weighting for data that corresponds to
    2024.5.15 onward should be correct.
 #. The :ref:`csv.fit@Input Files@option_fit.csv@root_node_sex` option
    was added to the csv.fit routine.
-   The new :ref:`csv.start_node_sex-name` example was uses this option,
+   The new :ref:`csv.root_node_sex-name` example was uses this option,
    and the root_node_name option.
-#. Add the :ref:`wish_list@Covariate Reference Values` wish list item.
+#. Add the Covariate Reference Values wish list item,
+   which was completed on :ref:`2024@mm-dd@12-13` .
 
 05-11
 =====
@@ -304,7 +566,7 @@ of the covariate.csv file.
 =====
 If there was a :ref:`split_reference_table-name` ,
 :ref:`option_all_table@refit_split` was false,  and
-:ref:`continue_cascade@fit_node_database` in continue_cascade
+:ref:`continue_cascade@fit_database` in continue_cascade
 was the node just before the split, continue_cascade would crash with
 a python dictionary key error.
 For example, this error occurred when using continue_cascade
@@ -424,6 +686,7 @@ comment as part of csv.fit.ode_method.no_ode.
 -----------------------------------------------------------------------------
 {xrst_begin 2023}
 {xrst_spell
+   meta
    cen
    copyfileobj
    cv
@@ -552,10 +815,10 @@ Add definition of *true value for the average integrand* to the discussion of
 =====
 #. Add the :ref:`wish_list@Duration` item to the wish list.
 
-#. Move the :ref:`wish_list@Meta Regression` item to a higher priority
+#. Move the Meta Regression item to a higher priority
    on the wish list; i.e., closer to the top of the list.
 
-#. Add :ref:`wish_list@csv.fit@See Priors for Each Fit` to the wish list.
+#. Add See Priors for Each Fit to the wish list.
 
 11-03
 =====
@@ -734,7 +997,7 @@ the standard deviation of the random effects,
 Merge in other_database branch:
 
 #. **API Change** :
-   The :ref:`option_all_table@root_node_database` was added to the
+   The :ref:`option_all_table@root_database` was added to the
    option_all table.
    In addition it was removed as an argument to
    :ref:`cascade_root_node-name` and :ref:`create_all_node_db-name` .
@@ -742,9 +1005,9 @@ Merge in other_database branch:
    of the fit node database to a :ref:`fit_or_root_class-name` object.
 #. Read the
    :ref:`constant tables <module@at_cascade.constant_table_list>` from the
-   :ref:`glossary@root_node_database` .
+   :ref:`glossary@root_database` .
 #. Use :ref:`copy_root_db-name` to remove the constant tables from the
-   :ref:`fit node databases <glossary@fit_node_database>` .
+   :ref:`fit node databases <glossary@fit_database>` .
    This avoids multiple copies of these tables and thereby saves disk space.
 
 05-16
@@ -824,12 +1087,12 @@ In the examples, move the assignment to ``new`` from just before a call to
 in :ref:`absolute_covariates.py-name` the text ::
 
    new          = False
-   connection   = dismod_at.create_connection(root_node_database, new)
+   connection   = dismod_at.create_connection(root_database, new)
 
 was changed to ::
 
    connection   = dismod_at.create_connection(
-      root_node_database, new = False, readonly = False
+      root_database, new = False, readonly = False
    )
 
 04-12
@@ -993,6 +1256,7 @@ See the dismod_at documentation for the rate_eff_cov table for more details.
 -----------------------------------------------------------------------------
 {xrst_begin 2022}
 {xrst_spell
+   meta
    const
    dage
    dd
@@ -1188,7 +1452,7 @@ Add :ref:`option_all_table@number_sample` to the option all table.
 10-28
 =====
 1. Remove the packaging wish list item because it was completed.
-2. Add the :ref:`wish_list@Meta Regression` wish list item.
+2. Add the Meta Regression wish list item.
 
 10-27
 =====
@@ -1408,7 +1672,7 @@ Change :ref:`no_ode_fit-name` to always use Gaussian data densities.
 
 02-05
 =====
-Use :ref:`get_cov_reference-name` to compute references for relative covariates
+Use :ref:`com_cov_reference-name` to compute references for relative covariates
 and remove the all_cov_reference table from the :ref:`all_node_db-name`.
 
 02-04
@@ -1516,7 +1780,7 @@ mm-dd
 3. Replace :ref:`no_ode_fit-name` max_fit and max_abs_effect arguments by
    :ref:`no_ode_fit@option_all_dict`.
 
-4. In no_ode_fit, change in_database to :ref:`no_ode_fit@root_node_database`,
+4. In no_ode_fit, change in_database to :ref:`no_ode_fit@root_database`,
    and change out_database to :ref:`no_ode_fit@root_fit_database`.
 
 12-21
@@ -1564,15 +1828,15 @@ below a certain point.
    This has been fixed and the option table setting is now used for all fits.
 
 2. Move cascade_fit_node to :ref:`cascade_root_node-name` (better name now that
-   the routine is not recursive. In addition, change the fit_node_database
-   argument name to root_node_database.
+   the routine is not recursive. In addition, change the fit_database
+   argument name to root_database.
 
 12-01
 =====
 1. Add :ref:`get_database_dir-name`.
    This routine is for use with parallel processing.
 
-2. Change fit_node_database base create_job_table argument to
+2. Change fit_database base create_job_table argument to
    :ref:`create_job_table@node_table`.
 
 3. Add :ref:`create_job_table@job_table@start_child_job_id` and
@@ -1590,7 +1854,7 @@ Change the name get_job_table to
 
 2. Add :ref:`option_all_table@root_split_reference_name`
    to the option_all table (so that get_job_table can use any
-   fit_node_database).
+   fit_database).
 
 11-28
 =====

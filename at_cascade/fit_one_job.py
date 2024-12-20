@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
-'''
+r'''
 {xrst_begin fit_one_job}
 {xrst_spell
    io
@@ -67,9 +67,9 @@ If this argument is not None, it is a ``io.TextIOBase`` object
 corresponding to a file that is opened for writing the tracing output
 for this job.
 
-fit_node_database
-*****************
-The :ref:`glossary@fit_node_database` for this fit is
+fit_database
+************
+The :ref:`glossary@fit_database` for this fit is
 *fit_node_dir*\ ``/dismod.db`` where *fit_node_dir*
 is the :ref:`get_database_dir@database_dir` returned by
 get_database_dir for the fit node and split_reference_id corresponding
@@ -77,7 +77,7 @@ to *run_job_id*.
 
 Upon Input
 ==========
-On input, *fit_node_database* is an :ref:`glossary@input_node_database`.
+On input, *fit_database* is an :ref:`glossary@input_node_database`.
 
 fit_var
 =======
@@ -92,17 +92,28 @@ distribution for the model variables for the fit_node.
 
 log
 ===
-Upon return, a summary of the operations preformed by dismod.
-In addition, the following entries are added to the log table:
+The log table is initialized as empty when ``fit_one_job`` starts.
+Upon return or abort due to an exception,
+the log table contains a summary of the operations preformed by dismod.
+In addition,
+the following entries will be added to the log table
+if the corresponding event occurs:
 
 .. csv-table::
    :header-rows:1
 
-   message_type, message,        meaning
+   message_type, message,        event
    at_cascade,   no data: abort, abort fit because all the data is held out
    at_cascade,   fit: OK,        the maximum likelihood problem was solved
    at_cascade,   sample: OK,     the posterior samples were computed
-   at_cascade,   children: OK,   the child databases, with priors, were created
+   at_cascade,   children: OK,   the child databases with priors were created
+
+Note that the events depend on each other in the following way:
+
+#. If children: OK is present, then sample: OK is present.
+#. If sample: OK is present, then fit: OK is present.
+#. If fit: OK is present, then no data: abort is **not** present.
+
 
 Exception
 *********
@@ -268,6 +279,69 @@ def fit_one_job(
          msg += 'list with three elements'
          assert False, msg
    #
+   # node_split_set
+   node_split_set = set()
+   for row in all_table['node_split'] :
+      node_split_set.add( row['node_id'] )
+   #
+   # fit_database
+   database_dir = at_cascade.get_database_dir(
+      node_table              = node_table,
+      split_reference_table   = all_table['split_reference'],
+      node_split_set          = node_split_set,
+      root_node_id            = root_node_id,
+      root_split_reference_id = root_split_reference_id,
+      fit_node_id             = fit_node_id ,
+      fit_split_reference_id  = fit_split_reference_id,
+   )
+   fit_database      = f'{result_dir}/{database_dir}/dismod.db'
+   #
+   # check fit_database
+   parent_node_name = at_cascade.get_parent_node(fit_database)
+   assert parent_node_name == node_table[fit_node_id]['node_name']
+   #
+   # integrand_table
+   root_database      = option_all_dict['root_database']
+   fit_or_root        = at_cascade.fit_or_root_class(
+      fit_database, root_database
+   )
+   integrand_table = fit_or_root.get_table('integrand')
+   fit_or_root.close()
+   #
+   # fit_database: log table
+   connection = dismod_at.create_connection(
+      fit_database, new = False, readonly = False
+   )
+   command = 'DROP TABLE IF EXISTS log'
+   dismod_at.sql_command(connection, command)
+   #
+   # init
+   command = [ 'dismod_at', fit_database, 'init' ]
+   system_command(command, file_stdout)
+   #
+   # max_fit
+   if 'max_fit' in option_all_dict :
+      max_fit = option_all_dict['max_fit']
+      if double_max_fit :
+         max_fit = str( 2 * int(max_fit) )
+      for integrand_id in fit_integrand :
+         integrand_name = integrand_table[integrand_id]['integrand_name']
+         command = [
+            'dismod_at', fit_database,
+            'hold_out', integrand_name, max_fit
+         ]
+         if balance_fit is not None :
+            command += balance_fit
+         system_command(command, file_stdout)
+   #
+   # max_abs_effect
+   if 'max_abs_effect' in option_all_dict:
+      max_abs_effect = option_all_dict['max_abs_effect']
+      command =[
+         'dismod_at', fit_database, 'bnd_mulcov', max_abs_effect
+      ]
+      system_command(command, file_stdout)
+   #
    # perturb_optimization
    perturb_optimization = dict()
    for key in [ 'start', 'scale' ] :
@@ -282,80 +356,24 @@ def fit_one_job(
          if float(sigma) > 0.0 :
             perturb_optimization[key] = sigma
    #
-   # node_split_set
-   node_split_set = set()
-   for row in all_table['node_split'] :
-      node_split_set.add( row['node_id'] )
-   #
-   # fit_node_database
-   database_dir = at_cascade.get_database_dir(
-      node_table              = node_table,
-      split_reference_table   = all_table['split_reference'],
-      node_split_set          = node_split_set,
-      root_node_id            = root_node_id,
-      root_split_reference_id = root_split_reference_id,
-      fit_node_id             = fit_node_id ,
-      fit_split_reference_id  = fit_split_reference_id,
-   )
-   fit_node_database = f'{result_dir}/{database_dir}/dismod.db'
-   #
-   # check fit_node_database
-   parent_node_name = at_cascade.get_parent_node(fit_node_database)
-   assert parent_node_name == node_table[fit_node_id]['node_name']
-   #
-   # integrand_table
-   root_node_database = option_all_dict['root_node_database']
-   fit_or_root        = at_cascade.fit_or_root_class(
-      fit_node_database, root_node_database
-   )
-   integrand_table = fit_or_root.get_table('integrand')
-   fit_or_root.close()
-   #
-   # init
-   command = [ 'dismod_at', fit_node_database, 'init' ]
-   system_command(command, file_stdout)
-   #
-   # max_fit
-   if 'max_fit' in option_all_dict :
-      max_fit = option_all_dict['max_fit']
-      if double_max_fit :
-         max_fit = str( 2 * int(max_fit) )
-      for integrand_id in fit_integrand :
-         integrand_name = integrand_table[integrand_id]['integrand_name']
-         command = [
-            'dismod_at', fit_node_database,
-            'hold_out', integrand_name, max_fit
-         ]
-         if balance_fit is not None :
-            command += balance_fit
-         system_command(command, file_stdout)
-   #
-   # max_abs_effect
-   if 'max_abs_effect' in option_all_dict:
-      max_abs_effect = option_all_dict['max_abs_effect']
-      command =[
-         'dismod_at', fit_node_database, 'bnd_mulcov', max_abs_effect
-      ]
-      system_command(command, file_stdout)
-   #
-   # perturb_optimization
+   # fit_database: scale_var and start_var tables
    for key in perturb_optimization :
       sigma = perturb_optimization[key]
       table = f'{key}_var'
       command = [
-         'dismodat.py', fit_node_database, 'perturb', table, sigma
+         'dismodat.py', fit_database, 'perturb', table, sigma
       ]
       system_command(command, file_stdout)
    #
    # fit_node_datase.log_table
    # if fit has no data, abort with 'fit: error: no data abort' in log_table
    data_include_table = at_cascade.data_include(
-      fit_node_database, root_node_database
+      fit_database, root_database
    )
    if len( data_include_table )  == 0 :
       msg        = 'no data: abort'
       connection = dismod_at.create_connection(
-         fit_node_database, new = False, readonly = False
+         fit_database, new = False, readonly = False
       )
       at_cascade.add_log_entry(connection, msg)
       #
@@ -364,12 +382,12 @@ def fit_one_job(
       raise Exception(msg)
    #
    # fit
-   command = [ 'dismod_at', fit_node_database, 'fit', fit_type ]
+   command = [ 'dismod_at', fit_database, 'fit', fit_type ]
    system_command(command, file_stdout)
    #
-   # fit_node_database.log_table
+   # fit_database.log_table
    connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
+      fit_database, new = False, readonly = False
    )
    msg      = 'fit: OK'
    at_cascade.add_log_entry(connection, msg)
@@ -388,16 +406,16 @@ def fit_one_job(
          msg += 'sample_method is simulate.'
          assert False, msg
       command = [
-         'dismod_at', fit_node_database, 'set', 'truth_var', 'fit_var'
+         'dismod_at', fit_database, 'set', 'truth_var', 'fit_var'
       ]
       system_command(command, file_stdout)
       command = [
-         'dismod_at', fit_node_database, 'simulate', number_simulate
+         'dismod_at', fit_database, 'simulate', number_simulate
       ]
       system_command(command, file_stdout)
    command = [
       'dismod_at',
-      fit_node_database,
+      fit_database,
       'sample',
       sample_method,
       fit_type,
@@ -405,9 +423,9 @@ def fit_one_job(
    ]
    system_command(command, file_stdout)
    #
-   # fit_node_database.log_table
+   # fit_database.log_table
    connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
+      fit_database, new = False, readonly = False
    )
    msg      = 'sample: OK'
    at_cascade.add_log_entry(connection, msg)
@@ -416,23 +434,23 @@ def fit_one_job(
    # avgint_parent_grid
    at_cascade.avgint_parent_grid(
       all_node_database = all_node_database ,
-      fit_node_database = fit_node_database ,
+      fit_database      = fit_database ,
       job_table         = job_table         ,
       fit_job_id        = run_job_id        ,
    )
    #
    # connection
    connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
+      fit_database, new = False, readonly = False
    )
    #
    # c_shift_predict_fit_var
-   command = [ 'dismod_at', fit_node_database, 'predict', 'fit_var' ]
+   command = [ 'dismod_at', fit_database, 'predict', 'fit_var' ]
    system_command(command, file_stdout)
    at_cascade.move_table(connection, 'predict', 'c_shift_predict_fit_var')
    #
    # c_shift_predict_sample
-   command = [ 'dismod_at', fit_node_database, 'predict', 'sample' ]
+   command = [ 'dismod_at', fit_database, 'predict', 'sample' ]
    system_command(command, file_stdout)
    at_cascade.move_table(connection, 'predict', 'c_shift_predict_sample')
    #
@@ -488,22 +506,24 @@ def fit_one_job(
    #
    # create shifted databases
    at_cascade.create_shift_db(
-      all_node_database,
-      fit_node_database,
-      shift_databases,
+      all_node_database = all_node_database,
+      fit_database      = fit_database,
+      shift_databases   = shift_databases,
+      no_ode_fit        = False,
+      job_table         = job_table,
    )
    #
    # empty_avgint_table
    connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
+      fit_database, new = False, readonly = False
    )
    at_cascade.empty_avgint_table(connection)
    connection.close()
    #
    #
-   # fit_node_database.log_table
+   # fit_database.log_table
    connection = dismod_at.create_connection(
-      fit_node_database, new = False, readonly = False
+      fit_database, new = False, readonly = False
    )
    msg      = 'children: OK'
    at_cascade.add_log_entry(connection, msg)

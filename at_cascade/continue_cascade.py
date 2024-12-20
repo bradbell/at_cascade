@@ -19,7 +19,7 @@ Purpose
 *******
 Sometimes when running the cascade, the fit or statistics for a node fails.
 This may be because of something that happened on the system,
-or because of some of the settings in the :ref:`glossary@root_node_database`.
+or because of some of the settings in the :ref:`glossary@root_database`.
 This routine enables you to continue the cascade from such a node.
 
 all_node_database
@@ -29,15 +29,15 @@ is a python string specifying the location of the
 relative to the current working directory.
 This argument can't be ``None``.
 
-fit_node_database
-*****************
+fit_database
+************
 is a python string specifying the location of a dismod_at database
 relative to the current working directory.
-This is a :ref:`glossary@fit_node_database` with the
+This is a :ref:`glossary@fit_database` with the
 final state after a run of
 :ref:`cascade_root_node-name` or :ref:`continue_cascade-name`
 that includes fitting this database.
-The *fit_node_database* is not changed, it is only used
+The *fit_database* is not changed, it is only used
 to identify which child jobs to fit.
 
 fit_goal_set
@@ -67,7 +67,7 @@ for this parameter.
    see :ref:`fit_parallel@shared_unique` .
 
 #. The *shared_unique* special case is where you are running (in parallel)
-   continue_cascade with the same *fit_node_database*, and disjoint
+   continue_cascade with the same *fit_database*, and disjoint
    *fit_goal_set* . (The intersection of disjoint sets is empty.)
 
 #. In the special case above, the suggested value for *shared_unique*
@@ -88,14 +88,14 @@ import at_cascade
 # at_cascade.continue_cascade
 def continue_cascade(
    all_node_database = None,
-   fit_node_database = None,
+   fit_database      = None,
    fit_goal_set      = None,
    fit_type_list     = [ 'both', 'fixed' ],
    shared_unique     = '',
 # )
 ) :
    assert type(all_node_database) == str
-   assert type(fit_node_database) == str
+   assert type(fit_database) == str
    assert type(fit_goal_set)      == set
    assert type(fit_type_list)     == list
    assert type(shared_unique)     == str
@@ -111,11 +111,11 @@ def continue_cascade(
       dismod_at.get_table_dict(connection, 'split_reference')
    connection.close()
    #
-   # result_dir, root_node_name, root_node_database,
+   # result_dir, root_node_name, root_database,
    # max_number_cpu, refit_split
    result_dir         = None
    root_node_name     = None
-   root_node_database = None
+   root_database      = None
    max_number_cpu     = 1
    refit_split        = False
    for row in option_all_table :
@@ -123,19 +123,19 @@ def continue_cascade(
          result_dir = row['option_value']
       if row['option_name'] == 'root_node_name' :
          root_node_name = row['option_value']
-      if row['option_name'] == 'root_node_database' :
-         root_node_database = row['option_value']
+      if row['option_name'] == 'root_database' :
+         root_database      = row['option_value']
       if row['option_name'] == 'max_number_cpu' :
          max_number_cpu = int( row['option_value'] )
       if row['option_name'] == 'refit_split' :
          refit_split = row['option_value'] == 'true'
    assert result_dir is not None
    assert root_node_name is not None
-   assert root_node_database is not None
+   assert root_database is not None
    #
    # node_table, covariate_table, fit_integrand
    fit_or_root = at_cascade.fit_or_root_class(
-      fit_node_database, root_node_database
+      fit_database, root_database
    )
    node_table      = fit_or_root.get_table('node')
    covariate_table = fit_or_root.get_table('covariate')
@@ -157,7 +157,7 @@ def continue_cascade(
          )
    #
    # fit_node_id
-   fit_node_name = at_cascade.get_parent_node(fit_node_database)
+   fit_node_name = at_cascade.get_parent_node(fit_database)
    fit_node_id   = at_cascade.table_name2id(node_table, 'node', fit_node_name)
    #
    # fit_split_reference_id

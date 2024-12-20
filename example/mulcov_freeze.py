@@ -71,8 +71,8 @@ The true value for *alpha* (used which simulating the data) is
 
 Freeze
 ======
-For this example we freeze *alpha* at node n1 to its prior mean
-(which is its fit value in node n0).
+For this example we freeze *alpha* at node n1 to its posterior mean
+(which is the optimal value for the fit at node n1).
 {xrst_literal
    # BEGIN mulcov_freeze_table
    # END mulcov_freeze_table
@@ -551,16 +551,16 @@ def main() :
    result_dir = 'build/example'
    at_cascade.empty_directory(result_dir)
    #
-   # Create root_node.db
-   root_node_database  = f'{result_dir}/root_node.db'
-   root_node_db(root_node_database)
+   # Create root.db
+   root_database       = f'{result_dir}/root.db'
+   root_node_db(root_database)
    #
    # Create all_node.db
    all_node_database = f'{result_dir}/all_node.db'
    option_all        = {
       'result_dir':     result_dir,
       'root_node_name': 'n0',
-      'root_node_database': root_node_database,
+      'root_database': root_database,
    }
    at_cascade.create_all_node_db(
       all_node_database       = all_node_database,
@@ -573,8 +573,8 @@ def main() :
    os.mkdir(root_node_dir)
    #
    # avgint_table
-   # This also erases the avgint table from root_node_database
-   avgint_table = at_cascade.extract_avgint( root_node_database )
+   # This also erases the avgint table from root_database
+   avgint_table = at_cascade.extract_avgint( root_database )
    #
    # cascade starting at root node
    at_cascade.cascade_root_node(
@@ -588,7 +588,7 @@ def main() :
       at_cascade.check_cascade_node(
          rate_true = rate_true,
          all_node_database  = all_node_database,
-         fit_node_database  = goal_database,
+         fit_database       = goal_database,
          avgint_table       = avgint_table,
          relative_tolerance = 2e-3,
       )

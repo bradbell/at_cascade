@@ -1,12 +1,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
-{xrst_begin get_cov_reference}}
+{xrst_begin com_cov_reference}}
 
-Get Covariate Reference Values
-##############################
+Compute Covariate Reference Values
+##################################
+Compute covariate references by averaging values in the data table
+for a specific node and split reference value.
 
 Syntax
 ******
@@ -15,53 +17,43 @@ Syntax
    # BEGIN RETURN, # END RETURN
 }
 
-fit_node_database
-*****************
-is an :ref:`glossary@input_node_database`.
-Only the following tables in this database are used:
-option, data, node, and covariate.
-None of the tables are modified.
-
-option Table
-============
-This table must have a row with option_value equal to parent_node_name.
-Only this row of the option table is used.
-The parent node must be the shift node, or the parent of the shift node.
-
-data Table
-==========
-Only the following columns of this table are used:
-data_id, node_id, x_0, ... x_n,
-where n is the number of covariates minus one.
-
-
-all_node_database
-*****************
-is the :ref:all_node_db`.
-Only the :ref:`option_all_table-name` and :ref:`split_reference_table-name` are used.
-
-option_all Table
-================
+option_all_table
+****************
 The :ref:`option_all_table@split_covariate_name` and
 :ref:`option_all_table@absolute_covariates` rows of this table
 (if they exist) are the only rows of this table that are used.
 
+split_reference_table
+*********************
+is the :ref:`split_reference_table-name` as a ``list``
+of ``dict`` .
+
+node_table
+**********
+This is a list of dict representing the node table in the
+:ref:`glossary@root_database` .
+
+covariate_table
+***************
+This is the covariate table for any fit or the one in the
+root node database.
+
 shift_node_id
 *************
-This is the dismod_at parent node that the covariate reference values
-correspond to.
+This is the dismod_at node that the computed
+covariate reference values correspond to.
 
 split_reference_id
 ******************
 This is the :ref:`split_reference_table@split_reference_id` that the
-covariate reference values correspond to.
+computed covariate reference values correspond to.
 
 cov_reference_list
 ******************
 1. The return value is a ``list`` with length equal to the
-   length of the covariate table.
+   length of the covariate table (in the root node database).
 2. The :ref:`option_all_table@absolute_covariates` have the same
-   reference value as in the *fit_node_database* covariate table.
+   reference value as in the :ref:`glossary@root_database` .
 3. The splitting covariate has reference value corresponding to
    *split_reference_id* in the split_reference table.
 4. The :ref:`glossary@Relative Covariate` reference values are equal to
@@ -72,89 +64,61 @@ cov_reference_list
    covariate for this *split_reference_id* are included in the average.
 7. null values for a covariate are not included in the average.
 8. If there are no values to average for a relative covariate, the reference
-   in the *fit_node_database* covariate table is used for that covariate.
+   in the root_database covariate table is used for that covariate.
 
-
-
-{xrst_end get_cov_reference}}
+{xrst_end com_cov_reference}}
 '''
 import at_cascade
 import dismod_at
 import math
 #
 # BEGIN DEF
-# at_cascade.get_cov_reference
-def get_cov_reference(
-   all_node_database  ,
-   fit_node_database  ,
-   shift_node_id      ,
-   split_reference_id = None,
+# at_cascade.com_cov_reference
+def com_cov_reference(
+   option_all_table      ,
+   split_reference_table ,
+   node_table            ,
+   covariate_table       ,
+   shift_node_id         ,
+   split_reference_id    = None,
+   data_table            = None,
 # )
 ) :
-   assert type(all_node_database) == str
-   assert type(fit_node_database) == str
+   assert type(option_all_table) == list
+   assert type(split_reference_table) == list
+   assert type(node_table) == list
+   assert type(covariate_table) == list
    assert type(shift_node_id) == int
+   assert type(split_reference_id) == int or split_reference_id == None
+   assert type(data_table) == list or data_table == None
    # END DEF
    #
-   # all_table
-   connection       = dismod_at.create_connection(
-      all_node_database, new = False, readonly = True
-   )
-   all_table        = dict()
-   for tbl_name in [ 'option_all', 'split_reference' ] :
-      all_table[tbl_name] = dismod_at.get_table_dict(connection, tbl_name)
-   connection.close()
-   #
-   # root_node_database
-   root_node_database = None
-   for row in all_table['option_all'] :
-      if row['option_name'] == 'root_node_database' :
-         root_node_database = row['option_value']
-   assert root_node_database != None
+   # root_database
+   root_database      = None
+   for row in option_all_table :
+      if row['option_name'] == 'root_database' :
+         root_database      = row['option_value']
+   assert root_database != None
    #
    # check split_reference_id
-   if len( all_table['split_reference'] ) == 0 :
+   if len( split_reference_table ) == 0 :
       assert split_reference_id == None
    else :
       assert type(split_reference_id) == int
    #
-   # fit_table
-   fit_or_root = at_cascade.fit_or_root_class(
-      fit_node_database, root_node_database
-   )
-   fit_table = dict()
-   for tbl_name in [ 'option', 'data', 'node', 'covariate', ] :
-      fit_table[tbl_name] = fit_or_root.get_table(tbl_name)
-   fit_or_root.close()
-   #
-   # parent_node_id
-   parent_node_name = None
-   for row in fit_table['option'] :
-      assert row['option_name'] != 'parent_node_id'
-      if row['option_name'] == 'parent_node_name' :
-         parent_node_name = row['option_value']
-   assert parent_node_name is not None
-   parent_node_id = at_cascade.table_name2id(
-      fit_table['node'], 'node', parent_node_name
-   )
-   #
-   # shift_node_ok
-   shift_node_ok = parent_node_id == shift_node_id
-   if fit_table['node'][shift_node_id]['parent'] == parent_node_id :
-      shift_node_ok = True
-   if not shift_node_ok :
-      shift_node_name = fit_table['node'][shift_node_id]['node_name']
-      msg  = f'get_cov_reference: shit node = {shift_node_name}\n'
-      msg += f'is not the parent node = {parent_node_name}\n'
-      msg += 'nor a child of the parent node'
-      assert False, msg
-
+   # data_table
+   if data_table == None :
+      connection = dismod_at.create_connection(
+         root_database, new = False, readonly = True
+      );
+      data_table = dismod_at.get_table_dict(connection, 'data')
+      connection.close()
    #
    # cov_info
    cov_info = at_cascade.get_cov_info(
-      all_table['option_all'],
-      fit_table['covariate'],
-      all_table['split_reference']
+      option_all_table,
+      covariate_table,
+      split_reference_table
    )
    #
    # rel_covariate_id_set
@@ -162,21 +126,21 @@ def get_cov_reference(
    #
    # split_covariate_id
    split_covariate_id = None
-   if len( all_table['split_reference'] ) > 0 :
+   if len( split_reference_table ) > 0 :
       split_covariate_id = cov_info['split_covariate_id']
    #
    # check max_difference
    for covariate_id in rel_covariate_id_set :
-      covariate_row  = fit_table['covariate'][covariate_id]
+      covariate_row  = covariate_table[covariate_id]
       max_difference = covariate_row['max_difference']
       if not max_difference in [ None, math.inf ] :
-         msg  = f'get_cov_reference: covariate_id = {covariate_id}\n'
+         msg  = f'com_cov_reference: covariate_id = {covariate_id}\n'
          msg += 'is a relative covariate and '
          msg += f'max_difference = {max_difference} is not None or infinity'
          assert False, msg
    #
    # n_covariate
-   n_covariate = len( fit_table['covariate'] )
+   n_covariate = len( covariate_table )
    #
    # covariate_label
    covariate_label = list()
@@ -185,25 +149,25 @@ def get_cov_reference(
    #
    # is_decendant
    is_descendant = set()
-   for (node_id, row) in enumerate(fit_table['node']) :
+   for (node_id, row) in enumerate(node_table) :
       this_is_descendant = node_id == shift_node_id
       ancestor_node_id   = row['parent']
       while not ancestor_node_id is None :
          if ancestor_node_id == shift_node_id :
             this_is_descendant = True
-         ancestor_row     = fit_table['node'][ancestor_node_id]
+         ancestor_row     = node_table[ancestor_node_id]
          ancestor_node_id = ancestor_row['parent']
       if this_is_descendant :
          is_descendant.add( node_id )
    #
    # split_reference_value
-   if len( all_table['split_reference'] ) > 0 :
-      row  = all_table['split_reference'][split_reference_id]
+   if len( split_reference_table ) > 0 :
+      row  = split_reference_table[split_reference_id]
       split_reference_value = row['split_reference_value']
    #
    # data_subset_list
    data_subset_list = list()
-   for (data_id, data_row) in enumerate(fit_table['data']) :
+   for (data_id, data_row) in enumerate(data_table) :
       #
       # node_id
       node_id = data_row['node_id']
@@ -212,7 +176,7 @@ def get_cov_reference(
          # in_bnd
          in_bnd = True
          for covariate_id in range( n_covariate ) :
-            covariate_row   = fit_table['covariate'][covariate_id]
+            covariate_row   = covariate_table[covariate_id]
             reference       = covariate_row['reference']
             if covariate_id == split_covariate_id :
                reference = split_reference_value
@@ -237,17 +201,17 @@ def get_cov_reference(
    for covariate_id in range( n_covariate) :
       #
       # reference
-      reference = fit_table['covariate'][covariate_id]['reference']
+      reference = covariate_table[covariate_id]['reference']
       if covariate_id == split_covariate_id :
          reference = split_reference_value
       #
       if covariate_id in rel_covariate_id_set :
          #
          # covariate_list
-         covariate_row  = fit_table['covariate'][covariate_id]
+         covariate_row  = covariate_table[covariate_id]
          covariate_list = list()
          for data_id in data_subset_list :
-            data_row  = fit_table['data'][data_id]
+            data_row  = data_table[data_id]
             cov_value = data_row[ covariate_label[covariate_id] ]
             if not cov_value is None :
                covariate_list.append(cov_value)
