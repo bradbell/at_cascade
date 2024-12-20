@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import numpy
 import scipy.interpolate
@@ -62,14 +62,18 @@ Duplicates are not included in this list.
 
 spline_dict
 ***********
-Is a ``dict`` of spline functions.
-This for each *z_name* in  *z_list* .
+Is a ``dict`` of spline functions with keys equal to
+each *z_name* in  *z_list* .
 The function call
 {xrst_code py}
    z = spline_dict[z_name](x, y)
 {xrst_code}
-sets z to the value of the spline for *z_name*
-where the values x, y, and z are ``float`` ,
+sets z to the value of the spline for *z_name* .
+
+#. The values x and y are ``float`` or ``int`` .
+#. The value z is a  ``float`` .
+#. The function is extended as constant with respect to x (y)
+   for values of x (y) outside the limits of x_grid (y_grid).
 
 Example
 *******
@@ -78,8 +82,12 @@ Example
 {xrst_end bilinear}
 """
 class spline_wrapper :
-   def __init__(self, spline) :
+   def __init__(self, spline, x_min, x_max, y_min, y_max) :
       self.spline = spline
+      self.x_min  = x_min
+      self.x_max  = x_max
+      self.y_min  = y_min
+      self.y_max  = y_max
    def __call__(self, x, y) :
       if type(x) == int :
          x = float(x)
@@ -87,6 +95,15 @@ class spline_wrapper :
          y = float(y)
       assert type(x) == float
       assert type(y) == float
+      #
+      # The documentation for RectBivariateSpline says
+      # 'Evaluated points outside the data range will be extrapolated.' .
+      # but testing indicates the following is not necessary
+      x = max(x, self.x_min)
+      x = min(x, self.x_max)
+      y = max(y, self.y_min)
+      y = min(y, self.y_max)
+      #
       result = self.spline(x, y)
       assert type(result) == numpy.ndarray
       assert result.size == 1
@@ -202,7 +219,11 @@ def bilinear(
       spline = scipy.interpolate.RectBivariateSpline(
          x_grid, y_grid, z_grid, kx=1, ky=1, s=0
       )
-      spline_dict[z_name] = spline_wrapper( spline )
+      x_min = x_grid[0]
+      x_max = x_grid[-1]
+      y_min = y_grid[0]
+      y_max = y_grid[-1]
+      spline_dict[z_name] = spline_wrapper(spline , x_min, x_max, y_min, y_max)
    #
    # BEGIN_RETURN
    # ...

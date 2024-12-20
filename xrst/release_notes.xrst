@@ -43,6 +43,18 @@ Release Notes for 2024
 mm-dd
 *****
 
+12-20
+=====
+The bilinear spline documentation was extended to include the
+fact that :ref:`bilinear@spline_dict` is constant w.r.t x (y)
+for values of x (y) outside the limits of the grid.
+Testing indicates that this is true linear interpolation using 
+{xrst_spell_off}
+scipy.RectBivariateSpline 
+{xrst_spell_on}
+but its documentation was not clear on this, 
+so the :ref:`bilinear-name` was modified to ensure this.
+
 12-14
 =====
 The :ref:`csv.shock_cov-name` example was extended to include
