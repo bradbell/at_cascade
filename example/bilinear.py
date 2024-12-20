@@ -28,16 +28,21 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 #
-def test_n_time(n_time) :
+def test_grid(n_age, n_time) :
    #
-   # age_list, time_list
+   # age_list
    age_list  = [ 80.0,   20.0   ]
+   if n_age == 1 :
+      age_list = [ 50.0 ]
+   else :
+      assert n_age == 2
+   #
+   # time_list
+   time_list = [ 2200.0, 1980.0 ]
    if n_time == 1 :
       time_list = [ 2000.0 ]
-   elif n_time == 2 :
-      time_list = [ 2200.0, 1980.0 ]
    else :
-      assert False
+      assert n_time == 2
    #
    # limit_age_time
    def limit_age_time(age, time) :
@@ -112,7 +117,9 @@ def test_n_time(n_time) :
 #
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :
-   test_n_time(1)
-   test_n_time(2)
+   test_grid(2, 2)
+   test_grid(1, 2)
+   test_grid(2, 1)
+   test_grid(1, 1)
    print('bilinear: OK')
 # END_SOURCE

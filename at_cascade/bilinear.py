@@ -13,29 +13,29 @@ Bilinear Spline Interpolation
 Syntax
 ******
 {xrst_literal ,
-   BEGIN_SYNTAX, END_SYNTAX
+   BEGIN_PROTOTYPE, END_PROTOTYPE
    BEGIN_RETURN, END_RETURN
 }
 
 x_name
 ******
-Is a ``str`` containing the name in *table* for the x
+is the name in *table* for the x
 variable in the interpolation.
 
 y_name
 ******
-Is a ``str`` containing the name in *table* for the y
+is the name in *table* for the y
 variable in the interpolation.
 
 z_list
 ******
-Is a ``list`` of ``str`` .
-Each element of *z_list*  contains the name in *table* for a z
+Each element of  *z_list* is a ``str`` specifying
+the name in *table* for a z
 variable in the interpolation.
 
 table
 *****
-This is a ``list`` of ``dict``.
+Each element of *table* is a ``dict``.
 The values *x_name* , *y_name* and each element of *z_list*
 must be a key in each of the dictionaries.
 Furthermore, the corresponding dictionary values must be ``str`` or ``float`` .
@@ -82,13 +82,14 @@ Example
 {xrst_end bilinear}
 """
 class spline_wrapper :
-   def __init__(self, spline, x_min, x_max, y_min, y_max) :
+   def __init__(self, spline, box, n_x, n_y) :
       self.spline = spline
-      self.x_min  = x_min
-      self.x_max  = x_max
-      self.y_min  = y_min
-      self.y_max  = y_max
+      self.box    = box
+      self.n_x    = n_x
+      self.n_y    = n_y
    def __call__(self, x, y) :
+      #
+      # x, y
       if type(x) == int :
          x = float(x)
       if type(y) == int :
@@ -96,30 +97,44 @@ class spline_wrapper :
       assert type(x) == float
       assert type(y) == float
       #
+      # x, y
       # The documentation for RectBivariateSpline says
       # 'Evaluated points outside the data range will be extrapolated.' .
       # but testing indicates the following is not necessary
-      x = max(x, self.x_min)
-      x = min(x, self.x_max)
-      y = max(y, self.y_min)
-      y = min(y, self.y_max)
+      x = max(x, self.box['x_min'])
+      x = min(x, self.box['x_max'])
+      y = max(y, self.box['y_min'])
+      y = min(y, self.box['y_max'])
       #
-      result = self.spline(x, y)
+      # result
+      if self.n_x == 1 and self.n_y == 1 :
+         result = self.spline
+      elif self.n_x == 1 :
+         result = self.spline(y)
+      elif self.n_y == 1 :
+         result = self.spline(x)
+      else :
+         result = self.spline(x, y)
       assert type(result) == numpy.ndarray
       assert result.size == 1
-      return float(result)
+      #
+      result = float(result)
+      return result
 
-# BEGIN_SYNTAX
+# BEGIN_PROTOTYPE
 # at_cascade.bilinear
 def bilinear(
-# x_grid, y_grid, spline_dict = bilinear(
    table,
    x_name,
    y_name,
    z_list
 # )
-# END_SYNTAX
 ) :
+   assert type(table) == list
+   assert type(x_name) == str
+   assert type(y_name) == str
+   assert type(z_list) == list
+   # END_PROTOTYPE
    #
    if len(table) == 0 :
       return (list(), list(), None)
@@ -133,15 +148,7 @@ def bilinear(
       x_set.add(x)
       y_set.add(y)
    #
-   # n_x, n_y
-   n_x = len(x_set)
-   n_y = len(y_set)
-   #
-   # x_grid_in, y_grid_in
-   x_grid_in = sorted(x_set)
-   y_grid_in = sorted(y_set)
-   #
-   # triple_list, x_set, y_set
+   # triple_list
    triple_list = list()
    for row in table :
       x      = float( row[x_name] )
@@ -149,27 +156,6 @@ def bilinear(
       triple = (x, y, row)
       triple_list.append( triple )
       #
-      if n_x == 1 :
-         if x == 0.0 :
-            x_other = 1.0
-         else :
-            x_other = 2.0 * x
-         triple = (x_other, y, row)
-         triple_list.append( triple )
-         x_set.add(x_other)
-      #
-      if n_y == 1 :
-         if y == 0.0 :
-            y_other = 1.0
-         else :
-            y_other = 2.0 * y
-         triple = (x, y_other, row)
-         triple_list.append( triple )
-         y_set.add(y_other)
-      #
-      if n_x == 1 and n_y == 1 :
-         triple = (x_other, y_other, row)
-         triple_list.append( triple )
    #
    # n_x, n_y
    n_x = len(x_set)
@@ -180,7 +166,7 @@ def bilinear(
    y_grid = sorted(y_set)
    #
    if len(triple_list) != n_x * n_y :
-      return (x_grid_in, y_grid_in, None)
+      return (x_grid, y_grid, None)
    #
    # triple_list
    triple_list = sorted(triple_list)
@@ -188,13 +174,11 @@ def bilinear(
    # spline_dict
    spline_dict = dict()
    #
-   # z_grid
-   z_grid = numpy.empty( (n_x, n_y) )
-   #
    # z_name
    for z_name in z_list :
       #
       # z_grid
+      z_grid    = numpy.empty( (n_x, n_y) )
       z_grid[:] = numpy.nan
       #
       # index, triple
@@ -206,29 +190,42 @@ def bilinear(
          x_index  = int( index / n_y )
          y_index  = index % n_y
          if x != x_grid[x_index] :
-            return(x_grid_in, y_grid_in, None)
+            return(x_grid, y_grid, None)
          if y != y_grid[y_index] :
-            return(x_grid_in, y_grid_in, None)
+            return(x_grid, y_grid, None)
          #
          # z_grid
-         row   = triple[2]
-         value = float( row[z_name] )
-         z_grid[x_index][y_index] =  value
+         row                      = triple[2]
+         value                    = float( row[z_name] )
+         z_grid[x_index, y_index] =  value
       #
-      # spline_dict
-      spline = scipy.interpolate.RectBivariateSpline(
-         x_grid, y_grid, z_grid, kx=1, ky=1, s=0
-      )
-      x_min = x_grid[0]
-      x_max = x_grid[-1]
-      y_min = y_grid[0]
-      y_max = y_grid[-1]
-      spline_dict[z_name] = spline_wrapper(spline , x_min, x_max, y_min, y_max)
+      # spline
+      if n_x == 1 and n_y == 1 :
+         spline = z_grid
+      elif n_x == 1 :
+         spline = scipy.interpolate.UnivariateSpline(
+            y_grid, z_grid[0,:], k=1, s=0
+         )
+      elif n_y == 1 :
+         spline = scipy.interpolate.UnivariateSpline(
+            x_grid, z_grid[:,0], k=1, s=0
+         )
+      else :
+         spline = scipy.interpolate.RectBivariateSpline(
+            x_grid, y_grid, z_grid, kx=1, ky=1, s=0
+         )
+      box = {
+         'x_min' : x_grid[0],
+         'x_max' : x_grid[-1],
+         'y_min' : y_grid[0],
+         'y_max' : y_grid[-1],
+      }
+      spline_dict[z_name] = spline_wrapper(spline , box, n_x, n_y)
    #
    # BEGIN_RETURN
    # ...
-   assert type(x_grid_in) == list
-   assert type(y_grid_in) == list
+   assert type(x_grid) == list
+   assert type(y_grid) == list
    assert type(spline_dict) == dict
-   return (x_grid_in, y_grid_in, spline_dict)
+   return (x_grid, y_grid, spline_dict)
    # END_RETURN

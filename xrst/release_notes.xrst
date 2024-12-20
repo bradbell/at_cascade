@@ -45,15 +45,22 @@ mm-dd
 
 12-20
 =====
-The bilinear spline documentation was extended to include the
-fact that :ref:`bilinear@spline_dict` is constant w.r.t x (y)
-for values of x (y) outside the limits of the grid.
-Testing indicates that this is true linear interpolation using 
-{xrst_spell_off}
-scipy.RectBivariateSpline 
-{xrst_spell_on}
-but its documentation was not clear on this, 
-so the :ref:`bilinear-name` was modified to ensure this.
+#. The bilinear spline documentation was extended to include the
+   fact that :ref:`bilinear@spline_dict` is constant w.r.t x (y)
+   for values of x (y) outside the limits of the grid.
+
+#. Testing indicates that the condition above is true for
+   {xrst_spell_off}
+   scipy.RectBivariateSpline
+   {xrst_spell_on}
+   but its documentation is not clear on this.
+   The ref:`bilinear-name` routine was modified to ensure this condition.
+
+#. If the grid only has one x point (one y point),
+   a linear interpolation in just y (just x) is done,
+   as apposed to bilinear interpolation on an extended grid.
+   In the special case where the grid has only one point,
+   no interpolation is done and the value at that one point is returned.
 
 12-14
 =====
