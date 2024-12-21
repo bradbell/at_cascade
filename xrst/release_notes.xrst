@@ -54,7 +54,7 @@ mm-dd
    scipy.RectBivariateSpline
    {xrst_spell_on}
    but its documentation is not clear on this.
-   The ref:`bilinear-name` routine was modified to ensure this condition.
+   The :ref:`bilinear-name` routine was modified to ensure this condition.
 
 #. If the function values are constant with respect to x (y)
    a linear interpolation in just y (just x) is used
