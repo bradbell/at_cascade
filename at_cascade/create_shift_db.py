@@ -643,9 +643,11 @@ def create_shift_db(
       if no_ode_fit :
          mulcov_freeze_dict = dict()
       else :
-         mulcov_freeze_table = all_table['mulcov_freeze']
          mulcov_freeze_dict = at_cascade.get_freeze_dict(
-            job_table, fit_node_id, fit_split_reference_id, mulcov_freeze_table
+            fit_table['node'],
+            fit_node_id,
+            fit_split_reference_id,
+            all_table['mulcov_freeze'],
          )
       #
       # shift_database     = fit_database

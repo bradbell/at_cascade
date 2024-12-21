@@ -43,6 +43,17 @@ Release Notes for 2024
 mm-dd
 *****
 
+12-21
+=====
+There was a bug in the
+:ref:`csv.fit@Input Files@option_fit.csv@freeze_type` option.
+To be specific, if the freeze type was ``posterior`` ,
+and :ref:`continue_cascade-name` was run staring after the freeze,
+the freeze would not be in effect.
+This was fixed by changing the :ref:`get_freeze_dict-name`
+to use the node table instead of the job table to determine if a
+covariate has been frozen.
+
 12-20
 =====
 #. The bilinear spline documentation was improved to include the

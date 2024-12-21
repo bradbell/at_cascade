@@ -12,9 +12,10 @@ Get Set of Covariate Multipliers That are Frozen
    # BEGIN_DEF , # END_DEF
 }
 
-job_table
-*********
-is the :ref:`create_job_table@job_table` for this cascade.
+
+node_table
+**********
+is a ``list`` of ``dict`` containing the node table for this cascade.
 
 fit_node_id
 ***********
@@ -45,33 +46,26 @@ the corresponding *mulcov_id* is in *mulcov_freeze_dict* .
 
 values
 ======
-If this fit job is in the mulcov_freeze table  with *mulcov_id* ,
-*mulcov_freeze_dict* [ *mulcov_id* ] is 'posterior' .
-If a parent job is in the mulcov_freeze table  with *mulcov_id* ,
-*mulcov_freeze_dict* [ *mulcov_id* ] is 'prior' .
+#. If this fit job is in the mulcov_freeze table with this *mulcov_id* ,
+   *mulcov_freeze_dict* [ *mulcov_id* ] is 'posterior' .
+
+#. If a parent of this fit job is in the mulcov_freeze table  with this
+   *mulcov_id* , *mulcov_freeze_dict* [ *mulcov_id* ] is 'prior' .
 
 {xrst_end get_freeze_dict}
 '''
 # BEGIN_DEF
 def get_freeze_dict(
-   job_table,
+   node_table,
    fit_node_id,
    fit_split_reference_id,
    mulcov_freeze_table,
 ) :
-   assert type(job_table) == list
+   assert type(node_table) == list
    assert type(fit_node_id) == int
    assert type(fit_split_reference_id) == int or fit_split_reference_id == None
    assert type(mulcov_freeze_table) == list
    # END_DEF
-   #
-   # fit_job_id
-   fit_job_id = None
-   for (job_id, job_row) in enumerate(job_table) :
-      if job_row['fit_node_id'] == fit_node_id :
-         if job_row['split_reference_id'] == fit_split_reference_id :
-            fit_job_id = job_id
-   assert fit_job_id != None
    #
    # mulcov_freeze_dict
    mulcov_freeze_dict = dict()
@@ -79,30 +73,25 @@ def get_freeze_dict(
    # freeze_row
    for freeze_row in mulcov_freeze_table :
       #
-      # freeze_node_id, freeze_split_reference, mulcov_id
-      freeze_node_id            = freeze_row['fit_node_id']
+      # freeze_split_reference_id
       freeze_split_reference_id = freeze_row['split_reference_id']
-      freeze_mulcov_id          = freeze_row['mulcov_id']
-      #
-      # job_id
-      job_id = fit_job_id
-      while job_id != None :
+      if freeze_split_reference_id == fit_split_reference_id :
          #
-         # job_node_id, job_split_reference_id
-         job_row                 = job_table[job_id]
-         job_node_id             = job_row['fit_node_id']
-         job_split_reference_id  = job_row['split_reference_id']
+         # freeze_node_id, mulcov_id
+         freeze_node_id    = freeze_row['fit_node_id']
+         freeze_mulcov_id  = freeze_row['mulcov_id']
          #
-         # mulcov_freeze_dict
-         if freeze_node_id == job_node_id :
-            if freeze_split_reference_id == job_split_reference_id :
-               if job_id == fit_job_id :
+         # node_id
+         node_id = fit_node_id
+         while node_id != None :
+            if freeze_node_id == node_id :
+               if node_id == fit_node_id :
                   mulcov_freeze_dict[freeze_mulcov_id] = 'posterior'
                else :
                   mulcov_freeze_dict[freeze_mulcov_id] = 'prior'
-         #
-         # job_id
-         job_id = job_table[job_id]['parent_job_id']
+            #
+            # node_id
+            node_id = node_table[node_id]['parent']
    #
    # BEGIN_RETURN
    assert type(mulcov_freeze_dict) == dict
