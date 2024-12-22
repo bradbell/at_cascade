@@ -3,7 +3,7 @@
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
-{xrst_begin com_cov_reference}}
+{xrst_begin com_cov_reference}
 
 Compute Covariate Reference Values
 ##################################
@@ -66,7 +66,7 @@ cov_reference_list
 8. If there are no values to average for a relative covariate, the reference
    in the root_database covariate table is used for that covariate.
 
-{xrst_end com_cov_reference}}
+{xrst_end com_cov_reference}
 '''
 import at_cascade
 import dismod_at

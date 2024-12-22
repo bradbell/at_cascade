@@ -21,6 +21,7 @@ The at_cascade Examples
    example/csv/population.py
    example/csv/prevalence2iota.py
    example/csv/root_node_sex.py
+   example/csv/same_cov_xam.py
    example/csv/shock_cov.py
    example/csv/sim_fit_pred.py
    example/csv/simulate_xam.py

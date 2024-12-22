@@ -43,6 +43,13 @@ Release Notes for 2024
 mm-dd
 *****
 
+12-22
+=====
+Add :ref:`csv.same_covariate-name` .
+The plan is to use this,
+together with the last item under 12-20 below,
+to complete the :ref:`wish_list@csv.fit@Covariate Table Size` wish list item.
+
 12-21
 =====
 There was a bug in the

@@ -225,7 +225,7 @@ def summary(
    if os.path.exists(summary_dir) :
       msg  = 'The directory {summary_dir} already exists'
       msg += 'You must remove it to run another summary command today'
-      assert msg, False
+      assert False, msg
    else :
       os.makedirs(summary_dir)
    # error

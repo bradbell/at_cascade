@@ -192,9 +192,8 @@ covariate_name
 --------------
 Except for node_name, sex, age. time, and omega,
 the columns of this file are covariates.
-The header row specifies the *covariate_name*
-and the other rows are floats containing the corresponding
-covariate value.
+The header row specifies the *covariate_name* for a column
+and the other rows are floats containing the corresponding covariate value.
 The option_sim.csv
 :ref:`csv.simulate@Input Files@option_sim.csv@absolute_covariates`
 specifies which covariates are absolute.

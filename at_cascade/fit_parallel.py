@@ -251,7 +251,7 @@ def fit_parallel(
    if shared_number_cpu_inuse[0] != 1 :
       n_inuse = shared_number_cpu_inuse[0]
       msg =f'{shared_memory_prefix_plus}_number_cpu_inuse[0] = {n_inuse}'
-      assert msg, False
+      assert False, msg
    #
    # shared_job_status
    for job_id in range(0, len(job_table) ):

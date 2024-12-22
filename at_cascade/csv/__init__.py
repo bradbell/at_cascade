@@ -121,6 +121,7 @@ Routines
    at_cascade/csv/pre_user.py
    at_cascade/csv/predict.py
    at_cascade/csv/read_table.py
+   at_cascade/csv/same_covariate.py
    at_cascade/csv/set_truth.py
    at_cascade/csv/simulate.py
    at_cascade/csv/write_table.py
@@ -143,6 +144,7 @@ from .pre_parallel     import pre_parallel
 from .pre_user         import pre_user
 from .predict          import predict
 from .read_table       import read_table
+from .same_covariate   import same_covariate
 from .set_truth        import set_truth
 from .simulate         import simulate
 from .write_table      import write_table
