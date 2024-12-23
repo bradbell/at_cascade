@@ -43,6 +43,14 @@ Release Notes for 2024
 mm-dd
 *****
 
+12-23
+=====
+#. Add ``omega`` to the spline columns returned by 
+   :ref:`csv.same_covariate-name` .
+#. Use csv.same_covariate to reduce the number of splines returned
+   by :ref:`csv.covariate_spline-name` 
+   (some dictionary key combinations return the same spline).
+
 12-22
 =====
 Add :ref:`csv.same_covariate-name` .

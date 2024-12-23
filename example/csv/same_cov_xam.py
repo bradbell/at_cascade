@@ -110,17 +110,18 @@ def main() :
    # same cov
    same_cov = at_cascade.csv.same_covariate(covariate_table)
    #
-   # check that haqi is same for all nodes and all sexes
-   triple_other = None
-   for node_name in node_list :
-      for sex in sex_list :
-         triple = (node_name, sex, 'haqi')
-         if same_cov[triple] == triple :
-               assert triple_other == None
-               triple_other = triple
-   for node_name in node_list :
-      for sex in sex_list :
-         assert same_cov[ (node_name, sex, 'haqi') ] == triple_other
+   # check that omega and haqi are same for all nodes and all sexes
+   for cov_name in { 'omega', 'haqi' } :
+      triple_other = None
+      for node_name in node_list :
+         for sex in sex_list :
+            triple = (node_name, sex, cov_name)
+            if same_cov[triple] == triple :
+                  assert triple_other == None
+                  triple_other = triple
+      for node_name in node_list :
+         for sex in sex_list :
+            assert same_cov[ (node_name, sex, cov_name) ] == triple_other
    #
    # income
    # same for all nodes, different for each sex

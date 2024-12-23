@@ -22,14 +22,14 @@ Is a ``list`` of ``dict`` representation of a
 
 cov_name
 ========
-We use *cov_name* for one of the
+We use *cov_name* for ``omega`` or one of the
 :ref:`covariate_names <csv.simulate@Input Files@covariate.csv@covariate_name>`
 that appear in this file.
 
 age, time, cov_name
 ===================
-You may better detect covariates that are the same if
-you convert the age, time, and covariate columns from
+You may better detect covariates and omegas that are the same if
+you convert the age, time, omega, and covariate columns from
 ``str`` to ``float`` (or a similar type that can be sorted).
 For example,
 '0.1' is not equal to '0.10' but
@@ -55,6 +55,12 @@ For a *node_name* , *sex*, and *cov_name* is the covariate table, let
    for all the (node_name, sex) values that have the same
    the (age , time , covariate) values.
 
+Side Effects
+************
+This routine reports and error
+if the age-time grid is not rectangular
+and the same for each (node_name, sex) pair.
+
 Example
 *******
 see :ref:`csv.same_cov_xam-name` .
@@ -68,21 +74,29 @@ def same_covariate(covariate_table) :
    #
    #
    # cov_list
-   exclude    = { 'node_name', 'sex', 'age', 'time', 'omega'}
+   exclude    = { 'node_name', 'sex', 'age', 'time'}
    cov_list   = list( set( covariate_table[0].keys() ) - exclude )
    #
-   # node_list, sex_list
+   # node_set, sex_set, age_set, time_set
    node_set   = set()
    sex_set    = set()
+   age_set    = set()
+   time_set   = set()
    for row in covariate_table :
       node_set.add( row['node_name'] )
       sex_set.add(  row['sex'] )
-   node_list = list( node_set )
-   sex_list  = list( sex_set )
+      age_set.add(  row['age'] )
+      time_set.add( row['time'] )
    if sex_set != { 'female' , 'male' } :
       msg  = 'covaraite.csv: expected sex to contain feamle and male\n'
       msg += 'It contains {sex_set}'
       assert False, msg
+   #
+   # node_list, sex_list, age_list, time_list
+   node_list = sorted( node_set )
+   sex_list  = sorted( sex_set )
+   age_list  = sorted( age_set )
+   time_list = sorted( time_set )
    #
    # cov_subtable
    cov_subtable = dict()
@@ -102,22 +116,25 @@ def same_covariate(covariate_table) :
       table = sorted(table, key = lambda row : (row['age'], row['time']) )
       cov_subtable[pair] = table
    #
-   # check_age_time
-   check_age_time = None
+   # check age-time grid
+   n_age  = len(age_list)
+   n_time = len(time_list)
    for pair in cov_subtable :
-      age_time = list()
-      for row in cov_subtable[pair] :
-         age_time.append( (row['age'], row['time'] ) )
-      if check_age_time == None :
-         check_age_time = age_time
-         check_pair     = pair
-      else :
-         if check_age_time != age_time :
-            (node_1, sex_1) = pair
-            (node_2, sex_2) = check_pair
-            msg  = f'covariate.csv: age-time grid for ({node_1}, {sex_1})'
-            msg += f' is different than for ({node_2}, {sex_2})'
-            assert False, msg
+      table = cov_subtable[pair]
+      for (i_age, age) in enumerate(age_list) :
+         for (i_time, time) in enumerate(time_list) :
+            index = i_age * n_time + i_time
+            row   = table[index]
+            age   = row['age']
+            time  = row['time']
+            if age != age_list[i_age] or time != time_list[i_time] :
+               (node_name, sex) = pair
+               msg  = 'covariate_spline: Error in covariate.csv\n'
+               msg += f'node_name = {node_name}, sex = {sex} \n'
+               msg += 'Expected following rectangular grid:\n'
+               msg += f'age_grid  = {age_list}\n'
+               msg += f'time_grid = {time_list}'
+               assert False, msg
    #
    # same_cov
    same_cov = dict()

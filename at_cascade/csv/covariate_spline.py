@@ -21,10 +21,10 @@ Syntax
 
 covariate_table
 ***************
-This is a list of dict with the same keys for each dict
-containing the information in :ref:`csv.simulate@Input Files@covariate.csv` .
-All of the keys are covariate names except for
-``node_name`` , ``sex``, ``age`` and ``time`` .
+Is a ``list`` of ``dict`` representation of a
+:ref:`csv.simulate@Input Files@covariate.csv` file.
+All of the keys in this ``dict`` are covariate names except for
+``node_name`` , ``sex``, ``age`` , ``time`` and ``omega`` .
 
 node_set
 ********
@@ -43,26 +43,25 @@ that are present for each node_name and sex.
 spline_cov
 **********
 This is a dict of dict of dict.
-For each *node_name* in *covariate_table*,
-each *sex* in *covariate_table*,
-and each *covariate_name* in *covariate_table*
-{xrst_code py}
-   spline = spline_cov[node_name][sex][covariate_name]
-{xrst_code}
-is a spline function returning the value of the specified covariate,
-for the specified sex and node.
-To be more specific
+Let spline be defined by
+
+   for node_name in covariate_table
+      for sex in covariate_table
+         for cov_name a covariate name or omega
+            spline = spline_cov[node_name][sex][cov_name]
+
+Then spline is the corresponding function of age and time; i.e.,
 {xrst_code py}
    z = spline(age, time)
 {xrst_code}
-is the value of the covariate at the specified age and time where
+sets *z* to the value of the covariate or omega
+for the specified age, time, node_name, and sex where
 *age*, *time*, and *z* are floats.
 
 Side Effects
 ************
 This routine aborts with an assert if covariate.csv does not have the
 same rectangular grid in age and time for each (node_name, sex) pair.
-
 
 {xrst_end csv.covariate_spline}
 '''
@@ -75,10 +74,9 @@ def covariate_spline(covariate_table , node_set) :
    # END_SYNTAX
    #
    # cov_name_list
-   cov_name_list = list()
-   for key in covariate_table[0].keys() :
-      if key not in [ 'node_name', 'sex', 'age', 'time' ] :
-         cov_name_list.append( key )
+   exclude       = {  'node_name', 'sex', 'age', 'time' }
+   cov_name_set  = set( covariate_table[0].keys() ) - exclude
+   cov_name_list = list( cov_name_set )
    #
    # covariate_row_list
    covariate_row_list  = dict()
@@ -107,20 +105,21 @@ def covariate_spline(covariate_table , node_set) :
          covariate_row_list[node_name][sex] = list()
       covariate_row_list[node_name][sex].append( row )
    #
+   # same_cov
+   same_cov = at_cascade.csv.same_covariate(covariate_table)
+   #
    # spline_cov
    spline_cov = dict()
-   #
-   # previous
-   previous = dict()
-   #
-   # node_name
+   previous   = dict()
    for node_name in covariate_row_list :
       #
       # spline_cov[node_name]
       spline_cov[node_name] = dict()
       #
-      # sex
       for sex in covariate_row_list[node_name] :
+         #
+         # spline_cov[node_name][sex]
+         spline_cov[node_name][sex] = dict()
          #
          # age_grid, time_grid, spline_dict
          age_grid, time_grid, spline_dict = at_cascade.bilinear(
@@ -129,41 +128,36 @@ def covariate_spline(covariate_table , node_set) :
             y_name = 'time',
             z_list = cov_name_list
          )
-         #
-         if spline_dict == None :
-            msg  = 'covariate_spline: Error in covariate.csv\n'
-            msg += f'node_name = {node_name}, sex = {sex} \n'
-            msg += 'Expected following rectangular grid:\n'
-            msg += f'age_grid  = {age_grid}\n'
-            msg += f'time_grid = {time_grid}'
-            assert False, msg
-         #
-         if len( previous ) == 0 :
-            same_grid = True
-         else :
+         # at_cascade.csv.same_covariate should have checked rectangular grid
+         assert spline_dict != None
+         if len( previous ) != 0 :
             same_grid = previous['age_grid'] == age_grid
             same_grid = same_grid and previous['time_grid'] == time_grid
-         if not same_grid :
-            msg  = 'covariate_spline: Error in covariate.csv\n'
-            msg += 'node_name = {node_name}, sex = {sex} \n'
-            msg += f'age_grid  = {age_grid}\n'
-            msg += f'time_grid = {time_grid}'
-            previous_name      = previous['node_name']
-            previous_sex       = previous['sex']
-            previous_age_grid  = previous['age_grid']
-            previous_time_grid = previous['time_grid']
-            msg += 'node_name = {previous_name}, sex = {previous_sex} \n'
-            msg += f'age_grid  = {previous_age_grid}\n'
-            msg += f'time_grid = {previous_time_grid}'
-            assert False, msg
+            assert same_grid
          #
          # spline_cov[node_name][sex]
-         spline_cov[node_name][sex] = spline_dict
+         # python will free memory for splines that are not used
+         for cov_name in cov_name_list :
+            triple = (node_name, sex, cov_name)
+            if same_cov[triple] == triple :
+               spline_cov[node_name][sex][cov_name] = spline_dict[cov_name]
          #
          previous['node_name'] = node_name
          previous['sex']       = sex
          previous['age_grid']  = age_grid
          previous['time_grid'] = time_grid
+   #
+   # spline_cov
+   for node_name in covariate_row_list :
+      for sex in covariate_row_list[node_name] :
+         for cov_name in cov_name_list :
+            triple = (node_name, sex, cov_name)
+            if same_cov[triple] != triple :
+               (node_other, sex_other, cov_other) = same_cov[triple]
+               assert cov_other == cov_name
+               spline_cov[node_name][sex][cov_name] = \
+                  spline_cov[node_other][sex_other][cov_other]
+
    # BEGIN_RETURN
    # ...
    assert type(age_grid) == list
