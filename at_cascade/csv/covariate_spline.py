@@ -121,33 +121,41 @@ def covariate_spline(covariate_table , node_set) :
          # spline_cov[node_name][sex]
          spline_cov[node_name][sex] = dict()
          #
-         # age_grid, time_grid, spline_dict
-         age_grid, time_grid, spline_dict = at_cascade.bilinear(
-            table  = covariate_row_list[node_name][sex] ,
-            x_name = 'age',
-            y_name = 'time',
-            z_list = cov_name_list
-         )
-         # at_cascade.csv.same_covariate should have checked rectangular grid
-         assert spline_dict != None
-         if len( previous ) != 0 :
-            same_grid = previous['age_grid'] == age_grid
-            same_grid = same_grid and previous['time_grid'] == time_grid
-            assert same_grid
-         #
-         # spline_cov[node_name][sex]
-         # python will free memory for splines that are not used
+         # z_list
+         # only compuite splines that are needed
+         z_list = list()
          for cov_name in cov_name_list :
             triple = (node_name, sex, cov_name)
             if same_cov[triple] == triple :
+               z_list.append( cov_name )
+         if 0 < len(z_list) :
+            #
+            # age_grid, time_grid, spline_dict
+            age_grid, time_grid, spline_dict = at_cascade.bilinear(
+               table  = covariate_row_list[node_name][sex] ,
+               x_name = 'age',
+               y_name = 'time',
+               z_list = cov_name_list
+            )
+            # same_covariate should have checked rectangular grid
+            assert spline_dict != None
+            if len( previous ) != 0 :
+               same_grid = previous['age_grid'] == age_grid
+               same_grid = same_grid and previous['time_grid'] == time_grid
+               assert same_grid
+            #
+            # spline_cov[node_name][sex]
+            for cov_name in z_list :
+               triple = (node_name, sex, cov_name)
                spline_cov[node_name][sex][cov_name] = spline_dict[cov_name]
-         #
-         previous['node_name'] = node_name
-         previous['sex']       = sex
-         previous['age_grid']  = age_grid
-         previous['time_grid'] = time_grid
+            #
+            previous['node_name'] = node_name
+            previous['sex']       = sex
+            previous['age_grid']  = age_grid
+            previous['time_grid'] = time_grid
    #
    # spline_cov
+   # link from splines that are not needed to corresponding same spline
    for node_name in covariate_row_list :
       for sex in covariate_row_list[node_name] :
          for cov_name in cov_name_list :
