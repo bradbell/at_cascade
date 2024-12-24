@@ -1470,10 +1470,10 @@ def create_root_database(fit_dir) :
    # weight_dict
    for node_name in node_set :
       for covariate_name in covariate_list :
-         key        = (node_name, 'female', covariate_name)
-         fun_female = weight_dict[key]
-         key        = (node_name, 'male', covariate_name)
-         fun_male   = weight_dict[key]
+         triple     = (node_name, 'female', covariate_name)
+         fun_female = weight_dict[triple]
+         triple     = (node_name, 'male', covariate_name)
+         fun_male   = weight_dict[triple]
          #
          fun_both      = weighting_function(weight_index)
          weight_index += 1
@@ -1481,15 +1481,15 @@ def create_root_database(fit_dir) :
             for time in time_grid :
                weight = ( fun_female(age, time) + fun_male(age, time) ) / 2.0
                fun_both.set(age, time, weight)
-         key              = (node_name, 'both', covariate_name)
-         weight_dict[key] = fun_both
+         triple              = (node_name, 'both', covariate_name)
+         weight_dict[triple] = fun_both
    #
    # weight_table
    weight_table = list()
    age_id_list  = [ age_list.index(age) for age in age_grid ]
    time_id_list = [ time_list.index(time) for time in time_grid ]
-   for key in weight_dict :
-      fun   = weight_dict[key]
+   for triple in weight_dict :
+      fun   = weight_dict[triple]
       index = fun.index
       name  = f'weight_{index}'
       row = {
@@ -1502,13 +1502,13 @@ def create_root_database(fit_dir) :
    #
    # rate_eff_cov_table
    rate_eff_cov_table = list()
-   for key in weight_dict :
+   for triple in weight_dict :
       #
-      fun         = weight_dict[key]
+      fun         = weight_dict[triple]
       index       = fun.index
       weight_name = f'weight_{index}'
       #
-      (node_name, sex_name, covariate_name) = key
+      (node_name, sex_name, covariate_name) = triple
       sex_value = at_cascade.csv.sex_name2value[sex_name]
       #
       row = {
@@ -1530,8 +1530,8 @@ def create_root_database(fit_dir) :
          age_upper     = float( row['age_upper'] )
          if age_lower != age_upper :
             sex_name      = sex_value2name[ row['sex'] ]
-            key           = ( row['node_name'], sex_name, 'population' )
-            fun           = weight_dict[key]
+            triple        = ( row['node_name'], sex_name, 'population' )
+            fun           = weight_dict[triple]
             index         = fun.index
             weight_name   = f'weight_{index}'
             row['weight'] = weight_name
