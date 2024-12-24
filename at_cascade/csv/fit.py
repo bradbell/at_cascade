@@ -1166,6 +1166,7 @@ class weighting_function :
 #
 # csv_covariate_table
 # is the list of dict corresponding to the covariate.csv file
+# All the columns, except node_name and sex, have been converted to float.
 #
 # global_option_value
 # This routine assues that global_option_value has been set.
@@ -1205,15 +1206,45 @@ def create_root_database(fit_dir) :
       at_cascade.csv.check_table(file_name, input_table[name])
    print('begin creating root node database' )
    #
-   # csv_covariate_table
-   # This is different from dismod_at_covariate table created below
-   csv_covariate_table = input_table['covariate']
-   #
    # node_set
    node_set       = set()
    for row in input_table['node'] :
       node_name   = row['node_name']
       node_set.add( node_name )
+   #
+   # csv_covariate_table, covariate_list
+   # This is different from dismod_at_covariate table created below
+   csv_covariate_table = input_table['covariate']
+   exclude             = { 'node_name', 'sex', 'age', 'time', 'omega' }
+   covariate_list      = list( set( csv_covariate_table[0].keys() ) - exclude )
+   #
+   # cov_covariate_table
+   check_node_set      = set()
+   check_sex_set       = set()
+   for row in csv_covariate_table :
+      row['age']  = float( row['age'] )
+      row['time'] = float( row['time'] )
+      #
+      check_node_set.add( row['node_name'] )
+      check_sex_set.add(  row['sex'] )
+      #
+      row['omega'] = float( row['omega'] )
+      for covariate_name in covariate_list :
+         row[covariate_name] = float( row[covariate_name] )
+   if check_sex_set != { 'female', 'male' } :
+      print(check_sex_set)
+      msg  = 'The sexes above are in covariate.csv '
+      msg += 'but it should be female and male'
+      assert False, msg
+   if len(node_set - check_node_set) > 0 :
+      difference = node_set - check_node_set
+      print(difference)
+      msg = 'The nodes above are in node.csv but not in covariate.csv'
+      assert False, msg
+   if len(check_node_set - node_set) > 0 :
+      difference = check_node_set - node_set
+      print(difference)
+      msg = 'The nodes above are in covariate.csv but not in node.csv'
    #
    # root_node_name, root_node_sex, random_seed
    root_node_name = global_option_value['root_node_name']
@@ -1224,10 +1255,7 @@ def create_root_database(fit_dir) :
    root_covariate_ref = at_cascade.csv.covariate_avg(
       csv_covariate_table, root_node_name, root_node_sex
    )
-   #
-   # covariate_list
-   covariate_list = list( root_covariate_ref.keys() )
-   assert not 'sex' in covariate_list
+   assert covariate_list == list( root_covariate_ref.keys() )
    #
    # root_covariate_ref
    absolute_covariates = global_option_value['absolute_covariates']
@@ -1423,40 +1451,21 @@ def create_root_database(fit_dir) :
    # weight_dict, weight_index
    weight_dict    = dict()
    weight_index   = 0
-   check_node_set = set()
-   check_sex_set  = set()
    for row in csv_covariate_table :
-      age  = float( row['age'] )
-      time = float( row['time'] )
       #
       node_name = row['node_name']
       sex_name  = row['sex']
       #
-      check_node_set.add(node_name)
-      check_sex_set.add(sex_name)
-      #
       for covariate_name in covariate_list :
-         key = (node_name, sex_name, covariate_name)
-         if key not in weight_dict :
+         triple = (node_name, sex_name, covariate_name)
+         if triple not in weight_dict :
             fun           = weighting_function(weight_index)
             weight_index += 1
-            weight_dict[key] = fun
-         weight = float( row[covariate_name] )
-         weight_dict[key].set(age, time, weight)
-   if check_sex_set != { 'female', 'male' } :
-      print(check_sex_set)
-      msg  = 'The sexes above are in covariate.csv '
-      msg += 'but it should be female and male'
-      assert False, msg
-   if len(node_set - check_node_set) > 0 :
-      difference = node_set - check_node_set
-      print(difference)
-      msg = 'The nodes above are in node.csv but not in covariate.csv'
-      assert False, msg
-   if len(check_node_set - node_set) > 0 :
-      difference = check_node_set - node_set
-      print(difference)
-      msg = 'The nodes above are in covariate.csv but not in node.csv'
+            weight_dict[triple] = fun
+         age    = row['age']
+         time   = row['time']
+         weight = row[covariate_name]
+         weight_dict[triple].set(age, time, weight)
    #
    # weight_dict
    for node_name in node_set :
@@ -1843,9 +1852,9 @@ def create_all_node_database(
    for row in csv_covariate_table :
       node_name          = row['node_name']
       sex                = row['sex']
-      age                = float( row['age'] )
-      time               = float( row['time'] )
-      omega              = float( row['omega'] )
+      age                = row['age']
+      time               = row['time']
+      omega              = row['omega']
       #
       if sex not in [ 'female', 'male' ] :
          msg  = 'covariate.csv: sex is not female or male'
