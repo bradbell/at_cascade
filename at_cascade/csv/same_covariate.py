@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2024 Bradley M. Bell
 # ----------------------------------------------------------------------------
+import copy
 '''
 {xrst_begin csv.same_covariate}
 
@@ -19,6 +20,8 @@ covariate_table
 ***************
 Is a ``list`` of ``dict`` representation of a
 :ref:`csv.simulate@Input Files@covariate.csv` file.
+All of the columns in this table have been converted to ``float``
+except for *node_name* and *sex* which have type ``str`` .
 
 cov_name
 ========
@@ -26,18 +29,25 @@ We use *cov_name* for ``omega`` or one of the
 :ref:`covariate_names <csv.simulate@Input Files@covariate.csv@covariate_name>`
 that appear in this file.
 
-age, time, cov_name
-===================
-You may better detect covariates and omegas that are the same if
-you convert the age, time, omega, and covariate columns from
-``str`` to ``float`` (or a similar type that can be sorted).
-For example,
-'0.1' is not equal to '0.10' but
-'float(0.1)' is equal to 'float(0.10)' .
 
+both
+====
+For each node_name, age, time,
+the covariate table value for *sex* equal both
+is the average of its value for females and males.
+To be specific, if female_value, male_value, both_value
+are the corresponding values for a specific (node_name, age, time) then:
+{xrst_code py}
+   if female_value == male_value :
+      both_value = female_value
+   else :
+      both_value = ( float( female_value ) + float( male_value ) ) / 2.0
+{xrst_code}
 
 same_cov
 ********
+We include the *sex* value both even though it is not actually in the
+covariate table.
 For a *node_name* , *sex*, and *cov_name* is the covariate table, let
 {xrst_code py}
    (node_other, sex_other, cov_other) = same_cov[ (node_name, sex, cov_name) ]
@@ -70,6 +80,12 @@ see :ref:`csv.same_cov_xam-name` .
 # BEGIN_PROTOTYPE
 def same_covariate(covariate_table) :
    assert type(covariate_table) == list
+   for row in covariate_table :
+      for key in row :
+         if key in { 'node_name' , 'sex' } :
+            assert type( row[key] ) == str
+         else :
+            assert type( row[key] ) == float
    # END_PROTOTYPE
    #
    #
@@ -136,6 +152,22 @@ def same_covariate(covariate_table) :
                msg += f'time_grid = {time_list}'
                assert False, msg
    #
+   # cov_subtable
+   for node_name in node_list :
+      cov_subtable[ (node_name, 'both') ] = list()
+      for (i_age, age) in enumerate(age_list) :
+         for (i_time, time) in enumerate(time_list) :
+            index = i_age * n_time + i_time
+            row_female = cov_subtable[ (node_name, 'female')][index]
+            row_male   = cov_subtable[ (node_name, 'male')][index]
+            assert row_female['age'] == row_male['age']
+            assert row_female['time'] == row_male['time']
+            row_both   = copy.copy( row_female )
+            for cov_name in cov_list :
+               if row_female[key] != row_male[key] :
+                  row_both[key] = (row_female[key] + row_male[key]) / 2.0
+            cov_subtable[ (node_name, 'both') ].append(row_both)
+   #
    # same_cov
    same_cov = dict()
    #
@@ -147,7 +179,7 @@ def same_covariate(covariate_table) :
       for pair in cov_subtable :
          cov_value = list()
          for row in cov_subtable[pair] :
-            cov_value.append( float(row[cov_name]) )
+            cov_value.append( row[cov_name] )
          cov_value_dict[pair] = cov_value
       #
       # cov_value_list

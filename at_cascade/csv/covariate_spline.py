@@ -25,6 +25,8 @@ Is a ``list`` of ``dict`` representation of a
 :ref:`csv.simulate@Input Files@covariate.csv` file.
 All of the keys in this ``dict`` are covariate names except for
 ``node_name`` , ``sex``, ``age`` , ``time`` and ``omega`` .
+All of the columns have been converted to type ``float`` except
+for *node_name* and *sex* which have type ``str`` .
 
 node_set
 ********

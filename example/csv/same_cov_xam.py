@@ -83,7 +83,7 @@ def income(node, sex, age, time) :
 def main() :
    #
    age_list  = [ 20.0, 80.0 ]
-   time_list = [ 1980, 2020 ]
+   time_list = [ 1980.0, 2020.0 ]
    node_list = [ 'n0', 'n1', 'n2' ]
    sex_list  = [ 'female', 'male' ]
    cov_list  = [ 'haqi', 'income' ]
@@ -109,6 +109,9 @@ def main() :
    #
    # same cov
    same_cov = at_cascade.csv.same_covariate(covariate_table)
+   #
+   # sex_list
+   sex_list = sex_list + [ 'both' ]
    #
    # check that omega and haqi are same for all nodes and all sexes
    for cov_name in { 'omega', 'haqi' } :

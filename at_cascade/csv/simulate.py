@@ -1100,6 +1100,12 @@ def simulate(sim_dir) :
       input_table[name] = at_cascade.csv.read_table(file_name)
       at_cascade.csv.check_table(file_name, input_table[name])
    #
+   # input_table['covariate']
+   for row in input_table['covariate'] :
+      for key in row :
+         if key not in { 'node_name', 'sex' } :
+            row[key] = float( row[key] )
+   #
    if global_option_value['trace'] :
       print('Creating data structures:' )
    #
