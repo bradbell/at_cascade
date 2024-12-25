@@ -15,6 +15,7 @@ The at_cascade Examples
    example/continue_cascade.py
    example/csv/binomial.py
    example/csv/break_fit_pred.py
+   example/csv/cov_both_xam.py
    example/csv/coverage.py
    example/csv/csv_table.py
    example/csv/join_file_xam.py

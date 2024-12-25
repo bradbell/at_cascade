@@ -111,6 +111,7 @@ Routines
    at_cascade/csv/ancestor_fit.py
    at_cascade/csv/check_table.py
    at_cascade/csv/covariate_avg.py
+   at_cascade/csv/covariate_both.py
    at_cascade/csv/covariate_spline.py
    at_cascade/csv/empty_str.py
    at_cascade/csv/fit.py
@@ -134,6 +135,7 @@ Routines
 from .ancestor_fit     import ancestor_fit
 from .check_table      import check_table
 from .covariate_avg    import covariate_avg
+from .covariate_both   import covariate_both
 from .covariate_spline import covariate_spline
 from .empty_str        import empty_str
 from .fit              import fit
