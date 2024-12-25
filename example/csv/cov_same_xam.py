@@ -105,6 +105,7 @@ def main() :
                   'income'    : income(node_name, sex, age, time) ,
                }
                covariate_table.append(row)
+   covariate_table = at_cascade.csv.covariate_both(covariate_table)
    random.shuffle(covariate_table)
    #
    # same cov

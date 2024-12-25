@@ -22,6 +22,8 @@ Is a ``list`` of ``dict`` representation of a
 :ref:`csv.simulate@Input Files@covariate.csv` file.
 All of the columns in this table have been converted to ``float``
 except for *node_name* and *sex* which have type ``str`` .
+In addition, *sex* equal to ``both`` may have been added; see
+:ref:`csv.covariate_both-name` .
 
 cov_name
 ========
@@ -30,25 +32,9 @@ We use *cov_name* for ``omega`` or one of the
 that appear in this file.
 
 
-both
-====
-For each node_name, age, time,
-the covariate table value for *sex* equal both
-is the average of its value for females and males.
-To be specific, if female_value, male_value, both_value
-are the corresponding values for a specific (node_name, age, time) then:
-{xrst_code py}
-   if female_value == male_value :
-      both_value = female_value
-   else :
-      both_value = ( float( female_value ) + float( male_value ) ) / 2.0
-{xrst_code}
-
 cov_same
 ********
-We include the *sex* value both even though it is not actually in the
-covariate table.
-For a *node_name* , *sex*, and *cov_name* is the covariate table, let
+For a *node_name* , *sex*, and *cov_name* is *covariate_table*
 {xrst_code py}
    (node_other, sex_other, cov_other) = cov_same[ (node_name, sex, cov_name) ]
 {xrst_code}
@@ -56,14 +42,14 @@ For a *node_name* , *sex*, and *cov_name* is the covariate table, let
 #. If follows that *cov_other* == *cov_name*; i.e.,
    the covariate column for these two triples is the same.
 
-#. The (age , time , covariate) values
-   corresponding to (node_name , sex) are the same as
-   the (age , time , covariate) values
-   corresponding to (node_other , sex_other) .
+#. For each age, time, the *cov_name* value corresponding to
+   (node_name, sex, cov_name)
+   is the same as the *cov_other* value corresponding to
+   (node_other, sex_other, cov_other).
 
-#. There is only one (node_other, sex_other) value
-   for all the (node_name, sex) values that have the same
-   the (age , time , covariate) values.
+#. There is one and only one value of (node_other, sex_other, cov_other)
+   for all the (node_name, sex, cov_name) triples
+   that have the same *cov_name* value for each age and time.
 
 Side Effects
 ************
@@ -82,10 +68,8 @@ def covariate_same(covariate_table) :
    assert type(covariate_table) == list
    for row in covariate_table :
       for key in row :
-         if key in { 'node_name' , 'sex' } :
-            assert type( row[key] ) == str
-         else :
-            assert type( row[key] ) == float
+         type_check = str if key in [ 'node_name' , 'sex' ] else float
+         assert type( row[key] ) == type_check
    # END_PROTOTYPE
    #
    #
@@ -103,10 +87,6 @@ def covariate_same(covariate_table) :
       sex_set.add(  row['sex'] )
       age_set.add(  row['age'] )
       time_set.add( row['time'] )
-   if sex_set != { 'female' , 'male' } :
-      msg  = 'covaraite.csv: expected sex to contain feamle and male\n'
-      msg += 'It contains {sex_set}'
-      assert False, msg
    #
    # node_list, sex_list, age_list, time_list
    node_list = sorted( node_set )
@@ -152,26 +132,8 @@ def covariate_same(covariate_table) :
                msg += f'time_grid = {time_list}'
                assert False, msg
    #
-   # cov_subtable
-   for node_name in node_list :
-      cov_subtable[ (node_name, 'both') ] = list()
-      for (i_age, age) in enumerate(age_list) :
-         for (i_time, time) in enumerate(time_list) :
-            index = i_age * n_time + i_time
-            row_female = cov_subtable[ (node_name, 'female')][index]
-            row_male   = cov_subtable[ (node_name, 'male')][index]
-            assert row_female['age'] == row_male['age']
-            assert row_female['time'] == row_male['time']
-            row_both   = copy.copy( row_female )
-            for cov_name in cov_list :
-               if row_female[key] != row_male[key] :
-                  row_both[key] = (row_female[key] + row_male[key]) / 2.0
-            cov_subtable[ (node_name, 'both') ].append(row_both)
-   #
    # cov_same
    cov_same = dict()
-   #
-   # cov_name
    for cov_name in cov_list :
       #
       # cov_value_dict
