@@ -1452,57 +1452,52 @@ def create_root_database(fit_dir) :
          row_out['parent'] = row_in['parent_name']
       node_table.append( row_out )
    #
+   # cov_same
+   cov_same = at_cascade.csv.covariate_same(csv_covariate_table)
+   #
    # weight_dict, weight_index
    weight_dict    = dict()
    weight_index   = 0
    for row in csv_covariate_table :
-      #
       node_name = row['node_name']
       sex_name  = row['sex']
-      #
       for covariate_name in covariate_list :
          triple = (node_name, sex_name, covariate_name)
-         if triple not in weight_dict :
-            fun           = weighting_function(weight_index)
-            weight_index += 1
-            weight_dict[triple] = fun
-         age    = row['age']
-         time   = row['time']
-         weight = row[covariate_name]
-         weight_dict[triple].set(age, time, weight)
+         if cov_same[triple] == triple :
+            if triple not in weight_dict :
+               fun                 = weighting_function(weight_index)
+               weight_index       += 1
+               weight_dict[triple] = fun
+            age    = row['age']
+            time   = row['time']
+            weight = row[covariate_name]
+            weight_dict[triple].set(age, time, weight)
    #
    # weight_dict
    for node_name in node_set :
-      for covariate_name in covariate_list :
-         triple     = (node_name, 'female', covariate_name)
-         fun_female = weight_dict[triple]
-         triple     = (node_name, 'male', covariate_name)
-         fun_male   = weight_dict[triple]
-         #
-         fun_both      = weighting_function(weight_index)
-         weight_index += 1
-         for age  in age_grid :
-            for time in time_grid :
-               weight = ( fun_female(age, time) + fun_male(age, time) ) / 2.0
-               fun_both.set(age, time, weight)
-         triple              = (node_name, 'both', covariate_name)
-         weight_dict[triple] = fun_both
+      for sex in [ 'female', 'male', 'both' ] :
+         for cov_name in covariate_list :
+            triple = (node_name, sex, cov_name)
+            if cov_same[triple] != triple :
+               triple_other = cov_same[triple]
+               weight_dict[triple] = weight_dict[triple_other]
    #
    # weight_table
    weight_table = list()
    age_id_list  = [ age_list.index(age) for age in age_grid ]
    time_id_list = [ time_list.index(time) for time in time_grid ]
    for triple in weight_dict :
-      fun   = weight_dict[triple]
-      index = fun.index
-      name  = f'weight_{index}'
-      row = {
-         'name'     : f'weight_{index}'   ,
-         'age_id'   : age_id_list         ,
-         'time_id'  : time_id_list        ,
-         'fun'      : fun                 ,
-      }
-      weight_table.append(row)
+      if cov_same[triple] == triple :
+         fun   = weight_dict[triple]
+         index = fun.index
+         name  = f'weight_{index}'
+         row = {
+            'name'     : f'weight_{index}'   ,
+            'age_id'   : age_id_list         ,
+            'time_id'  : time_id_list        ,
+            'fun'      : fun                 ,
+         }
+         weight_table.append(row)
    #
    # rate_eff_cov_table
    rate_eff_cov_table = list()
