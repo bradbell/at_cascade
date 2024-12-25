@@ -1132,8 +1132,10 @@ def simulate(sim_dir) :
       assert False, msg
    #
    # root_covariate_ref
+   covariate_table    = input_table['covariate']
+   covariate_table    = at_cascade.csv.covariate_both(covariate_table)
    root_covariate_ref = at_cascade.csv.covariate_avg(
-      covariate_table = input_table['covariate'] ,
+      covariate_table = covariate_table          ,
       node_name       = root_node_name           ,
       sex             = 'both'                   ,
    )

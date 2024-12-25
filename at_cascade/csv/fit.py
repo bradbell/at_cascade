@@ -1166,7 +1166,8 @@ class weighting_function :
 #
 # csv_covariate_table
 # is the list of dict corresponding to the covariate.csv file
-# All the columns, except node_name and sex, have been converted to float.
+# All the columns, except node_name and sex, have been converted to float
+# and rows with both sex have been added; see covariate_both.
 #
 # global_option_value
 # This routine assues that global_option_value has been set.
@@ -1245,6 +1246,9 @@ def create_root_database(fit_dir) :
       difference = check_node_set - node_set
       print(difference)
       msg = 'The nodes above are in covariate.csv but not in node.csv'
+   #
+   # csv_covariate_table
+   csv_covariate_table = at_cascade.csv.covariate_both(csv_covariate_table)
    #
    # root_node_name, root_node_sex, random_seed
    root_node_name = global_option_value['root_node_name']
@@ -1856,13 +1860,12 @@ def create_all_node_database(
       time               = row['time']
       omega              = row['omega']
       #
-      if sex not in [ 'female', 'male' ] :
+      if sex not in [ 'female', 'male', 'both' ] :
          msg  = 'covariate.csv: sex is not female or male'
          assert False, msg
       split_reference_id = at_cascade.table_name2id(
          split_reference_table, 'split_reference', sex
       )
-      assert split_reference_id != 1
       if node_name not in omega_data :
          omega_data[node_name] = list()
          for k in range( len(split_reference_table) ) :
@@ -1875,15 +1878,6 @@ def create_all_node_database(
       i = age_grid.index(age)
       j = time_grid.index(time)
       omega_data[node_name][k][i * n_time + j] = omega
-   for node_name in omega_data :
-      for i in range( n_age ) :
-         for j in range( n_time ) :
-            female = omega_data[node_name][0][i * n_time + j]
-            both   = omega_data[node_name][1][i * n_time + j]
-            male   = omega_data[node_name][2][i * n_time + j]
-            assert female != None and both == None and male != None
-            both   = (female + male) / 2.0
-            omega_data[node_name][1][i * n_time + j] = both
    #
    # cov_reference_table
    cov_reference_table = None

@@ -17,8 +17,12 @@ Syntax
 
 covariate_table
 ***************
-Is a table (i.e., list of dict) containing the information in
-:ref:`csv.simulate@Input Files@covariate.csv` .
+Is a ``list`` of ``dict`` representation of a
+:ref:`csv.simulate@Input Files@covariate.csv` file.
+All of the columns in this table have been converted to ``float``
+except for *node_name* and *sex* which have type ``str`` .
+In addition, *sex* equal to ``both`` may have been added; see
+:ref:`csv.covariate_both-name` .
 
 node_name
 *********
@@ -31,9 +35,7 @@ and the values are the average of the corresponding covariate.
 
 sex
 ***
-is the sex that this average is for. If it is female or male,
-only that sex is included in the average.
-If it is both, both sexes are included in the average.
+is the sex that this average is for.
 
 {xrst_end csv.covariate_avg}
 '''
@@ -45,12 +47,6 @@ def covariate_avg(covariate_table, node_name, sex) :
    assert type(node_name) == str
    assert sex in [ 'female', 'male', 'both' ]
    # END_SYNTAX
-   #
-   # include_sex
-   if sex == 'both' :
-      include_sex = { 'female', 'male' }
-   else :
-      include_sex = { sex }
    #
    # covariate_name_list
    covariate_name_list = list()
@@ -68,24 +64,20 @@ def covariate_avg(covariate_table, node_name, sex) :
    line_number = 0;
    for row in covariate_table :
       line_number += 1
-      sex          = row['sex']
-      #
-      if sex not in  { 'female', 'male' } :
+      if row['sex'] not in  { 'female', 'male', 'both' } :
+         sex  = row['sex']
          msg  = f'covariate.csv at line {line_number}\n'
          msg += 'sex = {sex} is not female or male'
          assert False, msg
       #
-      if node_name == row['node_name'] and row['sex'] in include_sex :
+      if node_name == row['node_name'] and row['sex'] == sex :
          count += 1
          for covariate_name in covariate_name_list :
             covariate_sum[covariate_name] += float( row[covariate_name] )
    #
    if count == 0 :
-      if sex == 'both' :
-         msg  = f'node "{node_name}" does not appear '
-      else :
-         msg  = f'node "{node_name}" does not appear with sex "{sex}" '
-      msg += 'in covariate.csv'
+      msg  = f'node "{node_name}" does not appear with sex "{sex}" '
+      msg += 'covariate_table.'
       assert False, msg
    #
    # covariate_average
