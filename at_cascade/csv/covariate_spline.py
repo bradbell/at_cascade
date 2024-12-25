@@ -107,8 +107,8 @@ def covariate_spline(covariate_table , node_set) :
          covariate_row_list[node_name][sex] = list()
       covariate_row_list[node_name][sex].append( row )
    #
-   # same_cov
-   same_cov = at_cascade.csv.same_covariate(covariate_table)
+   # cov_same
+   cov_same = at_cascade.csv.covariate_same(covariate_table)
    #
    # spline_cov
    spline_cov = dict()
@@ -128,7 +128,7 @@ def covariate_spline(covariate_table , node_set) :
          z_list = list()
          for cov_name in cov_name_list :
             triple = (node_name, sex, cov_name)
-            if same_cov[triple] == triple :
+            if cov_same[triple] == triple :
                z_list.append( cov_name )
          if 0 < len(z_list) :
             #
@@ -139,7 +139,7 @@ def covariate_spline(covariate_table , node_set) :
                y_name = 'time',
                z_list = cov_name_list
             )
-            # same_covariate should have checked rectangular grid
+            # covariate_same should have checked rectangular grid
             assert spline_dict != None
             if len( previous ) != 0 :
                same_grid = previous['age_grid'] == age_grid
@@ -162,8 +162,8 @@ def covariate_spline(covariate_table , node_set) :
       for sex in covariate_row_list[node_name] :
          for cov_name in cov_name_list :
             triple = (node_name, sex, cov_name)
-            if same_cov[triple] != triple :
-               (node_other, sex_other, cov_other) = same_cov[triple]
+            if cov_same[triple] != triple :
+               (node_other, sex_other, cov_other) = cov_same[triple]
                assert cov_other == cov_name
                spline_cov[node_name][sex][cov_name] = \
                   spline_cov[node_other][sex_other][cov_other]

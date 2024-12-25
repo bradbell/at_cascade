@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------
 import copy
 '''
-{xrst_begin csv.same_covariate}
+{xrst_begin csv.covariate_same}
 
 Determine Which Covariates in covariate.csv Are the Same
 ########################################################
@@ -44,13 +44,13 @@ are the corresponding values for a specific (node_name, age, time) then:
       both_value = ( float( female_value ) + float( male_value ) ) / 2.0
 {xrst_code}
 
-same_cov
+cov_same
 ********
 We include the *sex* value both even though it is not actually in the
 covariate table.
 For a *node_name* , *sex*, and *cov_name* is the covariate table, let
 {xrst_code py}
-   (node_other, sex_other, cov_other) = same_cov[ (node_name, sex, cov_name) ]
+   (node_other, sex_other, cov_other) = cov_same[ (node_name, sex, cov_name) ]
 {xrst_code}
 
 #. If follows that *cov_other* == *cov_name*; i.e.,
@@ -73,12 +73,12 @@ and the same for each (node_name, sex) pair.
 
 Example
 *******
-see :ref:`csv.same_cov_xam-name` .
+see :ref:`csv.cov_same_xam-name` .
 
-{xrst_end csv.same_covariate}
+{xrst_end csv.covariate_same}
 '''
 # BEGIN_PROTOTYPE
-def same_covariate(covariate_table) :
+def covariate_same(covariate_table) :
    assert type(covariate_table) == list
    for row in covariate_table :
       for key in row :
@@ -168,8 +168,8 @@ def same_covariate(covariate_table) :
                   row_both[key] = (row_female[key] + row_male[key]) / 2.0
             cov_subtable[ (node_name, 'both') ].append(row_both)
    #
-   # same_cov
-   same_cov = dict()
+   # cov_same
+   cov_same = dict()
    #
    # cov_name
    for cov_name in cov_list :
@@ -185,25 +185,25 @@ def same_covariate(covariate_table) :
       # cov_value_list
       cov_value_list = sorted(cov_value_dict.items(), key = lambda x : x[1])
       #
-      # same_cov
+      # cov_same
       previous_value  = None
       previous_triple = None
       for (pair, cov_value) in cov_value_list :
          (node_name, sex) = pair
          triple           = (node_name, sex, cov_name)
          if cov_value == previous_value :
-            other_triple           = same_cov[previous_triple]
-            same_cov[triple]       = other_triple
-            assert same_cov[other_triple] == other_triple
+            other_triple           = cov_same[previous_triple]
+            cov_same[triple]       = other_triple
+            assert cov_same[other_triple] == other_triple
          else :
-            same_cov[triple] = triple
+            cov_same[triple] = triple
          previous_value  = cov_value
          previous_triple = triple
    # BEGIN_RETURN
    #
-   assert type(same_cov) == dict
-   for triple in same_cov :
+   assert type(cov_same) == dict
+   for triple in cov_same :
       assert type(triple) == tuple
       assert len(triple) == 3
-   return same_cov
+   return cov_same
    # END_RETURN

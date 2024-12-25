@@ -3,12 +3,12 @@
 # SPDX-FileContributor: 2024 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
-{xrst_begin csv.same_cov_xam}
+{xrst_begin csv.cov_same_xam}
 {xrst_spell
    haqi
 }
 
-Example and Test of same_covariate
+Example and Test of covariate_same
 ##################################
 
 Covariates
@@ -30,9 +30,9 @@ covariate_table
 The covariate table is shuffled, after it is created,
 to demonstrate the fact that the order of its rows does not matter.
 
-same_cov
+cov_same
 ********
-same_cov is checked to see that it detects the following:
+cov_same is checked to see that it detects the following:
 
 haqi
 ====
@@ -50,7 +50,7 @@ Source
    # END_SOURCE
 }
 
-{xrst_end csv.same_cov_xam}
+{xrst_end csv.cov_same_xam}
 '''
 # BEGIN_SOURCE
 # at_cascade
@@ -108,7 +108,7 @@ def main() :
    random.shuffle(covariate_table)
    #
    # same cov
-   same_cov = at_cascade.csv.same_covariate(covariate_table)
+   cov_same = at_cascade.csv.covariate_same(covariate_table)
    #
    # sex_list
    sex_list = sex_list + [ 'both' ]
@@ -119,12 +119,12 @@ def main() :
       for node_name in node_list :
          for sex in sex_list :
             triple = (node_name, sex, cov_name)
-            if same_cov[triple] == triple :
+            if cov_same[triple] == triple :
                   assert triple_other == None
                   triple_other = triple
       for node_name in node_list :
          for sex in sex_list :
-            assert same_cov[ (node_name, sex, cov_name) ] == triple_other
+            assert cov_same[ (node_name, sex, cov_name) ] == triple_other
    #
    # income
    # same for all nodes, different for each sex
@@ -132,13 +132,13 @@ def main() :
    for node_name in node_list :
       for sex in sex_list :
          triple = (node_name, sex, 'income')
-         if same_cov[triple] == triple :
+         if cov_same[triple] == triple :
                assert sex not in triple_other
                triple_other[sex] = triple
    for node_name in node_list :
       for sex in sex_list :
-         assert same_cov[ (node_name, sex, 'income') ] == triple_other[sex]
-   print('same_cov_xam: OK')
+         assert cov_same[ (node_name, sex, 'income') ] == triple_other[sex]
+   print('cov_same_xam: OK')
 #
 if __name__ == '__main__' :
    main()

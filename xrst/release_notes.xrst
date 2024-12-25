@@ -45,15 +45,15 @@ mm-dd
 
 12-23
 =====
-#. Add ``omega`` to the spline columns returned by 
-   :ref:`csv.same_covariate-name` .
-#. Use csv.same_covariate to reduce the number of splines returned
-   by :ref:`csv.covariate_spline-name` 
+#. Add ``omega`` to the spline columns returned by
+   :ref:`csv.covariate_same-name` .
+#. Use csv.covariate_same to reduce the number of splines returned
+   by :ref:`csv.covariate_spline-name`
    (some dictionary key combinations return the same spline).
 
 12-22
 =====
-Add :ref:`csv.same_covariate-name` .
+Add :ref:`csv.covariate_same-name` .
 The plan is to use this,
 together with the last item under 12-20 below,
 to complete the :ref:`wish_list@csv.fit@Covariate Table Size` wish list item.

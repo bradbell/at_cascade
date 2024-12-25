@@ -16,13 +16,13 @@ The at_cascade Examples
    example/csv/binomial.py
    example/csv/break_fit_pred.py
    example/csv/cov_both_xam.py
+   example/csv/cov_same_xam.py
    example/csv/coverage.py
    example/csv/csv_table.py
    example/csv/join_file_xam.py
    example/csv/population.py
    example/csv/prevalence2iota.py
    example/csv/root_node_sex.py
-   example/csv/same_cov_xam.py
    example/csv/shock_cov.py
    example/csv/sim_fit_pred.py
    example/csv/simulate_xam.py
