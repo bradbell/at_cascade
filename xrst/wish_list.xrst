@@ -23,21 +23,6 @@ are different; see :ref:`wish_list@csv.fit@avgint Table` below.)
 csv.fit
 *******
 
-Covariate Table Size
-====================
-The number of rows and columns in the
-:ref:`csv.fit@Input Files@covariate.csv` keeps increasing
-(as we find new uses for covariates).
-This in turn increases the size of the dismod_at weight grid table; see
-`Rate Effect Covariate Table
-<https://dismod-at.readthedocs.io/rate_eff_cov_table.html>`_ .
-If a covariate does not depend on sex (location),
-that covariate should use one weight table for both sexes (all locations).
-If a covariate does not depend on age (time),
-the corresponding weight grid table should have one age point (one time point).
-A similar compression should be done by the
-:ref:`csv.covariate_spline-name` routine.
-
 avgint Table
 ============
 Document the state of the avgint table in

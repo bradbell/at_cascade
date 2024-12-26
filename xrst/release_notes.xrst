@@ -43,6 +43,17 @@ Release Notes for 2024
 mm-dd
 *****
 
+12-26
+=====
+The Covariate Table Size wish list item has been completed;
+see :ref:`csv.fit@Input Files@covariate.csv@Compression` in
+the csv.fit documentation.
+
+12-25
+=====
+Add the :ref:`csv.covariate_both-name` and change
+csv.same_covariate to :ref:`csv.covariate_same-name` .
+
 12-23
 =====
 #. Add ``omega`` to the spline columns returned by
@@ -54,9 +65,9 @@ mm-dd
 12-22
 =====
 Add :ref:`csv.covariate_same-name` .
-The plan is to use this,
+This was used on 12-26 above,
 together with the last item under 12-20 below,
-to complete the :ref:`wish_list@csv.fit@Covariate Table Size` wish list item.
+to help complete the Covariate Table Size wish list item.
 
 12-21
 =====
@@ -174,8 +185,7 @@ Add :ref:`option_all_table@freeze_type` to the option_all table.
    For example, the covariate could be one at the root location
    and smaller the further down the node tree a location is.
 
-#. Add the :ref:`wish_list@csv.fit@Covariate Table Size` entry to the
-   wish list.
+#. Add the Covariate Table Size entry to the wish list.
 
 
 11-05

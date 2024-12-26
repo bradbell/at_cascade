@@ -480,6 +480,24 @@ covariate.csv
 This csv file has the same description as the simulate
 :ref:`csv.simulate@Input Files@covariate.csv` file.
 
+Compression
+-----------
+The :ref:`csv.covariate_same-name` routine is used to detect when
+two (node, sex, covariate) combinations have the same covariate values.
+In addition, csv.fit detects when a covariate is constant with respect to
+age or time or both.
+This can result in a large savings in the size of the root node database
+and the amount of memory required by dismod_at
+(depending on the values in covariate.csv).
+The following summary of this savings is printed when csv.fit is run::
+
+   csv.fit: create_root_database: covariate counts
+   number (node, sex, covariate) combinations = ...
+   number of corresponding weights            = ...
+   number that are constant w.r.t. age        = ...
+   number that are constant w.r.t. time       = ...
+   number that are constant w.r.t. both       = ...
+
 
 population
 ----------
@@ -1483,7 +1501,7 @@ def create_root_database(fit_dir) :
                triple_other = cov_same[triple]
                weight_dict[triple] = weight_dict[triple_other]
    #
-   # weight_table
+   # weight_table, n_const
    weight_table = list()
    age_id_list  = [ age_list.index(age) for age in age_grid ]
    time_id_list = [ time_list.index(time) for time in time_grid ]
@@ -1516,8 +1534,10 @@ def create_root_database(fit_dir) :
          if const_age and const_time :
             n_const['both'] += 1
          weight_table.append(row)
+   #
+   # see csv.fit@Input Files@covarite.csv@Compression
    print('csv.fit: create_root_database: covariate counts')
-   print('number (node, sex, covaraite) combinations =', len(weight_dict) )
+   print('number (node, sex, covariate) combinations =', len(weight_dict) )
    print('number of corresponding weights            =', weight_count)
    print('number that are constant w.r.t. age        =', n_const['age'])
    print('number that are constant w.r.t. time       =', n_const['time'])
