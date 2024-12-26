@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin empty_avgint_table}
@@ -8,11 +8,11 @@
 Create An Empty avgint Table
 ############################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   # BEGIN syntax
-   # END syntax
+   # BEGIN_DEF
+   # END_DEF
 }
 
 connection
@@ -39,10 +39,10 @@ import time
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
-# BEGIN syntax
+# BEGIN_DEF
 # at_cascade.empty_avgint_table
 def empty_avgint_table(connection) :
-# END syntax
+# END_DEF
 # ----------------------------------------------------------------------------
    #
    # n_covariate

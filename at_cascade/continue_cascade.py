@@ -8,11 +8,11 @@
 Continue Cascade From a Fit Node
 ################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   # BEGIN syntax
-   # END syntax
+   # BEGIN_DEF
+   # END_DEF
 }
 
 Purpose
@@ -84,7 +84,7 @@ import multiprocessing
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
-# BEGIN syntax
+# BEGIN_DEF
 # at_cascade.continue_cascade
 def continue_cascade(
    all_node_database = None,
@@ -99,7 +99,7 @@ def continue_cascade(
    assert type(fit_goal_set)      == set
    assert type(fit_type_list)     == list
    assert type(shared_unique)     == str
-   # END syntax
+   # END_DEF
    #
    # split_reference_table, option_all, node_split_table, fit_goal
    connection       = dismod_at.create_connection(

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin csv.check_table}
@@ -8,11 +8,11 @@
 Check Columns in a CSV File
 ###########################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   BEGIN_SYNTAX
-   END_SYNTAX
+   BEGIN_DEF
+   END_DEF
 }
 
 file_name
@@ -29,14 +29,14 @@ table  = at_cascade.csv.read(file_name)
 {xrst_end csv.check_table}
 '''
 #
-# BEGIN_SYNTAX
+# BEGIN_DEF
 # at_cascade.csv.check_table
 def check_table(file_name, table) :
    assert type(file_name) == str
    assert type(table) == list
    if len(table) > 0 :
       assert type( table[0] ) == dict
-   # END_SYNTAX
+   # END_DEF
    #
    # empty table case
    if len(table) == 0 :

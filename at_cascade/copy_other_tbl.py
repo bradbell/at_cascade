@@ -16,8 +16,8 @@ from at_cascade.copy_other_tbl to dismod_at.copy_other_tbl .
 Prototype
 *********
 {xrst_literal
-   # BEGIN_PROTOTYPE
-   # END_PROTOTYPE
+   # BEGIN_DEF
+   # END_DEF
 }
 
 Purpose
@@ -35,11 +35,11 @@ import tempfile
 import at_cascade
 import dismod_at
 #
-# BEGIN_PROTOTYPE
+# BEGIN_DEF
 # at_cascade.copy_other_tbl
 def copy_other_tbl(fit_database) :
    assert type(fit_database) == str
-   # END_PROTOTYPE
+   # END_DEF
    #
    # fit_connection
    fit_connection = dismod_at.create_connection(

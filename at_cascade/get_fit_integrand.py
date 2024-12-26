@@ -8,11 +8,11 @@
 Determine the Set of Integrands in Data Table
 #############################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
-   # BEGIN DEF, END DEF
-   # BEGIN RETURN, END RETURN
+   # BEGIN_DEF, END_DEF
+   # BEGIN_RETURN, END_RETURN
 }
 
 fit_or_root
@@ -35,11 +35,11 @@ import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
 #
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.get_fit_integrand
 def get_fit_integrand(fit_or_root) :
    assert type(fit_or_root) == at_cascade.fit_or_root_class
-   # END DEF
+   # END_DEF
    #
    # data_table
    data_table = fit_or_root.get_table('data')
@@ -50,8 +50,8 @@ def get_fit_integrand(fit_or_root) :
       if row['hold_out'] == 0 :
          fit_integrand.add( row['integrand_id'] )
    #
-   # BEGIN RETURN
+   # BEGIN_RETURN
    # ...
    assert type(fit_integrand) == set
    return fit_integrand
-   # END RETURN
+   # END_RETURN

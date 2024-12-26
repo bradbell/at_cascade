@@ -13,11 +13,11 @@
 Create Database With Shifted Covariate References
 #################################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   # BEGIN syntax
-   # END syntax
+   # BEGIN_DEF
+   # END_DEF
 }
 
 all_node_database
@@ -417,7 +417,7 @@ def add_shift_grid_row(
    shift_grid_row['smooth_id']  = len( shift_table['smooth'] ) - 1
    shift_table['smooth_grid'].append( shift_grid_row )
 # ----------------------------------------------------------------------------
-# BEGIN syntax
+# BEGIN_DEF
 # at_cascade.create_shift_db
 def create_shift_db(
    all_node_database    ,
@@ -435,7 +435,7 @@ def create_shift_db(
       assert job_table == None
    else :
       assert type(job_table) == list
-   # END syntax
+   # END_DEF
    #
    # predict_sample
    predict_sample = not no_ode_fit

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin table_exists}
@@ -8,8 +8,8 @@
 Check if A Database Table Exists
 ################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
    # BEGIN_DEF, # END_DEF
    # BEGIN_RETURN, # END_RETURN

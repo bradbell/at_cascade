@@ -11,8 +11,8 @@ Checks Logs For Warnings and Errors
 Prototype
 *********
 {xrst_literal ,
-   # BEGIN DEF, # END DEF
-   # BEGIN RETURN, # END RETURN
+   # BEGIN_DEF, # END_DEF
+   # BEGIN_RETURN, # END_RETURN
 }
 
 Purpose
@@ -79,7 +79,7 @@ import multiprocessing
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.check_log
 def check_log(
    message_type                  ,
@@ -96,7 +96,7 @@ def check_log(
    if start_job_id == None :
       start_job_id = 0
    assert max_job_depth == None or type(max_job_depth) == int
-   # END DEF
+   # END_DEF
    #
    assert message_type in [ 'error', 'warning', 'at_cascade' ]
    #
@@ -213,8 +213,8 @@ def check_log(
                      message_dict[job_name] = list()
                   message_dict[job_name].append( row['message'] )
    #
-   # BEGIN RETURN
+   # BEGIN_RETURN
    # ...
    assert type(message_dict) == dict
    return message_dict
-   # END RETURN
+   # END_RETURN

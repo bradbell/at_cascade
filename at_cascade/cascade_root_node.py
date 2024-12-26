@@ -11,11 +11,11 @@ r'''
 Cascade Fits Starting at Root Node
 ##################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   # BEGIN syntax
-   # END syntax
+   # BEGIN_DEF
+   # END_DEF
 }
 
 all_node_database
@@ -115,7 +115,7 @@ import multiprocessing
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
-# BEGIN syntax
+# BEGIN_DEF
 # at_cascade.cascade_root_node
 def cascade_root_node(
    all_node_database       ,
@@ -128,7 +128,7 @@ def cascade_root_node(
    assert type(fit_goal_set)       == set
    assert type(no_ode_fit)         == bool
    assert type(fit_type_list)      == list
-   # END syntax
+   # END_DEF
    #
    # split_reference_table, option_all_table
    connection  = dismod_at.create_connection(

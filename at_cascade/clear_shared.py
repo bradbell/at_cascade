@@ -15,8 +15,8 @@ Clear at_cascade Shared Memory
 Prototype
 *********
 {xrst_literal
-   # BEGIN DEF
-   # END DEF
+   # BEGIN_DEF
+   # END_DEF
 }
 
 Purpose
@@ -49,12 +49,12 @@ for the shared memory that we are clearing; see
 import dismod_at
 import at_cascade
 from multiprocessing import shared_memory
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.clear_shared
 def clear_shared(all_node_database, job_name) :
    assert type(all_node_database) == str
    assert type(job_name) == str
-   # END DEF
+   # END_DEF
    #
    # shared_memory_prefix
    connection           = dismod_at.create_connection(

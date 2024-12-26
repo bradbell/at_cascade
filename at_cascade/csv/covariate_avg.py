@@ -8,10 +8,10 @@
 Compute Covariate Averages for One Node
 #######################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
-   # BEGIN_SYNTAX, # END_SYNTAX
+   # BEGIN_DEF, # END_DEF
    # BEGIN_RETURN, # END_RETURN
 }
 
@@ -39,14 +39,14 @@ is the sex that this average is for.
 
 {xrst_end csv.covariate_avg}
 '''
-# BEGIN_SYNTAX
+# BEGIN_DEF
 # at_cascade.csv.covariate_avg
 def covariate_avg(covariate_table, node_name, sex) :
    assert type(covariate_table) == list
    assert type(covariate_table[0]) == dict
    assert type(node_name) == str
    assert sex in [ 'female', 'male', 'both' ]
-   # END_SYNTAX
+   # END_DEF
    #
    # covariate_name_list
    covariate_name_list = list()

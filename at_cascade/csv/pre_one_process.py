@@ -19,8 +19,8 @@ Keep predicting for as long as thee are jobs left to predict for.
 Prototype
 *********
 {xrst_literal
-   # BEGIN DEF
-   # END DEF
+   # BEGIN_DEF
+   # END_DEF
 }
 
 fit_dir
@@ -239,7 +239,7 @@ def try_one_job(
    assert predict_job_error == None or type(predict_job_error) == str
    return predict_job_error
 # ----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.csv.pre_one_process
 def pre_one_process(
   fit_dir,
@@ -272,7 +272,7 @@ def pre_one_process(
    assert type( job_status_name[0] )       == str
    assert type(shared_job_status_name)     == str
    assert type(shared_lock)                == multiprocessing.synchronize.Lock
-   # END DEF
+   # END_DEF
    # ----------------------------------------------------------------------
    job_status_skip  = job_status_name.index( 'skip' )
    job_status_ready = job_status_name.index( 'ready' )

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_parent_node}
@@ -8,10 +8,10 @@
 Get Parent Node Name From Option Table
 ######################################
 
-PROTOTYPE
+Prototype
 *********
 {xrst_literal ,
-   # BEGIN_PROTOTYPE, # END_PROTOTYPE
+   # BEGIN_DEF, # END_DEF
    # BEGIN_RETURN,  # END_RETURN
 }
 
@@ -31,10 +31,10 @@ option table.
 '''
 import dismod_at
 # ----------------------------------------------------------------------------
-# BEGIN_PROTOTYPE
+# BEGIN_DEF
 def get_parent_node(database = None) :
    assert type(database) == str
-   # END_PROTOTYPE
+   # END_DEF
    #
    # option_table
    connection       = dismod_at.create_connection(

@@ -10,10 +10,10 @@ import scipy.interpolate
 Bilinear Spline Interpolation
 #############################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
-   BEGIN_PROTOTYPE, END_PROTOTYPE
+   BEGIN_DEF, END_DEF
    BEGIN_RETURN, END_RETURN
 }
 
@@ -121,7 +121,7 @@ class spline_wrapper :
       result = float(result)
       return result
 
-# BEGIN_PROTOTYPE
+# BEGIN_DEF
 # at_cascade.bilinear
 def bilinear(
    table,
@@ -134,7 +134,7 @@ def bilinear(
    assert type(x_name) == str
    assert type(y_name) == str
    assert type(z_list) == list
-   # END_PROTOTYPE
+   # END_DEF
    #
    if len(table) == 0 :
       return (list(), list(), None)

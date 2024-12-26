@@ -8,11 +8,11 @@ r'''
 Get Database Directory Corresponding To a Fit
 #############################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
-   # BEGIN DEF, # END DEF
-   # BEGIN RETURN, # END RETURN
+   # BEGIN_DEF, # END_DEF
+   # BEGIN_RETURN, # END_RETURN
 }
 
 node_table
@@ -73,7 +73,7 @@ In other words, the fit database has the following path:
 '''
 import dismod_at
 # ----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.get_database_dir
 def get_database_dir(
    node_table                    ,
@@ -91,7 +91,7 @@ def get_database_dir(
    assert root_split_reference_id==None or type(root_split_reference_id)==int
    assert type(fit_node_id) == int
    assert fit_split_reference_id==None or type(fit_split_reference_id)==int
-   # END DEF
+   # END_DEF
    #
    # fit_split_reference_name
    if 0 < len(split_reference_table) :
@@ -149,8 +149,8 @@ def get_database_dir(
    # database_dir
    database_dir = database_dir[:-1]
    #
-   # BEGIN RETURN
+   # BEGIN_RETURN
    #  ...
    assert type(database_dir) == str
    return database_dir
-   # END RETURN
+   # END_RETURN

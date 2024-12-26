@@ -21,8 +21,8 @@ Keep fitting jobs for as long as there are jobs ready to be fit.
 Prototype
 *********
 {xrst_literal
-   # BEGIN DEF
-   # END DEF
+   # BEGIN_DEF
+   # END_DEF
 }
 
 job_table
@@ -389,7 +389,7 @@ def try_one_job(
       #
    return
 # ----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 def fit_one_process(
    job_table,
    this_job_id,
@@ -421,7 +421,7 @@ def fit_one_process(
    assert type(shared_number_cpu_inuse_name) == str
    assert type(shared_lock)          == multiprocessing.synchronize.Lock
    assert type(shared_event)         == multiprocessing.synchronize.Event
-   # END DEF
+   # END_DEF
    # ----------------------------------------------------------------------
    job_status_skip  = job_status_name.index( 'skip' )
    job_status_wait  = job_status_name.index( 'wait' )

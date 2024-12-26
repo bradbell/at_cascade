@@ -8,11 +8,11 @@ r'''
 Predicts Rates and Covariate Multipliers on Parent Grid
 #######################################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   # BEGIN syntax
-   # END syntax
+   # BEGIN_DEF
+   # END_DEF
 }
 
 Purpose
@@ -245,7 +245,7 @@ def possible_child_job_list(
    #
    return child_job_list
 # ----------------------------------------------------------------------------
-# BEGIN syntax
+# BEGIN_DEF
 # at_cascade.avgint_parent_grid
 def avgint_parent_grid(
    all_node_database = None ,
@@ -258,7 +258,7 @@ def avgint_parent_grid(
    assert type(fit_database) == str
    assert type(job_table) == list or job_table == None
    assert type(fit_job_id) == int or fit_job_id == None
-   # END syntax
+   # END_DEF
    #
    # option_all_table
    connection = dismod_at.create_connection(

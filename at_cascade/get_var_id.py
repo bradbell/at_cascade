@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_var_id}
@@ -14,11 +14,11 @@
 Map Var Table Values to its Primary Key
 #######################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
-   # BEGIN DEF, # END DEF
-   # BEGIN RETURN, # END RETURN
+   # BEGIN_DEF, # END_DEF
+   # BEGIN_RETURN, # END_RETURN
 }
 
 var_table
@@ -55,7 +55,7 @@ other arguments matter:
 
 {xrst_end get_var_id}
 '''
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.get_var_id
 def get_var_id(
    var_table          ,
@@ -69,11 +69,10 @@ def get_var_id(
    group_id     = None,
    subgroup_id  = None,
 # )
-# END syntax
 ) :
    assert type(var_table) == list
    assert type(var_type)  == str
-   # END DEF
+   # END_DEF
    # var_id
    var_id       = None
    #
@@ -146,8 +145,8 @@ def get_var_id(
       msg  = 'get_var_id: Something is wrong with this var_table'
       assert False, msg
    #
-   # BEGIN RETURN
+   # BEGIN_RETURN
    # ...
    assert type(var_id) == int
    return var_id
-   # END RETURN
+   # END_RETURN

@@ -14,8 +14,8 @@ Fit With Specified Maximum Number of Processes
 Prototype
 *********
 {xrst_literal
-   # BEGIN DEF
-   # END DEF
+   # BEGIN_DEF
+   # END_DEF
 }
 
 job_table
@@ -111,7 +111,7 @@ def get_shared_memory_prefix(all_node_database) :
          shared_memory_prefix = row['option_value']
    return shared_memory_prefix
 # ----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.fit_parallel
 def fit_parallel(
    job_table         ,
@@ -135,7 +135,7 @@ def fit_parallel(
    assert type(max_number_cpu)    == int
    assert type(fit_type_list)     == list
    assert type(shared_unique)     == str
-   # END DEF
+   # END_DEF
    # ----------------------------------------------------------------------
    # job_status_name
    job_status_name = [

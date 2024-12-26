@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import csv
 """
@@ -9,10 +9,10 @@ import csv
 Create A Table from a CSV File
 ##############################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
-   BEGIN_SYNTAX, END_SYNTAX
+   BEGIN_DEF, END_DEF
    BEGIN_RETURN, END_RETURN
 }
 
@@ -40,11 +40,11 @@ Example
 
 {xrst_end csv.read_table}
 """
-# BEGIN_SYNTAX
+# BEGIN_DEF
 # at_cascade.csv.read_table
 def read_table(file_name) :
    assert type(file_name)  == str
-   # END_SYNTAX
+   # END_DEF
    #
    file_ptr   = open(file_name)
    reader     = csv.DictReader(file_ptr)

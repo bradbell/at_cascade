@@ -8,8 +8,8 @@
 Create an Empty Directory
 #########################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
    # BEGIN_DEF ,    # END_DEF
    # BEGIN_RETURN , # END_RETURN

@@ -11,8 +11,8 @@ Predict With Specified Maximum Number of Processes
 Prototype
 *********
 {xrst_literal
-   # BEGIN DEF
-   # END DEF
+   # BEGIN_DEF
+   # END_DEF
 }
 
 fit_dir
@@ -77,7 +77,7 @@ def get_shared_memory_prefix(all_node_database) :
          shared_memory_prefix = row['option_value']
    return shared_memory_prefix
 # ----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.csv.pre_parallel
 def pre_parallel(
    fit_dir,
@@ -95,7 +95,7 @@ def pre_parallel(
    assert type(fit_goal_set)                == set
    assert type( next(iter(fit_goal_set) ))  == str
    assert type( option_predict )            == dict
-   # END DEF
+   # END_DEF
    # ----------------------------------------------------------------------
    # job_status_name
    job_status_name = [

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin add_log_entry}
@@ -11,11 +11,11 @@
 Add Log Table Entry
 ###################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   # BEGIN DEF
-   # END DEF
+   # BEGIN_DEF
+   # END_DEF
 }
 
 Purpose
@@ -48,11 +48,11 @@ following columns values:
 import time
 import dismod_at
 # ----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.add_log_entry
 def add_log_entry(connection, message) :
    assert type(message) == str
-   # END DEF
+   # END_DEF
    #
    # cmd
    cmd  = 'create table if not exists log('

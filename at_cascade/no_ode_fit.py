@@ -15,11 +15,11 @@ r'''
 Do A No Ode Fit For One Node
 ############################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
-   # BEGIN DEF, # END DEF
-   # BEGIN RETURN, # END RETURN
+   # BEGIN_DEF, # END_DEF
+   # BEGIN_RETURN, # END_RETURN
 }
 
 all_node_database
@@ -127,7 +127,7 @@ def add_index_to_name(table, name_col) :
       name = name[: -1]
    row[name_col] = name + '_' + str( len(table) )
 # ----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.no_ode_fit
 def no_ode_fit(
    all_node_database   ,
@@ -139,7 +139,7 @@ def no_ode_fit(
    assert type(root_database) == str
    assert type(option_all_dict) == dict
    assert fit_type == 'fixed' or fit_type == 'both'
-   # END DEF
+   # END_DEF
    #
    # result_dir, max_fit, max_abs_effect, max_number_cpu
    result_dir     = None
@@ -363,8 +363,8 @@ def no_ode_fit(
       current_time   = now.strftime("%H:%M:%S")
       print( f'End:   {current_time}: no_ode' )
    #
-   # BEGIN RETURN
+   # BEGIN_RETURN
    # ...
    assert type(root_fit_database) == str
    return root_fit_database
-   # END RETURN
+   # END_RETURN

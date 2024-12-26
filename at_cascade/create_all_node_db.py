@@ -8,11 +8,11 @@ r'''
 Create an All Node Database
 ###########################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   # BEGIN syntax
-   # END syntax
+   # BEGIN_DEF
+   # END_DEF
 }
 
 all_node_database
@@ -160,7 +160,7 @@ def is_descendant(node_table, ancestor_node_id, this_node_id) :
          return True
    return False
 # ----------------------------------------------------------------------------
-# BEGIN syntax
+# BEGIN_DEF
 # at_cascade.create_all_node_db
 def create_all_node_db(
    all_node_database         = None,
@@ -190,7 +190,7 @@ def create_all_node_db(
    assert type(node_split_table)       == list
    assert type(mulcov_freeze_table)    == list
    assert type(cov_reference_table)    == list or cov_reference_table == None
-   # END syntax
+   # END_DEF
    #
    # some asserts
    if omega_grid is None :

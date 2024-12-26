@@ -11,11 +11,11 @@
 Determine the Set of Nodes to Fit
 #################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
-   # BEGIN DEF, # END DEF
-   # BEGIN RETURN, # END RETURN
+   # BEGIN_DEF, # END_DEF
+   # BEGIN_RETURN, # END_RETURN
 }
 
 root_node_id
@@ -53,7 +53,7 @@ len( *fit_children* [ *node_id* ] ) = 0 .
 import sys
 import at_cascade
 # ----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.get_fit_children
 def get_fit_children(
    root_node_id  ,
@@ -63,7 +63,7 @@ def get_fit_children(
    assert type( root_node_id ) == int
    assert type( fit_goal_set ) == set
    assert type( node_table ) == list
-   # END DEF
+   # END_DEF
    #
    # number of nodes
    n_node       = len( node_table )
@@ -92,7 +92,7 @@ def get_fit_children(
             node_id = parent_id
          fit_children[root_node_id].add( node_id )
    #
-   # BEGIN RETURN
+   # BEGIN_RETURN
    # ...
    assert type(fit_children) == list
    ok = False
@@ -100,4 +100,4 @@ def get_fit_children(
       ok = ok or len( fit_children[node_id] ) == 0
    assert ok
    return fit_children
-   # END RETURN
+   # END_RETURN

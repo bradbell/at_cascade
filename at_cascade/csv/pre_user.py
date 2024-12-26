@@ -15,8 +15,8 @@ Convert Prediction Csv Files From dismod_at Notation to User csv.fit Notation
 Prototype
 *********
 {xrst_literal
-   # BEGIN DEF
-   # END DEF
+   # BEGIN_DEF
+   # END_DEF
 }
 
 fit_dir
@@ -170,7 +170,7 @@ def predict_table_dismod2user(
    #
    return user_predict_table
 # ----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.csv.pre_user
 def pre_user(
    fit_dir,
@@ -197,7 +197,7 @@ def pre_user(
    assert type(root_node_id)               == int
    assert type(root_split_reference_id)    == int
    assert type(root_database)         == str
-   # END DEF
+   # END_DEF
    #
    # split_reference_table
    split_reference_table = at_cascade.csv.split_reference_table

@@ -10,11 +10,11 @@ Compute Covariate Reference Values
 Compute covariate references by averaging values in the data table
 for a specific node and split reference value.
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
-   # BEGIN DEF, # END DEF
-   # BEGIN RETURN, # END RETURN
+   # BEGIN_DEF, # END_DEF
+   # BEGIN_RETURN, # END_RETURN
 }
 
 option_all_table
@@ -72,7 +72,7 @@ import at_cascade
 import dismod_at
 import math
 #
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.com_cov_reference
 def com_cov_reference(
    option_all_table      ,
@@ -91,7 +91,7 @@ def com_cov_reference(
    assert type(shift_node_id) == int
    assert type(split_reference_id) == int or split_reference_id == None
    assert type(data_table) == list or data_table == None
-   # END DEF
+   # END_DEF
    #
    # root_database
    root_database      = None
@@ -223,8 +223,8 @@ def com_cov_reference(
       # cov_reference_list
       cov_reference_list.append(reference)
    # -------------------------------------------------------------------------
-   # BEGIN RETURN
+   # BEGIN_RETURN
    # ...
    assert type(cov_reference_list) == list
    return cov_reference_list
-   # END RETURN
+   # END_RETURN

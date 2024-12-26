@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin job_descendent}
@@ -11,8 +11,8 @@ Check if A Job is a Descendant of Another
 Prototype
 *********
 {xrst_literal ,
-   # BEGIN DEF, # END DEF
-   # BEGIN RETURN, # END RETURN
+   # BEGIN_DEF, # END_DEF
+   # BEGIN_RETURN, # END_RETURN
 }
 
 job_table
@@ -60,13 +60,13 @@ ancestor and descendent nodes.
 {xrst_end job_descendent}
 '''
 # -----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.job_descendent
 def job_descendent(job_table, ancestor_id, descendent_id) :
    assert type(job_table)   == list
    assert type(ancestor_id)   == int
    assert type(descendent_id) == int
-   # END DEF
+   # END_DEF
    #
    # generation
    generation = 0
@@ -77,7 +77,7 @@ def job_descendent(job_table, ancestor_id, descendent_id) :
    if job_id == None :
       generation = None
    #
-   # BEGIN RETURN
+   # BEGIN_RETURN
    assert generation == None or type(generation) == int
    return generation
-   # END RETURN
+   # END_RETURN

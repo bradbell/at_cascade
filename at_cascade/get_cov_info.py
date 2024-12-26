@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin get_cov_info}
@@ -11,11 +11,11 @@
 Get Covariate Information
 #########################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
-   # BEGIN DEF, # END DEF
-   # BEGIN RETURN, # END RETURN
+   # BEGIN_DEF, # END_DEF
+   # BEGIN_RETURN, # END_RETURN
 }
 
 option_all_table
@@ -82,7 +82,7 @@ the reference value for split_covariate_name in the covariate table.
 {xrst_end get_cov_info}
 '''
 import at_cascade
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.get_cov_info(
 def get_cov_info(
    option_all_table      ,
@@ -93,7 +93,7 @@ def get_cov_info(
    assert type(option_all_table) == list
    assert type(covariate_table) == list
    assert type(split_reference_table) == list
-   # END DEF
+   # END_DEF
    #
    # option_all
    option_all = dict()
@@ -166,8 +166,8 @@ def get_cov_info(
       'split_reference_list':  split_reference_list,
       'split_reference_id':    split_reference_id,
    }
-   # BEGIN RETURN
+   # BEGIN_RETURN
    # ...
    assert type(cov_info) == dict
    return cov_info
-   # END RETURN
+   # END_RETURN

@@ -12,7 +12,7 @@ Add both Sex to csv Covariate Table
 Prototype
 *********
 {xrst_literal ,
-   # BEGIN_PROTOTYPE, # END_PROTOTYPE
+   # BEGIN_DEF, # END_DEF
    # BEGIN_RETURN, # END_RETURN
 }
 
@@ -48,14 +48,14 @@ see :ref:`csv.cov_both_xam-name` .
 
 {xrst_end csv.covariate_both}
 '''
-# BEGIN_PROTOTYPE
+# BEGIN_DEF
 def covariate_both(covariate_table_in) :
    assert type(covariate_table_in) == list
    for row in covariate_table_in :
       for key in row :
          type_check = str if key in [ 'node_name' , 'sex' ] else float
          assert type( row[key] ) == type_check
-   # END_PROTOTYPE
+   # END_DEF
    #
    # covariate_dict
    covariate_dict = dict()

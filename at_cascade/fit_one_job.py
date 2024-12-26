@@ -13,11 +13,11 @@ r'''
 Run One Job
 ###########
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   # BEGIN syntax
-   # END syntax
+   # BEGIN_DEF
+   # END_DEF
 }
 
 Default Value
@@ -154,7 +154,7 @@ def system_command(command, file_stdout) :
          write_command = True,
       )
 # ----------------------------------------------------------------------------
-# BEGIN syntax
+# BEGIN_DEF
 # at_cascade.fit_one_job
 def fit_one_job(
    job_table               ,
@@ -176,7 +176,7 @@ def fit_one_job(
    assert type(first_fit) == bool
    if trace_file_obj is not None :
       assert isinstance(trace_file_obj, io.TextIOBase)
-   # END syntax
+   # END_DEF
    #
    # trace_line_number
    # You can use this routine to help track down a crash during fit_one_job.

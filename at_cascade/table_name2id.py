@@ -11,11 +11,11 @@ r'''
 Map a Table Row Name to The Row Index
 #####################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
-   # BEGIN DEF, END DEF
-   # BEGIN RETURN, END RETURN
+   # BEGIN_DEF, END_DEF
+   # BEGIN_RETURN, END_RETURN
 }
 
 table
@@ -41,7 +41,7 @@ This is the index of the row in the table where
 {xrst_end table_name2id}
 '''
 # -----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.table_name2id
 def table_name2id(
    table, tbl_name, row_name
@@ -49,7 +49,7 @@ def table_name2id(
 ) :
    assert type(table) == list
    assert type(tbl_name) == str
-   # END DEF
+   # END_DEF
    col_name = tbl_name + '_name'
    row_id   = None
    for (index, row) in enumerate(table) :
@@ -60,8 +60,8 @@ def table_name2id(
       msg += f'is not presnet in column "{col_name}" of "{tbl_name}" table.'
       assert False, msg
    #
-   # BEGIN RETURN
+   # BEGIN_RETURN
    # ...
    assert type(row_id) == int
    return row_id
-   # END RETURN
+   # END_RETURN

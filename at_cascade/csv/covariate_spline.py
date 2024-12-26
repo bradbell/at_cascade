@@ -12,10 +12,10 @@ import at_cascade
 Create Spline Functions For Covariates
 ######################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
-   BEGIN_SYNTAX, END_SYNTAX
+   BEGIN_DEF, END_DEF
    BEGIN_RETURN, END_RETURN
 }
 
@@ -67,13 +67,13 @@ same rectangular grid in age and time for each (node_name, sex) pair.
 
 {xrst_end csv.covariate_spline}
 '''
-# BEGIN_SYNTAX
+# BEGIN_DEF
 # at_casade.csv.covariate_spline
 def covariate_spline(covariate_table , node_set) :
    assert type( covariate_table ) == list
    assert type( covariate_table[0] ) == dict
    assert type( node_set ) == set
-   # END_SYNTAX
+   # END_DEF
    #
    # cov_name_list
    exclude       = {  'node_name', 'sex', 'age', 'time' }

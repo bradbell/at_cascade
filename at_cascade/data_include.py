@@ -10,8 +10,8 @@ Rows of Data Table That are Include for a Fit
 Prototype
 *********
 {xrst_literal ,
-   # BEGIN DEF, # END DEF
-   # BEGIN RETURN, # END RETURN
+   # BEGIN_DEF, # END_DEF
+   # BEGIN_RETURN, # END_RETURN
 }
 
 fit_database
@@ -41,7 +41,7 @@ the rows that satisfy the following conditions:
 '''
 import at_cascade
 #
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.data_include
 def data_include(
    fit_database,
@@ -49,7 +49,7 @@ def data_include(
 ) :
    assert type( fit_database ) == str
    assert type( root_database ) == str
-   # END DEF
+   # END_DEF
    #
    # fit_or_root
    fit_or_root = at_cascade.fit_or_root_class(
@@ -111,10 +111,10 @@ def data_include(
       if not hold_out :
          data_include_table.append(data_row)
    #
-   # BEGIN RETURN
+   # BEGIN_RETURN
    assert type( data_include_table ) == list
    if len( data_include_table ) > 0 :
       assert type( data_include_table[0] ) == dict
       assert data_include_table[0]['hold_out'] == 0
    return data_include_table
-   # END RETURN
+   # END_RETURN

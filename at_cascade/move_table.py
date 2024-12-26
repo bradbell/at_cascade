@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin move_table}
@@ -12,11 +12,11 @@
 Move Table
 ##########
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   # BEGIN syntax
-   # END syntax
+   # BEGIN_DEF
+   # END_DEF
 }
 
 Purpose
@@ -53,13 +53,13 @@ to table *dst_name*.
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
-# BEGIN syntax
+# BEGIN_DEF
 def move_table(
    connection, src_name, dst_name
 ) :
    assert type(src_name) == str
    assert type(dst_name) == str
-   # END syntax
+   # END_DEF
    #
    command     = 'DROP TABLE IF EXISTS ' + dst_name
    dismod_at.sql_command(connection, command)

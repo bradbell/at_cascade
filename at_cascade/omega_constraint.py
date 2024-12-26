@@ -12,11 +12,11 @@
 Set Omega Constraints in a Fit Node Database
 ############################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   # BEGIN DEF
-   # END DEF
+   # BEGIN_DEF
+   # END_DEF
 }
 
 all_node_database
@@ -88,7 +88,7 @@ def child_node_id_list(node_table, parent_node_id) :
          result.append(node_id)
    return result
 # ----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.omega_constraint
 def omega_constraint(
 # at_cascade.omega_constraint(
@@ -98,7 +98,7 @@ def omega_constraint(
 ) :
    assert type(all_node_database) == str
    assert type(fit_database) == str
-   # END DEF
+   # END_DEF
    #
    # all_tables
    connection        = dismod_at.create_connection(

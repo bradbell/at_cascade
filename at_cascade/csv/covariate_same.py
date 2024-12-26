@@ -12,7 +12,7 @@ Determine Which Covariates in covariate.csv Are the Same
 Prototype
 *********
 {xrst_literal ,
-   # BEGIN_PROTOTYPE, # END_PROTOTYPE
+   # BEGIN_DEF, # END_DEF
    # BEGIN_RETURN, # END_RETURN
 }
 
@@ -63,14 +63,14 @@ see :ref:`csv.cov_same_xam-name` .
 
 {xrst_end csv.covariate_same}
 '''
-# BEGIN_PROTOTYPE
+# BEGIN_DEF
 def covariate_same(covariate_table) :
    assert type(covariate_table) == list
    for row in covariate_table :
       for key in row :
          type_check = str if key in [ 'node_name' , 'sex' ] else float
          assert type( row[key] ) == type_check
-   # END_PROTOTYPE
+   # END_DEF
    #
    #
    # cov_list

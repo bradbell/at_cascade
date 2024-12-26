@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-23 Bradley M. Bell
+# SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import csv
 """
@@ -9,11 +9,11 @@ import csv
 Join The Tables In Two Csv Files
 ################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   BEGIN_SYNTAX
-   END_SYNTAX
+   BEGIN_DEF
+   END_DEF
 }
 
 left_file
@@ -49,7 +49,7 @@ Example
 import at_cascade
 #
 def join_file(
-# BEGIN_SYNTAX
+# BEGIN_DEF
 # at_cascade.csv.join_file
    left_file    ,
    right_file   ,
@@ -59,7 +59,7 @@ def join_file(
    assert type(left_file)  == str
    assert type(right_file)  == str
    assert type(result_file)  == str
-   # END_SYNTAX
+   # END_DEF
    #
    # left_table, right_table
    left_table   = at_cascade.csv.read_table(left_file)

@@ -12,11 +12,11 @@ r"""
 Create A CSV File from a Table
 ##############################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal
-   BEGIN_SYNTAX
-   END_SYNTAX
+   BEGIN_DEF
+   END_DEF
 }
 
 table
@@ -63,7 +63,7 @@ Example
 {xrst_end csv.write_table}
 """
 def write_table(
-# BEGIN_SYNTAX
+# BEGIN_DEF
 # at_cascade.csv.write_table(
    file_name  = None,
    table      = None,
@@ -75,7 +75,7 @@ def write_table(
    assert type(columns) == list or columns == None
    if columns == None :
       columns = table[0].keys()
-   # END_SYNTAX
+   # END_DEF
    #
    file_ptr    = open(file_name, 'w')
    writer      = csv.DictWriter(file_ptr, fieldnames = columns)

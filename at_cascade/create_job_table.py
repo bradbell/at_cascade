@@ -11,11 +11,11 @@ r'''
 Table of Job Parent Child Relationships
 #######################################
 
-Syntax
-******
+Prototype
+*********
 {xrst_literal ,
-   # BEGIN DEF, END DEF
-   # BEGIN RETURN, END RETURN
+   # BEGIN_DEF, END_DEF
+   # BEGIN_RETURN, END_RETURN
 }
 
 Summary
@@ -237,7 +237,7 @@ def get_child_job_table(
    #
    return child_job_table
 # -----------------------------------------------------------------------------
-# BEGIN DEF
+# BEGIN_DEF
 # at_cascade.create_job_table
 def create_job_table(
    all_node_database                 ,
@@ -255,7 +255,7 @@ def create_job_table(
    assert type(start_split_reference_id) == int or \
       start_split_reference_id == None
    assert type(fit_goal_set) == set
-   # END DEF
+   # END_DEF
    #
    # fit_goal_set
    temp = set()
@@ -413,7 +413,7 @@ def create_job_table(
       # job_id
       job_id += 1
    #
-   # BEGIN RETURN
+   # BEGIN_RETURN
    # ...
    assert type(job_table)      == list
    assert type( job_table[0] ) == dict
@@ -424,4 +424,4 @@ def create_job_table(
       parent_job_id = job_table[job_id]['parent_job_id']
       assert job_table[parent_job_id]['prior_only'] == False
    return job_table
-   # END RETURN
+   # END_RETURN
