@@ -15,7 +15,7 @@ at_cascade.version
 ******************
 The version number for this copy of at_cascade.
 {xrst_code py}'''
-version = '2024.12.25'
+version = '2024.12.26'
 '''{xrst_code}
 
 at_cascade.constant_table_list

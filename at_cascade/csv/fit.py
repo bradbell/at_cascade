@@ -1138,6 +1138,7 @@ class weighting_function :
       assert type(index) == int
       self.index  = index
       self.value  = dict()
+      self.name   = f'weight_{index}'
    def set(self, age, time, weight) :
       assert type(age)         == float
       assert type(time)        == float
@@ -1465,7 +1466,7 @@ def create_root_database(fit_dir) :
          triple = (node_name, sex_name, covariate_name)
          if cov_same[triple] == triple :
             if triple not in weight_dict :
-               fun                 = weighting_function(weight_index)
+               fun                 = weighting_function(weight_index, )
                weight_index       += 1
                weight_dict[triple] = fun
             age    = row['age']
@@ -1486,17 +1487,30 @@ def create_root_database(fit_dir) :
    weight_table = list()
    age_id_list  = [ age_list.index(age) for age in age_grid ]
    time_id_list = [ time_list.index(time) for time in time_grid ]
+   age_0        = age_grid[0]
+   time_0       = time_grid[0]
    for triple in weight_dict :
       if cov_same[triple] == triple :
-         fun   = weight_dict[triple]
-         index = fun.index
-         name  = f'weight_{index}'
+         fun        = weight_dict[triple]
+         index      = fun.index
+         name       = f'weight_{index}'
+         const_age  = True
+         const_time = True
+         for age in age_grid :
+            for time in time_grid :
+               const_age = const_age and fun(age_0, time)   == fun(age, time)
+               const_time= const_time and fun(age,  time_0) == fun(age, time)
          row = {
             'name'     : f'weight_{index}'   ,
             'age_id'   : age_id_list         ,
             'time_id'  : time_id_list        ,
             'fun'      : fun                 ,
          }
+         if const_age :
+
+            row['age_id'] = [ age_list.index(age_0) ]
+         if const_time :
+            row['time_id'] = [ time_list.index(time_0) ]
          weight_table.append(row)
    #
    # rate_eff_cov_table
