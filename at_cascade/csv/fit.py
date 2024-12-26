@@ -1456,9 +1456,9 @@ def create_root_database(fit_dir) :
    # cov_same
    cov_same = at_cascade.csv.covariate_same(csv_covariate_table)
    #
-   # weight_dict, weight_index
+   # weight_dict, weight_count
    weight_dict    = dict()
-   weight_index   = 0
+   weight_count   = 0
    for row in csv_covariate_table :
       node_name = row['node_name']
       sex_name  = row['sex']
@@ -1466,8 +1466,8 @@ def create_root_database(fit_dir) :
          triple = (node_name, sex_name, covariate_name)
          if cov_same[triple] == triple :
             if triple not in weight_dict :
-               fun                 = weighting_function(weight_index, )
-               weight_index       += 1
+               fun                 = weighting_function(weight_count, )
+               weight_count       += 1
                weight_dict[triple] = fun
             age    = row['age']
             time   = row['time']
@@ -1489,6 +1489,7 @@ def create_root_database(fit_dir) :
    time_id_list = [ time_list.index(time) for time in time_grid ]
    age_0        = age_grid[0]
    time_0       = time_grid[0]
+   n_const      = { 'age' : 0, 'time' : 0, 'both' : 0}
    for triple in weight_dict :
       if cov_same[triple] == triple :
          fun        = weight_dict[triple]
@@ -1507,11 +1508,20 @@ def create_root_database(fit_dir) :
             'fun'      : fun                 ,
          }
          if const_age :
-
-            row['age_id'] = [ age_list.index(age_0) ]
+            n_const['age']  += 1
+            row['age_id']    = [ age_list.index(age_0) ]
          if const_time :
-            row['time_id'] = [ time_list.index(time_0) ]
+            n_const['time'] += 1
+            row['time_id']   = [ time_list.index(time_0) ]
+         if const_age and const_time :
+            n_const['both'] += 1
          weight_table.append(row)
+   print('csv.fit: create_root_database: covariate counts')
+   print('number (node, sex, covaraite) combinations =', len(weight_dict) )
+   print('number of corresponding weights            =', weight_count)
+   print('number that are constant w.r.t. age        =', n_const['age'])
+   print('number that are constant w.r.t. time       =', n_const['time'])
+   print('number that are constant w.r.t. both       =', n_const['both'])
    #
    # rate_eff_cov_table
    rate_eff_cov_table = list()
