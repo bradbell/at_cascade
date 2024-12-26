@@ -483,12 +483,14 @@ This csv file has the same description as the simulate
 Compression
 -----------
 The :ref:`csv.covariate_same-name` routine is used to detect when
-two (node, sex, covariate) combinations have the same covariate values.
+two (node, sex) pairs have the same values for a covariate.
 In addition, csv.fit detects when a covariate is constant with respect to
 age or time or both.
-This can result in a large savings in the size of the root node database
-and the amount of memory required by dismod_at
-(depending on the values in covariate.csv).
+If many (node_name, sex) pairs have the same values for a covariate,
+or do not depend on age or time,
+this can result in a large savings in the size of the root node database
+and the amount of memory required by dismod_at.
+This depends on the values you choose in covariate.csv.
 The following summary of this savings is printed when csv.fit is run::
 
    csv.fit: create_root_database: covariate counts
@@ -1278,7 +1280,7 @@ def create_root_database(fit_dir) :
    root_covariate_ref = at_cascade.csv.covariate_avg(
       csv_covariate_table, root_node_name, root_node_sex
    )
-   assert covariate_list == list( root_covariate_ref.keys() )
+   assert set( covariate_list ) == set( root_covariate_ref.keys() )
    #
    # root_covariate_ref
    absolute_covariates = global_option_value['absolute_covariates']
