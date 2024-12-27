@@ -62,9 +62,9 @@ Example
 
 {xrst_end csv.write_table}
 """
-def write_table(
 # BEGIN_DEF
 # at_cascade.csv.write_table(
+def write_table(
    file_name  = None,
    table      = None,
    columns    = None,

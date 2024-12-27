@@ -48,9 +48,9 @@ Example
 """
 import at_cascade
 #
-def join_file(
 # BEGIN_DEF
 # at_cascade.csv.join_file
+def join_file(
    left_file    ,
    right_file   ,
    result_file  ,
