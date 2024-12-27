@@ -83,7 +83,7 @@ the reference value for split_covariate_name in the covariate table.
 '''
 import at_cascade
 # BEGIN_DEF
-# at_cascade.get_cov_info(
+# at_cascade.get_cov_info
 def get_cov_info(
    option_all_table      ,
    covariate_table       ,

@@ -32,6 +32,7 @@ option table.
 import dismod_at
 # ----------------------------------------------------------------------------
 # BEGIN_DEF
+# at_cascade.get_parent_node
 def get_parent_node(database = None) :
    assert type(database) == str
    # END_DEF

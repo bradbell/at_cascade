@@ -54,6 +54,7 @@ import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
 # BEGIN_DEF
+# at_cascade.move_table
 def move_table(
    connection, src_name, dst_name
 ) :

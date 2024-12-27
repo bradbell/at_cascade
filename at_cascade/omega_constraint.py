@@ -90,7 +90,6 @@ def child_node_id_list(node_table, parent_node_id) :
 # ----------------------------------------------------------------------------
 # BEGIN_DEF
 # at_cascade.omega_constraint
-# at_cascade.omega_constraint(
 def omega_constraint(
    all_node_database ,
    fit_database ,

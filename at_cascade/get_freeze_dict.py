@@ -55,6 +55,7 @@ values
 {xrst_end get_freeze_dict}
 '''
 # BEGIN_DEF
+# at_cascade.get_freeze_dict
 def get_freeze_dict(
    node_table,
    fit_node_id,
