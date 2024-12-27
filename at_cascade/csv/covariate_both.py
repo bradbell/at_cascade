@@ -49,6 +49,7 @@ see :ref:`csv.cov_both_xam-name` .
 {xrst_end csv.covariate_both}
 '''
 # BEGIN_DEF
+# at_cascade.csv.covariate_both
 def covariate_both(covariate_table_in) :
    assert type(covariate_table_in) == list
    for row in covariate_table_in :

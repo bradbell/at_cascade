@@ -64,6 +64,7 @@ see :ref:`csv.cov_same_xam-name` .
 {xrst_end csv.covariate_same}
 '''
 # BEGIN_DEF
+# at_cascade.csv.covariate_same
 def covariate_same(covariate_table) :
    assert type(covariate_table) == list
    for row in covariate_table :

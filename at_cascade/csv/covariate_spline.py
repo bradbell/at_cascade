@@ -68,7 +68,7 @@ same rectangular grid in age and time for each (node_name, sex) pair.
 {xrst_end csv.covariate_spline}
 '''
 # BEGIN_DEF
-# at_casade.csv.covariate_spline
+# at_cascade.csv.covariate_spline
 def covariate_spline(covariate_table , node_set) :
    assert type( covariate_table ) == list
    assert type( covariate_table[0] ) == dict
