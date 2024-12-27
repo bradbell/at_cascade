@@ -165,7 +165,6 @@ def fit_one_job(
    fit_type                ,
    first_fit               ,
    trace_file_obj   = None ,
-# )
 ) :
    assert type(job_table) == list
    assert type(run_job_id) == int

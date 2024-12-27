@@ -45,7 +45,6 @@ This is the index of the row in the table where
 # at_cascade.table_name2id
 def table_name2id(
    table, tbl_name, row_name
-# )
 ) :
    assert type(table) == list
    assert type(tbl_name) == str

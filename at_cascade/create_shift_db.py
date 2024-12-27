@@ -425,7 +425,6 @@ def create_shift_db(
    shift_databases      ,
    no_ode_fit           = False,
    job_table            = None,
-# )
 ) :
    assert type(all_node_database) == str
    assert type(fit_database) == str

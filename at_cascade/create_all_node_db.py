@@ -172,7 +172,6 @@ def create_all_node_db(
    omega_grid                = None,
    omega_data                = None,
    cov_reference_table       = None,
-# )
 ) :
    if fit_goal_table is None :
       fit_goal_table = list()

@@ -128,7 +128,6 @@ def bilinear(
    x_name,
    y_name,
    z_list
-# )
 ) :
    assert type(table) == list
    assert type(x_name) == str

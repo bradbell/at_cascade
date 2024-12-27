@@ -122,7 +122,6 @@ def cascade_root_node(
    fit_goal_set            ,
    no_ode_fit              = False,
    fit_type_list           = [ 'both', 'fixed' ]
-# )
 ) :
    assert type(all_node_database)  == str
    assert type(fit_goal_set)       == set

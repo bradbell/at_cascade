@@ -88,7 +88,6 @@ def check_log(
    job_table                     ,
    start_job_id           = None ,
    max_job_depth          = None ,
-# )
 ) :
    assert type(message_type)        == str
    assert type(all_node_database)   == str

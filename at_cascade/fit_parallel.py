@@ -123,7 +123,6 @@ def fit_parallel(
    max_number_cpu    ,
    fit_type_list     ,
    shared_unique     ,
-# )
 ) :
    #
    assert type(job_table)         == list

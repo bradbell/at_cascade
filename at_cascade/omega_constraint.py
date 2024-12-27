@@ -94,7 +94,6 @@ def child_node_id_list(node_table, parent_node_id) :
 def omega_constraint(
    all_node_database ,
    fit_database ,
-# )
 ) :
    assert type(all_node_database) == str
    assert type(fit_database) == str

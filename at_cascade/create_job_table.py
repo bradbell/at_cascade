@@ -245,7 +245,6 @@ def create_job_table(
    start_node_id                     ,
    fit_goal_set                      ,
    start_split_reference_id   = None ,
-# )
 ) :
    assert type(all_node_database) == str
    assert type(node_table) == list

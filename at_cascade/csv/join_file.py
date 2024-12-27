@@ -54,7 +54,6 @@ def join_file(
    left_file    ,
    right_file   ,
    result_file  ,
-# )
 ) :
    assert type(left_file)  == str
    assert type(right_file)  == str

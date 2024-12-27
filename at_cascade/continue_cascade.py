@@ -92,7 +92,6 @@ def continue_cascade(
    fit_goal_set      = None,
    fit_type_list     = [ 'both', 'fixed' ],
    shared_unique     = '',
-# )
 ) :
    assert type(all_node_database) == str
    assert type(fit_database) == str

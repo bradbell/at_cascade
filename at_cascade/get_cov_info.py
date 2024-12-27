@@ -88,7 +88,6 @@ def get_cov_info(
    option_all_table      ,
    covariate_table       ,
    split_reference_table ,
-# )
 ) :
    assert type(option_all_table) == list
    assert type(covariate_table) == list

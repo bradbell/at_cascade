@@ -68,7 +68,6 @@ def write_table(
    file_name  = None,
    table      = None,
    columns    = None,
-# )
 ) :
    assert type(file_name)  == str
    assert type(table)      == list

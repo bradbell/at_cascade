@@ -82,7 +82,6 @@ def com_cov_reference(
    shift_node_id         ,
    split_reference_id    = None,
    data_table            = None,
-# )
 ) :
    assert type(option_all_table) == list
    assert type(split_reference_table) == list

@@ -68,7 +68,6 @@ def get_var_id(
    mulcov_id    = None,
    group_id     = None,
    subgroup_id  = None,
-# )
 ) :
    assert type(var_table) == list
    assert type(var_type)  == str

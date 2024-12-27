@@ -100,7 +100,6 @@ def check_cascade_node(
          fit_database  ,
          avgint_table       ,
          relative_tolerance = None,
-# )
 ) :
    assert type(all_node_database) == str
    assert type(fit_database) == str

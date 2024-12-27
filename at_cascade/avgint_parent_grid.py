@@ -252,7 +252,6 @@ def avgint_parent_grid(
    fit_database      = None ,
    job_table         = None ,
    fit_job_id        = None ,
-# )
 ) :
    assert type(all_node_database)  == str
    assert type(fit_database) == str
