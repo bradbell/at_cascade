@@ -98,7 +98,9 @@ csv_file['data_in.csv'] = header + \
 '''
 0,Sincidence,n0,female,0,10,1990,2000,0.00,1e-4,0,gaussian,,
 1,Sincidence,n1,female,10,20,2000,2010,0.00,1e-4,0,gaussian,,
-2,Sincidence,n2,female,20,30,2010,2020,0.00,1e-4,0,gaussian,,
+2,Sincidence,n1,female,10,20,2000,2010,0.00,1e-4,0,gaussian,,
+3,Sincidence,n2,female,20,30,2010,2020,0.00,1e-4,0,gaussian,,
+4,Sincidence,n2,female,20,30,2010,2020,0.00,1e-4,0,gaussian,,
 '''
 
 #
