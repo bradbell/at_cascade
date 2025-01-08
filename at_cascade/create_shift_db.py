@@ -696,6 +696,7 @@ def create_shift_db(
       # shift_table['mulcov']
       # and corresponding entries in
       # smooth, smooth_grid, and prior
+      mulcov_prior_std_factor = 1.0
       for (mulcov_id, shift_mulcov_row) in enumerate(shift_table['mulcov']) :
          assert shift_mulcov_row['subgroup_smooth_id'] is None
          #
@@ -771,7 +772,7 @@ def create_shift_db(
                      integrand_id,
                      node_id,
                      split_id,
-                     shift_prior_std_factor,
+                     mulcov_prior_std_factor,
                      freeze,
                      copy_row,
                      age_id_next_list[fit_smooth_id],
