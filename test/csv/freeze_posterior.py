@@ -68,6 +68,7 @@ except for:
 #. random_seed is chosen using the python time package
 #. refit_split is set to false
 #. max_number_cpu should be either 1 or None
+#. number_sample is increased to 1000 to stabilize sam_std values for err calculations
 
 {xrst_code py}"""
 max_number_cpu = None
@@ -77,6 +78,8 @@ csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 csv_file['option_fit.csv'] += 'refit_split,false\n'
 csv_file['option_fit.csv'] += 'tolerance_fixed,1e-8\n'
 csv_file['option_fit.csv'] += 'freeze_type,posterior\n'
+csv_file['option_fit.csv'] += 'child_prior_std_factor,100\n'
+csv_file['option_fit.csv'] += 'number_sample,1000\n'
 if max_number_cpu == 1 :
    csv_file['option_fit.csv'] += f'max_number_cpu,1\n'
 """{xrst_code}
@@ -415,12 +418,22 @@ def main() :
    #
    # check priors on haqi match
    variable_tables = dict()
-   node_path = ['n0/male/n1','n0/male/n1/n3/n4']
-   node_name = ['n1', 'n4']
+   node_path = ['n0/', 'n0/male/n1','n0/male/n1/n3/n4']
+   node_name = ['n0', 'n1', 'n4']
    for i in range(len(node_name)):
       variable_tables[node_name[i]] = at_cascade.csv.read_table(
          file_name = f'{fit_dir}/{node_path[i]}/variable.csv'
       )
+   haqi_posterior = variable_tables.pop("n0")
+   for row in haqi_posterior:
+      if row['covariate'] == "haqi":
+         sam_std = row['sam_std']
+         fit_value = row['fit_value']
+         haqi_root_posterior = {
+            "sam_std" : float(sam_std),
+            "fit_value" : float(fit_value)
+         }
+
    haqi_priors = dict()
    for node, table in variable_tables.items():
       for row in table:
@@ -428,12 +441,17 @@ def main() :
             std_v = row['std_v']
             mean_v = row['mean_v']
             haqi_priors[node] = {
-               "std_v" : std_v,
-               "mean_v" : mean_v
+               "std_v" : float(std_v),
+               "mean_v" : float(mean_v)
             }
+      root_post_std = haqi_root_posterior["sam_std"]
+      prior_drift = (haqi_priors[node]["std_v"] - root_post_std) / root_post_std
+      if abs(prior_drift) > 0.01:
+         print(f"prior_drift: {prior_drift}")
+         assert False
+   assert haqi_priors['n1']['mean_v'] == haqi_root_posterior["fit_value"]
    assert haqi_priors['n1']['std_v'] == haqi_priors['n4']['std_v']
    assert haqi_priors['n1']['mean_v'] == haqi_priors['n4']['mean_v']
-
 
 #
 if __name__ == '__main__' :
