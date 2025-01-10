@@ -228,6 +228,7 @@ option_all            = {
    'root_split_reference_name':  'both',
    'split_covariate_name':       'sex',
    'shift_prior_std_factor':      1e3,
+   'mulcov_prior_std_factor':     1e3,
 }
 option_all['root_database'] = option_all['result_dir'] + '/root.db'
 # END option_all_table
