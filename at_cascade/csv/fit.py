@@ -132,7 +132,7 @@ The default value for this option is infinity; i.e., no bound.
 child_prior_std_factor
 ----------------------
 This factor multiplies the parent fit posterior standard deviation for the
-value priors in the during a child fit.
+rate value priors in the during a child fit.
 If it is greater (less) than one, the child priors are larger (smaller)
 than indicated by the posterior corresponding to the parent fit.
 The default value for this option is 2.0.
@@ -275,6 +275,13 @@ It specifies a lower bound on the standard deviation for each measured data
 value as a fraction of the measurement value.
 The default value for *minimum_meas_cv* is zero.
 
+mulcov_prior_std_factor
+-----------------------
+This factor multiplies the parent fit posterior standard deviation for the
+covariate multiplier value priors in the during a child fit.
+If it is greater (less) than one, the child priors are larger (smaller)
+than indicated by the posterior corresponding to the parent fit.
+The default value for this option is 2.0.
 
 no_ode_ignore
 -------------
