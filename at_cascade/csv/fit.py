@@ -1056,6 +1056,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'max_num_iter_fixed'    : (int,   100)                ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
       'minimum_meas_cv'       : (float, 0.0)                ,
+      'mulcov_prior_std_factor' : (float,  1.0)             ,
       'no_ode_fit'            : (bool,  True)               ,
       'no_ode_ignore'         : (str,   None)               ,
       'number_sample'         : (int,   20)                 ,
