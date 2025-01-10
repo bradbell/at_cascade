@@ -467,6 +467,12 @@ def create_shift_db(
       if row['option_name'] == 'shift_prior_std_factor' :
          shift_prior_std_factor = float( row['option_value'] )
    #
+   # mulcov_prior_std_factor
+   mulcov_prior_std_factor = 1.0
+   for row in all_table['option_all'] :
+      if row['option_name'] == 'mulcov_prior_std_factor' :
+         mulcov_prior_std_factor = float( row['option_value'] )
+   #
    # no_ode_ignore
    no_ode_ignore = ''
    for row in all_table['option_all'] :
@@ -696,7 +702,6 @@ def create_shift_db(
       # shift_table['mulcov']
       # and corresponding entries in
       # smooth, smooth_grid, and prior
-      mulcov_prior_std_factor = 1.0
       for (mulcov_id, shift_mulcov_row) in enumerate(shift_table['mulcov']) :
          assert shift_mulcov_row['subgroup_smooth_id'] is None
          #
