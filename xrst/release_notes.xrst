@@ -10,6 +10,30 @@ Release Notes for at_cascade
 
 {xrst_end release_notes}
 -----------------------------------------------------------------------------
+{xrst_begin 2025}
+{xrst_spell
+   mm
+   dd
+   py
+   pdf
+}
+
+Release Notes for 2025
+######################
+
+mm-dd
+*****
+
+01-12
+=====
+The test/csv/fit.py and test/csv/sample_fail.py tests
+were failing on some systems; see
+`pull request 29 <https://github.com/bradbell/at_cascade/pull/29>`_ .
+The failures have has been fixed by not expecting the plot_data.pdf file
+to exist for (node, sex) pairs that have only one data point.
+
+{xrst_end 2025}
+-----------------------------------------------------------------------------
 {xrst_begin 2024}
 {xrst_spell
   args

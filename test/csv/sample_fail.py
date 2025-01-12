@@ -222,8 +222,14 @@ def main() :
    # check for db2csv files
    for (node, sex) in subdir_list :
       subdir = subdir_list[(node, sex)]
-      for name in db2csv_name_list + [ 'data_plot.pdf', 'rate_plot.pdf' ] :
+      for name in db2csv_name_list + [ 'rate_plot.pdf' ] :
          file_path = f'{fit_dir}/{subdir}/{name}'
+         assert os.path.exists(file_path)
+      #
+      # Only (n0, sex) jobs have more than one data point; see n_fit_dict in
+      # https://dismod-at.readthedocs.io/plot_data_fit.html#n-fit-dict
+      if node == 'n0' :
+         file_path = f'{fit_dir}/{subdir}/data_plot.pdf'
          assert os.path.exists(file_path)
 #
 if __name__ == '__main__' :

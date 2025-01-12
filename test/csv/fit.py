@@ -38,7 +38,7 @@ plot,true
 '''
 #
 # node.csv
-# Use node n-1 to test starting below the base of the tree
+# Use node n-1 to test the root node not being the base of the node tree
 csv_file['node.csv'] = \
 '''node_name,parent_name
 n-1,
@@ -67,7 +67,7 @@ n3,male,2.0,50,2000,0.02
 '''
 #
 # fit_goal.csv
-# n-1 is not included in test because it is not below the root node n0
+# n-1 and n3 are not not below the root node n0, hence not fit
 csv_file['fit_goal.csv'] = \
 '''node_name
 n1
@@ -244,8 +244,14 @@ def main() :
    # check for db2csv files
    for (node, sex) in subdir_list :
       subdir = subdir_list[(node, sex)]
-      for name in db2csv_name_list + [ 'data_plot.pdf', 'rate_plot.pdf' ] :
+      for name in db2csv_name_list + [ 'rate_plot.pdf' ] :
          file_path = f'{fit_dir}/{subdir}/{name}'
+         assert os.path.exists(file_path)
+      #
+      # Only (n0, sex) jobs have more than one data point; see n_fit_dict in
+      # https://dismod-at.readthedocs.io/plot_data_fit.html#n-fit-dict
+      if node == 'n0' :
+         file_path = f'{fit_dir}/{subdir}/data_plot.pdf'
          assert os.path.exists(file_path)
    #
    file_name = f'{fit_dir}/n0/dismod.db'
