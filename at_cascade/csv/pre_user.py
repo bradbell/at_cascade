@@ -5,8 +5,7 @@
 r'''
 {xrst_begin csv.pre_user}
 {xrst_spell
-   tru
-   sam
+  tru
 }
 
 Convert Prediction Csv Files From dismod_at Notation to User csv.fit Notation

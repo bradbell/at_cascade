@@ -17,21 +17,19 @@ import dismod_at
 '''
 {xrst_begin csv.shock_cov}
 {xrst_spell
-   const
-   cv
-   dage
-   def
-   dtime
-   eps
-   iter
-   meas
-   min
-   num
-   pdf
-   sincidence
-   std
-   tim
-   rel
+  const
+  cv
+  dage
+  def
+  dtime
+  eps
+  iter
+  meas
+  num
+  pdf
+  rel
+  sincidence
+  std
 }
 
 Simulate and Fit Incidence Using Prevalence Data and a Shock Covariate

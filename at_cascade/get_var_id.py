@@ -5,10 +5,10 @@
 '''
 {xrst_begin get_var_id}
 {xrst_spell
-   dage
-   dtime
-   meas
-   mulstd
+  dage
+  dtime
+  meas
+  mulstd
 }
 
 Map Var Table Values to its Primary Key

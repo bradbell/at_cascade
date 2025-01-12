@@ -5,8 +5,8 @@
 r'''
 {xrst_begin_parent remission}
 {xrst_spell
-   dage
-   dtime
+  dage
+  dtime
 }
 
 Example Estimation With Remission and No Incidence Data

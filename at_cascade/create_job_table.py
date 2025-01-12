@@ -5,7 +5,7 @@
 r'''
 {xrst_begin create_job_table}
 {xrst_spell
-   bool
+  bool
 }
 
 Table of Job Parent Child Relationships

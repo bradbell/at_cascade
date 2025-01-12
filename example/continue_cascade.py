@@ -5,8 +5,8 @@
 r'''
 {xrst_begin_parent continue_cascade_xam}
 {xrst_spell
-   dage
-   dtime
+  dage
+  dtime
 }
 
 Example Continuing a Cascade

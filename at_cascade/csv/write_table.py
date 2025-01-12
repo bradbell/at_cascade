@@ -6,7 +6,7 @@ import csv
 r"""
 {xrst_begin csv.write_table}
 {xrst_spell
-   len
+  len
 }
 
 Create A CSV File from a Table

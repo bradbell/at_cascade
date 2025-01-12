@@ -5,9 +5,9 @@
 '''
 {xrst_begin create_shift_db}
 {xrst_spell
-   dage
-   dtime
-   var
+  dage
+  dtime
+  var
 }
 
 Create Database With Shifted Covariate References

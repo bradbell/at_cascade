@@ -5,9 +5,9 @@
 r'''
 {xrst_begin_parent one_at_function}
 {xrst_spell
-   avg
-   dage
-   dtime
+  avg
+  dage
+  dtime
 }
 
 Example That Directly Measures One Age Time Function

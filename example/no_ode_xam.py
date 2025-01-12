@@ -5,12 +5,12 @@
 r'''
 {xrst_begin_parent no_ode_xam}
 {xrst_spell
-   avg
-   dage
-   dtime
-   mtexcess
-   sincidence
-   smoothings
+  avg
+  dage
+  dtime
+  mtexcess
+  sincidence
+  smoothings
 }
 
 Example Using no_ode_fit To Initialize Optimization

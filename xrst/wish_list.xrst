@@ -4,10 +4,10 @@
 # ----------------------------------------------------------------------------
 {xrst_begin wish_list}
 {xrst_spell
-   avgint
-   attaches
-   meas
-   cov
+  attaches
+  avgint
+  cov
+  meas
 }
 
 Wish List for at_cascade

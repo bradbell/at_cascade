@@ -11,13 +11,11 @@ import at_cascade
 """
 {xrst_begin csv.simulate}
 {xrst_spell
-   boolean
-   cv
-   meas
-   min
-   pini
-   sincidence
-   std
+  cv
+  meas
+  pini
+  sincidence
+  std
 }
 
 Simulate A Cascade Data Set

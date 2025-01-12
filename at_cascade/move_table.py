@@ -5,8 +5,8 @@
 '''
 {xrst_begin move_table}
 {xrst_spell
-   dst
-   src
+  dst
+  src
 }
 
 Move Table

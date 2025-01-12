@@ -5,11 +5,11 @@
 r'''
 {xrst_begin csv.coverage}
 {xrst_spell
-   cv
-   sincidence
-   std
-   meas
-   random random
+  cv
+  meas
+  random random
+  sincidence
+  std
 }
 
 Csv Example Checking Coverage For Asymptotic Samples

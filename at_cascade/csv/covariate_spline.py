@@ -6,7 +6,7 @@ import at_cascade
 '''
 {xrst_begin csv.covariate_spline}
 {xrst_spell
-   cov
+  cov
 }
 
 Create Spline Functions For Covariates

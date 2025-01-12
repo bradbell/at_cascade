@@ -5,7 +5,7 @@
 r'''
 {xrst_begin table_name2id}
 {xrst_spell
-   tbl
+  tbl
 }
 
 Map a Table Row Name to The Row Index

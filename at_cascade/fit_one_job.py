@@ -5,9 +5,8 @@
 r'''
 {xrst_begin fit_one_job}
 {xrst_spell
-   io
-   obj
-   var
+  obj
+  var
 }
 
 Run One Job

@@ -5,7 +5,7 @@
 '''
 {xrst_begin fit_parallel}
 {xrst_spell
-   cpus
+  cpus
 }
 
 Fit With Specified Maximum Number of Processes

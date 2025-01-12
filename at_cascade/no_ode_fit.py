@@ -5,11 +5,11 @@
 r'''
 {xrst_begin no_ode_fit}
 {xrst_spell
-   init
-   mtexcess
-   mtother
-   relrisk
-   sincidence
+  init
+  mtexcess
+  mtother
+  relrisk
+  sincidence
 }
 
 Do A No Ode Fit For One Node

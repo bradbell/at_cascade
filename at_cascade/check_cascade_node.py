@@ -5,7 +5,7 @@
 '''
 {xrst_begin check_cascade_node}
 {xrst_spell
-   avgint
+  avgint
 }
 
 Check the Cascade Results for a Node

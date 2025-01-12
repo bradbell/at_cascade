@@ -5,8 +5,8 @@
 r'''
 {xrst_begin_parent split_covariate}
 {xrst_spell
-   dage
-   dtime
+  dage
+  dtime
 }
 
 Example Using split_reference Table

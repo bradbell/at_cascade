@@ -5,9 +5,9 @@
 r'''
 {xrst_begin relrisk}
 {xrst_spell
-   avgint
-   sincidence
-   mtexcess
+  avgint
+  mtexcess
+  sincidence
 }
 
 Example Fitting Relative Risk Data

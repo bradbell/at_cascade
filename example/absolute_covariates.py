@@ -5,8 +5,8 @@
 r'''
 {xrst_begin_parent absolute_covariates}
 {xrst_spell
-   dage
-   dtime
+  dage
+  dtime
 }
 
 Example Using absolute_covariates Option in all_node_database

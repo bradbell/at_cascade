@@ -8,10 +8,10 @@ catch_exceptions_and_continue = True
 '''
 {xrst_begin fit_one_process}
 {xrst_spell
-   cpus
-   inuse
-   numpy
-   dtype
+  cpus
+  dtype
+  inuse
+  numpy
 }
 
 Fit Using One Process

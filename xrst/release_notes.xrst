@@ -12,27 +12,25 @@ Release Notes for at_cascade
 -----------------------------------------------------------------------------
 {xrst_begin 2024}
 {xrst_spell
-   multi
-   dd
-   mm
-   grep
-   homebrew
-   sed
-   inuse
-   nfs
-   Errno
-   xam
-   sincidence
-   meas
-   mtstandard
-   args
-   darwin
-   py
-   haqi
-   avg
-   sqlite
-   meta
-   def
+  args
+  avg
+  dd
+  def
+  errno
+  grep
+  haqi
+  homebrew
+  inuse
+  meas
+  mm
+  mtstandard
+  multi
+  nfs
+  py
+  sed
+  sincidence
+  sqlite
+  xam
 }
 
 .. _issue13: https://github.com/bradbell/at_cascade/issues/13
@@ -722,21 +720,19 @@ comment as part of csv.fit.ode_method.no_ode.
 -----------------------------------------------------------------------------
 {xrst_begin 2023}
 {xrst_spell
-   meta
-   cen
-   copyfileobj
-   cv
-   dd
-   errno
-   mm
-   pini
-   ptr
-   readonly
-   sam
-   shutil
-   std
-   tru
-   xam
+  cen
+  copyfileobj
+  cv
+  dd
+  errno
+  mm
+  pini
+  ptr
+  readonly
+  shutil
+  std
+  tru
+  xam
 }
 
 Release Notes for 2023
@@ -1292,21 +1288,18 @@ See the dismod_at documentation for the rate_eff_cov table for more details.
 -----------------------------------------------------------------------------
 {xrst_begin 2022}
 {xrst_spell
-   meta
-   const
-   dage
-   dd
-   distutils
-   dtime
-   laplace
-   mm
-   mtall
-   mtspecific
-   numpy
-   pyspellchecker
-   rst
-   sam
-   smoothings
+  const
+  dage
+  dd
+  distutils
+  dtime
+  mm
+  mtall
+  mtspecific
+  numpy
+  pyspellchecker
+  rst
+  smoothings
 }
 
 Release Notes for 2022
@@ -1770,11 +1763,11 @@ at_cascade module.
 -----------------------------------------------------------------------------
 {xrst_begin 2021}
 {xrst_spell
-   dd
-   iter
-   mm
-   num
-   py
+  dd
+  iter
+  mm
+  num
+  py
 }
 
 Release Notes for 2021

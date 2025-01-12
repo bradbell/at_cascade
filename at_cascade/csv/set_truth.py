@@ -12,7 +12,7 @@ import dismod_at
 """
 {xrst_begin csv.set_truth}
 {xrst_spell
-   var
+  var
 }
 
 Set the Truth Table for a Fitted Database

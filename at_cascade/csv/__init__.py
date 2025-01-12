@@ -4,9 +4,6 @@
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.module}
-{xrst_spell
-   boolean
-}
 
 The at_cascade.csv Python Module
 ################################

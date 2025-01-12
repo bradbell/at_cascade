@@ -4,9 +4,6 @@
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin map_shared}
-{xrst_spell
-   darwin
-}
 
 Map at_cascade Shared Memory Names
 ##################################

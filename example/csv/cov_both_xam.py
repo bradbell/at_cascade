@@ -5,7 +5,7 @@
 '''
 {xrst_begin csv.cov_both_xam}
 {xrst_spell
-   haqi
+  haqi
 }
 
 Example and Test of covariate_both

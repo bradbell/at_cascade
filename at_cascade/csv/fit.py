@@ -13,35 +13,32 @@ r'''
 
 {xrst_begin csv.fit}
 {xrst_spell
-   avg
-   avgint
-   bnd
-   boolean
-   cen
-   const
-   cov
-   cpus
-   cv
-   dage
-   dtime
-   eigen
-   ipopt
-   iter
-   laplace
-   meas
-   mtexcess
-   mtother
-   mtwith
-   mul
-   num
-   pini
-   pos
-   relrisk
-   sam
-   sincidence
-   sqlite
-   std
-   underbars
+  avg
+  avgint
+  bnd
+  cen
+  const
+  cov
+  cpus
+  cv
+  dage
+  dtime
+  eigen
+  ipopt
+  iter
+  meas
+  mtexcess
+  mtother
+  mtwith
+  mul
+  num
+  pini
+  pos
+  relrisk
+  sincidence
+  sqlite
+  std
+  underbars
 }
 
 Fit a CSV Specified Cascade

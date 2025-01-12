@@ -5,11 +5,10 @@
 r'''
 {xrst_begin csv.pre_one_job}
 {xrst_spell
-   pdf
-   sam
-   tru
-   avgint
-   avg
+  avg
+  avgint
+  pdf
+  tru
 }
 
 Calculate the predictions for One Fit

@@ -5,7 +5,7 @@
 r'''
 {xrst_begin cascade_root_node}
 {xrst_spell
-   var
+  var
 }
 
 Cascade Fits Starting at Root Node

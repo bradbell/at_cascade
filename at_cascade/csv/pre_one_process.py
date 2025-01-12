@@ -8,8 +8,8 @@ catch_exceptions_and_continue = True
 r'''
 {xrst_begin csv.pre_one_process}
 {xrst_spell
-   numpy
-   dtype
+  dtype
+  numpy
 }
 
 Predict Using One Process

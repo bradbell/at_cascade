@@ -5,7 +5,7 @@
 '''
 {xrst_begin csv.cov_same_xam}
 {xrst_spell
-   haqi
+  haqi
 }
 
 Example and Test of covariate_same

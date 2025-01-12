@@ -11,8 +11,8 @@ At Cascade Math
 -----------------------------------------------------------------------------
 {xrst_begin ode_iota_omega}
 {xrst_spell
-   da
-   ds
+  da
+  ds
 }
 
 Dismod ODE With Constant iota and omega

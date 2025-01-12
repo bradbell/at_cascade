@@ -5,8 +5,8 @@
 r'''
 {xrst_begin_parent max_fit_option}
 {xrst_spell
-   dage
-   dtime
+  dage
+  dtime
 }
 
 Example Using max_fit Option

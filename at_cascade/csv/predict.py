@@ -12,14 +12,12 @@ import time
 r'''
 {xrst_begin csv.predict}
 {xrst_spell
-   avg
-   avgint
-   boolean
-   cpus
-   meas
-   pdf
-   sam
-   tru
+  avg
+  avgint
+  cpus
+  meas
+  pdf
+  tru
 }
 
 Prediction for a CSV Fit

@@ -5,7 +5,7 @@
 '''
 {xrst_begin add_log_entry}
 {xrst_spell
-   unix
+  unix
 }
 
 Add Log Table Entry

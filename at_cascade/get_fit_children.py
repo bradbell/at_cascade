@@ -5,7 +5,7 @@
 '''
 {xrst_begin get_fit_children}
 {xrst_spell
-   len
+  len
 }
 
 Determine the Set of Nodes to Fit

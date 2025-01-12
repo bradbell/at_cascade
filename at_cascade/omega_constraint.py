@@ -5,8 +5,8 @@
 '''
 {xrst_begin omega_constraint}
 {xrst_spell
-   nslist
-   smoothings
+  nslist
+  smoothings
 }
 
 Set Omega Constraints in a Fit Node Database

@@ -5,9 +5,9 @@
 r'''
 {xrst_begin_parent mulcov_freeze}
 {xrst_spell
-   avg
-   dage
-   dtime
+  avg
+  dage
+  dtime
 }
 
 Example That Directly Measures One Age Time Function

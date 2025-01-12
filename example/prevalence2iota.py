@@ -5,9 +5,9 @@
 r'''
 {xrst_begin_parent prevalence2iota}
 {xrst_spell
-   avg
-   dage
-   dtime
+  avg
+  dage
+  dtime
 }
 
 Example Estimation of iota From Prevalence Data
