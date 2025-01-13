@@ -3,9 +3,13 @@
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # This is an edited verison of the csv.break_fit_pred example.
-# It demonstrate a bug that was fixed on 2024-12-21.
+# 
+# Demonstrate a bug that was fixed on 2024-12-21.
 # To be specific, freezing the posterior for a covariate multiplier would
 # not work if a continue cascade started after the freeze.
+#
+# 2DO:
+# Test the child_prior_std_factor_mulcov option.
 #
 import os
 import sys
@@ -369,7 +373,7 @@ def computation(fit_dir) :
 def main() :
    #
    # fit_dir
-   fit_dir = 'build/example/csv'
+   fit_dir = 'build/test/csv'
    at_cascade.empty_directory(fit_dir)
    #
    # write csv files

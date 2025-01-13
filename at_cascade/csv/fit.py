@@ -129,10 +129,16 @@ The default value for this option is infinity; i.e., no bound.
 child_prior_std_factor
 ----------------------
 This factor multiplies the parent fit posterior standard deviation for the
-value priors in the during a child fit.
+value priors the during a child fit (except for the covariate multipliers).
 If it is greater (less) than one, the child priors are larger (smaller)
 than indicated by the posterior corresponding to the parent fit.
 The default value for this option is 2.0.
+
+child_prior_std_factor_mulcov
+-----------------------------
+This factor multiplies the parent fit posterior standard deviation for the
+value priors for the covariate multipliers.
+The default value for this option is *child_prior_std_factor* .
 
 compress_interval
 -----------------
@@ -1044,6 +1050,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'balance_sex'           : (bool,  True)               ,
       'bound_random'          : (float, float('inf'))       ,
       'child_prior_std_factor': (float,  2.0)               ,
+      'child_prior_std_factor_mulcov' : (float, None)       ,
       'compress_interval'     : (str,   '100.0 100.0')      ,
       'covariate_reference'   : (str,   'data_in.csv')      ,
       'freeze_type'           : (str,   'mean')             ,
@@ -1813,6 +1820,11 @@ def create_all_node_database(
    refit_split            = global_option_value['refit_split']
    refit_split            = str(refit_split).lower()
    #
+   child_prior_std_factor_mulcov = \
+      global_option_value['child_prior_std_factor_mulcov']
+   if child_prior_std_factor_mulcov == None :
+      child_prior_std_factor_mulcov = child_prior_std_factor
+   #
    if absolute_covariates == None :
       absolute_covariates = 'one'
    else :
@@ -1835,6 +1847,7 @@ def create_all_node_database(
       'root_split_reference_name'    : 'both',
       'split_covariate_name'         : 'sex',
       'shift_prior_std_factor'       : child_prior_std_factor,
+      'shift_prior_std_factor_mulcov'  : child_prior_std_factor_mulcov,
    }
    if balance_sex :
       option_all['balance_fit'] = 'sex -0.5 +0.5'

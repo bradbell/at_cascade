@@ -420,10 +420,17 @@ shift_prior_std_factor
 **********************
 This factor multiplies the parent fit posterior standard deviation
 for the :ref:`create_shift_db@shift_databases@Value Priors`
-in the shifted databases.
+in the shifted databases (except for the covariate multipliers).
 If it is greater (less) than one, the child priors are larger (smaller)
 than the posterior corresponding to the parent node fit.
 If this option does not appear, the value one is used for the factor.
+
+shift_prior_std_factor_mulcov
+*****************************
+This factor multiplies the parent fit posterior standard deviation
+for the covariate multipliers in the shifted databases.
+If this option does not appear,
+*shift_prior_std_factor* is used for the factor.
 
 
 {xrst_end option_all_table}

@@ -466,6 +466,12 @@ def create_shift_db(
       if row['option_name'] == 'shift_prior_std_factor' :
          shift_prior_std_factor = float( row['option_value'] )
    #
+   # shift_prior_std_factor_mulcov
+   shift_prior_std_factor_mulcov = shift_prior_std_factor
+   for row in all_table['option_all'] :
+      if row['option_name'] == 'shift_prior_std_factor_mulcov' :
+         shift_prior_std_factor_mulcov = float( row['option_value'] )
+   #
    # no_ode_ignore
    no_ode_ignore = ''
    for row in all_table['option_all'] :
@@ -770,7 +776,7 @@ def create_shift_db(
                      integrand_id,
                      node_id,
                      split_id,
-                     shift_prior_std_factor,
+                     shift_prior_std_factor_mulcov,
                      freeze,
                      copy_row,
                      age_id_next_list[fit_smooth_id],

@@ -286,7 +286,7 @@ def root_node_db(file_name) :
 def main() :
    # -------------------------------------------------------------------------
    # result_dir
-   result_dir = 'build/example'
+   result_dir = 'build/test'
    at_cascade.empty_directory(result_dir)
    #
    # Create root.db
