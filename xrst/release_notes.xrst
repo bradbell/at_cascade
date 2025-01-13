@@ -16,6 +16,7 @@ Release Notes for at_cascade
    dd
    py
    pdf
+   relrisk
 }
 
 Release Notes for 2025
@@ -25,7 +26,7 @@ Release Notes for 2025
 mm-dd
 *****
 
-10-13
+01-13
 =====
 #. Add :ref:`csv.fit@Input Files@option_fit.csv@child_prior_std_factor_mulcov`
    to the option_fit csv file and
@@ -35,10 +36,16 @@ mm-dd
 #. The computation of the standard deviation for the child priors
    was using one degree of freedom.
    This is not correct because we know the true mean of the samples; i.e.,
-   the fit value (the number of degrees of fredom should be zero).
+   the fit value (the number of degrees of freedom should be zero).
    This has been fixed and the child prior
    standard deviations that are a factor of :math:`\sqrt{(N-1)/N}`
    smaller where N is the number of samples.
+
+#. There was a bug in :ref:`fit_one_process-name` . It sometimes
+   returned on the main branch before all the other processes had finished.
+   This has been fixed.
+   It was found by repeated running of the `example/relrisk.py` test
+   which uses a large value for :ref:`option_all_table@max_number_cpu` .
 
 01-12
 =====

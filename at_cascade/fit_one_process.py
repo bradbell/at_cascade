@@ -493,16 +493,25 @@ def fit_one_process(
          if job_id_run.size == 0 :
             #
             # no jobs running or ready
-            if master_process and shared_number_cpu_inuse[0] == 1:
-               # We are done, return to fit_parallel which wuill use
-               # the shared memory for error checking and then free it.
-               #
-               # should not need this release
-               shared_lock.release()
-               #
-               shm_job_status.close()
-               shm_number_cpu_inuse.close()
-               return
+            if master_process :
+               if shared_number_cpu_inuse[0] == 1:
+                  # We are done, return to fit_parallel which wuill use
+                  # the shared memory for error checking and then free it.
+                  #
+                  # should not need this release
+                  shared_lock.release()
+                  #
+                  shm_job_status.close()
+                  shm_number_cpu_inuse.close()
+                  return
+               else :
+                  #
+                  # wait for another process to change shared memory,
+                  # then go back to the while True point above
+                  shared_event.clear()
+                  shared_lock.release()
+                  seconds = 10.0
+                  shared_event.wait(timeout = seconds)
             else :
                # return this processor
                shared_number_cpu_inuse[0] -= 1
