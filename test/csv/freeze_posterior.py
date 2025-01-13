@@ -3,12 +3,11 @@
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # This is an edited verison of the csv.break_fit_pred example.
-# 
+#
 # Demonstrate a bug that was fixed on 2024-12-21.
 # To be specific, freezing the posterior for a covariate multiplier would
 # not work if a continue cascade started after the freeze.
 #
-# 2DO:
 # Test the child_prior_std_factor_mulcov option.
 #
 import os
@@ -18,6 +17,7 @@ import math
 import shutil
 import csv
 import multiprocessing
+import statistics
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
@@ -74,13 +74,18 @@ except for:
 #. max_number_cpu should be either 1 or None
 
 {xrst_code py}"""
-max_number_cpu = None
+max_number_cpu                = None
+number_sample                 = 20
+child_prior_std_factor_mulcov = 3.0
 random_seed    = str( int( time.time() ) )
 csv_file['option_fit.csv']  = 'name,value\n'
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 csv_file['option_fit.csv'] += 'refit_split,false\n'
 csv_file['option_fit.csv'] += 'tolerance_fixed,1e-8\n'
 csv_file['option_fit.csv'] += 'freeze_type,posterior\n'
+csv_file['option_fit.csv'] += 'child_prior_std_factor_mulcov,' + \
+                              str(child_prior_std_factor_mulcov) + '\n'
+csv_file['option_fit.csv'] += 'number_sample,' + str(number_sample) + '\n'
 if max_number_cpu == 1 :
    csv_file['option_fit.csv'] += f'max_number_cpu,1\n'
 """{xrst_code}
@@ -268,6 +273,57 @@ Source Code
 """
 # BEGIN_PROGRAM
 #
+# n0_mulcov_posterior
+# mulcov_mean, mulcov_std =
+def n0_mulcov_posterior(fit_dir) :
+   #
+   # all_node_database, fit_database
+   root_database = f'{fit_dir}/root.db'
+   fit_database  = f'{fit_dir}/n0/dismod.db'
+   #
+   # fit_or_root
+   fit_or_root = at_cascade.fit_or_root_class(fit_database, root_database)
+   #
+   # fit_table
+   fit_table = dict()
+   for name in [
+      'integrand',
+      'c_shift_predict_fit_var' ,
+      'c_shift_predict_sample' ,
+      'c_shift_avgint'
+   ] :
+      fit_table[name] = fit_or_root.get_table(name)
+   #
+   # mulcov_mean
+   # A covariate multiplier does not depend on age, time, or other
+   # covarites, so predicting for it is simple.
+   mulcov_mean = None
+   for predict_row in fit_table['c_shift_predict_fit_var'] :
+      avgint_id          = predict_row['avgint_id']
+      avgint_row         = fit_table['c_shift_avgint'][avgint_id]
+      integrand_id       = avgint_row['integrand_id']
+      integrand_row      = fit_table['integrand'][integrand_id]
+      if integrand_row['integrand_name'] == 'mulcov_0' :
+         assert mulcov_mean == None
+         mulcov_mean = predict_row['avg_integrand']
+   assert mulcov_mean != None
+   #
+   # mulcov_sample
+   mulcov_sample = list()
+   for predict_row in fit_table['c_shift_predict_sample'] :
+      avgint_id          = predict_row['avgint_id']
+      avgint_row         = fit_table['c_shift_avgint'][avgint_id]
+      integrand_id       = avgint_row['integrand_id']
+      integrand_row      = fit_table['integrand'][integrand_id]
+      if integrand_row['integrand_name'] == 'mulcov_0' :
+         mulcov_sample.append( predict_row['avg_integrand'] )
+   assert len(mulcov_sample) == number_sample
+   #
+   # mulcov_std
+   mulcov_std = statistics.stdev(mulcov_sample, xbar = mulcov_mean)
+   #
+   return (mulcov_mean, mulcov_std)
+#
 # computation
 def computation(fit_dir) :
    #
@@ -437,8 +493,16 @@ def main() :
             }
    assert haqi_priors['n1']['std_v'] == haqi_priors['n4']['std_v']
    assert haqi_priors['n1']['mean_v'] == haqi_priors['n4']['mean_v']
-
-
+   #
+   # n0_mean, n0_std
+   n0_mean, n0_std = n0_mulcov_posterior(fit_dir)
+   n0_std          = n0_std * child_prior_std_factor_mulcov
+   #
+   # rel_error
+   rel_error = float(haqi_priors['n1']['mean_v']) / n0_mean - 1.0
+   assert abs(rel_error) < 1e-4
+   rel_error = float(haqi_priors['n1']['std_v']) / n0_std - 1.0
+   assert abs(rel_error) < 1e-4
 #
 if __name__ == '__main__' :
    main()

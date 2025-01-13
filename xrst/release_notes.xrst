@@ -21,6 +21,13 @@ Release Notes for at_cascade
 Release Notes for 2025
 ######################
 
+mulcov_prior Branch
+*******************
+Add :ref:`csv.fit@Input Files@option_fit.csv@child_prior_std_factor_mulcov`
+to the option_fit csv file and
+:ref:`option_all_table@shift_prior_std_factor_mulcov`
+to the option_all table.
+
 mm-dd
 *****
 
