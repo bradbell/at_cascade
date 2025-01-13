@@ -17,7 +17,7 @@ import math
 import shutil
 import csv
 import multiprocessing
-import statistics
+import numpy
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
@@ -320,7 +320,7 @@ def n0_mulcov_posterior(fit_dir) :
    assert len(mulcov_sample) == number_sample
    #
    # mulcov_std
-   mulcov_std = statistics.stdev(mulcov_sample, xbar = mulcov_mean)
+   mulcov_std = numpy.std(mulcov_sample, mean = mulcov_mean, ddof = 0)
    #
    return (mulcov_mean, mulcov_std)
 #
@@ -498,11 +498,17 @@ def main() :
    n0_mean, n0_std = n0_mulcov_posterior(fit_dir)
    n0_std          = n0_std * child_prior_std_factor_mulcov
    #
-   # rel_error
+   # check mean
    rel_error = float(haqi_priors['n1']['mean_v']) / n0_mean - 1.0
-   assert abs(rel_error) < 1e-4
+   if  abs(rel_error) > 1e-4 :
+      print(haqi_priors['n1']['mean_v'], n0_mean)
+      assert False
+   #
+   # check_std
    rel_error = float(haqi_priors['n1']['std_v']) / n0_std - 1.0
-   assert abs(rel_error) < 1e-4
+   if abs(rel_error) > 1e-4 :
+      print(haqi_priors['n1']['std_v'], n0_std)
+      assert False
 #
 if __name__ == '__main__' :
    main()

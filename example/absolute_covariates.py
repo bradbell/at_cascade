@@ -211,7 +211,7 @@ option_all            = {
    'root_node_name':            'n0',
    'root_split_reference_name': 'both',
    'split_covariate_name':      'sex',
-   'max_numbwr_cpu':            '1',
+   'max_number_cpu':            '1',
 }
 option_all['root_database'] = option_all['result_dir'] + '/root.db'
 split_reference_table = [

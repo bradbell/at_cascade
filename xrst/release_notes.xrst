@@ -21,15 +21,24 @@ Release Notes for at_cascade
 Release Notes for 2025
 ######################
 
+
 mm-dd
 *****
 
 10-13
 =====
-Add :ref:`csv.fit@Input Files@option_fit.csv@child_prior_std_factor_mulcov`
-to the option_fit csv file and
-:ref:`option_all_table@shift_prior_std_factor_mulcov`
-to the option_all table.
+#. Add :ref:`csv.fit@Input Files@option_fit.csv@child_prior_std_factor_mulcov`
+   to the option_fit csv file and
+   :ref:`option_all_table@shift_prior_std_factor_mulcov`
+   to the option_all table.
+
+#. The computation of the standard deviation for the child priors
+   was using one degree of freedom.
+   This is not correct because we know the true mean of the samples; i.e.,
+   the fit value (the number of degrees of fredom should be zero).
+   This has been fixed and the child prior
+   standard deviations that are a factor of :math:`\sqrt{(N-1)/N}`
+   smaller where N is the number of samples.
 
 01-12
 =====

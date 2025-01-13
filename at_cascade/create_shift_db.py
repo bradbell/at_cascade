@@ -138,7 +138,7 @@ import os
 import math
 import copy
 import shutil
-import statistics
+import numpy
 import dismod_at
 import at_cascade
 # ----------------------------------------------------------------------------
@@ -338,7 +338,7 @@ def add_shift_grid_row(
                # std
                eta        = fit_prior_row['eta']
                if eta is None :
-                  std  = statistics.stdev(fit_sample[key], xbar=mean)
+                  std  = numpy.std(fit_sample[key], mean=mean)
                else:
                   # There is a log trasnformation of this variable before
                   # passing it to cppad_mixed. Hence its value are gaussian
@@ -352,7 +352,7 @@ def add_shift_grid_row(
                   #
                   # log_std
                   log_mean = math.log(mean + eta)
-                  log_std  = statistics.stdev(log_sample, xbar = log_mean)
+                  log_std  = numpy.std(log_sample, mean = log_mean, ddof = 0)
                   #
                   # inverse log transformation
                   std      = (math.exp(log_std) - 1) * (mean + eta)
