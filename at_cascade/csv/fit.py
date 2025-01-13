@@ -1829,6 +1829,7 @@ def create_all_node_database(
       absolute_covariates = 'one'
    else :
       absolute_covariates += ' one'
+   # BEGIN_SORT_THIS_LINE_PLUS_2
    option_all = {
       'absolute_covariates'          : absolute_covariates ,
       'freeze_type'                  : global_option_value['freeze_type'],
@@ -1838,17 +1839,18 @@ def create_all_node_database(
       'number_sample'                : number_sample,
       'perturb_optimization_scale'   : 0.2,
       'perturb_optimization_start'   : 0.2,
-      'sample_method'                : global_option_value['sample_method'],
-      'shared_memory_prefix'         : shared_memory_prefix,
       'refit_split'                  : refit_split,
       'result_dir'                   : fit_dir,
       'root_database'           : root_database,
       'root_node_name'               : root_node_name,
       'root_split_reference_name'    : 'both',
-      'split_covariate_name'         : 'sex',
+      'sample_method'                : global_option_value['sample_method'],
+      'shared_memory_prefix'         : shared_memory_prefix,
       'shift_prior_std_factor'       : child_prior_std_factor,
       'shift_prior_std_factor_mulcov'  : child_prior_std_factor_mulcov,
+      'split_covariate_name'         : 'sex',
    }
+   # END_SORT_THIS_LINE_MINUS_2
    if balance_sex :
       option_all['balance_fit'] = 'sex -0.5 +0.5'
    if no_ode_ignore != None :
