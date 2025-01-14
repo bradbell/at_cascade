@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington
-# SPDX-FileContributor: 2023-24 Garland Culbreth
+# SPDX-FileContributor: 2023-25 Garland Culbreth
 # ----------------------------------------------------------------------------
 {xrst_begin bib}
 {xrst_spell
@@ -50,8 +50,10 @@ https://optimization-online.org/wp-content/uploads/2011/04/3008.pdf
 
 DisMod-AT fixed effects distribution
 ************************************
+fixed_effects_distribution_
 
-https://dismod-at.readthedocs.io/sample_command.html#fixed-effects-distribution
+.. _fixed_effects_distribution: https://dismod-at.readthedocs.io/latest/
+   sample_command.html#fixed-effects-distribution
 
 Wachter and Biegler (2006)
 **************************
@@ -66,6 +68,7 @@ Cole, Chu, and Greenland (2014)
 
 Cole, S.R., Chu, H. and Greenland, S., 2014. Maximum likelihood, profile
 likelihood, and penalized likelihood: a primer. American journal of
-epidemiology, 179(2), pp.252-260. https://doi.org/10.1093/aje/kwt245
+epidemiology, 179(2), pp.252-260.
+``https://doi.org/10.1093/aje/kwt245``
 
 {xrst_end bib}

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import multiprocessing
 import queue
@@ -86,7 +86,7 @@ If this option is true, the csv files will make it more difficult
 to see the tree structure corresponding to the ``dismod.db`` files.
 The default value for this option is false .
 
-.. _db2csv_command: https://dismod-at.readthedocs.io/db2csv_command.html
+.. _db2csv_command: https://dismod-at.readthedocs.io/latest/db2csv_command.html
 
 float_precision
 ---------------
@@ -102,7 +102,7 @@ own plots using the
 :ref:`csv.predict@Output Files@sam_predict.csv` files.
 The dismod_at `plot_curve`_ routine may be helpful in this regard.
 
-.. _plot_curve: https://dismod-at.readthedocs.io/plot_curve.html
+.. _plot_curve: https://dismod-at.readthedocs.io/latest/plot_curve.html
 
 max_number_cpu
 --------------

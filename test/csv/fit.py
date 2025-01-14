@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -249,7 +249,7 @@ def main() :
          assert os.path.exists(file_path)
       #
       # Only (n0, sex) jobs have more than one data point; see n_fit_dict in
-      # https://dismod-at.readthedocs.io/plot_data_fit.html#n-fit-dict
+      # https://dismod-at.readthedocs.io/latest/plot_data_fit.html#n-fit-dict
       if node == 'n0' :
          file_path = f'{fit_dir}/{subdir}/data_plot.pdf'
          assert os.path.exists(file_path)

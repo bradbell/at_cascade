@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.pre_one_job}
@@ -76,7 +76,7 @@ If fit_same_as_predict and db2csv,
 the `db2csv_command`_ is used to generate the csv files
 corresponding to the *pre_database* .
 
-.. _db2csv_command: https://dismod-at.readthedocs.io/db2csv_command.html
+.. _db2csv_command: https://dismod-at.readthedocs.io/latest/db2csv_command.html
 
 plot
 ****
@@ -161,7 +161,7 @@ import copy
 # the `db2csv_command`_ is used to generate the csv files
 # corresponding to the *pre_database* .
 #
-# .. _db2csv_command: https://dismod-at.readthedocs.io/db2csv_command.html
+# .. _db2csv_command: https://dismod-at.readthedocs.io/latest/db2csv_command.html
 #
 # plot
 # ****
