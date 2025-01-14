@@ -15,8 +15,8 @@ set -e -u
 # is used by new_release to skip checking external links.
 # new_release.sh skips this when testng before the remote branch exists.
 # -----------------------------------------------------------------------------
-year='' # Year for this stable version
-release='' # first release for each year starts with 0
+year='2025' # Year for this stable version
+release='0' # first release for each year starts with 0
 # -----------------------------------------------------------------------------
 if [ "$0" != 'bin/new_release.sh' ]
 then
