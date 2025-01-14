@@ -6,6 +6,7 @@
 {xrst_spell
    pypi
    url
+   gz
 }
 
 Cascading Dismod_at Analysis From Parent To Child Regions
@@ -18,6 +19,25 @@ at_cascade-2025.1.14
 Git Repository
 **************
 `<https://github.com/bradbell/at_cascade>`_
+
+Versions
+********
+
+.. list-table::
+   :widths: auto
+
+   * - This version
+     - at_cascade-2025.1.14
+   * - Documentation for latest version
+     - `latest <https://at_cascade.readthedocs.io/latest>`_
+   * - Documentation for most recent stable version
+     - `stable-2025 <https://at_cascade.readthedocs.io/stable-2025>`_
+   * - Most recent release of this stable version
+     - release-2025_
+
+.. _release-2025: https://codeload.github.com/bradbell/
+   at_cascade/tar.gz/refs/tags/2025.0.0
+
 
 Install
 *******
