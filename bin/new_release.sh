@@ -176,13 +176,6 @@ do
       -e "s|archive/[0-9]\{4\}[.]0[.][0-9]*.tar.gz|archive/$tag.tar.gz|"
 done
 #
-# check_version
-# changes to version ?
-if ! bin/check_version.sh
-then
-   echo 'Continuing even thought bin/check_version made changes.'
-fi
-#
 # check_all.sh
 if [ "$skip_main_check_all" == 'no' ]
 then
