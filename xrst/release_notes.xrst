@@ -26,6 +26,27 @@ Release Notes for 2025
 mm-dd
 *****
 
+01-15
+=====
+Start the 2025 stable versions of at_cascade; see the new
+:ref:`at_cascade@Versions` table.
+A release for 2025 has the stable version 2025.0.\ *number*
+where *number* is the release number.
+Only bug fixes, not new features, are added between release numbers.
+
+This change has broken old web links to the at_cascade documentation.
+An old link of the form
+
+| |tab| ``https://at-cascade.readthedocs.io/``\ *html_file_name*
+
+has the following form in the latest documentation:
+
+| |tab| ``https://at-cascade.readthedocs.io/latest/``\ *html_file_name*
+
+and the following for in the 2025 stable documentation:
+
+| |tab| ``https://at-cascade.readthedocs.io/stable-2025/``\ *html_file_name*
+
 01-13
 =====
 #. Add :ref:`csv.fit@Input Files@option_fit.csv@child_prior_std_factor_mulcov`
