@@ -76,8 +76,8 @@ no_copyright_list='
 invisible_and_tab_ok='
 '
 #
-# check_commit
-# These files may have automatic changes that should not be commited.
+# check_git_commit
+# These files may have automatic changes that should not be commited every time.
 # Including them in this list gives the user the option to abort their changes.
-check_commit='
+check_git_commit='
 '

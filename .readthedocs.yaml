@@ -1,3 +1,16 @@
+# {xrst_comment_ch #}
+#
+# Example Read the Docs Configuration
+# ###################################
+#
+# Read the Docs Specification
+# ***************************
+# `<https://docs.readthedocs.com/platform/stable/config-file>`_
+#
+# This Example File
+# *****************
+# {xrst_literal}
+#
 version: 2
 
 build:
@@ -21,8 +34,6 @@ build:
       # build/html
       # This comamnd builds the xrst user documentaiton.
       # Suppress spell warnings because readthdocs uses a different dictionry.
-      # bin/dev_tools.sh assumes that group_list and index_page_name, 
-      # are on their own lines.
       - xrst
          --page_source
          --html_theme furo
