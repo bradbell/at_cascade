@@ -19,6 +19,10 @@ spdx_license_id='AGPL-3.0-or-later'
 # package_name
 package_name='at_cascade'
 #
+# index_page_name
+# is the xrst index page_name for this projects documentaiton.
+index_page_name='at_cascade'
+#
 # version_file_list
 # The possible patterns for a latest version number are:
 #     yyyymmdd or yyyy.month.day

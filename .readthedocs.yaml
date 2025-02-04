@@ -4,6 +4,8 @@ build:
    os: "ubuntu-22.04"
    tools:
       python: "3.10"
+   #
+   # The readthedocs commands feature is still in beta
    commands:
       #
       # xrst
@@ -17,7 +19,10 @@ build:
       - xrst --version
       #
       # build/html
-      # The xsrst html_directory for this configuration is build/html.
+      # This comamnd builds the xrst user documentaiton.
+      # Suppress spell warnings because readthdocs uses a different dictionry.
+      # bin/dev_tools.sh assumes that group_list and index_page_name, 
+      # are on their own lines.
       - xrst
          --page_source
          --html_theme furo
