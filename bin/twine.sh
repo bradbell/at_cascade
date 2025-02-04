@@ -4,6 +4,13 @@ set -e -u
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 # SPDX-FileContributor: 2020-25 Bradley M. Bell
 # -----------------------------------------------------------------------------
+# bin/twine.sh branch_or_tag
+# 1. This program muse be executed from the main or master branch
+# 2. branch_or_tag can be a branch or a tag. If it is a branch, it must be
+#    main or master.
+# 3. If branch_or_tag is a tag, the corresponding version is upladed to pypi.
+#    Otherwise it is uploaded to testpipi.
+# -----------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
    echo $*
