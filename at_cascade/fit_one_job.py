@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin fit_one_job}
@@ -262,6 +262,16 @@ def fit_one_job(
          all_table['split_reference'], 'split_reference', name
       )
    #
+   # max_fit_parent
+   if 'max_fit_parent' not in option_all_dict :
+      max_fit_parent = None
+   else :
+      max_fit_parent = option_all_dict['max_fit_parent']
+      if 'max_fit' not in option_all_dict :
+         msg  = 'max_fit_parent appears in option_all table '
+         msg += 'but max_fit does not.'
+         assert False, msg
+   #
    # balance_fit
    if 'balance_fit' not in option_all_dict :
       balance_fit = None
@@ -328,6 +338,8 @@ def fit_one_job(
             'dismod_at', fit_database,
             'hold_out', integrand_name, max_fit
          ]
+         if max_fit_parent is not None :
+            command += [ max_fit_parent ]
          if balance_fit is not None :
             command += balance_fit
          system_command(command, file_stdout)

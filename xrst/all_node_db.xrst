@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 {xrst_begin_parent all_node_db}
 {xrst_spell
@@ -233,7 +233,8 @@ The subsample of the data with size
 get an equal number of data values for each child of the node
 currently being fit.
 If this option appears,
-it specifies additional balancing that dismod_at should do
+:ref:`option_all_table@max_fit` must appear.
+This option specifies additional balancing that dismod_at should do
 for the randomly selected data subsample.
 It is a space separated list with the following values
 in the following order:
@@ -304,6 +305,17 @@ If the split_reference_id and the node_id for a fit appears in the
 This results in a better representation of the covariate multipliers
 before freezing them for the jobs that will use the value determined
 by this fit.
+
+max_fit_parent
+**************
+If this option appears,
+:ref:`option_all_table@max_fit` must appear.
+This option specifies the maximum number of parent node data
+values for each integrand and *max_fit* only applies to the child node.
+If this option does not appear,
+*max_fit* applies to all the data that is include for a fit.
+Note that data corresponding to the parent node
+will not be used when fitting any of its descendants.
 
 max_number_cpu
 **************

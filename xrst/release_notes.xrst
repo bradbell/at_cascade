@@ -26,6 +26,12 @@ Release Notes for 2025
 mm-dd
 *****
 
+02-06
+=====
+Add the *max_fit_parent* option to the
+:ref:`option_all table<option_all_table@max_fit_parent>` and the
+:ref:`option_fit.csv file<csv.fit@Input Files@option_fit.csv@max_fit_parent>` .
+
 01-15
 =====
 Start the 2025 stable versions of at_cascade; see the new

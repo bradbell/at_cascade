@@ -254,6 +254,16 @@ This is because the sex covariate multiplier is frozen after the both fit
 and the other covariate multipliers are frozen of the female and male fits.
 The default value for *max_fit* is 250.
 
+max_fit_parent
+--------------
+If this integer is greater than or equal zero,
+*max_fit* only applies to the child data for a fit,
+and *max_fit_parent* is the maximum number of data values for the parent.
+The default value for *max_fit_parent* is minus one in which case
+*max_fit* only applies to the all the data for a fit.
+Note that data corresponding to the parent node
+will not be used when fitting any of its descendants.
+
 max_num_iter_fixed
 ------------------
 This integer is the maximum number of Ipopt iterations to try before
@@ -1057,6 +1067,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'hold_out_integrand'            : (str,   None)               ,
       'max_abs_effect'                : (float, 2.0)                ,
       'max_fit'                       : (int,   250)                ,
+      'max_fit_parent'                : (int,   -1)                 ,
       'max_num_iter_fixed'            : (int,   100)                ,
       'max_number_cpu'                : (int,   max_number_cpu)     ,
       'minimum_meas_cv'               : (float, 0.0)                ,
@@ -1815,6 +1826,7 @@ def create_all_node_database(
    absolute_covariates    = global_option_value['absolute_covariates']
    number_sample          = global_option_value['number_sample']
    balance_sex            = global_option_value['balance_sex']
+   max_fit_parent         = global_option_value['max_fit_parent']
    no_ode_ignore          = global_option_value['no_ode_ignore']
    #
    refit_split            = global_option_value['refit_split']
@@ -1851,6 +1863,8 @@ def create_all_node_database(
       'split_covariate_name'           : 'sex',
    }
    # END_SORT_THIS_LINE_MINUS_2
+   if max_fit_parent >= 0 :
+      option_all['max_fit_parent'] = max_fit_parent
    if balance_sex :
       option_all['balance_fit'] = 'sex -0.5 +0.5'
    if no_ode_ignore != None :
