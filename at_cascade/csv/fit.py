@@ -1365,7 +1365,7 @@ def create_root_database(fit_dir) :
       { 'name' : 'rate_case'          , 'value' : ode_method                },
    ]
    if bound_random != float('inf') :
-      option_table['bound_random'] = bound_random
+      option_table.append({'name': 'bound_random', 'value': bound_random})
    #
    # spline_cov
    age_grid, time_grid, spline_cov = at_cascade.csv.covariate_spline(
