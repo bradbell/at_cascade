@@ -1243,6 +1243,10 @@ def create_root_database(fit_dir) :
       at_cascade.csv.check_table(file_name, input_table[name])
    print('begin creating root node database' )
    #
+   # data_in_header
+   file_name      = f'{fit_dir}/data_in.csv'
+   data_in_header = at_cascade.csv.get_header(file_name)
+   #
    # node_set
    node_set       = set()
    for row in input_table['node'] :
@@ -1308,7 +1312,7 @@ def create_root_database(fit_dir) :
          root_covariate_ref[covariate_name] = 0.0
    #
    # forbidden_covariate
-   forbidden_covariate = set( input_table['data_in'][0].keys() )
+   forbidden_covariate = set( data_in_header )
    forbidden_covariate.add( "one" )
    for covariate_name in covariate_list :
       if covariate_name in forbidden_covariate :
@@ -1450,32 +1454,31 @@ def create_root_database(fit_dir) :
             if row[key] != None :
                row[key] = float( row[key] )
    #
-   # min_data_age,  max_data_age
-   # min_data_time, max_data_time
-   min_data_age  = data_table[0]['age_lower']
-   max_data_age  = data_table[0]['age_upper']
-   min_data_time = data_table[0]['time_lower']
-   max_data_time = data_table[0]['time_upper']
-   for row in data_table :
-      min_data_age  = min( min_data_age, row['age_lower'] )
-      max_data_age  = max( max_data_age, row['age_upper'] )
-      min_data_time = min( min_data_time, row['time_lower'] )
-      max_data_time = max( max_data_time, row['time_upper'] )
-   #
-   # age_list
-   age_set = set( age_grid )
-   age_set.add(min_data_age)
-   age_set.add(max_data_age)
+   # age_set, time_set
+   age_set  = set( age_grid )
+   time_set = set( time_grid )
    for row in input_table['parent_rate'] :
       age_set.add( float( row['age'] ) )
-   age_list = sorted( list( age_set ) )
-   #
-   # time_list
-   time_set = set( time_grid )
-   time_set.add(min_data_time)
-   time_set.add(max_data_time)
-   for row in input_table['parent_rate'] :
       time_set.add( float( row['time'] ) )
+   #
+   # age_set, time_set
+   if len( data_table ) > 0 :
+      min_data_age  = data_table[0]['age_lower']
+      max_data_age  = data_table[0]['age_upper']
+      min_data_time = data_table[0]['time_lower']
+      max_data_time = data_table[0]['time_upper']
+      for row in data_table :
+         min_data_age  = min( min_data_age, row['age_lower'] )
+         max_data_age  = max( max_data_age, row['age_upper'] )
+         min_data_time = min( min_data_time, row['time_lower'] )
+         max_data_time = max( max_data_time, row['time_upper'] )
+      age_set.add(min_data_age)
+      age_set.add(max_data_age)
+      time_set.add(min_data_time)
+      time_set.add(max_data_time)
+   #
+   # arg_list, time_list
+   age_list  = sorted( list( age_set ) )
    time_list = sorted( list( time_set ) )
    #
    # node_table, node_set

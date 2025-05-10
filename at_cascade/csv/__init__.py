@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.module}
@@ -113,6 +113,7 @@ Routines
    at_cascade/csv/covariate_spline.py
    at_cascade/csv/empty_str.py
    at_cascade/csv/fit.py
+   at_cascade/csv/get_header.py
    at_cascade/csv/join_file.py
    at_cascade/csv/pre_one_job.py
    at_cascade/csv/pre_one_process.py
@@ -137,6 +138,7 @@ from .covariate_same   import covariate_same
 from .covariate_spline import covariate_spline
 from .empty_str        import empty_str
 from .fit              import fit
+from .get_header       import get_header
 from .join_file        import join_file
 from .pre_one_job      import pre_one_job
 from .pre_one_process  import pre_one_process

@@ -32,6 +32,8 @@ run_job_id
 **********
 This is the :ref:`create_job_table@job_table@job_id`
 for the job that is run.
+If *run_job_id* is zero, this job has no ancestors.
+This is a special case for :ref:`fit_one_job@fit_database@fit_var`
 
 all_node_database
 *****************
@@ -82,6 +84,11 @@ fit_var
 =======
 Upon return, the fit_var table correspond to the posterior
 mean for the model variables for the fit_node.
+If :ref:`fit_one_job@run_job_id` is not zero
+and there is no data corresponding to this fit,
+the fit is not done because an ancestor job can be used to predict for this job.
+In this case a no data abort message will appear in the
+:ref:`fit_one_job@fit_database@log` table.
 
 sample
 ======
@@ -377,10 +384,11 @@ def fit_one_job(
    #
    # fit_node_datase.log_table
    # if fit has no data, abort with 'fit: error: no data abort' in log_table
+   # ( unless this fit has no ancestors; i.e., run_job_id == 0 ).
    data_include_table = at_cascade.data_include(
       fit_database, root_database
    )
-   if len( data_include_table )  == 0 :
+   if len( data_include_table )  == 0 and run_job_id > 0:
       msg        = 'no data: abort'
       connection = dismod_at.create_connection(
          fit_database, new = False, readonly = False

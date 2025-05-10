@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import csv
 r"""
@@ -29,6 +29,8 @@ This is a ``list`` of ``str`` specifying the keys in the table dictionary
 that are written to the file.
 If this argument is ``None`` ,
 *table* [0].keys() is used as its default value.
+If :ref:`csv.read_table-name` returns am empty table,
+:ref:`csv.get_header-name` can be used to determine the column names.
 
 file_name
 *********

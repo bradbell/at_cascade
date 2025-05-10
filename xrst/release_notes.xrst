@@ -26,6 +26,17 @@ Release Notes for 2025
 mm-dd
 *****
 
+05-10
+=====
+The special case where there is no data at the root (node, sex) pair
+used to cause at_cascade to abort.
+This has been changed so that the no data case can be used to
+better understand how the priors work; see :ref:`csv.no_data-name` .
+Note the this requires a special case when
+:ref:`fit_one_job@run_job_id` is zero.
+
+
+
 02-06
 =====
 Add the *max_fit_parent* option to the
