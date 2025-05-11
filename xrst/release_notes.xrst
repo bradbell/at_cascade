@@ -26,6 +26,12 @@ Release Notes for 2025
 mm-dd
 *****
 
+05-11
+=====
+Add discussion of the
+:ref:`csv.no_data@Negative Log Likelihood` and the how it
+relates to the :ref:`csv.fit@Output Files@sam_predict.csv` file.
+
 05-10
 =====
 The special case where there is no data at the root (node, sex) pair

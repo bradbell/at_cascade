@@ -5,7 +5,7 @@
 import os
 import sys
 import time
-import math
+import numpy
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
@@ -14,6 +14,7 @@ import at_cascade
 """
 {xrst_begin csv.no_data}
 {xrst_spell
+  diota
   const
   dage
   delim
@@ -48,20 +49,25 @@ n0,
 option_fit.csv
 **************
 This example uses the default value for the options that are not
-listed below:
+listed below.
+The number of samples is huge so that the sample covariance
+is close to the true covariance (for testing).
 
 .. csv-table::
    :header: Name, Value
    :delim: |
 
-   random_seed| chosen using current seconds reported by python time package.
-   tolerance_fixed| this is set small, 1e-8, so we can check accuracy.
+   tolerance_fixed | this is set small, 1e-8, so we can check accuracy.
+   random_seed | chosen using current seconds reported by python time package.
+   number_sample | The number of samples of the posterior for each fit
 
 {xrst_code py}"""
 random_seed    = str( int( time.time() ) )
+number_sample  = 10000
 csv_file['option_fit.csv']  = 'name,value\n'
+csv_file['option_fit.csv'] += 'tolerance_fixed,1e-8\n'
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
-csv_file['option_fit.csv'] += f'tolerance_fixed,1e-8\n'
+csv_file['option_fit.csv'] += f'number_sample,{number_sample}\n'
 """{xrst_code}
 
 option_predict.csv
@@ -88,7 +94,7 @@ n0,male,100,2000,0.02
 
 fit_goal.csv
 ************
-This example only fits node n0.
+This example only fits the root node n0.
 {xrst_code py}"""
 csv_file['fit_goal.csv'] = \
 '''node_name
@@ -114,6 +120,20 @@ This is the mean value of iota in the gauss_eps_1 prior:
 iota_mean = 0.01
 """{xrst_code}
 
+iota_std
+********
+This is the standard deviation value of iota in the gauss_eps_1 prior:
+{xrst_code py}"""
+iota_std = 0.1
+"""{xrst_code}
+
+diota_std
+*********
+This is the standard deviation of the iota age difference in gauss_0d prior:
+{xrst_code py}"""
+diota_std = 0.2
+"""{xrst_code}
+
 prior.csv
 *********
 We define three priors:
@@ -122,14 +142,14 @@ We define three priors:
    :widths: auto
    :delim: ;
 
-   gauss_01;    a Gaussian with mean 0 standard deviation 1
-   gauss_eps_1; a Gaussian with lower eps, upper 1, mean iota_mean, and std .1
+   gauss_eps_1; a Gaussian with lower eps, upper 1, iota_mean, iota_std
+   gauss_0_d;    a Gaussian with mean 0 standard deviation diota_std
 
 {xrst_code py}"""
 csv_file['prior.csv'] = \
    'name,lower,upper,mean,std,density\n' \
-   f'gauss_eps_1,1e-6,1.0,{iota_mean},0.1,gaussian\n' \
-   'gauss_01,,,0.0,1.0,gaussian\n'
+   f'gauss_eps_1,1e-6,1.0,{iota_mean},{iota_std},gaussian\n' \
+   f'gauss_0_d,,,0.0,{diota_std},gaussian\n'
 """{xrst_code}
 
 parent_rate.csv
@@ -137,14 +157,14 @@ parent_rate.csv
 The only non-zero rates are omega and iota
 (omega is known and specified by the covariate.csv file).
 The model for iota is linear w.r.t age and constant w.r.t. time.
-Its value prior is gauss_eps_1 and its dage prior is gauss_01.
+Its value prior is gauss_eps_1 and its dage prior is gauss_0_d.
 It does not have any dtime priors because
 there are no time differences between grid values.
 {xrst_code py}"""
 csv_file['parent_rate.csv'] = \
 '''rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value
-iota,0.0,2000,gauss_eps_1,gauss_01,,
-iota,100.0,2000,gauss_eps_1,gauss_01,,
+iota,0.0,2000,gauss_eps_1,gauss_0_d,,
+iota,100.0,2000,gauss_eps_1,gauss_0_d,,
 '''
 """{xrst_code}
 
@@ -174,7 +194,119 @@ header  = 'data_id, integrand_name, node_name, sex, age_lower, age_upper, '
 header += 'time_lower, time_upper, meas_value, meas_std, hold_out, '
 header += 'density_name, eta, nu'
 csv_file['data_in.csv'] = header + '\n'
-"""{xrst_code}
+r"""{xrst_code}
+
+Negative Log Likelihood
+***********************
+The standard deviation in the difference prior above is one.
+Consider the root job; i.e., the fit for node n0 and both sexes.
+Two times the negative log likelihood for this example :math:`2 L(x)` is:
+
+.. math::
+
+   2 L( x ) =
+      - \log( 2 \pi d^2 )
+      + \left( \frac{ x_1 - x_0 }{ d } \right)^2
+      + \sum_{j=0}^1
+         - \log( 2 \pi \sigma^2 )
+         + \left( \frac{ x_j - \bar{\iota} }{ \sigma } \right)^2
+
+where
+:math:`x_0` is iota at age 0,
+:math:`x_1` is iota at age 100,
+:math:`\bar{\iota}` is *iota_mean* ,
+:math:`\sigma` is *iota_std* ,
+:math:`d` is *diota_std* ,
+
+Gradient
+========
+The partial of :math:`L(x)` with respect to :math:`x_j` is:
+
+.. math::
+
+   \frac{ \partial L(x)} { \partial x_j } =
+      \frac{x_j - x_{1-j}}{ d^2 }  + \frac{ x_j - \bar{\iota} }{ \sigma^2 }
+
+Hessian
+=======
+The second partial of :math:`L(x)` with respect to :math:`x_j` is:
+
+.. math::
+
+   \frac{ \partial^2 L(x)} { \partial x_j^2 } = d^{-2} + \sigma^{-2}
+
+The cross partial with respect to :math:`x_0` and :math:`x_1` is:
+
+.. math::
+
+   \frac{ \partial^2 L(x)} { \partial x_0 \partial x_1 } = - d^{-2}
+
+The Hessian of :math:`L(x)` is:
+
+.. math::
+
+   H & =
+   \begin{bmatrix}
+   d^{-2} + \sigma^{-2} & -d^{-2} \\
+   -d^{-2}              & d^{-2} + \sigma^{-2}
+   \end{bmatrix}
+   \\
+   H & =
+   d^{-2} \begin{bmatrix}
+   1 + ( d / \sigma )^2    & - 1 \\
+   - 1                     & 1 + ( d / \sigma )^2
+   \end{bmatrix}
+
+The determinant of :math:`d^2 H` is:
+
+.. math::
+
+   \det(d^2 H )  = 2 ( d / \sigma )^2    + ( d / \sigma )^4
+
+The inverse of :math:`d^2 H` is:
+
+.. math::
+
+   d^{-2} H^{-1} & =
+      \frac{1}{ 2 ( d / \sigma )^2    + ( d / \sigma )^4    }
+      \begin{bmatrix}
+      1 + ( d / \sigma )^2    & 1 \\
+      1                     & 1 + ( d / \sigma )^2
+      \end{bmatrix}
+   \\
+   d^{-2} H^{-1} & =
+      \frac{ ( d / \sigma )^2    }{ 2  + ( d / \sigma )^2    }
+      \begin{bmatrix}
+      1 + ( d / \sigma )^2    & 1 \\
+      1                     & 1 + ( d / \sigma )^2
+      \end{bmatrix}
+
+It follows that:
+
+.. math::
+
+   H^{-1} & =
+      \frac{ \sigma^{-2} }{ 2  + ( d / \sigma )^2    }
+      \begin{bmatrix}
+      1 + ( d / \sigma )^2    & 1 \\
+      1                     & 1 + ( d / \sigma )^2
+      \end{bmatrix}
+   \\
+   H^{-1} & =
+      \frac{ \sigma^{-2} }{ 2 ( \sigma / d )^{-2}  + 1    }
+      \begin{bmatrix}
+       ( \sigma / d )^{-2}  + 1 & ( \sigma / d )^{-2}  \\
+      ( \sigma / d )^{-2}   & ( \sigma / d )^{-2} + 1
+      \end{bmatrix}
+
+Covariance of sam_predict.csv
+=============================
+The covariance of the samples in o
+:ref:`csv.fit@Output Files@sam_predict.csv` is equal to
+:math:`H^{-1}` .
+Note that as :math:`\sigma / d` (i.e. *iota_std* / *diota_std* ) gets small,
+the variance of the estimates for iota
+gets close to :math:`\sigma^2` (i.e., the square of *iota_std* ) .
 
 Source Code
 ***********
@@ -186,12 +318,6 @@ Source Code
 {xrst_end csv.no_data}
 """
 # BEGIN_PROGRAM
-#
-# prior calculator
-def calculate_prior_from_vals(x_0, x_1, v_0, v_1, d_0):
-   return -math.log(
-      0.5 * (x_0 - v_0)**2 + 0.5 * (x_1 - v_1)**2 + 0.5 * (x_0 - x_1 - d_0)**2
-   )
 #
 # main
 def main() :
@@ -213,17 +339,62 @@ def main() :
    # predict
    at_cascade.csv.predict(fit_dir)
    #
-   # predict_table
-   file_name = f'{fit_dir}/fit_predict.csv'
-   predict_table = at_cascade.csv.read_table(file_name)
+   # fit_predict
+   # 3 sexes, 2 ages
+   file_name   = f'{fit_dir}/fit_predict.csv'
+   fit_predict = at_cascade.csv.read_table(file_name)
+   assert len( fit_predict ) == 3 * 2
    #
    # row
-   for row in predict_table :
+   for row in fit_predict :
+      # Sincidence is the only integerand in predict_integrand.csv
       assert row['integrand_name'] == 'Sincidence'
+      # n0 is the only node in fit_goal.csv and it has no ancestors
       assert row['node_name'] == 'n0'
+      # Since there is no data, only the root job (n0, both) is fit
+      assert row['fit_sex'] == 'both'
+      # Predictions are made for all sexes
+      assert row['sex'] in [ 'female', 'male', 'both' ]
+      # There are two age values in covariate.csv
+      assert float(row['age']) in [ 0.0, 100.0 ]
+      # There is only on time value in covariate.csv
+      assert float(row['time']) == 2000.0
+      #
+      # rel_error
       iota      = float( row['avg_integrand'] )
       rel_error = 1.0 - iota / iota_mean
       assert abs( rel_error ) < 1e-8
+   #
+   # sam_predict
+   # 3 sexes, 2 ages, number_sample samples
+   file_name   = f'{fit_dir}/sam_predict.csv'
+   sam_predict = at_cascade.csv.read_table(file_name)
+   assert len( sam_predict ) == 3 * 2 * number_sample
+   #
+   # sample_array
+   age2variable_index = { 0.0 : 0, 100.0 : 1 }
+   sample_array    = numpy.empty( (number_sample, 2) )
+   sample_array[:] = numpy.nan
+   for row in sam_predict :
+      if row['sex'] == 'both' :
+         iota           = float( row['avg_integrand'] )
+         sample_index   = int( row['sample_index'] )
+         age            = float( row['age'] )
+         variable_index = age2variable_index[age]
+         sample_array[sample_index , variable_index]  = iota
+   #
+   # sample_cov
+   sample_cov = numpy.cov( sample_array , rowvar = False )
+   #
+   # Hinv
+   d2    = 1.0 / ( diota_std * diota_std )
+   s2    = 1.0 / ( iota_std * iota_std )
+   H     = [ [ d2 + s2 , - d2 ], [ - d2 , d2 + s2 ] ]
+   H     = numpy.array(H)
+   Hinv  = numpy.linalg.inv(H)
+   #
+   rel_error = (Hinv - sample_cov) / Hinv
+   assert numpy.max( numpy.abs( rel_error ) ) < 0.1
 #
 #
 if __name__ == '__main__' :
