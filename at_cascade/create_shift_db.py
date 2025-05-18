@@ -1,13 +1,15 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
-'''
+r'''
 {xrst_begin create_shift_db}
 {xrst_spell
   dage
   dtime
   var
+  std
+  delim
 }
 
 Create Database With Shifted Covariate References
@@ -19,6 +21,84 @@ Prototype
    # BEGIN_DEF
    # END_DEF
 }
+
+Theory
+******
+For this discussion we start our indexing at one
+(recall that python starts its indexing at zero).
+Suppose that there is only on rate; e.g. iota,
+no data, and all the priors are Gaussian.
+We use the following notation for the rate's prior:
+
+.. csv-table::
+   :header-rows: 1
+   :delim: ;
+
+   Notation; Meaning
+   :math:`r_{i,j}` ; value of the rate at the i-th age and j-th time
+   :math:`N`       ; number of age points in the rate grid
+   :math:`M`       ; number of time points in the rate grid
+   :math:`m_v`     ; mean for the rate values
+   :math:`m_a`     ; mean for the rate age differences
+   :math:`m_t`     ; mean for the rate time values
+   :math:`s_v`     ; standard deviation (std) of the value prior for the rate
+   :math:`s_a`     ; std of the age difference prior for the rate
+   :math:`s_t`     ; std of the time difference prior for the rate
+   :math:`L(r)`    ; the negative log-likelihood
+
+Note that the means and standard deviations actually depend on
+the age and time indices (i,j).
+We have dropped these indices because they can be inferred from the (i,j)
+indices of :math:`r` .
+
+.. math::
+
+   2 L(r) = &
+      + \sum_{i,j}
+      \left( \frac{ r_{i,j} - m_v } { s_v } \right)^2
+      - \log ( 2 \pi s_v^2 )
+   \\ &
+      + \sum_{i < N , j}
+      \left( \frac{ r_{i+1,j} - r_{i,j} - m_a } { s_a } \right)^2
+      - \log ( 2 \pi s_a^2 )
+   \\ &
+      + \sum_{i, j < M}
+      \left( \frac{ r_{i,j+1} - r_{i,j} - m_t } { s_t } \right)^2
+      - \log ( 2 \pi s_t^2 )
+
+The partial of :math:`L(r)` with respect to :math:`r_{N,M}` is
+
+.. math::
+
+   \frac{ \partial L}{\partial r_{N,M}}
+   =
+   \frac{ r_{N,M} - m_v } { s_v^2 }
+   +
+   \frac{ r_{N,M} - r_{N-1,M} - m_a } { s_a^2 }
+   +
+   \frac{ r_{N,M} - r_{N,M-1} - m_t } { s_t^2 }
+
+The second partial of :math:`L(r)` with respect to :math:`r_{N,M}` is
+
+.. math::
+
+   \frac{ \partial^2 L}{\partial r_{N,M} \partial r_{N,M} }
+   =
+   s_v^{-2} + s_a^{-2} + s_t^{-2}
+
+The inverse of the Hessian is the covariance matrix for the
+estimate of :math:`r` .
+Suppose that we want the standard deviation for :math:`r_{N,M}` to be
+:math:`\sigma` .
+If we approximation the diagonal of the inverse buy the inverse
+of the diagonal, it follows that
+
+.. math::
+
+   \sigma^2    & = \left( s_v^{-2} + s_a^{-2} + s_t^{-2} \right)^{-1}
+   \\
+   \sigma^{-2} & =  s_v^{-2} + s_a^{-2} + s_t^{-2}
+
 
 all_node_database
 *****************

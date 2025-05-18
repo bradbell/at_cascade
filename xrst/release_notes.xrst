@@ -26,6 +26,12 @@ Release Notes for 2025
 mm-dd
 *****
 
+05-18
+=====
+Add a discussion child job shifted priors under
+:ref:`create_shift_db@Theory` in the
+:ref:`create_shift_db-title` section
+
 05-11
 =====
 Add discussion of the
