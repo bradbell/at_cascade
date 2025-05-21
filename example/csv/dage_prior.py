@@ -12,21 +12,21 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 """
-{xrst_begin csv.no_data}
+{xrst_begin csv.dage_prior}
 {xrst_spell
   diota
   const
-  dage
   delim
   dtime
   eps
   meas
   sincidence
   std
+  mtexcess
 }
 
-Use a No Data Example to Understand Priors
-##########################################
+Remove dage Priors From Child Jobs
+##################################
 
 csv_file
 ********
@@ -50,12 +50,12 @@ option_fit.csv
 **************
 This example uses the default value for the options that are not
 listed below.
-For example, refit_split is true so that we get predictions for
-the female / male split at node n0.
-(The separate female / male fits will abort because there is no data
-for either of these cases and they are not the root job case.)
 The number of samples is huge so that the sample covariance
 is close to the true covariance (for testing).
+The *child_prior_std_factor* is one
+and the *child_prior_dage* is false,
+so that the child job iota variables have the same standard deviations
+as for the parent job.
 
 .. csv-table::
    :header: Name, Value
@@ -63,7 +63,9 @@ is close to the true covariance (for testing).
 
    tolerance_fixed | this is set small, 1e-8, so we can check accuracy.
    random_seed | chosen using current seconds reported by python time package.
-   number_sample | The number of samples of the posterior for each fit
+   number_sample | is the number of samples of the posterior for each fit.
+   child_prior_dage | is false so there are no dage priors in child jobs.
+   child_prior_std_factor | is one so child job has same std.
 
 {xrst_code py}"""
 random_seed    = str( int( time.time() ) )
@@ -72,6 +74,8 @@ csv_file['option_fit.csv']  = 'name,value\n'
 csv_file['option_fit.csv'] += 'tolerance_fixed,1e-8\n'
 csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 csv_file['option_fit.csv'] += f'number_sample,{number_sample}\n'
+csv_file['option_fit.csv'] += 'child_prior_dage,false\n'
+csv_file['option_fit.csv'] += 'child_prior_std_factor,1.0\n'
 """{xrst_code}
 
 option_predict.csv
@@ -135,7 +139,7 @@ diota_std
 *********
 This is the standard deviation of the iota age difference in gauss_0d prior:
 {xrst_code py}"""
-diota_std = 0.2
+diota_std = 0.01
 """{xrst_code}
 
 prior.csv
@@ -174,7 +178,7 @@ iota,100.0,2000,gauss_eps_1,gauss_0_d,,
 
 child_rate.csv
 **************
-The are no children (hence no random effects) in this example.
+The are no child nodes (hence no random effects) in this example.
 {xrst_code py}"""
 csv_file['child_rate.csv'] = \
 '''rate_name,value_prior
@@ -192,12 +196,20 @@ csv_file['mulcov.csv'] = \
 
 data_in.csv
 ***********
-There is no data in this example
+There is one data point for each sex so that the child jobs get fit
+(otherwise the child fit jobs would abort).
+The data for are a direct measurement of chi (mtexcess)
+so it will not affect the value of iota in the fit.
 {xrst_code py}"""
 header  = 'data_id,integrand_name,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,meas_value,meas_std,hold_out,'
 header += 'density_name,eta,nu'
-csv_file['data_in.csv'] = header + '\n'
+csv_file['data_in.csv']  = header +  \
+'''
+0,mtexcess,n0,female,50,50,2000,2000,0.01,0.01,0,gaussian,,
+1,mtexcess,n0,male,50,50,2000,2000,0.01,0.01,0,gaussian,,
+'''
+
 r"""{xrst_code}
 
 Negative Log Likelihood
@@ -319,7 +331,7 @@ Source Code
    END_PROGRAM
 }
 
-{xrst_end csv.no_data}
+{xrst_end csv.dage_prior}
 """
 # BEGIN_PROGRAM
 #
@@ -344,10 +356,12 @@ def main() :
    at_cascade.csv.predict(fit_dir)
    #
    # fit_predict
-   # 3 sexes, 2 ages
+   # fit_sex == both:   3 sexes, 2 ages
+   # fit_sex == female: 1 sex,   2 ages
+   # fit_sex == male:   1 sex,   2 ages
    file_name   = f'{fit_dir}/fit_predict.csv'
    fit_predict = at_cascade.csv.read_table(file_name)
-   assert len( fit_predict ) == 3 * 2
+   assert len( fit_predict ) == 5 * 2
    #
    # row
    for row in fit_predict :
@@ -356,7 +370,7 @@ def main() :
       # n0 is the only node in fit_goal.csv and it has no ancestors
       assert row['node_name'] == 'n0'
       # Since there is no data, only the root job (n0, both) is fit
-      assert row['fit_sex'] == 'both'
+      assert row['fit_sex'] in [ 'female', 'male', 'both' ]
       # Predictions are made for all sexes
       assert row['sex'] in [ 'female', 'male', 'both' ]
       # There are two age values in covariate.csv
@@ -375,21 +389,6 @@ def main() :
    sam_predict = at_cascade.csv.read_table(file_name)
    assert len( sam_predict ) == len( fit_predict ) * number_sample
    #
-   # sample_array
-   age2variable_index = { 0.0 : 0, 100.0 : 1 }
-   sample_array    = numpy.empty( (number_sample, 2) )
-   sample_array[:] = numpy.nan
-   for row in sam_predict :
-      if row['sex'] == 'both' :
-         iota           = float( row['avg_integrand'] )
-         sample_index   = int( row['sample_index'] )
-         age            = float( row['age'] )
-         variable_index = age2variable_index[age]
-         sample_array[sample_index , variable_index]  = iota
-   #
-   # sample_cov
-   sample_cov = numpy.cov( sample_array , rowvar = False )
-   #
    # Hinv
    d2    = 1.0 / ( diota_std * diota_std )
    s2    = 1.0 / ( iota_std * iota_std )
@@ -397,8 +396,30 @@ def main() :
    H     = numpy.array(H)
    Hinv  = numpy.linalg.inv(H)
    #
-   rel_error = (Hinv - sample_cov) / Hinv
-   assert numpy.max( numpy.abs( rel_error ) ) < 0.1
+   # sex
+   for sex in [ 'female', 'male' ] :
+      #
+      # sample_cov
+      sample_cov = dict()
+      for fit_sex in [ 'both', sex ] :
+         #
+         # sample_array
+         age2variable_index = { 0.0 : 0, 100.0 : 1 }
+         sample_array    = numpy.empty( (number_sample, 2) )
+         sample_array[:] = numpy.nan
+         for row in sam_predict :
+            if row['sex'] == sex and row['fit_sex'] == fit_sex :
+               iota           = float( row['avg_integrand'] )
+               sample_index   = int( row['sample_index'] )
+               age            = float( row['age'] )
+               variable_index = age2variable_index[age]
+               sample_array[sample_index , variable_index]  = iota
+         #
+         # sample_cov
+         sample_cov[fit_sex] = numpy.cov( sample_array , rowvar = False )
+      #
+      rel_error = 1.0 - sample_cov[sex] / sample_cov['both']
+      assert numpy.max( numpy.abs( rel_error ) ) < 0.1
 #
 #
 if __name__ == '__main__' :

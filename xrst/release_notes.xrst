@@ -23,6 +23,20 @@ Release Notes for 2025
 ######################
 
 
+Changes on prior Branch
+***********************
+#. Add the
+   :ref:`csv.fit@Input Files@option_fit.csv@child_prior_dage` and
+   :ref:`csv.fit@Input Files@option_fit.csv@child_prior_dtime` options to
+   the csv interface; for example, see :ref:`csv.dage_prior-name` .
+   This also added the :ref:`option_all_table@shift_prior_dage` and
+   :ref:`option_all_table@shift_prior_dtime` options in the option all table.
+
+#. Remove white space from the header in the
+   :ref:`csv.no_data@data_in.csv` file in the no_data.py example.
+   Also improve the discussion of the
+   :ref:`csv.no_data@option_fit.csv` file for this example.
+
 mm-dd
 *****
 

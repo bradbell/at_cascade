@@ -333,6 +333,8 @@ def add_shift_grid_row(
    shift_node_id,
    shift_split_reference_id,
    shift_prior_std_factor,
+   shift_prior_dage,
+   shift_prior_dtime,
    freeze,
    copy_row,
    age_id_next,
@@ -446,45 +448,51 @@ def add_shift_grid_row(
    # -----------------------------------------------------------------------
    # dage_prior
    # -----------------------------------------------------------------------
-   fit_prior_id       = fit_grid_row['dage_prior_id']
-   if fit_prior_id == None :
-      shift_dage_prior_id= None
+   if not shift_prior_dage :
+      shift_dage_prior_id = None
    else :
-      fit_prior_row      = fit_table['prior'][fit_prior_id]
-      shift_prior_row    = copy.copy( fit_prior_row )
-      if dage_fit_var is not None :
-         mean = dage_fit_var
-         if shift_prior_row['lower'] != None :
-            if mean < shift_prior_row['lower']  :
-               mean = shift_prior_row['lower']
-         if shift_prior_row['upper'] != None :
-            if shift_prior_row['lower'] < mean :
-               mean = shift_prior_row['upper']
-         shift_prior_row['mean'] = mean
-      shift_dage_prior_id  = len( shift_table['prior'] )
-      shift_table['prior'].append( shift_prior_row )
-      add_index_to_name( shift_table['prior'], 'prior_name' )
+      fit_prior_id       = fit_grid_row['dage_prior_id']
+      if fit_prior_id == None :
+         shift_dage_prior_id = None
+      else :
+         fit_prior_row      = fit_table['prior'][fit_prior_id]
+         shift_prior_row    = copy.copy( fit_prior_row )
+         if dage_fit_var is not None :
+            mean = dage_fit_var
+            if shift_prior_row['lower'] != None :
+               if mean < shift_prior_row['lower']  :
+                  mean = shift_prior_row['lower']
+            if shift_prior_row['upper'] != None :
+               if shift_prior_row['lower'] < mean :
+                  mean = shift_prior_row['upper']
+            shift_prior_row['mean'] = mean
+         shift_dage_prior_id  = len( shift_table['prior'] )
+         shift_table['prior'].append( shift_prior_row )
+         add_index_to_name( shift_table['prior'], 'prior_name' )
    # -----------------------------------------------------------------------
    # dtime_prior
    # -----------------------------------------------------------------------
-   fit_prior_id       = fit_grid_row['dtime_prior_id']
-   if fit_prior_id == None :
-      shift_dtime_prior_id= None
+   if not shift_prior_dtime :
+      shift_dtime_prior_id = None
    else :
-      fit_prior_row       = fit_table['prior'][fit_prior_id]
-      shift_prior_row       = copy.copy( fit_prior_row )
-      shift_dtime_prior_id  = len( shift_table['prior'] )
-      if dtime_fit_var is not None :
-         mean = dtime_fit_var
-         if shift_prior_row['lower'] != None :
-            if mean < shift_prior_row['lower']  :
-               mean = shift_prior_row['lower']
-         if shift_prior_row['upper'] != None :
-            if shift_prior_row['lower'] < mean :
-               mean = shift_prior_row['upper']
-         shift_prior_row['mean'] = mean
-      shift_table['prior'].append( shift_prior_row )
-      add_index_to_name( shift_table['prior'], 'prior_name' )
+      fit_prior_id       = fit_grid_row['dtime_prior_id']
+      if fit_prior_id == None :
+         shift_dtime_prior_id = None
+      else :
+         fit_prior_row       = fit_table['prior'][fit_prior_id]
+         shift_prior_row       = copy.copy( fit_prior_row )
+         shift_dtime_prior_id  = len( shift_table['prior'] )
+         if dtime_fit_var is not None :
+            mean = dtime_fit_var
+            if shift_prior_row['lower'] != None :
+               if mean < shift_prior_row['lower']  :
+                  mean = shift_prior_row['lower']
+            if shift_prior_row['upper'] != None :
+               if shift_prior_row['lower'] < mean :
+                  mean = shift_prior_row['upper']
+            shift_prior_row['mean'] = mean
+         shift_table['prior'].append( shift_prior_row )
+         add_index_to_name( shift_table['prior'], 'prior_name' )
    # -----------------------------------------------------------------------
    # shift_grid_row
    shift_grid_row = copy.copy( fit_grid_row )
@@ -540,11 +548,27 @@ def create_shift_db(
          root_database      = row['option_value']
    assert root_database != None
    #
-   # shift_prior_std_factor
+   # shift_prior_std_factor, shift_prior_dage, shift_prior_dtime
    shift_prior_std_factor = 1.0
+   shift_prior_dage       = True
+   shift_prior_dtime      = True
    for row in all_table['option_all'] :
       if row['option_name'] == 'shift_prior_std_factor' :
          shift_prior_std_factor = float( row['option_value'] )
+      if row['option_name'] == 'shift_prior_dage' :
+         shift_prior_dage = row['option_value'].strip()
+         if shift_prior_dage not in [ 'true', 'false' ] :
+            msg  = f'option_all table: shift_prior_dage = {shift_prior_dage} '
+            msg += 'is not true or false'
+            assert False, msg
+         shift_prior_dage = shift_prior_dage == 'true'
+      if row['option_name'] == 'shift_prior_dtime' :
+         shift_prior_dtime = row['option_value'].strip()
+         if shift_prior_dtime not in [ 'true', 'false' ] :
+            msg  = f'option_all table: shift_prior_dtime = {shift_prior_dtime} '
+            msg += 'is not true or false'
+            assert False, msg
+         shift_prior_dtime = shift_prior_dtime == 'true'
    #
    # shift_prior_std_factor_mulcov
    shift_prior_std_factor_mulcov = shift_prior_std_factor
@@ -857,6 +881,8 @@ def create_shift_db(
                      node_id,
                      split_id,
                      shift_prior_std_factor_mulcov,
+                     shift_prior_dage,
+                     shift_prior_dtime,
                      freeze,
                      copy_row,
                      age_id_next_list[fit_smooth_id],
@@ -930,6 +956,8 @@ def create_shift_db(
                      shift_node_id,
                      shift_split_reference_id,
                      shift_prior_std_factor,
+                     shift_prior_dage,
+                     shift_prior_dtime,
                      freeze,
                      copy_row,
                      age_id_next_list[fit_smooth_id],

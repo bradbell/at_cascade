@@ -19,6 +19,7 @@ The at_cascade Examples
    example/csv/cov_same_xam.py
    example/csv/coverage.py
    example/csv/csv_table.py
+   example/csv/dage_prior.py
    example/csv/join_file_xam.py
    example/csv/no_data.py
    example/csv/population.py

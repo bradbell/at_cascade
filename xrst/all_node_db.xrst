@@ -192,6 +192,8 @@ split_reference value).
   cpus
   mul
   std
+  dage
+  dtime
 }
 
 All Node Option Table
@@ -443,6 +445,21 @@ This factor multiplies the parent fit posterior standard deviation
 for the covariate multipliers in the shifted databases.
 If this option does not appear,
 *shift_prior_std_factor* is used for the factor.
+
+shift_prior_dage
+****************
+The possible values for this option are true and false
+and its default value is true.
+It this is false, no dage priors are created for the child jobs;
+see :ref:`create_shift_db@shift_databases@dage and dtime Priors` .
+
+shift_prior_dtime
+*****************
+The possible values for this option are true and false
+and its default value is true.
+It this is false, no dtime priors are created for the child jobs.
+If both *shift_prior_dage* and *shift_prior_dtime* are false,
+only value priors are created for the child jobs.
 
 
 {xrst_end option_all_table}

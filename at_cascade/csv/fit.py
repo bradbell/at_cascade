@@ -126,6 +126,18 @@ It is the intention that this bound not be active
 at the final value for the fixed effects.
 The default value for this option is infinity; i.e., no bound.
 
+child_prior_dage
+----------------
+This option is true or false.
+If it is false, no dage priors are created for the child jobs.
+The default value for this option is true.
+
+child_prior_dtime
+-----------------
+This option is true or false.
+If it is false, no dtime priors are created for the child jobs.
+The default value for this option is true.
+
 child_prior_std_factor
 ----------------------
 This factor multiplies the parent fit posterior standard deviation for the
@@ -1059,6 +1071,8 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'age_avg_split'                 : (str,   None)               ,
       'balance_sex'                   : (bool,  True)               ,
       'bound_random'                  : (float, float('inf'))       ,
+      'child_prior_dage'              : (bool, True)                ,
+      'child_prior_dtime'             : (bool, True)                ,
       'child_prior_std_factor'        : (float,  2.0)               ,
       'child_prior_std_factor_mulcov' : (float, None)               ,
       'compress_interval'             : (str,   '100.0 100.0')      ,
@@ -1279,13 +1293,14 @@ def create_root_database(fit_dir) :
       assert False, msg
    if len(node_set - check_node_set) > 0 :
       difference = node_set - check_node_set
-      print(difference)
-      msg = 'The nodes above are in node.csv but not in covariate.csv'
+      msg  = f'{difference}\n'
+      msg += 'The nodes above are in node.csv but not in covariate.csv'
       assert False, msg
    if len(check_node_set - node_set) > 0 :
       difference = check_node_set - node_set
-      print(difference)
-      msg = 'The nodes above are in covariate.csv but not in node.csv'
+      msg  = f'{difference}\n'
+      msg += 'The nodes above are in covariate.csv but not in node.csv'
+      assert False, msg
    #
    # csv_covariate_table
    csv_covariate_table = at_cascade.csv.covariate_both(csv_covariate_table)
@@ -1832,8 +1847,10 @@ def create_all_node_database(
    max_fit_parent         = global_option_value['max_fit_parent']
    no_ode_ignore          = global_option_value['no_ode_ignore']
    #
-   refit_split            = global_option_value['refit_split']
-   refit_split            = str(refit_split).lower()
+   convert = { True : 'true' , False : 'false' }
+   refit_split        = convert[ global_option_value['refit_split'] ]
+   child_prior_dage   = convert[ global_option_value['child_prior_dage'] ]
+   child_prior_dtime  = convert[ global_option_value['child_prior_dtime'] ]
    #
    child_prior_std_factor_mulcov = \
       global_option_value['child_prior_std_factor_mulcov']
@@ -1861,6 +1878,8 @@ def create_all_node_database(
       'root_split_reference_name'      : 'both',
       'sample_method'                  : global_option_value['sample_method'],
       'shared_memory_prefix'           : shared_memory_prefix,
+      'shift_prior_dage'               : child_prior_dage,
+      'shift_prior_dtime'              : child_prior_dtime,
       'shift_prior_std_factor'         : child_prior_std_factor,
       'shift_prior_std_factor_mulcov'  : child_prior_std_factor_mulcov,
       'split_covariate_name'           : 'sex',
