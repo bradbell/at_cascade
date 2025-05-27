@@ -1,0 +1,249 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
+# ----------------------------------------------------------------------------
+{xrst_begin fit_info_theory}
+{xrst_spell
+   delim
+   frobenius
+}
+
+Adjusting Prior to Fit The Information Matrix
+#############################################
+
+Simplification
+**************
+We consider each rate separately because the prior does not allow for
+correlation between the different rates.
+
+Notation
+********
+.. csv-table::
+   :header-rows: 1
+   :delim: ;
+
+   Notation; Meaning
+   :math:`r_{i,j}`       ; value of the rate at the i-th age and j-th time
+   :math:`N`             ; number of age points in the rate grid minus 1
+   :math:`M`             ; number of time points in the rate grid minus 1
+   :math:`\bar{v}_{i,j}` ; mean for the rate value at (i,j)
+   :math:`\bar{a}_{i,j}` ; mean for age forward differences at (i,j)
+   :math:`\bar{t}_{i,j}` ; mean for time forward differences at (i,j)
+   :math:`v_{i,j}`       ; variance for the rate value at (i,j)
+   :math:`a_{i,j}`       ; variance for age forward differences at (i,j)
+   :math:`t_{i,j}`       ; variance for time forward differences at (i,j)
+   :math:`L(r)`          ; the negative log-likelihood for prior
+   :math:`V(r)`          ; value contribution to :math:`L(z)`
+   :math:`A(r)`          ; age contribution to :math:`L(z)`
+   :math:`T(r)`          ; time contribution to :math:`L(z)`
+
+Hessian of Prior Negative Log Likelihood
+****************************************
+
+The negative log likelihood for the prior,
+as a function of the rate values, is:
+
+.. math::
+
+   V (r) = & \sum_{i,j}
+   ( r_{i,j} - \bar{v}_{i,j} )^2 / ( 2 v_{i,j} )
+   - \log ( 2 \pi v_{i,j} )
+   \\
+   A (r) = & \sum_{i < N, j}
+   ( r_{i+i,j} - r_{i,j} - \bar{a}_{i,j} )^2 / ( 2 a_{i,j} )
+   - \log ( 2 \pi a_{i,j} )
+   \\
+   T (r) = & \sum_{i, j < M}
+   ( r_{i,j+1} - r_{i,j} - \bar{t}_{i,j} )^2 / ( 2 t_{i,j} )
+   - \log ( 2 \pi t_{i,j} )
+   \\
+   L(r) = & V (r) + A (r) + B (r)
+
+The partials of the negative log likelihood for the prior are given by:
+
+..  math::
+
+   \frac{ \partial V }{ \partial r_{i,j} } = &
+   ( r_{i,j} - \bar{v}_{i,j} ) / v_{i,j}
+   \\
+   \frac{ \partial A }{ \partial r_{i,j} } = &
+   \begin{cases}
+      + ( r_{N,j} - r_{N-1,j} - \bar{a}_{N-1,j} ) / a_{N-1,j} &
+      \text{if $i = N$}
+      \\
+      - ( r_{1,j} - r_{0,j} - \bar{a}_{0,j} ) / a_{0,j} &
+      \text{if $i = 0$}
+      \\
+      + ( r_{i,j} - r_{i-1,j} - \bar{a}_{i-1,j} ) / a_{i-1,j}
+      - ( r_{i+1,j} - r_{i,j} - \bar{a}_{i,j} ) / a_{i,j} &
+      \text{otherwise}
+   \end{cases}
+   \\
+   \frac{ \partial T }{ \partial r_{i,j} } = &
+   \begin{cases}
+      + ( r_{i,M} - r_{i,M-1} - \bar{t}_{i,M-1} ) / t_{i,M-1} &
+      \text{if $j = M$}
+      \\
+      - ( r_{i,1} - r_{i,0} - \bar{t}_{i,0} ) / t_{i,0} &
+      \text{if $j = 0$}
+      \\
+      + ( r_{i,j} - r_{i,j-1} - \bar{t}_{i,j-1} ) / t_{i,j-1}
+      - ( r_{i,j+1} - r_{i,j} - \bar{t}_{i,j} ) / t_{i,j} &
+      \text{otherwise}
+   \end{cases}
+   \\
+   \frac{ \partial L }{ \partial r_{i,j} } = &
+   \frac{ \partial V }{ \partial r_{i,j} } +
+   \frac{ \partial A }{ \partial r_{i,j} } +
+   \frac{ \partial T }{ \partial r_{i,j} }
+
+We use the following notation to simplify the expressions below:
+
+.. math::
+
+   u_{i,j} = v_{i,j}^{-1} ~ , ~
+   b_{i,j} = a_{i,j}^{-1} ~ , ~
+   s_{i,j} = t_{i,j}^{-1}
+
+The second partials of :math:`V(r)` are given by:
+
+.. math::
+
+   \frac{ \partial^2 V }{ \partial r_{k,\ell} \partial r_{i,j} } =
+   \begin{cases}
+      u_{i,j}  & \text{if $k=i$ and $\ell=j$}
+      \\
+      0        & \text{otherwise}
+   \end{cases}
+
+The second partials of :math:`A(r)` when :math:`i = N` are given by:
+
+.. math::
+
+   (i = N)
+   \frac{ \partial^2 A }{ \partial r_{k,\ell} \partial r_{i,j} } =
+   \begin{cases}
+      + b_{i-1,j} & \text{if $k=i$ and $\ell=j$}
+      \\
+      - b_{i-1,j} & \text{if $k=i-1$ and $\ell=j$}
+      \\
+      0            & \text{otherwise}
+   \end{cases}
+
+The second partials of :math:`A(r)` when :math:`i = 0` are given by:
+
+.. math::
+
+   (i = 0)
+   \frac{ \partial^2 A }{ \partial r_{k,\ell} \partial r_{i,j} } =
+   \begin{cases}
+      - b_{i,j} & \text{if $k=i$ and $\ell=j$}
+      \\
+      + b_{i,j} & \text{if $k=i+1$ and $\ell=j$}
+      \\
+      0            & \text{otherwise}
+   \end{cases}
+
+The second partials of :math:`A(r)` when :math:`0 < i < N` are given by:
+
+.. math::
+   (0 < i < N)
+   \frac{ \partial^2 A }{ \partial r_{k,\ell} \partial r_{i,j} } =
+   \begin{cases}
+      - b_{i-1,j} & \text{if $k=i-1$ and $\ell=j$}
+      \\
+      + b_{i-1,j} + b_{i,j}  & \text{if $k=i$ and $\ell=j$}
+      \\
+      - b_{i,j} & \text{if $k=i+1$ and $\ell=j$}
+      \\
+      0            & \text{otherwise}
+   \end{cases}
+
+
+
+The second partials of :math:`T(r)` are given by:
+
+.. math::
+
+   (j = M)
+   \frac{ \partial^2 T }{ \partial r_{k,\ell} \partial r_{i,j} } = &
+   \begin{cases}
+      + s_{i,j-1} & \text{if $k=i$ and $\ell=j$}
+      \\
+      - s_{i,j-1} & \text{if $k=i$ and $\ell=j-1$}
+      \\
+      0            & \text{otherwise}
+   \end{cases}
+   \\
+   (j = 0)
+   \frac{ \partial^2 T }{ \partial r_{k,\ell} \partial r_{i,j} } = &
+   \begin{cases}
+      - s_{i,j} & \text{if $k=i$ and $\ell=j$}
+      \\
+      + s_{i,j} & \text{if $k=i$ and $\ell=j+1$}
+      \\
+      0            & \text{otherwise}
+   \end{cases}
+   \\
+   (0 < j < M)
+   \frac{ \partial^2 T }{ \partial r_{k,\ell} \partial r_{i,j} } = &
+   \begin{cases}
+      - s_{i,j-1} & \text{if $k=i$ and $\ell=j-1$}
+      \\
+      + s_{i,j-1} + s_{i,j}  & \text{if $k=i$ and $\ell=j$}
+      \\
+      - s_{i,j} & \text{if $k=i$ and $\ell=j+1$}
+      \\
+      0            & \text{otherwise}
+   \end{cases}
+
+The second partials of :math:`L(r)` are given by:
+
+.. math::
+
+   \frac{ \partial^2 L }{ \partial r_{k,\ell} \partial r_{i,j} } =
+   \frac{ \partial^2 V }{ \partial r_{k,\ell} \partial r_{i,j} } +
+   \frac{ \partial^2 A }{ \partial r_{k,\ell} \partial r_{i,j} } +
+   \frac{ \partial^2 T }{ \partial r_{k,\ell} \partial r_{i,j} }
+
+We use :math:`H( b , s )` to denote the Hessian of :math:`L(r)` ,
+with respect to :math:`r`,
+as a function of the prior parameters
+:math:`b = \{ b_{i,j} \}` and :math:`s = \{ s_{i,j} \}` ; i.e.,
+
+.. math::
+
+   H_{i,j}^{k,\ell} (a, b)
+   =
+   \frac{ \partial^2 L }{ \partial r_{k,\ell} \partial r_{i,j} }
+
+
+Problem
+*******
+Given an information matrix :math:`I` ,
+determine the parameter matrices :math:`b` and :math:`s` that minimize
+
+.. math::
+
+   \sum_{i,j} \sum_{k,\ell} \left(
+      H_{i,j}^{k,\ell} (b, s) - I_{i,j}^{k,\ell}
+   \right)^2
+
+subject to a lower bound of zero and a positive upper bound
+on the elements of :math:`b` and :math:`s` .
+
+
+#. This is the Frobenius norm squared of the difference between the
+   approximation and the desired information matrix.
+
+#. The indices where :math:`| k - i| > 1` or :math:`| \ell - j | > 1`
+   do not need to be included in the summation.
+
+#. If an element of :math:`b` or :math:`s` is zero at the solution,
+   the corresponding term is not included in the prior
+   (because its variance is infinite).
+
+#. The positive upper bound corresponds to a lower limit on the
+   variances in the prior.
+
+{xrst_end fit_info_theory}
