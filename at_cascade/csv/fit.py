@@ -1,4 +1,4 @@
-#s SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
@@ -300,8 +300,8 @@ The default value for *max_num_iter_fixed* is 100.
 
 max_number_cpu
 --------------
-This integer is the maximum number of cpus (processes) to use
-This must be greater than zero. If it is one, the jobs are run
+This integer is the maximum number of cpus (processes) to use.
+It must be greater than zero. If it is one, the jobs are run
 sequentially, more output is printed to the screen, and the program
 can be cleanly stopped with a control-C.
 The default value for this option is

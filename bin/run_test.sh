@@ -1,7 +1,7 @@
 #! /bin/bash -e
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 if [ "$0" != 'bin/run_test.sh' ]
 then
@@ -44,6 +44,11 @@ for try_number in {1..3}
 do
    if python3 $test_file >& run_test.tmp
    then
+      if [ "$test_file" == 'test/csv/rcond_lower.py' ]
+      then
+         $sed_path -i run_test.tmp \
+            -e '/sample_fixed: *rcond *=/d'
+      fi
       if [ "$test_file" == 'test/recover_fit.py' ]
       then
          $sed_path -i run_test.tmp \
