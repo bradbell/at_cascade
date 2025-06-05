@@ -23,8 +23,21 @@ Release Notes for 2025
 ######################
 
 
-Changes on prior Branch
-***********************
+
+mm-dd
+*****
+
+06-05
+=====
+Add the following wish list items:
+:ref:`wish_list@csv.fit@Child Job Priors` ,
+:ref:`wish_list@csv.fit@predict_goal.csv` .
+
+06-03
+=====
+#. Add the csv.fit
+   :ref:`csv.fit@Input Files@option_fit.csv@asymptotic_rcond_lower` option.
+
 #. Add the
    :ref:`csv.fit@Input Files@option_fit.csv@child_prior_dage` and
    :ref:`csv.fit@Input Files@option_fit.csv@child_prior_dtime` options to
@@ -37,8 +50,8 @@ Changes on prior Branch
    Also improve the discussion of the
    :ref:`csv.no_data@option_fit.csv` file for this example.
 
-mm-dd
-*****
+#. Discuss a :ref:`create_shift_db@Problem` with the current method
+   used to create child job priors.
 
 05-18
 =====

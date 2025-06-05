@@ -22,6 +22,20 @@ Prototype
    # END_DEF
 }
 
+Problem
+*******
+The value and difference priors are treated as independent.
+Currently the standard deviations for the difference priors are fixed
+at their value for the root level.
+In addition, the standard deviations for the value priors are set
+using the posterior samples predicted by the parent job fit.
+The theory section below discusses the problem with this.
+The following options provide a way to avoid this problem:
+:ref:`csv.fit@Input Files@option_fit.csv@child_prior_dage` ,
+:ref:`csv.fit@Input Files@option_fit.csv@child_prior_dtime` ,
+:ref:`option_all_table@shift_prior_dage` ,
+:ref:`option_all_table@shift_prior_dtime` .
+
 Theory
 ******
 For this discussion we start our indexing at one
@@ -29,6 +43,8 @@ For this discussion we start our indexing at one
 Suppose that there is only on rate; e.g. iota,
 no data, and all the priors are Gaussian.
 We use the following notation for the rate's prior:
+(The :ref:`fit_info_theory-name` page has a more general discussion
+of the analysis below.)
 
 .. csv-table::
    :header-rows: 1

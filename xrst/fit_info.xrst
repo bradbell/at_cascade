@@ -6,10 +6,15 @@
 {xrst_spell
    delim
    frobenius
+   scipy
+   lsq
 }
 
 Adjusting Prior to Fit The Information Matrix
 #############################################
+This method is motivated by the
+:ref:`create_shift_db@Problem` with the current method for
+creating child job priors.
 
 Simplification
 **************
@@ -232,9 +237,12 @@ determine the parameter matrices :math:`b` and :math:`s` that minimize
 subject to a lower bound of zero and a positive upper bound
 on the elements of :math:`b` and :math:`s` .
 
+#. This is a linear least square problem subject to lower and upper bounds
+   on the variables being optimized. It could be solved using
+   ``scipy.optimize.lsq_linear`` .
 
-#. This is the Frobenius norm squared of the difference between the
-   approximation and the desired information matrix.
+#. The objective above is the Frobenius norm squared of the difference between
+   the approximation and the desired information matrix.
 
 #. The indices where :math:`| k - i| > 1` or :math:`| \ell - j | > 1`
    do not need to be included in the summation.

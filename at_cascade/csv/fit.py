@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: AGPL-3.0-or-later
+#s SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
@@ -39,6 +39,7 @@ r'''
   sqlite
   std
   underbars
+  rcond
 }
 
 Fit a CSV Specified Cascade
@@ -105,6 +106,17 @@ The default for this value is the empty string; i.e.,
 no extra age splitting over the uniformly spaced grid specified by
 :ref:`csv.fit@Input Files@option_fit.csv@ode_step_size`.
 
+asymptotic_rcond_lower
+----------------------
+This float is a lower bound for an approximate
+reciprocal condition number of the Hessian of the fixed effects objective.
+This Hessian is used as an approximation for the information matrix when
+using the ``asymptotic``
+:ref:`csv.fit@Input Files@option_fit.csv@sample_method` .
+This option must be between zero and one and its default value is zero..
+If the approximate reciprocal condition number is less than
+*asymptotic_rcond_lower*, the asymptotic sample method will fail.
+
 balance_sex
 -----------
 This is a boolean option.
@@ -131,12 +143,16 @@ child_prior_dage
 This option is true or false.
 If it is false, no dage priors are created for the child jobs.
 The default value for this option is true.
+See the :ref:`create_shift_db@Problem` for a discussion of
+why you may want to use this option.
 
 child_prior_dtime
 -----------------
 This option is true or false.
 If it is false, no dtime priors are created for the child jobs.
 The default value for this option is true.
+See the :ref:`create_shift_db@Problem` for a discussion of
+why you may want to use this option.
 
 child_prior_std_factor
 ----------------------
@@ -1069,6 +1085,8 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
    option_default  = {
       'absolute_covariates'           : (str,   None)               ,
       'age_avg_split'                 : (str,   None)               ,
+      'asymptotic_rcond_lower'        : (float, 0.0)                ,
+      'asymptotic_recond_lower'       : (float, 0.0)                ,
       'balance_sex'                   : (bool,  True)               ,
       'bound_random'                  : (float, float('inf'))       ,
       'child_prior_dage'              : (bool, True)                ,
@@ -1349,6 +1367,7 @@ def create_root_database(fit_dir) :
       })
    #
    # option_table
+   asymptotic_rcond_lower = global_option_value['asymptotic_rcond_lower']
    age_avg_split      = global_option_value['age_avg_split']
    bound_random       = global_option_value['bound_random']
    compress_interval  = global_option_value['compress_interval']
@@ -1368,6 +1387,7 @@ def create_root_database(fit_dir) :
    else :
       splitting_covariate = 'sex'
    option_table = [
+      { 'name' : 'asymptotic_rcond_lower', 'value' : asymptotic_rcond_lower },
       { 'name' : 'age_avg_split',       'value' : age_avg_split             },
       { 'name' : 'compress_interval',   'value' : compress_interval         },
       { 'name' : 'hold_out_integrand',  'value' : hold_out_integrand        },
