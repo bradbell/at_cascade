@@ -83,6 +83,7 @@ csv_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 csv_file['option_fit.csv'] += 'refit_split,false\n'
 csv_file['option_fit.csv'] += 'tolerance_fixed,1e-8\n'
 csv_file['option_fit.csv'] += 'freeze_type,posterior\n'
+csv_file['option_fit.csv'] += 'bound_random,1.0\n'
 csv_file['option_fit.csv'] += 'child_prior_std_factor_mulcov,' + \
                               str(child_prior_std_factor_mulcov) + '\n'
 csv_file['option_fit.csv'] += 'number_sample,' + str(number_sample) + '\n'
