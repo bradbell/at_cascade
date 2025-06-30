@@ -356,7 +356,7 @@ def ancestor_set(node_table, node_id) :
 # has been coverted to its corresponding type.
 #
 global_option_value = None
-def set_global_option_value(fit_dir, option_table, top_node_name) :
+def set_global_option_value(fit_dir, option_table, number_sample_fit, top_node_name) :
    global global_option_value
    assert type(global_option_value) == dict or global_option_value == None
    assert type(option_table) == list
@@ -378,6 +378,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'db2csv'                : (bool,  False)              ,
       'float_precision'       : (int,   5)                  ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
+      'number_sample_predict' : (int,   number_sample_fit)                 ,
       'plot'                  : (bool,  False)              ,
       'zero_meas_value'       : (bool,  False)              ,
    }
@@ -475,8 +476,10 @@ def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
    #
    # global_option_value
    option_table = at_cascade.csv.read_table(f'{fit_dir}/option_predict.csv')
+   option_fit_table = at_cascade.csv.read_table(f'{fit_dir}/option_fit_out.csv')
+   number_sample_fit = option_fit_table["name" == "number_sample"]["value"]
    set_global_option_value(
-      fit_dir, option_table, top_node_name
+      fit_dir, option_table, number_sample_fit, top_node_name
    )
    #
    # start_node_name
