@@ -169,5 +169,5 @@ def main() :
 #
 if __name__ == '__main__' :
    main()
-   print('csv_fit.py: OK')
+   print('number_sample_predict.py: OK')
 # END_PYTHON
