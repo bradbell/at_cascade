@@ -133,6 +133,12 @@ multipliers are set to zero during the predictions
 (instead of their simulation values, fit, or sample values).
 The default value for this option is false .
 
+number_sample_predict
+---------------------
+This integer option specifies the number of samples generated for each
+prediction. If not set, :ref:`csv.fit@Input Files@option_fit.csv@number_sample`
+from :ref:`csv.fit@Input Files@option_fit.csv` will be used.
+
 covariate.csv
 =============
 Same as the csv fit
