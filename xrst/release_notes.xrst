@@ -17,6 +17,7 @@ Release Notes for at_cascade
    py
    pdf
    relrisk
+   rcond
 }
 
 Release Notes for 2025
@@ -32,6 +33,12 @@ mm-dd
 Add the following wish list items:
 :ref:`wish_list@csv.fit@Child Job Priors` ,
 :ref:`wish_list@csv.fit@predict_goal.csv` .
+
+07-03
+=====
+The name of the new option asymptotic_rcond_lower was miss spelled
+one place in the csv.fit.py source code.
+This made it impossible to use and has been fixed.
 
 06-03
 =====

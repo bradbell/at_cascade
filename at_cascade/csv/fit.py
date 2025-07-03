@@ -1086,7 +1086,6 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'absolute_covariates'           : (str,   None)               ,
       'age_avg_split'                 : (str,   None)               ,
       'asymptotic_rcond_lower'        : (float, 0.0)                ,
-      'asymptotic_recond_lower'       : (float, 0.0)                ,
       'balance_sex'                   : (bool,  True)               ,
       'bound_random'                  : (float, float('inf'))       ,
       'child_prior_dage'              : (bool, True)                ,
