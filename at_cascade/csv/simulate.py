@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import time
 import math
@@ -124,7 +124,7 @@ Hence only the rates that appear in
 :ref:`csv.simulate@Input Files@no_effect_rate.csv`
 have an effect (the other random effects multiply zero).
 The default value for this option is 0.0; i.e.,
-there are random effects for the corresponding rate.
+there are no random effects for the corresponding rate.
 
 trace
 -----
