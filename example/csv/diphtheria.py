@@ -101,7 +101,7 @@ are constant w.r.t age and time:
 {xrst_code py}'''
 no_effect_rate_truth = {
    'iota' : 1e-6  ,
-   'rho'  : 13.0  ,
+   'rho'  : 13.0 ,
    'chi'  : 1e-1 ,
 }
 '''{xrst_code}
@@ -141,10 +141,9 @@ sim_file['option_sim.csv'] =  \
    'name,value\n' + \
    'float_precision,5\n' + \
    'random_depend_sex,false\n' + \
-   f'integrand_step_size,{ode_step_size}\n' + \
-   f'std_random_effects_iota,{std_random_effects_truth}\n'
+   f'integrand_step_size,{ode_step_size}\n'
+#   f'std_random_effects_iota,{std_random_effects_truth}\n'
 '''{xrst_code}
-
 node.csv
 ========
 {xrst_code py}'''
@@ -243,6 +242,7 @@ ode_method,iota_pos_rho_pos
 balance_sex,false
 freeze_type,mean
 child_prior_std_factor_mulcov,1
+tolerance_fixed,1e-8
 """
 fit_file['option_fit.csv'] += f'ode_step_size,{ode_step_size}\n'
 '''{xrst_code}
@@ -463,10 +463,10 @@ def check_predict(fit_dir) :
       max_fit_diff[integrand_name] = max_diff
    #
    # check max_fit_diff
-   # 2DO: fix check of fit to truth
    for integrand_name in integrand_list :
-      print(  max_fit_diff[integrand_name] / max_tru[integrand_name] )
-      # assert max_fit_diff[integrand_name] / max_tru[integrand_name] < 0.1
+      relerr =  max_fit_diff[integrand_name] / max_tru[integrand_name]
+      if abs( relerr ) > 1e-3 :
+         assert False, f'{integrand_name}: relerr = {relerr}'
    #
    # max_sam_diff
    n_tru = len(predict_table['tru'])
@@ -490,8 +490,8 @@ def check_predict(fit_dir) :
    #
    # check max_sam_diff
    # 2DO: fix check of sample to truth
-   for integrand_name in integrand_list :
-      print( max_fit_diff[integrand_name] / max_tru[integrand_name] )
+   ## for integrand_name in integrand_list :
+      # print( max_fit_diff[integrand_name] / max_tru[integrand_name] )
       # assert max_fit_diff[integrand_name] / max_tru[integrand_name] < 0.1
 # ---------------------------------------------------------------------------
 if __name__ == '__main__' :
