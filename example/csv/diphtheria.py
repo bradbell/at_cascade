@@ -45,6 +45,14 @@ Global variables besides
 :ref:`csv.diphtheria@sim_file` and :ref:`csv.diphtheria@fit_file`.
 Variables that do not appear in a heading are temporaries.
 
+ode_step_size
+=============
+The step size used to approximate the ode solution and to
+average integrals with respect to age and time.
+{xrst_code py}'''
+ode_step_size = 1.0
+'''{xrst_code}
+
 integrand_list
 ==============
 Generate data and predict for the following integrands:
@@ -59,19 +67,25 @@ parent rage grid.
 {xrst_code py}'''
 #
 age_grid = dict()
-age_grid['iota'] = numpy.linspace(0.0, 100.0, 11)
-age_grid['chi']  = numpy.linspace(0.0, 100.0, 5)
-age_grid['rho']  = [ 50.0 ]
+age_grid['iota'] = [ 0.0 ]
+age_grid['chi']  = [ 0.0 ]
+age_grid['rho']  = [ 0.0 ]
+age_grid['all']  = sorted( set( 
+   [100.0] + age_grid['iota'] + age_grid['chi'] + age_grid['rho']
+) )
 #
 time_grid = dict()
-time_grid['iota'] = numpy.linspace(1980.0, 2025.0, 10)
-time_grid['chi']  = numpy.linspace(1980.0, 2025.0, 2)
-time_grid['rho']  = [ 2020.0 ]
+time_grid['iota'] = [ 1980.0 ]
+time_grid['chi']  = [ 1980.0 ]
+time_grid['rho']  = [ 1980.0 ]
+time_grid['all']  = sorted( set( 
+   [2025.0] + time_grid['iota'] + time_grid['chi'] + time_grid['rho']
+) )
 '''{xrst_code}
 
 node_dict
 =========
-Keys are nodes and values are corresponding parent node:
+Keys are nodes,  values are corresponding parent node:
 {xrst_code py}'''
 node_dict = {
    'n0' : ''   ,
@@ -110,7 +124,7 @@ dtp3_multiplier_truth
 This factor multiples the dtp3 covariate to get the reduction in diphtheria
 incidence due to the vaccine:
 {xrst_code py}'''
-dtp3_multiplier_truth = - 3.5
+dtp3_multiplier_truth = 0.0
 '''{xrst_code}
 
 sim_file
@@ -127,6 +141,7 @@ sim_file['option_sim.csv'] =  \
    'name,value\n' + \
    'float_precision,5\n' + \
    'random_depend_sex,false\n' + \
+   f'integrand_step_size,{ode_step_size}\n' + \
    f'std_random_effects_iota,{std_random_effects_truth}\n'
 '''{xrst_code}
 
@@ -148,9 +163,9 @@ diphtheria-tetanus-pertussis vaccine during their first year of life.
 sim_file['covariate.csv'] = 'node_name,sex,age,time,omega,dtp3\n'
 for node_name in node_dict :
    for sex in [ 'female', 'male' ] :
-      for age in age_grid['iota' ] :
-         for time in time_grid['iota'] :
-            r     = (time - 2020.0) / 40.0
+      for age in age_grid['all' ] :
+         for time in time_grid['all'] :
+            r     = (time - 2020.0) / 100.0
             dtp3  = 0.9 * ( 1.0 - r * r )
             row   = f'{node_name},{sex},{age},{time},{omega_truth},{dtp3}\n'
             sim_file['covariate.csv'] += row
@@ -170,15 +185,15 @@ simulate.csv
 {xrst_code py}'''
 header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,meas_std_cv,meas_std_min\n'
-meas_std_cv     = 0.01
+meas_std_cv     = 0.1
 std_min         = 1e-6
 simulate_id     = 0
 sim_file['simulate.csv'] = header
 for integrand_name in integrand_list :
    for node_name in node_dict :
       for sex in [ 'female', 'male' ] :
-         for age in age_grid['iota'] :
-            for time in time_grid['iota'] :
+         for age in age_grid['all'] :
+            for time in time_grid['all'] :
                row  = f'{simulate_id},{integrand_name},{node_name},{sex},'
                row += f'{age},{age},{time},{time},'
                row += f'{meas_std_cv},{std_min}\n'
@@ -193,7 +208,7 @@ The no effect rates are constant, w.r.t age and time, during the simulation.
 sim_file['no_effect_rate.csv'] = 'rate_name,age,time,rate_truth\n'
 for rate_name in no_effect_rate_truth :
    rate_truth = no_effect_rate_truth[rate_name]
-   sim_file['no_effect_rate.csv'] += f'{rate_name},0,0,{rate_truth}\n'
+   sim_file['no_effect_rate.csv'] += f'{rate_name},0.0,0.0,{rate_truth}\n'
 '''{xrst_code}
 
 fit_file
@@ -216,22 +231,20 @@ option_fit.csv
 fit_file['option_fit.csv']  =  \
 """name,value
 max_fit,500
-max_fit_parent,1000000
+max_fit_parent,10000
 sample_method,asymptotic
 max_num_iter_fixed,50
 root_node_name,n0
 refit_split,false
 max_abs_effect,4
-ode_step_size,5
 quasi_fixed,false
 child_prior_std_factor,2
 ode_method,iota_pos_rho_pos
 balance_sex,false
-no_ode_ignore,iota rho
-hold_out_integrand,mtexcess
 freeze_type,mean
 child_prior_std_factor_mulcov,1
 """
+fit_file['option_fit.csv'] += f'ode_step_size,{ode_step_size}\n'
 '''{xrst_code}
 
 option_predict.csv
@@ -267,10 +280,14 @@ fit_file['prior.csv']  = \
    'name,density,mean,std,eta,lower,upper\n' + \
    f'delta_prior,log_gaussian,0.0,{delta_prior_std},1e-10,,\n' + \
    f'random_prior,gaussian,0.0,{std_random_effects_fit},,,,\n'
-for rate_name in [ 'iota', 'chi' ] :
+for rate_name in no_effect_rate_truth :
    rate_truth = no_effect_rate_truth[rate_name]
-   lower      = rate_truth / 100.0
-   upper      = rate_truth * 100.0
+   if rate_name == 'rho' :
+      lower = rate_truth
+      upper = rate_truth
+   else :
+      lower      = rate_truth / 100.0
+      upper      = rate_truth * 100.0
    fit_file['prior.csv'] += \
       f'prior_{rate_name},uniform,{rate_truth},,,{lower},{upper}\n'
 '''{xrst_code}
@@ -281,17 +298,12 @@ The rates are constant during simulation, but not during fitting.
 {xrst_code py}'''
 fit_file['parent_rate.csv'] = \
    'rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value\n'
-for rate_name in [ 'iota', 'chi' ] :
+for rate_name in no_effect_rate_truth :
    for age in age_grid[rate_name] :
       for time in time_grid[rate_name] :
          row  = f'{rate_name},{age},{time},prior_{rate_name},'
          row += 'delta_prior,delta_prior,\n'
          fit_file['parent_rate.csv'] += row
-rho  = no_effect_rate_truth['rho']
-row  = f'rho,50.0,2020.0,,,,{rho}\n'
-fit_file['parent_rate.csv'] += row
-
-
 '''{xrst_code}
 
 child_rate.csv
@@ -299,7 +311,6 @@ child_rate.csv
 {xrst_code py}'''
 fit_file['child_rate.csv'] = \
 """rate_name,value_prior
-iota,random_prior
 """
 '''{xrst_code}
 
@@ -385,12 +396,19 @@ def fit(sim_dir, fit_dir) :
       #
       # row_in
       row_in            = dict()
-      row_in['data_id'] = row_join['simulate_id']
       for key in copy_column :
          row_in[key] = row_join[key]
-      row_in['meas_value']    = row_join['meas_value']
-      row_in['hold_out']      = 0
+      #
+      # row_in
+      row_in['data_id']       = row_join['simulate_id']
+      row_in['meas_value']    = row_join['meas_mean']
       row_in['density_name']  = 'gaussian'
+      row_in['hold_out']      = 0
+      if float( row_join['age_upper'] ) <= ode_step_size :
+         if row_join['integrand_name'] == 'mtspecific' :
+            row_in['hold_out'] = 1
+      #
+      # data_in_table
       data_in_table.append( row_in )
    #
    # data_in.csv
