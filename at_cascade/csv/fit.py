@@ -111,7 +111,7 @@ asymptotic_rcond_lower
 This float is a lower bound for an approximate
 reciprocal condition number of the Hessian of the fixed effects objective.
 This Hessian is used as an approximation for the information matrix when
-using the ``asymptotic``
+using the ``asymptotic`` or ``censor_asymptotic``
 :ref:`csv.fit@Input Files@option_fit.csv@sample_method` .
 This option must be between zero and one and its default value is zero..
 If the approximate reciprocal condition number is less than
@@ -491,8 +491,8 @@ are for the *root_node_sex* .
 sample_method
 -------------
 This string specifies the :ref:`option_all_table@sample_method` .
-It must be ``asymptotic`` or ``simulate`` and it's default value is
-``asymptotic`` .
+It must be ``asymptotic`` , ``censor_asymptotic`` or ``simulate``
+'and it's default value is ``asymptotic`` .
 
 shared_memory_prefix
 --------------------

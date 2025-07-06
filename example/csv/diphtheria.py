@@ -22,14 +22,12 @@ import at_cascade
    mtexcess
    mtspecific
    Sincidence
-   linspace
    num
    cv
    pos
    meas
    iter
    std
-   numpy
    dtp
 }
 
@@ -50,7 +48,7 @@ ode_step_size
 The step size used to approximate the ode solution and to
 average integrals with respect to age and time.
 {xrst_code py}'''
-ode_step_size = 1.0
+ode_step_size = 5.0
 '''{xrst_code}
 
 integrand_list
@@ -70,7 +68,7 @@ age_grid = dict()
 age_grid['iota'] = [ 0.0 ]
 age_grid['chi']  = [ 0.0 ]
 age_grid['rho']  = [ 0.0 ]
-age_grid['all']  = sorted( set( 
+age_grid['all']  = sorted( set(
    [100.0] + age_grid['iota'] + age_grid['chi'] + age_grid['rho']
 ) )
 #
@@ -78,7 +76,7 @@ time_grid = dict()
 time_grid['iota'] = [ 1980.0 ]
 time_grid['chi']  = [ 1980.0 ]
 time_grid['rho']  = [ 1980.0 ]
-time_grid['all']  = sorted( set( 
+time_grid['all']  = sorted( set(
    [2025.0] + time_grid['iota'] + time_grid['chi'] + time_grid['rho']
 ) )
 '''{xrst_code}
@@ -184,7 +182,7 @@ simulate.csv
 {xrst_code py}'''
 header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,meas_std_cv,meas_std_min\n'
-meas_std_cv     = 0.1
+meas_std_cv     = 10.0
 std_min         = 1e-6
 simulate_id     = 0
 sim_file['simulate.csv'] = header
@@ -231,7 +229,7 @@ fit_file['option_fit.csv']  =  \
 """name,value
 max_fit,500
 max_fit_parent,10000
-sample_method,asymptotic
+sample_method,censor_asymptotic
 max_num_iter_fixed,50
 root_node_name,n0
 refit_split,false
@@ -286,8 +284,8 @@ for rate_name in no_effect_rate_truth :
       lower = rate_truth
       upper = rate_truth
    else :
-      lower      = rate_truth / 100.0
-      upper      = rate_truth * 100.0
+      lower      = rate_truth / 10.0
+      upper      = rate_truth * 10.0
    fit_file['prior.csv'] += \
       f'prior_{rate_name},uniform,{rate_truth},,,{lower},{upper}\n'
 '''{xrst_code}

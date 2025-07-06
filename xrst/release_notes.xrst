@@ -28,17 +28,22 @@ Release Notes for 2025
 mm-dd
 *****
 
+07-05
+=====
+Add the ``censor_asymptotic``  *sample_method* to the
+:ref:`option_all table<option_all_table@sample_method>` and the
+:ref:`option_fit.csv file<csv.fit@Input Files@option_fit.csv@sample_method>` .
+
+
 06-05
 =====
-Add the following wish list items:
-:ref:`wish_list@csv.fit@Child Job Priors` ,
-:ref:`wish_list@csv.fit@predict_goal.csv` .
+#. Add the following wish list items:
+   :ref:`wish_list@csv.fit@Child Job Priors` ,
+   :ref:`wish_list@csv.fit@predict_goal.csv` .
 
-07-03
-=====
-The name of the new option asymptotic_rcond_lower was miss spelled
-one place in the csv.fit.py source code.
-This made it impossible to use and has been fixed.
+#. The name of the new option asymptotic_rcond_lower was miss spelled
+   one place in the csv.fit.py source code.
+   This made it impossible to use and has been fixed.
 
 06-03
 =====
