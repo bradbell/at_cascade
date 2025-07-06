@@ -224,10 +224,12 @@ fit_file['covariate.csv'] = sim_file['covariate.csv']
 
 option_fit.csv
 ==============
-The priors for iota are uniform.
-We use ``censor_asymptotic`` to make sure we do not get
-negative sampels for iota and prevalence, which would cause
-the predictions to fail.
+#. The priors for iota are uniform.
+   We use ``censor_asymptotic`` to make sure we do not get
+   negative samples for iota and prevalence, which would cause
+   the predictions to fail.
+#. We are completely ignoring the mtexcess data.
+   It gets set to zero just before the fit, to test ignoring it.
 {xrst_code py}'''
 fit_file['option_fit.csv']  =  \
 """name,value
@@ -245,6 +247,7 @@ balance_sex,false
 freeze_type,mean
 child_prior_std_factor_mulcov,1
 tolerance_fixed,1e-8
+no_ode_ignore,mtexcess
 hold_out_integrand,mtexcess
 """
 fit_file['option_fit.csv'] += f'ode_step_size,{ode_step_size}\n'
@@ -403,10 +406,15 @@ def fit(sim_dir, fit_dir) :
          row_in[key] = row_join[key]
       #
       # row_in
+      # All the mtexcess data is ignored; see option_fit.csv table.
+      # The model for mtspecific is not numerically stable near zero prevalence.
       row_in['data_id']       = row_join['simulate_id']
-      row_in['meas_value']    = row_join['meas_mean']
       row_in['density_name']  = 'gaussian'
       row_in['hold_out']      = 0
+      if row_join['integrand_name'] == 'mtexcess' :
+         row_in['meas_value']    = 0
+      else :
+         row_in['meas_value']    = row_join['meas_mean']
       if float( row_join['age_upper'] ) <= ode_step_size :
          if row_join['integrand_name'] == 'mtspecific' :
             row_in['hold_out'] = 1
