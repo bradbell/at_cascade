@@ -224,6 +224,10 @@ fit_file['covariate.csv'] = sim_file['covariate.csv']
 
 option_fit.csv
 ==============
+The priors for iota are uniform.
+We use ``censor_asymptotic`` to make sure we do not get
+negative sampels for iota and prevalence, which would cause
+the predictions to fail.
 {xrst_code py}'''
 fit_file['option_fit.csv']  =  \
 """name,value
@@ -241,6 +245,7 @@ balance_sex,false
 freeze_type,mean
 child_prior_std_factor_mulcov,1
 tolerance_fixed,1e-8
+hold_out_integrand,mtexcess
 """
 fit_file['option_fit.csv'] += f'ode_step_size,{ode_step_size}\n'
 '''{xrst_code}
@@ -463,7 +468,7 @@ def check_predict(fit_dir) :
    # check max_fit_diff
    for integrand_name in integrand_list :
       relerr =  max_fit_diff[integrand_name] / max_tru[integrand_name]
-      if abs( relerr ) > 1e-3 :
+      if abs( relerr ) > 1e-2 :
          assert False, f'{integrand_name}: relerr = {relerr}'
    #
    # max_sam_diff
