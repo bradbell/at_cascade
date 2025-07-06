@@ -114,7 +114,7 @@ std_random_effects_truth
 ========================
 This is the true standard deviation of the random effects
 {xrst_code py}'''
-std_random_effects_truth = 0.6
+std_random_effects_truth = 1.0
 '''{xrst_code}
 
 dtp3_multiplier_truth
@@ -139,8 +139,8 @@ sim_file['option_sim.csv'] =  \
    'name,value\n' + \
    'float_precision,5\n' + \
    'random_depend_sex,false\n' + \
-   f'integrand_step_size,{ode_step_size}\n'
-#   f'std_random_effects_iota,{std_random_effects_truth}\n'
+   f'integrand_step_size,{ode_step_size}\n' + \
+   f'std_random_effects_iota,{std_random_effects_truth}\n'
 '''{xrst_code}
 node.csv
 ========
@@ -279,13 +279,15 @@ n1
 
 prior.csv
 =========
+Often one uses a Gaussian prior on the random effects.
+We are using a uniform because we have good data,
+know the true random effects,  and are trying to reproduce it with the fit.
 {xrst_code py}'''
 delta_prior_std        = 0.2
-std_random_effects_fit = std_random_effects_truth
 fit_file['prior.csv']  = \
    'name,density,mean,std,eta,lower,upper\n' + \
    f'delta_prior,log_gaussian,0.0,{delta_prior_std},1e-10,,\n' + \
-   f'random_prior,gaussian,0.0,{std_random_effects_fit},,,,\n'
+   f'random_effects_prior,uniform,0.0,,,,,\n'
 for rate_name in no_effect_rate_truth :
    rate_truth = no_effect_rate_truth[rate_name]
    if rate_name == 'rho' :
@@ -317,6 +319,7 @@ child_rate.csv
 {xrst_code py}'''
 fit_file['child_rate.csv'] = \
 """rate_name,value_prior
+iota,random_effects_prior
 """
 '''{xrst_code}
 
