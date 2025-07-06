@@ -161,7 +161,7 @@ def set_truth(sim_dir, fit_database, root_database) :
    assert len( fit_table['var'] ) == len( var_id2simulate_id )
    #
    # copy_list
-   # must copy these files becasue simulate may be run in parallel.
+   # must copy these files because simulate may be run in parallel.
    copy_list = [
       'node', 'covariate', 'no_effect_rate', 'multiplier_sim', 'random_effect'
    ]
@@ -296,3 +296,8 @@ def set_truth(sim_dir, fit_database, root_database) :
          col_type = [ 'real' ],
          row_list = row_list,
       )
+   #
+   # fit_database
+   msg = 'csv.predict: setting truth_var table using simulation information' 
+   at_cascade.add_log_entry(connection, msg)
+
