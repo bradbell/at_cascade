@@ -875,6 +875,8 @@ def average_integrand_grid(
    #
    return grid
 # ----------------------------------------------------------------------------
+# read_random_effect_node_rate_sex
+#
 # random_effect_node_rate_sex[node_name][rate_name][sex] :
 # is the simulated random effect for the corresponding node, sex and rate.
 # For a given node_name, sex and rate_name, the sum of
@@ -909,6 +911,38 @@ def read_random_effect_node_rate_sex(sim_dir) :
          sys.exit(msg)
       result[node_name][rate_name][sex] = float( row['random_effect'] )
    return result
+#
+# ----------------------------------------------------------------------------
+# write_random_effect_csv
+#
+# sim_dir
+# is the directory where the input csv files are located.
+#
+def write_random_effect_csv(
+   float_format, sim_dir, random_effect_node_rate_sex,
+) :
+   assert type(sim_dir) == str
+   assert type(random_effect_node_rate_sex) == dict
+   #
+   # random_effect_table
+   random_effect_table = list()
+   for node_name in random_effect_node_rate_sex :
+      for rate_name in random_effect_node_rate_sex[node_name] :
+         for sex in  random_effect_node_rate_sex[node_name][rate_name] :
+            #
+            # row
+            row                  = { 'node_name' : node_name, 'sex' : sex }
+            row['rate_name']     = rate_name
+            random_effect = \
+               random_effect_node_rate_sex[node_name][rate_name][sex]
+            row['random_effect'] = float_format.format(random_effect)
+            #
+            # random_effect_table
+            random_effect_table.append( row )
+   #
+   # random_effect.csv
+   file_name = f'{sim_dir}/random_effect.csv'
+   at_cascade.csv.write_table(file_name, random_effect_table)
 #
 # ----------------------------------------------------------------------------
 # random_effect_node_rate_sex[node_name][rate_name][sex] :
@@ -1157,6 +1191,10 @@ def simulate(sim_dir) :
       'chi'  : global_option_value['std_random_effects_chi']  ,
    }
    #
+   # float_format
+   n_digits = str( global_option_value['float_precision'] )
+   float_format = '{0:.' + n_digits + 'g}'
+   #
    if global_option_value['new_random_effects'] :
       random_effect_node_rate_sex = sim_random_effect_node_rate_sex(
          random_depend_sex  ,
@@ -1164,6 +1202,11 @@ def simulate(sim_dir) :
          rate_name_list     ,
          parent_node_dict   ,
          child_list_node    ,
+      )
+      #
+      # random_effect.csv
+      write_random_effect_csv(
+         float_format, sim_dir, random_effect_node_rate_sex
       )
    else :
       random_effect_node_rate_sex = read_random_effect_node_rate_sex(sim_dir)
@@ -1179,10 +1222,6 @@ def simulate(sim_dir) :
       print( f'Simulation: total id = {simulate_id:,}' )
    s_last  = time.time()
    s_start = s_last
-   #
-   # float_format
-   n_digits = str( global_option_value['float_precision'] )
-   float_format = '{0:.' + n_digits + 'g}'
    #
    # data_sim_table
    data_sim_table = list()
@@ -1315,26 +1354,6 @@ def simulate(sim_dir) :
    # data.csv
    file_name = f'{sim_dir}/data_sim.csv'
    at_cascade.csv.write_table(file_name, data_sim_table)
-   #
-   # random_effect_table
-   random_effect_table = list()
-   for node_name in parent_node_dict :
-      for rate_name in spline_no_effect_rate :
-         for sex in [ 'female', 'male' ] :
-            #
-            # row
-            row                  = { 'node_name' : node_name, 'sex' : sex }
-            row['rate_name']     = rate_name
-            random_effect = \
-               random_effect_node_rate_sex[node_name][rate_name][sex]
-            row['random_effect'] = float_format.format(random_effect)
-            #
-            # random_effect_table
-            random_effect_table.append( row )
-   #
-   # random_effect.csv
-   file_name = f'{sim_dir}/random_effect.csv'
-   at_cascade.csv.write_table(file_name, random_effect_table)
    #
    if global_option_value['trace'] :
       print( 'csv.simulate done' )
