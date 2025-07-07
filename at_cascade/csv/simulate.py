@@ -1106,6 +1106,187 @@ def sim_random_effect_node_rate_sex (
    #
    return random_effect_node_rate_sex
 # ----------------------------------------------------------------------------
+# create_data_sim_table
+#
+# valid_integrand_name
+# a list of the valid integrand names
+#
+# parent_node_dict
+# a dictionary that mapes nodes to parent nodes.
+# the root node is in the keys and has an empty parent.
+#
+# spline_no_effect_rate
+# maps rate_name to a spline that evaluates the rate as a function of
+# age and time.
+#
+# random_effect_node_rate_sex
+# maps node_name, rate_name, and sex -> the random effect.
+#
+# root_covariate_ref
+# is the covariate reference value for the root node.
+#
+#
+# multiplier_list_rate[rate_name] :
+# is the list of rows, in the multiplier_sim table, that have rate_name
+# equal to the specified rate_name.
+#
+# spline_node_sex_cov
+# maps node_name, sex, and covariate to a apline that evaluates the
+# covarite as a function of age and time.
+#
+def create_data_sim_table(
+   simulate_table,
+   valid_integrand_name        ,
+   parent_node_dict            ,
+   spline_no_effect_rate       ,
+   random_effect_node_rate_sex ,
+   root_covariate_ref          ,
+   multiplier_list_rate        ,
+   spline_node_sex_cov         ,
+) :
+   #
+   # float_format
+   n_digits = str( global_option_value['float_precision'] )
+   float_format = '{0:.' + n_digits + 'g}'
+   #
+   # node_set
+   node_set = set( parent_node_dict.keys() )
+   #
+   # s_last, s_start
+   if global_option_value['trace'] :
+      simulate_id = len( simulate_table )
+      print( f'Simulation: total id = {simulate_id:,}' )
+   s_last  = time.time()
+   s_start = s_last
+   #
+   # data_sim_table
+   data_sim_table = list()
+   for (simulate_id, sim_row) in enumerate( simulate_table) :
+      line_number = simulate_id + 2
+      #
+      # s_current
+      s_current = time.time()
+      if s_current - s_last > 30.0 and global_option_value['trace'] :
+            #
+            # seconds, s_last
+            seconds = s_current - s_start
+            s_last  = s_current
+            print( f'{simulate_id:,} id, {seconds:.0f} sec' )
+      #
+      # simulate_id
+      if True :
+         if simulate_id != int( float(sim_row['simulate_id']) ) :
+            msg  = f'csv.simulate: Error at line {line_number} '
+            msg += f'in simulate.csv\n'
+            msg += f'simulate_id = ' + sim_row['simulate_id']
+            msg += ' is not equal line number minus two'
+            assert False, msg
+      #
+      # integrand_name
+      integrand_name = sim_row['integrand_name']
+      if integrand_name not in valid_integrand_name :
+         msg  = f'csv.simulate: Error at line {line_number} '
+         msg += f' in simulate.csv\n'
+         msg += f'integrand_name = ' + integrand_name
+         msg += ' is not a valid integrand name'
+         assert False, msg
+      #
+      # node_name
+      node_name = sim_row['node_name']
+      if node_name not in node_set :
+         msg  = f'csv.simulate: Error at line {line_number} '
+         msg += f' in simulate.csv\n'
+         msg += f'node_name = ' + node_name
+         msg += ' is not in node.csv'
+         assert False, msg
+      #
+      # sex
+      sex = sim_row['sex']
+      if sex not in [ 'female', 'male', 'both' ] :
+         msg  = f'csv.simulate: Error at line {line_number} '
+         msg += f' in simulate.csv\n'
+         msg += f'sex = ' + sex
+         msg += ' is not male, feamle, or both'
+         assert False, msg
+      #
+      # age_lower, age_upper, time_lower, time_upper
+      age_lower  = float( sim_row['age_lower'] )
+      age_upper  = float( sim_row['age_upper'] )
+      time_lower = float( sim_row['time_lower'] )
+      time_upper = float( sim_row['time_upper'] )
+      #
+      # age_mid, time_mid
+      age_mid  = ( age_lower  + age_upper )  / 2.0
+      time_mid = ( time_lower + time_upper ) / 2.0
+      #
+      covariate_value_dict = dict()
+      for cov_name in root_covariate_ref.keys() :
+         covariate_value_dict[cov_name] = eval_spline(
+            spline_node_sex_cov, node_name, sex, cov_name, age_mid, time_mid
+         )
+      #
+      # rate_fun_dict
+      rate_fun_dict = get_rate_fun_dict(
+         parent_node_dict            ,
+         spline_no_effect_rate       ,
+         random_effect_node_rate_sex ,
+         root_covariate_ref          ,
+         multiplier_list_rate        ,
+         node_name                   ,
+         sex                         ,
+         spline_node_sex_cov         ,
+      )
+      #
+      # data_row
+      # Note that changes to data_row will also change covariate_value_dict
+      data_row = covariate_value_dict
+      data_row['simulate_id'] = simulate_id
+      #
+      # grid
+      integrand_step_size = global_option_value['integrand_step_size']
+      grid = average_integrand_grid(
+         integrand_step_size, age_lower, age_upper, time_lower, time_upper
+      )
+      #
+      # avg_integrand
+      abs_tol = global_option_value['absolute_tolerance']
+      avg_integrand = dismod_at.average_integrand(
+         rate_fun_dict, integrand_name, grid, abs_tol,
+      )
+      # numpy uses its own type for floats
+      avg_integrand = float( avg_integrand )
+      #
+      # data_row['meas_mean']
+      meas_mean             = avg_integrand
+      data_row['meas_mean'] = meas_mean
+      #
+      # data_row['meas_std']
+      meas_std_cv          = float( sim_row['meas_std_cv'] )
+      meas_std_min         = float( sim_row['meas_std_min'] )
+      meas_std             = max(meas_std_min, meas_std_cv * meas_mean )
+      data_row['meas_std'] = meas_std
+      #
+      # data_row['meas_value']
+      meas_value             = random.gauss(meas_mean, meas_std )
+      meas_value             = max(meas_value, 0.0)
+      data_row['meas_value'] = meas_value
+      #
+      # data_row
+      for key in data_row :
+         value = data_row[key]
+         if type( value ) == float :
+            data_row[key] = float_format.format(value)
+      #
+      # data_sim_table
+      data_sim_table.append( data_row )
+   #
+   # seconds
+   seconds = s_current - s_start
+   if global_option_value['trace'] :
+      print( f'End simulation: total seconds = {seconds:.0f}' )
+   #
+   return data_sim_table
+# ----------------------------------------------------------------------------
 # BEGIN_SIMULATE
 # at_cascade.csv.simulate
 def simulate(sim_dir) :
@@ -1237,140 +1418,17 @@ def simulate(sim_dir) :
       input_table['multiplier_sim']
    )
    #
-   # s_last, s_start
-   if global_option_value['trace'] :
-      simulate_id = len( input_table['simulate'] )
-      print( f'Simulation: total id = {simulate_id:,}' )
-   s_last  = time.time()
-   s_start = s_last
-   #
    # data_sim_table
-   data_sim_table = list()
-   for (simulate_id, sim_row) in enumerate( input_table['simulate'] ) :
-      line_number = simulate_id + 2
-      #
-      # s_current
-      s_current = time.time()
-      if s_current - s_last > 30.0 and global_option_value['trace'] :
-            #
-            # seconds, s_last
-            seconds = s_current - s_start
-            s_last  = s_current
-            print( f'{simulate_id:,} id, {seconds:.0f} sec' )
-      #
-      # simulate_id
-      if True :
-         if simulate_id != int( float(sim_row['simulate_id']) ) :
-            msg  = f'csv.simulate: Error at line {line_number} '
-            msg += f'in simulate.csv\n'
-            msg += f'simulate_id = ' + sim_row['simulate_id']
-            msg += ' is not equal line number minus two'
-            assert False, msg
-      #
-      # integrand_name
-      integrand_name = sim_row['integrand_name']
-      if integrand_name not in valid_integrand_name :
-         msg  = f'csv.simulate: Error at line {line_number} '
-         msg += f' in simulate.csv\n'
-         msg += f'integrand_name = ' + integrand_name
-         msg += ' is not a valid integrand name'
-         assert False, msg
-      #
-      # node_name
-      node_name = sim_row['node_name']
-      if node_name not in node_set :
-         msg  = f'csv.simulate: Error at line {line_number} '
-         msg += f' in simulate.csv\n'
-         msg += f'node_name = ' + node_name
-         msg += ' is not in node.csv'
-         assert False, msg
-      #
-      # sex
-      sex = sim_row['sex']
-      if sex not in [ 'female', 'male', 'both' ] :
-         msg  = f'csv.simulate: Error at line {line_number} '
-         msg += f' in simulate.csv\n'
-         msg += f'sex = ' + sex
-         msg += ' is not male, feamle, or both'
-         assert False, msg
-      #
-      # age_lower, age_upper, time_lower, time_upper
-      age_lower  = float( sim_row['age_lower'] )
-      age_upper  = float( sim_row['age_upper'] )
-      time_lower = float( sim_row['time_lower'] )
-      time_upper = float( sim_row['time_upper'] )
-      #
-      # age_mid, time_mid
-      age_mid  = ( age_lower  + age_upper )  / 2.0
-      time_mid = ( time_lower + time_upper ) / 2.0
-      #
-      covariate_value_dict = dict()
-      for cov_name in root_covariate_ref.keys() :
-         covariate_value_dict[cov_name] = eval_spline(
-            spline_node_sex_cov, node_name, sex, cov_name, age_mid, time_mid
-         )
-      #
-      # rate_fun_dict
-      rate_fun_dict = get_rate_fun_dict(
-         parent_node_dict            ,
-         spline_no_effect_rate       ,
-         random_effect_node_rate_sex ,
-         root_covariate_ref          ,
-         multiplier_list_rate        ,
-         node_name                   ,
-         sex                         ,
-         spline_node_sex_cov         ,
-      )
-      #
-      # data_row
-      # Note that changes to data_row will also change covariate_value_dict
-      data_row = covariate_value_dict
-      data_row['simulate_id'] = simulate_id
-      #
-      # grid
-      integrand_step_size = global_option_value['integrand_step_size']
-      grid = average_integrand_grid(
-         integrand_step_size, age_lower, age_upper, time_lower, time_upper
-      )
-      #
-      # avg_integrand
-      abs_tol = global_option_value['absolute_tolerance']
-      avg_integrand = dismod_at.average_integrand(
-         rate_fun_dict, integrand_name, grid, abs_tol,
-      )
-      # numpy uses its own type for floats
-      avg_integrand = float( avg_integrand )
-      #
-      # data_row['meas_mean']
-      meas_mean             = avg_integrand
-      data_row['meas_mean'] = meas_mean
-      #
-      # data_row['meas_std']
-      meas_std_cv          = float( sim_row['meas_std_cv'] )
-      meas_std_min         = float( sim_row['meas_std_min'] )
-      meas_std             = max(meas_std_min, meas_std_cv * meas_mean )
-      data_row['meas_std'] = meas_std
-      #
-      # data_row['meas_value']
-      meas_value             = random.gauss(meas_mean, meas_std )
-      meas_value             = max(meas_value, 0.0)
-      data_row['meas_value'] = meas_value
-      #
-      # data_row
-      for key in data_row :
-         value = data_row[key]
-         if type( value ) == float :
-            data_row[key] = float_format.format(value)
-      #
-      # data_sim_table
-      data_sim_table.append( data_row )
-   #
-   # seconds, simulate_id
-   seconds = s_current - s_start
-   simulate_id = len( input_table['simulate'] )
-   if global_option_value['trace'] :
-      print( f'End simulation: total seconds = {seconds:.0f}' )
-      print( 'Write files' )
+   data_sim_table = create_data_sim_table(
+      input_table['simulate']     ,
+      valid_integrand_name        ,
+      parent_node_dict            ,
+      spline_no_effect_rate       ,
+      random_effect_node_rate_sex ,
+      root_covariate_ref          ,
+      multiplier_list_rate        ,
+      spline_node_sex_cov         ,
+   )
    #
    # data.csv
    file_name = f'{sim_dir}/data_sim.csv'
