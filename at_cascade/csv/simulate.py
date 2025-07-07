@@ -435,6 +435,8 @@ outside the age rage (time range) in the covariate.csv file.
 {xrst_end csv.simulate}
 """
 # ----------------------------------------------------------------------------
+# set_global_option_value
+#
 # Sets global global_option_value to dict representation of option_sim.csv
 #
 # sim_dir
@@ -529,6 +531,8 @@ def set_global_option_value(sim_dir, option_table) :
    #
    assert type(global_option_value) == dict
 # ----------------------------------------------------------------------------
+# get_parent_node_dict
+#
 # parent_node_dict[node_name]:
 # The is the name of the node that is the parent of node_node.
 # The keys and values in this dictionary are strings.
@@ -603,6 +607,8 @@ def get_parent_node_dict( node_table ) :
    #
    return parent_node_dict, child_list_node
 # ----------------------------------------------------------------------------
+# get_spline_no_effect_rate
+#
 # spline = spline_no_effect_rate[rate_name] :
 # 1. rate_name is any of the rate names in the no_effect_rate table.
 # 2. value = spline(age, time) evaluates the no_effect spline
@@ -673,6 +679,7 @@ def get_multiplier_list_rate(multiplier_sim_table) :
       multiplier_list_rate[rate_name].append(row)
    return multiplier_list_rate
 # ----------------------------------------------------------------------------
+# eval_spline
 #
 # spline = spline_node_sex_cov[node_name][sex][cov_name] :
 # is a function that evaluates value = spline(age, time) where
@@ -715,6 +722,8 @@ def eval_spline(spline_node_sex_cov, node_name, sex, cov_name, age, time) :
       result = spline(age, time)
    return result
 # ----------------------------------------------------------------------------
+# get_rate_fun_dict
+#
 # rate_fun = rate_fun_dict[rate_name] :
 # For each of rate_name in spline_no_effect_rate, value = rate_fun(age, time)
 # is the value of the corresponding rate included all fo the effects
@@ -836,6 +845,8 @@ def get_rate_fun_dict(
    #
    return rate_fun_dict
 # ----------------------------------------------------------------------------
+# average_interand_grid
+#
 # grid['age'] :
 # is a list of age point starting at age_lower, ending at age_upper
 # and such that the difference between points is less than or equal
@@ -915,12 +926,20 @@ def read_random_effect_node_rate_sex(sim_dir) :
 # ----------------------------------------------------------------------------
 # write_random_effect_csv
 #
+# float_format
+# is the format used to write the random effects to random_effects.csv
+#
 # sim_dir
-# is the directory where the input csv files are located.
+# is the directory where random_effects.csv is written.
+#
+# random_effect_node_rate_sex[node_name][rate_name][sex]
+# is the random effect corresponding to the specified
+# node_name, rate_name, and sex.
 #
 def write_random_effect_csv(
    float_format, sim_dir, random_effect_node_rate_sex,
 ) :
+   assert type(float_format) == str
    assert type(sim_dir) == str
    assert type(random_effect_node_rate_sex) == dict
    #
@@ -945,6 +964,8 @@ def write_random_effect_csv(
    at_cascade.csv.write_table(file_name, random_effect_table)
 #
 # ----------------------------------------------------------------------------
+# sim_random_effect_node_rate_sex
+#
 # random_effect_node_rate_sex[node_name][rate_name][sex] :
 # is the simulated random effect for the corresponding node, sex and rate.
 # For a given node_name, sex and rate_name, the sum of
