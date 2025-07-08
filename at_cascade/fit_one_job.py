@@ -238,8 +238,10 @@ def fit_one_job(
    # sample_method
    if 'sample_method' in option_all_dict :
       sample_method = option_all_dict['sample_method']
-      if sample_method not in [ 'asymptotic', 'simulate' ] :
-         msg = 'opton_all table: sample_method is not asymptotic or simulate'
+      if sample_method not in [
+         'asymptotic', 'censor_asymptotic', 'simulate' ] :
+         msg  = 'opton_all table: sample_method is not '
+         msg += 'asymptotic , censor_asymptotic, or simulate'
          assert False, msg
    else :
       sample_method = 'asymptotic'

@@ -370,9 +370,11 @@ starting point (instead of the scaling point) is shifted.
 
 sample_method
 *************
-This is either ``asymptotic`` or ``simulate`` and is the dismod_at
-sampling method used to create posterior samples of the model variables
-for each fit. These samples are used to create prior for the fit's
+This is the dismod_at sampling method used to create posterior samples
+of the model variables for each fit.
+It must be one of the following:
+``asymptotic`` , ``censor_asymptotic`` or ``simulate`` .
+These samples are used to create prior for the fit's
 :ref:`glossary@child jobs` and for dismod_at predictions; e.g.,
 :ref:`csv.predict-name` .
 It is an error for *sample_method* to be ``simulate`` and

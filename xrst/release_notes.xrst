@@ -17,6 +17,7 @@ Release Notes for at_cascade
    py
    pdf
    relrisk
+   rcond
 }
 
 Release Notes for 2025
@@ -27,11 +28,33 @@ Release Notes for 2025
 mm-dd
 *****
 
+07-08
+=====
+Add the :ref:`wish_list@subprocess` wish list item.
+
+07-07
+=====
+The value of the random effects used to create
+:ref:`csv.predict@Output Files@tru_predict.csv` where not correct when
+there was a non-zero covariate multiplier.
+This has been fixed.
+
+07-05
+=====
+Add the ``censor_asymptotic``  *sample_method* to the
+:ref:`option_all table<option_all_table@sample_method>` and the
+:ref:`option_fit.csv file<csv.fit@Input Files@option_fit.csv@sample_method>` .
+
+
 06-05
 =====
-Add the following wish list items:
-:ref:`wish_list@csv.fit@Child Job Priors` ,
-:ref:`wish_list@csv.fit@predict_goal.csv` .
+#. Add the following wish list items:
+   :ref:`wish_list@csv.fit@Child Job Priors` ,
+   :ref:`wish_list@csv.fit@predict_goal.csv` .
+
+#. The name of the new option asymptotic_rcond_lower was miss spelled
+   one place in the csv.fit.py source code.
+   This made it impossible to use and has been fixed.
 
 06-03
 =====

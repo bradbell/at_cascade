@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import time
 import math
@@ -124,7 +124,7 @@ Hence only the rates that appear in
 :ref:`csv.simulate@Input Files@no_effect_rate.csv`
 have an effect (the other random effects multiply zero).
 The default value for this option is 0.0; i.e.,
-there are random effects for the corresponding rate.
+there are no random effects for the corresponding rate.
 
 trace
 -----
@@ -435,6 +435,8 @@ outside the age rage (time range) in the covariate.csv file.
 {xrst_end csv.simulate}
 """
 # ----------------------------------------------------------------------------
+# set_global_option_value
+#
 # Sets global global_option_value to dict representation of option_sim.csv
 #
 # sim_dir
@@ -529,6 +531,8 @@ def set_global_option_value(sim_dir, option_table) :
    #
    assert type(global_option_value) == dict
 # ----------------------------------------------------------------------------
+# get_parent_node_dict
+#
 # parent_node_dict[node_name]:
 # The is the name of the node that is the parent of node_node.
 # The keys and values in this dictionary are strings.
@@ -603,6 +607,8 @@ def get_parent_node_dict( node_table ) :
    #
    return parent_node_dict, child_list_node
 # ----------------------------------------------------------------------------
+# get_spline_no_effect_rate
+#
 # spline = spline_no_effect_rate[rate_name] :
 # 1. rate_name is any of the rate names in the no_effect_rate table.
 # 2. value = spline(age, time) evaluates the no_effect spline
@@ -673,6 +679,7 @@ def get_multiplier_list_rate(multiplier_sim_table) :
       multiplier_list_rate[rate_name].append(row)
    return multiplier_list_rate
 # ----------------------------------------------------------------------------
+# eval_spline
 #
 # spline = spline_node_sex_cov[node_name][sex][cov_name] :
 # is a function that evaluates value = spline(age, time) where
@@ -715,6 +722,8 @@ def eval_spline(spline_node_sex_cov, node_name, sex, cov_name, age, time) :
       result = spline(age, time)
    return result
 # ----------------------------------------------------------------------------
+# get_rate_fun_dict
+#
 # rate_fun = rate_fun_dict[rate_name] :
 # For each of rate_name in spline_no_effect_rate, value = rate_fun(age, time)
 # is the value of the corresponding rate included all fo the effects
@@ -836,6 +845,8 @@ def get_rate_fun_dict(
    #
    return rate_fun_dict
 # ----------------------------------------------------------------------------
+# average_interand_grid
+#
 # grid['age'] :
 # is a list of age point starting at age_lower, ending at age_upper
 # and such that the difference between points is less than or equal
@@ -875,6 +886,8 @@ def average_integrand_grid(
    #
    return grid
 # ----------------------------------------------------------------------------
+# read_random_effect_node_rate_sex
+#
 # random_effect_node_rate_sex[node_name][rate_name][sex] :
 # is the simulated random effect for the corresponding node, sex and rate.
 # For a given node_name, sex and rate_name, the sum of
@@ -911,6 +924,48 @@ def read_random_effect_node_rate_sex(sim_dir) :
    return result
 #
 # ----------------------------------------------------------------------------
+# write_random_effect_csv
+#
+# float_format
+# is the format used to write the random effects to random_effects.csv
+#
+# sim_dir
+# is the directory where random_effects.csv is written.
+#
+# random_effect_node_rate_sex[node_name][rate_name][sex]
+# is the random effect corresponding to the specified
+# node_name, rate_name, and sex.
+#
+def write_random_effect_csv(
+   float_format, sim_dir, random_effect_node_rate_sex,
+) :
+   assert type(float_format) == str
+   assert type(sim_dir) == str
+   assert type(random_effect_node_rate_sex) == dict
+   #
+   # random_effect_table
+   random_effect_table = list()
+   for node_name in random_effect_node_rate_sex :
+      for rate_name in random_effect_node_rate_sex[node_name] :
+         for sex in  random_effect_node_rate_sex[node_name][rate_name] :
+            #
+            # row
+            row                  = { 'node_name' : node_name, 'sex' : sex }
+            row['rate_name']     = rate_name
+            random_effect = \
+               random_effect_node_rate_sex[node_name][rate_name][sex]
+            row['random_effect'] = float_format.format(random_effect)
+            #
+            # random_effect_table
+            random_effect_table.append( row )
+   #
+   # random_effect.csv
+   file_name = f'{sim_dir}/random_effect.csv'
+   at_cascade.csv.write_table(file_name, random_effect_table)
+#
+# ----------------------------------------------------------------------------
+# sim_random_effect_node_rate_sex
+#
 # random_effect_node_rate_sex[node_name][rate_name][sex] :
 # is the simulated random effect for the corresponding node, sex and rate.
 # For a given node_name, sex and rate_name, the sum of
@@ -1051,142 +1106,62 @@ def sim_random_effect_node_rate_sex (
    #
    return random_effect_node_rate_sex
 # ----------------------------------------------------------------------------
-# BEGIN_SIMULATE
-# at_cascade.csv.simulate
-def simulate(sim_dir) :
-   assert type(sim_dir) == str
-   # END_SIMULATE
-   valid_integrand_name = {
-      'Sincidence',
-      'remission',
-      'mtexcess',
-      'mtother',
-      'mtwith',
-      'susceptible',
-      'withC',
-      'prevalence',
-      'Tincidence',
-      'mtspecific',
-      'mtall',
-      'mtstandard',
-      'relrisk',
-   }
-   #
-   # input_table
-   input_table = dict()
-   file_name   = f'{sim_dir}/option_sim.csv'
-   input_table['option_sim'] = at_cascade.csv.read_table(file_name)
-   #
-   # global_option_value
-   set_global_option_value( sim_dir, input_table['option_sim'] )
-   #
-   # random_seed
-   random.seed( int( global_option_value['random_seed'] ) )
-   #
-   #
-   if global_option_value['trace'] :
-      print('Reading csv files:')
-   input_list  = [
-      'node',
-      'covariate',
-      'multiplier_sim',
-      'no_effect_rate',
-      'simulate',
-   ]
-   for name in input_list :
-      file_name         = f'{sim_dir}/{name}.csv'
-      input_table[name] = at_cascade.csv.read_table(file_name)
-      at_cascade.csv.check_table(file_name, input_table[name])
-   #
-   # input_table['covariate']
-   for row in input_table['covariate'] :
-      for key in row :
-         if key not in { 'node_name', 'sex' } :
-            row[key] = float( row[key] )
-   #
-   if global_option_value['trace'] :
-      print('Creating data structures:' )
-   #
-   # parent_node_dict, child_list_node
-   parent_node_dict, child_list_node = \
-      get_parent_node_dict( input_table['node'] )
-   #
-   # spline_node_sex_cov
-   node_set = set( parent_node_dict.keys() )
-   age_grid, time_grid, spline_node_sex_cov = at_cascade.csv.covariate_spline(
-      input_table['covariate'], node_set
-   )
-   #
-   # root_node_name
-   root_node_name = None
-   for node_name in parent_node_dict :
-      if parent_node_dict[node_name] == '' :
-         if root_node_name != None :
-            msg = 'node.csv has more than one node with no parent'
-            assert False, msg
-         root_node_name = node_name
-   if root_node_name == None :
-      msg = 'node.csv every node has a parent node; i.e, no root node'
-      assert False, msg
-   #
-   # root_covariate_ref
-   covariate_table    = input_table['covariate']
-   covariate_table    = at_cascade.csv.covariate_both(covariate_table)
-   root_covariate_ref = at_cascade.csv.covariate_avg(
-      covariate_table = covariate_table          ,
-      node_name       = root_node_name           ,
-      sex             = 'both'                   ,
-   )
-   absolute_covariates = global_option_value['absolute_covariates']
-   if absolute_covariates != None :
-      for covariate_name in absolute_covariates.split() :
-         root_covariate_ref[covariate_name] = 0.0
-   #
-   # spline_no_effect_rate
-   spline_no_effect_rate = get_spline_no_effect_rate(
-      input_table['no_effect_rate']
-   )
-   #
-   # random_effect_node_rate_sex
-   random_depend_sex   = global_option_value['random_depend_sex']
-   rate_name_list      = spline_no_effect_rate.keys()
-   std_random_effects  = {
-      'pini' : global_option_value['std_random_effects_pini'] ,
-      'iota' : global_option_value['std_random_effects_iota'] ,
-      'rho'  : global_option_value['std_random_effects_rho']  ,
-      'chi'  : global_option_value['std_random_effects_chi']  ,
-   }
-   #
-   if global_option_value['new_random_effects'] :
-      random_effect_node_rate_sex = sim_random_effect_node_rate_sex(
-         random_depend_sex  ,
-         std_random_effects ,
-         rate_name_list     ,
-         parent_node_dict   ,
-         child_list_node    ,
-      )
-   else :
-      random_effect_node_rate_sex = read_random_effect_node_rate_sex(sim_dir)
-   #
-   # multiplier_list_rate
-   multiplier_list_rate = get_multiplier_list_rate(
-      input_table['multiplier_sim']
-   )
-   #
-   # s_last, s_start
-   if global_option_value['trace'] :
-      simulate_id = len( input_table['simulate'] )
-      print( f'Simulation: total id = {simulate_id:,}' )
-   s_last  = time.time()
-   s_start = s_last
+# create_data_sim_table
+#
+# valid_integrand_name
+# a list of the valid integrand names
+#
+# parent_node_dict
+# a dictionary that mapes nodes to parent nodes.
+# the root node is in the keys and has an empty parent.
+#
+# spline_no_effect_rate
+# maps rate_name to a spline that evaluates the rate as a function of
+# age and time.
+#
+# random_effect_node_rate_sex
+# maps node_name, rate_name, and sex -> the random effect.
+#
+# root_covariate_ref
+# is the covariate reference value for the root node.
+#
+#
+# multiplier_list_rate[rate_name] :
+# is the list of rows, in the multiplier_sim table, that have rate_name
+# equal to the specified rate_name.
+#
+# spline_node_sex_cov
+# maps node_name, sex, and covariate to a apline that evaluates the
+# covarite as a function of age and time.
+#
+def create_data_sim_table(
+   simulate_table,
+   valid_integrand_name        ,
+   parent_node_dict            ,
+   spline_no_effect_rate       ,
+   random_effect_node_rate_sex ,
+   root_covariate_ref          ,
+   multiplier_list_rate        ,
+   spline_node_sex_cov         ,
+) :
    #
    # float_format
    n_digits = str( global_option_value['float_precision'] )
    float_format = '{0:.' + n_digits + 'g}'
    #
+   # node_set
+   node_set = set( parent_node_dict.keys() )
+   #
+   # s_last, s_start
+   if global_option_value['trace'] :
+      simulate_id = len( simulate_table )
+      print( f'Simulation: total id = {simulate_id:,}' )
+   s_last  = time.time()
+   s_start = s_last
+   #
    # data_sim_table
    data_sim_table = list()
-   for (simulate_id, sim_row) in enumerate( input_table['simulate'] ) :
+   for (simulate_id, sim_row) in enumerate( simulate_table) :
       line_number = simulate_id + 2
       #
       # s_current
@@ -1305,36 +1280,159 @@ def simulate(sim_dir) :
       # data_sim_table
       data_sim_table.append( data_row )
    #
-   # seconds, simulate_id
+   # seconds
    seconds = s_current - s_start
-   simulate_id = len( input_table['simulate'] )
    if global_option_value['trace'] :
       print( f'End simulation: total seconds = {seconds:.0f}' )
-      print( 'Write files' )
+   #
+   return data_sim_table
+# ----------------------------------------------------------------------------
+# BEGIN_SIMULATE
+# at_cascade.csv.simulate
+def simulate(sim_dir) :
+   assert type(sim_dir) == str
+   # END_SIMULATE
+   valid_integrand_name = {
+      'Sincidence',
+      'remission',
+      'mtexcess',
+      'mtother',
+      'mtwith',
+      'susceptible',
+      'withC',
+      'prevalence',
+      'Tincidence',
+      'mtspecific',
+      'mtall',
+      'mtstandard',
+      'relrisk',
+   }
+   #
+   # input_table
+   input_table = dict()
+   file_name   = f'{sim_dir}/option_sim.csv'
+   input_table['option_sim'] = at_cascade.csv.read_table(file_name)
+   #
+   # global_option_value
+   set_global_option_value( sim_dir, input_table['option_sim'] )
+   #
+   # random_seed
+   random.seed( int( global_option_value['random_seed'] ) )
+   #
+   #
+   if global_option_value['trace'] :
+      print('Reading csv files:')
+   input_list  = [
+      'node',
+      'covariate',
+      'multiplier_sim',
+      'no_effect_rate',
+      'simulate',
+   ]
+   for name in input_list :
+      file_name         = f'{sim_dir}/{name}.csv'
+      input_table[name] = at_cascade.csv.read_table(file_name)
+      at_cascade.csv.check_table(file_name, input_table[name])
+   #
+   # input_table['covariate']
+   for row in input_table['covariate'] :
+      for key in row :
+         if key not in { 'node_name', 'sex' } :
+            row[key] = float( row[key] )
+   #
+   if global_option_value['trace'] :
+      print('Creating data structures:' )
+   #
+   # parent_node_dict, child_list_node
+   parent_node_dict, child_list_node = \
+      get_parent_node_dict( input_table['node'] )
+   #
+   # spline_node_sex_cov
+   node_set = set( parent_node_dict.keys() )
+   age_grid, time_grid, spline_node_sex_cov = at_cascade.csv.covariate_spline(
+      input_table['covariate'], node_set
+   )
+   #
+   # root_node_name
+   root_node_name = None
+   for node_name in parent_node_dict :
+      if parent_node_dict[node_name] == '' :
+         if root_node_name != None :
+            msg = 'node.csv has more than one node with no parent'
+            assert False, msg
+         root_node_name = node_name
+   if root_node_name == None :
+      msg = 'node.csv every node has a parent node; i.e, no root node'
+      assert False, msg
+   #
+   # root_covariate_ref
+   covariate_table    = input_table['covariate']
+   covariate_table    = at_cascade.csv.covariate_both(covariate_table)
+   root_covariate_ref = at_cascade.csv.covariate_avg(
+      covariate_table = covariate_table          ,
+      node_name       = root_node_name           ,
+      sex             = 'both'                   ,
+   )
+   absolute_covariates = global_option_value['absolute_covariates']
+   if absolute_covariates != None :
+      for covariate_name in absolute_covariates.split() :
+         root_covariate_ref[covariate_name] = 0.0
+   #
+   # spline_no_effect_rate
+   spline_no_effect_rate = get_spline_no_effect_rate(
+      input_table['no_effect_rate']
+   )
+   #
+   # random_effect_node_rate_sex
+   random_depend_sex   = global_option_value['random_depend_sex']
+   rate_name_list      = spline_no_effect_rate.keys()
+   std_random_effects  = {
+      'pini' : global_option_value['std_random_effects_pini'] ,
+      'iota' : global_option_value['std_random_effects_iota'] ,
+      'rho'  : global_option_value['std_random_effects_rho']  ,
+      'chi'  : global_option_value['std_random_effects_chi']  ,
+   }
+   #
+   # float_format
+   n_digits = str( global_option_value['float_precision'] )
+   float_format = '{0:.' + n_digits + 'g}'
+   #
+   if global_option_value['new_random_effects'] :
+      random_effect_node_rate_sex = sim_random_effect_node_rate_sex(
+         random_depend_sex  ,
+         std_random_effects ,
+         rate_name_list     ,
+         parent_node_dict   ,
+         child_list_node    ,
+      )
+      #
+      # random_effect.csv
+      write_random_effect_csv(
+         float_format, sim_dir, random_effect_node_rate_sex
+      )
+   else :
+      random_effect_node_rate_sex = read_random_effect_node_rate_sex(sim_dir)
+   #
+   # multiplier_list_rate
+   multiplier_list_rate = get_multiplier_list_rate(
+      input_table['multiplier_sim']
+   )
+   #
+   # data_sim_table
+   data_sim_table = create_data_sim_table(
+      input_table['simulate']     ,
+      valid_integrand_name        ,
+      parent_node_dict            ,
+      spline_no_effect_rate       ,
+      random_effect_node_rate_sex ,
+      root_covariate_ref          ,
+      multiplier_list_rate        ,
+      spline_node_sex_cov         ,
+   )
    #
    # data.csv
    file_name = f'{sim_dir}/data_sim.csv'
    at_cascade.csv.write_table(file_name, data_sim_table)
-   #
-   # random_effect_table
-   random_effect_table = list()
-   for node_name in parent_node_dict :
-      for rate_name in spline_no_effect_rate :
-         for sex in [ 'female', 'male' ] :
-            #
-            # row
-            row                  = { 'node_name' : node_name, 'sex' : sex }
-            row['rate_name']     = rate_name
-            random_effect = \
-               random_effect_node_rate_sex[node_name][rate_name][sex]
-            row['random_effect'] = float_format.format(random_effect)
-            #
-            # random_effect_table
-            random_effect_table.append( row )
-   #
-   # random_effect.csv
-   file_name = f'{sim_dir}/random_effect.csv'
-   at_cascade.csv.write_table(file_name, random_effect_table)
    #
    if global_option_value['trace'] :
       print( 'csv.simulate done' )

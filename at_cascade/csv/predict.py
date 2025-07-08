@@ -205,6 +205,10 @@ of the model variables.
 #. If :ref:`option_all_table@sample_method` is asymptotic,
    model variables for each sample are Gaussian correlated with mean equal to
    the optimal value and variance equal to the asymptotic approximation.
+#. If :ref:`option_all_table@sample_method` is censor_asymptotic,
+   model variables are the same as for asymptotic expect that values above
+   (below) their upper bound (lower bound) are converted to the corresponding
+   bound.
 #. If :ref:`option_all_table@sample_method` is simulate,
    the model variables for each sample at the optimal values corresponding
    to an independent data set.
