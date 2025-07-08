@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import copy
@@ -191,10 +191,9 @@ def set_truth(sim_dir, fit_database, root_database) :
    file_name        = f'{fit_node_dir}/covariate.csv'
    covariate_table  = at_cascade.csv.read_table(file_name)
    for row in covariate_table :
-      if row['node_name'] == fit_node_name :
-         for cov in cov2reference :
-            if cov != 'sex' and cov in row :
-               row[cov] = cov2reference[cov]
+      for cov in cov2reference :
+         if cov != 'sex' and cov in row :
+            row[cov] = cov2reference[cov]
    at_cascade.csv.write_table(file_name, covariate_table)
    #
    # simulate.csv
@@ -298,6 +297,5 @@ def set_truth(sim_dir, fit_database, root_database) :
       )
    #
    # fit_database
-   msg = 'csv.predict: setting truth_var table using simulation information' 
+   msg = 'csv.predict: setting truth_var table using simulation information'
    at_cascade.add_log_entry(connection, msg)
-

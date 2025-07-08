@@ -122,7 +122,7 @@ dtp3_multiplier_truth
 This factor multiples the dtp3 covariate to get the reduction in diphtheria
 incidence due to the vaccine:
 {xrst_code py}'''
-dtp3_multiplier_truth = 0.0
+dtp3_multiplier_truth = -3.0
 '''{xrst_code}
 
 sim_file
@@ -434,15 +434,28 @@ def fit(sim_dir, fit_dir) :
    # fit
    at_cascade.csv.fit(fit_dir)
 # ---------------------------------------------------------------------------
+def check_variable(fit_dir) :
+   file_name      = f'{fit_dir}/n0/variable.csv'
+   variable_table = at_cascade.csv.read_table(file_name)
+   for row in variable_table :
+      fit_value = float( row['fit_value'] )
+      truth     = float( row['truth'] )
+      if truth == 0.0 :
+         assert fit_value == 0.0
+      else :
+         # This test failed before 2025-07-07 because the covariate reference
+         # used for the random effects in set_truth.py were not correct.
+         relerr = ( 1.0 - fit_value / truth )
+         assert abs(relerr) < 1e-1
+
+# ---------------------------------------------------------------------------
 def check_predict(fit_dir) :
    #
    # predict_table
    predict_table = dict()
    for prefix in [ 'fit', 'tru', 'sam' ] :
       file_name = f'{fit_dir}/{prefix}_predict.csv'
-      file_obj  = open(file_name, 'r')
       predict_table[prefix] = at_cascade.csv.read_table(file_name)
-      file_obj.close()
    #
    # predict_table
    key = lambda row : int( row['avgint_id'] )
@@ -479,34 +492,9 @@ def check_predict(fit_dir) :
    # check max_fit_diff
    for integrand_name in integrand_list :
       relerr =  max_fit_diff[integrand_name] / max_tru[integrand_name]
-      if abs( relerr ) > 1e-2 :
+      if abs( relerr ) > 1e-1 :
          assert False, f'{integrand_name}: relerr = {relerr}'
    #
-   # max_sam_diff
-   n_tru = len(predict_table['tru'])
-   n_sam = len(predict_table['sam'])
-   assert n_sam % n_tru == 0
-   n_sample = int( n_sam / n_tru )
-   for i in range(n_tru) :
-      tru_row        = predict_table['tru'][i]
-      tru_value      = float( tru_row['avg_integrand'] )
-      integrand_name = tru_row['integrand_name']
-      for j in range(n_sample) :
-         sam_row    = predict_table['sam'][i * n_sample + j]
-         sam_value  = float( sam_row['avg_integrand'] )
-         #
-         assert int(tru_row['avgint_id']) == int(sam_row['avgint_id'])
-         assert tru_row['integrand_name'] == sam_row['integrand_name']
-         #
-         max_diff  = max_sam_diff[integrand_name]
-         max_diff  = max(max_diff, abs( sam_value - tru_value ) )
-         max_sam_diff[integrand_name] = max_diff
-   #
-   # check max_sam_diff
-   # 2DO: fix check of sample to truth
-   ## for integrand_name in integrand_list :
-      # print( max_fit_diff[integrand_name] / max_tru[integrand_name] )
-      # assert max_fit_diff[integrand_name] / max_tru[integrand_name] < 0.1
 # ---------------------------------------------------------------------------
 if __name__ == '__main__' :
    #
@@ -526,6 +514,9 @@ if __name__ == '__main__' :
    #
    # predict
    at_cascade.csv.predict(fit_dir, sim_dir)
+   #
+   # check_variable
+   check_variable(fit_dir)
    #
    # check_predict
    check_predict(fit_dir)

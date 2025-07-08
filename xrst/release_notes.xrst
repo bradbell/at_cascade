@@ -28,6 +28,13 @@ Release Notes for 2025
 mm-dd
 *****
 
+07-07
+=====
+The value of the random effects used to create
+:ref:`csv.predict@Output Files@tru_predict.csv` where not correct when
+there was a non-zero covariate multiplier.
+This has been fixed.
+
 07-05
 =====
 Add the ``censor_asymptotic``  *sample_method* to the
