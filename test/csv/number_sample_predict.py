@@ -29,7 +29,6 @@ number_sample,10
 sample_method,asymptotic
 no_ode_ignore,iota
 root_node_name,n0
-absolute_covariates,young
 '''
 #
 # option_predict.csv
@@ -51,15 +50,15 @@ n1,n0
 #
 # covariate.csv
 csv_file['covariate.csv'] = \
-'''node_name,sex,age,time,young,omega
-n0,female,20,2000,1.0,0.02
-n0,female,80,2000,0.0,0.02
-n0,male,20,2000,1.0,0.02
-n0,male,80,2000,0.0,0.02
-n1,female,20,2000,1.0,0.02
-n1,female,80,2000,0.0,0.02
-n1,male,20,2000,1.0,0.02
-n1,male,80,2000,0.0,0.02
+'''node_name,sex,age,time,omega
+n0,female,20,2000,0.02
+n0,female,80,2000,0.02
+n0,male,20,2000,0.02
+n0,male,80,2000,0.02
+n1,female,20,2000,0.02
+n1,female,80,2000,0.02
+n1,male,20,2000,0.02
+n1,male,80,2000,0.02
 '''
 #
 # fit_goal.csv
@@ -96,7 +95,6 @@ csv_file['child_rate.csv'] = \
 # mulcov.csv
 csv_file['mulcov.csv'] = \
 '''covariate,type,effected,value_prior,const_value
-young,meas_value,Sincidence,uniform_-2_2,
 '''
 #
 # data_in.csv
@@ -131,19 +129,15 @@ def main() :
    #
    # data_in.csv
    float_format        = '{0:.8g}'
-   mulcov_young_true   = 0.5
    file_name           = f'{fit_dir}/data_in.csv'
    table               = at_cascade.csv.read_table( file_name )
    for row in table :
       age            = float(row['age_lower'])
-      young          = float( age < 20 )
       integrand_name = row['integrand_name']
       assert integrand_name == 'Sincidence'
       #
-      effect            = mulcov_young_true * young
-      Sincidence        = math.exp(effect) * no_effect_iota_true
-      row['meas_value'] = float_format.format( Sincidence )
-      row['meas_std']   = float_format.format( Sincidence / 10.0 )
+      row['meas_value'] = float_format.format( no_effect_iota_true )
+      row['meas_std']   = float_format.format( no_effect_iota_true / 10.0 )
    at_cascade.csv.write_table(file_name, table)
    #
    # csv.fit, csv.predict
