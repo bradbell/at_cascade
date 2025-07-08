@@ -4,14 +4,29 @@
 # ----------------------------------------------------------------------------
 {xrst_begin wish_list}
 {xrst_spell
-  attaches
-  avgint
-  cov
-  meas
+   py
+   dismodat
+   subprocess
+   attaches
+   avgint
+   cov
+   meas
 }
 
 Wish List for at_cascade
 ########################
+
+subprocess
+**********
+All the sub-processes that run ``dismodat.py`` or ``dismod-at``
+should be converted to the corresponding python function call; e.g.::
+
+   subprocess.run( f'dismodat.py {database} db2csv' )
+
+should be converted to::
+
+   dismod_at.db2csv_command(database)
+
 
 avgint Table
 ************
