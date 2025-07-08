@@ -332,8 +332,8 @@ mulcov.csv
 ==========
 {xrst_code py}'''
 fit_file['mulcov.csv'] = \
-   'covariate,type,effected,value_prior,const_value' + \
-   f'dtp3,rate_value,iota,,{dtp3_multiplier_truth}'
+   'covariate,type,effected,value_prior,const_value\n' + \
+   f'dtp3,rate_value,iota,,{dtp3_multiplier_truth}\n'
 '''{xrst_code}
 
 predict_integrand.csv
@@ -451,7 +451,7 @@ def check_variable(fit_dir) :
          # This test failed before 2025-07-07 because the covariate reference
          # used for the random effects in set_truth.py were not correct.
          relerr = ( 1.0 - fit_value / truth )
-         assert abs(relerr) < 1e-1
+         assert abs(relerr) < 5e-2
 
 # ---------------------------------------------------------------------------
 def check_predict(fit_dir) :
@@ -478,27 +478,22 @@ def check_predict(fit_dir) :
    #
    # max_tru, max_fit_diff
    for i in range( len(predict_table['tru'] ) ) :
+      #
       tru_row        = predict_table['tru'][i]
       fit_row        = predict_table['fit'][i]
-      tru_value      = float( tru_row['avg_integrand'] )
-      fit_value      = float( fit_row['avg_integrand'] )
       integrand_name = tru_row['integrand_name']
-      #
       assert int(tru_row['avgint_id']) == int(fit_row['avgint_id'])
       assert tru_row['integrand_name'] == fit_row['integrand_name']
       #
-      tru                      = max_tru[integrand_name]
-      max_tru[integrand_name]  = max(tru, abs( tru_value ) )
+      tru_value      = float( tru_row['avg_integrand'] )
+      fit_value      = float( fit_row['avg_integrand'] )
       #
-      max_diff  = max_fit_diff[integrand_name]
-      max_diff  = max(max_diff, abs( fit_value - tru_value ) )
-      max_fit_diff[integrand_name] = max_diff
-   #
-   # check max_fit_diff
-   for integrand_name in integrand_list :
-      relerr =  max_fit_diff[integrand_name] / max_tru[integrand_name]
-      if abs( relerr ) > 1e-1 :
-         assert False, f'{integrand_name}: relerr = {relerr}'
+      #
+      if tru_value == 0.0 :
+         assert fit_value == 0.0
+      else :
+         relerr = 1.0 - fit_value / tru_value
+         assert abs(relerr) < 5e-2
    #
 # ---------------------------------------------------------------------------
 if __name__ == '__main__' :
