@@ -65,7 +65,7 @@ parent rage grid.
 {xrst_code py}'''
 #
 age_grid = dict()
-age_grid['iota'] = [ 0.0 ]
+age_grid['iota'] = [ 0.0, 100.00 ]
 age_grid['chi']  = [ 0.0 ]
 age_grid['rho']  = [ 0.0 ]
 age_grid['all']  = sorted( set(
@@ -73,7 +73,7 @@ age_grid['all']  = sorted( set(
 ) )
 #
 time_grid = dict()
-time_grid['iota'] = [ 1980.0 ]
+time_grid['iota'] = [ 1980.0, 2025.0 ]
 time_grid['chi']  = [ 1980.0 ]
 time_grid['rho']  = [ 1980.0 ]
 time_grid['all']  = sorted( set(
@@ -182,7 +182,7 @@ simulate.csv
 {xrst_code py}'''
 header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,meas_std_cv,meas_std_min\n'
-meas_std_cv     = 10.0
+meas_std_cv     = 1.0
 std_min         = 1e-6
 simulate_id     = 0
 sim_file['simulate.csv'] = header
@@ -246,7 +246,7 @@ ode_method,iota_pos_rho_pos
 balance_sex,false
 freeze_type,mean
 child_prior_std_factor_mulcov,1
-tolerance_fixed,1e-8
+tolerance_fixed,1e-10
 no_ode_ignore,mtexcess
 hold_out_integrand,mtexcess
 """
@@ -279,9 +279,14 @@ n1
 
 prior.csv
 =========
-Often one uses a Gaussian prior on the random effects.
 We are using a uniform because we have good data,
-know the true random effects,  and are trying to reproduce it with the fit.
+know the true random effects, and are trying to reproduce it with the fit.
+(Often one uses a Gaussian prior on the random effects.)
+We are using a Gaussian for the fixed effects.
+If we used a uniform for the fixed effects,
+the child prior standard deviations would not matter.
+Note that the stand deviation at the root level is 1.0
+(which is very large relative to the true rate values).
 {xrst_code py}'''
 delta_prior_std        = 0.2
 fit_file['prior.csv']  = \
@@ -297,7 +302,7 @@ for rate_name in no_effect_rate_truth :
       lower      = rate_truth / 10.0
       upper      = rate_truth * 10.0
    fit_file['prior.csv'] += \
-      f'prior_{rate_name},uniform,{rate_truth},,,{lower},{upper}\n'
+      f'prior_{rate_name},gaussian,{rate_truth},1.0,,{lower},{upper}\n'
 '''{xrst_code}
 
 parent_rate.csv
