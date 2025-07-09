@@ -285,7 +285,7 @@ n1
 
 prior.csv
 =========
-We are using a uniform because we have good data,
+We are using a uniform for the random effects because we have good data,
 know the true random effects, and are trying to reproduce it with the fit.
 (Often one uses a Gaussian prior on the random effects.)
 We are using a Gaussian for the fixed effects.
