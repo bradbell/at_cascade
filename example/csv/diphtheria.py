@@ -467,28 +467,20 @@ def check_fit_predict(fit_dir) :
    for prefix in [ 'fit', 'tru' ] :
       predict_table[prefix] = sorted(predict_table[prefix], key=key)
    #
-   # max_tru, max_fit_diff, max_sam_diff
-   max_tru      = dict()
-   max_fit_diff = dict()
-   max_sam_diff = dict()
-   for integrand_name in integrand_list :
-      max_tru[integrand_name]      = 0.0
-      max_fit_diff[integrand_name] = 0.0
-      max_sam_diff[integrand_name] = 0.0
-   #
-   # max_tru, max_fit_diff
+   # i
    for i in range( len(predict_table['tru'] ) ) :
       #
+      # tru_value, fit_value
       tru_row        = predict_table['tru'][i]
       fit_row        = predict_table['fit'][i]
-      integrand_name = tru_row['integrand_name']
+      #
       assert int(tru_row['avgint_id']) == int(fit_row['avgint_id'])
       assert tru_row['integrand_name'] == fit_row['integrand_name']
       #
       tru_value      = float( tru_row['avg_integrand'] )
       fit_value      = float( fit_row['avg_integrand'] )
       #
-      #
+      # check fit_value
       if tru_value == 0.0 :
          assert fit_value == 0.0
       else :
