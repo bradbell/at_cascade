@@ -463,7 +463,13 @@ def check_fit_predict(fit_dir) :
       predict_table[prefix] = at_cascade.csv.read_table(file_name)
    #
    # predict_table
-   key = lambda row : int( row['avgint_id'] )
+   key = lambda row : (
+      int( row['avgint_id'] ) ,
+      row['node_name'] ,
+      row['sex'] ,
+      row['fit_node_name'] ,
+      row['fit_sex']
+   )
    for prefix in [ 'fit', 'tru' ] :
       predict_table[prefix] = sorted(predict_table[prefix], key=key)
    #
