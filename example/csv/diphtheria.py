@@ -230,8 +230,7 @@ fit_file['covariate.csv'] = sim_file['covariate.csv']
 
 option_fit.csv
 ==============
-#. The priors for iota are uniform.
-   We use ``censor_asymptotic`` to make sure we do not get
+#. We use ``censor_asymptotic`` to make sure we do not get
    negative samples for iota and prevalence, which would cause
    the predictions to fail.
 #. We are completely ignoring the mtexcess data.
