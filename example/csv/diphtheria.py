@@ -439,7 +439,7 @@ def fit(sim_dir, fit_dir) :
    # fit
    at_cascade.csv.fit(fit_dir)
 # ---------------------------------------------------------------------------
-def check_variable(fit_dir) :
+def check_variable_csv(fit_dir) :
    file_name      = f'{fit_dir}/n0/variable.csv'
    variable_table = at_cascade.csv.read_table(file_name)
    for row in variable_table :
@@ -454,17 +454,17 @@ def check_variable(fit_dir) :
          assert abs(relerr) < 5e-2
 
 # ---------------------------------------------------------------------------
-def check_predict(fit_dir) :
+def check_fit_predict(fit_dir) :
    #
    # predict_table
    predict_table = dict()
-   for prefix in [ 'fit', 'tru', 'sam' ] :
+   for prefix in [ 'fit', 'tru' ] :
       file_name = f'{fit_dir}/{prefix}_predict.csv'
       predict_table[prefix] = at_cascade.csv.read_table(file_name)
    #
    # predict_table
    key = lambda row : int( row['avgint_id'] )
-   for prefix in [ 'fit', 'tru', 'sam' ] :
+   for prefix in [ 'fit', 'tru' ] :
       predict_table[prefix] = sorted(predict_table[prefix], key=key)
    #
    # max_tru, max_fit_diff, max_sam_diff
@@ -515,11 +515,11 @@ if __name__ == '__main__' :
    # predict
    at_cascade.csv.predict(fit_dir, sim_dir)
    #
-   # check_variable
-   check_variable(fit_dir)
+   # check_variable_csv
+   check_variable_csv(fit_dir)
    #
-   # check_predict
-   check_predict(fit_dir)
+   # check_fit_predict
+   check_fit_predict(fit_dir)
    #
    print('diphtheria.py: OK')
 # END PYTHON
