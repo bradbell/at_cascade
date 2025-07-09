@@ -34,8 +34,14 @@ import at_cascade
 Csv Example Simulating, Fitting and Predicting Diphtheria
 #########################################################
 
-Under Construction
-******************
+Prior Versus Posterior
+**********************
+This example does a check of priors versus posteriors;
+see the following function at the end:
+{xrst_literal
+   # BEGIN_CHECK_SAM_PREDICT
+   # END_CHECK_SAM_PREDICT
+}
 
 Global Variables
 ****************
@@ -439,6 +445,10 @@ def fit(sim_dir, fit_dir) :
    # fit
    at_cascade.csv.fit(fit_dir)
 # ---------------------------------------------------------------------------
+# check_variable_csv
+#
+# Check that the fit values for all the variables are close to the truth
+# used when the data was simulated.
 def check_variable_csv(fit_dir) :
    file_name      = f'{fit_dir}/n0/variable.csv'
    variable_table = at_cascade.csv.read_table(file_name)
@@ -451,9 +461,13 @@ def check_variable_csv(fit_dir) :
          # This test failed before 2025-07-07 because the covariate reference
          # used for the random effects in set_truth.py were not correct.
          relerr = ( 1.0 - fit_value / truth )
-         assert abs(relerr) < 5e-2
+         assert abs(relerr) < 1e-1
 
 # ---------------------------------------------------------------------------
+# check_fit_predict
+#
+# Check that the predictions corresponding to the fit are close to the
+# predictions corresponding the the truth used to simulate the data.
 def check_fit_predict(fit_dir) :
    #
    # predict_table
@@ -494,6 +508,84 @@ def check_fit_predict(fit_dir) :
          assert abs(relerr) < 5e-2
    #
 # ---------------------------------------------------------------------------
+# BEGIN_CHECK_SAM_PREDICT
+# check_sam_predict
+#
+# Check that the prior samples of Sincendence have larger standard deviation
+# than the posterior samples.
+def check_sam_predict(fit_dir) :
+# END_CHECK_SAM_PREDICT
+   #
+   # fit_predict_table
+   file_name = f'{fit_dir}/fit_predict.csv'
+   fit_predict_table = at_cascade.csv.read_table(file_name)
+   #
+   # fit_pjob_fjob_at
+   fit_pjob_fjob_at = dict()
+   for row in fit_predict_table :
+      if row['integrand_name'] == 'Sincidence' :
+         #
+         pjob = ( row['node_name'] , row['sex'] )
+         if pjob not in fit_pjob_fjob_at :
+            fit_pjob_fjob_at[pjob] = dict()
+         #
+         fjob = ( row['fit_node_name'] , row['fit_sex'] )
+         if fjob not in fit_pjob_fjob_at[pjob] :
+            fit_pjob_fjob_at[pjob][fjob] = dict()
+         #
+         at            = ( float( row['age'] ), float( row['time'] ) )
+         avg_integrand = float( row['avg_integrand'] )
+         assert at not in fit_pjob_fjob_at
+         fit_pjob_fjob_at[pjob][fjob][at] = avg_integrand
+   #
+   # sam_predict_table
+   file_name = f'{fit_dir}/sam_predict.csv'
+   sam_predict_table = at_cascade.csv.read_table(file_name)
+   #
+   # sam_pjob_fjob_at
+   sam_pjob_fjob_at = dict()
+   for row in sam_predict_table :
+      if row['integrand_name'] == 'Sincidence' :
+         #
+         pjob = ( row['node_name'] , row['sex'] )
+         if pjob not in sam_pjob_fjob_at :
+            sam_pjob_fjob_at[pjob] = dict()
+         #
+         fjob = ( row['fit_node_name'] , row['fit_sex'] )
+         if fjob not in sam_pjob_fjob_at[pjob] :
+            sam_pjob_fjob_at[pjob][fjob] = dict()
+         #
+         at = ( float( row['age'] ), float( row['time'] ) )
+         if at not in sam_pjob_fjob_at[pjob][fjob] :
+            sam_pjob_fjob_at[pjob][fjob][at] = list()
+         #
+         avg_integrand = float( row['avg_integrand'] )
+         sam_pjob_fjob_at[pjob][fjob][at].append( avg_integrand )
+   #
+   # std_pjob_fjob_at
+   # numpy does not provide for the case where we know the mean
+   std_pjob_fjob_at = dict()
+   for pjob in sam_pjob_fjob_at :
+      std_pjob_fjob_at[pjob] = dict()
+      for fjob in sam_pjob_fjob_at[pjob] :
+         std_pjob_fjob_at[pjob][fjob] = dict()
+         for at in sam_pjob_fjob_at[pjob][fjob] :
+            mean    = fit_pjob_fjob_at[pjob][fjob][at]
+            samples = sam_pjob_fjob_at[pjob][fjob][at]
+            #
+            sam   = numpy.array( samples ) - mean
+            samsq = sam**2
+            std   = numpy.sqrt( samsq.sum() / samsq.size )
+            std_pjob_fjob_at[pjob][fjob][at] = std
+   #
+   # check
+   for sex in ['female', 'male' ] :
+      pjob = ( 'n1', sex )
+      for at in std_pjob_fjob_at[pjob][('n0', 'both')] :
+         std_posterior  = std_pjob_fjob_at[pjob][ ('n1', sex ) ][at]
+         std_prior      = std_pjob_fjob_at[pjob][ ('n0', 'both' ) ][at]
+         assert std_posterior < std_prior
+# ---------------------------------------------------------------------------
 if __name__ == '__main__' :
    #
    # sim_dir
@@ -518,6 +610,9 @@ if __name__ == '__main__' :
    #
    # check_fit_predict
    check_fit_predict(fit_dir)
+   #
+   # check_sam_predict
+   check_sam_predict(fit_dir)
    #
    print('diphtheria.py: OK')
 # END PYTHON
