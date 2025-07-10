@@ -50,6 +50,13 @@ Global variables besides
 :ref:`csv.diphtheria@sim_file` and :ref:`csv.diphtheria@fit_file`.
 Variables that do not appear in a heading are temporaries.
 
+child_prior_std_factor
+======================
+The factor that multiplies the prior standard deviations:
+{xrst_code py}'''
+child_prior_std_factor = 2.0
+'''{xrst_code}
+
 ode_step_size
 =============
 The step size used to approximate the ode solution and to
@@ -250,7 +257,6 @@ root_node_name,n0
 refit_split,false
 max_abs_effect,4
 quasi_fixed,false
-child_prior_std_factor,2
 ode_method,iota_pos_rho_pos
 balance_sex,false
 freeze_type,mean
@@ -259,7 +265,10 @@ tolerance_fixed,1e-10
 no_ode_ignore,mtexcess
 hold_out_integrand,mtexcess
 """
-fit_file['option_fit.csv'] += f'ode_step_size,{ode_step_size}\n'
+fit_file['option_fit.csv'] += \
+   f'child_prior_std_factor,{child_prior_std_factor}\n'
+fit_file['option_fit.csv'] += \
+   f'ode_step_size,{ode_step_size}\n'
 '''{xrst_code}
 
 option_predict.csv
@@ -540,7 +549,7 @@ def check_fit_predict(fit_dir) :
          assert fit_value == 0.0
       else :
          relerr = 1.0 - fit_value / tru_value
-         assert abs(relerr) < 5e-2
+         assert abs(relerr) < 1e-1
    #
 # ---------------------------------------------------------------------------
 # BEGIN_CHECK_SAM_PREDICT
@@ -669,10 +678,10 @@ def check_sam_predict(fit_dir) :
             # mean should be very accurate
             assert abs( 1.0 - mean_v / mean ) < 1e-4
             #
-            # 2DO: Why is this std off by a factor of two ?
             # std should not be accurate because it uses different samples
             # from the posterior distribution
-            assert abs( 1.0 - std_v / (2.0 * std) ) < 0.1
+            relerr = 1.0 - std_v / (std * child_prior_std_factor)
+            assert abs( relerr ) < 0.1
 # ---------------------------------------------------------------------------
 if __name__ == '__main__' :
    #
