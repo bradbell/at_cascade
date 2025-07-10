@@ -512,72 +512,79 @@ def check_fit_predict(fit_dir) :
 #
 # Check that the prior samples of Sincendence have larger standard deviation
 # than the posterior samples.
+#
+# prefix
+# This is 'fit' for the fit predictions; i.e., the predictions corresponding
+# to the optimal value for the fit.
+# This is 'sam' for the sample predictions; i.e., the predictions corresponding
+# to the posterior distribution for the fit.
+#
+# pjob
+# We use the notation pjob for a prediction job; i.e.,
+# the (node, sex) tuple that we are predictong for.
+#
+# fjob
+# We use the notation fjob for a fit job; i.e.,
+# the (node, sex) tuple for the fit that is doing the prediction.
+#
+# at
+# We use the notation at for the (age, time) tuple that
+# the prediction is for.
+#
 def check_sam_predict(fit_dir) :
 # END_CHECK_SAM_PREDICT
    #
-   # fit_predict_table
-   file_name = f'{fit_dir}/fit_predict.csv'
-   fit_predict_table = at_cascade.csv.read_table(file_name)
+   # predict_table
+   predict_table = dict()
+   for prefix in [ 'fit', 'sam' ] :
+      file_name             = f'{fit_dir}/{prefix}_predict.csv'
+      predict_table[prefix] = at_cascade.csv.read_table(file_name)
    #
-   # fit_pjob_fjob_at
-   fit_pjob_fjob_at = dict()
-   for row in fit_predict_table :
-      if row['integrand_name'] == 'Sincidence' :
-         #
-         pjob = ( row['node_name'] , row['sex'] )
-         if pjob not in fit_pjob_fjob_at :
-            fit_pjob_fjob_at[pjob] = dict()
-         #
-         fjob = ( row['fit_node_name'] , row['fit_sex'] )
-         if fjob not in fit_pjob_fjob_at[pjob] :
-            fit_pjob_fjob_at[pjob][fjob] = dict()
-         #
-         at            = ( float( row['age'] ), float( row['time'] ) )
-         avg_integrand = float( row['avg_integrand'] )
-         assert at not in fit_pjob_fjob_at
-         fit_pjob_fjob_at[pjob][fjob][at] = avg_integrand
-   #
-   # sam_predict_table
-   file_name = f'{fit_dir}/sam_predict.csv'
-   sam_predict_table = at_cascade.csv.read_table(file_name)
-   #
-   # sam_pjob_fjob_at
-   sam_pjob_fjob_at = dict()
-   for row in sam_predict_table :
-      if row['integrand_name'] == 'Sincidence' :
-         #
-         pjob = ( row['node_name'] , row['sex'] )
-         if pjob not in sam_pjob_fjob_at :
-            sam_pjob_fjob_at[pjob] = dict()
-         #
-         fjob = ( row['fit_node_name'] , row['fit_sex'] )
-         if fjob not in sam_pjob_fjob_at[pjob] :
-            sam_pjob_fjob_at[pjob][fjob] = dict()
-         #
-         at = ( float( row['age'] ), float( row['time'] ) )
-         if at not in sam_pjob_fjob_at[pjob][fjob] :
-            sam_pjob_fjob_at[pjob][fjob][at] = list()
-         #
-         avg_integrand = float( row['avg_integrand'] )
-         sam_pjob_fjob_at[pjob][fjob][at].append( avg_integrand )
+   # prefix_pjob_fjob_at
+   prefix_pjob_fjob_at = dict()
+   for prefix in [ 'fit', 'sam' ] :
+      prefix_pjob_fjob_at[prefix] = dict()
+      #
+      for row in predict_table[prefix] :
+         if row['integrand_name'] == 'Sincidence' :
+            #
+            pjob = ( row['node_name'] , row['sex'] )
+            if pjob not in prefix_pjob_fjob_at[prefix] :
+                  prefix_pjob_fjob_at[prefix][pjob] = dict()
+            #
+            fjob = ( row['fit_node_name'] , row['fit_sex'] )
+            if fjob not in prefix_pjob_fjob_at[prefix][pjob] :
+               prefix_pjob_fjob_at[prefix][pjob][fjob] = dict()
+            #
+            at            = ( float( row['age'] ), float( row['time'] ) )
+            avg_integrand = float( row['avg_integrand'] )
+            #
+            if prefix == 'fit' :
+               assert at not in prefix_pjob_fjob_at[prefix][pjob]
+               prefix_pjob_fjob_at[prefix][pjob][fjob][at] = avg_integrand
+            else :
+               if at not in prefix_pjob_fjob_at[prefix][pjob][fjob] :
+                  prefix_pjob_fjob_at[prefix][pjob][fjob][at] = list()
+               this_list = prefix_pjob_fjob_at[prefix][pjob][fjob][at]
+               this_list.append( avg_integrand )
    #
    # std_pjob_fjob_at
-   # numpy does not provide for the case where we know the mean
+   # numpy.std does not provide for the case where we know the mean
    std_pjob_fjob_at = dict()
-   for pjob in sam_pjob_fjob_at :
+   for pjob in prefix_pjob_fjob_at['sam'] :
       std_pjob_fjob_at[pjob] = dict()
-      for fjob in sam_pjob_fjob_at[pjob] :
+      for fjob in prefix_pjob_fjob_at['sam'][pjob] :
          std_pjob_fjob_at[pjob][fjob] = dict()
-         for at in sam_pjob_fjob_at[pjob][fjob] :
-            mean    = fit_pjob_fjob_at[pjob][fjob][at]
-            samples = sam_pjob_fjob_at[pjob][fjob][at]
+         for at in prefix_pjob_fjob_at['sam'][pjob][fjob] :
+            mean    = prefix_pjob_fjob_at['fit'][pjob][fjob][at]
+            samples = prefix_pjob_fjob_at['sam'][pjob][fjob][at]
             #
             sam   = numpy.array( samples ) - mean
             samsq = sam**2
             std   = numpy.sqrt( samsq.sum() / samsq.size )
             std_pjob_fjob_at[pjob][fjob][at] = std
    #
-   # check
+   # compare prior and posterior std
    for sex in ['female', 'male' ] :
       pjob = ( 'n1', sex )
       for at in std_pjob_fjob_at[pjob][('n0', 'both')] :
