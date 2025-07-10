@@ -8,6 +8,7 @@ import os
 import sys
 import shutil
 import numpy
+import dismod_at
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
@@ -235,12 +236,15 @@ option_fit.csv
    the predictions to fail.
 #. We are completely ignoring the mtexcess data.
    It gets set to zero just before the fit, to test ignoring it.
+#. We are using a large number of samples so that the two realizations of the
+   no effect iota have close sample standard deviation.
 {xrst_code py}'''
 fit_file['option_fit.csv']  =  \
 """name,value
 max_fit,500
-max_fit_parent,10000
+max_fit_parent,1000
 sample_method,censor_asymptotic
+number_sample,1000
 max_num_iter_fixed,50
 root_node_name,n0
 refit_split,false
@@ -359,6 +363,38 @@ Rest of Source Code
 '''
 # ----------------------------------------------------------------------------
 # BEGIN PYTHON
+def get_dtp3_reference(node, sex) :
+   #
+   # file_name
+   if node == 'n0' :
+      assert sex == 'both'
+      file_name = f'{fit_dir}/n0/dismod.db'
+   else :
+      assert sex in [ 'female', 'male' ]
+      file_name = f'{fit_dir}/n0/{sex}/n1/dismod.db'
+   #
+   # connection
+   connection = dismod_at.create_connection(
+      file_name, new = False, readonly = True
+   )
+   #
+   # covariate_table
+   covariate_table = dismod_at.get_table_dict(
+      connection, tbl_name = 'covariate'
+   )
+   #
+   # connection
+   connection.close()
+   #
+   # reference
+   reference = None
+   for row in covariate_table :
+      if row['covariate_name'] == 'dtp3' :
+         reference = row['reference']
+   assert reference != None
+   #
+   return reference
+# ---------------------------------------------------------------------------
 def sim(sim_dir ) :
    #
    # write input csv files
@@ -466,7 +502,7 @@ def check_variable_csv(fit_dir) :
 # check_fit_predict
 #
 # Check that the predictions corresponding to the fit are close to the
-# predictions corresponding the the truth used to simulate the data.
+# predictions corresponding the truth used to simulate the data.
 def check_fit_predict(fit_dir) :
    #
    # predict_table
@@ -560,7 +596,7 @@ def check_sam_predict(fit_dir) :
             avg_integrand = float( row['avg_integrand'] )
             #
             if prefix == 'fit' :
-               assert at not in prefix_pjob_fjob_at[prefix][pjob]
+               assert at not in prefix_pjob_fjob_at[prefix][pjob][fjob]
                prefix_pjob_fjob_at[prefix][pjob][fjob][at] = avg_integrand
             else :
                if at not in prefix_pjob_fjob_at[prefix][pjob][fjob] :
@@ -569,7 +605,6 @@ def check_sam_predict(fit_dir) :
                this_list.append( avg_integrand )
    #
    # std_pjob_fjob_at
-   # numpy.std does not provide for the case where we know the mean
    std_pjob_fjob_at = dict()
    for pjob in prefix_pjob_fjob_at['sam'] :
       std_pjob_fjob_at[pjob] = dict()
@@ -578,11 +613,27 @@ def check_sam_predict(fit_dir) :
          for at in prefix_pjob_fjob_at['sam'][pjob][fjob] :
             mean    = prefix_pjob_fjob_at['fit'][pjob][fjob][at]
             samples = prefix_pjob_fjob_at['sam'][pjob][fjob][at]
+            std     = numpy.std(samples, mean = mean )
             #
-            sam   = numpy.array( samples ) - mean
-            samsq = sam**2
-            std   = numpy.sqrt( samsq.sum() / samsq.size )
             std_pjob_fjob_at[pjob][fjob][at] = std
+   #
+   # dtp3_pjob_fjob_at
+   dtp3_pjob_fjob_at = dict()
+   for row in predict_table['fit'] :
+      if row['integrand_name'] == 'Sincidence' :
+         #
+         pjob = ( row['node_name'] , row['sex'] )
+         if pjob not in dtp3_pjob_fjob_at :
+               dtp3_pjob_fjob_at[pjob] = dict()
+         #
+         fjob = ( row['fit_node_name'] , row['fit_sex'] )
+         if fjob not in dtp3_pjob_fjob_at[pjob] :
+            dtp3_pjob_fjob_at[pjob][fjob] = dict()
+         #
+         at   = ( float( row['age'] ), float( row['time'] ) )
+         assert at not in dtp3_pjob_fjob_at[pjob][fjob]
+         #
+         dtp3_pjob_fjob_at[pjob][fjob][at] = float( row['dtp3'] )
    #
    # compare prior and posterior std
    for sex in ['female', 'male' ] :
@@ -591,6 +642,37 @@ def check_sam_predict(fit_dir) :
          std_posterior  = std_pjob_fjob_at[pjob][ ('n1', sex ) ][at]
          std_prior      = std_pjob_fjob_at[pjob][ ('n0', 'both' ) ][at]
          assert std_posterior < std_prior
+   #
+   # compare no_effect prior calculated from predictions
+   # and the prior for n1 in variable.csv
+   for sex in [ 'female', 'male' ] :
+      file_name      = f'{fit_dir}/n0/{sex}/n1/variable.csv'
+      variable_table = at_cascade.csv.read_table(file_name)
+      pjob           = ( 'n1', sex )
+      fjob           = ( 'n0', 'both' )
+      dtp3_reference = get_dtp3_reference( 'n1', sex )
+      for row in variable_table :
+         if row['var_type'] == 'rate' and row['rate'] == 'iota' :
+            age     = float( row['age'] )
+            time    = float( row['time'] )
+            mean_v  = float( row['mean_v'] )
+            std_v   = float( row['std_v'] )
+            #
+            at         = (age, time)
+            dtp3       = dtp3_pjob_fjob_at[pjob][fjob][at] - dtp3_reference
+            multiplier = numpy.exp( dtp3_multiplier_truth * dtp3 )
+            #
+            at      = (age, time )
+            mean    = prefix_pjob_fjob_at['fit'][pjob][fjob][at] / multiplier
+            std     = std_pjob_fjob_at[pjob][fjob][at] / multiplier
+            #
+            # mean should be very accurate
+            assert abs( 1.0 - mean_v / mean ) < 1e-4
+            #
+            # 2DO: Why is this std off by a factor of two ?
+            # std should not be accurate because it uses different samples
+            # from the posterior distribution
+            assert abs( 1.0 - std_v / (2.0 * std) ) < 0.1
 # ---------------------------------------------------------------------------
 if __name__ == '__main__' :
    #
