@@ -671,7 +671,6 @@ def check_sam_predict(fit_dir) :
             dtp3       = dtp3_pjob_fjob_at[pjob][fjob][at] - dtp3_reference
             multiplier = numpy.exp( dtp3_multiplier_truth * dtp3 )
             #
-            at      = (age, time )
             mean    = prefix_pjob_fjob_at['fit'][pjob][fjob][at] / multiplier
             std     = std_pjob_fjob_at[pjob][fjob][at] / multiplier
             #
