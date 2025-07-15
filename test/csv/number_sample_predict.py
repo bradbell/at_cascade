@@ -154,12 +154,18 @@ def main() :
    number_sample_predict = option_predict_table['name' == 'number_sample_predict']['value']
    for row in option_predict_table:
       if row['name'] == 'number_sample_predict':
-         number_sample_predict = int( row['value'] )
+         number_sample_predict = int( row['value'] ) - 1
    #
    # check
+   max_sample_id = 0
    for row in predict_table :
       sample_index = int( row['sample_index'] )
-      assert sample_index < number_sample_predict
+      if sample_index > max_sample_id:
+         max_sample_id = sample_index
+   assert max_sample_id == number_sample_predict, (
+      "Number of samples not equal to number_sample_predict; "
+      f"expected {number_sample_predict} got {max_sample_id}."
+   )
 #
 if __name__ == '__main__' :
    main()
