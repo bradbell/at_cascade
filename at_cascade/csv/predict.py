@@ -487,7 +487,9 @@ def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
    # global_option_value
    option_table = at_cascade.csv.read_table(f'{fit_dir}/option_predict.csv')
    option_fit_table = at_cascade.csv.read_table(f'{fit_dir}/option_fit_out.csv')
-   number_sample_fit = option_fit_table["name" == "number_sample"]["value"]
+   for row in option_fit_table:
+      if row['name'] == 'number_sample':
+         number_sample_fit = int(row['value'])
    set_global_option_value(
       fit_dir, option_table, number_sample_fit, top_node_name
    )
