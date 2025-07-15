@@ -249,6 +249,7 @@ def pre_one_job(
    db2csv                ,
    plot                  ,
    zero_meas_value       ,
+   number_sample_predict ,
 ) :
    assert type(predict_job_name) == str
    assert type(fit_dir) == str
@@ -263,6 +264,7 @@ def pre_one_job(
    assert type( db2csv ) == bool
    assert type( plot ) == bool
    assert type( zero_meas_value) == bool
+   assert type( number_sample_predict ) == int
    # END_DEF
    #
    # option_all_table
@@ -272,12 +274,15 @@ def pre_one_job(
    option_all_table = dismod_at.get_table_dict(connection, 'option_all')
    connection.close()
    #
-   # root_database
+   # root_database and sample_method
    root_database      = None
    for row in option_all_table :
       if row['option_name'] == 'root_database' :
          root_database      = row['option_value']
+      if row['option_name'] == 'sample_method' :
+         sample_method      = row['option_value']
    assert root_database != None
+   assert sample_method != None
    #
    # fit_covariate_table, integrand_table, node_table
    fit_or_root = at_cascade.fit_or_root_class(
@@ -397,6 +402,21 @@ def pre_one_job(
    #
    # avgint table
    dismod_at.replace_table(connection, 'avgint', avgint_table)
+   #
+   # resample with number_sample_predict
+   for fit_type in ['fixed', 'both']:
+      try:
+         command = [
+            'dismod_at',
+            pre_database,
+            'sample',
+            sample_method,
+            fit_type,
+            str(number_sample_predict)
+         ]
+         dismod_at.system_command_prc(command)
+      except Exception as e:
+         print(f'sample {fit_type} message: {str(e)}')
    #
    # prefix_list
    prefix_list = list()

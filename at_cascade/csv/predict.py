@@ -388,7 +388,7 @@ def set_global_option_value(fit_dir, option_table, number_sample_fit, top_node_n
       'db2csv'                : (bool,  False)              ,
       'float_precision'       : (int,   5)                  ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
-      'number_sample_predict' : (int,   number_sample_fit)                 ,
+      'number_sample_predict' : (int,   number_sample_fit)  ,
       'plot'                  : (bool,  False)              ,
       'zero_meas_value'       : (bool,  False)              ,
    }

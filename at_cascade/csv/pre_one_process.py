@@ -179,6 +179,7 @@ def try_one_job(
    db2csv                  ,
    plot                    ,
    zero_meas_value         ,
+   number_sample_predict   ,
 ) :
    assert type(predict_job_name) == str
    assert type(fit_dir) == str
@@ -193,6 +194,7 @@ def try_one_job(
    assert type( db2csv ) == bool
    assert type( plot ) == bool
    assert type( zero_meas_value) == bool
+   assert type( number_sample_predict ) == int
    #
    # predict_job_error
    predict_job_error = None
@@ -212,6 +214,7 @@ def try_one_job(
          db2csv                  = db2csv                    ,
          plot                    = plot                      ,
          zero_meas_value         = zero_meas_value           ,
+         number_sample_predict   = number_sample_predict     ,
       )
    else :
       try :
@@ -229,6 +232,7 @@ def try_one_job(
             db2csv                  = db2csv                    ,
             plot                    = plot                      ,
             zero_meas_value         = zero_meas_value           ,
+            number_sample_predict   = number_sample_predict     ,
          )
          #
          # predict_job_error
@@ -339,10 +343,11 @@ def pre_one_process(
       # print_begin
       print_begin(job_name = predict_job_name)
       #
-      # zero_meas_value, db2csv, plot
-      zero_meas_value = option_predict['zero_meas_value']
-      db2csv          = option_predict['db2csv']
-      plot            = option_predict['plot']
+      # number_sample_predict, zero_meas_value, db2csv, plot
+      number_sample_predict = option_predict['number_sample_predict']
+      zero_meas_value       = option_predict['zero_meas_value']
+      db2csv                = option_predict['db2csv']
+      plot                  = option_predict['plot']
       #
       # predict_job_dir, ancestor_job_dir
       predict_job_dir, ancestor_job_dir = at_cascade.csv.ancestor_fit(
@@ -398,6 +403,7 @@ def pre_one_process(
             db2csv                  = db2csv                    ,
             plot                    = plot                      ,
             zero_meas_value         = zero_meas_value           ,
+            number_sample_predict   = number_sample_predict     ,
          )
          #
          # predict_job_dir, ancestor_job_dir
@@ -449,6 +455,7 @@ def pre_one_process(
             db2csv                  = db2csv                    ,
             plot                    = plot                      ,
             zero_meas_value         = zero_meas_value           ,
+            number_sample_predict   = number_sample_predict     ,
          )
          if predict_job_error == None :
             predict_job_error = prior_job_error
