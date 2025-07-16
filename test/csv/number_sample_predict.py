@@ -143,7 +143,6 @@ def main() :
    # option_predict_table
    file_name = f'{fit_dir}/option_predict.csv'
    option_predict_table = at_cascade.csv.read_table(file_name)
-   number_sample_predict = option_predict_table['name' == 'number_sample_predict']['value']
    for row in option_predict_table:
       if row['name'] == 'number_sample_predict':
          number_sample_predict = int( row['value'] ) - 1
