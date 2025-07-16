@@ -41,11 +41,9 @@ number_sample_predict,20
 '''
 #
 # node.csv
-# Use node n-1 to test starting below the base of the tree
 csv_file['node.csv'] = \
 '''node_name,parent_name
 n0,
-n1,n0
 '''
 #
 # covariate.csv
@@ -55,17 +53,12 @@ n0,female,20,2000,0.02
 n0,female,80,2000,0.02
 n0,male,20,2000,0.02
 n0,male,80,2000,0.02
-n1,female,20,2000,0.02
-n1,female,80,2000,0.02
-n1,male,20,2000,0.02
-n1,male,80,2000,0.02
 '''
 #
 # fit_goal.csv
-# n-1 is not included in test because it is not below the root node n0
 csv_file['fit_goal.csv'] = \
 '''node_name
-n1
+n0
 '''
 #
 # predict_integrand.csv
@@ -107,7 +100,6 @@ csv_file['data_in.csv'] = header + \
 0,Sincidence,n0,both,10,10,2000,2000,0.00,0.00,0,gaussian,,
 1,Sincidence,n0,both,80,80,2000,2000,0.00,0.00,0,gaussian,,
 '''
-
 #
 #
 def main() :
