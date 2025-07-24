@@ -412,19 +412,26 @@ def pre_one_job(
    dismod_at.replace_table(connection, 'avgint', avgint_table)
    #
    # resample with number_sample_predict
-   for fit_type in ['fixed', 'both']:
-      try:
-         command = [
-            'dismod_at',
-            pre_database,
-            'sample',
-            sample_method,
-            fit_type,
-            str(number_sample_predict)
-         ]
-         dismod_at.system_command_prc(command)
-      except Exception as e:
-         print(f'sample {fit_type} message: {str(e)}')
+   log_table = dismod_at.get_table_dict(connection, 'log')
+   log_fit_types = []
+   for row in log_table:
+      if 'begin fit' in row['message']:
+         log_fit_types.append(row['message'].replace('begin fit', '').strip())
+   if len(log_fit_types) < 1:
+      msg = 'Neither fit fixed nor fit both passed, prediction impossible.'
+      raise ValueError(msg)
+   try:
+      command = [
+         'dismod_at',
+         pre_database,
+         'sample',
+         sample_method,
+         log_fit_types[-1],  # The last match in the log table is the successful fit
+         str(number_sample_predict)
+      ]
+      dismod_at.system_command_prc(command)
+   except Exception as e:
+      print(f'sample {fit_type} message: {str(e)}')
    #
    # prefix_list
    prefix_list = list()
