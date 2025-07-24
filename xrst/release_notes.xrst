@@ -28,6 +28,10 @@ Release Notes for 2025
 mm-dd
 *****
 
+07-09
+=====
+Add the :ref:`csv.diphtheria-name` example.
+
 07-08
 =====
 Add the :ref:`wish_list@subprocess` wish list item.

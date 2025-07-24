@@ -8,6 +8,7 @@ import os
 import sys
 import shutil
 import numpy
+import dismod_at
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
@@ -34,14 +35,27 @@ import at_cascade
 Csv Example Simulating, Fitting and Predicting Diphtheria
 #########################################################
 
-Under Construction
-******************
+Prior Versus Posterior
+**********************
+This example does a check of priors versus posteriors;
+see the following function at the end:
+{xrst_literal
+   # BEGIN_CHECK_SAM_PREDICT
+   # END_CHECK_SAM_PREDICT
+}
 
 Global Variables
 ****************
 Global variables besides
 :ref:`csv.diphtheria@sim_file` and :ref:`csv.diphtheria@fit_file`.
 Variables that do not appear in a heading are temporaries.
+
+child_prior_std_factor
+======================
+The factor that multiplies the prior standard deviations:
+{xrst_code py}'''
+child_prior_std_factor = 2.0
+'''{xrst_code}
 
 ode_step_size
 =============
@@ -65,7 +79,7 @@ parent rage grid.
 {xrst_code py}'''
 #
 age_grid = dict()
-age_grid['iota'] = [ 0.0 ]
+age_grid['iota'] = [ 0.0, 100.00 ]
 age_grid['chi']  = [ 0.0 ]
 age_grid['rho']  = [ 0.0 ]
 age_grid['all']  = sorted( set(
@@ -73,7 +87,7 @@ age_grid['all']  = sorted( set(
 ) )
 #
 time_grid = dict()
-time_grid['iota'] = [ 1980.0 ]
+time_grid['iota'] = [ 1980.0, 2025.0 ]
 time_grid['chi']  = [ 1980.0 ]
 time_grid['rho']  = [ 1980.0 ]
 time_grid['all']  = sorted( set(
@@ -182,7 +196,7 @@ simulate.csv
 {xrst_code py}'''
 header  = 'simulate_id,integrand_name,node_name,sex,age_lower,age_upper,'
 header += 'time_lower,time_upper,meas_std_cv,meas_std_min\n'
-meas_std_cv     = 10.0
+meas_std_cv     = 1.0
 std_min         = 1e-6
 simulate_id     = 0
 sim_file['simulate.csv'] = header
@@ -224,33 +238,37 @@ fit_file['covariate.csv'] = sim_file['covariate.csv']
 
 option_fit.csv
 ==============
-#. The priors for iota are uniform.
-   We use ``censor_asymptotic`` to make sure we do not get
+#. We use ``censor_asymptotic`` to make sure we do not get
    negative samples for iota and prevalence, which would cause
    the predictions to fail.
 #. We are completely ignoring the mtexcess data.
    It gets set to zero just before the fit, to test ignoring it.
+#. We are using a large number of samples so that the two realizations of the
+   no effect iota have close sample standard deviation.
 {xrst_code py}'''
 fit_file['option_fit.csv']  =  \
 """name,value
 max_fit,500
-max_fit_parent,10000
+max_fit_parent,1000
 sample_method,censor_asymptotic
+number_sample,1000
 max_num_iter_fixed,50
 root_node_name,n0
 refit_split,false
 max_abs_effect,4
 quasi_fixed,false
-child_prior_std_factor,2
 ode_method,iota_pos_rho_pos
 balance_sex,false
 freeze_type,mean
 child_prior_std_factor_mulcov,1
-tolerance_fixed,1e-8
+tolerance_fixed,1e-10
 no_ode_ignore,mtexcess
 hold_out_integrand,mtexcess
 """
-fit_file['option_fit.csv'] += f'ode_step_size,{ode_step_size}\n'
+fit_file['option_fit.csv'] += \
+   f'child_prior_std_factor,{child_prior_std_factor}\n'
+fit_file['option_fit.csv'] += \
+   f'ode_step_size,{ode_step_size}\n'
 '''{xrst_code}
 
 option_predict.csv
@@ -279,9 +297,14 @@ n1
 
 prior.csv
 =========
-Often one uses a Gaussian prior on the random effects.
-We are using a uniform because we have good data,
-know the true random effects,  and are trying to reproduce it with the fit.
+We are using a uniform for the random effects because we have good data,
+know the true random effects, and are trying to reproduce it with the fit.
+(Often one uses a Gaussian prior on the random effects.)
+We are using a Gaussian for the fixed effects.
+If we used a uniform for the fixed effects,
+the child prior standard deviations would not matter.
+Note that the stand deviation at the root level is 1.0
+(which is very large relative to the true rate values).
 {xrst_code py}'''
 delta_prior_std        = 0.2
 fit_file['prior.csv']  = \
@@ -297,7 +320,7 @@ for rate_name in no_effect_rate_truth :
       lower      = rate_truth / 10.0
       upper      = rate_truth * 10.0
    fit_file['prior.csv'] += \
-      f'prior_{rate_name},uniform,{rate_truth},,,{lower},{upper}\n'
+      f'prior_{rate_name},gaussian,{rate_truth},1.0,,{lower},{upper}\n'
 '''{xrst_code}
 
 parent_rate.csv
@@ -327,8 +350,8 @@ mulcov.csv
 ==========
 {xrst_code py}'''
 fit_file['mulcov.csv'] = \
-   'covariate,type,effected,value_prior,const_value' + \
-   f'dtp3,rate_value,iota,,{dtp3_multiplier_truth}'
+   'covariate,type,effected,value_prior,const_value\n' + \
+   f'dtp3,rate_value,iota,,{dtp3_multiplier_truth}\n'
 '''{xrst_code}
 
 predict_integrand.csv
@@ -349,6 +372,38 @@ Rest of Source Code
 '''
 # ----------------------------------------------------------------------------
 # BEGIN PYTHON
+def get_dtp3_reference(node, sex) :
+   #
+   # file_name
+   if node == 'n0' :
+      assert sex == 'both'
+      file_name = f'{fit_dir}/n0/dismod.db'
+   else :
+      assert sex in [ 'female', 'male' ]
+      file_name = f'{fit_dir}/n0/{sex}/n1/dismod.db'
+   #
+   # connection
+   connection = dismod_at.create_connection(
+      file_name, new = False, readonly = True
+   )
+   #
+   # covariate_table
+   covariate_table = dismod_at.get_table_dict(
+      connection, tbl_name = 'covariate'
+   )
+   #
+   # connection
+   connection.close()
+   #
+   # reference
+   reference = None
+   for row in covariate_table :
+      if row['covariate_name'] == 'dtp3' :
+         reference = row['reference']
+   assert reference != None
+   #
+   return reference
+# ---------------------------------------------------------------------------
 def sim(sim_dir ) :
    #
    # write input csv files
@@ -434,7 +489,11 @@ def fit(sim_dir, fit_dir) :
    # fit
    at_cascade.csv.fit(fit_dir)
 # ---------------------------------------------------------------------------
-def check_variable(fit_dir) :
+# check_variable_csv
+#
+# Check that the fit values for all the variables are close to the truth
+# used when the data was simulated.
+def check_variable_csv(fit_dir) :
    file_name      = f'{fit_dir}/n0/variable.csv'
    variable_table = at_cascade.csv.read_table(file_name)
    for row in variable_table :
@@ -449,52 +508,179 @@ def check_variable(fit_dir) :
          assert abs(relerr) < 1e-1
 
 # ---------------------------------------------------------------------------
-def check_predict(fit_dir) :
+# check_fit_predict
+#
+# Check that the predictions corresponding to the fit are close to the
+# predictions corresponding the truth used to simulate the data.
+def check_fit_predict(fit_dir) :
    #
    # predict_table
    predict_table = dict()
-   for prefix in [ 'fit', 'tru', 'sam' ] :
+   for prefix in [ 'fit', 'tru' ] :
       file_name = f'{fit_dir}/{prefix}_predict.csv'
       predict_table[prefix] = at_cascade.csv.read_table(file_name)
    #
    # predict_table
-   key = lambda row : int( row['avgint_id'] )
-   for prefix in [ 'fit', 'tru', 'sam' ] :
+   key = lambda row : (
+      int( row['avgint_id'] ) ,
+      row['node_name'] ,
+      row['sex'] ,
+      row['fit_node_name'] ,
+      row['fit_sex']
+   )
+   for prefix in [ 'fit', 'tru' ] :
       predict_table[prefix] = sorted(predict_table[prefix], key=key)
    #
-   # max_tru, max_fit_diff, max_sam_diff
-   max_tru      = dict()
-   max_fit_diff = dict()
-   max_sam_diff = dict()
-   for integrand_name in integrand_list :
-      max_tru[integrand_name]      = 0.0
-      max_fit_diff[integrand_name] = 0.0
-      max_sam_diff[integrand_name] = 0.0
-   #
-   # max_tru, max_fit_diff
+   # i
    for i in range( len(predict_table['tru'] ) ) :
+      #
+      # tru_value, fit_value
       tru_row        = predict_table['tru'][i]
       fit_row        = predict_table['fit'][i]
-      tru_value      = float( tru_row['avg_integrand'] )
-      fit_value      = float( fit_row['avg_integrand'] )
-      integrand_name = tru_row['integrand_name']
       #
       assert int(tru_row['avgint_id']) == int(fit_row['avgint_id'])
       assert tru_row['integrand_name'] == fit_row['integrand_name']
       #
-      tru                      = max_tru[integrand_name]
-      max_tru[integrand_name]  = max(tru, abs( tru_value ) )
+      tru_value      = float( tru_row['avg_integrand'] )
+      fit_value      = float( fit_row['avg_integrand'] )
       #
-      max_diff  = max_fit_diff[integrand_name]
-      max_diff  = max(max_diff, abs( fit_value - tru_value ) )
-      max_fit_diff[integrand_name] = max_diff
+      # check fit_value
+      if tru_value == 0.0 :
+         assert fit_value == 0.0
+      else :
+         relerr = 1.0 - fit_value / tru_value
+         assert abs(relerr) < 1e-1
    #
-   # check max_fit_diff
-   for integrand_name in integrand_list :
-      relerr =  max_fit_diff[integrand_name] / max_tru[integrand_name]
-      if abs( relerr ) > 1e-1 :
-         assert False, f'{integrand_name}: relerr = {relerr}'
+# ---------------------------------------------------------------------------
+# BEGIN_CHECK_SAM_PREDICT
+# check_sam_predict
+#
+# Check that the prior samples of Sincendence have larger standard deviation
+# than the posterior samples.
+#
+# prefix
+# This is 'fit' for the fit predictions; i.e., the predictions corresponding
+# to the optimal value for the fit.
+# This is 'sam' for the sample predictions; i.e., the predictions corresponding
+# to the posterior distribution for the fit.
+#
+# pjob
+# We use the notation pjob for a prediction job; i.e.,
+# the (node, sex) tuple that we are predictong for.
+#
+# fjob
+# We use the notation fjob for a fit job; i.e.,
+# the (node, sex) tuple for the fit that is doing the prediction.
+#
+# at
+# We use the notation at for the (age, time) tuple that
+# the prediction is for.
+#
+def check_sam_predict(fit_dir) :
+# END_CHECK_SAM_PREDICT
    #
+   # predict_table
+   predict_table = dict()
+   for prefix in [ 'fit', 'sam' ] :
+      file_name             = f'{fit_dir}/{prefix}_predict.csv'
+      predict_table[prefix] = at_cascade.csv.read_table(file_name)
+   #
+   # prefix_pjob_fjob_at
+   prefix_pjob_fjob_at = dict()
+   for prefix in [ 'fit', 'sam' ] :
+      prefix_pjob_fjob_at[prefix] = dict()
+      #
+      for row in predict_table[prefix] :
+         if row['integrand_name'] == 'Sincidence' :
+            #
+            pjob = ( row['node_name'] , row['sex'] )
+            if pjob not in prefix_pjob_fjob_at[prefix] :
+                  prefix_pjob_fjob_at[prefix][pjob] = dict()
+            #
+            fjob = ( row['fit_node_name'] , row['fit_sex'] )
+            if fjob not in prefix_pjob_fjob_at[prefix][pjob] :
+               prefix_pjob_fjob_at[prefix][pjob][fjob] = dict()
+            #
+            at            = ( float( row['age'] ), float( row['time'] ) )
+            avg_integrand = float( row['avg_integrand'] )
+            #
+            if prefix == 'fit' :
+               assert at not in prefix_pjob_fjob_at[prefix][pjob][fjob]
+               prefix_pjob_fjob_at[prefix][pjob][fjob][at] = avg_integrand
+            else :
+               if at not in prefix_pjob_fjob_at[prefix][pjob][fjob] :
+                  prefix_pjob_fjob_at[prefix][pjob][fjob][at] = list()
+               this_list = prefix_pjob_fjob_at[prefix][pjob][fjob][at]
+               this_list.append( avg_integrand )
+   #
+   # std_pjob_fjob_at
+   std_pjob_fjob_at = dict()
+   for pjob in prefix_pjob_fjob_at['sam'] :
+      std_pjob_fjob_at[pjob] = dict()
+      for fjob in prefix_pjob_fjob_at['sam'][pjob] :
+         std_pjob_fjob_at[pjob][fjob] = dict()
+         for at in prefix_pjob_fjob_at['sam'][pjob][fjob] :
+            mean    = prefix_pjob_fjob_at['fit'][pjob][fjob][at]
+            samples = prefix_pjob_fjob_at['sam'][pjob][fjob][at]
+            std     = numpy.std(samples, mean = mean )
+            #
+            std_pjob_fjob_at[pjob][fjob][at] = std
+   #
+   # dtp3_pjob_fjob_at
+   dtp3_pjob_fjob_at = dict()
+   for row in predict_table['fit'] :
+      if row['integrand_name'] == 'Sincidence' :
+         #
+         pjob = ( row['node_name'] , row['sex'] )
+         if pjob not in dtp3_pjob_fjob_at :
+               dtp3_pjob_fjob_at[pjob] = dict()
+         #
+         fjob = ( row['fit_node_name'] , row['fit_sex'] )
+         if fjob not in dtp3_pjob_fjob_at[pjob] :
+            dtp3_pjob_fjob_at[pjob][fjob] = dict()
+         #
+         at   = ( float( row['age'] ), float( row['time'] ) )
+         assert at not in dtp3_pjob_fjob_at[pjob][fjob]
+         #
+         dtp3_pjob_fjob_at[pjob][fjob][at] = float( row['dtp3'] )
+   #
+   # compare prior and posterior std
+   for sex in ['female', 'male' ] :
+      pjob = ( 'n1', sex )
+      for at in std_pjob_fjob_at[pjob][('n0', 'both')] :
+         std_posterior  = std_pjob_fjob_at[pjob][ ('n1', sex ) ][at]
+         std_prior      = std_pjob_fjob_at[pjob][ ('n0', 'both' ) ][at]
+         assert std_posterior < std_prior
+   #
+   # compare no_effect prior calculated from predictions
+   # and the prior for n1 in variable.csv
+   for sex in [ 'female', 'male' ] :
+      file_name      = f'{fit_dir}/n0/{sex}/n1/variable.csv'
+      variable_table = at_cascade.csv.read_table(file_name)
+      pjob           = ( 'n1', sex )
+      fjob           = ( 'n0', 'both' )
+      dtp3_reference = get_dtp3_reference( 'n1', sex )
+      for row in variable_table :
+         if row['var_type'] == 'rate' and row['rate'] == 'iota' :
+            age     = float( row['age'] )
+            time    = float( row['time'] )
+            mean_v  = float( row['mean_v'] )
+            std_v   = float( row['std_v'] )
+            #
+            at         = (age, time)
+            dtp3       = dtp3_pjob_fjob_at[pjob][fjob][at] - dtp3_reference
+            multiplier = numpy.exp( dtp3_multiplier_truth * dtp3 )
+            #
+            mean    = prefix_pjob_fjob_at['fit'][pjob][fjob][at] / multiplier
+            std     = std_pjob_fjob_at[pjob][fjob][at] / multiplier
+            #
+            # mean should be very accurate
+            assert abs( 1.0 - mean_v / mean ) < 1e-4
+            #
+            # std should not be accurate because it uses different samples
+            # from the posterior distribution
+            relerr = 1.0 - std_v / (std * child_prior_std_factor)
+            assert abs( relerr ) < 0.1
 # ---------------------------------------------------------------------------
 if __name__ == '__main__' :
    #
@@ -515,11 +701,14 @@ if __name__ == '__main__' :
    # predict
    at_cascade.csv.predict(fit_dir, sim_dir)
    #
-   # check_variable
-   check_variable(fit_dir)
+   # check_variable_csv
+   check_variable_csv(fit_dir)
    #
-   # check_predict
-   check_predict(fit_dir)
+   # check_fit_predict
+   check_fit_predict(fit_dir)
+   #
+   # check_sam_predict
+   check_sam_predict(fit_dir)
    #
    print('diphtheria.py: OK')
 # END PYTHON
