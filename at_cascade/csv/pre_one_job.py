@@ -9,6 +9,7 @@ r'''
   avgint
   pdf
   tru
+  meas
 }
 
 Calculate the predictions for One Fit
@@ -84,6 +85,13 @@ If fit_same_as_predict and plot,
 ``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
 to *pre_database* are generated, in the same directory as *pre_database* ;
 i.e., the prediction directory
+
+zero_meas_value
+***************
+If zero_meas_value,
+the value zero is used for the meas_value covariate multipliers.
+This predicts what the mean of the corresponding data would be if
+there were no measurement value covariate effects.
 
 Csv Output Files
 ****************
