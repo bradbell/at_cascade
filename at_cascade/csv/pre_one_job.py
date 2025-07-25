@@ -86,7 +86,7 @@ to *pre_database* are generated, in the same directory as *pre_database* ;
 i.e., the prediction directory
 
 number_sample_predict
----------------------
+*********************
 This integer option specifies the number of samples generated for each
 prediction. This value is specified in
 :ref:`csv.predict#Input Files@option_predict.csv@number_sample_predict` If not
