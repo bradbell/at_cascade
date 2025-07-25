@@ -89,8 +89,8 @@ number_sample_predict
 *********************
 This integer option specifies the number of samples generated for each
 prediction. This value is specified in
-:ref:`csv.predict#Input Files@option_predict.csv@number_sample_predict` If not
-set, :ref:`csv.fit@Input Files@option_fit.csv@number_sample` from
+:ref:`csv.predict@Input Files@option_predict.csv@number_sample_predict`. The
+default value is :ref:`csv.fit@Input Files@option_fit.csv@number_sample` from
 :ref:`csv.fit@Input Files@option_fit.csv` will be used.
 
 Csv Output Files
