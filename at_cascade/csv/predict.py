@@ -491,6 +491,9 @@ def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
    for row in option_fit_table:
       if row['name'] == 'number_sample':
          number_sample_fit = int(row['value'])
+   if number_sample_fit is None:
+      msg = 'number_sample missing from option_fit_out.csv'
+      raise ValueError(msg)
    set_global_option_value(
       fit_dir, option_table, number_sample_fit, top_node_name
    )
