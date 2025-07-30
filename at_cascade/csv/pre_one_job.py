@@ -284,6 +284,7 @@ def pre_one_job(
    #
    # root_database and sample_method
    root_database      = None
+   sample_method      = None
    for row in option_all_table :
       if row['option_name'] == 'root_database' :
          root_database      = row['option_value']
