@@ -414,10 +414,16 @@ def pre_one_job(
    # resample with number_sample_predict
    log_table = dismod_at.get_table_dict(connection, 'log')
    log_fit_types = []
+   fit_passed = False
    for row in log_table:
       if 'begin fit' in row['message']:
          log_fit_types.append(row['message'].replace('begin fit', '').strip())
+      if 'end fit' in row['message']:
+         fit_passed = True
    if len(log_fit_types) < 1:
+      msg = 'Neither fit fixed nor fit both started, prediction impossible.'
+      raise ValueError(msg)
+   if not fit_passed:
       msg = 'Neither fit fixed nor fit both passed, prediction impossible.'
       raise ValueError(msg)
    try:
