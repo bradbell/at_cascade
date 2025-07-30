@@ -422,9 +422,11 @@ def pre_one_job(
       if 'end fit' in row['message']:
          fit_passed = True
    if len(log_fit_types) < 1:
+      connection.close()
       msg = 'Neither fit fixed nor fit both started, prediction impossible.'
       raise ValueError(msg)
    if not fit_passed:
+      connection.close()
       msg = 'Neither fit fixed nor fit both passed, prediction impossible.'
       raise ValueError(msg)
    try:
@@ -438,7 +440,8 @@ def pre_one_job(
       ]
       dismod_at.system_command_prc(command)
    except Exception as e:
-      print(f'sample {fit_type} message: {str(e)}')
+      connection.close()
+      raise Exception(e)
    #
    # prefix_list
    prefix_list = list()
