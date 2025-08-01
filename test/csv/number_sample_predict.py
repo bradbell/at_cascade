@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -14,6 +14,12 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
 import at_cascade
 # BEGIN_PYTHON
 #
+# number_sample
+number_sample_fit = 10
+#
+# number_sample_predict
+number_sample_predict = 30
+#
 # no_effect_iota_true
 no_effect_iota_true    = 0.01
 #
@@ -25,11 +31,11 @@ random_seed = str( int( time.time() ) )
 csv_file['option_fit.csv'] = \
 '''name,value
 max_abs_effect,3.0
-number_sample,10
 sample_method,asymptotic
 no_ode_ignore,iota
 root_node_name,n0
 '''
+csv_file['option_fit.csv'] += f'number_sample,{number_sample_fit}\n'
 #
 # option_predict.csv
 random_seed = str( int( time.time() ) )
@@ -37,8 +43,9 @@ csv_file['option_predict.csv'] = \
 '''name,value
 db2csv,true
 plot,true
-number_sample_predict,20
 '''
+csv_file['option_predict.csv'] += \
+   f'number_sample_predict,{number_sample_predict}\n'
 #
 # node.csv
 csv_file['node.csv'] = \
@@ -140,23 +147,16 @@ def main() :
    file_name = f'{fit_dir}/sam_predict.csv'
    predict_table = at_cascade.csv.read_table(file_name)
    #
-   # option_predict_table
-   file_name = f'{fit_dir}/option_predict.csv'
-   option_predict_table = at_cascade.csv.read_table(file_name)
-   for row in option_predict_table:
-      if row['name'] == 'number_sample_predict':
-         number_sample_predict = int( row['value'] ) - 1
-   #
    # check
    max_sample_id = 0
    for row in predict_table :
       sample_index = int( row['sample_index'] )
       if sample_index > max_sample_id:
          max_sample_id = sample_index
-   assert max_sample_id == number_sample_predict, (
-      "Number of samples not equal to number_sample_predict; "
-      f"expected {number_sample_predict} got {max_sample_id}."
-   )
+   if max_sample_id + 1 != number_sample_predict :
+      msg  = f'Number of samples = {max_sample_id + 1}, '
+      msg += f'number_sample_predict = {number_sample_predict}'
+      assert False, msg
 #
 if __name__ == '__main__' :
    main()

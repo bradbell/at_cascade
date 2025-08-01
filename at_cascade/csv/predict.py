@@ -136,9 +136,13 @@ The default value for this option is false .
 number_sample_predict
 ---------------------
 This integer option specifies the number of samples generated for each
-prediction. The default value is
-:ref:`csv.fit@Input Files@option_fit.csv@number_sample` from
+prediction.  Its default value is the value of
+:ref:`csv.fit@Input Files@option_fit.csv@number_sample` in
 :ref:`csv.fit@Input Files@option_fit.csv`.
+If number_sample_predict does not appear in option_predict.csv,
+and number_sample does not appear in option_fit.csv,
+the default value for number_sample
+is the value used for number_sample_predict.
 
 covariate.csv
 =============
@@ -354,6 +358,9 @@ def ancestor_set(node_table, node_id) :
 # option_table :
 # is the list of dict corresponding to option_predict.csv
 #
+# number_sample_fit
+# is equal to number_sample in the option_fit.csv file.
+#
 # top_node_name
 # is the name of the top node in the node tree
 #
@@ -367,12 +374,16 @@ def ancestor_set(node_table, node_id) :
 # has been coverted to its corresponding type.
 #
 global_option_value = None
-def set_global_option_value(fit_dir, option_table, number_sample_fit, top_node_name) :
+def set_global_option_value(
+   fit_dir, option_table, number_sample_fit, top_node_name
+) :
    global global_option_value
    assert type(global_option_value) == dict or global_option_value == None
    assert type(option_table) == list
    if len(option_table) > 0 :
       assert type( option_table[0] ) == dict
+   assert type(number_sample_fit) == int
+   assert type(top_node_name) == str
    #
    # user
    user = os.environ.get('USER')
@@ -477,23 +488,21 @@ def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
       msg = 'root.db: node_table: no node has None for parent'
       assert False, msg
    #
-   # refit_split
-   refit_split  = True
-   option_table = at_cascade.csv.read_table(f'{fit_dir}/option_fit.csv')
+   # refit_split, number_sample_fit
+   # 2DO: It would be better to get these valuses from the option_all table
+   # (see where csv.fit writes the option_all table).
+   refit_split       = True
+   number_sample_fit = 20
+   option_table      = at_cascade.csv.read_table(f'{fit_dir}/option_fit.csv')
    for row in option_table :
       if row['name'] == 'refit_split' :
          if row['value'] == 'false' :
             refit_split = False
+      if row['name'] == 'number_sample':
+         number_sample_fit = int(row['value'])
    #
    # global_option_value
    option_table = at_cascade.csv.read_table(f'{fit_dir}/option_predict.csv')
-   option_fit_table = at_cascade.csv.read_table(f'{fit_dir}/option_fit_out.csv')
-   for row in option_fit_table:
-      if row['name'] == 'number_sample':
-         number_sample_fit = int(row['value'])
-   if number_sample_fit is None:
-      msg = 'number_sample missing from option_fit_out.csv'
-      raise ValueError(msg)
    set_global_option_value(
       fit_dir, option_table, number_sample_fit, top_node_name
    )

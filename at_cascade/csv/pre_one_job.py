@@ -88,11 +88,7 @@ i.e., the prediction directory
 
 number_sample_predict
 *********************
-This integer option specifies the number of samples generated for each
-prediction. This value is specified in
-:ref:`csv.predict@Input Files@option_predict.csv@number_sample_predict`. The
-default value is :ref:`csv.fit@Input Files@option_fit.csv@number_sample` from
-:ref:`csv.fit@Input Files@option_fit.csv`.
+This is the number of samples generated for each prediction.
 
 zero_meas_value
 ***************
@@ -420,36 +416,42 @@ def pre_one_job(
    # avgint table
    dismod_at.replace_table(connection, 'avgint', avgint_table)
    #
-   # resample with number_sample_predict
-   log_table = dismod_at.get_table_dict(connection, 'log')
-   log_fit_types = []
-   fit_passed = False
+   # sample_command, sample_ok
+   log_table        = dismod_at.get_table_dict(connection, 'log')
+   sample_message   = None
+   sample_ok        = False
    for row in log_table:
-      if 'begin fit' in row['message']:
-         log_fit_types.append(row['message'].replace('begin fit', '').strip())
-      if 'end fit' in row['message']:
-         fit_passed = True
-   if len(log_fit_types) < 1:
-      connection.close()
-      msg = 'Neither fit fixed nor fit both started, prediction impossible.'
-      raise ValueError(msg)
-   if not fit_passed:
-      connection.close()
-      msg = 'Neither fit fixed nor fit both passed, prediction impossible.'
-      raise ValueError(msg)
-   try:
+      message_type = row['message_type']
+      message      = row['message']
+      if message_type == 'command' and message.startswith('end sample') :
+         sample_message  = message
+         sample_ok       = True
+      if message_type == 'command' and message.startswith('begin sample') :
+         sample_ok  = False
+   if not sample_ok :
+      message  = f'pre_one_job: {pre_database}: log table\n'
+      message += 'The last begin sample does not have an end sample after it.'
+      assert False, message
+   #
+   # pre_database
+   # ensure that sample table has number_sample_predict samples per variable.
+   sample_message = sample_message.split()
+   number_sample  = int( sample_message[-1] )
+   if number_sample != number_sample_predict :
+      assert sample_message[0] == 'end'
+      assert sample_message[1] == 'sample'
+      sample_methopd = sample_message[2]
+      variables      = sample_message[3]
+      number_sample  = str( number_sample_predict )
       command = [
          'dismod_at',
          pre_database,
          'sample',
          sample_method,
-         log_fit_types[-1],  # The last match in the log table is the successful fit
-         str(number_sample_predict)
+         variables,
+         number_sample
       ]
       dismod_at.system_command_prc(command)
-   except Exception as e:
-      connection.close()
-      raise Exception(e)
    #
    # prefix_list
    prefix_list = list()

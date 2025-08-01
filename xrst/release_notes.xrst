@@ -24,6 +24,11 @@ Release Notes for 2025
 ######################
 
 
+Branch number_samples:
+**********************
+Add :ref:`csv.predict@Input Files@option_predict.csv@number_sample_predict`
+to the option_fit.csv file.
+This requires dismod_at-2025.7.31 or later.
 
 mm-dd
 *****
