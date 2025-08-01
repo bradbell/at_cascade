@@ -9,6 +9,7 @@ r'''
   avgint
   pdf
   tru
+  meas
 }
 
 Calculate the predictions for One Fit
@@ -92,6 +93,13 @@ prediction. This value is specified in
 :ref:`csv.predict@Input Files@option_predict.csv@number_sample_predict`. The
 default value is :ref:`csv.fit@Input Files@option_fit.csv@number_sample` from
 :ref:`csv.fit@Input Files@option_fit.csv`.
+
+zero_meas_value
+***************
+If zero_meas_value,
+the value zero is used for the meas_value covariate multipliers.
+This predicts what the mean of the corresponding data would be if
+there were no measurement value covariate effects.
 
 Csv Output Files
 ****************
