@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin fit_one_job}
@@ -358,10 +358,7 @@ def fit_one_job(
    for key in perturb_optimization :
       sigma = perturb_optimization[key]
       table = f'{key}_var'
-      command = [
-         'dismodat.py', fit_database, 'perturb', table, sigma
-      ]
-      system_command(command, file_stdout)
+      dismod_at.db2csv_command( fit_database )
    #
    # fit_node_datase.log_table
    # if fit has no data, abort with 'fit: error: no data abort' in log_table
