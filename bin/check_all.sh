@@ -85,11 +85,15 @@ do
    fi
 done
 # -----------------------------------------------------------------------------
+#
+# bin/check_*.sh
 list=$(ls bin/check_*.sh | $sed -e '/check_all.sh/d' )
 for check in $list
 do
    echo_eval $check
 done
+#
+# xrst
 if which xrst >& /dev/null
 then
    xrst_flags=''
@@ -103,15 +107,9 @@ then
    fi
    bin/run_xrst.sh $xrst_flags
 fi
-# -----------------------------------------------------------------------------
-list=$(\
-   ls example/*.py example/csv/*.py test/*.py test/csv/*.py | \
-   $sed -e '/.*[/]temp.py/d' -e '/.*[/]temp.[0-9]*.py/d'  \
-)
-for script in $list
-do
-   echo_eval bin/run_test.sh $script
-done
+#
+# check_py_test.py
+echo_eval bin/check_py_test.py
 # -----------------------------------------------------------------------------
 echo 'check_all.sh: OK'
 exit 0
