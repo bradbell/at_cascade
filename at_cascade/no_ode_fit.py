@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin no_ode_fit}
@@ -314,8 +314,7 @@ def no_ode_fit(
          if key in option_all_dict :
             table = f'{perturb}_var'
             sigma = option_all_dict[key]
-            command = ['dismodat.py', no_ode_database, 'perturb', table, sigma]
-            system_command(command, file_stdout)
+            dismod_at.db2csv_command( no_ode_database )
 
    #
    # fit both

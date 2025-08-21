@@ -213,10 +213,7 @@ def diagonse_one(
    if fit_same_as_predict and db2csv :
       #
       # db2csv output files
-      command = [ 'dismodat.py', pre_database, 'db2csv' ]
-      dismod_at.system_command_prc(
-         command, print_command = False, return_stdout = True
-      )
+      dismod_at.db2csv_command( pre_database, )
    if fit_same_as_predict and plot :
       #
       # data_plot.pdf

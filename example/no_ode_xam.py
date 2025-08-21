@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin_parent no_ode_xam}
@@ -656,7 +656,7 @@ def display_no_ode_fit(root_node_dir) :
    dismod_at.plot_rate_fit(database, pdf_file, plot_title, rate_set)
    #
    # db2csv
-   dismod_at.system_command_prc([ 'dismodat.py', database, 'db2csv' ])
+   dismod_at.db2csv_command( database )
 # ----------------------------------------------------------------------------
 def check_no_ode_fit(root_database) :
    #
