@@ -65,6 +65,7 @@ version_file_list='
 no_copyright_list='
    .gitignore
    .readthedocs.yaml
+   agpl-3.0.txt
    bin/twine.sh
    readme.md
 '
