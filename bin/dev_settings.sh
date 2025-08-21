@@ -61,6 +61,7 @@ version_file_list='
 no_copyright_list='
    .gitignore
    .readthedocs.yaml
+   agpl-3.0.txt
    bin/upload.sh
    readme.md
 '
