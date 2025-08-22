@@ -20,6 +20,10 @@ Release Notes for at_cascade
    rcond
    subprocess
    dismodat
+   toml
+   conda
+   pyproject
+   setuptools
 }
 
 Release Notes for 2025
@@ -28,6 +32,12 @@ Release Notes for 2025
 
 mm-dd
 *****
+
+08-22
+=====
+Switch the pip build back end from setuptools to hatchling
+( see  `pyproject.toml` ) .
+This fixes the install of at_cascade on conda (and maybe other systems).
 
 08-21
 =====

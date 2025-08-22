@@ -87,7 +87,9 @@ done
 # -----------------------------------------------------------------------------
 #
 # bin/check_*.sh
-list=$(ls bin/check_*.sh | $sed -e '/check_all.sh/d' )
+list=$(ls bin/check_*.sh | \
+   $sed -e '/check_all.sh/d' -e '/check_install.sh/d' -e '/check_py_test.py/d'
+)
 for check in $list
 do
    echo_eval $check
@@ -110,6 +112,9 @@ fi
 #
 # check_py_test.py
 echo_eval bin/check_py_test.py
+#
+# check_install.py
+echo_eval bin/check_install.sh
 # -----------------------------------------------------------------------------
 echo 'check_all.sh: OK'
 exit 0

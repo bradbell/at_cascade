@@ -2,37 +2,58 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
-# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
+# https://packaging.python.org/en/latest/guides/writing-pyproject-toml
 #
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
-build-backend = "setuptools.build_meta"
-# ----------------------------------------------------------------------------
-[project]
-name              = 'at_cascade'
-version           = '2025.8.21'
-description       = 'Cascading dismod_at from parent to child regions'
-license           = { text = 'AGPL-3.0-or-later' }
-requires-python   = '>=3.8'
-authors = [
-  {name  = 'Bradley M. Bell', email = 'bradbell@seanet.com'},
-]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 #
-# see https://pypi.org/classifiers/
-classifiers       = [
-   'Programming Language :: Python :: 3',
-   'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
-   'Operating System :: OS Independent',
-]
-dependencies = [
+[project]
+#
+# Basic Information
+name              = 'at_cascade'
+version           = '2025.8.22'
+#
+# Dependencies and reqirements
+requires-python   = '>=3.8'
+dependencies      = [
   'dismod_at',
   'numpy',
   'scipy',
 ]
-
-[tool.setuptools]
-packages = [ 'at_cascade' ]
-
+#
+# Creating executable scipts
+# None
+#
+# About this project
+description   = 'Cascading dismod_at from parent to child regions'
+# readme      = readme.rst # 2DO
+license       = 'AGPL-3.0-or-later'
+license-files = [ 'agpl-3.0.txt' ]
+authors       = [
+  {name  = 'Bradley M. Bell', email = 'bradbell@seanet.com'},
+]
+maintainers   = [
+  {name  = 'Bradley M. Bell', email = 'bradbell@seanet.com'},
+]
+keywords      = [ 'public health', 'disease modeling', 'dismod_at' ]
+classifiers   = [ # see https://pypi.org/classifiers/
+   'Programming Language :: Python :: 3',
+   'Operating System :: OS Independent',
+]
+#
+# urls
 [project.urls]
-'Homepage'    = 'https://at-cascade.readthedocs.io'
-'Bug Tracker' = 'https://github.com/bradbell/at_cascade/issues'
+Documentation  = 'https://at-cascade.readthedocs.io'
+Homepage       = 'https://at-cascade.readthedocs.io'
+Changelog      = 'https://at-cascade.readthedocs.io/latest/release_notes.html'
+Repository     = 'https://github.com/bradbell/at_cascade'
+Issues         = 'https://github.com/bradbell/at_cascade/issues'
+#
+# ----------------------------------------------------------------------------
+# https://hatch.pypa.io/latest/config/build/
+[tool.hatch.build.targets.sdist]
+include = [
+  "at_cascade/*.py",
+  "at_cascade/csv/*.py",
+]
