@@ -12,7 +12,7 @@ build-backend = "hatchling.build"
 #
 # Basic Information
 name              = 'at_cascade'
-version           = '2025.0.2'
+version           = '2025.0.3'
 #
 # Dependencies and reqirements
 requires-python   = '>=3.8'

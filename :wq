@@ -1,0 +1,10 @@
+stable/2025: Advance 2025.0.2 -> 2925.0.3.
+# 1. Enter message for this commit above this line.
+# 2. The message for the previous commit is in git_commit.log (if it exists).
+# 3. This commit will abort if the first line does not begin with "stable/2025:"
+#    because stable/2025 is the branch for this commit.
+# 4. Lines starting with '#' are not included in the message.
+# 5. Below is a list of the files for this commit:
+#  M at_cascade.xrst
+#  M at_cascade/__init__.py
+#  M pyproject.toml
