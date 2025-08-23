@@ -111,6 +111,7 @@ def main() :
    )
    sample_exists = at_cascade.table_exists(connection, 'sample')
    assert not sample_exists
+   connection.close()
 #
 main()
 print( 'rcond_lower.py: OK' )

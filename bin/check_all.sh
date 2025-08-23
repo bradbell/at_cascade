@@ -88,7 +88,7 @@ done
 #
 # bin/check_*.sh
 list=$(ls bin/check_*.sh | \
-   $sed -e '/check_all.sh/d' -e '/check_install.sh/d' -e '/check_py_test.py/d'
+   $sed -e '/check_all.sh/d' -e '/check_install.sh/d'
 )
 for check in $list
 do
@@ -109,6 +109,9 @@ then
    fi
    bin/run_xrst.sh $xrst_flags
 fi
+#
+# check_connection.py
+echo_eval bin/check_connection.py
 #
 # check_py_test.py
 echo_eval bin/check_py_test.py

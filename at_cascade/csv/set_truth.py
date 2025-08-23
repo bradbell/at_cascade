@@ -275,7 +275,7 @@ def set_truth(sim_dir, fit_database, root_database) :
       assert truth_var_value != None
       truth_var_table.append( { 'truth_var_value' : truth_var_value} )
    #
-   # fit_database
+   # fit_database, connection
    # add the truth_var table
    connection = dismod_at.create_connection(
       fit_database, new = False, readonly = False
@@ -296,6 +296,7 @@ def set_truth(sim_dir, fit_database, root_database) :
          row_list = row_list,
       )
    #
-   # fit_database
+   # fit_database, connection
    msg = 'csv.predict: setting truth_var table using simulation information'
    at_cascade.add_log_entry(connection, msg)
+   connection.close()
