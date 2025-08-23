@@ -24,6 +24,8 @@ Release Notes for at_cascade
    conda
    pyproject
    setuptools
+   sqlite
+   unix
 }
 
 Release Notes for 2025
@@ -32,6 +34,14 @@ Release Notes for 2025
 
 mm-dd
 *****
+
+08-23
+=====
+Some of the python sqlite3 connections were not being closed.
+The corresponding variable just dropped out of scope.
+Dropping out of scope freed the corresponding resources on
+Unix but not on Windows.
+This has been fixed (all the connections are closed).
 
 08-22
 =====

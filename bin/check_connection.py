@@ -8,6 +8,7 @@
 # This program checks that each connection opened by create_connection
 # is later close in the same file.
 #
+import sys
 import os
 import re
 #
@@ -17,6 +18,9 @@ start_pattern = re.compile( r'\n *([^\n ]*).*dismod_at.create_connection' )
 # check_connection
 def check_connection(file_path) :
    #
+   # ok
+   ok = True
+   #
    # data
    file_obj  = open(file_path, 'r')
    data      = file_obj.read()
@@ -25,23 +29,40 @@ def check_connection(file_path) :
    m_start = start_pattern.search(data)
    while m_start != None :
       #
-      # variable
+      # variable, m_stop, ok
       variable     = m_start.group(1)
       stop_pattern = re.compile( variable + r'.close\(\)' )
       m_stop       = stop_pattern.search(data, m_start.end() )
       if m_stop == None :
-         print( f'{file_path}: {variable}.close() Not Found' )
+         print( f'{file_path}: {variable}.close() not after create connection' )
+         ok = False
+      else :
+         #
+         # ok
+         change_pattern = re.compile( r'\n *' + variable + ' *=' )
+         m_change       = change_pattern.search(
+            data, m_start.end(), m_stop.start(),
+         )
+         if m_change != None :
+            print( f'{file_path}: {variable}.close() not before {variable} =' )
+            ok = False
       #
       # m_start
       m_start      = start_pattern.search(data, m_start.end() )
+   #
+   return ok
 #
 def main() :
+   ok = True
    for subdir in [ 'example', 'test', 'at_cascade' ] :
       for root, dirs, files in os.walk(subdir) :
          for file in files :
             if file.endswith('.py') and not file.startswith('temp.') :
                file_path = os.path.join(root, file)
-               check_connection(file_path)
+               if not check_connection(file_path) :
+                  ok = False
+   if not ok :
+      sys.exit( 'check_connection.py: Error' )
    print( 'check_connection.py: OK' )
 #
 main()

@@ -1830,7 +1830,8 @@ def create_all_node_database(
    )
    for name in [ 'mulcov', 'age', 'time', 'covariate', 'node' ] :
       root_node_table[name] = dismod_at.get_table_dict(
-         connection = connection, tbl_name = name)
+         connection, tbl_name = name
+      )
    connection.close()
    #
    # root_node_sex

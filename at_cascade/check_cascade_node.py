@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin check_cascade_node}
@@ -112,6 +112,7 @@ def check_cascade_node(
       all_node_database, new = False, readonly = True
    )
    option_all_table = dismod_at.get_table_dict(connection, 'option_all')
+   connection.close()
    root_database      = None
    for row in option_all_table :
       if row['option_name'] == 'root_database' :

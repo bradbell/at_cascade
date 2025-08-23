@@ -331,6 +331,7 @@ def fit_one_job(
    )
    command = 'DROP TABLE IF EXISTS log'
    dismod_at.sql_command(connection, command)
+   connection.close()
    #
    # init
    command = [ 'dismod_at', fit_database, 'init' ]
@@ -393,6 +394,7 @@ def fit_one_job(
          fit_database, new = False, readonly = False
       )
       at_cascade.add_log_entry(connection, msg)
+      connection.close()
       #
       job_name = job_table[run_job_id]['job_name']
       msg      = f'no data: abort {job_name}'
