@@ -11,19 +11,28 @@
 import os
 import re
 #
+# start_pattern
 start_pattern = re.compile( r'\n *([^\n ]*).*dismod_at.create_connection' )
 #
+# check_connection
 def check_connection(file_path) :
+   #
+   # data
    file_obj  = open(file_path, 'r')
    data      = file_obj.read()
    #
+   # m_start
    m_start = start_pattern.search(data)
    while m_start != None :
+      #
+      # variable
       variable     = m_start.group(1)
-      stop_pattern = re.compile( variable + '.close()' )
+      stop_pattern = re.compile( variable + r'.close\(\)' )
       m_stop       = stop_pattern.search(data, m_start.end() )
       if m_stop == None :
          print( f'{file_path}: {variable}.close() Not Found' )
+      #
+      # m_start
       m_start      = start_pattern.search(data, m_start.end() )
 #
 def main() :
