@@ -13,7 +13,7 @@ import os
 import re
 #
 # start_pattern
-start_pattern = re.compile( r'\n *([^\n ]*).*dismod_at.create_connection' )
+start_pattern = re.compile( r'\n *([^\n ]*).*dismod_at[.]create_connection' )
 #
 # check_connection
 def check_connection(file_path) :
@@ -31,7 +31,7 @@ def check_connection(file_path) :
       #
       # variable, m_stop, ok
       variable     = m_start.group(1)
-      stop_pattern = re.compile( variable + r'.close\(\)' )
+      stop_pattern = re.compile( r'\n *' + variable + r'.close\(\)' )
       m_stop       = stop_pattern.search(data, m_start.end() )
       if m_stop == None :
          print( f'{file_path}: {variable}.close() not after create connection' )
