@@ -18,6 +18,7 @@ r'''
   meas
   pdf
   tru
+  std
 }
 
 Prediction for a CSV Fit
@@ -89,6 +90,16 @@ to see the tree structure corresponding to the ``dismod.db`` files.
 The default value for this option is false .
 
 .. _db2csv_command: https://dismod-at.readthedocs.io/latest/db2csv_command.html
+
+descendant_std_factor
+---------------------
+This factor scales an ancestor fit posterior samples before predicting
+for a descendant job; i.e., (node, sex) pair.
+It must be greater than zero and it's default value is 1.
+It is only used when predicting for a job that does **not** have samples.
+In this case the closest ancestor that does have samples
+is used to predict for the (node, sex) pair; see
+:ref:`csv.ancestor_fit-name`.
 
 float_precision
 ---------------
@@ -402,6 +413,7 @@ def set_global_option_value(
    # BEGIN_SORT_THIS_LINE_PLUS_2
    option_default  = {
       'db2csv'                : (bool,  False)              ,
+      'descendant_std_factor' : (float,   1.0)              ,
       'float_precision'       : (int,   5)                  ,
       'max_number_cpu'        : (int,   max_number_cpu)     ,
       'number_sample_predict' : (int,   number_sample_fit)  ,
@@ -444,6 +456,9 @@ def set_global_option_value(
       if name not in global_option_value :
          (option_type, default) = option_default[name]
          global_option_value[name] = default
+   #
+   if global_option_value['descendant_std_factor']  <= 0.0 :
+      assert False, "predict.csv: descemdant_std_factor <= 0"
    #
    # option_predict_out.csv
    table = list()

@@ -249,7 +249,8 @@ def pre_one_job(
    # END_DEF
    #
    #
-   # number_sample_predict, zero_meas_value, db2csv, plot
+   # descendant_std_factor. number_sample_predict, zero_meas_value, db2csv, plot
+   descendant_std_factor = option_predict['descendant_std_factor']
    number_sample_predict = option_predict['number_sample_predict']
    zero_meas_value       = option_predict['zero_meas_value']
    db2csv                = option_predict['db2csv']
@@ -258,6 +259,7 @@ def pre_one_job(
    assert type( plot ) == bool
    assert type( zero_meas_value) == bool
    assert type( number_sample_predict ) == int
+   assert type( descendant_std_factor ) == float
    #
    # option_all_table
    connection       = dismod_at.create_connection(
@@ -469,6 +471,8 @@ def pre_one_job(
       else :
          assert prefix == 'sam'
          command.append( 'sample' )
+         if not fit_same_as_predict :
+            command += [ 'fit_var', str(descendant_std_factor) ]
       if zero_meas_value :
          command.append( 'zero_meas_value' )
       dismod_at.system_command_prc(command, print_command = False )
