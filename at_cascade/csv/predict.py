@@ -82,6 +82,8 @@ db2csv
 If this boolean option is true,
 the dismod_at `db2csv_command`_ is used to generate the csv files
 corresponding to each :ref:`csv.fit@Output Files@dismod.db` .
+This is only done for (node, sex) pairs that have samples; i.e.,
+a successful fit and posterior samples.
 If this option is true, the csv files will make it more difficult
 to see the tree structure corresponding to the ``dismod.db`` files.
 The default value for this option is false .
@@ -120,6 +122,8 @@ plot
 If this boolean option is true,
 a ``data_plot.pdf`` and ``rate_plot.pdf`` file is created for each
 :ref:`csv.fit@Output Files@dismod.db` database.
+This is only done for (node, sex) pairs that have samples; i.e.,
+a successful fit and posterior samples.
 The data plot includes a maximum of 1,000 randomly chosen points for each
 integrand in the predict_integrand.csv file.
 The rate plot includes all the non-zero rates.

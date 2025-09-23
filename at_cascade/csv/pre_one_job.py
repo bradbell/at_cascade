@@ -7,9 +7,7 @@ r'''
 {xrst_spell
   avg
   avgint
-  pdf
   tru
-  meas
 }
 
 Calculate the predictions for One Fit
@@ -71,31 +69,11 @@ successful cascade fit.
 To be specific, ``sample: OK`` is in its
 :ref:`fit_one_job@fit_database@log`.
 
-db2csv
-******
-If fit_same_as_predict and db2csv,
-the `db2csv_command`_ is used to generate the csv files
-corresponding to the *pre_database* .
 
-.. _db2csv_command: https://dismod-at.readthedocs.io/latest/db2csv_command.html
-
-plot
-****
-If fit_same_as_predict and plot,
-``data_plot.pdf`` and ``rate_plot.pdf`` corresponding
-to *pre_database* are generated, in the same directory as *pre_database* ;
-i.e., the prediction directory
-
-number_sample_predict
-*********************
-This is the number of samples generated for each prediction.
-
-zero_meas_value
-***************
-If zero_meas_value,
-the value zero is used for the meas_value covariate multipliers.
-This predicts what the mean of the corresponding data would be if
-there were no measurement value covariate effects.
+option_predict
+**************
+This is an in memory representation of
+:ref:`csv.predict@Input Files@option_predict.csv` .
 
 Csv Output Files
 ****************
@@ -255,10 +233,7 @@ def pre_one_job(
    all_covariate_table   ,
    float_precision       ,
    fit_same_as_predict   ,
-   db2csv                ,
-   plot                  ,
-   zero_meas_value       ,
-   number_sample_predict ,
+   option_predict        ,
 ) :
    assert type(predict_job_name) == str
    assert type(fit_dir) == str
@@ -270,11 +245,19 @@ def pre_one_job(
    assert type( all_covariate_table[0] ) == dict
    assert type( float_precision ) == int
    assert type( fit_same_as_predict ) == bool
+   assert type( option_predict ) == dict
+   # END_DEF
+   #
+   #
+   # number_sample_predict, zero_meas_value, db2csv, plot
+   number_sample_predict = option_predict['number_sample_predict']
+   zero_meas_value       = option_predict['zero_meas_value']
+   db2csv                = option_predict['db2csv']
+   plot                  = option_predict['plot']
    assert type( db2csv ) == bool
    assert type( plot ) == bool
    assert type( zero_meas_value) == bool
    assert type( number_sample_predict ) == int
-   # END_DEF
    #
    # option_all_table
    connection       = dismod_at.create_connection(
