@@ -69,7 +69,7 @@ constant_table_list = [
    at_cascade/get_freeze_dict.py
    at_cascade/get_parent_node.py
    at_cascade/get_var_id.py
-   at_cascade/job_descendent.py
+   at_cascade/job_descendant.py
    at_cascade/map_shared.py
    at_cascade/move_table.py
    at_cascade/no_ode_fit.py
@@ -116,7 +116,7 @@ from .get_fit_integrand     import get_fit_integrand
 from .get_freeze_dict       import get_freeze_dict
 from .get_parent_node       import get_parent_node
 from .get_var_id            import get_var_id
-from .job_descendent        import job_descendent
+from .job_descendant        import job_descendant
 from .map_shared            import map_shared
 from .move_table            import move_table
 from .no_ode_fit            import no_ode_fit

@@ -64,7 +64,7 @@ are located.
 max_node_depth
 **************
 This is the number of generations below root node that are included;
-see :ref:`job_descendent@Node Depth Versus Job Depth`
+see :ref:`job_descendant@Node Depth Versus Job Depth`
 and note that sex is the :ref:`option_all_table@split_covariate_name` .
 If max_node_depth is zero,  only the root node will be included.
 If max_node_depth is None,  the root node and all its descendants are included.
@@ -473,7 +473,7 @@ root_node_name
 --------------
 This string is the name of the root node.
 The default for *root_node_name* is the top root of the entire node tree.
-Only the root node and its descendents will be fit.
+Only the root node and its descendants will be fit.
 Sometimes it is useful to set :ref:`csv.fit@max_node_depth` to zero
 and change *root_node_name* to a particular node that the
 cascade is having trouble fitting. This can greatly speed up model building.

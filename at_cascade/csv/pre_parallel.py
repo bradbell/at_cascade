@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.pre_parallel}
@@ -39,7 +39,7 @@ start_job_name
 **************
 Is the name of the job (fit) that the predictions should start at.
 This is a node name, followed by a period, followed by a sex.
-Only this fit, and its descendents, will be included in the predictions.
+Only this fit, and its descendants, will be included in the predictions.
 If this argument is None, all of the jobs (fits) will be included.
 
 max_job_depth
@@ -209,7 +209,7 @@ def pre_parallel(
    for predict_job_id in range(n_job) :
       #
       # include_this_job
-      job_depth = at_cascade.job_descendent(
+      job_depth = at_cascade.job_descendant(
          job_table, start_job_id, predict_job_id
       )
       include_this_job = False

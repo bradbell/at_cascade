@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 '''
 {xrst_begin check_log}
@@ -54,7 +54,7 @@ are not included.
 max_job_depth
 *************
 This is the number of generations below the start job that are included;
-see :ref:`job_descendent@Node Depth Versus Job Depth` .
+see :ref:`job_descendant@Node Depth Versus Job Depth` .
 If *max_job_depth* is None, all the jobs below the start job are included.
 If *max_job_depth* is zero, only the start job is included.
 
@@ -159,7 +159,7 @@ def check_log(
    for job_id in range( len(job_table) ) :
       #
       # include_this_job
-      job_depth = at_cascade.job_descendent(job_table, start_job_id, job_id)
+      job_depth = at_cascade.job_descendant(job_table, start_job_id, job_id)
       if job_depth == None :
          include_this_job = False
       elif max_job_depth == None :

@@ -35,6 +35,14 @@ Release Notes for 2025
 mm-dd
 *****
 
+09-23
+=====
+Both descendent and descendant were spread throughout the documentation
+and at_cascade source code.
+The spelling descendent was changed to descendant to be consistent
+While this included moving `job_descendent` to :ref:`job_descendant-name` ,
+it did not change the :ref:`csv.fit-name` of :ref:`csv.predict-name` API .
+
 08-23
 =====
 Some of the python sqlite3 connections were not being closed.
@@ -1120,7 +1128,7 @@ Add the :ref:`wish_list@max_fit` wish list item.
 
 07-21
 =====
-#. Add :ref:`job_descendent-name` to the at_cascade :ref:`module-name` .
+#. Add :ref:`job_descendant-name` to the at_cascade :ref:`module-name` .
 #. Add the :ref:`check_log@start_job_id` and :ref:`check_log@max_job_depth`
    arguments to the check_log routine.
 #. Fix bug in :ref:`csv.predict-name`. To be specific, only check

@@ -50,13 +50,13 @@ start_job_name
 **************
 Is the name of the job (fit) that the predictions should start at.
 This is a node name, followed by a period, followed by a sex.
-Only this fit, and its descendents, will be included in the predictions.
+Only this fit, and its descendants, will be included in the predictions.
 If this argument is None, all of the jobs (fits) will be included.
 
 max_job_depth
 *************
 This is the number of generations below start_job_name that are included;
-see :ref:`job_descendent@Node Depth Versus Job Depth`
+see :ref:`job_descendant@Node Depth Versus Job Depth`
 and note that sex is the :ref:`option_all_table@split_covariate_name` .
 If max_job_depth is zero,  only the start job will be included.
 If max_job_depth is None,  start job and all its descendants are included;

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin csv.pre_user}
@@ -34,7 +34,7 @@ start_job_name
 **************
 Is the name of the job (fit) that the predictions start at.
 This is a node name, followed by a period, followed by a sex.
-Only this fit, and its descendents, were included in the predictions.
+Only this fit, and its descendants, were included in the predictions.
 If this argument is None, all of the jobs (fits) were be included.
 
 predict_job_id_list

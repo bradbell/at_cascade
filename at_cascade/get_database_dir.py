@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin get_database_dir}
@@ -131,7 +131,7 @@ def get_database_dir(
    if node_id is None :
       fit_node_name  = node_table[fit_node_id]['node_name']
       root_node_name = node_table[root_node_id]['node_name']
-      msg  = f'{fit_node_name} is not a descendent of the root node '
+      msg  = f'{fit_node_name} is not a descendant of the root node '
       msg += root_node_name
       assert False, msg
    #
