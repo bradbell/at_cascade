@@ -249,7 +249,7 @@ def pre_one_job(
    # END_DEF
    #
    #
-   # descendant_std_factor. number_sample_predict, zero_meas_value, db2csv, plot
+   # descendant_std_factor, number_sample_predict, zero_meas_value, db2csv, plot
    descendant_std_factor = option_predict['descendant_std_factor']
    number_sample_predict = option_predict['number_sample_predict']
    zero_meas_value       = option_predict['zero_meas_value']

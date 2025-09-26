@@ -100,6 +100,7 @@ It is only used when predicting for a job that does **not** have samples.
 In this case the closest ancestor that does have samples
 is used to predict for the (node, sex) pair; see
 :ref:`csv.ancestor_fit-name`.
+For an example, see :ref:`csv.predict_descend-name` .
 
 float_precision
 ---------------

@@ -35,6 +35,13 @@ Release Notes for 2025
 mm-dd
 *****
 
+09-26
+=====
+Add the csv.predict option
+:ref:`csv.predict@Input Files@option_predict.csv@descendant_std_factor` ;
+see the :ref:`csv.predict_descend-name` example.
+
+
 09-23
 =====
 Both descendent and descendant were spread throughout the documentation

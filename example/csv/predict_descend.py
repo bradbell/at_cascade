@@ -5,6 +5,15 @@
 #
 '''
 {xrst_begin csv.predict_descend}
+{xrst_spell
+   eps
+   dage
+   dtime
+   const
+   eps
+   std
+   Sincidence
+}
 
 Example Predicting From Self and a Descendant
 #############################################
@@ -39,19 +48,43 @@ age_grid   = [0.0, 100.0]
 time_grid  = [1980.0, 2020.0]
 '''{xrst_code}
 
+number_sample
+*************
+This is the number of samples of the posterior distribution
+to generate for each successful fit. Note that each sample includes
+values for all the dismod_at model variables-name . For this example
+there is only one model variable *iota* .
+{xrst_code py}'''
+number_sample = 4000
+'''{xrst_code}
+
+descendant_std_factor
+=====================
+This is the
+:ref:`csv.predict@Input Files@option_predict.csv@descendant_std_factor` .
+This example checks that this factor is (is not) used when
+predicting for the node that was fit
+(for a descendant of the node that was fit).
+{xrst_code py}'''
+descendant_std_factor = 2.0
+'''{xrst_code}
+
+
+
+
 random_seed
 ***********
 We us the current time in seconds to seed the random number generator:
 {xrst_code py}'''
 import time
-random_seed = str( int( time.time() ) )
+random_seed = int( time.time() )
 '''{xrst_code}
 
 n_data, std_data
 ****************
 There are *n_data* simulated measurements.
-These measureenmts are a Gaussian with mean *iota_true*
-and stanard devatiom *std_data* :
+These measurements are a Gaussian with mean *iota_true*
+and standard deviation *std_data* :
 {xrst_code py}'''
 n_data = 1
 std_data = iota_true * 0.2
@@ -84,17 +117,16 @@ input_file['option_fit.csv']  =  \
 """name,value
 refit_split,false
 """
+input_file['option_fit.csv'] += f'number_sample,{number_sample}\n'
 input_file['option_fit.csv'] += f'random_seed,{random_seed}\n'
 '''{xrst_code}
 
 option_predict.csv
 ==================
 {xrst_code py}'''
-input_file['option_predict.csv']  =  \
-"""name,value
-db2csv,true
-descendant_std_factor,2.0
-"""
+input_file['option_predict.csv']  =  'name,value\n'
+input_file['option_predict.csv']  +=  \
+   f'descendant_std_factor,{descendant_std_factor}\n'
 '''{xrst_code}
 
 fit_goal.csv
@@ -150,7 +182,7 @@ iota,0.0,0.0,uniform_eps_0.1,,,
 '''{xrst_code}
 
 child_rate.csv
-===============
+==============
 All the child rates (rate random effects) are zero
 {xrst_code py}'''
 input_file['child_rate.csv'] = 'rate_name,value_prior\n'
@@ -161,12 +193,34 @@ mulcov.csv
 There are no covariate multipliers
 {xrst_code py}'''
 input_file['mulcov.csv'] = 'covariate,type,effected,value_prior,const_value\n'
-'''{xrst_code}
+r'''{xrst_code}
+
+Hessian of Likelihood
+*********************
+For this example, *iota* is the only model variable
+(that does not have equal lower and upper bounds).
+Let :math:`m` be *n_data* ,
+:math:`sigma` be *std_data*, and
+:math:`y_i` be the measurement values.
+The negative log likelihood for the n0 fit is:
+
+.. math::
+
+   L( \iota , y ) = \frac{1}{2} \sum_{i=0}^{m}
+      \log \left( 2 \pi \sigma^2 \right)
+      +
+      \left( \frac{y_i - \iota }{\sigma} \right)^2
+
+The Hessian with respect to iota ( :math:`\iota` ) is
+
+.. math::
+
+   \frac{ \partial^2 }{\partial \iota^2} L = \frac{m}{ \sigma^2 }
 
 
 Rest of Source Code
 *******************
-Below is the source code, except for the settimgs above.
+Below is the source code, except for the settings above.
 {xrst_literal
    # BEGIN REST_OF_SOURCE
    # END REST_OF_SOURCE
@@ -174,7 +228,7 @@ Below is the source code, except for the settimgs above.
 
 {xrst_end csv.predict_descend}
 '''
-# BEGIM REST_OF_SOURCE
+# BEGIN REST_OF_SOURCE
 #
 # os, sys, copy
 import os
@@ -219,13 +273,16 @@ def create_input_files(fit_dir) :
       'nu'             : None,
       'meas_std'       : std_data,
    }
-   for sex in [ 'female', 'male' ] :
-      for i in range(n_data) :
-         data_id          += 1
-         row['data_id']    = data_id
-         row['sex']        = sex
-         row['meas_value'] = random.normalvariate( iota_true, std_data )
-         data_table.append( copy.copy( row ) )
+   for i in range(n_data) :
+      if i % 2 == 0 :
+         sex = 'female'
+      else :
+         sex = 'male'
+      data_id          += 1
+      row['data_id']    = data_id
+      row['sex']        = sex
+      row['meas_value'] = random.normalvariate( iota_true, std_data )
+      data_table.append( copy.copy( row ) )
    #
    # data_in.csv
    at_cascade.csv.write_table(
@@ -248,6 +305,59 @@ def main() :
    #
    # at_cascade.csv.predict
    at_cascade.csv.predict(fit_dir)
+   #
+   # fit
+   file_name = f'{fit_dir}/fit_predict.csv'
+   fit_predict_table = at_cascade.csv.read_table(file_name);
+   fit               = dict()
+   for row in fit_predict_table :
+      avgint_id = int( row['avgint_id'] )
+      node_name = row['node_name']
+      sex       = row['sex']
+      key       = (avgint_id, node_name, sex)
+      assert key not in fit
+      fit[key]  = float( row['avg_integrand']  )
+   #
+   # sam
+   file_name = f'{fit_dir}/sam_predict.csv'
+   sam_predict_table = at_cascade.csv.read_table(file_name);
+   sam               = dict()
+   for row in sam_predict_table :
+      avgint_id = int( row['avgint_id'] )
+      node_name = row['node_name']
+      sex       = row['sex']
+      key       = (avgint_id, node_name, sex)
+      if key not in sam :
+         sam[key] = list()
+      sam[key].append(  float( row['avg_integrand']  ) )
+   #
+   # hessian_like
+   hessian_like = n_data / ( std_data * std_data )
+   #
+   # check predctions for n0
+   for avgint_id in range(4) :
+      key   = ( avgint_id, 'n0', 'both' )
+      sumsq = 0.0
+      assert number_sample == len( sam[key] )
+      for avg_integrand in sam[key] :
+         sumsq += ( avg_integrand - fit[key] )**2
+      sam_cov = sumsq / number_sample
+      relerr  = 1.0 -  sam_cov * hessian_like
+      assert abs( relerr ) < 0.05
+   #
+   # check predctions for n2
+   for avgint_id in range(4) :
+      for sex in [ 'female', 'male' ] :
+         key   = ( avgint_id, 'n2', sex )
+         sumsq = 0.0
+         assert number_sample == len( sam[key] )
+         for avg_integrand in sam[key] :
+            sumsq  += ( avg_integrand - fit[key] )**2
+         sam_cov    =  sumsq / number_sample
+         cov_factor = descendant_std_factor * descendant_std_factor
+         relerr     = 1.0 -  (sam_cov / cov_factor) * hessian_like
+         assert abs( relerr ) < 0.05
+   #
    #
    print('predict_descend.py: OK')
 #
