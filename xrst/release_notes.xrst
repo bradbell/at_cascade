@@ -35,6 +35,16 @@ Release Notes for 2025
 mm-dd
 *****
 
+10-11
+=====
+The
+:ref:`option_all_table@perturb_optimization_scale` and
+:ref:`option_all_table@perturb_optimization_scale` options were not working.
+This was a bug in :ref:`fit_one_job-name` .
+This has been fixed. In addition these options were added to
+:ref:`csv.fit@Input Files@option_fit.csv` in a way that is backward compatible.
+
+
 09-26
 =====
 Add the csv.predict option

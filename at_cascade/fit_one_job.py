@@ -378,9 +378,9 @@ def fit_one_job(
    #
    # fit_database: scale_var and start_var tables
    for key in perturb_optimization :
-      sigma = perturb_optimization[key]
-      table = f'{key}_var'
-      dismod_at.db2csv_command( fit_database )
+      sigma    = perturb_optimization[key]
+      tbl_name = f'{key}_var'
+      dismod_at.perturb_command( fit_database, tbl_name, sigma )
    #
    # fit_node_datase.log_table
    # if fit has no data, abort with 'fit: error: no data abort' in log_table

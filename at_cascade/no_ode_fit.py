@@ -312,10 +312,9 @@ def no_ode_fit(
       for perturb in [ 'start', 'scale' ] :
          key = f'perturb_optimization_{perturb}'
          if key in option_all_dict :
-            table = f'{perturb}_var'
             sigma = option_all_dict[key]
-            dismod_at.db2csv_command( no_ode_database )
-
+            tbl_name = f'{key}_var'
+            dismod_at.perturb_command( fit_database, tbl_name, sigma )
    #
    # fit both
    command = [ 'dismod_at', no_ode_database, 'fit', fit_type ]

@@ -14,7 +14,7 @@ Cascading Dismod_at Analysis From Parent To Child Regions
 
 Version
 *******
-at_cascade-2025.9.26
+at_cascade-2025.10.12
 
 Git Repository
 **************
@@ -27,7 +27,7 @@ Versions
    :widths: auto
 
    * - This version
-     - at_cascade-2025.9.26
+     - at_cascade-2025.10.12
    * - Documentation for latest version
      - `latest <https://at-cascade.readthedocs.io/latest>`_
    * - Documentation for most recent stable version

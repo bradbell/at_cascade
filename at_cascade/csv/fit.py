@@ -432,6 +432,22 @@ Finer resolution for specific ages can be achieved using the
 :ref:`csv.fit@Input Files@option_fit.csv@age_avg_split` option.
 The default value for this option is 10.0.
 
+perturb_optimization_scale
+--------------------------
+This is the standard deviation of the log of a random multiplier
+that perturbs the scaling point; see
+:ref:`option_all_table@perturb_optimization_scale` .
+The default value for this option is 0 for backward compatibility,
+but a suggested value is 0.2.
+
+perturb_optimization_start
+--------------------------
+This is the standard deviation of the log of a random multiplier
+that perturbs the starting point; see
+:ref:`option_all_table@perturb_optimization_start` .
+The default value for this option is 0 for backward compatibility,
+but a suggested value is 0.2.
+
 quasi_fixed
 -----------
 If this boolean option is true,
@@ -1107,6 +1123,8 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'number_sample'                 : (int,   20)                 ,
       'ode_method'                    : (str,   'iota_pos_rho_zero'),
       'ode_step_size'                 : (float, 10.0)               ,
+      'perturb_optimization_scale'    : (float, 0.0)                ,
+      'perturb_optimization_start'    : (float, 0.0)                ,
       'quasi_fixed'                   : (bool,  True )              ,
       'random_seed'                   : (int ,  random_seed )       ,
       'refit_split'                   : (bool,  True )              ,
@@ -1866,6 +1884,8 @@ def create_all_node_database(
    balance_sex            = global_option_value['balance_sex']
    max_fit_parent         = global_option_value['max_fit_parent']
    no_ode_ignore          = global_option_value['no_ode_ignore']
+   perturb_optimization_scale = global_option_value["perturb_optimization_scale"]
+   perturb_optimization_start = global_option_value["perturb_optimization_start"]
    #
    convert = { True : 'true' , False : 'false' }
    refit_split        = convert[ global_option_value['refit_split'] ]
@@ -1889,8 +1909,8 @@ def create_all_node_database(
       'max_fit'                        : global_option_value['max_fit'],
       'max_number_cpu'                 : global_option_value['max_number_cpu'],
       'number_sample'                  : number_sample,
-      'perturb_optimization_scale'     : 0.3,
-      'perturb_optimization_start'     : 0.1,
+      'perturb_optimization_scale'     : perturb_optimization_scale,
+      'perturb_optimization_start'     : perturb_optimization_start,
       'refit_split'                    : refit_split,
       'result_dir'                     : fit_dir,
       'root_database'                  : root_database,
