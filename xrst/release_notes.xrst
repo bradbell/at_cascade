@@ -35,6 +35,14 @@ Release Notes for 2025
 mm-dd
 *****
 
+10-14
+=====
+The version number for dismod_at and at_cascade was added at the
+beginning of each log table in the data base for each fit.
+One way to view this is in the log.csv file that is created when
+:ref:`csv.predict@Input Files@option_predict.csv@db2csv` is true
+in the csv.predict option file.
+
 10-11
 =====
 The

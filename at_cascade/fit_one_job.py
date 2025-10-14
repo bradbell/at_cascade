@@ -325,12 +325,26 @@ def fit_one_job(
    integrand_table = fit_or_root.get_table('integrand')
    fit_or_root.close()
    #
+   # dismod_at_version
+   dismod_at_version = dismod_at.system_command_prc(
+      command       = [ 'dismod_at', '--version' ] ,
+      print_command = False,
+      return_stdout = True,
+      return_stderr = False,
+   )
+   dismod_at_version = dismod_at_version.strip()
+   #
+   # at_cascade_version
+   at_cascade_version = 'at_cascade-' + at_cascade.version
+   #
    # fit_database: log table
    connection = dismod_at.create_connection(
       fit_database, new = False, readonly = False
    )
    command = 'DROP TABLE IF EXISTS log'
    dismod_at.sql_command(connection, command)
+   at_cascade.add_log_entry(connection, dismod_at_version)
+   at_cascade.add_log_entry(connection, at_cascade_version)
    connection.close()
    #
    # init
