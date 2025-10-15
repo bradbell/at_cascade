@@ -437,16 +437,14 @@ perturb_optimization_scale
 This is the standard deviation of the log of a random multiplier
 that perturbs the scaling point; see
 :ref:`option_all_table@perturb_optimization_scale` .
-The default value for this option is 0 for backward compatibility,
-but a suggested value is 0.2.
+The default value for this option is 0.3.
 
 perturb_optimization_start
 --------------------------
 This is the standard deviation of the log of a random multiplier
 that perturbs the starting point; see
 :ref:`option_all_table@perturb_optimization_start` .
-The default value for this option is 0 for backward compatibility,
-but a suggested value is 0.2.
+The default value for this option is 0.1.
 
 quasi_fixed
 -----------
@@ -1123,8 +1121,8 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
       'number_sample'                 : (int,   20)                 ,
       'ode_method'                    : (str,   'iota_pos_rho_zero'),
       'ode_step_size'                 : (float, 10.0)               ,
-      'perturb_optimization_scale'    : (float, 0.0)                ,
-      'perturb_optimization_start'    : (float, 0.0)                ,
+      'perturb_optimization_scale'    : (float, 0.3)                ,
+      'perturb_optimization_start'    : (float, 0.1)                ,
       'quasi_fixed'                   : (bool,  True )              ,
       'random_seed'                   : (int ,  random_seed )       ,
       'refit_split'                   : (bool,  True )              ,

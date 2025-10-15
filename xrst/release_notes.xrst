@@ -26,6 +26,7 @@ Release Notes for at_cascade
    setuptools
    sqlite
    unix
+   cee
 }
 
 Release Notes for 2025
@@ -34,6 +35,15 @@ Release Notes for 2025
 
 mm-dd
 *****
+
+10-15
+=====
+The problem with the optimization perturbation was introduced by
+commit c802cee on 08-21 and was fixed on 10-11 (see below).
+The csv.fit default value for these parameters was set to 0 and as been
+corrected to be backward compatible to before the change on 08-21; see
+:ref:`csv.fit@Input Files@option_fit.csv@perturb_optimization_scale` and
+:ref:`csv.fit@Input Files@option_fit.csv@perturb_optimization_start` .
 
 10-14
 =====
