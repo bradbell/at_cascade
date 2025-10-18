@@ -27,6 +27,7 @@ Release Notes for at_cascade
    sqlite
    unix
    cee
+   xam
 }
 
 Release Notes for 2025
@@ -35,6 +36,12 @@ Release Notes for 2025
 
 mm-dd
 *****
+
+10-17
+=====
+The at_cascade `example/no_ode_xam.py` was passing a list for the
+`dismod_at.plot_rate_fit` *rate_set* argument.
+This made a test crash using a newer version of dismod_at and has been fixed.
 
 10-15
 =====

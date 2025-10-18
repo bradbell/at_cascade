@@ -650,7 +650,7 @@ def display_no_ode_fit(root_node_dir) :
    )
    #
    # rate.pdf
-   rate_set = [ 'iota', 'chi' ]
+   rate_set = { 'iota', 'chi' }
    pdf_file = pdf_dir + '/rate.pdf'
    plot_title = 'rate'
    dismod_at.plot_rate_fit(database, pdf_file, plot_title, rate_set)
