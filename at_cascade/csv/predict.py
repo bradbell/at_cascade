@@ -108,16 +108,6 @@ This integer is the number of decimal digits of precision to
 include for float values in the output csv files.
 The default value for this option is 5.
 
-These are no effect rates; i.e., they are the estimated rate
-for this node an sex without any covariate effects
-If you want to include covariate effects, you will have to make your
-own plots using the
-:ref:`csv.predict@Output Files@fit_predict.csv` and
-:ref:`csv.predict@Output Files@sam_predict.csv` files.
-The dismod_at `plot_curve`_ routine may be helpful in this regard.
-
-.. _plot_curve: https://dismod-at.readthedocs.io/latest/plot_curve.html
-
 max_number_cpu
 --------------
 This integer is the maximum number of cpus (processes) to use
@@ -140,6 +130,16 @@ The data plot includes a maximum of 1,000 randomly chosen points for each
 integrand in the predict_integrand.csv file.
 The rate plot includes all the non-zero rates.
 The default value for this option is false .
+
+These are no effect rates; i.e., they are the estimated rate
+for this node an sex without any covariate effects
+If you want to include covariate effects, you will have to make your
+own plots using the
+:ref:`csv.predict@Output Files@fit_predict.csv` and
+:ref:`csv.predict@Output Files@sam_predict.csv` files.
+The dismod_at `plot_curve`_ routine may be helpful in this regard.
+
+.. _plot_curve: https://dismod-at.readthedocs.io/latest/plot_curve.html
 
 zero_meas_value
 ---------------
