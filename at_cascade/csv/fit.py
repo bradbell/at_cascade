@@ -754,9 +754,10 @@ that rate has not random effects.
 value_prior
 -----------
 is a string containing the name of the value prior for this child rate.
-Note that the child rates are in log of rate space.
-In addition, they are constant in age and time
-(this is a limitation of the csv.fit).
+
+.. note::
+   The child rates are in log of rate space. In addition, they are constant in
+   age and time (this is a limitation of the csv.fit).
 
 {xrst_comment ---------------------------------------------------------------}
 
