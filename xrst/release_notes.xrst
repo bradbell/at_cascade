@@ -37,6 +37,13 @@ Release Notes for 2025
 mm-dd
 *****
 
+11-15
+=====
+Fix documentation for
+:ref:`csv.predict@Input Files@option_predict.csv@float_precision` .
+To be more specific, the comments about the no effect rates were moved to the
+:ref:`csv.predict@Input Files@option_predict.csv@plot` documentation.
+
 10-17
 =====
 The at_cascade `example/no_ode_xam.py` was passing a list for the
