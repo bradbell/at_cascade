@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 
 {xrst_begin glossary}
@@ -118,8 +118,8 @@ age and time point is the same as in the *root_database*.
 
 Random Effects Smoothing
 ========================
-The smoothing for the child rates (except omega) are the same as in the
-*root_database*.
+The smoothing for the child rate effects (except omega)
+are the same as in the *root_database*.
 
 Rate Table
 ==========

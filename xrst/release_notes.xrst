@@ -37,6 +37,14 @@ Release Notes for 2025
 mm-dd
 *****
 
+11-28
+=====
+In the documentation, change 'child rate' to 'child rate effect' because these
+are not really rates, but rather random effects on rates.
+This is explained in the csv fit
+:ref:`csv.fit@Input Files@child_rate.csv@value_prior`
+
+
 11-15
 =====
 Fix documentation for

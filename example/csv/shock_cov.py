@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -351,10 +351,10 @@ fit_file['parent_rate.csv'] = data
 
 child_rate.csv
 ==============
-In csv.fit, child rates are a random effects and are constant in age and time.
+In csv.fit, child rate effects are constant in age and time.
 Note that when fitting node n0, n1 is a child node and its rate values
 correspond to random effects (and hence are in log of rate space).
-On the other hand, when fitting node n1, there are not child rates.
+On the other hand, when fitting node n1, there are no child rates.
 {xrst_code py}'''
 fit_file['child_rate.csv'] = \
 '''rate_name,value_prior

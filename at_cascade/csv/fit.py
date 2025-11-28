@@ -738,8 +738,8 @@ Either *const_value* or *value_prior* must be non-empty but not both.
 
 child_rate.csv
 ==============
-This csv file specifies the prior for the child rates
-pini, iota, rho and chi; i.e., their random effects.
+This csv file specifies the prior for the child rate effects
+pini, iota, rho and chi. These are random effects.
 (The parent and child priors for omega are created automatically
 using the :ref:`csv.simulate@Input Files@covariate.csv@omega` column
 in the :ref:`csv.fit@Input Files@covariate.csv` file. )
@@ -753,10 +753,18 @@ that rate has not random effects.
 
 value_prior
 -----------
-is a string containing the name of the value prior for this child rate.
-Note that the child rates are in log of rate space.
-In addition, they are constant in age and time
+is a string containing the name of the value prior for this child rate effects.
+The child rate effects are constant in age and time
 (this is a limitation of the csv.fit).
+
+Note that the child rate effects are in log of rate space.
+In other words, if :math:`u` is a child rate effect and :math:`p(a, t)` is the
+corresponding parent rate as a function of age, time.
+The corresponding child rate as a function of age and time :math:`c(a, t)` is
+
+.. math::
+
+   c(a,t) = \exp(u) p(a,t)
 
 {xrst_comment ---------------------------------------------------------------}
 
