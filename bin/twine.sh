@@ -1,5 +1,6 @@
 #! /usr/bin/env bash
 set -e -u
+# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/bin/dev_tools.sh !!
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 # SPDX-FileContributor: 2020-25 Bradley M. Bell
@@ -8,7 +9,7 @@ set -e -u
 # 1. This program muse be executed from the main or master branch
 # 2. branch_or_tag can be a branch or a tag. If it is a branch, it must be
 #    main or master.
-# 3. If branch_or_tag is a tag, the corresponding version is upladed to pypi.
+# 3. If branch_or_tag is a tag, the corresponding version is uploaded to pypi.
 #    Otherwise it is uploaded to testpipi.
 # -----------------------------------------------------------------------------
 # bash function that echos and executes a command
@@ -24,7 +25,7 @@ then
 fi
 if [ ! -e .git ]
 then
-   echo 'bin/twine.sh: Cannot find .git in curretn working directory'
+   echo 'bin/twine.sh: Cannot find .git in current working directory'
    exit 1
 fi
 #

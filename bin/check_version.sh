@@ -1,8 +1,9 @@
 #! /usr/bin/env bash
 set -e -u
+# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/bin/dev_tools.sh !!
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2020-25 Bradley M. Bell
+# SPDX-FileContributor: 2020-26 Bradley M. Bell
 # -----------------------------------------------------------------------------
 # bin/check_verison.sh
 # Checks that the version number in the version_file_list are correct;
@@ -59,7 +60,7 @@ p
 #
 : end
 EOF
-version=$($sed -n -r -f temp.sed $first_version_file)
+version=$($sed -n -r -f temp.sed $first_version_file | head -1)
 #
 # version_type
 if [[ "$version" =~ ^[0-9]{8}$ ]]
@@ -120,7 +121,9 @@ cat << EOF > temp.sed
 s|(["'])[0-9]{8}(["'])|\\1$version\\2|
 s|(["'])[0-9]{8}[.][0-9]{1,2}(["'])|\\1$version\\2|
 s|(["'])[0-9]{4}[.][0-9]{1,2}[.][0-9]{1,2}(["'])|\\1$version\\2|
-s|$package_name-[0-9]{8}|$package_name-$version|
+#
+s|$package_name-[0-9]{8}\$|$package_name-$version|
+s|$package_name-[0-9]{8}([^.])|$package_name-$version\\1|
 s|$package_name-[0-9]{8}[.][0-9]{1,2}|$package_name-$version|
 s|$package_name-[0-9]{4}[.][0-9]{1,2}[.][0-9]{1,2}|$package_name-$version|
 EOF
@@ -158,7 +161,7 @@ done
 # ----------------------------------------------------------------------------
 if [ "$version_ok" == 'no' ]
 then
-   echo 'bin/check_version.sh: version numbers were fixed (see above).'
+   echo 'check_version.sh: The version numbers were fixed (see above).'
    echo 'Re-execute bin/check_version.sh ?'
    exit 1
 fi

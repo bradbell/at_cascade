@@ -1,10 +1,11 @@
 #! /usr/bin/env bash
 set -e -u
+# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/bin/dev_tools.sh !!
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 # SPDX-FileContributor: 2020-25 Bradley M. Bell
 # -----------------------------------------------------------------------------
-# bin/check_tabls.h
+# bin/check_tab.sh
 # Checks for tabs in the source and returns an error if it finds any.
 # Files that are not checked can be specified in bin/dev_settings.sh.
 # -----------------------------------------------------------------------------
@@ -32,7 +33,9 @@ source bin/dev_settings.sh
 # ----------------------------------------------------------------------------
 #
 # sed.$$
-echo '#' > sed.$$
+cat << EOF > sed.$$
+s|.*-> *||
+EOF
 for name in $invisible_and_tab_ok
 do
    if [ -f $name ]

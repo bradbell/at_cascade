@@ -1,19 +1,17 @@
 #! /usr/bin/env bash
 set -e -u
+# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/bin/dev_tools.sh !!
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2020-25 Bradley M. Bell
+# SPDX-FileContributor: 2020-26 Bradley M. Bell
 # -----------------------------------------------------------------------------
 # bin/new_release.sh  [--skip_stable_check_all]
 # Creates and check a release for the year and release number specified below.
 #
 # bin/check_all.sh [--skip_external_links]
-# is used by new_release.sh to check the stable branch
-# correpsonding to this release (unless skipped by new_release.sh flags).
-#
-# bin/check_all.sh [--skip_external_links]
 # is used by new_release to skip checking external links.
-# new_release.sh skips this when testng before the new release (tag)  exists.
+# new_release.sh uses --skip_external_links when testing before the
+# new release (tag)  exists.
 # -----------------------------------------------------------------------------
 year='2025' # Year for this stable version
 release='3' # first release for each year starts with 0
@@ -67,7 +65,7 @@ echo_eval() {
 #
 # main_branch
 main_branch=$(git branch --show-current)
-if [ "$main_branch" != 'master' ] || [ "$main_branch" == 'main' ]
+if [ "$main_branch" != 'master' ] && [ "$main_branch" != 'main' ]
 then
    echo 'bin/new_release.sh: execute using master or main branch'
    exit 1
@@ -117,50 +115,43 @@ else
    tag=$year.0.$release
 fi
 #
-# tag_commited
-tag_commited='no'
+# tag_committed
+tag_committed='no'
 if git tag --list | grep "$tag" > /dev/null
 then
-   tag_commited='yes'
+   tag_committed='yes'
 fi
 #
 # stable_branch
 stable_branch=stable/$year
 #
 # stable_local_hash
-pattern=$(echo " *refs/heads/$stable_branch" | $sed -e 's|/|[/]|g')
-stable_local_hash=$(
-   git show-ref $stable_branch | \
-      $sed -n -e "/$pattern/p" | \
-         $sed -e "s|$pattern||"
-)
+if ! git show-ref --hash "heads/$stable_branch" > /dev/null
+then
+    echo "Cannot find local version of $stable_branch. Do the following ?"
+    echo "git branch $stable_branch $main_branch"
+    exit 1
+fi
+stable_local_hash=$(git show-ref --hash "heads/$stable_branch" )
 #
 # stable_remote_hash
-pattern=$(echo " *refs/remotes/origin/$stable_branch" | $sed -e 's|/|[/]|g')
-stable_remote_hash=$(
-   git show-ref $stable_branch | \
-      $sed -n -e "/$pattern/p" | \
-         $sed -e "s|$pattern||"
-)
+if ! git show-ref --hash "origin/$stable_branch" > /dev/null
+then
+    echo "Cannot find remote version of $stable_branch. Do the following ?"
+    echo "git checkout $stable_branch"
+    echo "git push --set-upstream origin $stable_branch"
+    exit 1
+fi
+stable_remote_hash=$(git show-ref --hash "origin/$stable_branch" )
 #
 # main_local_hash
-pattern=$(echo " *refs/heads/master" | $sed -e 's|/|[/]|g')
-main_local_hash=$(
-   git show-ref $main_branch | \
-      $sed -n -e "/$pattern/p" | \
-         $sed -e "s|$pattern||"
-)
+main_local_hash=$(git show-ref --hash "heads/$main_branch" )
 #
 # main_remote_hash
-pattern=$(echo " *refs/remotes/origin/master" | $sed -e 's|/|[/]|g')
-main_remote_hash=$(
-   git show-ref $main_branch | \
-      $sed -n -e "/$pattern/p" | \
-         $sed -e "s|$pattern||"
-)
+main_remote_hash=$(git show-ref --hash "origin/$main_branch" )
 #
 # ----------------------------------------------------------------------------
-# Changes to master branch
+# Changes to main_branch
 # ----------------------------------------------------------------------------
 #
 # version_file_list
@@ -187,7 +178,7 @@ do
 done
 #
 # run_xrst.sh
-if [ "$tag_commited" == 'yes' ]
+if [ "$tag_committed" == 'yes' ]
 then
    echo_eval bin/run_xrst.sh --external_links
 else
@@ -207,7 +198,7 @@ fi
 # ----------------------------------------------------------------------------
 if ! git show-ref $stable_branch > /dev/null
 then
-   echo "bin/new_release: neither local or remvoe $stable_branch exists."
+   echo "bin/new_release: neither local or remove $stable_branch exists."
    echo 'Use the following to create it ?'
    echo "   git branch $stable_branch"
    exit 1
@@ -259,13 +250,17 @@ fi
 # changes to version ?
 if ! bin/check_version.sh
 then
-   echo 'Continuing even thought bin/check_version made changes.'
+   echo 'Continuing even though bin/check_version made changes.'
+   if ! bin/check_version.sh
+   then
+      echo 'Continuing even though bin/check_version made more changes.'
+   fi
 fi
 #
 # check_all.sh
 if [ "$skip_stable_check_all" == 'no' ]
 then
-   if [ "$tag_commited" == 'yes' ]
+   if [ "$tag_committed" == 'yes' ]
    then
       echo_eval bin/check_all.sh --suppress_spell_warnings
    else
@@ -304,7 +299,7 @@ then
 fi
 #
 # push tag
-if [ "$tag_commited" == 'no' ]
+if [ "$tag_committed" == 'no' ]
 then
    read -p 'commit release or abort [c/a] ?' response
    if [ "$response" == 'a' ]
