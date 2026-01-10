@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-25 Bradley M. Bell
+# SPDX-FileContributor: 2003-26 Bradley M. Bell
 # ---------------------------------------------------------------------------
 # source bin/dev_settings.sh
 # Sets the value of the the development tool variables for this package.
@@ -81,6 +81,7 @@ no_copyright_list='
    agpl-3.0.txt
    bin/twine.sh
    readme.md
+   typos.toml
 '
 # END_SORT_THIS_LINE_MINUS_2
 #

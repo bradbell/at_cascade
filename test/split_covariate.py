@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-26 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 @xrst_begin_parent split_covariate@
