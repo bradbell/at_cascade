@@ -1,0 +1,572 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
+# SPDX-FileContributor: 2023-25 Garland Culbreth
+# ----------------------------------------------------------------------------
+{xrst_begin 2023}
+{xrst_spell
+  cen
+  copyfileobj
+  cv
+  dd
+  errno
+  mm
+  pini
+  ptr
+  readonly
+  shutil
+  std
+  tru
+  xam
+}
+
+Release Notes for 2023
+######################
+
+mm-dd
+*****
+
+12-22
+=====
+#. Extend the :ref:`csv.predict-name` to jobs that fail
+   to fit or compute sample statistics, jobs correspond to (node, sex) pair.
+   This was does by using the closest ancestor job that did fit
+   and have sample statistics; see the new columns
+   :ref:`csv.predict@Output Files@fit_predict.csv@fit_node_name` and
+   :ref:`csv.predict@Output Files@fit_predict.csv@fit_sex` in
+   the fit_predict.csv file.
+
+#. Fix a syntax warning when running the
+   :ref:`max_fit_option-name` and :ref:`mulcov_freeze-name` examples.
+
+12-19
+=====
+Some of the references to the dismod_at documentation were pointing
+to an old version that was frozen on 2022-11-05. This has been
+fixed and they no point to the current dismod_at documentation.
+
+12-15
+=====
+Add the a Predictions item to the wish list
+(this was completed on :ref:`2023@mm-dd@12-22` ).
+
+12-08
+=====
+The option_fit.csv *no_ode_ignore* option was extend to include the
+:ref:`csv.fit@Input Files@option_fit.csv@no_ode_ignore@all` choice.
+In addition, the No Ode Fit wish list item was removed.
+
+12-03
+=====
+Add :ref:`option_all_table@no_ode_ignore` to the option_all table and
+:ref:`option_fit.csv <csv.fit@Input Files@option_fit.csv@no_ode_ignore>` .
+This completed the old No Ode Fit wish list item but it added
+a new No Ode Fit item to the csv.fit wish list.
+
+12-02
+=====
+Using :ref:`csv.fit@Input Files@option_fit.csv@balance_sex`
+equal to true works correctly for versions of dismod_at that
+are greater than equal 20231201 (the bug mentioned below was fixed).
+Note that this will probably cause different results than before
+when the default value, true, is used for *balance_sex*  .
+
+11-30
+=====
+The :ref:`csv.fit@Input Files@option_fit.csv@balance_sex`
+option was added to the option_fit.csv file.
+Note that there currently is a bug in dismod_at and the
+default choice for *balance_sex* , true, does not work correctly.
+
+11-25
+=====
+#. The :ref:`option_all_table@sample_method`
+   option was added to the option_all table.
+#. The :ref:`csv.fit@Input Files@option_fit.csv@sample_method`
+   option was added to the option_fit.csv file.
+#. A definition for :ref:`glossary@child jobs` was added to the glossary.
+#. The :ref:`csv.module@split_reference_table` for the csv.simulate,
+   csv.fit, csv.predict routines was added to the documentation.
+#. Fix the sort of the items in the
+   :ref:`csv.fit@Input Files@option_fit.csv` documentation.
+
+11-24
+=====
+**API Change**
+
+#. Rename all_option_table -> :ref:`option_all_table-name` so that it is
+   similar to the csv option file names; e.g.,
+   :ref:`csv.fit@Input Files@option_fit.csv`  .
+#. Rename all_omega_table -> :ref:`omega_all@omega_all Table` so that it is
+   similar to option_all_table.
+#. Change all the :ref:`csv.module-name` page names that began with
+   ``csv_`` to begin with ``csv.``; e.g.,
+   change csv_fit -> :ref:`csv.fit-name` .
+   This is not really an API change, but links to the corresponding
+   documentation pages will need to be changed; e.g.,
+   change csv_fit.html -> csv.fit.html
+
+11-22
+=====
+Add documentation for the
+:ref:`csv.predict@Output Files@fit_predict.csv@sample_index`
+column in the fit_predict.csv and sam_predict.csv files
+output by csv.predict.
+
+11-18
+=====
+Mention difference between in the meaning of the standard deviation
+for linear and log-scaled priors; see
+:ref:`csv.fit@Input Files@parent_rate.csv@value_prior` ,
+:ref:`csv.fit@Input Files@parent_rate.csv@dage_prior` ,
+:ref:`csv.fit@Input Files@parent_rate.csv@dtime_prior` .
+Also make mention of it for data densities; see
+:ref:`csv.fit@Input Files@data_in.csv@meas_std` .
+
+11-10
+=====
+Add definition of *true value for the average integrand* to the discussion of
+:ref:`csv.simulate@Output Files@data_sim.csv@meas_mean` .
+
+11-08
+=====
+#. Add the :ref:`wish_list@Duration` item to the wish list.
+
+#. Move the Meta Regression item to a higher priority
+   on the wish list; i.e., closer to the top of the list.
+
+#. Add See Priors for Each Fit to the wish list.
+
+11-03
+=====
+Add the :ref:`copy_other_tbl-name` routine.
+This is useful when moving the dismod_at database corresponding
+to a fit from one location to another.
+
+10-21
+=====
+#. Add more discussion to the csv fit
+   :ref:`csv.fit@Input Files@child_rate.csv` documentation.
+#. Correct and improve the csv simulate
+   :ref:`csv.simulate@Input Files@covariate.csv@omega` documentation.
+   Importantly, remove the following sentence:
+   'The values in this column do not matter if
+   omega does not appear in no_effect_rate.csv' .
+
+
+10-07
+=====
+Improve the No Ode Fit wish list item and move it
+outside of the csv.fit group (it is not just for :ref:`csv.fit-name` ).
+(This wish list item was removed on :ref:`2023@mm-dd@12-03` .)
+
+10-05
+=====
+Add the :ref:`csv.fit@Input Files@option_fit.csv@number_sample` option
+to the ``csv.fit`` routine.
+
+10-02
+=====
+#. Add mention that ``one`` is one of the
+   :ref:`csv.fit@Input Files@option_fit.csv@absolute_covariates` .
+#. Add :ref:`wish_list@csv.fit@Measurement Value Covariate` wish
+   list item.
+
+09-26
+=====
+#. There was a mistake in the 08-25 changes that caused the cascade to
+   abort after the first type of fit failed, instead of trying the other type.
+   (Here the types of fits are both and fixed.)
+   This has been fixed.
+#. Add the :ref:`csv.fit@Input Files@option_fit.csv@bound_random` option
+   to csv.fit.
+
+08-25
+=====
+#. Add specification for the connection between data_in.csv
+   :ref:`csv.fit@Input Files@data_in.csv@data_id`
+   and the dismod_at data table data_id column.
+#. Add discussion about the model for the measurement mean
+   needing to be positive when using a
+   :ref:`csv.fit@Input Files@data_in.csv@meas_std@binomial`
+   density for the data.
+
+08-22
+=====
+There was a bug in how ``csv.fit`` handled the upper and lower age and time
+limits in :ref:`csv.fit@Input Files@data_in.csv` .
+To be specific, the lower limit (instead of the mid point) was used for
+both the upper and lower limits.
+This has been fixed.
+In addition, the :ref:`csv.fit@Input Files@option_fit.csv@compress_interval`
+option was added to the ``csv.fit`` routine.
+
+08-09
+=====
+Some bugs in the production of
+:ref:`csv.predict@Output Files@tru_predict.csv` were fixed.
+This is only relevant when :ref:`csv.predict@sim_dir` is present
+was present in a ``csv.predict`` call.
+
+07-25
+=====
+Add the :ref:`wish_list@max_fit` wish list item.
+
+07-23
+=====
+#. Add the :ref:`csv.sim_fit_pred-title` example.
+#. Move the csv.fit_xam example to :ref:`csv.break_fit_pred-name` .
+   This was done because it has changed from just a fit example
+   to also being an example of breaking up breaking up the computation.
+
+07-21
+=====
+#. Add :ref:`job_descendant-name` to the at_cascade :ref:`module-name` .
+#. Add the :ref:`check_log@start_job_id` and :ref:`check_log@max_job_depth`
+   arguments to the check_log routine.
+#. Fix bug in :ref:`csv.predict-name`. To be specific, only check
+   logs for jobs that we are predicting for. Checking logs for other jobs
+   might try to read a log that was changing (when running in parallel).
+#. Add the job_name to the shared memory name; see
+   :ref:`fit_parallel@shared_unique` .
+   This fixes a bug when running cascades in parallel.
+   It also required adding :ref:`clear_shared@job_name` to
+   the clear_shared routine.
+#. Change :ref:`csv.break_fit_pred-name` so that it runs jobs in parallel when
+   :ref:`csv.break_fit_pred@breakup_computation` is True .
+
+07-20
+=====
+The ``eta`` and ``nu`` columns were not actually
+:ref:`csv.fit@Input Files@data_in.csv@Optional Columns`
+in data_in.csv.  This has been fixed.
+
+07-06
+=====
+#. Add :ref:`csv.fit@Input Files@data_in.csv@sample_size`
+   to the csv.fit data_in.csv file.
+   This is used when modeling the data with a binomial distribution.
+#. Make certain columns in data_in.csv
+   :ref:`csv.fit@Input Files@data_in.csv@Optional Columns` .
+
+06-30
+=====
+The ``csv.simulate`` routine ignored ``pini`` entries in the
+:ref:`csv.simulate@Input Files@no_effect_rate.csv` file; i.e.,
+the initial prevalence was always zero.
+This has been fixed.
+
+06-28
+=====
+The csv.fit routine now reports (and exits) when a grid point appears
+more than once in
+:ref:`csv.fit@Input Files@parent_rate.csv` , or any of its other input files.
+
+06-26
+=====
+The :ref:`csv.fit-name` routine was changed to adapt to version 20230626
+of dismod_at. To be more specific, the *other_database* is now relative
+to the directory where the primary database is located.
+
+06-25
+=====
+
+#. There was a bug in :ref:`csv.predict-name` that would cause it to crash
+   at unpredictable times with a message like::
+
+      ... /at_cascade/csv/read_table.py", line 49, in read_table
+      file_ptr   = open(file_name)
+                 ^^^^^^^^^^^^^^^
+      FileNotFoundError: [Errno 2] No such file ... /fit_predict.csv
+
+   This has been fixed.
+
+#. Sometime it takes a while for the trace.out file corresponding to a fit
+   to have any information in it. The dismod_at initialization trace was
+   included in trace.out so that one has more feedback that the program
+   is making progress.
+
+06-23
+=====
+There was a bug in csv.fit that caused a crash when data_in.csv had
+:ref:`csv.fit@Input Files@data_in.csv@sex` had sex equal to `both` and
+there was a covariate, other than sex, in the
+:ref:`csv.fit@Input Files@covariate.csv` file.
+This has been fixed.
+
+06-20
+=====
+Remove the Disk Space entry from the wish list
+(it was completed by merging the other_database branch on 06-18).
+
+06-19
+=====
+Add pini to the
+:ref:`csv.simulate@Input Files@option_sim.csv@std_random_effects_rate`
+in option_sim.csv.
+Also add discussion about the connection between
+the standard deviation of the random effects,
+:ref:`csv.simulate@Input Files@no_effect_rate.csv` and
+:ref:`csv.simulate@random_effect.csv` .
+
+06-18
+=====
+Merge in other_database branch:
+
+#. **API Change** :
+   The :ref:`option_all_table@root_database` was added to the
+   option_all table.
+   In addition it was removed as an argument to
+   :ref:`cascade_root_node-name` and :ref:`create_all_node_db-name` .
+#. Change the :ref:`get_fit_integrand-name` argument from the name
+   of the fit node database to a :ref:`fit_or_root_class-name` object.
+#. Read the
+   :ref:`constant tables <module@at_cascade.constant_table_list>` from the
+   :ref:`glossary@root_database` .
+#. Use :ref:`copy_root_db-name` to remove the constant tables from the
+   :ref:`fit node databases <glossary@fit_database>` .
+   This avoids multiple copies of these tables and thereby saves disk space.
+
+05-16
+=====
+#. Add the :ref:`csv.predict@Input Files@option_predict.csv@float_precision`
+   to control the accuracy of the prediction files.
+#. Change the :ref:`csv.prevalence2iota-name` example to check for
+   extremely high accuracy in the corresponding
+   :ref:`csv.predict@Output Files@tru_predict.csv` file.
+
+05-15
+=====
+#. Improve documentation of correspondence between
+   :ref:`csv.predict@Output Files@fit_predict.csv` ,
+   tru_predict.csv and sam_predict.csv.
+#. Add :ref:`csv.simulate@Input Files@option_sim.csv@trace` to the
+   option_sim.csv file.
+#. Change the csv_sim_and_fit example to :ref:`csv.prevalence2iota-name` .
+
+05-14
+=====
+Add the optional
+:ref:`csv.predict@Output Files@tru_predict.csv` output file to csv.predict.
+
+05-13
+=====
+Add the :ref:`csv.simulate@Input Files@option_sim.csv@new_random_effects`
+option to the csv simulate routine.
+
+05-12
+=====
+#. The random effects were not being used properly in the
+   :ref:`csv.simulate-name` routine.
+   To be specific, the random effect for the node being fit,
+   was used for all the levels above the node being fit.
+   This has been fixed.
+#. The :ref:`csv.predict-name` routine was running parallel code
+   when :ref:`csv.predict@Input Files@option_predict.csv@max_number_cpu`
+   was one. This has been changed so that the execution stream simpler
+   when only one processor is used.
+
+05-11
+=====
+#. Improve the :ref:`get_parent_node-name` documentation.
+#. Define :ref:`csv.module@sex_name2value` in the at_cascade.csv name space.
+
+05-10
+=====
+There was a problem with the csv fit_xam  when
+:ref:`csv.break_fit_pred@breakup_computation` was true.
+To be specific, multiple copies of the header appeared in the
+:ref:`csv.predict@Output Files@fit_predict.csv` and
+:ref:`csv.predict@Output Files@sam_predict.csv` files.
+This has been fixed by using the csv DictReader and DictWriter routines
+instead of the shutil copyfileobj routine.
+
+
+05-03
+=====
+#. Add the following columns to the csv.fit data_in.csv table:
+   :ref:`csv.fit@Input Files@data_in.csv@density_name` ,
+   :ref:`csv.fit@Input Files@data_in.csv@eta` ,
+   :ref:`csv.fit@Input Files@data_in.csv@nu` .
+   **Warning** This is an API change because these columns must appear
+   in data.csv.
+   To get the same effect as before this change, add
+   ``,density,eta,nu`` to the end of the first line in data.csv and
+   ``,cen_gaussian,,`` to the end of the other lines in data.csv.
+
+#. The Data Density wish list item was removed.
+
+04-26
+=====
+In the examples, move the assignment to ``new`` from just before a call to
+``dismod_at.create_connection`` to inside the call. In addition, add
+``readonly`` to the call. For example,
+in :ref:`absolute_covariates.py-name` the text ::
+
+   new          = False
+   connection   = dismod_at.create_connection(root_database, new)
+
+was changed to ::
+
+   connection   = dismod_at.create_connection(
+      root_database, new = False, readonly = False
+   )
+
+04-12
+=====
+#. Add :ref:`at_cascade@Install` instructions.
+#. Add the Data Density wish list item.
+#. Remove separating the predictions form the fits because this
+   wish list item has been completed.
+
+04-09
+=====
+Merge in the predict branch. **Warning**
+this is an API change because you must run both the csv fit and predict
+routines to get what the fit routine used to produce; see comments below.
+
+#. Split the csv fit routine into a fit and predict steps; see
+   :ref:`csv.fit-name` , :ref:`csv.predict-name`.
+#. Add the :ref:`csv.predict@Input Files@option_predict.csv` file.
+#. Remove db2csv and plot from the :ref:`csv.fit@Input Files@option_fit.csv`
+   file (they have been moved to option_predict.csv).
+#. Add the :ref:`csv.predict@start_job_name` and
+   :ref:`csv.predict@max_job_depth` arguments to csv.predict.
+#. Improve the documentation for the :ref:`csv.break_fit_pred-name` .
+   In addition, include continuing the cascade in this example; see
+   :ref:`csv.break_fit_pred@breakup_computation` .
+#. Add the :ref:`csv.fit@max_node_depth` argument to csv.fit.
+#. Change :ref:`avgint_parent_grid-name` to predict for all children,
+   so continue_cascade works for any change of the
+   :ref:`continue_cascade@fit_goal_set`.
+
+04-06
+=====
+Improve the way the calculation of the
+:ref:`csv.predict@Output Files@fit_predict.csv` and
+:ref:`csv.predict@Output Files@sam_predict.csv` calculations
+are parallelized.
+(The old method did not seem to work well on some systems.)
+
+04-05
+=====
+Add some new items to the :ref:`wish_list@csv.fit` wish list.
+
+03-28
+=====
+#. Add some new :ref:`wish_list-name` items.
+#. Add the :ref:`csv.fit@Input Files@option_fit.csv@ode_method`
+   csv fit option.
+#. Change :ref:`csv.shock_cov-name` to use
+   :ref:`csv.fit@Input Files@option_fit.csv@ode_method@trapezoidal`
+   *ode_method* .
+
+03-25
+=====
+Add :ref:`csv.fit@Input Files@option_fit.csv@child_prior_std_factor`
+to the option_fit table.
+This is called :ref:`option_all_table@shift_prior_std_factor`
+in the option_all table.
+
+03-22
+=====
+Fix discussion of relative covariates under the
+:ref:`csv.fit@Input Files@mulcov.csv@covariate` heading,
+under multiplier.csv for the csv fit routine.
+
+03-20
+=====
+This documentation :ref:`at_cascade@Version` number was not updating
+since 2023..1. This has been fixed.
+
+03-17
+=====
+If a covariate multiplier was frozen at the root level,
+and for the split reference id corresponding to the
+:ref:`no_ode_fit-name` ,
+the covariate was frozen after the no_ode fit.
+This has been fixed so that the covariate is frozen after
+the full root level fit.
+
+03-14
+=====
+The
+:ref:`csv.predict@Output Files@fit_predict.csv` and
+:ref:`csv.predict@Output Files@sam_predict.csv` files are created after
+all the fits.
+We are predicting for all the nodes (we could predict for just the next fit
+we want to inspect the results for).
+This computation was changed from sequential to in parallel
+because it was slow when there are large number fits.
+
+03-09
+=====
+Add the ``test/csv_one_cov.py`` test
+which fails unless the version of dismod_at is greater than or equal
+dismod_at-20230309.
+
+03-08
+=====
+Add the :ref:`csv.fit@Input Files@option_fit.csv@minimum_meas_cv`
+to the option_fit table.
+
+02-04
+=====
+#. Change the :ref:`csv.shock_cov-name` example to use the simulated data,
+   instead of its mean, during fitting.
+   This results in zero data values for prevalence at non-zero ages
+   and hence is a good test of the censored gaussian density for the data
+   (true prevalence is zero at age zero).
+#. If a job failed, csv.fit would crash at the end when gathering the
+   :ref:`csv.predict@Output Files@fit_predict.csv` results.
+   This has been fixed and the failed results are skipped when building
+   fit_predict.csv (and sim_predict.csv).
+
+02-03
+=====
+#. Change the simulated data *percent_cv* data column to
+   :ref:`csv.simulate@Input Files@simulate.csv@meas_std_cv`
+   (which is now a ratio and not a percent),
+   and add the
+   :ref:`csv.simulate@Input Files@simulate.csv@meas_std_min` column.
+#. Change the density used for the data from Gaussian to censored Gaussian;
+   see :ref:`csv.fit@Input Files@data_in.csv@meas_std` .
+
+01-13
+=====
+If refit_split was false,
+the covariates were not frozen after the root level fit.
+This has been fixed; see
+:ref:`csv.fit@Input Files@option_fit.csv@refit_split@Multiplier Freeze`.
+
+01-05
+=====
+#. Create the :ref:`csv.shock_cov-name` example which simulates and fits an
+   incidence shock using prevalence data.
+   The shock is modeled as a covariate that affects the rate iota.
+   This is a good test of the covariate multiplier bug fix mentioned
+   directly below.
+#. Add the :ref:`wish_list@csv.fit@covariate.csv` wish list item.
+
+01-03
+=====
+Fix a bug in covariate multipliers that affect rate values.
+For example, the model for a prevalence measurement needs to compute rate
+values at ages and time that are previous to the prevalence measurement time.
+See the dismod_at documentation for the rate_eff_cov table for more details.
+
+01-04
+=====
+#. Add the csv fit
+   :ref:`csv.fit@Input Files@option_fit.csv@absolute_covariates` option.
+#. Remove covariate_effect_depend_age_time from
+   :ref:`csv.simulate@Input Files@option_sim.csv` .
+   Now the bug in the covariate multipliers has been fixed,
+   all simulations should be done with full age time variation in the
+   covariate values.
+#. Split the std_random_effects option_sim.csv option into
+   std_random_effects_iota, std_random_effects_chi, std_random_effects_rho .
+#. Remove the csv_absolute_covariate example (it will be replaced by
+   the csv_cov_shock example)
+
+{xrst_end 2023}

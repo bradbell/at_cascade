@@ -41,6 +41,7 @@ cat << EOF
 bin/check_all.sh flags
 possible flags
 --help                     print this help message
+--skip_check_copy          do not check copyright check
 --skip_external_links      do not check documentation external links
 --suppress_spell_warnings  do not check for documentaiton spelling errors
 EOF
@@ -48,7 +49,8 @@ EOF
    fi
 fi
 #
-# skip_external_links, suppress_spell_warnings
+# skip_check_copy, skip_external_links, suppress_spell_warnings
+skip_check_copy='no'
 skip_external_links='no'
 suppress_spell_warnings='no'
 while [ $# != 0 ]
@@ -57,6 +59,10 @@ do
 
       --skip_external_links)
       skip_external_links='yes'
+      ;;
+
+      --skip_check_copy)
+      skip_check_copy='yes'
       ;;
 
       --suppress_spell_warnings)
@@ -85,10 +91,14 @@ do
    fi
 done
 # -----------------------------------------------------------------------------
+if [ "$skip_check_copy" == 'no' ]
+then
+   bin/check_copy.sh
+fi
 #
 # bin/check_*.sh
 list=$(ls bin/check_*.sh | \
-   $sed -e '/check_all.sh/d' -e '/check_install.sh/d'
+   $sed -e '/check_all.sh/d' -e '/check_install.sh/d' -e '/check_copy.sh/d' \
 )
 for check in $list
 do

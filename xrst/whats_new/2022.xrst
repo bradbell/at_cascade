@@ -1,0 +1,478 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
+# ----------------------------------------------------------------------------
+{xrst_begin 2022}
+{xrst_spell
+  const
+  dage
+  dd
+  distutils
+  dtime
+  mm
+  mtall
+  mtspecific
+  numpy
+  pyspellchecker
+  rst
+  smoothings
+}
+
+Release Notes for 2022
+######################
+
+mm-dd
+*****
+
+12.19
+=====
+#. In :ref:`csv.join_file-name` use the dictionary ``update`` method
+   instead of the ``|`` operator because python 3.8 does not support
+   the ``|`` operator.
+#. :ref:`csv.fit-name` was failing when the USER environment variable
+   was not defined. This has been fixed (``none`` is the default user).
+
+12-18
+=====
+#. If a test fails, run it a second time with a different random seed.
+   As the number of tests increases this helps avoid a by chance test failure.
+#. Fix the value prior for iota in the sim_and_fit
+   example. To be specific, it was log Gaussian by mistake and has been
+   changed to Gaussian.
+#. You should advance to dismod_at-20221218 to avoid a crash when all of the
+   fixed effects have their lower and upper limits equal.
+
+12-12
+=====
+Improve the error messaging when both
+const_value and value_prior are empty in
+:ref:`csv.fit@Input Files@mulcov.csv` .
+
+12-08
+=====
+#. Add the
+   covariate_effect_depend_age_time  option.
+#. Add the option_sim.csv
+   :ref:`csv.simulate@Input Files@option_sim.csv@absolute_covariates` option,
+   and the option_fit.csv
+   :ref:`csv.fit@Input Files@option_fit.csv@absolute_covariates` option.
+#. Also add the csv_absolute_covariate example.
+   This can be used to help understand the covariate_effect_depend_age_sex
+   option (as well as absolute covariates).
+#. Remove the csv.fit wish list item. It was completed by the changes
+   of integrand to integrand_name (see below).
+
+12-07
+=====
+#. The default value for :ref:`csv.predict@Input Files@option_predict.csv@db2csv`
+   and :ref:`csv.predict@Input Files@option_predict.csv@plot` was true
+   and should have been false. This has been fixed.
+#. The csv simulate (csv fit) option file name was changed from
+   option.csv (option_in.csv) to
+   :ref:`csv.simulate@Input Files@option_sim.csv`
+   ( :ref:`csv.fit@Input Files@option_fit.csv` ) .
+#. Change the csv fit option_out.csv file to
+   :ref:`csv.fit@Output Files@option_fit_out.csv` .
+#. Add defaults for all the options in
+   :ref:`csv.simulate@Input Files@option_sim.csv` .
+#. Change the column node to node_name in
+   :ref:`csv.predict@Output Files@fit_predict.csv` and
+   :ref:`csv.predict@Output Files@sam_predict.csv` .
+#. Change the column integrand to integrand_name in
+   fit_predict.csv, sam_predict.csv and
+   :ref:`csv.fit@Input Files@data_in.csv` .
+
+
+12-06
+=====
+#. If the csv.fit parent_rate
+   :ref:`csv.fit@Input Files@parent_rate.csv@const_value` was non-empty,
+   the dage and dtime priors were treated as if they were empty.
+   This has been fixed (even though a rate is fixed for one age and time,
+   it might not be fixed for the next age and time).
+#. The sim_and_fit test would randomly fail.
+   Diagnostic information has been added (when the test fails)
+   and the limits have been widened (to reduce the chance that the
+   test fails).
+#. The following csv.fit options were added:
+   :ref:`csv.fit@Input Files@option_fit.csv@age_avg_split`,
+   :ref:`csv.fit@Input Files@option_fit.csv@ode_step_size`.
+
+
+12-03
+=====
+#. Add the sim_and_fit example.
+#. In the csv fit, extend the prior
+   :ref:`csv.fit@Input Files@prior.csv@density` to
+   include the log_gaussian and log_laplace cases.
+   This required adding the optional
+   :ref:`csv.fit@Input Files@prior.csv@eta` column to the prior.csv file.
+   In addition, some of the other columns were made optional.
+#. Add the csv fit :ref:`csv.fit@Input Files@option_fit.csv@quasi_fixed`
+   option.
+
+12-02
+=====
+#. Add the :ref:`csv.join_file-name` utility.
+#. The :ref:`csv.simulate@Output Files@data_sim.csv@meas_mean` was not
+   using the :ref:`csv.simulate@Input Files@option_sim.csv@float_precision`
+   (because the corresponding value was a numpy.float64 instead of a float).
+   This has been fixed.
+#. Add a wish list item for csv.fit.
+#. Fix bug in :ref:`csv.fit-name` where integrand names could be missing
+   during prediction step.
+
+11-28
+=====
+Adapt to xrst-2022.11.28.
+
+11-22
+=====
+Include the no_ode fit in the csv fit optional
+:ref:`csv.predict@Input Files@option_predict.csv@db2csv` and
+:ref:`csv.predict@Input Files@option_predict.csv@plot` operations.
+
+11-14
+=====
+Add :ref:`csv.fit@Input Files@option_fit.csv@max_abs_effect` to the
+csv fit option_in.csv file.
+
+11-12
+=====
+Add the refit_split option to the
+:ref:`option all table <option_all_table@refit_split>`  and the
+:ref:`csv.fit@Input Files@option_fit.csv` file.
+Note that its default value for the option all table is false,
+and for option_in.csv file its default value is true.
+
+11-10
+=====
+1. Add the :ref:`csv.simulate@Input Files@option_sim.csv@random_depend_sex`
+   option to the csv simulation routine. In addition, add a discussion
+   about :ref:`csv.simulate@Input Files@option_sim.csv` not being backward
+   compatible.
+2. Add the :ref:`csv.fit@Input Files@option_fit.csv@shared_memory_prefix`
+   option. In addition, add a discussion about
+   :ref:`csv.fit@Input Files@option_fit.csv` being backward compatible.
+
+11-09
+=====
+#. Add :ref:`csv.module@Notation@Data Type@Boolean` to the possible csv file
+   data types.
+#. Add the csv fit :ref:`csv.predict@Input Files@option_predict.csv@db2csv` option.
+   This required including a description of the
+   :ref:`csv.fit@Output Files@dismod.db` files in the csv fit documentation.
+#. Add the csv fit :ref:`csv.predict@Input Files@option_predict.csv@plot` option.
+#. Add mention of the fact that the csv fit
+   :ref:`csv.fit@Input Files@parent_rate.csv` file corresponds to
+   no random or fixed effects.
+#. The following assert checked that the option file was not read twice::
+
+      assert csv_option_value == None
+
+   This has been removed because one python session may fit different cases,
+   which could have different option values.
+
+11-08
+=====
+Fix and document using ``mulcov_``\ *id* as an
+:ref:`csv.fit@Input Files@predict_integrand.csv@integrand_name`
+in the predict.csv file.
+
+11-03
+=====
+Add :ref:`option_all_table@number_sample` to the option all table.
+
+11-02
+=====
+1. Check the csv.simulate :ref:`csv.simulate@Input Files` and
+   csv.fit :ref:`csv.simulate@Input Files` to make sure they have
+   all the necessary column names
+   (if not print an informative error message).
+2. The files :ref:`csv.predict@Output Files@fit_predict.csv` and
+   :ref:`csv.predict@Output Files@sam_predict.csv` contained multiple copies
+   of just one node instead of all the nodes that were fit.
+   This has been fixed.
+
+10-28
+=====
+1. Remove the packaging wish list item because it was completed.
+2. Add the Meta Regression wish list item.
+
+10-27
+=====
+1. Add the :ref:`csv.fit@Input Files@mulcov.csv@const_value` column
+   to the mulcov.csv input file.
+2. Add a discussion of the different covariate multiplier
+   :ref:`types <csv.fit@Input Files@mulcov.csv@type>` .
+3. sex and one were added to the possible covariates in csv fit; see
+   :ref:`csv.fit@Input Files@mulcov.csv@covariate` .
+
+10-25
+=====
+1. Add the :ref:`csv.fit@Input Files@option_fit.csv@max_num_iter_fixed`,
+   :ref:`csv.fit@Input Files@option_fit.csv@tolerance_fixed`,
+   and :ref:`csv.fit@Input Files@option_fit.csv@max_number_cpu` options.
+2. Add an error message to csv fit when the root node sub-directory already
+   exists in the :ref:`csv.fit@fit_dir` directory.
+
+10-20
+=====
+1. Remove the avgint Table item from the wish list
+   (it was done previously).
+2. Remove default None values for arguments to :ref:`check_cascade_node-name`
+   and include argument type asserts in Syntax.
+3. Change all_mtall to `omega_all` and remove all_mtspecific .
+   In other words, do the calculation of mtall minus mtspecific
+   (to get the omega constraint) outside of at_cascade.
+   This completed and removed the mtall wish list entry.
+4. In csv.fit, change all_predict.csv to
+   :ref:`csv.predict@Output Files@sam_predict.csv`.
+   Make the column names in this file specialized for
+   csv fit predictions.
+   In addition, add :ref:`csv.predict@Output Files@fit_predict.csv`
+   to the csv fit predictions.
+
+10-19
+=====
+1. Add :ref:`csv.fit@Input Files@option_fit.csv@max_fit`
+   to the csv option table.
+2. Change the definition of a
+   :ref:`csv.module@Notation@Rectangular Grid` so that it can be
+   different for each value in the selection column.
+3. Use the fact that the child rates (random effects) and the
+   covariate multipliers are constant in age and time to simplify csv.fit.
+   To be specific, use priors instead of smoothings for this functions
+   (which enabled us to remove smoothing names from csv.fit); see
+   :ref:`csv.fit@Input Files@parent_rate.csv`,
+   :ref:`csv.fit@Input Files@child_rate.csv`,
+   :ref:`csv.fit@Input Files@mulcov.csv`.
+4. There was an error in the all_predict.csv file.
+   To be specific, the samples were not properly limited
+   to the sex value corresponding to the fit.
+   This has been fixed.
+5. The covariate multipliers for sex are now frozen after
+   the both fit at the root node level.
+   The other covariate multipliers are frozen after the female and male
+   split at the root level.
+
+10-18
+=====
+Change fit option.csv to
+:ref:`csv.fit@Input Files@option_fit.csv` ,
+add default value for all the fit options,
+and place resulting options in
+:ref:`csv.fit@Output Files@option_fit_out.csv` .
+
+10-17
+=====
+First tested version of :ref:`csv.fit-name` .
+
+10-16
+=====
+Add the :ref:`csv.empty_str-name` utility for converting
+empty strings to, and from, None.
+
+10-15
+=====
+Change license notice to SPDX_ format.
+
+.. _SPDX: https://spdx.dev/learn/handling-license-info/
+
+10-14
+=====
+1. Improve the description of the location of the fit results; see
+   :ref:`cascade_root_node@Output dismod.db` .
+2. Add the mtall_data and avgint Table wish list entries.
+3. Fix bug in :ref:`csv.simulate-name` . To be specific, one of the rate functions
+   was being used for all the rates. A regression test for this bug was added
+   (where is more than one rate in
+   :ref:`csv.simulate@Input Files@no_effect_rate.csv` ).
+
+10-10
+=====
+Fix the return value for :ref:`bilinear@spline_dict` function calls::
+
+   z = spline_dict[z_name](x, y)
+
+so that the result z is a float and not a numpy array of size one.
+
+10-09
+=====
+1. Move the csv interface files to the csv sub-module; see
+   :ref:`csv.module-name`.
+2. Move
+
+   - read_csv_table to :ref:`csv.read_table-name`
+   - write_csv_table to :ref:`csv.write_table-name`
+
+10-06
+=====
+Fix some documentation spelling errors detected by new version of pyspellchecker.
+
+09-18
+=====
+1. Adapt to xrst-2022.9.18. This changes the location of documentation
+   html files from the ``doc/rst`` directory to the ``doc`` directory.
+2. Change the linking text for web pages from the page title to the
+   page name. For example, use :ref:`all_node_db-name` instead of
+   :ref:`all_node_db-title` to link to the all node database documentation.
+
+08-27
+=====
+1. Remove the relative_tolerance option from :ref:`csv.simulate-name` and
+   increase absolute_tolerance in its :ref:`example<csv.simulate_xam-name>`.
+   (It was removed from ``dismod_at.average_integrand`` because
+   testing it with :ref:`csv.simulate_xam-name` revealed problems.)
+2. Remove ``\begin{align*}`` from math directives
+   (sphinx automatically adds a split to math directives).
+
+08-25
+=====
+Add the absolute_tolerance, relative_tolerance, and float_precision
+columns to the :ref:`csv.simulate@Input Files@option_sim.csv` file.
+
+08-23
+=====
+1. Add tracing to :ref:`csv.simulate-name` ; i.e., it will report is progress.
+2. Change number of spaces corresponding an indent from 4 to 3.
+   (This interacts better with the sphinx documentation system.)
+
+08-21
+=====
+1. Fix some error message and add some tracing to :ref:`csv.simulate-name` .
+2. Update documentation to use xrst-2022.8.21.
+
+08-16
+=====
+Add the section :ref:`ode_iota_omega-name` which derives the dismod ODE solution
+when rates are constant and only iota, omega are non-zero.
+
+08-15
+=====
+Remove use of the python distutils package because it has been deprecated.
+
+08-12
+=====
+Add the :ref:`bilinear-name` spline routine.
+
+08-09
+=====
+1. Advance to xrst-2022.8.8 (this improves the documentation).
+2. Improve the :ref:`index<genindex>`
+   using the keyword file to exclude some entries .
+3. Add the :ref:`csv.read_table-name` and :ref:`csv.write_table-name` routines
+   to the at_cascade module.
+
+08-01
+=====
+Start construction of a cascade data simulation tool; see
+:ref:`csv.simulate-name` .
+
+04-18
+=====
+Remove shared memory and LD_LIBRARY_PATH items from the
+:ref:`wish_list-name`
+because they have been completed.
+
+03-22
+=====
+Add :ref:`option_all_table@balance_fit` to the option_all table.
+
+03-14
+=====
+1. Fix a bug in how
+   :ref:`avgint_parent_grid-name` and
+   :ref:`create_shift_db-name` pass
+   priors down the cascade. To be more specific, the split reference
+   covariate effects were not being handled properly.
+2. A check of the prior mean for iota was added at the end of
+   the :ref:`split_covariate-name` example
+3. Add the :ref:`no_ode_fit@fit_type` argument to no_ode_fit.
+
+03-12
+=====
+The shared memory names were shortened,
+to be specific _at_cascade was removed from theses names.
+In addition, the all node database was added as an argument
+to :ref:`clear_shared-name` so it would know the shared memory prefix.
+
+03-10
+=====
+Add the :ref:`cascade_root_node@fit_type_list` argument to
+cascade_root_node and continue_cascade.
+
+03-08
+=====
+The :ref:`remission-name` example was added.
+
+03-07
+=====
+The :ref:`option_all_table@shared_memory_prefix` was added to the
+option_all table.
+
+03-05
+=====
+Change :ref:`no_ode_fit-name` to always use Gaussian data densities.
+
+02-05
+=====
+Use :ref:`com_cov_reference-name` to compute references for relative covariates
+and remove the all_cov_reference table from the :ref:`all_node_db-name`.
+
+02-04
+=====
+In the examples, fix the following typos:
+Change 'are checked for check_cascade_node'
+to 'are checked by check_cascade_node'.
+Change 'rood_node_db routine' to 'root_node_db routine'.
+
+02-03
+=====
+Add new :ref:`wish_list-name` entries and remove old ones the have been completed.
+
+01-28
+=====
+Add the :ref:`add_log_entry-name`, :ref:`move_table-name`, and :ref:`empty_avgint_table-name`
+routines to the at_cascade module.
+
+01-27
+=====
+1. The max_fit value is now doubled when doing
+   :ref:`option_all_table@max_fit@mulcov_freeze` fit.
+
+2. If :ref:`option_all_table@max_number_cpu` was one,
+   the optimizer trace was not printed to the screen.
+   This has been fixed.
+
+01-26
+=====
+Change perturb_optimization_scaling to
+:ref:`option_all_table@perturb_optimization_scale` and add the
+:ref:`option_all_table@perturb_optimization_start` option.
+
+01-25
+=====
+The :ref:`clear_shared-name` routine was added to the
+at_cascade module.
+
+01-08
+=====
+1. Fix a bug in :ref:`create_shift_db-name`.
+   To be specific, the mean int a value prior child variable in the shifted
+   database (child database) might not satisfy the prior limits.
+   This violated the dismod_at assumptions about the value prior means.
+
+2. Change :ref:`create_shift_db@shift_databases@dage and dtime Priors`
+   to be difference predicted by parent fit.
+
+01-02
+=====
+1. The cascade would hang at the end, instead of detecting completion,
+   when :ref:`option_all_table@max_number_cpu` was greater the one.
+   This has been fixed.
+
+2. Use :ref:`create_job_table@job_table@job_name`
+   as the key for each job in the :ref:`check_log@message_dict` return value.
+
+{xrst_end 2022}

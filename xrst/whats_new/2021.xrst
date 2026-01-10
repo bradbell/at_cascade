@@ -1,0 +1,144 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
+# ----------------------------------------------------------------------------
+{xrst_begin 2021}
+{xrst_spell
+  dd
+  iter
+  mm
+  num
+  py
+}
+
+Release Notes for 2021
+######################
+
+mm-dd
+*****
+
+12-29
+=====
+1. Fix error recovery and add more job status reporting to
+   :ref:`fit_parallel-name`.
+
+2. Document the :ref:`fit_parallel@trace.out` file.
+
+12-28
+=====
+1. Change results_dir to result_dir.
+
+2. Remove the *trace_fit* parameter.
+
+12-26
+=====
+1. Add exception handling to running in parallel so that
+   program does not hang when a job fails.
+
+2. Change the fit_one_job trace_fit argument to
+   :ref:`fit_one_job@trace_file_obj` so that opening and closing the file
+   is managed by the calling program.
+
+12-24
+=====
+1. The base_directory was changed to the :ref:`option_all_table@result_dir`
+   and now a required option the option_all table.
+
+2. Change required precision in example/mulcov_freeze.py to reduce probability
+   of random test failure.
+
+3. Replace :ref:`no_ode_fit-name` max_fit and max_abs_effect arguments by
+   :ref:`no_ode_fit@option_all_dict`.
+
+4. In no_ode_fit, change in_database to :ref:`no_ode_fit@root_database`,
+   and change out_database to :ref:`no_ode_fit@root_fit_database`.
+
+12-21
+=====
+1. The output files are now relative to the base_directory
+   (they used to be relative to the current working directory).
+
+2. Starting from a :ref:`glossary@root_node` that was not at the top
+   of the node tree did not work. The :ref:`one_at_function-name` was
+   modified to test for this problem and the problem was fixed.
+
+12-08
+=====
+Remove the convergence problem :ref:`wish_list-name`
+entry because it was completed
+when the :ref:`option_all_table@perturb_optimization_scale` option
+was added.
+
+12-06
+=====
+Add the :ref:`mulcov_freeze-name` table which enables one to freeze the
+value of a covariate multiplier so it is the same for all fits
+below a certain point.
+
+12-05
+=====
+1. Add the :ref:`check_log-name` routine.
+
+2. Add the :ref:`option_all_table@perturb_optimization_scale` option
+   and list options in alphabetical order.
+
+12-03
+=====
+1. Add the :ref:`fit_parallel-name` routine which
+   runs :ref:`create_job_table@job_table` jobs
+   sequentially (in parallel) when :ref:`fit_parallel@max_number_cpu` is
+   one (greater than one).
+
+2. Add a :ref:`wish_list-name` for at_cascade.
+
+12-02
+=====
+1. The :ref:`no_ode_fit-name` routine was setting the dismod_at
+   max_num_iter_fixed option to 100 for all fits.
+   This has been fixed and the option table setting is now used for all fits.
+
+2. Move cascade_fit_node to :ref:`cascade_root_node-name` (better name now that
+   the routine is not recursive. In addition, change the fit_database
+   argument name to root_database.
+
+12-01
+=====
+1. Add :ref:`get_database_dir-name`.
+   This routine is for use with parallel processing.
+
+2. Change fit_database base create_job_table argument to
+   :ref:`create_job_table@node_table`.
+
+3. Add :ref:`create_job_table@job_table@start_child_job_id` and
+   :ref:`create_job_table@job_table@end_child_job_id` to the job table.
+
+11-30
+=====
+Change the name get_job_table to
+:ref:`create_job_table-name`.
+
+11-29
+=====
+1. Add get_job_table. This routine is under construction and planned
+   and part of a re-factoring for parallel processing.
+
+2. Add :ref:`option_all_table@root_split_reference_name`
+   to the option_all table (so that get_job_table can use any
+   fit_database).
+
+11-28
+=====
+1. Change the :ref:`create_all_node_db@option_all` argument to
+   create_all_node_db to be a complete representation of the
+   :ref:`option_all_table-name`.
+   This reduces the amount of necessary documentation.
+   It also requires that root_node_name be in the option_all argument.
+
+2. Change the :ref:`create_all_node_db@split_reference_table` argument to
+   have a default value (corresponding to the empty table).
+
+3. Change split_level in the option_all table to the
+   :ref:`node_split_table-name`.
+
+
+{xrst_end 2021}

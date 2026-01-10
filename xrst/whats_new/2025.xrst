@@ -1,0 +1,253 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
+# SPDX-FileContributor: 2021-25 Bradley M. Bell
+# SPDX-FileContributor: 2023-25 Garland Culbreth
+# ----------------------------------------------------------------------------
+{xrst_begin 2025}
+{xrst_spell
+   mm
+   dd
+   py
+   pdf
+   relrisk
+   rcond
+   subprocess
+   dismodat
+   toml
+   conda
+   pyproject
+   setuptools
+   sqlite
+   unix
+   cee
+   xam
+}
+
+Release Notes for 2025
+######################
+
+
+mm-dd
+*****
+
+11-28
+=====
+In the documentation, change 'child rate' to 'child rate effect' because these
+are not really rates, but rather random effects on rates.
+This is explained in the csv fit
+:ref:`csv.fit@Input Files@child_rate.csv@value_prior`
+
+
+11-15
+=====
+Fix documentation for
+:ref:`csv.predict@Input Files@option_predict.csv@float_precision` .
+To be more specific, the comments about the no effect rates were moved to the
+:ref:`csv.predict@Input Files@option_predict.csv@plot` documentation.
+
+10-17
+=====
+The at_cascade `example/no_ode_xam.py` was passing a list for the
+`dismod_at.plot_rate_fit` *rate_set* argument.
+This made a test crash using a newer version of dismod_at and has been fixed.
+
+10-15
+=====
+The problem with the optimization perturbation was introduced by
+commit c802cee on 08-21 and was fixed on 10-11 (see below).
+The csv.fit default value for these parameters was set to 0 and as been
+corrected to be backward compatible to before the change on 08-21; see
+:ref:`csv.fit@Input Files@option_fit.csv@perturb_optimization_scale` and
+:ref:`csv.fit@Input Files@option_fit.csv@perturb_optimization_start` .
+
+10-14
+=====
+The version number for dismod_at and at_cascade was added at the
+beginning of each log table in the data base for each fit.
+One way to view this is in the log.csv file that is created when
+:ref:`csv.predict@Input Files@option_predict.csv@db2csv` is true
+in the csv.predict option file.
+
+10-11
+=====
+The
+:ref:`option_all_table@perturb_optimization_scale` and
+:ref:`option_all_table@perturb_optimization_scale` options were not working.
+This was a bug in :ref:`fit_one_job-name` .
+This has been fixed. In addition these options were added to
+:ref:`csv.fit@Input Files@option_fit.csv` in a way that is backward compatible.
+
+
+09-26
+=====
+Add the csv.predict option
+:ref:`csv.predict@Input Files@option_predict.csv@descendant_std_factor` ;
+see the :ref:`csv.predict_descend-name` example.
+
+
+09-23
+=====
+Both descendent and descendant were spread throughout the documentation
+and at_cascade source code.
+The spelling descendent was changed to descendant to be consistent
+While this included moving `job_descendent` to :ref:`job_descendant-name` ,
+it did not change the :ref:`csv.fit-name` of :ref:`csv.predict-name` API .
+
+08-23
+=====
+Some of the python sqlite3 connections were not being closed.
+The corresponding variable just dropped out of scope.
+Dropping out of scope freed the corresponding resources on
+Unix but not on Windows.
+This has been fixed (all the connections are closed).
+
+08-22
+=====
+Switch the pip build back end from setuptools to hatchling
+( see  `pyproject.toml` ) .
+This fixes the install of at_cascade on conda (and maybe other systems).
+
+08-21
+=====
+Complete the subprocess wish list item; i.e.
+use `dismod_at.db2csv_command(database)` instead of
+`dismodat.py database db2csv` .
+
+08-01
+=====
+Add :ref:`csv.predict@Input Files@option_predict.csv@number_sample_predict`
+to the option_fit.csv file.
+This requires dismod_at-2025.7.31 or later.
+
+07-09
+=====
+Add the :ref:`csv.diphtheria-name` example.
+
+07-08
+=====
+Add the subprocess wish list item.
+
+07-07
+=====
+The value of the random effects used to create
+:ref:`csv.predict@Output Files@tru_predict.csv` where not correct when
+there was a non-zero covariate multiplier.
+This has been fixed.
+
+07-05
+=====
+Add the ``censor_asymptotic``  *sample_method* to the
+:ref:`option_all table<option_all_table@sample_method>` and the
+:ref:`option_fit.csv file<csv.fit@Input Files@option_fit.csv@sample_method>` .
+
+
+06-05
+=====
+#. Add the following wish list items:
+   :ref:`wish_list@csv.fit@Child Job Priors` ,
+   :ref:`wish_list@csv.fit@predict_goal.csv` .
+
+#. The name of the new option asymptotic_rcond_lower was miss spelled
+   one place in the csv.fit.py source code.
+   This made it impossible to use and has been fixed.
+
+06-03
+=====
+#. Add the csv.fit
+   :ref:`csv.fit@Input Files@option_fit.csv@asymptotic_rcond_lower` option.
+
+#. Add the
+   :ref:`csv.fit@Input Files@option_fit.csv@child_prior_dage` and
+   :ref:`csv.fit@Input Files@option_fit.csv@child_prior_dtime` options to
+   the csv interface; for example, see :ref:`csv.dage_prior-name` .
+   This also added the :ref:`option_all_table@shift_prior_dage` and
+   :ref:`option_all_table@shift_prior_dtime` options in the option all table.
+
+#. Remove white space from the header in the
+   :ref:`csv.no_data@data_in.csv` file in the no_data.py example.
+   Also improve the discussion of the
+   :ref:`csv.no_data@option_fit.csv` file for this example.
+
+#. Discuss a :ref:`create_shift_db@Problem` with the current method
+   used to create child job priors.
+
+05-18
+=====
+Add a discussion child job shifted priors under
+:ref:`create_shift_db@Theory` in the
+:ref:`create_shift_db-title` section
+
+05-11
+=====
+Add discussion of the
+:ref:`csv.no_data@Negative Log Likelihood` and the how it
+relates to the :ref:`csv.fit@Output Files@sam_predict.csv` file.
+
+05-10
+=====
+The special case where there is no data at the root (node, sex) pair
+used to cause at_cascade to abort.
+This has been changed so that the no data case can be used to
+better understand how the priors work; see :ref:`csv.no_data-name` .
+Note the this requires a special case when
+:ref:`fit_one_job@run_job_id` is zero.
+
+
+
+02-06
+=====
+Add the *max_fit_parent* option to the
+:ref:`option_all table<option_all_table@max_fit_parent>` and the
+:ref:`option_fit.csv file<csv.fit@Input Files@option_fit.csv@max_fit_parent>` .
+
+01-15
+=====
+Start the 2025 stable versions of at_cascade; see the new
+:ref:`at_cascade@Versions` table.
+A release for 2025 has the stable version 2025.0.\ *number*
+where *number* is the release number.
+Only bug fixes, not new features, are added between release numbers.
+
+This change has broken old web links to the at_cascade documentation.
+An old link of the form
+
+| |tab| ``https://at-cascade.readthedocs.io/``\ *html_file_name*
+
+has the following form in the latest documentation:
+
+| |tab| ``https://at-cascade.readthedocs.io/latest/``\ *html_file_name*
+
+and the following for in the 2025 stable documentation:
+
+| |tab| ``https://at-cascade.readthedocs.io/stable-2025/``\ *html_file_name*
+
+01-13
+=====
+#. Add :ref:`csv.fit@Input Files@option_fit.csv@child_prior_std_factor_mulcov`
+   to the option_fit csv file and
+   :ref:`option_all_table@shift_prior_std_factor_mulcov`
+   to the option_all table.
+
+#. The computation of the standard deviation for the child priors
+   was using one degree of freedom.
+   This is not correct because we know the true mean of the samples; i.e.,
+   the fit value (the number of degrees of freedom should be zero).
+   This has been fixed and the child prior
+   standard deviations that are a factor of :math:`\sqrt{(N-1)/N}`
+   smaller where N is the number of samples.
+
+#. There was a bug in :ref:`fit_one_process-name` . It sometimes
+   returned on the main branch before all the other processes had finished.
+   This has been fixed.
+   It was found by repeated running of the `example/relrisk.py` test
+   which uses a large value for :ref:`option_all_table@max_number_cpu` .
+
+01-12
+=====
+The test/csv/fit.py and test/csv/sample_fail.py tests
+were failing on some systems; see
+`pull request 29 <https://github.com/bradbell/at_cascade/pull/29>`_ .
+The failures have has been fixed by not expecting the plot_data.pdf file
+to exist for (node, sex) pairs that have only one data point.
+
+{xrst_end 2025}
