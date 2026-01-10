@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-26 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import numpy
 import scipy.interpolate
@@ -118,7 +118,8 @@ class spline_wrapper :
       assert type(result) == numpy.ndarray
       assert result.size == 1
       #
-      result = float(result)
+      result = result.flatten()
+      result = result[0]
       return result
 
 # BEGIN_DEF

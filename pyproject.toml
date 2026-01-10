@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-25 Bradley M. Bell
+# SPDX-FileContributor: 2021-26 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # https://packaging.python.org/en/latest/guides/writing-pyproject-toml
 #
@@ -12,7 +12,7 @@ build-backend = "hatchling.build"
 #
 # Basic Information
 name              = 'at_cascade'
-version           = '2025.11.28'
+version           = '2026.1.9'
 #
 # Dependencies and reqirements
 requires-python   = '>=3.8'
