@@ -435,7 +435,7 @@ def set_global_option_value(
          msg += ' in option_predict.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
-      (option_type, defualt) = option_default[name]
+      (option_type, default) = option_default[name]
       value                  = row['value']
       if value.strip() != '' :
          if option_type == bool :

@@ -240,7 +240,7 @@ def fit_one_job(
       sample_method = option_all_dict['sample_method']
       if sample_method not in [
          'asymptotic', 'censor_asymptotic', 'simulate' ] :
-         msg  = 'opton_all table: sample_method is not '
+         msg  = 'option_all table: sample_method is not '
          msg += 'asymptotic , censor_asymptotic, or simulate'
          assert False, msg
    else :
@@ -534,7 +534,7 @@ def fit_one_job(
       else :
          shift_name = dir_list[-1]
       #
-      # shfit_databases
+      # shift_databases
       shift_databases[shift_name] = shift_node_database
    #
    # create shifted databases

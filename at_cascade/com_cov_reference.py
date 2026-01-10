@@ -146,7 +146,7 @@ def com_cov_reference(
    for covariate_id in range( n_covariate ) :
       covariate_label.append( f'x_{covariate_id}' )
    #
-   # is_decendant
+   # is_descendant
    is_descendant = set()
    for (node_id, row) in enumerate(node_table) :
       this_is_descendant = node_id == shift_node_id

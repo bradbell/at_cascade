@@ -495,7 +495,7 @@ def set_global_option_value(sim_dir, option_table) :
          msg  = f'csv.simulate: Error: line {line_number} in option_sim.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
-      (option_type, defualt) = option_default[name]
+      (option_type, default) = option_default[name]
       value                  = row['value']
       if value == '' :
          option_value[name] = None
@@ -590,7 +590,7 @@ def get_parent_node_dict( node_table ) :
    for parent_name in child_list_node :
       if len( child_list_node[parent_name] ) == 1 :
          msg  = 'csv.simulate: Error in node.csv\n'
-         msg += f'the parent_name {parent_name} apprears once and only once'
+         msg += f'the parent_name {parent_name} appears once and only once'
          assert False, msg
    #
    # check that no node is and ancestor of itself
@@ -616,7 +616,7 @@ def get_parent_node_dict( node_table ) :
 #    are all floats.
 #
 # no_effect_rate_table:
-# is the table correspnding to no_effect_rate.csv
+# is the table corresponding to no_effect_rate.csv
 #
 # spline_no_effect_rate =
 def get_spline_no_effect_rate(no_effect_rate_table) :
@@ -828,7 +828,7 @@ def get_rate_fun_dict(
    rate_fun_dict = dict()
    rate_fun_dict['omega'] = lambda age, time : omega_fun(age, time)
    #
-   # cannot loop over rate name becasue it does not bind on assignment.
+   # cannot loop over rate name because it does not bind on assignment.
    if 'pini' in  spline_no_effect_rate :
       rate_fun_dict['pini'] = \
          lambda age, time : rate_fun(age, time, 'pini')

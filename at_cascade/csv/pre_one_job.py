@@ -164,7 +164,7 @@ import dismod_at
 import at_cascade
 import copy
 
-def diagonse_one(
+def diagnose_one(
    predict_job_name       ,
    fit_dir                ,
    pre_database           ,
@@ -514,7 +514,7 @@ def pre_one_job(
       file_name    = f'{predict_node_dir}/{prefix}_{suffix}.csv'
       at_cascade.csv.write_table(file_name, predict_table)
    #
-   diagonse_one(
+   diagnose_one(
       predict_job_name     = predict_job_name ,
       fit_dir              = fit_dir ,
       pre_database         = pre_database ,

@@ -14,7 +14,7 @@
 # This corresponding solution is
 #  S(a) =       (1 - pini) * exp(-iota * a)
 #  C(a) =  1  - (1 - pini) * exp(-iota * a)
-# see ode_iota_omega in doucmentation.
+# see ode_iota_omega in documentation.
 #
 # The average of exp( -lambda * a) from a = low to a = up is
 #  [ exp( -lambda * low) - exp( -lambda * up) ] / [ lambda * (up - low) ]

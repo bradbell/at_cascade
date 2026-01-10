@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
-# This case was crashing because n3 was incuded in the job table.
+# This case was crashing because n3 was included in the job table.
 # The error messages ended with
 # AssertionError: get_name_type: table log does not exist in
 #     .../at_cascade.git/build/test/csv/n0/female/n1/dismod.db

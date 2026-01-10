@@ -102,7 +102,7 @@ Number of Fits
 **************
 This is the number of times a data set is simulated and fit.
 The larger this number, the more accurate sample probability that
-the fit will be withing the confidence limits.
+the fit will be within the confidence limits.
 {xrst_code py}'''
 number_fit = 40
 assert number_fit % 4 == 0
@@ -510,7 +510,7 @@ def main() :
    #
    #
    # age
-   # Exclude age zero because prevalence at age zero is indentically zero.
+   # Exclude age zero because prevalence at age zero is identically zero.
    ok = True
    for age in age_grid[1 :] :
       # time

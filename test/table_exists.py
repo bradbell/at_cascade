@@ -14,7 +14,7 @@ import dismod_at
 #
 def main() :
    #
-   # wrok_dir
+   # work_dir
    work_dir = 'build/test'
    at_cascade.empty_directory(work_dir)
    os.chdir(work_dir)

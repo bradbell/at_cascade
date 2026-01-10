@@ -6,7 +6,7 @@ r'''
 Test freeze_type == posterior using following node table
                 n0
                /  \
-freze node = n1    n4
+freeze node = n1    n4
              /
             n2
             /

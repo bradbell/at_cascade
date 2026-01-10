@@ -16,7 +16,7 @@
 # This corresponding solution is
 #  S(a) = exp[ - (ometa + iota) * a ]
 #  C(a) =  exp(-omega * a] - exp[ -(omega + iota) * a ]
-# see ode_iota_omega in doucmentation.
+# see ode_iota_omega in documentation.
 #
 # The average of exp( -lambda * a) from a = low to a = up is
 #  [ exp( -lambda * low) - exp( -lambda * up) ] / [ lambda * (up - low) ]

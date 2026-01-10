@@ -559,7 +559,7 @@ def fit(sim_dir, fit_dir) :
       difference  = list( fit_goal_set.difference(predict_node_set) )
       (node, sex) = difference[0]
       msg  = f'cov_shock.py: the file {fit_dir}/predict.csv\n'
-      msg += f'missing resutls for the fit gloal node.sex = {node}.{sex}'
+      msg += f'missing results for the fit gloal node.sex = {node}.{sex}'
       assert False, msg
    #
    # cov_reference_table

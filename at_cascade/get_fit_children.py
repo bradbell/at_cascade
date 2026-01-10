@@ -68,7 +68,7 @@ def get_fit_children(
    # number of nodes
    n_node       = len( node_table )
    #
-   # fit_chiledren
+   # fit_children
    fit_children = list()
    for i in range(n_node) :
       fit_children.append( set() )

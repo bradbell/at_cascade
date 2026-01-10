@@ -438,7 +438,7 @@ def add_shift_grid_row(
                if eta is None :
                   std  = numpy.std(fit_sample[key], mean=mean)
                else:
-                  # There is a log trasnformation of this variable before
+                  # There is a log transformation of this variable before
                   # passing it to cppad_mixed. Hence its value are gaussian
                   # in log space.
                   #

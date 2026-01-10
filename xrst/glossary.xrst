@@ -6,7 +6,6 @@
 {xrst_begin glossary}
 {xrst_spell
   avgint
-  becasue
   dage
   dtime
   init
@@ -205,7 +204,7 @@ This is the set of nodes at which the cascade is split by the value
 of the splitting covariate.
 No node in this set can be a descendant (or ancestor) of another
 node in this set.
-(Becasue the splitting can only occur once in the path from the
+(Because the splitting can only occur once in the path from the
 *root_node* to any other node.)
 
 ode_integrand

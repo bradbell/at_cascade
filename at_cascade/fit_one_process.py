@@ -100,7 +100,7 @@ This is the name of the number of cpus in use memory.
 The corresponding multiprocessing shared memory is
 a numpy array with ``dtype`` equal to ``int`` and
 with length equal to one.
-The value *number_cpu_inuse* [0] is the number of cpus (precesses)
+The value *number_cpu_inuse* [0] is the number of cpus (processes)
 currently fitting this cascade.
 
 shared_lock
@@ -259,7 +259,7 @@ def try_one_job(
       print( f'Begin: {current_time}: fit {fit_type:<5} {job_name}' )
       #
       # fit_one_job
-      # the lock should not be aquired during this operation
+      # the lock should not be acquired during this operation
       if not catch_exceptions_and_continue :
          at_cascade.fit_one_job(
             job_table         = job_table,
@@ -459,7 +459,7 @@ def fit_one_process(
    if not skip_this_job :
       #
       # try_one_job
-      # assumes lock not aquired during this operation
+      # assumes lock not acquired during this operation
       try_one_job(
          job_table,
          this_job_id,
@@ -598,7 +598,7 @@ def fit_one_process(
             target = fit_one_process
             p = multiprocessing.Process(target = target, args = args)
             #
-            p.deamon = False
+            p.daemon = False
             p.start()
          #
          # job_id

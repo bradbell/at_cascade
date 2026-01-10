@@ -62,7 +62,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 # -----------------------------------------------------------------------------
-# global varables
+# global variables
 # -----------------------------------------------------------------------------
 # BEGIN fit_goal_set
 fit_goal_set = { 'n3', 'n4', 'n5', 'n6' }
@@ -342,7 +342,7 @@ def root_node_db(file_name) :
 # ----------------------------------------------------------------------------
 def main() :
    # -------------------------------------------------------------------------
-   # wrok_dir
+   # work_dir
    work_dir = 'build/test'
    at_cascade.empty_directory(work_dir)
    os.chdir(work_dir)

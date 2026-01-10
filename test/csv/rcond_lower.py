@@ -59,7 +59,7 @@ csv_file['predict_integrand.csv'] = \
 '''
 #
 # prior.csv
-# The correspnding reciprocal condition number is (4 / 10) squared; i.e., 0.04
+# The corresponding reciprocal condition number is (4 / 10) squared; i.e., 0.04
 csv_file['prior.csv'] = \
 '''name,lower,upper,mean,std,density
 gaussian_eps_10,1e-6,1.0,0.5,10.0,gaussian

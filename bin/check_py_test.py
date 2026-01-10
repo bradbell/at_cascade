@@ -30,7 +30,7 @@ def main() :
    if sys.argv[0] != 'bin/check_py_test.py' :
       sys.exit( 'bin/check_py_test.py must be run from its parent directory' )
    if len(sys.argv) != 1 :
-      sys.exit( 'bin/check_py_test.py does not expect any arugments' )
+      sys.exit( 'bin/check_py_test.py does not expect any arguments' )
    #
    # max_try
    # maximum number of times to try to pass each test

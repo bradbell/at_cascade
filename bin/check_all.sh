@@ -43,7 +43,7 @@ possible flags
 --help                     print this help message
 --skip_check_copy          do not check copyright check
 --skip_external_links      do not check documentation external links
---suppress_spell_warnings  do not check for documentaiton spelling errors
+--suppress_spell_warnings  do not check for documentation spelling errors
 EOF
       exit 0
    fi

@@ -1156,7 +1156,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
          msg  = f'csv.fit: Error: line {line_number} in option_fit.csv\n'
          msg += f'{name} is not a valid option name'
          assert False, msg
-      (option_type, defualt) = option_default[name]
+      (option_type, default) = option_default[name]
       value                  = row['value']
       if value.strip() != '' :
          if option_type == bool :

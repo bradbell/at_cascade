@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
-# This is an edited verison of the csv.break_fit_pred example.
+# This is an edited version of the csv.break_fit_pred example.
 #
 # Demonstrate a bug that was fixed on 2024-12-21.
 # To be specific, freezing the posterior for a covariate multiplier would

@@ -119,7 +119,7 @@ if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
    sys.path.insert(0, current_directory)
 import at_cascade
 # -----------------------------------------------------------------------------
-# global varables
+# global variables
 # -----------------------------------------------------------------------------
 # BEGIN relative_tolerance
 relative_tolerance = 1e-14

@@ -3,8 +3,8 @@
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # Test case where no_ode does not converge and the approximatte solution
-# does not satisfy does not satisfiy age difference constraint.
-# This makes sure that the mean used for the differnce prior
+# does not satisfy does not satisfy age difference constraint.
+# This makes sure that the mean used for the difference prior
 # satisfies the constraint for the difference prior.
 # ----------------------------------------------------------------------------
 # imports
