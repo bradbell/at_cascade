@@ -169,4 +169,4 @@ def main() :
    connection.close()
 if __name__ == '__main__' :
    main()
-   print('get_cov_rererence: OK')
+   print('get_cov_reference: OK')

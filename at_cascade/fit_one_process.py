@@ -551,7 +551,7 @@ def fit_one_process(
          n_cpu_available  = max_number_cpu - shared_number_cpu_inuse[0]
          n_cpu_spawn      = min(n_cpu_available, n_job_ready - 1)
          #
-         # shared_numper_cpu_inuse
+         # shared_number_cpu_inuse
          shared_number_cpu_inuse[0] += n_cpu_spawn
          #
          # shared_job_status

@@ -1083,7 +1083,7 @@ def ancestor_set(node_table, node_id) :
 # global_option_value[name] :
 # is the option value corresponding the specified option name.
 # Here name is a string and value
-# has been coverted to its corresponding type.
+# has been converted to its corresponding type.
 #
 global_option_value = None
 def set_global_option_value(fit_dir, option_table, top_node_name) :
@@ -1261,7 +1261,7 @@ class weighting_function :
 # and rows with both sex have been added; see covariate_both.
 #
 # global_option_value
-# This routine assues that global_option_value has been set.
+# This routine assumes that global_option_value has been set.
 #
 # age_grid, time_grid, csv_covariate_table =
 def create_root_database(fit_dir) :
@@ -1828,7 +1828,7 @@ def create_root_database(fit_dir) :
 # The ``node_id`` column has been added to this table.
 #
 # global_option_value
-# This routine assues that global_option_value has been set.
+# This routine assumes that global_option_value has been set.
 #
 def create_all_node_database(
    fit_dir, age_grid, time_grid, csv_covariate_table, fit_goal_table

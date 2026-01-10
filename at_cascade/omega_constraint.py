@@ -204,7 +204,7 @@ def omega_constraint(
    for row in all_tables['omega_index'] :
       omega_all_id = row['omega_all_id']
       if omega_all_id % (n_omega_age * n_omega_time) != 0 :
-         msg  = 'omega_index table: Expect omega_all_id to be a multipler '
+         msg  = 'omega_index table: Expect omega_all_id to be a multiple '
          msg += 'of n_omega_age * n_omega_time\n'
          msg += f'omega_all_id = {omega_all_id} '
          msg += f'n_omega_age = {n_omega_age} '

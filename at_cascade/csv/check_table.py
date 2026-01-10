@@ -132,7 +132,7 @@ def check_table(file_name, table) :
    keys = table2keys[table_name]
    for key in keys :
          if key not in table[0] :
-            msg       = f'The column name {key} does not appear in ths file\n'
+            msg       = f'The column name {key} does not appear in this file\n'
             msg      += f'{file_name}'
             assert False, msg
    #

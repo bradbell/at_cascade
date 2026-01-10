@@ -383,7 +383,7 @@ def ancestor_set(node_table, node_id) :
 # global_option_value[name] :
 # is the option value corresponding the specified option name.
 # Here name is a string and value
-# has been coverted to its corresponding type.
+# has been converted to its corresponding type.
 #
 global_option_value = None
 def set_global_option_value(
@@ -505,7 +505,7 @@ def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
       assert False, msg
    #
    # refit_split, number_sample_fit
-   # 2DO: It would be better to get these valuses from the option_all table
+   # 2DO: It would be better to get these values from the option_all table
    # (see where csv.fit writes the option_all table).
    refit_split       = True
    number_sample_fit = 20

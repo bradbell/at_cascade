@@ -452,7 +452,7 @@ outside the age rage (time range) in the covariate.csv file.
 # global_option_value[name] :
 # is the option value corresponding the specified option name.
 # Here name is a string and value
-# has been coverted to its corresponding type.
+# has been converted to its corresponding type.
 #
 global_option_value = None
 def set_global_option_value(sim_dir, option_table) :
@@ -701,8 +701,8 @@ def get_multiplier_list_rate(multiplier_sim_table) :
 # age
 # is the age at which we are evaluating the spline.
 #
-# itme
-# is the itme at which we are evaluating the spline.
+# time
+# is the time at which we are evaluating the spline.
 #
 def eval_spline(spline_node_sex_cov, node_name, sex, cov_name, age, time) :
    assert type(node_name) == str
@@ -726,7 +726,7 @@ def eval_spline(spline_node_sex_cov, node_name, sex, cov_name, age, time) :
 #
 # rate_fun = rate_fun_dict[rate_name] :
 # For each of rate_name in spline_no_effect_rate, value = rate_fun(age, time)
-# is the value of the corresponding rate included all fo the effects
+# is the value of the corresponding rate without any of the effects
 # where age, time, and value are floats.
 #
 # parent_node_dict:

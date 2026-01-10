@@ -94,7 +94,7 @@ def clear_shared(all_node_database, job_name) :
       #
       if exists == None :
          print( f'Unknown state: {shared_memory_name}' )
-         print( 'Try re-runing clear_shared')
+         print( 'Try re-running clear_shared')
       else :
          if exists :
             print( f'Found:     {shared_memory_name}' )
