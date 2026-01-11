@@ -17,7 +17,8 @@ mm-dd
 
 01-11
 =====
-Change the name of the master branch to main.
+#. Change the name of the master branch to main.
+#. Create the at_cascade-2026.0.0 release.
 
 01-10
 =====
