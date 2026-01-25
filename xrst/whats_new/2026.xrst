@@ -6,6 +6,7 @@
 {xrst_spell
    mm
    dd
+   py
 }
 
 Release Notes for 2026
@@ -14,6 +15,10 @@ Release Notes for 2026
 
 mm-dd
 *****
+
+01-25
+=====
+Fix python warning in get_header.py.
 
 01-11
 =====
