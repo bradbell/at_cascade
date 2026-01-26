@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-25 Bradley M. Bell
+# SPDX-FileContributor: 2021-26 Bradley M. Bell
 # -----------------------------------------------------------------------------
 #
 # The python program ``bin/check_test.py`` runs of the *.py files in the
@@ -50,6 +50,7 @@ def main() :
          for file in files :
             if file.endswith('.py') and not file.startswith('temp.') :
                file_list.append( os.path.join(root, file) )
+   file_list = sorted(file_list)
    #
    # max_len
    max_len = 0
