@@ -19,8 +19,8 @@ mm-dd
 02-09
 =====
 Move documentation for sample_index from
-ref:`csv.predict@Output Files@fit_predict.csv` to
-ref:`csv.predict@Output Files@sam_predict.csv` because
+:ref:`csv.predict@Output Files@fit_predict.csv` to
+:ref:`csv.predict@Output Files@sam_predict.csv` because
 sample_index is not in fit_predict.csv.
 
 01-25
