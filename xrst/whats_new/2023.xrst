@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-25 Bradley M. Bell
+# SPDX-FileContributor: 2021-26 Bradley M. Bell
 # SPDX-FileContributor: 2023-25 Garland Culbreth
 # ----------------------------------------------------------------------------
 {xrst_begin 2023}
@@ -108,10 +108,9 @@ default choice for *balance_sex* , true, does not work correctly.
 
 11-22
 =====
-Add documentation for the
-:ref:`csv.predict@Output Files@fit_predict.csv@sample_index`
-column in the fit_predict.csv and sam_predict.csv files
-output by csv.predict.
+Add documentation for the sample_index column in the
+:ref:`csv.predict@Output Files@fit_predict.csv`
+and sam_predict.csv files output by csv.predict.
 
 11-18
 =====

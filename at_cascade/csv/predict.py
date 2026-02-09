@@ -214,22 +214,6 @@ The age and time values comes from the covariate.csv file.
 The integrands values come from the predict_integrand.csv file
 and the covariate multiplier list.
 
-sample_index
-------------
-Each sample_index corresponds to an independent random sample
-of the model variables.
-
-#. If :ref:`option_all_table@sample_method` is asymptotic,
-   model variables for each sample are Gaussian correlated with mean equal to
-   the optimal value and variance equal to the asymptotic approximation.
-#. If :ref:`option_all_table@sample_method` is censor_asymptotic,
-   model variables are the same as for asymptotic expect that values above
-   (below) their upper bound (lower bound) are converted to the corresponding
-   bound.
-#. If :ref:`option_all_table@sample_method` is simulate,
-   the model variables for each sample at the optimal values corresponding
-   to an independent data set.
-
 integrand_name
 --------------
 is the integrand for this sample is equal to the integrand names
@@ -316,21 +300,37 @@ sam_predict.csv
 ===============
 This is a sampling of the predictions,
 using the posterior distribution of the model variables:
-It is similar to :ref:`csv.predict@Output Files@fit_predict.csv`
+It is the same as ref:`csv.predict@Output Files@fit_predict.csv`
 with the following differences:
 
 #. The first line (header line) is the same in this file and
    fit_predict.csv except that sam_predict.csv has an extra column
    named sample_index.
+
 #. Suppose that the other lines in sam_predict.csv and fit_predict.csv
    are sorted by ( *node_name* , *avgint_id* ) .
+
 #. Let *n_sample* be the number of other lines in sam_predict.csv divided by
    the number of other lines in fit_predict.csv.
+
 #. For each line in fit_predict.csv (not counting the header line),
    there are *n_sample* lines in sam_predict.csv,
    that are the same as the line in fit_predict.csv except for the value in the
    avg_integrand column and the extra sample_index column in
    sam_predict.csv.
+
+#. If :ref:`option_all_table@sample_method` is asymptotic,
+   model variables for each sample are Gaussian correlated with mean equal to
+   the optimal value and variance equal to the asymptotic approximation.
+
+#. If :ref:`option_all_table@sample_method` is censor_asymptotic,
+   model variables are the same as for asymptotic expect that values above
+   (below) their upper bound (lower bound) are converted to the corresponding
+   bound.
+
+#. If :ref:`option_all_table@sample_method` is simulate,
+   the model variables for each sample at the optimal values corresponding
+   to an independent data set.
 
 start_job_name
 --------------
