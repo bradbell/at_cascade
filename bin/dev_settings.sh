@@ -55,6 +55,7 @@ index_page_name='at_cascade'
 # In addition, all occurrences of stable-yyyy and release-yyyy are updated.
 version_file_list='
    pyproject.toml
+   CITATION.cff
    at_cascade/__init__.py
    at_cascade.xrst
 '
@@ -78,6 +79,7 @@ contributor_list='
 no_copyright_list='
    .gitignore
    .readthedocs.yaml
+   CITATION.cff
    agpl-3.0.txt
    bin/twine.sh
    readme.md
