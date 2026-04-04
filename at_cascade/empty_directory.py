@@ -11,8 +11,8 @@ Create an Empty Directory
 Prototype
 *********
 {xrst_literal
-   # BEGIN_DEF
-   # END_DEF
+    # BEGIN_DEF
+    # END_DEF
 }
 
 directory
@@ -30,10 +30,10 @@ import shutil
 # BEGIN_DEF
 # at_cascade.empty_directory
 def empty_directory(directory) :
-   assert type(directory) == str
-   assert directory.startswith('build/')
-   # END_DEF
-   #
-   if os.path.exists( directory ) :
-      shutil.rmtree( directory )
-   os.makedirs(directory)
+    assert type(directory) == str
+    assert directory.startswith('build/')
+    # END_DEF
+    #
+    if os.path.exists( directory ) :
+        shutil.rmtree( directory )
+    os.makedirs(directory)

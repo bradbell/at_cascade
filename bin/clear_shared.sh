@@ -5,10 +5,10 @@
 # ----------------------------------------------------------------------------
 if [ "$0" != 'bin/clear_shared.sh' ] || [ "$#" != 2 ]
 then
-   echo 'bin/clear_shared.sh all_node_dir job_name'
-   echo 'all_node_dir: directory where all_node.db is located'
-   echo 'job_name:     is the node_name.sex_name'
-   exit 1
+    echo 'bin/clear_shared.sh all_node_dir job_name'
+    echo 'all_node_dir: directory where all_node.db is located'
+    echo 'job_name:     is the node_name.sex_name'
+    exit 1
 fi
 all_node_dir="$1"
 job_name="$2"

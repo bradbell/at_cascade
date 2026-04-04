@@ -12,8 +12,8 @@ Create A Table from a CSV File
 Prototype
 *********
 {xrst_literal ,
-   BEGIN_DEF, END_DEF
-   BEGIN_RETURN, END_RETURN
+    BEGIN_DEF, END_DEF
+    BEGIN_RETURN, END_RETURN
 }
 
 
@@ -43,18 +43,18 @@ Example
 # BEGIN_DEF
 # at_cascade.csv.read_table
 def read_table(file_name) :
-   assert type(file_name)  == str
-   # END_DEF
-   #
-   file_ptr   = open(file_name)
-   reader     = csv.DictReader(file_ptr)
-   table      = list()
-   for row in reader :
-      table.append(row)
-   file_ptr.close()
-   #
-   # BEGIN_RETURN
-   # ...
-   assert type(table) == list
-   return table
-   # END_RETURN
+    assert type(file_name)  == str
+    # END_DEF
+    #
+    file_ptr   = open(file_name)
+    reader     = csv.DictReader(file_ptr)
+    table      = list()
+    for row in reader :
+        table.append(row)
+    file_ptr.close()
+    #
+    # BEGIN_RETURN
+    # ...
+    assert type(table) == list
+    return table
+    # END_RETURN

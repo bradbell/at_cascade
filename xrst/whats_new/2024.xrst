@@ -118,25 +118,25 @@ was corrected.
    :ref:`com_cov_reference-name` and its arguments were changed so that
    it could be called before the all_node database was created.
 
-   old::
+    old::
 
-      def get_cov_reference(
-         all_node_database  ,
-         fit_database       ,
-         shift_node_id      ,
-         split_reference_id = None
-      )
+        def get_cov_reference(
+            all_node_database  ,
+            fit_database       ,
+            shift_node_id      ,
+            split_reference_id = None
+        )
 
-   new::
+    new::
 
-      def com_cov_reference(
-         option_all_table      ,
-         split_reference_table ,
-         node_table            ,
-         covariate_table       ,
-         shift_node_id         ,
-         split_reference_id = None,
-      )
+        def com_cov_reference(
+            option_all_table      ,
+            split_reference_table ,
+            node_table            ,
+            covariate_table       ,
+            shift_node_id         ,
+            split_reference_id = None,
+        )
 
 
 12-12
@@ -250,10 +250,10 @@ another fit is started.
    that only had priors; i.e., were not fit.
    The error messages for both bugs ended with::
 
-      sqlite3.DatabaseError: file is not a database
+        sqlite3.DatabaseError: file is not a database
 
-   The *fit_goal_set* arguments to check_log was replaced by the
-   :ref:`check_log@job_table` and the bug was fixed.
+    The *fit_goal_set* arguments to check_log was replaced by the
+    :ref:`check_log@job_table` and the bug was fixed.
 
 09-24
 =====
@@ -263,7 +263,7 @@ There was a bug in this routine whereby it was possible for the mean
 of the age and time differences to not satisfy the constraint on the
 age and time differences. The corresponding error message was::
 
-   dismod_at error: mean greater than upper limit
+    dismod_at error: mean greater than upper limit
 
 This has been fixed.
 
@@ -273,10 +273,10 @@ There was an error in csv.predict when :ref:`csv.predict@start_job_name`
 did not correspond to the root node and :ref:`csv.predict@max_job_depth`
 was not ``None`` . The corresponding error message was of the form::
 
-   File "... ancestor_fit.py", line 123, in ancestor_fit
-   messages = at_cascade_log_dict[job_name]
-                ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-   KeyError: ...
+    File "... ancestor_fit.py", line 123, in ancestor_fit
+    messages = at_cascade_log_dict[job_name]
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    KeyError: ...
 
 This has been fixed.
 
@@ -295,7 +295,7 @@ This has been fixed.
 #. Some occurrences of the following python warnings
    (which were inside comments) were fixed::
 
-      SyntaxWarning: invalid escape sequence
+        SyntaxWarning: invalid escape sequence
 
 
 09-09
@@ -313,7 +313,7 @@ were not tested and may have trouble on other systems.
    the computation of ``haqi_avg`` was corrected,
    and indent level of the following line was corrected::
 
-      sample_list.append(row)
+        sample_list.append(row)
 
 #. **API Change** The :ref:`csv.predict-name` routine now includes priors
    even when posteriors are also available; see the discussion about
@@ -405,26 +405,26 @@ Add the Measurement Value Effects wish list item.
 #. If the age time grid in :ref:`csv.fit@Input Files@covariate.csv`
    was not the same for all nodes, the error message would print::
 
-      node_name = {node_name}, sex = {sex}
+        node_name = {node_name}, sex = {sex}
 
-   The text ``{node_name}`` and ``{sex}`` are now replace
-   by the name of the node and the sex for which the age time grid is different.
+    The text ``{node_name}`` and ``{sex}`` are now replace
+    by the name of the node and the sex for which the age time grid is different.
 
 #. Fix a bug in the :ref:`csv.break_fit_pred-name` example.
    To be specific, the python source code::
 
-               p_predict[sex] = multiprocessing.Process(
-                  target = at_cascade.csv.predict, args = args,
-                )
-               p_predict[sex].start()
+                    p_predict[sex] = multiprocessing.Process(
+                        target = at_cascade.csv.predict, args = args,
+                     )
+                    p_predict[sex].start()
 
-   was replaced by the source code::
+    was replaced by the source code::
 
-               key            = (node_name, sex)
-               p_predict[key] = multiprocessing.Process(
-                  target = at_cascade.csv.predict, args = args,
-                )
-               p_predict[key].start()
+                    key            = (node_name, sex)
+                    p_predict[key] = multiprocessing.Process(
+                        target = at_cascade.csv.predict, args = args,
+                     )
+                    p_predict[key].start()
 
 
 05-30
@@ -605,7 +605,7 @@ This has been fixed.
 =====
 There was a bug in ``check_log.py`` that could cause the following assert::
 
-   TypeError: '<=' not supported between instances of 'NoneType' and 'int'
+    TypeError: '<=' not supported between instances of 'NoneType' and 'int'
 
 This has been fixed.
 
@@ -669,32 +669,32 @@ comment as part of csv.fit.ode_method.no_ode.
    in the way multiprocessing Manger used; see issue13978_.
    This would cause the following error on some systems::
 
-      OSError: [Errno 16] Device or resource busy: '.nfs ...
+        OSError: [Errno 16] Device or resource busy: '.nfs ...
 
 #. Change the following names, note that predict_all and process_target
    were inside predict.py.
 
 .. csv-table::
-   :header-rows: 1
+    :header-rows: 1
 
-   Old Name, New Name
-   run_parallel,            :ref:`fit_parallel-name`
-   run_parallel_job,        fit_one_process
-   run_one_job,             :ref:`fit_one_job-name`
-   predict:predict_all,     :ref:`csv.pre_parallel-name`
-   predict:process_target,  :ref:`csv.pre_one_process-name`
-   predict_one,             :ref:`csv.pre_one_job-name`
+    Old Name, New Name
+    run_parallel,            :ref:`fit_parallel-name`
+    run_parallel_job,        fit_one_process
+    run_one_job,             :ref:`fit_one_job-name`
+    predict:predict_all,     :ref:`csv.pre_parallel-name`
+    predict:process_target,  :ref:`csv.pre_one_process-name`
+    predict_one,             :ref:`csv.pre_one_job-name`
 
 
 #. The text ``_fit`` was added to the python shared memory used for fitting.
    To be specific, the new shared memory names are:
 
-   | *shared_memory_prefix*\ ``_fit_``\ *job_name*\ ``_number_cpu_inuse``
-   | *shared_memory_prefix*\ ``_fit_``\ *job_name*\ ``_job_status``
+    | *shared_memory_prefix*\ ``_fit_``\ *job_name*\ ``_number_cpu_inuse``
+    | *shared_memory_prefix*\ ``_fit_``\ *job_name*\ ``_job_status``
 
 #. The following python shared memory is used by :ref:`csv.predict-name` :
 
-   | *shared_memory_prefix*\ ``_pre_``\ *job_name*\ ``_job_status``
+    | *shared_memory_prefix*\ ``_pre_``\ *job_name*\ ``_job_status``
 
 #. The :ref:`clear_shared-name` routine was modified so that it works
    for the new shared memory names above.

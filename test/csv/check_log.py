@@ -28,7 +28,7 @@ import multiprocessing
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 
 #csv_filt
@@ -118,48 +118,48 @@ csv_file['data_in.csv'] = csv_file['data_in.csv'].replace(' ', '')
 #
 # main
 def main() :
-   #
-   # fit_dir
-   fit_dir = 'build/test/csv'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # write csv files
-   for name in csv_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( csv_file[name] )
-      file_ptr.close()
-   #
-   # csv.fit
-   at_cascade.csv.fit(fit_dir, max_node_depth=0)
-   at_cascade.continue_cascade(
-      all_node_database = f'{fit_dir}/all_node.db'  ,
-      fit_database      = f'{fit_dir}/n0/dismod.db' ,
-      fit_goal_set      = { 'n2' }                  ,
-   )
-   #
-   # csv.predict
-   at_cascade.csv.predict(
-      fit_dir        = fit_dir,
-      sim_dir        = None,
-      start_job_name = 'n2.female',
-   )
-   #
-   # predict/fit_n2.female.csv
-   file_name    = f'{fit_dir}/predict/fit_n2.female.csv'
-   predict_data = at_cascade.csv.read_table(file_name)
-   for row in predict_data :
-      relerr = 1.0 - float( row['avg_integrand'] ) / iota_true
-      if abs(relerr) > 1e-4 :
-         print( f'relerr = {relerr}' )
-         assert False
-      assert row['fit_node_name'] in { 'n0', 'n2' }
-      assert row['fit_sex'] == 'female'
-      assert row['integrand_name'] == 'Sincidence'
-      assert row['node_name'] == 'n2'
-      assert row['sex'] == 'female'
+    #
+    # fit_dir
+    fit_dir = 'build/test/csv'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # write csv files
+    for name in csv_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
+    #
+    # csv.fit
+    at_cascade.csv.fit(fit_dir, max_node_depth=0)
+    at_cascade.continue_cascade(
+        all_node_database = f'{fit_dir}/all_node.db'  ,
+        fit_database      = f'{fit_dir}/n0/dismod.db' ,
+        fit_goal_set      = { 'n2' }                  ,
+    )
+    #
+    # csv.predict
+    at_cascade.csv.predict(
+        fit_dir        = fit_dir,
+        sim_dir        = None,
+        start_job_name = 'n2.female',
+    )
+    #
+    # predict/fit_n2.female.csv
+    file_name    = f'{fit_dir}/predict/fit_n2.female.csv'
+    predict_data = at_cascade.csv.read_table(file_name)
+    for row in predict_data :
+        relerr = 1.0 - float( row['avg_integrand'] ) / iota_true
+        if abs(relerr) > 1e-4 :
+            print( f'relerr = {relerr}' )
+            assert False
+        assert row['fit_node_name'] in { 'n0', 'n2' }
+        assert row['fit_sex'] == 'female'
+        assert row['integrand_name'] == 'Sincidence'
+        assert row['node_name'] == 'n2'
+        assert row['sex'] == 'female'
 
 
 if __name__ == '__main__' :
-   main()
-   print('check_log: ok')
+    main()
+    print('check_log: ok')

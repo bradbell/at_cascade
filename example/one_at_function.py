@@ -20,13 +20,13 @@ cov_reference Table
 This example specifies the :ref:`cov_reference_table-name` in its call to
 :ref:`create_all_node_db <create_all_node_db@cov_reference_table>` ; using
 {xrst_literal
-   # BEGIN_CREATE_ALL_NODE_DB
-   # END_CREATE_ALL_NODE_DB
+    # BEGIN_CREATE_ALL_NODE_DB
+    # END_CREATE_ALL_NODE_DB
 }
 It also checks that the table has been set properly using
 {xrst_literal
-   # BEGIN_CHECK_COV_REFERENCE_TABLE
-   # END_CHECK_COV_REFERENCE_TABLE
+    # BEGIN_CHECK_COV_REFERENCE_TABLE
+    # END_CHECK_COV_REFERENCE_TABLE
 }
 
 Nodes
@@ -36,17 +36,17 @@ The :ref:`glossary@root_node` is n1,
 the :ref:`glossary@fit_goal_set` is {n3, n4},
 and the leaf nodes are {n3, n4, n5, n6}::
 
-                n0
-          /-----/\-----\
-        n1             (n2)
-       /  \            /  \
-    (n3)  (n4)       n5    n6
+                     n0
+             /-----/\-----\
+          n1             (n2)
+         /  \            /  \
+     (n3)  (n4)       n5    n6
 
 fit_goal_set
 ============
 {xrst_literal
-   # BEGIN fit_goal_set
-   # END fit_goal_set
+    # BEGIN fit_goal_set
+    # END fit_goal_set
 }
 
 Rates
@@ -71,8 +71,8 @@ r_n
 We use *r_n* for the reference value of income at node *n*.
 The code below sets this reference using the name avg_income:
 {xrst_literal
-   # BEGIN avg_income
-   # END avg_income
+    # BEGIN avg_income
+    # END avg_income
 }
 
 alpha
@@ -83,8 +83,8 @@ that multipliers income.
 This multiplier affects the value of iota.
 The true value for *alpha* (used which simulating the data) is
 {xrst_literal
-   # BEGIN alpha_true
-   # END alpha_true
+    # BEGIN alpha_true
+    # END alpha_true
 }
 
 
@@ -99,8 +99,8 @@ s_n
 We use *s_n* to denote the sum of the random effects for node *n*.
 The code below sets this sum using the name sum_random:
 {xrst_literal
-   # BEGIN sum_random
-   # END sum_random
+    # BEGIN sum_random
+    # END sum_random
 }
 
 Simulated Data
@@ -112,8 +112,8 @@ The random seed can be used to reproduce results.
 If the original value of this setting is zero, the clock is used get
 a random seed. The actual value or *random_seed* is always printed.
 {xrst_literal
-   # BEGIN random_seed
-   # END random_seed
+    # BEGIN random_seed
+    # END random_seed
 }
 
 
@@ -126,8 +126,8 @@ The covariate values are a list in the
 same order as the covariate table.
 The value *t* is not used by this function for this example.
 {xrst_literal
-   # BEGIN rate_true
-   # END rate_true
+    # BEGIN rate_true
+    # END rate_true
 }
 
 y_i
@@ -155,8 +155,8 @@ a_i
 ===
 For each leaf node, data is generated on the following *age_grid*:
 {xrst_literal
-   # BEGIN age_grid
-   # END age_grid
+    # BEGIN age_grid
+    # END age_grid
 }
 
 I_i
@@ -164,8 +164,8 @@ I_i
 For each leaf node and each age in *age_grid*,
 data is generated for the following *income_grid*:
 {xrst_literal
-   # BEGIN income_grid
-   # END income_grid
+    # BEGIN income_grid
+    # END income_grid
 }
 Note that the check of the fit for the nodes in the fit_goal_set
 expects much more accuracy when the income grid is not chosen randomly.
@@ -181,8 +181,8 @@ Value Prior
 ===========
 The following is the value prior used for the root_node
 {xrst_literal
-   # BEGIN parent_value_prior
-   # END parent_value_prior
+    # BEGIN parent_value_prior
+    # END parent_value_prior
 }
 The mean and standard deviation are only used for the root_node.
 The :ref:`create_shift_db-name`
@@ -192,8 +192,8 @@ dage Prior
 ==========
 The following is the dage prior used for the fit_node:
 {xrst_literal
-   # BEGIN parent_dage_prior
-   # END parent_dage_prior
+    # BEGIN parent_dage_prior
+    # END parent_dage_prior
 }
 
 Child Rate Smoothing
@@ -207,8 +207,8 @@ Value Prior
 ===========
 The following is the value prior used for the children of the fit_node:
 {xrst_literal
-   # BEGIN child_value_prior
-   # END child_value_prior
+    # BEGIN child_value_prior
+    # END child_value_prior
 }
 
 Alpha Smoothing
@@ -221,8 +221,8 @@ Value Prior
 ===========
 The following is the value prior used for this smoothing:
 {xrst_literal
-   # BEGIN alpha_value_prior
-   # END alpha_value_prior
+    # BEGIN alpha_value_prior
+    # END alpha_value_prior
 }
 The mean and standard deviation are only used for the root_node.
 The create_shift_db
@@ -245,8 +245,8 @@ one_at_function: Python Source Code
 ###################################
 
 {xrst_literal
-   BEGIN one_at_function source code
-   END one_at_function source code
+    BEGIN one_at_function source code
+    END one_at_function source code
 }
 
 {xrst_end one_at_function.py}
@@ -269,7 +269,7 @@ from math import exp
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 # -----------------------------------------------------------------------------
 # global variables
@@ -281,7 +281,7 @@ fit_goal_set = { 'n3', 'n4' }
 # BEGIN random_seed
 random_seed = 0
 if random_seed == 0 :
-   random_seed = int( time.time() )
+    random_seed = int( time.time() )
 random.seed(random_seed)
 print('one_at_function: random_seed = ', random_seed)
 # END random_seed
@@ -315,316 +315,316 @@ age_grid = [0.0, 20.0, 40.0, 60.0, 80.0, 100.0 ]
 random_income = False
 income_grid   = dict()
 for node in [ 'n3', 'n4', 'n5', 'n6' ] :
-   max_income  = 2.0 * avg_income[node]
-   if random_income :
-      n_income_grid = 10
-      income_grid[node] = \
-         [ random.uniform(0.0, max_income) for j in range(n_income_grid) ]
-      income_grid[node] = sorted( income_grid[node] )
-   else :
-      n_income_grid = 3
-      d_income_grid = max_income / (n_income_grid - 1)
-      income_grid[node] = [ j * d_income_grid for j in range(n_income_grid) ]
+    max_income  = 2.0 * avg_income[node]
+    if random_income :
+        n_income_grid = 10
+        income_grid[node] = \
+            [ random.uniform(0.0, max_income) for j in range(n_income_grid) ]
+        income_grid[node] = sorted( income_grid[node] )
+    else :
+        n_income_grid = 3
+        d_income_grid = max_income / (n_income_grid - 1)
+        income_grid[node] = [ j * d_income_grid for j in range(n_income_grid) ]
 # END income_grid
 # ----------------------------------------------------------------------------
 # functions
 # ----------------------------------------------------------------------------
 # BEGIN rate_true
 def rate_true(rate, a, t, n, c) :
-   income = c[0]
-   s_n    = sum_random[n]
-   r_0    = avg_income['n0']
-   effect = s_n + alpha_true * ( income - r_0 )
-   if rate == 'iota' :
-      return (1 + a / 100) * 1e-2 * exp(effect)
-   return 0.0
+    income = c[0]
+    s_n    = sum_random[n]
+    r_0    = avg_income['n0']
+    effect = s_n + alpha_true * ( income - r_0 )
+    if rate == 'iota' :
+        return (1 + a / 100) * 1e-2 * exp(effect)
+    return 0.0
 # END rate_true
 # ----------------------------------------------------------------------------
 def root_node_db(file_name) :
-   #
-   # BEGIN iota_50
-   covariate_list = [ avg_income['n0'] ]
-   iota_50        = rate_true('iota', 50.0, None, 'n0', covariate_list)
-   # END iota_50
-   #
-   # prior_table
-   prior_table = list()
-   prior_table.append(
-      # BEGIN parent_value_prior
-      {   'name':    'parent_value_prior',
-         'density': 'gaussian',
-         'lower':   iota_50 / 10.0,
-         'upper':   iota_50 * 10.0,
-         'mean':    iota_50,
-         'std':     iota_50 * 10.0,
-         'eta':     iota_50 * 1e-3
-      }
-      # END parent_value_prior
-   )
-   prior_table.append(
-      # BEGIN parent_dage_prior
-      {   'name':    'parent_dage_prior',
-         'density': 'log_gaussian',
-         'mean':    0.0,
-         'std':     3.0,
-         'eta':     iota_50 * 1e-3,
-      }
-      # END parent_dage_prior
-   )
-   prior_table.append(
-      # BEGIN child_value_prior
-      {   'name':    'child_value_prior',
-         'density': 'gaussian',
-         'mean':    0.0,
-         'std':     10.0,
-      }
-      # END child_value_prior
-   )
-   prior_table.append(
-      # BEGIN alpha_value_prior
-      {   'name':    'alpha_value_prior',
-         'density': 'gaussian',
-         'lower':   - 10 * abs(alpha_true),
-         'upper':   + 10 * abs(alpha_true),
-         'std':     + 10 * abs(alpha_true),
-         'mean':    0.0,
-      }
-      # END alpha_value_prior
-   )
-   #
-   # smooth_table
-   smooth_table = list()
-   #
-   # parent_smooth
-   fun = lambda a, t : ('parent_value_prior', 'parent_dage_prior', None)
-   smooth_table.append({
-      'name':       'parent_smooth',
-      'age_id':     range( len(age_grid) ),
-      'time_id':    [0],
-      'fun':        fun,
-   })
-   #
-   # child_smooth
-   fun = lambda a, t : ('child_value_prior', None, None)
-   smooth_table.append({
-      'name':       'child_smooth',
-      'age_id':     [0],
-      'time_id':    [0],
-      'fun':        fun,
-   })
-   #
-   # alpha_smooth
-   fun = lambda a, t : ('alpha_value_prior', None, None)
-   smooth_table.append({
-      'name':       'alpha_smooth',
-      'age_id':     [0],
-      'time_id':    [0],
-      'fun':        fun,
-   })
-   #
-   # node_table
-   node_table = [
-      { 'name':'n0',        'parent':''   },
-      { 'name':'n1',        'parent':'n0' },
-      { 'name':'n2',        'parent':'n0' },
-      { 'name':'n3',        'parent':'n1' },
-      { 'name':'n4',        'parent':'n1' },
-      { 'name':'n5',        'parent':'n2' },
-      { 'name':'n6',        'parent':'n2' },
-   ]
-   #
-   # rate_table
-   rate_table = [ {
-      'name':           'iota',
-      'parent_smooth':  'parent_smooth',
-      'child_smooth':   'child_smooth' ,
-   } ]
-   #
-   # covariate_table
-   covariate_table = [ { 'name':'income',   'reference':avg_income['n0'] } ]
-   #
-   # mulcov_table
-   mulcov_table = [ {
-      # alpha
-      'covariate':  'income',
-      'type':       'rate_value',
-      'effected':   'iota',
-      'group':      'world',
-      'smooth':     'alpha_smooth',
-   } ]
-   #
-   # subgroup_table
-   subgroup_table = [ {'subgroup': 'world', 'group':'world'} ]
-   #
-   # integrand_table
-   integrand_table = [ {'name':'Sincidence'} ]
-   for mulcov_id in range( len(mulcov_table) ) :
-      integrand_table.append( { 'name': f'mulcov_{mulcov_id}' } )
-   #
-   # avgint_table
-   avgint_table = list()
-   row = {
-      'node':         'n0',
-      'subgroup':     'world',
-      'weight':       '',
-      'time_lower':   2000.0,
-      'time_upper':   2000.0,
-      'income':       None,
-      'integrand':    'Sincidence',
-   }
-   for age in age_grid :
-      row['age_lower'] = age
-      row['age_upper'] = age
-      avgint_table.append( copy.copy(row) )
-   #
-   # data_table
-   data_table  = list()
-   leaf_set    = { 'n3', 'n4', 'n5', 'n6' }
-   for (age_id, age) in enumerate( age_grid ) :
-      row = {
-         'subgroup':     'world',
-         'weight':       '',
-         'time_lower':   2000.0,
-         'time_upper':   2000.0,
-         'integrand':    'Sincidence',
-         'density':      'gaussian',
-         'hold_out':     False,
-      }
-      for node in leaf_set :
-         for income in income_grid[node] :
-            meas_value        = rate_true(
-               'iota', age, None, node, [ income ]
-            )
-            row['node']       = node
-            row['meas_value'] = meas_value
-            row['age_lower']  = age
-            row['age_upper']  = age
-            row['income']     = income
-            # The model for the measurement noise is small so a few
-            # data points act like lots of real data points.
-            # The actual measruement noise is zero.
-            row['meas_std']   = meas_value / 10.0
-            data_table.append( copy.copy(row) )
-   #
-   # time_grid
-   time_grid = [ 2000.0 ]
-   #
-   # weight table:
-   weight_table = list()
-   #
-   # nslist_table
-   nslist_table = dict()
-   #
-   # option_table
-   option_table = [
-      { 'name':'parent_node_name',      'value':'n1'},
-      { 'name':'rate_case',             'value':'iota_pos_rho_zero'},
-      { 'name': 'zero_sum_child_rate',  'value':'iota'},
-      { 'name':'quasi_fixed',           'value':'false'},
-      { 'name':'max_num_iter_fixed',    'value':'50'},
-      { 'name':'tolerance_fixed',       'value':'1e-8'},
-      { 'name':'random_seed',           'value':str(random_seed)},
-   ]
-   # ----------------------------------------------------------------------
-   # create database
-   dismod_at.create_database(
-      file_name,
-      age_grid,
-      time_grid,
-      integrand_table,
-      node_table,
-      subgroup_table,
-      weight_table,
-      covariate_table,
-      avgint_table,
-      data_table,
-      prior_table,
-      smooth_table,
-      nslist_table,
-      rate_table,
-      mulcov_table,
-      option_table
-   )
+    #
+    # BEGIN iota_50
+    covariate_list = [ avg_income['n0'] ]
+    iota_50        = rate_true('iota', 50.0, None, 'n0', covariate_list)
+    # END iota_50
+    #
+    # prior_table
+    prior_table = list()
+    prior_table.append(
+        # BEGIN parent_value_prior
+        {    'name':    'parent_value_prior',
+            'density': 'gaussian',
+            'lower':   iota_50 / 10.0,
+            'upper':   iota_50 * 10.0,
+            'mean':    iota_50,
+            'std':     iota_50 * 10.0,
+            'eta':     iota_50 * 1e-3
+        }
+        # END parent_value_prior
+    )
+    prior_table.append(
+        # BEGIN parent_dage_prior
+        {    'name':    'parent_dage_prior',
+            'density': 'log_gaussian',
+            'mean':    0.0,
+            'std':     3.0,
+            'eta':     iota_50 * 1e-3,
+        }
+        # END parent_dage_prior
+    )
+    prior_table.append(
+        # BEGIN child_value_prior
+        {    'name':    'child_value_prior',
+            'density': 'gaussian',
+            'mean':    0.0,
+            'std':     10.0,
+        }
+        # END child_value_prior
+    )
+    prior_table.append(
+        # BEGIN alpha_value_prior
+        {    'name':    'alpha_value_prior',
+            'density': 'gaussian',
+            'lower':   - 10 * abs(alpha_true),
+            'upper':   + 10 * abs(alpha_true),
+            'std':     + 10 * abs(alpha_true),
+            'mean':    0.0,
+        }
+        # END alpha_value_prior
+    )
+    #
+    # smooth_table
+    smooth_table = list()
+    #
+    # parent_smooth
+    fun = lambda a, t : ('parent_value_prior', 'parent_dage_prior', None)
+    smooth_table.append({
+        'name':       'parent_smooth',
+        'age_id':     range( len(age_grid) ),
+        'time_id':    [0],
+        'fun':        fun,
+    })
+    #
+    # child_smooth
+    fun = lambda a, t : ('child_value_prior', None, None)
+    smooth_table.append({
+        'name':       'child_smooth',
+        'age_id':     [0],
+        'time_id':    [0],
+        'fun':        fun,
+    })
+    #
+    # alpha_smooth
+    fun = lambda a, t : ('alpha_value_prior', None, None)
+    smooth_table.append({
+        'name':       'alpha_smooth',
+        'age_id':     [0],
+        'time_id':    [0],
+        'fun':        fun,
+    })
+    #
+    # node_table
+    node_table = [
+        { 'name':'n0',        'parent':''   },
+        { 'name':'n1',        'parent':'n0' },
+        { 'name':'n2',        'parent':'n0' },
+        { 'name':'n3',        'parent':'n1' },
+        { 'name':'n4',        'parent':'n1' },
+        { 'name':'n5',        'parent':'n2' },
+        { 'name':'n6',        'parent':'n2' },
+    ]
+    #
+    # rate_table
+    rate_table = [ {
+        'name':           'iota',
+        'parent_smooth':  'parent_smooth',
+        'child_smooth':   'child_smooth' ,
+    } ]
+    #
+    # covariate_table
+    covariate_table = [ { 'name':'income',   'reference':avg_income['n0'] } ]
+    #
+    # mulcov_table
+    mulcov_table = [ {
+        # alpha
+        'covariate':  'income',
+        'type':       'rate_value',
+        'effected':   'iota',
+        'group':      'world',
+        'smooth':     'alpha_smooth',
+    } ]
+    #
+    # subgroup_table
+    subgroup_table = [ {'subgroup': 'world', 'group':'world'} ]
+    #
+    # integrand_table
+    integrand_table = [ {'name':'Sincidence'} ]
+    for mulcov_id in range( len(mulcov_table) ) :
+        integrand_table.append( { 'name': f'mulcov_{mulcov_id}' } )
+    #
+    # avgint_table
+    avgint_table = list()
+    row = {
+        'node':         'n0',
+        'subgroup':     'world',
+        'weight':       '',
+        'time_lower':   2000.0,
+        'time_upper':   2000.0,
+        'income':       None,
+        'integrand':    'Sincidence',
+    }
+    for age in age_grid :
+        row['age_lower'] = age
+        row['age_upper'] = age
+        avgint_table.append( copy.copy(row) )
+    #
+    # data_table
+    data_table  = list()
+    leaf_set    = { 'n3', 'n4', 'n5', 'n6' }
+    for (age_id, age) in enumerate( age_grid ) :
+        row = {
+            'subgroup':     'world',
+            'weight':       '',
+            'time_lower':   2000.0,
+            'time_upper':   2000.0,
+            'integrand':    'Sincidence',
+            'density':      'gaussian',
+            'hold_out':     False,
+        }
+        for node in leaf_set :
+            for income in income_grid[node] :
+                meas_value        = rate_true(
+                    'iota', age, None, node, [ income ]
+                )
+                row['node']       = node
+                row['meas_value'] = meas_value
+                row['age_lower']  = age
+                row['age_upper']  = age
+                row['income']     = income
+                # The model for the measurement noise is small so a few
+                # data points act like lots of real data points.
+                # The actual measruement noise is zero.
+                row['meas_std']   = meas_value / 10.0
+                data_table.append( copy.copy(row) )
+    #
+    # time_grid
+    time_grid = [ 2000.0 ]
+    #
+    # weight table:
+    weight_table = list()
+    #
+    # nslist_table
+    nslist_table = dict()
+    #
+    # option_table
+    option_table = [
+        { 'name':'parent_node_name',      'value':'n1'},
+        { 'name':'rate_case',             'value':'iota_pos_rho_zero'},
+        { 'name': 'zero_sum_child_rate',  'value':'iota'},
+        { 'name':'quasi_fixed',           'value':'false'},
+        { 'name':'max_num_iter_fixed',    'value':'50'},
+        { 'name':'tolerance_fixed',       'value':'1e-8'},
+        { 'name':'random_seed',           'value':str(random_seed)},
+    ]
+    # ----------------------------------------------------------------------
+    # create database
+    dismod_at.create_database(
+        file_name,
+        age_grid,
+        time_grid,
+        integrand_table,
+        node_table,
+        subgroup_table,
+        weight_table,
+        covariate_table,
+        avgint_table,
+        data_table,
+        prior_table,
+        smooth_table,
+        nslist_table,
+        rate_table,
+        mulcov_table,
+        option_table
+    )
 # ----------------------------------------------------------------------------
 # main
 # ----------------------------------------------------------------------------
 def main() :
-   # -------------------------------------------------------------------------
-   # result_dir
-   result_dir = 'build/example'
-   at_cascade.empty_directory(result_dir)
-   #
-   # Create root.db
-   root_database       = f'{result_dir}/root.db'
-   root_node_db(root_database)
-   #
-   # option_all
-   option_all        = {
-      'result_dir':     result_dir,
-      'root_node_name': 'n1',
-      'root_database':  root_database,
-   }
-   #
-   # cov_reference_table
-   # only need to specify for the root node and its descendants
-   row = {
-      'split_reference_id' : None ,
-      'reference_value'    : avg_income['n0'] ,
-      'covariate_id'       : 0,
-   }
-   cov_reference_table = list()
-   for node_id in [ 1, 3,  4 ] :
-      row['node_id'] = node_id
-      cov_reference_table.append( copy.copy(row) )
-   #
-   # BEGIN_CREATE_ALL_NODE_DB
-   all_node_database = f'{result_dir}/all_node.db'
-   at_cascade.create_all_node_db(
-      all_node_database       = all_node_database,
-      option_all              = option_all,
-      cov_reference_table     = cov_reference_table,
-   )
-   # END_CREATE_ALL_NODE_DB
-   #
-   # avgint_table
-   # This also erases the avgint table from root_database
-   avgint_table = at_cascade.extract_avgint( root_database )
-   #
-   # cascade starting at root node
-   at_cascade.cascade_root_node(
-      all_node_database  = all_node_database ,
-      fit_goal_set       = fit_goal_set      ,
-   )
-   #
-   # check results
-   for goal_dir in [ 'n1/n3', 'n1/n4' ] :
-      goal_database = f'{result_dir}/{goal_dir}/dismod.db'
-      at_cascade.check_cascade_node(
-         rate_true = rate_true,
-         all_node_database  = all_node_database,
-         fit_database       = goal_database,
-         avgint_table       = avgint_table,
-         relative_tolerance = 2e-3,
-      )
-   #
-   # check that fits were not run for n5 and n6
-   for not_fit_dir in [ f'{result_dir}/n0', '{result_dir}/n2' ] :
-      assert not os.path.exists( not_fit_dir )
-   #
-   # BEGIN_CHECK_COV_REFERENCE_TABLE
-   connection = dismod_at.create_connection(
-      all_node_database, new = False, readonly = True
-   )
-   check_table = dismod_at.get_table_dict(connection, 'cov_reference')
-   connection.close()
-   assert len(check_table) == len(cov_reference_table)
-   for check_id in range( len(check_table) ) :
-      row       = cov_reference_table[check_id]
-      check_row = check_table[check_id]
-      assert row == check_row
-   # END_CHECK_COV_REFERENCE_TABLE
+    # -------------------------------------------------------------------------
+    # result_dir
+    result_dir = 'build/example'
+    at_cascade.empty_directory(result_dir)
+    #
+    # Create root.db
+    root_database       = f'{result_dir}/root.db'
+    root_node_db(root_database)
+    #
+    # option_all
+    option_all        = {
+        'result_dir':     result_dir,
+        'root_node_name': 'n1',
+        'root_database':  root_database,
+    }
+    #
+    # cov_reference_table
+    # only need to specify for the root node and its descendants
+    row = {
+        'split_reference_id' : None ,
+        'reference_value'    : avg_income['n0'] ,
+        'covariate_id'       : 0,
+    }
+    cov_reference_table = list()
+    for node_id in [ 1, 3,  4 ] :
+        row['node_id'] = node_id
+        cov_reference_table.append( copy.copy(row) )
+    #
+    # BEGIN_CREATE_ALL_NODE_DB
+    all_node_database = f'{result_dir}/all_node.db'
+    at_cascade.create_all_node_db(
+        all_node_database       = all_node_database,
+        option_all              = option_all,
+        cov_reference_table     = cov_reference_table,
+    )
+    # END_CREATE_ALL_NODE_DB
+    #
+    # avgint_table
+    # This also erases the avgint table from root_database
+    avgint_table = at_cascade.extract_avgint( root_database )
+    #
+    # cascade starting at root node
+    at_cascade.cascade_root_node(
+        all_node_database  = all_node_database ,
+        fit_goal_set       = fit_goal_set      ,
+    )
+    #
+    # check results
+    for goal_dir in [ 'n1/n3', 'n1/n4' ] :
+        goal_database = f'{result_dir}/{goal_dir}/dismod.db'
+        at_cascade.check_cascade_node(
+            rate_true = rate_true,
+            all_node_database  = all_node_database,
+            fit_database       = goal_database,
+            avgint_table       = avgint_table,
+            relative_tolerance = 2e-3,
+        )
+    #
+    # check that fits were not run for n5 and n6
+    for not_fit_dir in [ f'{result_dir}/n0', '{result_dir}/n2' ] :
+        assert not os.path.exists( not_fit_dir )
+    #
+    # BEGIN_CHECK_COV_REFERENCE_TABLE
+    connection = dismod_at.create_connection(
+        all_node_database, new = False, readonly = True
+    )
+    check_table = dismod_at.get_table_dict(connection, 'cov_reference')
+    connection.close()
+    assert len(check_table) == len(cov_reference_table)
+    for check_id in range( len(check_table) ) :
+        row       = cov_reference_table[check_id]
+        check_row = check_table[check_id]
+        assert row == check_row
+    # END_CHECK_COV_REFERENCE_TABLE
 #
 if __name__ == '__main__' :
-   main()
-   print('one_at_function: OK')
+    main()
+    print('one_at_function: OK')
 # END one_at_function source code

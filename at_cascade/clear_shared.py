@@ -15,8 +15,8 @@ Clear at_cascade Shared Memory
 Prototype
 *********
 {xrst_literal
-   # BEGIN_DEF
-   # END_DEF
+    # BEGIN_DEF
+    # END_DEF
 }
 
 Purpose
@@ -26,7 +26,7 @@ and has a particular prefix.
 For example, you may get the following error message when trying
 to run the cascade:
 
-   FileExistsError: [Errno 17] File exists: *name*
+    FileExistsError: [Errno 17] File exists: *name*
 
 where *name* ends with ``_number_cpu_inuse`` or ``_job_status``.
 This may happen if the previous :ref:`fit_parallel-name`
@@ -52,57 +52,57 @@ from multiprocessing import shared_memory
 # BEGIN_DEF
 # at_cascade.clear_shared
 def clear_shared(all_node_database, job_name) :
-   assert type(all_node_database) == str
-   assert type(job_name) == str
-   # END_DEF
-   #
-   # shared_memory_prefix
-   connection           = dismod_at.create_connection(
-      all_node_database, new = False, readonly = True
-   )
-   option_all_table     = dismod_at.get_table_dict(connection, 'option_all')
-   connection.close()
-   shared_memory_prefix = ""
-   for row in option_all_table :
-      if row['option_name'] == 'shared_memory_prefix' :
-         shared_memory_prefix = row['option_value']
-   #
-   #
-   # shared_memory_prefix_plus
-   shared_memory_prefix_plus = f'{shared_memory_prefix}_{job_name}'
-   #
-   # name
-   for name in  [ '_number_cpu_inuse', '_job_status' ] :
-      #
-      # shared_memory_name
-      shared_memory_name = shared_memory_prefix_plus + name
-      mapped_memory_name = at_cascade.map_shared( shared_memory_name )
-      try :
-         shm = shared_memory.SharedMemory(
-            create = True, name = mapped_memory_name, size = 1
-         )
-         exists = False
-      except FileExistsError :
-         try :
+    assert type(all_node_database) == str
+    assert type(job_name) == str
+    # END_DEF
+    #
+    # shared_memory_prefix
+    connection           = dismod_at.create_connection(
+        all_node_database, new = False, readonly = True
+    )
+    option_all_table     = dismod_at.get_table_dict(connection, 'option_all')
+    connection.close()
+    shared_memory_prefix = ""
+    for row in option_all_table :
+        if row['option_name'] == 'shared_memory_prefix' :
+            shared_memory_prefix = row['option_value']
+    #
+    #
+    # shared_memory_prefix_plus
+    shared_memory_prefix_plus = f'{shared_memory_prefix}_{job_name}'
+    #
+    # name
+    for name in  [ '_number_cpu_inuse', '_job_status' ] :
+        #
+        # shared_memory_name
+        shared_memory_name = shared_memory_prefix_plus + name
+        mapped_memory_name = at_cascade.map_shared( shared_memory_name )
+        try :
             shm = shared_memory.SharedMemory(
-               create = False, name = mapped_memory_name
+                create = True, name = mapped_memory_name, size = 1
             )
-            exists = True
-         except Exception as e :
-            print( str(e) )
-            exists = None
-      #
-      if exists == None :
-         print( f'Unknown state: {shared_memory_name}' )
-         print( 'Try re-running clear_shared')
-      else :
-         if exists :
-            print( f'Found:     {shared_memory_name}' )
-         else :
-            print( f'Not Found: {shared_memory_name}' )
-         if shared_memory_name != mapped_memory_name :
-            print( f'           {mapped_memory_name}' )
-         #
-         shm.close()
-         shm.unlink()
-   print('clear_shared: OK')
+            exists = False
+        except FileExistsError :
+            try :
+                shm = shared_memory.SharedMemory(
+                    create = False, name = mapped_memory_name
+                )
+                exists = True
+            except Exception as e :
+                print( str(e) )
+                exists = None
+        #
+        if exists == None :
+            print( f'Unknown state: {shared_memory_name}' )
+            print( 'Try re-running clear_shared')
+        else :
+            if exists :
+                print( f'Found:     {shared_memory_name}' )
+            else :
+                print( f'Not Found: {shared_memory_name}' )
+            if shared_memory_name != mapped_memory_name :
+                print( f'           {mapped_memory_name}' )
+            #
+            shm.close()
+            shm.unlink()
+    print('clear_shared: OK')

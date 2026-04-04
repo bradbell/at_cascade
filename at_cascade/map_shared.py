@@ -11,8 +11,8 @@ Map at_cascade Shared Memory Names
 Prototype
 *********
 {xrst_literal ,
-   # BEGIN_DEF , # END_DEF
-   # BEGIN_RETURN , # END_RETURN
+    # BEGIN_DEF , # END_DEF
+    # BEGIN_RETURN , # END_RETURN
 }
 
 Purpose
@@ -28,21 +28,21 @@ name that is short enough to work on the current system.
 import platform
 import os
 def map_shared(shared_name) :
-   assert type(shared_name) == str
-   # END_DEF
-   mac_os  = platform.system() == 'Darwin'
-   sandbox  = os.getcwd().endswith('at_cascade.git')
-   if mac_os or sandbox :
-      hash_code   = 0
-      factor      = 0
-      for ch in shared_name :
-         factor    += 1
-         hash_code += factor * ord(ch)
-      mapped_name = str( hash_code )
-   else :
-      # This case is not tested by bin/check_all.sh
-      mapped_name = shared_name
-   # BEGIN_RETURN
-   assert type(mapped_name) == str
-   return mapped_name
-   # END_RETURN
+    assert type(shared_name) == str
+    # END_DEF
+    mac_os  = platform.system() == 'Darwin'
+    sandbox  = os.getcwd().endswith('at_cascade.git')
+    if mac_os or sandbox :
+        hash_code   = 0
+        factor      = 0
+        for ch in shared_name :
+            factor    += 1
+            hash_code += factor * ord(ch)
+        mapped_name = str( hash_code )
+    else :
+        # This case is not tested by bin/check_all.sh
+        mapped_name = shared_name
+    # BEGIN_RETURN
+    assert type(mapped_name) == str
+    return mapped_name
+    # END_RETURN

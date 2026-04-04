@@ -7,21 +7,21 @@
 # ---------------------------------------------------------------------------
 if [ "$0" != "bin/check_install.sh" ]
 then
-   echo "bin/check_install.sh: must be executed from its parent directory"
-   exit 1
+    echo "bin/check_install.sh: must be executed from its parent directory"
+    exit 1
 fi
 # -----------------------------------------------------------------------------
 # echo_eval
 echo_eval() {
-   echo $*
-   eval $*
+    echo $*
+    eval $*
 }
 # -----------------------------------------------------------------------------
 #
 # check_install
 if [ -e 'build/check_install' ]
 then
-   echo_eval rm -r build/check_install
+    echo_eval rm -r build/check_install
 fi
 echo_eval mkdir build/check_install
 echo_eval cd build/check_install
@@ -29,13 +29,13 @@ echo_eval cd build/check_install
 # uninstall
 if pip3 list | grep '^at[_-]cascade ' > /dev/null
 then
-   pip3 uninstall --yes at_cascade
+    pip3 uninstall --yes at_cascade
 fi
 if python3 -c 'import at_cascade' >& /dev/null
 then
-   python3 -c 'import at_cascade; print(at_cascade.__file__)'
-   echo 'check_install.sh: cannot uninstall at_cascade'
-   exit 1
+    python3 -c 'import at_cascade; print(at_cascade.__file__)'
+    echo 'check_install.sh: cannot uninstall at_cascade'
+    exit 1
 fi
 #
 # install

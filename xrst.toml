@@ -19,15 +19,15 @@ default = 'at_cascade.xrst'
 rst_epilog = ''
 rst_prolog = '''
 .. |space| unicode:: 0xA0
-.. |tab| replace:: |space| |space| |space| |space|
+.. |tab| replace:: |space| |space| |space| |space| |space|
 .. |newline| raw:: html
 
-   <br/>
+    <br/>
 
 '''
 latex_macro = [
-   '\newcommand{\B}[1]{ {\bf #1} }' ,
-   '\newcommand{\R}[1]{ {\rm #1} }' ,
+    '\newcommand{\B}[1]{ {\bf #1} }' ,
+    '\newcommand{\R}[1]{ {\rm #1} }' ,
 ]
 
 [heading]
@@ -38,72 +38,72 @@ overline  = [ false, false, false, false, false,  ]
 # BEGIN_SORT_THIS_LINE_PLUS_4
 [project_dictionary]
 data = [
-   '''
-      cpu
-      csv
-      db
-      dict
-      dir
-      dismod
-      gaussian
-      int
-      max
-      mulcov
-      multiplier
-      sim
-      str
-      th
-   '''
+    '''
+        cpu
+        csv
+        db
+        dict
+        dir
+        dismod
+        gaussian
+        int
+        max
+        mulcov
+        multiplier
+        sim
+        str
+        th
+    '''
 ]
 # END_SORT_THIS_LINE_MINUS_3
 
 [not_in_index]
 data = [
-   # Exclude articles and prepositions
-   '''
-      a
-      and
-      by
-      for
-      of
-      the
-      that
-      this
-      to
-      using
-   ''',
-   # Exclude rate_true(rate, a, t, n, c)
-   '''
-      rate_true\(rate,
-      a,
-      t,
-      n,
-      c\)
-   ''',
-   # Exclude words that are used in many sections of the documentation.
-   '''
-      code
-      covariate
-      data
-      fit
-      n
-      n_i
-      node
-      nodes
-      parent
-      prior
-      python
-      random
-      rate
-      simulated
-      smoothing
-      source
-      syntax
-      table
-      value
-      y_i
-   ''',
-   #
-   # Exclude the mm-dd headings used by the xrst release notes.
-   '[0-9][0-9]-[0-9][0-9]',
+    # Exclude articles and prepositions
+    '''
+        a
+        and
+        by
+        for
+        of
+        the
+        that
+        this
+        to
+        using
+    ''',
+    # Exclude rate_true(rate, a, t, n, c)
+    '''
+        rate_true\(rate,
+        a,
+        t,
+        n,
+        c\)
+    ''',
+    # Exclude words that are used in many sections of the documentation.
+    '''
+        code
+        covariate
+        data
+        fit
+        n
+        n_i
+        node
+        nodes
+        parent
+        prior
+        python
+        random
+        rate
+        simulated
+        smoothing
+        source
+        syntax
+        table
+        value
+        y_i
+    ''',
+    #
+    # Exclude the mm-dd headings used by the xrst release notes.
+    '[0-9][0-9]-[0-9][0-9]',
 ]

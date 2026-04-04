@@ -27,8 +27,8 @@ Prediction for a CSV Fit
 Prototype
 *********
 {xrst_literal
-   # BEGIN_PREDICT
-   # END_PREDICT
+    # BEGIN_PREDICT
+    # END_PREDICT
 }
 
 Example
@@ -118,7 +118,7 @@ sequentially, more output is printed to the screen, and the program
 can be cleanly stopped with a control-C.
 The default value for this option is
 {xrst_code py}
-   max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
+    max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
 {xrst_code}
 
 plot
@@ -201,9 +201,9 @@ fit_predict.csv
    the predictions are only for jobs at or below the starting job.
    In addition, the predictions are stored below *fit_dir* in the file
 
-      ``predict/fit_``\ *start_job_name*\ ``.csv``
+        ``predict/fit_``\ *start_job_name*\ ``.csv``
 
-   and not in ``fit_predict.csv`` .
+    and not in ``fit_predict.csv`` .
 
 
 avgint_id
@@ -338,7 +338,7 @@ If *start_job_name* is not None,
 the predictions are only for jobs at or below the starting job.
 In addition, the predictions are stored below *fit_dir* in the file
 
-   ``predict/sam_``\ *start_job_name*\ ``.csv``
+    ``predict/sam_``\ *start_job_name*\ ``.csv``
 
 and not in ``sam_predict.csv`` .
 
@@ -356,11 +356,11 @@ each sample index.
 # Returns the node indices for the ancestors of the node specified by node_id.
 # The node specified by node_id is included in this set.
 def ancestor_set(node_table, node_id) :
-   result = { node_id }
-   while node_table[node_id]['parent'] != None :
-      node_id = node_table[node_id]['parent']
-      result.add(node_id)
-   return result
+    result = { node_id }
+    while node_table[node_id]['parent'] != None :
+        node_id = node_table[node_id]['parent']
+        result.add(node_id)
+    return result
 # ----------------------------------------------------------------------------
 # Sets global global_option_value to dict representation of option_predict.csv
 #
@@ -387,223 +387,223 @@ def ancestor_set(node_table, node_id) :
 #
 global_option_value = None
 def set_global_option_value(
-   fit_dir, option_table, number_sample_fit, top_node_name
+    fit_dir, option_table, number_sample_fit, top_node_name
 ) :
-   global global_option_value
-   assert type(global_option_value) == dict or global_option_value == None
-   assert type(option_table) == list
-   if len(option_table) > 0 :
-      assert type( option_table[0] ) == dict
-   assert type(number_sample_fit) == int
-   assert type(top_node_name) == str
-   #
-   # user
-   user = os.environ.get('USER')
-   if user == None :
-      user = 'none'
-   else :
-      user = user.replace(' ', '_')
-   #
-   # option_default
-   max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
-   random_seed    = int( time.time() )
-   # BEGIN_SORT_THIS_LINE_PLUS_2
-   option_default  = {
-      'db2csv'                : (bool,  False)              ,
-      'descendant_std_factor' : (float,   1.0)              ,
-      'float_precision'       : (int,   5)                  ,
-      'max_number_cpu'        : (int,   max_number_cpu)     ,
-      'number_sample_predict' : (int,   number_sample_fit)  ,
-      'plot'                  : (bool,  False)              ,
-      'zero_meas_value'       : (bool,  False)              ,
-   }
-   # END_SORT_THIS_LINE_MINUS_2
-   #
-   # global_option_value
-   line_number      = 0
-   global_option_value = dict()
-   for row in option_table :
-      line_number += 1
-      name         = row['name']
-      if name in global_option_value :
-         msg  = f'csv.predict: Error: line {line_number}'
-         msg += ' in option_predict.csv\n'
-         msg += f'the name {name} appears twice in this table'
-         assert False, msg
-      if not name in option_default :
-         msg  = f'csv.predict: Error: line {line_number}'
-         msg += ' in option_predict.csv\n'
-         msg += f'{name} is not a valid option name'
-         assert False, msg
-      (option_type, default) = option_default[name]
-      value                  = row['value']
-      if value.strip() != '' :
-         if option_type == bool :
-            if value not in [ 'true', 'false' ] :
-               msg  = f'csv.predict: Error: line {line_number}'
-               msg += ' in option_predict.csv\n'
-               msg += f'The value for {name} is not true or false'
-               assert False, msg
-            global_option_value[name] = value == 'true'
-         else :
-            global_option_value[name] = option_type( value )
-   #
-   # global_option_value
-   for name in option_default :
-      if name not in global_option_value :
-         (option_type, default) = option_default[name]
-         global_option_value[name] = default
-   #
-   if global_option_value['descendant_std_factor']  <= 0.0 :
-      assert False, "predict.csv: descemdant_std_factor <= 0"
-   #
-   # option_predict_out.csv
-   table = list()
-   for name in global_option_value :
-      value = global_option_value[name]
+    global global_option_value
+    assert type(global_option_value) == dict or global_option_value == None
+    assert type(option_table) == list
+    if len(option_table) > 0 :
+        assert type( option_table[0] ) == dict
+    assert type(number_sample_fit) == int
+    assert type(top_node_name) == str
+    #
+    # user
+    user = os.environ.get('USER')
+    if user == None :
+        user = 'none'
+    else :
+        user = user.replace(' ', '_')
+    #
+    # option_default
+    max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
+    random_seed    = int( time.time() )
+    # BEGIN_SORT_THIS_LINE_PLUS_2
+    option_default  = {
+        'db2csv'                : (bool,  False)              ,
+        'descendant_std_factor' : (float,   1.0)              ,
+        'float_precision'       : (int,   5)                  ,
+        'max_number_cpu'        : (int,   max_number_cpu)     ,
+        'number_sample_predict' : (int,   number_sample_fit)  ,
+        'plot'                  : (bool,  False)              ,
+        'zero_meas_value'       : (bool,  False)              ,
+    }
+    # END_SORT_THIS_LINE_MINUS_2
+    #
+    # global_option_value
+    line_number      = 0
+    global_option_value = dict()
+    for row in option_table :
+        line_number += 1
+        name         = row['name']
+        if name in global_option_value :
+            msg  = f'csv.predict: Error: line {line_number}'
+            msg += ' in option_predict.csv\n'
+            msg += f'the name {name} appears twice in this table'
+            assert False, msg
+        if not name in option_default :
+            msg  = f'csv.predict: Error: line {line_number}'
+            msg += ' in option_predict.csv\n'
+            msg += f'{name} is not a valid option name'
+            assert False, msg
+        (option_type, default) = option_default[name]
+        value                  = row['value']
+        if value.strip() != '' :
+            if option_type == bool :
+                if value not in [ 'true', 'false' ] :
+                    msg  = f'csv.predict: Error: line {line_number}'
+                    msg += ' in option_predict.csv\n'
+                    msg += f'The value for {name} is not true or false'
+                    assert False, msg
+                global_option_value[name] = value == 'true'
+            else :
+                global_option_value[name] = option_type( value )
+    #
+    # global_option_value
+    for name in option_default :
+        if name not in global_option_value :
+            (option_type, default) = option_default[name]
+            global_option_value[name] = default
+    #
+    if global_option_value['descendant_std_factor']  <= 0.0 :
+        assert False, "predict.csv: descemdant_std_factor <= 0"
+    #
+    # option_predict_out.csv
+    table = list()
+    for name in global_option_value :
+        value = global_option_value[name]
 
-      if type(value) == bool :
-         if value :
-            value = 'true'
-         else :
-            value = 'false'
-      row = { 'name' : name , 'value' : value }
-      table.append(row)
-   file_name = f'{fit_dir}/option_predict_out.csv'
-   at_cascade.csv.write_table(file_name, table)
-   #
-   assert type(global_option_value) == dict
+        if type(value) == bool :
+            if value :
+                value = 'true'
+            else :
+                value = 'false'
+        row = { 'name' : name , 'value' : value }
+        table.append(row)
+    file_name = f'{fit_dir}/option_predict_out.csv'
+    at_cascade.csv.write_table(file_name, table)
+    #
+    assert type(global_option_value) == dict
 # ----------------------------------------------------------------------------
 # BEGIN_PREDICT
 # at_cascade.csv.predict
 def predict(fit_dir, sim_dir=None, start_job_name=None, max_job_depth=None) :
-   assert type(fit_dir)  == str
-   assert sim_dir        == None or type(sim_dir) == str
-   assert start_job_name == None or type(start_job_name) == str
-   assert max_job_depth  == None or type(max_job_depth) == int
-   # END_PREDICT
-   #
-   # dismod_node_table, dismod_option_table
-   database     = f'{fit_dir}/root.db'
-   connection   = dismod_at.create_connection(
-      database, new = False, readonly = True
-   )
-   dismod_node_table   = dismod_at.get_table_dict(connection, 'node')
-   dismod_option_table = dismod_at.get_table_dict(connection, 'option')
-   connection.close()
-   #
-   # top_node_name
-   top_node_name = None
-   for row in dismod_node_table :
-      if row['parent'] == None :
-         if top_node_name != None :
-            msg = 'root.db: node table: more than one node has no parent'
-            assert False, msg
-         top_node_name = row['node_name']
-   if top_node_name == None :
-      msg = 'root.db: node_table: no node has None for parent'
-      assert False, msg
-   #
-   # refit_split, number_sample_fit
-   # 2DO: It would be better to get these values from the option_all table
-   # (see where csv.fit writes the option_all table).
-   refit_split       = True
-   number_sample_fit = 20
-   option_table      = at_cascade.csv.read_table(f'{fit_dir}/option_fit.csv')
-   for row in option_table :
-      if row['name'] == 'refit_split' :
-         if row['value'] == 'false' :
-            refit_split = False
-      if row['name'] == 'number_sample':
-         number_sample_fit = int(row['value'])
-   #
-   # global_option_value
-   option_table = at_cascade.csv.read_table(f'{fit_dir}/option_predict.csv')
-   set_global_option_value(
-      fit_dir, option_table, number_sample_fit, top_node_name
-   )
-   #
-   # start_node_name
-   start_node_name = None
-   if start_job_name == None :
-      for row in dismod_option_table :
-         if row['option_name'] == 'parent_node_name' :
-            start_node_name = row['option_value']
-         elif row['option_value'] == 'parent_node_id' :
-            start_node_id   = int( row['option_value'] )
-            start_node_name = dismod_node_table[parent_node_id]['node_name']
-   else :
-      index           = start_job_name.rindex('.')
-      start_node_name = start_job_name[: index]
-   assert start_node_name != None
-   #
-   # max_node_depth
-   if max_job_depth == None :
-      max_node_depth = None
-   elif not refit_split :
-      max_node_depth = max_job_depth
-   elif start_job_name == None or start_job_name.endswith('.both') :
-      if refit_split :
-         if max_job_depth > 0 :
-            max_node_depth = max_job_depth - 1
-         else :
-            max_node_depth = 0
-      else :
-         max_node_depth = max_job_depth
-   else :
-         max_node_depth = max_job_depth
-   #
-   # fit_goal_table
-   file_name      = f'{fit_dir}/fit_goal.csv'
-   fit_goal_table = at_cascade.csv.read_table(file_name)
-   if len(fit_goal_table) == 0 :
-      fit_goal_table = list()
-      for node_id in range( len(dismod_node_table) ) :
-         node_name = dismod_node_table[node_id]['node_name']
-         row = { 'node_id' : node_id , 'node_name' : node_name}
-         fit_goal_table.append( row )
-   for row in fit_goal_table :
-      node_name = row['node_name']
-      node_id   = at_cascade.table_name2id(dismod_node_table, 'node', node_name)
-      row['node_id'] = node_id
-   #
-   # fit_goal_set
-   fit_goal_set   = set()
-   start_node_id  = \
-      at_cascade.table_name2id(dismod_node_table, 'node', start_node_name)
-   for row in fit_goal_table :
-      node_id   = row['node_id']
-      node_list = [ node_id ]
-      while node_id != start_node_id and node_id != None :
-         node_id   = dismod_node_table[node_id]['parent']
-         if node_id != None :
-            node_list.append( node_id )
-      if node_id == start_node_id :
-         if max_node_depth == None :
-            node_id   = node_list[0]
-         elif len(node_list) <= max_node_depth + 1 :
-            node_id   = node_list[0]
-         else :
-            node_id  = node_list[-max_node_depth - 1]
-         node_name = dismod_node_table[node_id]['node_name']
-         fit_goal_set.add( node_name )
-   #
-   if len(fit_goal_set) == 0 :
-      msg  = f'Cannot find start_node_name = {start_node_name},\n'
-      msg += 'or any of its children, in fit_goal.csv'
-      assert False, msg
-   #
-   # covariate_table
-   file_name       = f'{fit_dir}/covariate.csv'
-   covariate_table = at_cascade.csv.read_table(file_name)
-   #
-   # predict
-   at_cascade.csv.pre_parallel(
-      fit_dir,
-      sim_dir,
-      covariate_table,
-      fit_goal_set,
-      start_job_name,
-      max_job_depth,
-      global_option_value,
-   )
+    assert type(fit_dir)  == str
+    assert sim_dir        == None or type(sim_dir) == str
+    assert start_job_name == None or type(start_job_name) == str
+    assert max_job_depth  == None or type(max_job_depth) == int
+    # END_PREDICT
+    #
+    # dismod_node_table, dismod_option_table
+    database     = f'{fit_dir}/root.db'
+    connection   = dismod_at.create_connection(
+        database, new = False, readonly = True
+    )
+    dismod_node_table   = dismod_at.get_table_dict(connection, 'node')
+    dismod_option_table = dismod_at.get_table_dict(connection, 'option')
+    connection.close()
+    #
+    # top_node_name
+    top_node_name = None
+    for row in dismod_node_table :
+        if row['parent'] == None :
+            if top_node_name != None :
+                msg = 'root.db: node table: more than one node has no parent'
+                assert False, msg
+            top_node_name = row['node_name']
+    if top_node_name == None :
+        msg = 'root.db: node_table: no node has None for parent'
+        assert False, msg
+    #
+    # refit_split, number_sample_fit
+    # 2DO: It would be better to get these values from the option_all table
+    # (see where csv.fit writes the option_all table).
+    refit_split       = True
+    number_sample_fit = 20
+    option_table      = at_cascade.csv.read_table(f'{fit_dir}/option_fit.csv')
+    for row in option_table :
+        if row['name'] == 'refit_split' :
+            if row['value'] == 'false' :
+                refit_split = False
+        if row['name'] == 'number_sample':
+            number_sample_fit = int(row['value'])
+    #
+    # global_option_value
+    option_table = at_cascade.csv.read_table(f'{fit_dir}/option_predict.csv')
+    set_global_option_value(
+        fit_dir, option_table, number_sample_fit, top_node_name
+    )
+    #
+    # start_node_name
+    start_node_name = None
+    if start_job_name == None :
+        for row in dismod_option_table :
+            if row['option_name'] == 'parent_node_name' :
+                start_node_name = row['option_value']
+            elif row['option_value'] == 'parent_node_id' :
+                start_node_id   = int( row['option_value'] )
+                start_node_name = dismod_node_table[parent_node_id]['node_name']
+    else :
+        index           = start_job_name.rindex('.')
+        start_node_name = start_job_name[: index]
+    assert start_node_name != None
+    #
+    # max_node_depth
+    if max_job_depth == None :
+        max_node_depth = None
+    elif not refit_split :
+        max_node_depth = max_job_depth
+    elif start_job_name == None or start_job_name.endswith('.both') :
+        if refit_split :
+            if max_job_depth > 0 :
+                max_node_depth = max_job_depth - 1
+            else :
+                max_node_depth = 0
+        else :
+            max_node_depth = max_job_depth
+    else :
+            max_node_depth = max_job_depth
+    #
+    # fit_goal_table
+    file_name      = f'{fit_dir}/fit_goal.csv'
+    fit_goal_table = at_cascade.csv.read_table(file_name)
+    if len(fit_goal_table) == 0 :
+        fit_goal_table = list()
+        for node_id in range( len(dismod_node_table) ) :
+            node_name = dismod_node_table[node_id]['node_name']
+            row = { 'node_id' : node_id , 'node_name' : node_name}
+            fit_goal_table.append( row )
+    for row in fit_goal_table :
+        node_name = row['node_name']
+        node_id   = at_cascade.table_name2id(dismod_node_table, 'node', node_name)
+        row['node_id'] = node_id
+    #
+    # fit_goal_set
+    fit_goal_set   = set()
+    start_node_id  = \
+        at_cascade.table_name2id(dismod_node_table, 'node', start_node_name)
+    for row in fit_goal_table :
+        node_id   = row['node_id']
+        node_list = [ node_id ]
+        while node_id != start_node_id and node_id != None :
+            node_id   = dismod_node_table[node_id]['parent']
+            if node_id != None :
+                node_list.append( node_id )
+        if node_id == start_node_id :
+            if max_node_depth == None :
+                node_id   = node_list[0]
+            elif len(node_list) <= max_node_depth + 1 :
+                node_id   = node_list[0]
+            else :
+                node_id  = node_list[-max_node_depth - 1]
+            node_name = dismod_node_table[node_id]['node_name']
+            fit_goal_set.add( node_name )
+    #
+    if len(fit_goal_set) == 0 :
+        msg  = f'Cannot find start_node_name = {start_node_name},\n'
+        msg += 'or any of its children, in fit_goal.csv'
+        assert False, msg
+    #
+    # covariate_table
+    file_name       = f'{fit_dir}/covariate.csv'
+    covariate_table = at_cascade.csv.read_table(file_name)
+    #
+    # predict
+    at_cascade.csv.pre_parallel(
+        fit_dir,
+        sim_dir,
+        covariate_table,
+        fit_goal_set,
+        start_job_name,
+        max_job_depth,
+        global_option_value,
+    )

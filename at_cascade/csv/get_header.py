@@ -12,8 +12,8 @@ Get the Header from a CSV File
 Prototype
 *********
 {xrst_literal ,
-   BEGIN_DEF, END_DEF
-   BEGIN_RETURN, END_RETURN
+    BEGIN_DEF, END_DEF
+    BEGIN_RETURN, END_RETURN
 }
 
 
@@ -42,15 +42,15 @@ Example
 # BEGIN_DEF
 # at_cascade.csv.get_header
 def get_header(file_name) :
-   assert type(file_name)  == str
-   # END_DEF
-   #
-   file_ptr   = open(file_name)
-   reader     = csv.reader(file_ptr)
-   header     = next( reader )
-   #
-   # BEGIN_RETURN
-   # ...
-   assert type(header) == list
-   return header
-   # END_RETURN
+    assert type(file_name)  == str
+    # END_DEF
+    #
+    file_ptr   = open(file_name)
+    reader     = csv.reader(file_ptr)
+    header     = next( reader )
+    #
+    # BEGIN_RETURN
+    # ...
+    assert type(header) == list
+    return header
+    # END_RETURN

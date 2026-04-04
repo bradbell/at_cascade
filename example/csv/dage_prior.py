@@ -9,7 +9,7 @@ import numpy
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 """
 {xrst_begin csv.dage_prior}
@@ -58,14 +58,14 @@ so that the child job iota variables have the same standard deviations
 as for the parent job.
 
 .. csv-table::
-   :header: Name, Value
-   :delim: |
+    :header: Name, Value
+    :delim: |
 
-   tolerance_fixed | this is set small, 1e-8, so we can check accuracy.
-   random_seed | chosen using current seconds reported by python time package.
-   number_sample | is the number of samples of the posterior for each fit.
-   child_prior_dage | is false so there are no dage priors in child jobs.
-   child_prior_std_factor | is one so child job has same std.
+    tolerance_fixed | this is set small, 1e-8, so we can check accuracy.
+    random_seed | chosen using current seconds reported by python time package.
+    number_sample | is the number of samples of the posterior for each fit.
+    child_prior_dage | is false so there are no dage priors in child jobs.
+    child_prior_std_factor | is one so child job has same std.
 
 {xrst_code py}"""
 random_seed    = str( int( time.time() ) )
@@ -147,17 +147,17 @@ prior.csv
 We define three priors:
 
 .. csv-table::
-   :widths: auto
-   :delim: ;
+    :widths: auto
+    :delim: ;
 
-   gauss_eps_1; a Gaussian with lower eps, upper 1, iota_mean, iota_std
-   gauss_0_d;   a Gaussian with mean 0 standard deviation diota_std
+    gauss_eps_1; a Gaussian with lower eps, upper 1, iota_mean, iota_std
+    gauss_0_d;   a Gaussian with mean 0 standard deviation diota_std
 
 {xrst_code py}"""
 csv_file['prior.csv'] = \
-   'name,lower,upper,mean,std,density\n' \
-   f'gauss_eps_1,1e-6,1.0,{iota_mean},{iota_std},gaussian\n' \
-   f'gauss_0_d,,,0.0,{diota_std},gaussian\n'
+    'name,lower,upper,mean,std,density\n' \
+    f'gauss_eps_1,1e-6,1.0,{iota_mean},{iota_std},gaussian\n' \
+    f'gauss_0_d,,,0.0,{diota_std},gaussian\n'
 """{xrst_code}
 
 parent_rate.csv
@@ -220,12 +220,12 @@ Two times the negative log likelihood for this example :math:`2 L(x)` is:
 
 .. math::
 
-   2 L( x ) =
-      - \log( 2 \pi d^2 )
-      + \left( \frac{ x_1 - x_0 }{ d } \right)^2
-      + \sum_{j=0}^1
-         - \log( 2 \pi \sigma^2 )
-         + \left( \frac{ x_j - \bar{\iota} }{ \sigma } \right)^2
+    2 L( x ) =
+        - \log( 2 \pi d^2 )
+        + \left( \frac{ x_1 - x_0 }{ d } \right)^2
+        + \sum_{j=0}^1
+            - \log( 2 \pi \sigma^2 )
+            + \left( \frac{ x_j - \bar{\iota} }{ \sigma } \right)^2
 
 where
 :math:`x_0` is iota at age 0,
@@ -240,8 +240,8 @@ The partial of :math:`L(x)` with respect to :math:`x_j` is:
 
 .. math::
 
-   \frac{ \partial L(x)} { \partial x_j } =
-      \frac{x_j - x_{1-j}}{ d^2 }  + \frac{ x_j - \bar{\iota} }{ \sigma^2 }
+    \frac{ \partial L(x)} { \partial x_j } =
+        \frac{x_j - x_{1-j}}{ d^2 }  + \frac{ x_j - \bar{\iota} }{ \sigma^2 }
 
 Hessian
 =======
@@ -249,71 +249,71 @@ The second partial of :math:`L(x)` with respect to :math:`x_j` is:
 
 .. math::
 
-   \frac{ \partial^2 L(x)} { \partial x_j^2 } = d^{-2} + \sigma^{-2}
+    \frac{ \partial^2 L(x)} { \partial x_j^2 } = d^{-2} + \sigma^{-2}
 
 The cross partial with respect to :math:`x_0` and :math:`x_1` is:
 
 .. math::
 
-   \frac{ \partial^2 L(x)} { \partial x_0 \partial x_1 } = - d^{-2}
+    \frac{ \partial^2 L(x)} { \partial x_0 \partial x_1 } = - d^{-2}
 
 The Hessian of :math:`L(x)` is:
 
 .. math::
 
-   H & =
-   \begin{bmatrix}
-   d^{-2} + \sigma^{-2} & -d^{-2} \\
-   -d^{-2}              & d^{-2} + \sigma^{-2}
-   \end{bmatrix}
-   \\
-   H & =
-   d^{-2} \begin{bmatrix}
-   1 + ( d / \sigma )^2    & - 1 \\
-   - 1                     & 1 + ( d / \sigma )^2
-   \end{bmatrix}
+    H & =
+    \begin{bmatrix}
+    d^{-2} + \sigma^{-2} & -d^{-2} \\
+    -d^{-2}              & d^{-2} + \sigma^{-2}
+    \end{bmatrix}
+    \\
+    H & =
+    d^{-2} \begin{bmatrix}
+    1 + ( d / \sigma )^2    & - 1 \\
+    - 1                     & 1 + ( d / \sigma )^2
+    \end{bmatrix}
 
 The determinant of :math:`d^2 H` is:
 
 .. math::
 
-   \det(d^2 H )  = 2 ( d / \sigma )^2    + ( d / \sigma )^4
+    \det(d^2 H )  = 2 ( d / \sigma )^2    + ( d / \sigma )^4
 
 The inverse of :math:`d^2 H` is:
 
 .. math::
 
-   d^{-2} H^{-1} & =
-      \frac{1}{ 2 ( d / \sigma )^2    + ( d / \sigma )^4    }
-      \begin{bmatrix}
-      1 + ( d / \sigma )^2    & 1 \\
-      1                     & 1 + ( d / \sigma )^2
-      \end{bmatrix}
-   \\
-   d^{-2} H^{-1} & =
-      \frac{ ( d / \sigma )^2    }{ 2  + ( d / \sigma )^2    }
-      \begin{bmatrix}
-      1 + ( d / \sigma )^2    & 1 \\
-      1                     & 1 + ( d / \sigma )^2
-      \end{bmatrix}
+    d^{-2} H^{-1} & =
+        \frac{1}{ 2 ( d / \sigma )^2    + ( d / \sigma )^4    }
+        \begin{bmatrix}
+        1 + ( d / \sigma )^2    & 1 \\
+        1                     & 1 + ( d / \sigma )^2
+        \end{bmatrix}
+    \\
+    d^{-2} H^{-1} & =
+        \frac{ ( d / \sigma )^2    }{ 2  + ( d / \sigma )^2    }
+        \begin{bmatrix}
+        1 + ( d / \sigma )^2    & 1 \\
+        1                     & 1 + ( d / \sigma )^2
+        \end{bmatrix}
 
 It follows that:
 
 .. math::
 
-   H^{-1} & =
-      \frac{ \sigma^{-2} }{ 2  + ( d / \sigma )^2    }
-      \begin{bmatrix}
-      1 + ( d / \sigma )^2    & 1 \\
-      1                     & 1 + ( d / \sigma )^2
-      \end{bmatrix}
-   \\
-   H^{-1} & =
-      \frac{ \sigma^{-2} }{ 2 ( \sigma / d )^{-2}  + 1    }
-      \begin{bmatrix}
-       ( \sigma / d )^{-2}  + 1 & ( \sigma / d )^{-2}  \\
-      ( \sigma / d )^{-2}   & ( \sigma / d )^{-2} + 1
-      \end{bmatrix}
+    H^{-1} & =
+        \frac{ \sigma^{-2} }{ 2  + ( d / \sigma )^2    }
+        \begin{bmatrix}
+        1 + ( d / \sigma )^2    & 1 \\
+        1                     & 1 + ( d / \sigma )^2
+        \end{bmatrix}
+    \\
+    H^{-1} & =
+        \frac{ \sigma^{-2} }{ 2 ( \sigma / d )^{-2}  + 1    }
+        \begin{bmatrix}
+         ( \sigma / d )^{-2}  + 1 & ( \sigma / d )^{-2}  \\
+        ( \sigma / d )^{-2}   & ( \sigma / d )^{-2} + 1
+        \end{bmatrix}
 
 Covariance of sam_predict.csv
 =============================
@@ -327,8 +327,8 @@ gets close to :math:`\sigma^2` (i.e., the square of *iota_std* ) .
 Source Code
 ***********
 {xrst_literal
-   BEGIN_PROGRAM
-   END_PROGRAM
+    BEGIN_PROGRAM
+    END_PROGRAM
 }
 
 {xrst_end csv.dage_prior}
@@ -337,92 +337,92 @@ Source Code
 #
 # main
 def main() :
-   #
-   # fit_dir
-   fit_dir = 'build/example/csv'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # write csv files
-   for name in csv_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( csv_file[name] )
-      file_ptr.close()
-   #
-   # fit
-   at_cascade.csv.fit(fit_dir)
-   #
-   # predict
-   at_cascade.csv.predict(fit_dir)
-   #
-   # fit_predict
-   # fit_sex == both:   3 sexes, 2 ages
-   # fit_sex == female: 1 sex,   2 ages
-   # fit_sex == male:   1 sex,   2 ages
-   file_name   = f'{fit_dir}/fit_predict.csv'
-   fit_predict = at_cascade.csv.read_table(file_name)
-   assert len( fit_predict ) == 5 * 2
-   #
-   # row
-   for row in fit_predict :
-      # Sincidence is the only integerand in predict_integrand.csv
-      assert row['integrand_name'] == 'Sincidence'
-      # n0 is the only node in fit_goal.csv and it has no ancestors
-      assert row['node_name'] == 'n0'
-      # Since there is no data, only the root job (n0, both) is fit
-      assert row['fit_sex'] in [ 'female', 'male', 'both' ]
-      # Predictions are made for all sexes
-      assert row['sex'] in [ 'female', 'male', 'both' ]
-      # There are two age values in covariate.csv
-      assert float(row['age']) in [ 0.0, 100.0 ]
-      # There is only on time value in covariate.csv
-      assert float(row['time']) == 2000.0
-      #
-      # rel_error
-      iota      = float( row['avg_integrand'] )
-      rel_error = 1.0 - iota / iota_mean
-      assert abs( rel_error ) < 1e-8
-   #
-   # sam_predict
-   # 3 sexes, 2 ages, number_sample samples
-   file_name   = f'{fit_dir}/sam_predict.csv'
-   sam_predict = at_cascade.csv.read_table(file_name)
-   assert len( sam_predict ) == len( fit_predict ) * number_sample
-   #
-   # Hinv
-   d2    = 1.0 / ( diota_std * diota_std )
-   s2    = 1.0 / ( iota_std * iota_std )
-   H     = [ [ d2 + s2 , - d2 ], [ - d2 , d2 + s2 ] ]
-   H     = numpy.array(H)
-   Hinv  = numpy.linalg.inv(H)
-   #
-   # sex
-   for sex in [ 'female', 'male' ] :
-      #
-      # sample_cov
-      sample_cov = dict()
-      for fit_sex in [ 'both', sex ] :
-         #
-         # sample_array
-         age2variable_index = { 0.0 : 0, 100.0 : 1 }
-         sample_array    = numpy.empty( (number_sample, 2) )
-         sample_array[:] = numpy.nan
-         for row in sam_predict :
-            if row['sex'] == sex and row['fit_sex'] == fit_sex :
-               iota           = float( row['avg_integrand'] )
-               sample_index   = int( row['sample_index'] )
-               age            = float( row['age'] )
-               variable_index = age2variable_index[age]
-               sample_array[sample_index , variable_index]  = iota
-         #
-         # sample_cov
-         sample_cov[fit_sex] = numpy.cov( sample_array , rowvar = False )
-      #
-      rel_error = 1.0 - sample_cov[sex] / sample_cov['both']
-      assert numpy.max( numpy.abs( rel_error ) ) < 0.1
+    #
+    # fit_dir
+    fit_dir = 'build/example/csv'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # write csv files
+    for name in csv_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
+    #
+    # fit
+    at_cascade.csv.fit(fit_dir)
+    #
+    # predict
+    at_cascade.csv.predict(fit_dir)
+    #
+    # fit_predict
+    # fit_sex == both:   3 sexes, 2 ages
+    # fit_sex == female: 1 sex,   2 ages
+    # fit_sex == male:   1 sex,   2 ages
+    file_name   = f'{fit_dir}/fit_predict.csv'
+    fit_predict = at_cascade.csv.read_table(file_name)
+    assert len( fit_predict ) == 5 * 2
+    #
+    # row
+    for row in fit_predict :
+        # Sincidence is the only integerand in predict_integrand.csv
+        assert row['integrand_name'] == 'Sincidence'
+        # n0 is the only node in fit_goal.csv and it has no ancestors
+        assert row['node_name'] == 'n0'
+        # Since there is no data, only the root job (n0, both) is fit
+        assert row['fit_sex'] in [ 'female', 'male', 'both' ]
+        # Predictions are made for all sexes
+        assert row['sex'] in [ 'female', 'male', 'both' ]
+        # There are two age values in covariate.csv
+        assert float(row['age']) in [ 0.0, 100.0 ]
+        # There is only on time value in covariate.csv
+        assert float(row['time']) == 2000.0
+        #
+        # rel_error
+        iota      = float( row['avg_integrand'] )
+        rel_error = 1.0 - iota / iota_mean
+        assert abs( rel_error ) < 1e-8
+    #
+    # sam_predict
+    # 3 sexes, 2 ages, number_sample samples
+    file_name   = f'{fit_dir}/sam_predict.csv'
+    sam_predict = at_cascade.csv.read_table(file_name)
+    assert len( sam_predict ) == len( fit_predict ) * number_sample
+    #
+    # Hinv
+    d2    = 1.0 / ( diota_std * diota_std )
+    s2    = 1.0 / ( iota_std * iota_std )
+    H     = [ [ d2 + s2 , - d2 ], [ - d2 , d2 + s2 ] ]
+    H     = numpy.array(H)
+    Hinv  = numpy.linalg.inv(H)
+    #
+    # sex
+    for sex in [ 'female', 'male' ] :
+        #
+        # sample_cov
+        sample_cov = dict()
+        for fit_sex in [ 'both', sex ] :
+            #
+            # sample_array
+            age2variable_index = { 0.0 : 0, 100.0 : 1 }
+            sample_array    = numpy.empty( (number_sample, 2) )
+            sample_array[:] = numpy.nan
+            for row in sam_predict :
+                if row['sex'] == sex and row['fit_sex'] == fit_sex :
+                    iota           = float( row['avg_integrand'] )
+                    sample_index   = int( row['sample_index'] )
+                    age            = float( row['age'] )
+                    variable_index = age2variable_index[age]
+                    sample_array[sample_index , variable_index]  = iota
+            #
+            # sample_cov
+            sample_cov[fit_sex] = numpy.cov( sample_array , rowvar = False )
+        #
+        rel_error = 1.0 - sample_cov[sex] / sample_cov['both']
+        assert numpy.max( numpy.abs( rel_error ) ) < 0.1
 #
 #
 if __name__ == '__main__' :
-   main()
-   print('prior_sam: OK')
+    main()
+    print('prior_sam: OK')
 # END_PROGRAM

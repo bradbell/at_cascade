@@ -12,7 +12,7 @@ import shutil
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 import dismod_at
 # BEGIN_PYTHON
@@ -91,48 +91,48 @@ header += 'time_lower,time_upper,meas_value,meas_std,hold_out,'
 header += 'density_name,eta,nu\n'
 csv_file['data_in.csv']  = header
 csv_file['data_in.csv'] += \
-   f'0,Sincidence,n0,both,0,10,1990,2000,{iota_true},1e-4,0,gaussian,,\n'
+    f'0,Sincidence,n0,both,0,10,1990,2000,{iota_true},1e-4,0,gaussian,,\n'
 #
 #
 def main() :
-   #
-   # fit_dir
-   fit_dir = 'build/test/csv'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # write csv files
-   for name in csv_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( csv_file[name] )
-      file_ptr.close()
-   #
-   # csv.fit
-   at_cascade.csv.fit(fit_dir)
-   #
-   # connection
-   file_name  = f'{fit_dir}/n0/dismod.db'
-   connection = dismod_at.create_connection(
-      file_name, new = False, readonly = True
-   )
-   #
-   # iota_index
-   var_table  = dismod_at.get_table_dict(connection, 'var');
-   rate_table = dismod_at.get_table_dict(connection, 'rate');
-   iota_index = None
-   for index in range( len(var_table) ) :
-      if rate_table[ var_table[index]['rate_id'] ]['rate_name'] == 'iota' :
-         iota_index = index
-   assert iota_index != None
-   for tbl_name in [ 'start_var', 'scale_var' ] :
-      table      = dismod_at.get_table_dict(connection, tbl_name);
-      iota_value = table[iota_index][f'{tbl_name}_value']
-      assert abs( 1.0 - iota_value / iota_true ) > 0.1
-   #
-   # connection
-   connection.close()
+    #
+    # fit_dir
+    fit_dir = 'build/test/csv'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # write csv files
+    for name in csv_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
+    #
+    # csv.fit
+    at_cascade.csv.fit(fit_dir)
+    #
+    # connection
+    file_name  = f'{fit_dir}/n0/dismod.db'
+    connection = dismod_at.create_connection(
+        file_name, new = False, readonly = True
+    )
+    #
+    # iota_index
+    var_table  = dismod_at.get_table_dict(connection, 'var');
+    rate_table = dismod_at.get_table_dict(connection, 'rate');
+    iota_index = None
+    for index in range( len(var_table) ) :
+        if rate_table[ var_table[index]['rate_id'] ]['rate_name'] == 'iota' :
+            iota_index = index
+    assert iota_index != None
+    for tbl_name in [ 'start_var', 'scale_var' ] :
+        table      = dismod_at.get_table_dict(connection, tbl_name);
+        iota_value = table[iota_index][f'{tbl_name}_value']
+        assert abs( 1.0 - iota_value / iota_true ) > 0.1
+    #
+    # connection
+    connection.close()
 #
 if __name__ == '__main__' :
-   main()
-   print('csv.perturb: OK')
+    main()
+    print('csv.perturb: OK')
 # END_PYTHON

@@ -10,8 +10,8 @@ Rows of Data Table That are Include for a Fit
 Prototype
 *********
 {xrst_literal ,
-   # BEGIN_DEF, # END_DEF
-   # BEGIN_RETURN, # END_RETURN
+    # BEGIN_DEF, # END_DEF
+    # BEGIN_RETURN, # END_RETURN
 }
 
 fit_database
@@ -44,77 +44,77 @@ import at_cascade
 # BEGIN_DEF
 # at_cascade.data_include
 def data_include(
-   fit_database,
-   root_database
+    fit_database,
+    root_database
 ) :
-   assert type( fit_database ) == str
-   assert type( root_database ) == str
-   # END_DEF
-   #
-   # fit_or_root
-   fit_or_root = at_cascade.fit_or_root_class(
-      fit_database, root_database
-   )
-   #
-   # data_subset_table
-   data_subset_table = fit_or_root.get_table('data_subset')
-   #
-   # data_table
-   data_table = fit_or_root.get_table('data')
-   #
-   # integrand_table
-   integrand_table = fit_or_root.get_table('integrand')
-   #
-   # option_table
-   option_table = fit_or_root.get_table('option')
-   #
-   # fit_or_root
-   fit_or_root.close()
-   #
-   # hold_out_name_list
-   hold_out_integrand = None
-   for row in option_table :
-      if row['option_name'] == 'hold_out_integrand' :
-         hold_out_integrand = row[ 'option_value' ]
-   if hold_out_integrand == None :
-      hold_out_name_list = list()
-   else :
-      hold_out_name_list = hold_out_integrand.split()
-   #
-   # hold_out_id_list
-   hold_out_id_set   = set()
-   for integrand_name in hold_out_name_list :
-      integrand_id = at_cascade.table_name2id(
-         integrand_table, 'integrand', integrand_name
-      )
-      hold_out_id_set.add(integrand_id)
-   #
-   # data_include_table
-   data_include_table = list()
-   for subset_row in data_subset_table :
-      #
-      # data_id
-      data_id = subset_row['data_id']
-      #
-      # data_row
-      data_row = data_table[data_id]
-      #
-      # integrand_id
-      integrand_id = data_row['integrand_id']
-      #
-      # hold_out
-      hold_out = integrand_id in hold_out_id_set
-      hold_out = hold_out or bool( data_row['hold_out'] )
-      hold_out = hold_out or bool( subset_row['hold_out'] )
-      #
-      # data_include_table
-      if not hold_out :
-         data_include_table.append(data_row)
-   #
-   # BEGIN_RETURN
-   assert type( data_include_table ) == list
-   if len( data_include_table ) > 0 :
-      assert type( data_include_table[0] ) == dict
-      assert data_include_table[0]['hold_out'] == 0
-   return data_include_table
-   # END_RETURN
+    assert type( fit_database ) == str
+    assert type( root_database ) == str
+    # END_DEF
+    #
+    # fit_or_root
+    fit_or_root = at_cascade.fit_or_root_class(
+        fit_database, root_database
+    )
+    #
+    # data_subset_table
+    data_subset_table = fit_or_root.get_table('data_subset')
+    #
+    # data_table
+    data_table = fit_or_root.get_table('data')
+    #
+    # integrand_table
+    integrand_table = fit_or_root.get_table('integrand')
+    #
+    # option_table
+    option_table = fit_or_root.get_table('option')
+    #
+    # fit_or_root
+    fit_or_root.close()
+    #
+    # hold_out_name_list
+    hold_out_integrand = None
+    for row in option_table :
+        if row['option_name'] == 'hold_out_integrand' :
+            hold_out_integrand = row[ 'option_value' ]
+    if hold_out_integrand == None :
+        hold_out_name_list = list()
+    else :
+        hold_out_name_list = hold_out_integrand.split()
+    #
+    # hold_out_id_list
+    hold_out_id_set   = set()
+    for integrand_name in hold_out_name_list :
+        integrand_id = at_cascade.table_name2id(
+            integrand_table, 'integrand', integrand_name
+        )
+        hold_out_id_set.add(integrand_id)
+    #
+    # data_include_table
+    data_include_table = list()
+    for subset_row in data_subset_table :
+        #
+        # data_id
+        data_id = subset_row['data_id']
+        #
+        # data_row
+        data_row = data_table[data_id]
+        #
+        # integrand_id
+        integrand_id = data_row['integrand_id']
+        #
+        # hold_out
+        hold_out = integrand_id in hold_out_id_set
+        hold_out = hold_out or bool( data_row['hold_out'] )
+        hold_out = hold_out or bool( subset_row['hold_out'] )
+        #
+        # data_include_table
+        if not hold_out :
+            data_include_table.append(data_row)
+    #
+    # BEGIN_RETURN
+    assert type( data_include_table ) == list
+    if len( data_include_table ) > 0 :
+        assert type( data_include_table[0] ) == dict
+        assert data_include_table[0]['hold_out'] == 0
+    return data_include_table
+    # END_RETURN

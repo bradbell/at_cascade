@@ -12,7 +12,7 @@ import multiprocessing
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 """
 {xrst_begin csv.root_node_sex}
@@ -53,11 +53,11 @@ n3,n1
 r"""{xrst_code}
 The following is a diagram of this node tree::
 
-        n0
-        |
-        n1
-       /  \
-     n2    n3
+          n0
+          |
+          n1
+         /  \
+      n2    n3
 
 
 option_fit.csv
@@ -136,12 +136,12 @@ prior.csv
 We define three priors:
 
 .. csv-table::
-   :widths: auto
-   :delim: ;
+    :widths: auto
+    :delim: ;
 
-   uniform_1_1; a uniform distribution on [ -1, 1 ]
-   uniform_eps_1; a uniform distribution on [ 1e-6, 1 ]
-   gauss_01; a mean 0 standard deviation 1 Gaussian distribution
+    uniform_1_1; a uniform distribution on [ -1, 1 ]
+    uniform_eps_1; a uniform distribution on [ 1e-6, 1 ]
+    gauss_01; a mean 0 standard deviation 1 Gaussian distribution
 
 {xrst_code py}"""
 csv_file['prior.csv'] = \
@@ -195,9 +195,9 @@ true_mulcov_haqi           = 0.5
 root_mulcov_prior_constant = True
 csv_file['mulcov.csv']  = 'covariate,type,effected,value_prior,const_value\n'
 if root_mulcov_prior_constant :
-   csv_file['mulcov.csv'] += f'haqi,rate_value,iota,,{true_mulcov_haqi}\n'
+    csv_file['mulcov.csv'] += f'haqi,rate_value,iota,,{true_mulcov_haqi}\n'
 else :
-   csv_file['mulcov.csv'] += 'haqi,rate_value,iota,uniform_-1_1,\n'
+    csv_file['mulcov.csv'] += 'haqi,rate_value,iota,uniform_-1_1,\n'
 """{xrst_code}
 
 root_mulcov_prior_constant
@@ -240,15 +240,15 @@ the true value for iota with no measurement noise,
 even though the measurement standard deviation is modeled as 1e-4.
 See the following code:
 {xrst_literal
-   # BEGIN_MEAS_VALUE
-   # END_MEAS_VALUE
+    # BEGIN_MEAS_VALUE
+    # END_MEAS_VALUE
 }
 
 Source Code
 ***********
 {xrst_literal
-   BEGIN_PROGRAM
-   END_PROGRAM
+    BEGIN_PROGRAM
+    END_PROGRAM
 }
 
 {xrst_end csv.root_node_sex}
@@ -257,114 +257,114 @@ Source Code
 #
 # main
 def main() :
-   #
-   # fit_dir
-   fit_dir = 'build/example/csv'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # write csv files
-   for name in csv_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( csv_file[name] )
-      file_ptr.close()
-   #
-   # node_sex2haqi
-   file_name  = f'{fit_dir}/covariate.csv'
-   table      = at_cascade.csv.read_table( file_name )
-   node_sex2haqi = dict()
-   for row in table :
-      node_name = row['node_name']
-      sex       = row['sex']
-      haqi      = float(  row['haqi'] )
-      key       = (node_name, sex)
-      if key not in node_sex2haqi :
-         node_sex2haqi[key] = list()
-      node_sex2haqi[key].append( haqi )
-   #
-   # haqi_avg
-   haqi_sum = 0.0
-   for key in node_sex2haqi :
-      value              = node_sex2haqi[key]
-      node_sex2haqi[key] = sum(value) / len(value)
-      haqi_sum          += node_sex2haqi[key]
-   haqi_avg = haqi_sum / len(node_sex2haqi)
-   #
-   # data_in.csv
-   float_format      = '{0:.5g}'
-   no_effect_iota    = 0.1
-   file_name         = f'{fit_dir}/data_in.csv'
-   table             = at_cascade.csv.read_table( file_name )
-   for row in table :
-      node_name      = row['node_name']
-      sex            = row['sex']
-      integrand_name = row['integrand_name']
-      assert integrand_name == 'Sincidence'
-      #
-      # BEGIN_MEAS_VALUE
-      haqi              = node_sex2haqi[(node_name, sex)]
-      effect            = true_mulcov_haqi * (haqi - haqi_avg)
-      iota              = math.exp(effect) * no_effect_iota
-      row['meas_value'] = float_format.format( iota )
-      # END_MEAS_VALUE
-   at_cascade.csv.write_table(file_name, table)
-   #
-   # fit
-   at_cascade.csv.fit(fit_dir)
-   #
-   # predict
-   at_cascade.csv.predict(fit_dir)
-   #
-   # prefix
-   for prefix in [ 'fit' , 'sam' ] :
-      #
-      # predict_table
-      file_name = f'{fit_dir}/{prefix}_predict.csv'
-      predict_table = at_cascade.csv.read_table(file_name)
-      #
-      # node
-      for node in [ 'n1', 'n2', 'n3' ] :
-         # sex
-         for sex in [ 'female', 'both', 'male' ] :
-            #
-            # sample_list
-            sample_list = list()
-            for row in predict_table :
-               include = True
-               include = include and row['integrand_name'] == 'Sincidence'
-               include = include and row['node_name'] == node
-               include = include and row['sex'] == sex
-               if not root_mulcov_prior_constant :
-                  # Do not include the samples corresponding to priors
-                  include = include and row['fit_node_name'] == node
-                  include = include and row['fit_sex'] == sex
-               if include :
-                  sample_list.append(row)
-            if sex != 'female' :
-               assert len(sample_list) == 0
-            else :
-               assert len(sample_list) > 0
-            #
-            if len(sample_list) > 0 :
-               sum_avgint = 0.0
-               for row in sample_list :
-                  sum_avgint   += float( row['avg_integrand'] )
-               avgint    = sum_avgint / len(sample_list)
-               haqi      = float( row['haqi'] )
-               effect    = true_mulcov_haqi * (haqi - haqi_avg)
-               iota      = math.exp(effect) * no_effect_iota
-               rel_error = (avgint - iota) / iota
-               #
-               assert haqi == node_sex2haqi[ (node, sex) ]
-               if False :
-                  print( node, prefix, rel_error )
-               else :
-                  if prefix == 'sam' :
-                     assert abs(rel_error) < 1e-2
-                  else :
-                     assert abs(rel_error) < 1e-4
+    #
+    # fit_dir
+    fit_dir = 'build/example/csv'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # write csv files
+    for name in csv_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
+    #
+    # node_sex2haqi
+    file_name  = f'{fit_dir}/covariate.csv'
+    table      = at_cascade.csv.read_table( file_name )
+    node_sex2haqi = dict()
+    for row in table :
+        node_name = row['node_name']
+        sex       = row['sex']
+        haqi      = float(  row['haqi'] )
+        key       = (node_name, sex)
+        if key not in node_sex2haqi :
+            node_sex2haqi[key] = list()
+        node_sex2haqi[key].append( haqi )
+    #
+    # haqi_avg
+    haqi_sum = 0.0
+    for key in node_sex2haqi :
+        value              = node_sex2haqi[key]
+        node_sex2haqi[key] = sum(value) / len(value)
+        haqi_sum          += node_sex2haqi[key]
+    haqi_avg = haqi_sum / len(node_sex2haqi)
+    #
+    # data_in.csv
+    float_format      = '{0:.5g}'
+    no_effect_iota    = 0.1
+    file_name         = f'{fit_dir}/data_in.csv'
+    table             = at_cascade.csv.read_table( file_name )
+    for row in table :
+        node_name      = row['node_name']
+        sex            = row['sex']
+        integrand_name = row['integrand_name']
+        assert integrand_name == 'Sincidence'
+        #
+        # BEGIN_MEAS_VALUE
+        haqi              = node_sex2haqi[(node_name, sex)]
+        effect            = true_mulcov_haqi * (haqi - haqi_avg)
+        iota              = math.exp(effect) * no_effect_iota
+        row['meas_value'] = float_format.format( iota )
+        # END_MEAS_VALUE
+    at_cascade.csv.write_table(file_name, table)
+    #
+    # fit
+    at_cascade.csv.fit(fit_dir)
+    #
+    # predict
+    at_cascade.csv.predict(fit_dir)
+    #
+    # prefix
+    for prefix in [ 'fit' , 'sam' ] :
+        #
+        # predict_table
+        file_name = f'{fit_dir}/{prefix}_predict.csv'
+        predict_table = at_cascade.csv.read_table(file_name)
+        #
+        # node
+        for node in [ 'n1', 'n2', 'n3' ] :
+            # sex
+            for sex in [ 'female', 'both', 'male' ] :
+                #
+                # sample_list
+                sample_list = list()
+                for row in predict_table :
+                    include = True
+                    include = include and row['integrand_name'] == 'Sincidence'
+                    include = include and row['node_name'] == node
+                    include = include and row['sex'] == sex
+                    if not root_mulcov_prior_constant :
+                        # Do not include the samples corresponding to priors
+                        include = include and row['fit_node_name'] == node
+                        include = include and row['fit_sex'] == sex
+                    if include :
+                        sample_list.append(row)
+                if sex != 'female' :
+                    assert len(sample_list) == 0
+                else :
+                    assert len(sample_list) > 0
+                #
+                if len(sample_list) > 0 :
+                    sum_avgint = 0.0
+                    for row in sample_list :
+                        sum_avgint   += float( row['avg_integrand'] )
+                    avgint    = sum_avgint / len(sample_list)
+                    haqi      = float( row['haqi'] )
+                    effect    = true_mulcov_haqi * (haqi - haqi_avg)
+                    iota      = math.exp(effect) * no_effect_iota
+                    rel_error = (avgint - iota) / iota
+                    #
+                    assert haqi == node_sex2haqi[ (node, sex) ]
+                    if False :
+                        print( node, prefix, rel_error )
+                    else :
+                        if prefix == 'sam' :
+                            assert abs(rel_error) < 1e-2
+                        else :
+                            assert abs(rel_error) < 1e-4
 #
 if __name__ == '__main__' :
-   main()
-   print('root_node_sex.py: OK')
+    main()
+    print('root_node_sex.py: OK')
 # END_PROGRAM

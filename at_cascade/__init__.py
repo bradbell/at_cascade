@@ -5,7 +5,7 @@
 '''
 {xrst_begin module}
 {xrst_spell
-   cov
+    cov
 }
 
 The at_cascade Python Module
@@ -15,7 +15,7 @@ at_cascade.version
 ******************
 The version number for this copy of at_cascade.
 {xrst_code py}'''
-version = '2026.3.27'
+version = '2026.4.4'
 '''{xrst_code}
 
 at_cascade.constant_table_list
@@ -25,57 +25,57 @@ The :ref:`fit_or_root_class-name` uses the
 :ref:`glossary@root_database` to get the value for these tables:
 {xrst_code py} '''
 constant_table_list = [
-   'age',
-   'data',
-   'density',
-   'integrand',
-   'node',
-   'rate_eff_cov',
-   'subgroup',
-   'time',
-   'weight',
-   'weight_grid',
+    'age',
+    'data',
+    'density',
+    'integrand',
+    'node',
+    'rate_eff_cov',
+    'subgroup',
+    'time',
+    'weight',
+    'weight_grid',
 ]
 '''{xrst_code}
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
 {xrst_toc_table
-   at_cascade/add_log_entry.py
-   at_cascade/avgint_parent_grid.py
-   at_cascade/bilinear.py
-   at_cascade/cascade_root_node.py
-   at_cascade/check_cascade_node.py
-   at_cascade/check_log.py
-   at_cascade/clear_shared.py
-   at_cascade/com_cov_reference.py
-   at_cascade/continue_cascade.py
-   at_cascade/copy_other_tbl.py
-   at_cascade/copy_root_db.py
-   at_cascade/create_all_node_db.py
-   at_cascade/create_job_table.py
-   at_cascade/create_shift_db.py
-   at_cascade/data_include.py
-   at_cascade/empty_avgint_table.py
-   at_cascade/empty_directory.py
-   at_cascade/extract_avgint.py
-   at_cascade/fit_one_job.py
-   at_cascade/fit_one_process.py
-   at_cascade/fit_or_root_class.py
-   at_cascade/fit_parallel.py
-   at_cascade/get_cov_info.py
-   at_cascade/get_database_dir.py
-   at_cascade/get_fit_children.py
-   at_cascade/get_fit_integrand.py
-   at_cascade/get_freeze_dict.py
-   at_cascade/get_parent_node.py
-   at_cascade/get_var_id.py
-   at_cascade/job_descendant.py
-   at_cascade/map_shared.py
-   at_cascade/move_table.py
-   at_cascade/no_ode_fit.py
-   at_cascade/omega_constraint.py
-   at_cascade/table_exists.py
-   at_cascade/table_name2id.py
+    at_cascade/add_log_entry.py
+    at_cascade/avgint_parent_grid.py
+    at_cascade/bilinear.py
+    at_cascade/cascade_root_node.py
+    at_cascade/check_cascade_node.py
+    at_cascade/check_log.py
+    at_cascade/clear_shared.py
+    at_cascade/com_cov_reference.py
+    at_cascade/continue_cascade.py
+    at_cascade/copy_other_tbl.py
+    at_cascade/copy_root_db.py
+    at_cascade/create_all_node_db.py
+    at_cascade/create_job_table.py
+    at_cascade/create_shift_db.py
+    at_cascade/data_include.py
+    at_cascade/empty_avgint_table.py
+    at_cascade/empty_directory.py
+    at_cascade/extract_avgint.py
+    at_cascade/fit_one_job.py
+    at_cascade/fit_one_process.py
+    at_cascade/fit_or_root_class.py
+    at_cascade/fit_parallel.py
+    at_cascade/get_cov_info.py
+    at_cascade/get_database_dir.py
+    at_cascade/get_fit_children.py
+    at_cascade/get_fit_integrand.py
+    at_cascade/get_freeze_dict.py
+    at_cascade/get_parent_node.py
+    at_cascade/get_var_id.py
+    at_cascade/job_descendant.py
+    at_cascade/map_shared.py
+    at_cascade/move_table.py
+    at_cascade/no_ode_fit.py
+    at_cascade/omega_constraint.py
+    at_cascade/table_exists.py
+    at_cascade/table_name2id.py
 }
 .. END_SORT_THIS_LINE_MINUS_2
 

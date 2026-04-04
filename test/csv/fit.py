@@ -10,7 +10,7 @@ import shutil
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 import dismod_at
 # BEGIN_PYTHON
@@ -129,144 +129,144 @@ csv_file['data_in.csv'] = header + \
 #
 #
 def main() :
-   #
-   # fit_dir
-   fit_dir = 'build/test/csv'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # write csv files
-   for name in csv_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( csv_file[name] )
-      file_ptr.close()
-   #
-   # table
-   file_name  = f'{fit_dir}/covariate.csv'
-   table      = at_cascade.csv.read_table( file_name )
-   #
-   # data_in.csv
-   float_format      = '{0:.5g}'
-   true_mulcov_sex   = 0.5
-   no_effect_iota    = 0.1
-   file_name         = f'{fit_dir}/data_in.csv'
-   table             = at_cascade.csv.read_table( file_name )
-   for row in table :
-      sex_name       = row['sex']
-      integrand_name = row['integrand_name']
-      assert integrand_name == 'Sincidence'
-      #
-      sex_name  = row['sex']
-      effect    = true_mulcov_sex * ( sex_name2income[sex_name] - 1.5)
-      iota      = math.exp(effect) * no_effect_iota
-      row['meas_value'] = float_format.format( iota )
-   at_cascade.csv.write_table(file_name, table)
-   #
-   # csv.fit, csv.predict
-   at_cascade.csv.fit(fit_dir)
-   at_cascade.csv.predict(fit_dir)
-   #
-   # number_sample
-   number_sample = 10
-   #
-   # prefix
-   for prefix in [ 'fit', 'sam' ] :
-      #
-      # predict_table
-      file_name = f'{fit_dir}/{prefix}_predict.csv'
-      predict_table = at_cascade.csv.read_table(file_name)
-      #
-      # node
-      for node in [ 'n0', 'n1', 'n2' ] :
-         # sex_name
-         for sex_name in [ 'female', 'both', 'male' ] :
-            #
-            # sample_list
-            sample_list = list()
-            for row in predict_table :
-               if row['integrand_name'] == 'Sincidence' and \
-               row['node_name'] == node and \
-               row['sex'] == sex_name :
-                  sample_list.append(row)
-            #
-            # check sample_list
-            if node == 'n-1' or node == 'n3' :
-               assert len(sample_list) == 0
-            elif sex_name == 'both' :
-               if node != 'n0' :
-                  assert len(sample_list) == 0
-               else :
-                  if prefix == 'fit' :
-                     assert len(sample_list) == 1
-                  else :
-                     assert len(sample_list) == number_sample
-            else :
-               if prefix == 'fit' :
-                  assert len(sample_list) == 2
-               else :
-                  assert len(sample_list) == 2 * number_sample
-            if len( sample_list ) > 0 :
-               sum_avgint = 0.0
-               for row in sample_list :
-                  sum_avgint   += float( row['avg_integrand'] )
-               avgint    = sum_avgint / len(sample_list)
-               income    = sex_name2income[sex_name]
-               effect    = true_mulcov_sex * (income - 1.5)
-               iota      = math.exp(effect) * no_effect_iota
-               rel_error = (avgint - iota) / iota
-               if abs(rel_error) > 0.01 :
-                  print('rel_error =', rel_error)
-                  assert False
-   #
-   # db2csv_file_list
-   # hes_fixed.csv would be included if sample_method was asymptotic.
-   db2csv_name_list = [
-      'log.csv',
-      'age_avg.csv',
-      'trace_fixed.csv',
-      'mixed_info.csv',
-      'variable.csv',
-      'data.csv',
-      'predict.csv',
-   ]
-   #
-   # subdir_list
-   subdir_list = {
-      ('n0', 'both')   : 'n0' ,
-      ('n0', 'female') : 'n0/female' ,
-      ('n0', 'male')   : 'n0/male' ,
-      ('n1', 'female') : 'n0/female/n1' ,
-      ('n1', 'male')   : 'n0/male/n1' ,
-      ('n2', 'female') : 'n0/female/n2' ,
-      ('n2', 'male')   : 'n0/male/n2' ,
-   }
-   #
-   # check for db2csv files
-   for (node, sex) in subdir_list :
-      subdir = subdir_list[(node, sex)]
-      for name in db2csv_name_list + [ 'rate_plot.pdf' ] :
-         file_path = f'{fit_dir}/{subdir}/{name}'
-         assert os.path.exists(file_path)
-      #
-      # Only (n0, sex) jobs have more than one data point; see n_fit_dict in
-      # https://dismod-at.readthedocs.io/latest/plot_data_fit.html#n-fit-dict
-      if node == 'n0' :
-         file_path = f'{fit_dir}/{subdir}/data_plot.pdf'
-         assert os.path.exists(file_path)
-   #
-   file_name = f'{fit_dir}/n0/dismod.db'
-   new      = False
-   connection = dismod_at.create_connection(file_name, new)
-   tbl_name   = 'bnd_mulcov'
-   bnd_mulcov_table = dismod_at.get_table_dict(connection, tbl_name)
-   connection.close()
-   max_mulcov     = bnd_mulcov_table[0]['max_mulcov']
-   max_cov_diff   = bnd_mulcov_table[0]['max_cov_diff']
-   max_abs_effect = 3.0
-   assert max_cov_diff == 0.5
-   assert max_mulcov == max_abs_effect / max_cov_diff
+    #
+    # fit_dir
+    fit_dir = 'build/test/csv'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # write csv files
+    for name in csv_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
+    #
+    # table
+    file_name  = f'{fit_dir}/covariate.csv'
+    table      = at_cascade.csv.read_table( file_name )
+    #
+    # data_in.csv
+    float_format      = '{0:.5g}'
+    true_mulcov_sex   = 0.5
+    no_effect_iota    = 0.1
+    file_name         = f'{fit_dir}/data_in.csv'
+    table             = at_cascade.csv.read_table( file_name )
+    for row in table :
+        sex_name       = row['sex']
+        integrand_name = row['integrand_name']
+        assert integrand_name == 'Sincidence'
+        #
+        sex_name  = row['sex']
+        effect    = true_mulcov_sex * ( sex_name2income[sex_name] - 1.5)
+        iota      = math.exp(effect) * no_effect_iota
+        row['meas_value'] = float_format.format( iota )
+    at_cascade.csv.write_table(file_name, table)
+    #
+    # csv.fit, csv.predict
+    at_cascade.csv.fit(fit_dir)
+    at_cascade.csv.predict(fit_dir)
+    #
+    # number_sample
+    number_sample = 10
+    #
+    # prefix
+    for prefix in [ 'fit', 'sam' ] :
+        #
+        # predict_table
+        file_name = f'{fit_dir}/{prefix}_predict.csv'
+        predict_table = at_cascade.csv.read_table(file_name)
+        #
+        # node
+        for node in [ 'n0', 'n1', 'n2' ] :
+            # sex_name
+            for sex_name in [ 'female', 'both', 'male' ] :
+                #
+                # sample_list
+                sample_list = list()
+                for row in predict_table :
+                    if row['integrand_name'] == 'Sincidence' and \
+                    row['node_name'] == node and \
+                    row['sex'] == sex_name :
+                        sample_list.append(row)
+                #
+                # check sample_list
+                if node == 'n-1' or node == 'n3' :
+                    assert len(sample_list) == 0
+                elif sex_name == 'both' :
+                    if node != 'n0' :
+                        assert len(sample_list) == 0
+                    else :
+                        if prefix == 'fit' :
+                            assert len(sample_list) == 1
+                        else :
+                            assert len(sample_list) == number_sample
+                else :
+                    if prefix == 'fit' :
+                        assert len(sample_list) == 2
+                    else :
+                        assert len(sample_list) == 2 * number_sample
+                if len( sample_list ) > 0 :
+                    sum_avgint = 0.0
+                    for row in sample_list :
+                        sum_avgint   += float( row['avg_integrand'] )
+                    avgint    = sum_avgint / len(sample_list)
+                    income    = sex_name2income[sex_name]
+                    effect    = true_mulcov_sex * (income - 1.5)
+                    iota      = math.exp(effect) * no_effect_iota
+                    rel_error = (avgint - iota) / iota
+                    if abs(rel_error) > 0.01 :
+                        print('rel_error =', rel_error)
+                        assert False
+    #
+    # db2csv_file_list
+    # hes_fixed.csv would be included if sample_method was asymptotic.
+    db2csv_name_list = [
+        'log.csv',
+        'age_avg.csv',
+        'trace_fixed.csv',
+        'mixed_info.csv',
+        'variable.csv',
+        'data.csv',
+        'predict.csv',
+    ]
+    #
+    # subdir_list
+    subdir_list = {
+        ('n0', 'both')   : 'n0' ,
+        ('n0', 'female') : 'n0/female' ,
+        ('n0', 'male')   : 'n0/male' ,
+        ('n1', 'female') : 'n0/female/n1' ,
+        ('n1', 'male')   : 'n0/male/n1' ,
+        ('n2', 'female') : 'n0/female/n2' ,
+        ('n2', 'male')   : 'n0/male/n2' ,
+    }
+    #
+    # check for db2csv files
+    for (node, sex) in subdir_list :
+        subdir = subdir_list[(node, sex)]
+        for name in db2csv_name_list + [ 'rate_plot.pdf' ] :
+            file_path = f'{fit_dir}/{subdir}/{name}'
+            assert os.path.exists(file_path)
+        #
+        # Only (n0, sex) jobs have more than one data point; see n_fit_dict in
+        # https://dismod-at.readthedocs.io/latest/plot_data_fit.html#n-fit-dict
+        if node == 'n0' :
+            file_path = f'{fit_dir}/{subdir}/data_plot.pdf'
+            assert os.path.exists(file_path)
+    #
+    file_name = f'{fit_dir}/n0/dismod.db'
+    new      = False
+    connection = dismod_at.create_connection(file_name, new)
+    tbl_name   = 'bnd_mulcov'
+    bnd_mulcov_table = dismod_at.get_table_dict(connection, tbl_name)
+    connection.close()
+    max_mulcov     = bnd_mulcov_table[0]['max_mulcov']
+    max_cov_diff   = bnd_mulcov_table[0]['max_cov_diff']
+    max_abs_effect = 3.0
+    assert max_cov_diff == 0.5
+    assert max_mulcov == max_abs_effect / max_cov_diff
 #
 if __name__ == '__main__' :
-   main()
-   print('csv_fit.py: OK')
+    main()
+    print('csv_fit.py: OK')
 # END_PYTHON

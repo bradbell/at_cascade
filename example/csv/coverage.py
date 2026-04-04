@@ -127,8 +127,8 @@ So we make *meas_std_cv* small enough so the censoring will be very unlikely.
 Source Code
 ***********
 {xrst_literal
-   # BEGIN PYTHON
-   # END PYTHON
+    # BEGIN PYTHON
+    # END PYTHON
 }
 
 {xrst_end csv.coverage}
@@ -143,7 +143,7 @@ import scipy
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 # ----------------------------------------------------------------------------
 # simulation files
@@ -170,9 +170,9 @@ n0,
 # covariate.csv
 sim_file['covariate.csv']  = 'node_name,sex,age,time,omega\n'
 for sex in [ 'male', 'female' ] :
-   for age in age_grid :
-      for time in time_grid :
-         sim_file['covariate.csv'] += f'n0,{sex},{age},{time},{true_omega}\n'
+    for age in age_grid :
+        for time in time_grid :
+            sim_file['covariate.csv'] += f'n0,{sex},{age},{time},{true_omega}\n'
 #
 # no_effect_rate.csv
 sim_file['no_effect_rate.csv'] = 'rate_name,age,time,rate_truth\n'
@@ -191,7 +191,7 @@ row    += f'2000,2000,{meas_std_cv},0.0\n'
 #
 sim_file['simulate.csv'] = header
 for simulate_id in range( n_data_per_fit ) :
-   sim_file['simulate.csv'] += f'{simulate_id},' + row
+    sim_file['simulate.csv'] += f'{simulate_id},' + row
 # ----------------------------------------------------------------------------
 # fit files
 # ----------------------------------------------------------------------------
@@ -257,285 +257,285 @@ fit_file['mulcov.csv'] = \
 # ----------------------------------------------------------------------------
 # next_random_seed
 def next_random_seed(option_file) :
-   option_table = at_cascade.csv.read_table(option_file)
-   max_int      = 2**31 - 1
-   found        = False
-   for row in option_table :
-      if row['name'] == 'random_seed' :
-         found        = True
-         new_seed     = random.randint(1, max_int)
-         row['value'] = str(new_seed)
-   assert found
-   at_cascade.csv.write_table(option_file, option_table)
+    option_table = at_cascade.csv.read_table(option_file)
+    max_int      = 2**31 - 1
+    found        = False
+    for row in option_table :
+        if row['name'] == 'random_seed' :
+            found        = True
+            new_seed     = random.randint(1, max_int)
+            row['value'] = str(new_seed)
+    assert found
+    at_cascade.csv.write_table(option_file, option_table)
 # -----------------------------------------------------------------------------
 # sim
 # Simulate the data for one fit
 def run_sim(sim_dir) :
-   #
-   # write input csv files
-   for name in sim_file :
-      file_name = f'{sim_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( sim_file[name] )
-      file_ptr.close()
-   #
-   # option_sim.csv
-   file_name = f'{sim_dir}/option_sim.csv'
-   next_random_seed(file_name)
-   #
-   # csv.simulate
-   at_cascade.csv.simulate(sim_dir)
-   #
-   # data_join.csv
-   at_cascade.csv.join_file(
-      left_file   = f'{sim_dir}/simulate.csv' ,
-      right_file  = f'{sim_dir}/data_sim.csv' ,
-      result_file = f'{sim_dir}/data_join.csv',
-   )
+    #
+    # write input csv files
+    for name in sim_file :
+        file_name = f'{sim_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( sim_file[name] )
+        file_ptr.close()
+    #
+    # option_sim.csv
+    file_name = f'{sim_dir}/option_sim.csv'
+    next_random_seed(file_name)
+    #
+    # csv.simulate
+    at_cascade.csv.simulate(sim_dir)
+    #
+    # data_join.csv
+    at_cascade.csv.join_file(
+        left_file   = f'{sim_dir}/simulate.csv' ,
+        right_file  = f'{sim_dir}/data_sim.csv' ,
+        result_file = f'{sim_dir}/data_join.csv',
+    )
 # -----------------------------------------------------------------------------
 # fit
 # Do one fit
 def run_fit(sim_dir, fit_dir) :
-   #
-   # node.csv, covarite.csv
-   for file_name in [ 'node.csv', 'covariate.csv' ] :
-      shutil.copyfile(
-         src = f'{sim_dir}/{file_name}' ,
-         dst = f'{fit_dir}/{file_name}' ,
-      )
-   #
-   # csv files in fit_file
-   for name in fit_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( fit_file[name] )
-      file_ptr.close()
-   #
-   # option_fit.csv
-   file_name = f'{fit_dir}/option_fit.csv'
-   next_random_seed(file_name)
-   #
-   #
-   # data_join_table
-   # This is a join of simulate.csv and dats_sim.csv
-   data_join_table = at_cascade.csv.read_table(
-      file_name = f'{sim_dir}/data_join.csv'
-   )
-   #
-   # table
-   table = list()
-   #
-   # row_join
-   for row_join in data_join_table :
-      assert row_join['integrand_name'] == 'Sincidence'
-      #
-      # row_in
-      row_in = dict()
-      copy_list  = [ 'integrand_name', 'node_name', 'sex' ]
-      copy_list += [ 'age_lower', 'age_upper', 'time_lower', 'time_upper' ]
-      copy_list += [ 'meas_value', 'meas_std' ]
-      for key in copy_list :
-         row_in[key] = row_join[key]
-      #
-      row_in['data_id']        = row_join['simulate_id']
-      row_in['hold_out']       = '0'
-      row_in[ 'density_name' ] = 'gaussian'
-      row_in[ 'eta' ]          = ''
-      row_in[ 'nu' ]           = ''
-      #
-      # table
-      table.append( row_in )
-   #
-   # data_in.csv
-   at_cascade.csv.write_table(
-         file_name = f'{fit_dir}/data_in.csv' ,
-         table     = table ,
-   )
-   #
-   # fit
-   at_cascade.csv.fit(fit_dir)
+    #
+    # node.csv, covarite.csv
+    for file_name in [ 'node.csv', 'covariate.csv' ] :
+        shutil.copyfile(
+            src = f'{sim_dir}/{file_name}' ,
+            dst = f'{fit_dir}/{file_name}' ,
+        )
+    #
+    # csv files in fit_file
+    for name in fit_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( fit_file[name] )
+        file_ptr.close()
+    #
+    # option_fit.csv
+    file_name = f'{fit_dir}/option_fit.csv'
+    next_random_seed(file_name)
+    #
+    #
+    # data_join_table
+    # This is a join of simulate.csv and dats_sim.csv
+    data_join_table = at_cascade.csv.read_table(
+        file_name = f'{sim_dir}/data_join.csv'
+    )
+    #
+    # table
+    table = list()
+    #
+    # row_join
+    for row_join in data_join_table :
+        assert row_join['integrand_name'] == 'Sincidence'
+        #
+        # row_in
+        row_in = dict()
+        copy_list  = [ 'integrand_name', 'node_name', 'sex' ]
+        copy_list += [ 'age_lower', 'age_upper', 'time_lower', 'time_upper' ]
+        copy_list += [ 'meas_value', 'meas_std' ]
+        for key in copy_list :
+            row_in[key] = row_join[key]
+        #
+        row_in['data_id']        = row_join['simulate_id']
+        row_in['hold_out']       = '0'
+        row_in[ 'density_name' ] = 'gaussian'
+        row_in[ 'eta' ]          = ''
+        row_in[ 'nu' ]           = ''
+        #
+        # table
+        table.append( row_in )
+    #
+    # data_in.csv
+    at_cascade.csv.write_table(
+            file_name = f'{fit_dir}/data_in.csv' ,
+            table     = table ,
+    )
+    #
+    # fit
+    at_cascade.csv.fit(fit_dir)
 # -----------------------------------------------------------------------------
 def posterior_fit(fit_dir) :
-   #
-   # n_grid
-   n_grid = len(age_grid) * len(time_grid)
-   #
-   # table
-   table = at_cascade.csv.read_table(
-      file_name = f'{fit_dir}/fit_predict.csv'
-   )
-   assert len(table) == n_grid
-   #
-   # fit
-   fit = dict()
-   for age in age_grid :
-      fit[age] = dict()
-   #
-   # predict
-   for row in table :
-      age           = float( row['age'] )
-      time          = float( row['time'] )
-      avg_integrand = float( row['avg_integrand'] )
-      fit[age][time] = avg_integrand
-   #
-   return fit
+    #
+    # n_grid
+    n_grid = len(age_grid) * len(time_grid)
+    #
+    # table
+    table = at_cascade.csv.read_table(
+        file_name = f'{fit_dir}/fit_predict.csv'
+    )
+    assert len(table) == n_grid
+    #
+    # fit
+    fit = dict()
+    for age in age_grid :
+        fit[age] = dict()
+    #
+    # predict
+    for row in table :
+        age           = float( row['age'] )
+        time          = float( row['time'] )
+        avg_integrand = float( row['avg_integrand'] )
+        fit[age][time] = avg_integrand
+    #
+    return fit
 # -----------------------------------------------------------------------------
 def posterior_truth(fit_dir) :
-   #
-   # n_grid
-   n_grid = len(age_grid) * len(time_grid)
-   #
-   # table
-   table = at_cascade.csv.read_table(
-      file_name = f'{fit_dir}/tru_predict.csv'
-   )
-   assert len(table) == n_grid
-   #
-   # truth
-   truth = dict()
-   for age in age_grid :
-      truth[age] = dict()
-   #
-   # predict
-   for row in table :
-      age           = float( row['age'] )
-      time          = float( row['time'] )
-      avg_integrand = float( row['avg_integrand'] )
-      truth[age][time] = avg_integrand
-   #
-   return truth
+    #
+    # n_grid
+    n_grid = len(age_grid) * len(time_grid)
+    #
+    # table
+    table = at_cascade.csv.read_table(
+        file_name = f'{fit_dir}/tru_predict.csv'
+    )
+    assert len(table) == n_grid
+    #
+    # truth
+    truth = dict()
+    for age in age_grid :
+        truth[age] = dict()
+    #
+    # predict
+    for row in table :
+        age           = float( row['age'] )
+        time          = float( row['time'] )
+        avg_integrand = float( row['avg_integrand'] )
+        truth[age][time] = avg_integrand
+    #
+    return truth
 # -----------------------------------------------------------------------------
 def posterior_sample(fit_dir) :
-   #
-   # truth
-   truth = posterior_truth(fit_dir)
-   #
-   # fit
-   fit  = posterior_fit(fit_dir)
-   #
-   # n_grid
-   n_grid = len(age_grid) * len(time_grid)
-   #
-   # table
-   table = at_cascade.csv.read_table(
-      file_name = f'{fit_dir}/sam_predict.csv'
-   )
-   assert len(table) == n_grid * n_sample_per_fit
-   #
-   # sample_list
-   sample_list = dict()
-   for age in age_grid :
-      sample_list[age] = dict()
-      for time in time_grid :
-         sample_list[age][time] = list()
-   #
-   # sample_list
-   # We shift the samples from being centered on the fit to being centered
-   # on the truth. This enables us to check how often a fits falls within
-   # the confidence interval from the truth.
-   for row in table :
-      age           = float( row['age'] )
-      time          = float( row['time'] )
-      avg_integrand = float( row['avg_integrand'] )
-      shift         = truth[age][time] - fit[age][time]
-      assert age in age_grid
-      assert time in time_grid
-      sample_list[age][time].append( avg_integrand + shift )
-   #
-   # sample_list
-   for age in age_grid :
-      for time in time_grid :
-         assert len( sample_list[age][time] ) == n_sample_per_fit
-         sample_list[age][time] = sorted( sample_list[age][time] )
-   #
-   return sample_list
+    #
+    # truth
+    truth = posterior_truth(fit_dir)
+    #
+    # fit
+    fit  = posterior_fit(fit_dir)
+    #
+    # n_grid
+    n_grid = len(age_grid) * len(time_grid)
+    #
+    # table
+    table = at_cascade.csv.read_table(
+        file_name = f'{fit_dir}/sam_predict.csv'
+    )
+    assert len(table) == n_grid * n_sample_per_fit
+    #
+    # sample_list
+    sample_list = dict()
+    for age in age_grid :
+        sample_list[age] = dict()
+        for time in time_grid :
+            sample_list[age][time] = list()
+    #
+    # sample_list
+    # We shift the samples from being centered on the fit to being centered
+    # on the truth. This enables us to check how often a fits falls within
+    # the confidence interval from the truth.
+    for row in table :
+        age           = float( row['age'] )
+        time          = float( row['time'] )
+        avg_integrand = float( row['avg_integrand'] )
+        shift         = truth[age][time] - fit[age][time]
+        assert age in age_grid
+        assert time in time_grid
+        sample_list[age][time].append( avg_integrand + shift )
+    #
+    # sample_list
+    for age in age_grid :
+        for time in time_grid :
+            assert len( sample_list[age][time] ) == n_sample_per_fit
+            sample_list[age][time] = sorted( sample_list[age][time] )
+    #
+    return sample_list
 # -----------------------------------------------------------------------------
 def main() :
-   #
-   # sim_dir
-   sim_dir = 'build/example/csv/sim'
-   at_cascade.empty_directory(sim_dir)
-   #
-   # fit_dir
-   fit_dir = 'build/example/csv/fit'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # fit_list
-   fit_list = dict()
-   for age in age_grid :
-      fit_list[age] = dict()
-      for time in time_grid :
-         fit_list[age][time] = list()
-   #
-   # fit_list, posterior_sam
-   for i_fit in range(number_fit) :
-      #
-      # fit_dir/n0
-      at_cascade.empty_directory( f'{fit_dir}/n0' )
-      os.rmdir( f'{fit_dir}/n0' )
-      #
-      # run_sim
-      run_sim(sim_dir)
-      #
-      # run_fit
-      run_fit(sim_dir, fit_dir)
-      #
-      # predict
-      at_cascade.csv.predict(fit_dir, sim_dir)
-      #
-      # posterior_sam
-      if i_fit == 0 :
-         posterior_sam = posterior_sample(fit_dir)
-      #
-      # fit_list
-      fit = posterior_fit(fit_dir)
-      for age in age_grid :
-         for time in time_grid :
-            fit_list[age][time].append( fit[age][time] )
-   #
-   # lower_index, upper_index
-   # sample index corresponding to 1/4 of the values below (above)
-   lower_index = round( n_sample_per_fit / 4 )
-   upper_index = round( n_sample_per_fit * 3 / 4 )
-   #
-   # sample_lower, sample_upper
-   sample_lower = dict()
-   sample_upper = dict()
-   for age in age_grid :
-      sample_lower[age] = dict()
-      sample_upper[age] = dict()
-      for time in time_grid :
-         sample_lower[age][time] = posterior_sam[age][time][lower_index]
-         sample_upper[age][time] = posterior_sam[age][time][upper_index]
-   #
-   #
-   # age
-   # Exclude age zero because prevalence at age zero is identically zero.
-   ok = True
-   for age in age_grid[1 :] :
-      # time
-      for time in time_grid :
-         assert len(fit_list[age][time]) == number_fit
-         count = 0
-         lower = sample_lower[age][time]
-         upper = sample_upper[age][time]
-         for fit in fit_list[age][time] :
-            if lower < fit and fit < upper :
-               count += 1
-         probability = count / number_fit
-         msg  = f'random_seed = {random_seed}, '
-         msg += f'age = {age}, '
-         msg += f'time = {time}, '
-         msg += f'lower = {lower:.4f}, '
-         msg += f'upper = {upper:.4f}, '
-         msg += f'probability = {probability}'
-         print( msg )
-         # print( f'fit_list =\n{fit_list}' )
-         # 0.5 should be the probability of being within the limits
-         ok = ok and abs( probability - 0.5 ) <= 0.2
-   assert ok
+    #
+    # sim_dir
+    sim_dir = 'build/example/csv/sim'
+    at_cascade.empty_directory(sim_dir)
+    #
+    # fit_dir
+    fit_dir = 'build/example/csv/fit'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # fit_list
+    fit_list = dict()
+    for age in age_grid :
+        fit_list[age] = dict()
+        for time in time_grid :
+            fit_list[age][time] = list()
+    #
+    # fit_list, posterior_sam
+    for i_fit in range(number_fit) :
+        #
+        # fit_dir/n0
+        at_cascade.empty_directory( f'{fit_dir}/n0' )
+        os.rmdir( f'{fit_dir}/n0' )
+        #
+        # run_sim
+        run_sim(sim_dir)
+        #
+        # run_fit
+        run_fit(sim_dir, fit_dir)
+        #
+        # predict
+        at_cascade.csv.predict(fit_dir, sim_dir)
+        #
+        # posterior_sam
+        if i_fit == 0 :
+            posterior_sam = posterior_sample(fit_dir)
+        #
+        # fit_list
+        fit = posterior_fit(fit_dir)
+        for age in age_grid :
+            for time in time_grid :
+                fit_list[age][time].append( fit[age][time] )
+    #
+    # lower_index, upper_index
+    # sample index corresponding to 1/4 of the values below (above)
+    lower_index = round( n_sample_per_fit / 4 )
+    upper_index = round( n_sample_per_fit * 3 / 4 )
+    #
+    # sample_lower, sample_upper
+    sample_lower = dict()
+    sample_upper = dict()
+    for age in age_grid :
+        sample_lower[age] = dict()
+        sample_upper[age] = dict()
+        for time in time_grid :
+            sample_lower[age][time] = posterior_sam[age][time][lower_index]
+            sample_upper[age][time] = posterior_sam[age][time][upper_index]
+    #
+    #
+    # age
+    # Exclude age zero because prevalence at age zero is identically zero.
+    ok = True
+    for age in age_grid[1 :] :
+        # time
+        for time in time_grid :
+            assert len(fit_list[age][time]) == number_fit
+            count = 0
+            lower = sample_lower[age][time]
+            upper = sample_upper[age][time]
+            for fit in fit_list[age][time] :
+                if lower < fit and fit < upper :
+                    count += 1
+            probability = count / number_fit
+            msg  = f'random_seed = {random_seed}, '
+            msg += f'age = {age}, '
+            msg += f'time = {time}, '
+            msg += f'lower = {lower:.4f}, '
+            msg += f'upper = {upper:.4f}, '
+            msg += f'probability = {probability}'
+            print( msg )
+            # print( f'fit_list =\n{fit_list}' )
+            # 0.5 should be the probability of being within the limits
+            ok = ok and abs( probability - 0.5 ) <= 0.2
+    assert ok
 # -----------------------------------------------------------------------------
 if __name__ == '__main__' :
-   main()
-   print('csv.coverage: OK')
+    main()
+    print('csv.coverage: OK')
 # END PYTHON

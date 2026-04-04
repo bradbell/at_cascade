@@ -6,13 +6,13 @@
 '''
 {xrst_begin csv.predict_descend}
 {xrst_spell
-   eps
-   dage
-   dtime
-   const
-   eps
-   std
-   Sincidence
+    eps
+    dage
+    dtime
+    const
+    eps
+    std
+    Sincidence
 }
 
 Example Predicting From Self and a Descendant
@@ -32,9 +32,9 @@ node_dict
 Keys are nodes and values are corresponding parent node:
 {xrst_code py}'''
 node_dict = {
-   'n0' : ''   ,
-   'n1' : 'n0' ,
-   'n2' : 'n0' ,
+    'n0' : ''   ,
+    'n1' : 'n0' ,
+    'n2' : 'n0' ,
 }
 '''{xrst_code}
 
@@ -126,7 +126,7 @@ option_predict.csv
 {xrst_code py}'''
 input_file['option_predict.csv']  =  'name,value\n'
 input_file['option_predict.csv']  +=  \
-   f'descendant_std_factor,{descendant_std_factor}\n'
+    f'descendant_std_factor,{descendant_std_factor}\n'
 '''{xrst_code}
 
 fit_goal.csv
@@ -143,8 +143,8 @@ node.csv
 input_file['node.csv'] = \
 'node_name,parent_name\n'
 for node_name in node_dict :
-   parent_name = node_dict[node_name]
-   input_file['node.csv'] += f'{node_name},{parent_name}\n'
+    parent_name = node_dict[node_name]
+    input_file['node.csv'] += f'{node_name},{parent_name}\n'
 '''{xrst_code}
 
 covariate.csv
@@ -152,11 +152,11 @@ covariate.csv
 {xrst_code py}'''
 input_file['covariate.csv'] = 'node_name,sex,age,time,omega\n'
 for node_name in [ 'n0', 'n1', 'n2' ] :
-   for sex in [ 'female', 'male' ] :
-      for age in age_grid :
-         for time in time_grid :
-            row   = f'{node_name},{sex},{age},{time},{omega_true}\n'
-            input_file['covariate.csv'] += row
+    for sex in [ 'female', 'male' ] :
+        for age in age_grid :
+            for time in time_grid :
+                row   = f'{node_name},{sex},{age},{time},{omega_true}\n'
+                input_file['covariate.csv'] += row
 '''{xrst_code}
 
 prior.csv
@@ -206,24 +206,24 @@ The negative log likelihood for the n0 fit is:
 
 .. math::
 
-   L( \iota , y ) = \frac{1}{2} \sum_{i=0}^{m}
-      \log \left( 2 \pi \sigma^2 \right)
-      +
-      \left( \frac{y_i - \iota }{\sigma} \right)^2
+    L( \iota , y ) = \frac{1}{2} \sum_{i=0}^{m}
+        \log \left( 2 \pi \sigma^2 \right)
+        +
+        \left( \frac{y_i - \iota }{\sigma} \right)^2
 
 The Hessian with respect to iota ( :math:`\iota` ) is
 
 .. math::
 
-   \frac{ \partial^2 }{\partial \iota^2} L = \frac{m}{ \sigma^2 }
+    \frac{ \partial^2 }{\partial \iota^2} L = \frac{m}{ \sigma^2 }
 
 
 Rest of Source Code
 *******************
 Below is the source code, except for the settings above.
 {xrst_literal
-   # BEGIN REST_OF_SOURCE
-   # END REST_OF_SOURCE
+    # BEGIN REST_OF_SOURCE
+    # END REST_OF_SOURCE
 }
 
 {xrst_end csv.predict_descend}
@@ -242,126 +242,126 @@ random.seed(random_seed)
 # at_cascade
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 #
 # fit
 def create_input_files(fit_dir) :
-   #
-   # csv files in input_file
-   for name in input_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( input_file[name] )
-      file_ptr.close()
-   #
-   # data_table
-   data_table = list()
-   data_id    = -1
-   age        = 50.0
-   time       = 2000.0
-   row = {
-      'node_name'      : 'n0',
-      'integrand_name' : 'Sincidence',
-      'hold_out'       : 0,
-      'density_name'   : 'gaussian',
-      'age_lower'      : age,
-      'age_upper'      : age,
-      'time_lower'     : time,
-      'time_upper'     : time,
-      'eta'            : None,
-      'nu'             : None,
-      'meas_std'       : std_data,
-   }
-   for i in range(n_data) :
-      if i % 2 == 0 :
-         sex = 'female'
-      else :
-         sex = 'male'
-      data_id          += 1
-      row['data_id']    = data_id
-      row['sex']        = sex
-      row['meas_value'] = random.normalvariate( iota_true, std_data )
-      data_table.append( copy.copy( row ) )
-   #
-   # data_in.csv
-   at_cascade.csv.write_table(
-      file_name = f'{fit_dir}/data_in.csv' ,
-      table     = data_table ,
-   )
+    #
+    # csv files in input_file
+    for name in input_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( input_file[name] )
+        file_ptr.close()
+    #
+    # data_table
+    data_table = list()
+    data_id    = -1
+    age        = 50.0
+    time       = 2000.0
+    row = {
+        'node_name'      : 'n0',
+        'integrand_name' : 'Sincidence',
+        'hold_out'       : 0,
+        'density_name'   : 'gaussian',
+        'age_lower'      : age,
+        'age_upper'      : age,
+        'time_lower'     : time,
+        'time_upper'     : time,
+        'eta'            : None,
+        'nu'             : None,
+        'meas_std'       : std_data,
+    }
+    for i in range(n_data) :
+        if i % 2 == 0 :
+            sex = 'female'
+        else :
+            sex = 'male'
+        data_id          += 1
+        row['data_id']    = data_id
+        row['sex']        = sex
+        row['meas_value'] = random.normalvariate( iota_true, std_data )
+        data_table.append( copy.copy( row ) )
+    #
+    # data_in.csv
+    at_cascade.csv.write_table(
+        file_name = f'{fit_dir}/data_in.csv' ,
+        table     = data_table ,
+    )
 #
 # main
 def main() :
-   #
-   # fit_dir
-   fit_dir = 'build/example/csv/fit'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # create_input_files
-   create_input_files(fit_dir)
-   #
-   # at_cascade.csv.fit
-   at_cascade.csv.fit(fit_dir)
-   #
-   # at_cascade.csv.predict
-   at_cascade.csv.predict(fit_dir)
-   #
-   # fit
-   file_name = f'{fit_dir}/fit_predict.csv'
-   fit_predict_table = at_cascade.csv.read_table(file_name);
-   fit               = dict()
-   for row in fit_predict_table :
-      avgint_id = int( row['avgint_id'] )
-      node_name = row['node_name']
-      sex       = row['sex']
-      key       = (avgint_id, node_name, sex)
-      assert key not in fit
-      fit[key]  = float( row['avg_integrand']  )
-   #
-   # sam
-   file_name = f'{fit_dir}/sam_predict.csv'
-   sam_predict_table = at_cascade.csv.read_table(file_name);
-   sam               = dict()
-   for row in sam_predict_table :
-      avgint_id = int( row['avgint_id'] )
-      node_name = row['node_name']
-      sex       = row['sex']
-      key       = (avgint_id, node_name, sex)
-      if key not in sam :
-         sam[key] = list()
-      sam[key].append(  float( row['avg_integrand']  ) )
-   #
-   # hessian_like
-   hessian_like = n_data / ( std_data * std_data )
-   #
-   # check predctions for n0
-   for avgint_id in range(4) :
-      key   = ( avgint_id, 'n0', 'both' )
-      sumsq = 0.0
-      assert number_sample == len( sam[key] )
-      for avg_integrand in sam[key] :
-         sumsq += ( avg_integrand - fit[key] )**2
-      sam_cov = sumsq / number_sample
-      relerr  = 1.0 -  sam_cov * hessian_like
-      assert abs( relerr ) < 0.05
-   #
-   # check predctions for n2
-   for avgint_id in range(4) :
-      for sex in [ 'female', 'male' ] :
-         key   = ( avgint_id, 'n2', sex )
-         sumsq = 0.0
-         assert number_sample == len( sam[key] )
-         for avg_integrand in sam[key] :
-            sumsq  += ( avg_integrand - fit[key] )**2
-         sam_cov    =  sumsq / number_sample
-         cov_factor = descendant_std_factor * descendant_std_factor
-         relerr     = 1.0 -  (sam_cov / cov_factor) * hessian_like
-         assert abs( relerr ) < 0.05
-   #
-   #
-   print('predict_descend.py: OK')
+    #
+    # fit_dir
+    fit_dir = 'build/example/csv/fit'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # create_input_files
+    create_input_files(fit_dir)
+    #
+    # at_cascade.csv.fit
+    at_cascade.csv.fit(fit_dir)
+    #
+    # at_cascade.csv.predict
+    at_cascade.csv.predict(fit_dir)
+    #
+    # fit
+    file_name = f'{fit_dir}/fit_predict.csv'
+    fit_predict_table = at_cascade.csv.read_table(file_name);
+    fit               = dict()
+    for row in fit_predict_table :
+        avgint_id = int( row['avgint_id'] )
+        node_name = row['node_name']
+        sex       = row['sex']
+        key       = (avgint_id, node_name, sex)
+        assert key not in fit
+        fit[key]  = float( row['avg_integrand']  )
+    #
+    # sam
+    file_name = f'{fit_dir}/sam_predict.csv'
+    sam_predict_table = at_cascade.csv.read_table(file_name);
+    sam               = dict()
+    for row in sam_predict_table :
+        avgint_id = int( row['avgint_id'] )
+        node_name = row['node_name']
+        sex       = row['sex']
+        key       = (avgint_id, node_name, sex)
+        if key not in sam :
+            sam[key] = list()
+        sam[key].append(  float( row['avg_integrand']  ) )
+    #
+    # hessian_like
+    hessian_like = n_data / ( std_data * std_data )
+    #
+    # check predctions for n0
+    for avgint_id in range(4) :
+        key   = ( avgint_id, 'n0', 'both' )
+        sumsq = 0.0
+        assert number_sample == len( sam[key] )
+        for avg_integrand in sam[key] :
+            sumsq += ( avg_integrand - fit[key] )**2
+        sam_cov = sumsq / number_sample
+        relerr  = 1.0 -  sam_cov * hessian_like
+        assert abs( relerr ) < 0.05
+    #
+    # check predctions for n2
+    for avgint_id in range(4) :
+        for sex in [ 'female', 'male' ] :
+            key   = ( avgint_id, 'n2', sex )
+            sumsq = 0.0
+            assert number_sample == len( sam[key] )
+            for avg_integrand in sam[key] :
+                sumsq  += ( avg_integrand - fit[key] )**2
+            sam_cov    =  sumsq / number_sample
+            cov_factor = descendant_std_factor * descendant_std_factor
+            relerr     = 1.0 -  (sam_cov / cov_factor) * hessian_like
+            assert abs( relerr ) < 0.05
+    #
+    #
+    print('predict_descend.py: OK')
 #
 if __name__ == '__main__' :
-   main()
+    main()
 #
 # END REST_OF_SOURCE

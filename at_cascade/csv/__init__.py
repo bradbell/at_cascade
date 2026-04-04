@@ -94,9 +94,9 @@ the :ref:`split_reference_table-name` has the following values for
 csv.fit, :ref:`csv.simulate-name` and :ref:`csv.predict-name` :
 {xrst_code py}'''
 split_reference_table = [
-   { 'split_reference_name' : 'female' , 'split_reference_value' : -0.5 },
-   { 'split_reference_name' : 'both'   , 'split_reference_value' :  0.0 },
-   { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
+    { 'split_reference_name' : 'female' , 'split_reference_value' : -0.5 },
+    { 'split_reference_name' : 'both'   , 'split_reference_value' :  0.0 },
+    { 'split_reference_name' : 'male'   , 'split_reference_value' : +0.5 },
 ]
 '''{xrst_code}
 
@@ -105,25 +105,25 @@ Routines
 
 .. BEGIN_SORT_THIS_LINE_PLUS_2
 {xrst_toc_table
-   at_cascade/csv/ancestor_fit.py
-   at_cascade/csv/check_table.py
-   at_cascade/csv/covariate_avg.py
-   at_cascade/csv/covariate_both.py
-   at_cascade/csv/covariate_same.py
-   at_cascade/csv/covariate_spline.py
-   at_cascade/csv/empty_str.py
-   at_cascade/csv/fit.py
-   at_cascade/csv/get_header.py
-   at_cascade/csv/join_file.py
-   at_cascade/csv/pre_one_job.py
-   at_cascade/csv/pre_one_process.py
-   at_cascade/csv/pre_parallel.py
-   at_cascade/csv/pre_user.py
-   at_cascade/csv/predict.py
-   at_cascade/csv/read_table.py
-   at_cascade/csv/set_truth.py
-   at_cascade/csv/simulate.py
-   at_cascade/csv/write_table.py
+    at_cascade/csv/ancestor_fit.py
+    at_cascade/csv/check_table.py
+    at_cascade/csv/covariate_avg.py
+    at_cascade/csv/covariate_both.py
+    at_cascade/csv/covariate_same.py
+    at_cascade/csv/covariate_spline.py
+    at_cascade/csv/empty_str.py
+    at_cascade/csv/fit.py
+    at_cascade/csv/get_header.py
+    at_cascade/csv/join_file.py
+    at_cascade/csv/pre_one_job.py
+    at_cascade/csv/pre_one_process.py
+    at_cascade/csv/pre_parallel.py
+    at_cascade/csv/pre_user.py
+    at_cascade/csv/predict.py
+    at_cascade/csv/read_table.py
+    at_cascade/csv/set_truth.py
+    at_cascade/csv/simulate.py
+    at_cascade/csv/write_table.py
 }
 .. END_SORT_THIS_LINE_MINUS_2
 

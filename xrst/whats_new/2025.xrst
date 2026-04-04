@@ -5,22 +5,22 @@
 # ----------------------------------------------------------------------------
 {xrst_begin 2025}
 {xrst_spell
-   mm
-   dd
-   py
-   pdf
-   relrisk
-   rcond
-   subprocess
-   dismodat
-   toml
-   conda
-   pyproject
-   setuptools
-   sqlite
-   unix
-   cee
-   xam
+    mm
+    dd
+    py
+    pdf
+    relrisk
+    rcond
+    subprocess
+    dismodat
+    toml
+    conda
+    pyproject
+    setuptools
+    sqlite
+    unix
+    cee
+    xam
 }
 
 Release Notes for 2025

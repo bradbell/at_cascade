@@ -12,7 +12,7 @@ build-backend = "hatchling.build"
 #
 # Basic Information
 name              = 'at_cascade'
-version           = '2026.3.27'
+version           = '2026.4.4'
 #
 # Dependencies and reqirements
 requires-python   = '>=3.8'
@@ -38,8 +38,8 @@ maintainers   = [
 ]
 keywords      = [ 'public health', 'disease modeling', 'dismod_at' ]
 classifiers   = [ # see https://pypi.org/classifiers/
-   'Programming Language :: Python :: 3',
-   'Operating System :: OS Independent',
+    'Programming Language :: Python :: 3',
+    'Operating System :: OS Independent',
 ]
 #
 # urls

@@ -12,8 +12,8 @@ Create A Table from a CSV File
 Prototype
 *********
 {xrst_literal ,
-   BEGIN_DEF, END_DEF
-   BEGIN_RETURN, END_RETURN
+    BEGIN_DEF, END_DEF
+    BEGIN_RETURN, END_RETURN
 }
 
 
@@ -55,27 +55,27 @@ Example
 # BEGIN_DEF
 # at_cascade.csv.empty_str
 def empty_str(table_in, direction) :
-   assert type(table_in)  == list
-   if len(table_in) > 0 :
-      assert type(table_in[0]) == dict
-   assert direction == 'to_none' or direction == 'from_none'
-   # END_DEF
-   #
-   table_out = list()
-   for row in table_in :
-      row = copy.copy(row)
-      for key in row :
-         if direction == 'to_none' :
-            if row[key] == '' :
-               row[key] = None
-         else :
-            if row[key] == None :
-               row[key] = ''
-      table_out.append(row)
-   # BEGIN_RETURN
-   # ...
-   assert type(table_out) == list
-   if len(table_out) > 0 :
-         assert type(table_out[0]) == dict
-   return table_out
-   # END_RETURN
+    assert type(table_in)  == list
+    if len(table_in) > 0 :
+        assert type(table_in[0]) == dict
+    assert direction == 'to_none' or direction == 'from_none'
+    # END_DEF
+    #
+    table_out = list()
+    for row in table_in :
+        row = copy.copy(row)
+        for key in row :
+            if direction == 'to_none' :
+                if row[key] == '' :
+                    row[key] = None
+            else :
+                if row[key] == None :
+                    row[key] = ''
+        table_out.append(row)
+    # BEGIN_RETURN
+    # ...
+    assert type(table_out) == list
+    if len(table_out) > 0 :
+            assert type(table_out[0]) == dict
+    return table_out
+    # END_RETURN

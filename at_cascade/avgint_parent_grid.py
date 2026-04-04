@@ -11,8 +11,8 @@ Predicts Rates and Covariate Multipliers on Parent Grid
 Prototype
 *********
 {xrst_literal
-   # BEGIN_DEF
-   # END_DEF
+    # BEGIN_DEF
+    # END_DEF
 }
 
 Purpose
@@ -108,441 +108,441 @@ import at_cascade
 # ----------------------------------------------------------------------------
 # cov_reference_list =
 def get_cov_reference_list(
-   n_covariate, cov_reference_table, node_id, split_reference_id
+    n_covariate, cov_reference_table, node_id, split_reference_id
 ) :
-   #
-   #
-   cov_reference_list = n_covariate * [None]
-   for row in cov_reference_table :
-      if row['node_id'] == node_id :
-         if row['split_reference_id'] == split_reference_id :
-            covariate_id = row['covariate_id']
-            if covariate_id < len(cov_reference_list) :
-               cov_reference_list[covariate_id] = row['reference_value']
-   if None in cov_reference_list :
-      covariate_id = cov_reference_list.index(None)
-      msg  = 'all_node database: cov_reference table: '
-      msg += 'No row has the following values:\n'
-      msg += f'node_id = {node_id}, '
-      msg += f'split_reference_id = {split_reference_id}, '
-      msg += f'covariate_id = {covariate_id}'
-      assert False, msg
-   #
-   return cov_reference_list
+    #
+    #
+    cov_reference_list = n_covariate * [None]
+    for row in cov_reference_table :
+        if row['node_id'] == node_id :
+            if row['split_reference_id'] == split_reference_id :
+                covariate_id = row['covariate_id']
+                if covariate_id < len(cov_reference_list) :
+                    cov_reference_list[covariate_id] = row['reference_value']
+    if None in cov_reference_list :
+        covariate_id = cov_reference_list.index(None)
+        msg  = 'all_node database: cov_reference table: '
+        msg += 'No row has the following values:\n'
+        msg += f'node_id = {node_id}, '
+        msg += f'split_reference_id = {split_reference_id}, '
+        msg += f'covariate_id = {covariate_id}'
+        assert False, msg
+    #
+    return cov_reference_list
 # ----------------------------------------------------------------------------
 # This routine is very similar to get_child_job_table in create_job_table.
 # Perhaps there is a good way to combine these two routines.
 #
 # child_job_list =
 def possible_child_job_list(
-   # all node database tables
-   option_all_table      ,
-   node_split_table      ,
-   split_reference_table ,
-   # fit node database tables
-   fit_node_id           ,
-   node_table            ,
-   covariate_table       ,
+    # all node database tables
+    option_all_table      ,
+    node_split_table      ,
+    split_reference_table ,
+    # fit node database tables
+    fit_node_id           ,
+    node_table            ,
+    covariate_table       ,
 ) :
-   assert type(fit_node_id) == int
-   tables = (
-      option_all_table      ,
-      node_split_table      ,
-      split_reference_table ,
-      node_table            ,
-      covariate_table       ,
-   )
-   for table in tables :
-      assert type(table) == list
-      if len(table) > 0 :
-         assert type( table[0] == dict )
-   #
-   # option_all_dict
-   option_all_dict = dict()
-   for row in option_all_table :
-      option_all_dict[ row['option_name'] ] = row['option_value']
-   #
-   # fit_node_children
-   fit_node_children = list()
-   for (node_id, row) in enumerate(node_table) :
-      if row['parent'] == fit_node_id :
-         fit_node_children.append(node_id)
-   #
-   # refit_split
-   if 'refit_split' in option_all_dict :
-      refit_split = option_all_dict['refit_split']
-      assert refit_split in [ 'true', 'false' ]
-      refit_split = refit_split == 'true'
-   else :
-      refit_split = False
-   #
-   # root_node_name
-   assert 'root_node_name' in option_all_dict
-   root_node_name = option_all_dict['root_node_name']
-   #
-   # root_node_id
-   root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
-   #
-   # root_split_reference_id
-   if 'root_split_reference_name' in option_all_dict :
-      root_split_reference_name = option_all_dict['root_split_reference_name']
-      root_split_reference_id   = at_cascade.table_name2id(
-         split_reference_table,
-         'split_reference',
-         root_split_reference_name
-      )
-   else :
-      root_split_reference_id   = None
-      if refit_split :
-         msg  = 'option_all_table: refit_split is true and '
-         msg += ' root_split_reference_name does not appear'
-         assert False, msg
-   #
-   # fit_split_reference_id
-   cov_info = at_cascade.get_cov_info(
-      option_all_table, covariate_table, split_reference_table
-   )
-   if 'split_reference_id' not in cov_info :
-      fit_split_reference_id = None
-   else :
-      fit_split_reference_id = cov_info['split_reference_id']
-   #
-   # Special case where there is no splitting covariate
-   if fit_split_reference_id == None :
-      child_job_list = list()
-      for shift_node_id in fit_node_children :
-         child_job = (shift_node_id, None)
-         child_job_list.append(child_job)
-      return child_job_list
-   #
-   # already_split
-   already_split = root_split_reference_id != fit_split_reference_id
-   #
-   # node_split_set
-   node_split_set = set()
-   for row in node_split_table :
-      node_split_set.add( row['node_id'] )
-   #
-   # shift_reference_set
-   if already_split or fit_node_id not in node_split_set :
-      shift_reference_set = { fit_split_reference_id }
-   else :
-      shift_reference_set = set( range( len(split_reference_table) ) )
-      shift_reference_set.remove( root_split_reference_id )
-   #
-   #
-   # child_job_list
-   child_job_list = list()
-   if fit_node_id in node_split_set and not already_split and refit_split :
-      for shift_split_reference_id in shift_reference_set :
-         child_job = (fit_node_id, shift_split_reference_id)
-         child_job_list.append(child_job)
-   else :
-      for shift_split_reference_id in shift_reference_set :
-         for shift_node_id in fit_node_children :
-            child_job = (shift_node_id, shift_split_reference_id)
+    assert type(fit_node_id) == int
+    tables = (
+        option_all_table      ,
+        node_split_table      ,
+        split_reference_table ,
+        node_table            ,
+        covariate_table       ,
+    )
+    for table in tables :
+        assert type(table) == list
+        if len(table) > 0 :
+            assert type( table[0] == dict )
+    #
+    # option_all_dict
+    option_all_dict = dict()
+    for row in option_all_table :
+        option_all_dict[ row['option_name'] ] = row['option_value']
+    #
+    # fit_node_children
+    fit_node_children = list()
+    for (node_id, row) in enumerate(node_table) :
+        if row['parent'] == fit_node_id :
+            fit_node_children.append(node_id)
+    #
+    # refit_split
+    if 'refit_split' in option_all_dict :
+        refit_split = option_all_dict['refit_split']
+        assert refit_split in [ 'true', 'false' ]
+        refit_split = refit_split == 'true'
+    else :
+        refit_split = False
+    #
+    # root_node_name
+    assert 'root_node_name' in option_all_dict
+    root_node_name = option_all_dict['root_node_name']
+    #
+    # root_node_id
+    root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
+    #
+    # root_split_reference_id
+    if 'root_split_reference_name' in option_all_dict :
+        root_split_reference_name = option_all_dict['root_split_reference_name']
+        root_split_reference_id   = at_cascade.table_name2id(
+            split_reference_table,
+            'split_reference',
+            root_split_reference_name
+        )
+    else :
+        root_split_reference_id   = None
+        if refit_split :
+            msg  = 'option_all_table: refit_split is true and '
+            msg += ' root_split_reference_name does not appear'
+            assert False, msg
+    #
+    # fit_split_reference_id
+    cov_info = at_cascade.get_cov_info(
+        option_all_table, covariate_table, split_reference_table
+    )
+    if 'split_reference_id' not in cov_info :
+        fit_split_reference_id = None
+    else :
+        fit_split_reference_id = cov_info['split_reference_id']
+    #
+    # Special case where there is no splitting covariate
+    if fit_split_reference_id == None :
+        child_job_list = list()
+        for shift_node_id in fit_node_children :
+            child_job = (shift_node_id, None)
             child_job_list.append(child_job)
-   #
-   return child_job_list
+        return child_job_list
+    #
+    # already_split
+    already_split = root_split_reference_id != fit_split_reference_id
+    #
+    # node_split_set
+    node_split_set = set()
+    for row in node_split_table :
+        node_split_set.add( row['node_id'] )
+    #
+    # shift_reference_set
+    if already_split or fit_node_id not in node_split_set :
+        shift_reference_set = { fit_split_reference_id }
+    else :
+        shift_reference_set = set( range( len(split_reference_table) ) )
+        shift_reference_set.remove( root_split_reference_id )
+    #
+    #
+    # child_job_list
+    child_job_list = list()
+    if fit_node_id in node_split_set and not already_split and refit_split :
+        for shift_split_reference_id in shift_reference_set :
+            child_job = (fit_node_id, shift_split_reference_id)
+            child_job_list.append(child_job)
+    else :
+        for shift_split_reference_id in shift_reference_set :
+            for shift_node_id in fit_node_children :
+                child_job = (shift_node_id, shift_split_reference_id)
+                child_job_list.append(child_job)
+    #
+    return child_job_list
 # ----------------------------------------------------------------------------
 # BEGIN_DEF
 # at_cascade.avgint_parent_grid
 def avgint_parent_grid(
-   all_node_database = None ,
-   fit_database      = None ,
-   job_table         = None ,
-   fit_job_id        = None ,
+    all_node_database = None ,
+    fit_database      = None ,
+    job_table         = None ,
+    fit_job_id        = None ,
 ) :
-   assert type(all_node_database)  == str
-   assert type(fit_database) == str
-   assert type(job_table) == list or job_table == None
-   assert type(fit_job_id) == int or fit_job_id == None
-   # END_DEF
-   #
-   # option_all_table
-   connection = dismod_at.create_connection(
-      all_node_database, new = False, readonly = True
-   )
-   get_table             = dismod_at.get_table_dict
-   option_all_table      = get_table(connection, 'option_all')
-   node_split_table      = get_table(connection, 'node_split')
-   split_reference_table = get_table(connection, 'split_reference')
-   cov_reference_table   = get_table(connection, 'cov_reference')
-   connection.close()
-   #
-   # root_database
-   root_database      = None
-   for row in option_all_table :
-      if row['option_name'] == 'root_database' :
-         root_database      = row['option_value']
-   assert root_database != None
-   #
-   # fit_tables
-   fit_or_root = at_cascade.fit_or_root_class(
-      fit_database, root_database
-   )
-   fit_tables = dict()
-   for name in [
-      'age',
-      'covariate',
-      'integrand',
-      'mulcov',
-      'node',
-      'option',
-      'rate',
-      'smooth_grid',
-      'time',
-   ] :
-      fit_tables[name] = fit_or_root.get_table(name)
-   fit_or_root.close()
-   #
-   # split_covariate_id, fit_split_reference_id, fit_split_reference
-   split_covariate_id     = None
-   fit_split_reference_id = None
-   fit_split_reference    = None
-   cov_info = at_cascade.get_cov_info(
-      option_all_table, fit_tables['covariate'], split_reference_table
-   )
-   if 'split_covariate_id' in cov_info :
-      split_covariate_id     = cov_info['split_covariate_id']
-      fit_split_reference_id = cov_info['split_reference_id']
-      split_reference_list   = cov_info['split_reference_list']
-      fit_split_reference    = split_reference_list[fit_split_reference_id]
-   #
-   # minimum_age_id
-   minimum_age_id = 0
-   minimum_age    = fit_tables['age'][minimum_age_id]['age']
-   for (age_id, row) in enumerate(fit_tables['age']) :
-      if row['age'] < minimum_age :
-         minimum_age_id = age_id
-         minimum_age    = row['age']
-   #
-   # n_covariate
-   n_covariate = len( fit_tables['covariate'] )
-   #
-   # parent_node_id
-   parent_node_name = None
-   for row in fit_tables['option'] :
-      assert row['option_name'] != 'parent_node_id'
-      if row['option_name'] == 'parent_node_name' :
-         parent_node_name = row['option_value']
-   assert parent_node_name is not None
-   parent_node_id = at_cascade.table_name2id(
-      fit_tables['node'], 'node', parent_node_name
-   )
-   #
-   # child_job_list
-   child_job_list = possible_child_job_list(
-      option_all_table       = option_all_table,
-      node_split_table       = node_split_table ,
-      split_reference_table  = split_reference_table ,
-      fit_node_id            = parent_node_id,
-      node_table             = fit_tables['node'],
-      covariate_table        = fit_tables['covariate'],
-   )
-   #
-   # cov_reference_dict
-   n_covariate  = len( fit_tables['covariate'] )
-   cov_reference_dict = dict()
-   if job_table == None :
-      #
-      # cov_reference_list
-      cov_reference_list = get_cov_reference_list(
-         n_covariate,
-         cov_reference_table,
-         parent_node_id,
-         fit_split_reference_id
-      )
-      # cov_reference[ (parent_node_id, fit_split_reference_id) ]
-      key                     = (parent_node_id, fit_split_reference_id)
-      cov_reference_dict[key] = cov_reference_list
-   else :
-      #
-      # (shift_node_id, shift_split_reference_id)
-      for child_job in child_job_list :
-         (shift_node_id, shift_split_reference_id) = child_job
-         #
-         # cov_reference_list
-         node_id = fit_tables['node'][shift_node_id]['parent']
-         assert shift_node_id == parent_node_id or node_id == parent_node_id
-         cov_reference_list = get_cov_reference_list(
+    assert type(all_node_database)  == str
+    assert type(fit_database) == str
+    assert type(job_table) == list or job_table == None
+    assert type(fit_job_id) == int or fit_job_id == None
+    # END_DEF
+    #
+    # option_all_table
+    connection = dismod_at.create_connection(
+        all_node_database, new = False, readonly = True
+    )
+    get_table             = dismod_at.get_table_dict
+    option_all_table      = get_table(connection, 'option_all')
+    node_split_table      = get_table(connection, 'node_split')
+    split_reference_table = get_table(connection, 'split_reference')
+    cov_reference_table   = get_table(connection, 'cov_reference')
+    connection.close()
+    #
+    # root_database
+    root_database      = None
+    for row in option_all_table :
+        if row['option_name'] == 'root_database' :
+            root_database      = row['option_value']
+    assert root_database != None
+    #
+    # fit_tables
+    fit_or_root = at_cascade.fit_or_root_class(
+        fit_database, root_database
+    )
+    fit_tables = dict()
+    for name in [
+        'age',
+        'covariate',
+        'integrand',
+        'mulcov',
+        'node',
+        'option',
+        'rate',
+        'smooth_grid',
+        'time',
+    ] :
+        fit_tables[name] = fit_or_root.get_table(name)
+    fit_or_root.close()
+    #
+    # split_covariate_id, fit_split_reference_id, fit_split_reference
+    split_covariate_id     = None
+    fit_split_reference_id = None
+    fit_split_reference    = None
+    cov_info = at_cascade.get_cov_info(
+        option_all_table, fit_tables['covariate'], split_reference_table
+    )
+    if 'split_covariate_id' in cov_info :
+        split_covariate_id     = cov_info['split_covariate_id']
+        fit_split_reference_id = cov_info['split_reference_id']
+        split_reference_list   = cov_info['split_reference_list']
+        fit_split_reference    = split_reference_list[fit_split_reference_id]
+    #
+    # minimum_age_id
+    minimum_age_id = 0
+    minimum_age    = fit_tables['age'][minimum_age_id]['age']
+    for (age_id, row) in enumerate(fit_tables['age']) :
+        if row['age'] < minimum_age :
+            minimum_age_id = age_id
+            minimum_age    = row['age']
+    #
+    # n_covariate
+    n_covariate = len( fit_tables['covariate'] )
+    #
+    # parent_node_id
+    parent_node_name = None
+    for row in fit_tables['option'] :
+        assert row['option_name'] != 'parent_node_id'
+        if row['option_name'] == 'parent_node_name' :
+            parent_node_name = row['option_value']
+    assert parent_node_name is not None
+    parent_node_id = at_cascade.table_name2id(
+        fit_tables['node'], 'node', parent_node_name
+    )
+    #
+    # child_job_list
+    child_job_list = possible_child_job_list(
+        option_all_table       = option_all_table,
+        node_split_table       = node_split_table ,
+        split_reference_table  = split_reference_table ,
+        fit_node_id            = parent_node_id,
+        node_table             = fit_tables['node'],
+        covariate_table        = fit_tables['covariate'],
+    )
+    #
+    # cov_reference_dict
+    n_covariate  = len( fit_tables['covariate'] )
+    cov_reference_dict = dict()
+    if job_table == None :
+        #
+        # cov_reference_list
+        cov_reference_list = get_cov_reference_list(
             n_covariate,
             cov_reference_table,
-            shift_node_id,
-            shift_split_reference_id
-         )
-         #
-         # cov_reference[ (shift_node_id, shift_split_reference_id) ]
-         key                     = child_job
-         cov_reference_dict[key] = cov_reference_list
-   #
-   # tbl_name
-   tbl_name = 'avgint'
-   #
-   # col_name
-   col_name = [
-      'integrand_id',
-      'node_id',
-      'subgroup_id',
-      'weight_id',
-      'age_lower',
-      'age_upper',
-      'time_lower',
-      'time_upper',
-   ]
-   #
-   # col_tyype
-   col_type = [
-      'integer',
-      'integer',
-      'integer',
-      'integer',
-      'real',
-      'real',
-      'real',
-      'real',
-   ]
-   #
-   # add covariates to col_name and col_type
-   for covariate_id in range( n_covariate ) :
-      col_name.append( 'x_' + str(covariate_id) )
-      col_type.append( 'real' )
-   #
-   # add the smoothing grid columns to col_name and col_type
-   col_name += [ 'c_age_id', 'c_time_id', 'c_split_reference_id' ]
-   col_type += 3 * ['integer']
-   #
-   # name_rate2integrand
-   name_rate2integrand = {
-      'pini':   'prevalence',
-      'iota':   'Sincidence',
-      'rho':    'remission',
-      'chi':    'mtexcess',
-   }
-   #
-   # initialize row_list
-   row_list = list()
-   #
-   # mulcov_id
-   for mulcov_id in range( len( fit_tables['mulcov'] ) ) :
-      #
-      # mulcov_row
-      mulcov_row = fit_tables['mulcov'][mulcov_id]
-      #
-      # group_smooth_id
-      group_smooth_id = mulcov_row['group_smooth_id']
-      if not group_smooth_id is None :
-         #
-         # integrand_id
-         integrand_name  = 'mulcov_' + str(mulcov_id)
-         integrand_id    = at_cascade.table_name2id(
-            fit_tables['integrand'], 'integrand', integrand_name
-         )
-         #
-         # grid_row
-         for grid_row in fit_tables['smooth_grid'] :
-            if grid_row['smooth_id'] == group_smooth_id :
-               #
-               # age_id
-               age_id    = grid_row['age_id']
-               age_lower = fit_tables['age'][age_id]['age']
-               age_upper = age_lower
-               #
-               # time_id
-               time_id    = grid_row['time_id']
-               time_lower = fit_tables['time'][time_id]['time']
-               time_upper = time_lower
-               #
-               # row
-               node_id            = None
-               subgroup_id        = 0
-               weight_id          = None
-               split_reference_id = None
-               row = [
-                  integrand_id,
-                  node_id,
-                  subgroup_id,
-                  weight_id,
-                  age_lower,
-                  age_upper,
-                  time_lower,
-                  time_upper,
-               ]
-               row += n_covariate * [ None ]
-               row += [ age_id, time_id, split_reference_id ]
-               #
-               # add to row_list
-               row_list.append( row )
-   #
-   # rate_name
-   for rate_name in name_rate2integrand :
-      #
-      # rate_id
-      rate_id = at_cascade.table_name2id(
-         fit_tables['rate'], 'rate', rate_name
-      )
-      #
-      # parent_smooth_id
-      parent_smooth_id = fit_tables['rate'][rate_id]['parent_smooth_id']
-      if not parent_smooth_id is None :
-         #
-         # integrand_id
-         integrand_name  = name_rate2integrand[rate_name]
-         integrand_id    = at_cascade.table_name2id(
-            fit_tables['integrand'], 'integrand', integrand_name
-         )
-         #
-         # grid_row
-         for grid_row in fit_tables['smooth_grid'] :
-            if grid_row['smooth_id'] == parent_smooth_id :
-               #
-               # age_id
-               age_id    = grid_row['age_id']
-               age_lower = fit_tables['age'][age_id]['age']
-               age_upper = age_lower
-               #
-               # prior for pini must use age index zero
-               if rate_name == 'pini' :
-                  assert age_id == minimum_age_id
-               #
-               # time_id
-               time_id    = grid_row['time_id']
-               time_lower = fit_tables['time'][time_id]['time']
-               time_upper = time_lower
-               #
-               # key
-               for key in cov_reference_dict :
-                  #
-                  # node_id
-                  node_id = key[0]
-                  #
-                  # split_reference_id
-                  split_reference_id = key[1]
-                  #
-                  # row
-                  subgroup_id = 0
-                  weight_id   = None
-                  row = [
-                     integrand_id,
-                     node_id,
-                     subgroup_id,
-                     weight_id,
-                     age_lower,
-                     age_upper,
-                     time_lower,
-                     time_upper,
-                  ]
-                  row += cov_reference_dict[key]
-                  row += [ age_id, time_id, split_reference_id ]
-                  #
-                  # add to row_list
-                  row_list.append( row )
-   #
-   # put new avgint table in fit_database
-   connection    = dismod_at.create_connection(
-      fit_database, new = False, readonly = False
-   )
-   command       = 'DROP TABLE IF EXISTS ' + tbl_name
-   dismod_at.sql_command(connection, command)
-   dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
-   connection.close()
+            parent_node_id,
+            fit_split_reference_id
+        )
+        # cov_reference[ (parent_node_id, fit_split_reference_id) ]
+        key                     = (parent_node_id, fit_split_reference_id)
+        cov_reference_dict[key] = cov_reference_list
+    else :
+        #
+        # (shift_node_id, shift_split_reference_id)
+        for child_job in child_job_list :
+            (shift_node_id, shift_split_reference_id) = child_job
+            #
+            # cov_reference_list
+            node_id = fit_tables['node'][shift_node_id]['parent']
+            assert shift_node_id == parent_node_id or node_id == parent_node_id
+            cov_reference_list = get_cov_reference_list(
+                n_covariate,
+                cov_reference_table,
+                shift_node_id,
+                shift_split_reference_id
+            )
+            #
+            # cov_reference[ (shift_node_id, shift_split_reference_id) ]
+            key                     = child_job
+            cov_reference_dict[key] = cov_reference_list
+    #
+    # tbl_name
+    tbl_name = 'avgint'
+    #
+    # col_name
+    col_name = [
+        'integrand_id',
+        'node_id',
+        'subgroup_id',
+        'weight_id',
+        'age_lower',
+        'age_upper',
+        'time_lower',
+        'time_upper',
+    ]
+    #
+    # col_tyype
+    col_type = [
+        'integer',
+        'integer',
+        'integer',
+        'integer',
+        'real',
+        'real',
+        'real',
+        'real',
+    ]
+    #
+    # add covariates to col_name and col_type
+    for covariate_id in range( n_covariate ) :
+        col_name.append( 'x_' + str(covariate_id) )
+        col_type.append( 'real' )
+    #
+    # add the smoothing grid columns to col_name and col_type
+    col_name += [ 'c_age_id', 'c_time_id', 'c_split_reference_id' ]
+    col_type += 3 * ['integer']
+    #
+    # name_rate2integrand
+    name_rate2integrand = {
+        'pini':   'prevalence',
+        'iota':   'Sincidence',
+        'rho':    'remission',
+        'chi':    'mtexcess',
+    }
+    #
+    # initialize row_list
+    row_list = list()
+    #
+    # mulcov_id
+    for mulcov_id in range( len( fit_tables['mulcov'] ) ) :
+        #
+        # mulcov_row
+        mulcov_row = fit_tables['mulcov'][mulcov_id]
+        #
+        # group_smooth_id
+        group_smooth_id = mulcov_row['group_smooth_id']
+        if not group_smooth_id is None :
+            #
+            # integrand_id
+            integrand_name  = 'mulcov_' + str(mulcov_id)
+            integrand_id    = at_cascade.table_name2id(
+                fit_tables['integrand'], 'integrand', integrand_name
+            )
+            #
+            # grid_row
+            for grid_row in fit_tables['smooth_grid'] :
+                if grid_row['smooth_id'] == group_smooth_id :
+                    #
+                    # age_id
+                    age_id    = grid_row['age_id']
+                    age_lower = fit_tables['age'][age_id]['age']
+                    age_upper = age_lower
+                    #
+                    # time_id
+                    time_id    = grid_row['time_id']
+                    time_lower = fit_tables['time'][time_id]['time']
+                    time_upper = time_lower
+                    #
+                    # row
+                    node_id            = None
+                    subgroup_id        = 0
+                    weight_id          = None
+                    split_reference_id = None
+                    row = [
+                        integrand_id,
+                        node_id,
+                        subgroup_id,
+                        weight_id,
+                        age_lower,
+                        age_upper,
+                        time_lower,
+                        time_upper,
+                    ]
+                    row += n_covariate * [ None ]
+                    row += [ age_id, time_id, split_reference_id ]
+                    #
+                    # add to row_list
+                    row_list.append( row )
+    #
+    # rate_name
+    for rate_name in name_rate2integrand :
+        #
+        # rate_id
+        rate_id = at_cascade.table_name2id(
+            fit_tables['rate'], 'rate', rate_name
+        )
+        #
+        # parent_smooth_id
+        parent_smooth_id = fit_tables['rate'][rate_id]['parent_smooth_id']
+        if not parent_smooth_id is None :
+            #
+            # integrand_id
+            integrand_name  = name_rate2integrand[rate_name]
+            integrand_id    = at_cascade.table_name2id(
+                fit_tables['integrand'], 'integrand', integrand_name
+            )
+            #
+            # grid_row
+            for grid_row in fit_tables['smooth_grid'] :
+                if grid_row['smooth_id'] == parent_smooth_id :
+                    #
+                    # age_id
+                    age_id    = grid_row['age_id']
+                    age_lower = fit_tables['age'][age_id]['age']
+                    age_upper = age_lower
+                    #
+                    # prior for pini must use age index zero
+                    if rate_name == 'pini' :
+                        assert age_id == minimum_age_id
+                    #
+                    # time_id
+                    time_id    = grid_row['time_id']
+                    time_lower = fit_tables['time'][time_id]['time']
+                    time_upper = time_lower
+                    #
+                    # key
+                    for key in cov_reference_dict :
+                        #
+                        # node_id
+                        node_id = key[0]
+                        #
+                        # split_reference_id
+                        split_reference_id = key[1]
+                        #
+                        # row
+                        subgroup_id = 0
+                        weight_id   = None
+                        row = [
+                            integrand_id,
+                            node_id,
+                            subgroup_id,
+                            weight_id,
+                            age_lower,
+                            age_upper,
+                            time_lower,
+                            time_upper,
+                        ]
+                        row += cov_reference_dict[key]
+                        row += [ age_id, time_id, split_reference_id ]
+                        #
+                        # add to row_list
+                        row_list.append( row )
+    #
+    # put new avgint table in fit_database
+    connection    = dismod_at.create_connection(
+        fit_database, new = False, readonly = False
+    )
+    command       = 'DROP TABLE IF EXISTS ' + tbl_name
+    dismod_at.sql_command(connection, command)
+    dismod_at.create_table(connection, tbl_name, col_name, col_type, row_list)
+    connection.close()

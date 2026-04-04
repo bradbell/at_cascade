@@ -14,8 +14,8 @@ Cascade Fits Starting at Root Node
 Prototype
 *********
 {xrst_literal
-   # BEGIN_DEF
-   # END_DEF
+    # BEGIN_DEF
+    # END_DEF
 }
 
 all_node_database
@@ -51,7 +51,7 @@ root_fit_database
 *****************
 This database is located at
 
-   *result_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
+    *result_dir*\ ``/``\ *root_node_name*\ ``/dismod.db``
 
 see :ref:`option_all_table@result_dir`
 and :ref:`option_all_table@root_node_name`.
@@ -118,111 +118,111 @@ import at_cascade
 # BEGIN_DEF
 # at_cascade.cascade_root_node
 def cascade_root_node(
-   all_node_database       ,
-   fit_goal_set            ,
-   no_ode_fit              = False,
-   fit_type_list           = [ 'both', 'fixed' ]
+    all_node_database       ,
+    fit_goal_set            ,
+    no_ode_fit              = False,
+    fit_type_list           = [ 'both', 'fixed' ]
 ) :
-   assert type(all_node_database)  == str
-   assert type(fit_goal_set)       == set
-   assert type(no_ode_fit)         == bool
-   assert type(fit_type_list)      == list
-   # END_DEF
-   #
-   # split_reference_table, option_all_table
-   connection  = dismod_at.create_connection(
-      all_node_database, new = False, readonly = True
-   )
-   split_reference_table = dismod_at.get_table_dict(
-      connection, 'split_reference'
-   )
-   option_all_table = dismod_at.get_table_dict(connection, 'option_all')
-   connection.close()
-   #
-   # option_all_dict
-   option_all_dict = dict()
-   for row in option_all_table :
-      option_all_dict[ row['option_name'] ] = row['option_value']
-   #
-   # root_node_name, root_database, max_number_cpu, result_dir
-   root_node_name     = option_all_dict['root_node_name']
-   root_database      = option_all_dict['root_database']
-   result_dir         = option_all_dict['result_dir']
-   max_number_cpu     = 1
-   if 'max_number_cpu' in option_all_dict :
-      max_number_cpu = int( option_all_dict['max_number_cpu'] )
-   #
-   # check root_node_name
-   parent_node_name = at_cascade.get_parent_node(root_database)
-   if parent_node_name != root_node_name :
-      msg  = f'{root_database} parent_node_name = {parent_node_name}\n'
-      msg += f'{all_node_database} root_node_name = {root_node_name}'
-      assert False, msg
-   #
-   # root_fit_database
-   root_fit_database = f'{result_dir}/{root_node_name}/dismod.db'
-   if not os.path.exists( f'{result_dir}/{root_node_name}' ) :
-      os.makedirs( f'{result_dir}/{root_node_name}' )
-   if not no_ode_fit :
-      at_cascade.copy_root_db(root_database, root_fit_database)
-      at_cascade.omega_constraint(all_node_database, root_fit_database)
-   else :
-      at_cascade.no_ode_fit(
-         all_node_database  = all_node_database,
-         root_database      = root_database,
-         option_all_dict    = option_all_dict,
-         fit_type           = fit_type_list[0],
-      )
-   #
-   # node_table, covariate_table, fit_integrand
-   fit_or_root = at_cascade.fit_or_root_class(
-      root_fit_database, root_database
-   )
-   node_table      = fit_or_root.get_table('node')
-   covariate_table = fit_or_root.get_table('covariate')
-   avgint_table    = fit_or_root.get_table('avgint')
-   if len(avgint_table) != 0 :
-      msg = 'cascade_root_node: avgint table is not empty'
-      assert False, msg
-   fit_integrand = at_cascade.get_fit_integrand(fit_or_root)
-   fit_or_root.close()
-   #
-   # root_node_id
-   root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
-   #
-   # root_split_reference_id
-   if len(split_reference_table) == 0 :
-      root_split_reference_id = None
-   else :
-      cov_info = at_cascade.get_cov_info(
-         option_all_table, covariate_table, split_reference_table
-      )
-      root_split_reference_id = cov_info['split_reference_id']
-   #
-   # job_table
-   job_table = at_cascade.create_job_table(
-      all_node_database          = all_node_database,
-      node_table                 = node_table,
-      start_node_id              = root_node_id,
-      start_split_reference_id   = root_split_reference_id,
-      fit_goal_set               = fit_goal_set,
-   )
-   #
-   # start_job_id
-   start_job_id = 0
-   #
-   # skip_start_job
-   skip_start_job = False
-   #
-   # fit_one_process
-   at_cascade.fit_parallel(
-      job_table         = job_table ,
-      start_job_id      = start_job_id,
-      all_node_database = all_node_database,
-      node_table        = node_table,
-      fit_integrand     = fit_integrand,
-      skip_start_job    = skip_start_job,
-      max_number_cpu    = max_number_cpu,
-      fit_type_list     = fit_type_list,
-      shared_unique     = '',
-   )
+    assert type(all_node_database)  == str
+    assert type(fit_goal_set)       == set
+    assert type(no_ode_fit)         == bool
+    assert type(fit_type_list)      == list
+    # END_DEF
+    #
+    # split_reference_table, option_all_table
+    connection  = dismod_at.create_connection(
+        all_node_database, new = False, readonly = True
+    )
+    split_reference_table = dismod_at.get_table_dict(
+        connection, 'split_reference'
+    )
+    option_all_table = dismod_at.get_table_dict(connection, 'option_all')
+    connection.close()
+    #
+    # option_all_dict
+    option_all_dict = dict()
+    for row in option_all_table :
+        option_all_dict[ row['option_name'] ] = row['option_value']
+    #
+    # root_node_name, root_database, max_number_cpu, result_dir
+    root_node_name     = option_all_dict['root_node_name']
+    root_database      = option_all_dict['root_database']
+    result_dir         = option_all_dict['result_dir']
+    max_number_cpu     = 1
+    if 'max_number_cpu' in option_all_dict :
+        max_number_cpu = int( option_all_dict['max_number_cpu'] )
+    #
+    # check root_node_name
+    parent_node_name = at_cascade.get_parent_node(root_database)
+    if parent_node_name != root_node_name :
+        msg  = f'{root_database} parent_node_name = {parent_node_name}\n'
+        msg += f'{all_node_database} root_node_name = {root_node_name}'
+        assert False, msg
+    #
+    # root_fit_database
+    root_fit_database = f'{result_dir}/{root_node_name}/dismod.db'
+    if not os.path.exists( f'{result_dir}/{root_node_name}' ) :
+        os.makedirs( f'{result_dir}/{root_node_name}' )
+    if not no_ode_fit :
+        at_cascade.copy_root_db(root_database, root_fit_database)
+        at_cascade.omega_constraint(all_node_database, root_fit_database)
+    else :
+        at_cascade.no_ode_fit(
+            all_node_database  = all_node_database,
+            root_database      = root_database,
+            option_all_dict    = option_all_dict,
+            fit_type           = fit_type_list[0],
+        )
+    #
+    # node_table, covariate_table, fit_integrand
+    fit_or_root = at_cascade.fit_or_root_class(
+        root_fit_database, root_database
+    )
+    node_table      = fit_or_root.get_table('node')
+    covariate_table = fit_or_root.get_table('covariate')
+    avgint_table    = fit_or_root.get_table('avgint')
+    if len(avgint_table) != 0 :
+        msg = 'cascade_root_node: avgint table is not empty'
+        assert False, msg
+    fit_integrand = at_cascade.get_fit_integrand(fit_or_root)
+    fit_or_root.close()
+    #
+    # root_node_id
+    root_node_id = at_cascade.table_name2id(node_table, 'node', root_node_name)
+    #
+    # root_split_reference_id
+    if len(split_reference_table) == 0 :
+        root_split_reference_id = None
+    else :
+        cov_info = at_cascade.get_cov_info(
+            option_all_table, covariate_table, split_reference_table
+        )
+        root_split_reference_id = cov_info['split_reference_id']
+    #
+    # job_table
+    job_table = at_cascade.create_job_table(
+        all_node_database          = all_node_database,
+        node_table                 = node_table,
+        start_node_id              = root_node_id,
+        start_split_reference_id   = root_split_reference_id,
+        fit_goal_set               = fit_goal_set,
+    )
+    #
+    # start_job_id
+    start_job_id = 0
+    #
+    # skip_start_job
+    skip_start_job = False
+    #
+    # fit_one_process
+    at_cascade.fit_parallel(
+        job_table         = job_table ,
+        start_job_id      = start_job_id,
+        all_node_database = all_node_database,
+        node_table        = node_table,
+        fit_integrand     = fit_integrand,
+        skip_start_job    = skip_start_job,
+        max_number_cpu    = max_number_cpu,
+        fit_type_list     = fit_type_list,
+        shared_unique     = '',
+    )

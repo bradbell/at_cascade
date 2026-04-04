@@ -168,10 +168,10 @@ and for option_in.csv file its default value is true.
    no random or fixed effects.
 #. The following assert checked that the option file was not read twice::
 
-      assert csv_option_value == None
+        assert csv_option_value == None
 
-   This has been removed because one python session may fit different cases,
-   which could have different option values.
+    This has been removed because one python session may fit different cases,
+    which could have different option values.
 
 11-08
 =====
@@ -293,7 +293,7 @@ Change license notice to SPDX_ format.
 =====
 Fix the return value for :ref:`bilinear@spline_dict` function calls::
 
-   z = spline_dict[z_name](x, y)
+    z = spline_dict[z_name](x, y)
 
 so that the result z is a float and not a numpy array of size one.
 
@@ -303,8 +303,8 @@ so that the result z is a float and not a numpy array of size one.
    :ref:`csv.module-name`.
 2. Move
 
-   - read_csv_table to :ref:`csv.read_table-name`
-   - write_csv_table to :ref:`csv.write_table-name`
+    - read_csv_table to :ref:`csv.read_table-name`
+    - write_csv_table to :ref:`csv.write_table-name`
 
 10-06
 =====

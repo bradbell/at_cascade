@@ -4,9 +4,9 @@
 # ----------------------------------------------------------------------------
 {xrst_begin at_cascade}
 {xrst_spell
-   pypi
-   url
-   gz
+    pypi
+    url
+    gz
 }
 
 Cascading Dismod_at Analysis From Parent To Child Regions
@@ -14,7 +14,7 @@ Cascading Dismod_at Analysis From Parent To Child Regions
 
 Version
 *******
-at_cascade-2026.3.27
+at_cascade-2026.4.4
 
 Git Repository
 **************
@@ -24,19 +24,19 @@ Versions
 ********
 
 .. list-table::
-   :widths: auto
+    :widths: auto
 
-   * - This version
-     - at_cascade-2026.3.27
-   * - Documentation for latest version
-     - `latest <https://at-cascade.readthedocs.io/latest>`_
-   * - Documentation for most recent stable version
-     - `stable-2026 <https://at-cascade.readthedocs.io/stable-2026>`_
-   * - Most recent release of this stable version
-     - release-2026_
+    * - This version
+      - at_cascade-2026.4.4
+    * - Documentation for latest version
+      - `latest <https://at-cascade.readthedocs.io/latest>`_
+    * - Documentation for most recent stable version
+      - `stable-2026 <https://at-cascade.readthedocs.io/stable-2026>`_
+    * - Most recent release of this stable version
+      - release-2026_
 
 .. _release-2026: https://codeload.github.com/bradbell/
-   at_cascade/tar.gz/refs/tags/2026.0.0
+    at_cascade/tar.gz/refs/tags/2026.0.0
 
 
 Install
@@ -48,9 +48,9 @@ to determine the date corresponding to this version.
 The commands below install the at_cascade dependencies and then replace
 at_cascade using its most recent test version::
 
-   pip install at_cascade
-   pip uninstall -y at_cascade
-   pip install --index-url https://test.pypi.org/simple/ at_cascade
+    pip install at_cascade
+    pip uninstall -y at_cascade
+    pip install --index-url https://test.pypi.org/simple/ at_cascade
 
 On some systems you may need to replace ``pip`` by ``pip3`` .
 
@@ -58,15 +58,15 @@ On some systems you may need to replace ``pip`` by ``pip3`` .
 Children
 ********
 {xrst_toc_table
-   xrst/glossary.xrst
-   xrst/all_node_db.xrst
-   example/example.xrst
-   at_cascade/__init__.py
-   at_cascade/csv/__init__.py
-   xrst/wish_list.xrst
-   xrst/release_notes.xrst
-   xrst/math.xrst
-   xrst/bib.xrst
+    xrst/glossary.xrst
+    xrst/all_node_db.xrst
+    example/example.xrst
+    at_cascade/__init__.py
+    at_cascade/csv/__init__.py
+    xrst/wish_list.xrst
+    xrst/release_notes.xrst
+    xrst/math.xrst
+    xrst/bib.xrst
 }
 
 {xrst_end at_cascade}

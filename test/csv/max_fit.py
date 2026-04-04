@@ -14,7 +14,7 @@ import shutil
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 import dismod_at
 # BEGIN_PYTHON
@@ -109,47 +109,47 @@ csv_file['data_in.csv'] = header + \
 #
 #
 def main() :
-   #
-   # fit_dir
-   fit_dir = 'build/test/csv'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # write csv files
-   for name in csv_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( csv_file[name] )
-      file_ptr.close()
-   #
-   # csv.fit
-   at_cascade.csv.fit(fit_dir)
-   #
-   # data_table, integrand_table
-   root_database      = f'{fit_dir}/root.db'
-   connection         = dismod_at.create_connection(root_database)
-   data_table         = dismod_at.get_table_dict(connection, 'data')
-   integrand_table    = dismod_at.get_table_dict(connection, 'integrand')
-   connection.close()
-   #
-   # data_subset_table
-   fit_database      = f'{fit_dir}/n0/dismod.db'
-   connection        = dismod_at.create_connection(fit_database)
-   data_subset_table = dismod_at.get_table_dict(connection, 'data_subset')
-   connection.close()
-   #
-   # hold_in_count
-   hold_in_count = 0
-   for subset_row in data_subset_table :
-      data_id        = subset_row['data_id']
-      data_row       = data_table[data_id]
-      integrand_id   = data_row['integrand_id']
-      integrand_name = integrand_table[integrand_id]['integrand_name']
-      assert integrand_name == 'Sincidence'
-      if data_row['hold_out'] == 0 and subset_row['hold_out'] == 0 :
-         hold_in_count += 1
-   assert hold_in_count == max_fit
+    #
+    # fit_dir
+    fit_dir = 'build/test/csv'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # write csv files
+    for name in csv_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
+    #
+    # csv.fit
+    at_cascade.csv.fit(fit_dir)
+    #
+    # data_table, integrand_table
+    root_database      = f'{fit_dir}/root.db'
+    connection         = dismod_at.create_connection(root_database)
+    data_table         = dismod_at.get_table_dict(connection, 'data')
+    integrand_table    = dismod_at.get_table_dict(connection, 'integrand')
+    connection.close()
+    #
+    # data_subset_table
+    fit_database      = f'{fit_dir}/n0/dismod.db'
+    connection        = dismod_at.create_connection(fit_database)
+    data_subset_table = dismod_at.get_table_dict(connection, 'data_subset')
+    connection.close()
+    #
+    # hold_in_count
+    hold_in_count = 0
+    for subset_row in data_subset_table :
+        data_id        = subset_row['data_id']
+        data_row       = data_table[data_id]
+        integrand_id   = data_row['integrand_id']
+        integrand_name = integrand_table[integrand_id]['integrand_name']
+        assert integrand_name == 'Sincidence'
+        if data_row['hold_out'] == 0 and subset_row['hold_out'] == 0 :
+            hold_in_count += 1
+    assert hold_in_count == max_fit
 #
 if __name__ == '__main__' :
-   main()
-   print('csv_max_fit: OK')
+    main()
+    print('csv_max_fit: OK')
 # END_PYTHON

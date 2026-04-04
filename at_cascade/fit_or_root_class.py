@@ -70,45 +70,45 @@ import dismod_at
 import at_cascade
 #
 class fit_or_root_class :
-   #
-   # __init__
-   def __init__(self, fit_database, root_database) :
-      assert type(fit_database) == str
-      assert type(root_database) == str
-      #
-      self.fit_connection = dismod_at.create_connection(
-         fit_database, new = False, readonly = True
-      )
-      self.root_connection = dismod_at.create_connection(
-         root_database, new = False, readonly = True
-      )
-      self.open = True
-   #
-   # get_table
-   def get_table(self, table_name) :
-      assert type(table_name) == str
-      assert self.open
-      #
-      if table_name in at_cascade.constant_table_list :
-         table = dismod_at.get_table_dict(self.root_connection, table_name)
-      else :
-         table = dismod_at.get_table_dict(self.fit_connection, table_name)
-      return table
-   #
-   # null_row
-   def null_row(self, table_name) :
-      if table_name in at_cascade.constant_table_list :
-         connection = self.root_connection
-      else :
-         connection = self.fit_connection
-      (col_name, col_type) = dismod_at.get_name_type(connection, table_name)
-      row = dict()
-      for key in col_name :
-         row[key] = None
-      return row
-   #
-   # close
-   def close(self) :
-      self.fit_connection.close()
-      self.root_connection.close()
-      self.open = False
+    #
+    # __init__
+    def __init__(self, fit_database, root_database) :
+        assert type(fit_database) == str
+        assert type(root_database) == str
+        #
+        self.fit_connection = dismod_at.create_connection(
+            fit_database, new = False, readonly = True
+        )
+        self.root_connection = dismod_at.create_connection(
+            root_database, new = False, readonly = True
+        )
+        self.open = True
+    #
+    # get_table
+    def get_table(self, table_name) :
+        assert type(table_name) == str
+        assert self.open
+        #
+        if table_name in at_cascade.constant_table_list :
+            table = dismod_at.get_table_dict(self.root_connection, table_name)
+        else :
+            table = dismod_at.get_table_dict(self.fit_connection, table_name)
+        return table
+    #
+    # null_row
+    def null_row(self, table_name) :
+        if table_name in at_cascade.constant_table_list :
+            connection = self.root_connection
+        else :
+            connection = self.fit_connection
+        (col_name, col_type) = dismod_at.get_name_type(connection, table_name)
+        row = dict()
+        for key in col_name :
+            row[key] = None
+        return row
+    #
+    # close
+    def close(self) :
+        self.fit_connection.close()
+        self.root_connection.close()
+        self.open = False

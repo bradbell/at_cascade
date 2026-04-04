@@ -4,12 +4,12 @@
 # ---------------------------------------------------------------------------
 import sys
 def main() :
-   dict_obj = { 'a' : 1, 'z' : 2 , 'd' : 3 }
-   dict_obj.update( {'z' : 4,  'c' : 5} )
-   assert list( dict_obj.keys() ) == [ 'a', 'z', 'd', 'c' ]
-   assert list( dict_obj.values() ) == [ 1, 4, 3, 5 ]
+    dict_obj = { 'a' : 1, 'z' : 2 , 'd' : 3 }
+    dict_obj.update( {'z' : 4,  'c' : 5} )
+    assert list( dict_obj.keys() ) == [ 'a', 'z', 'd', 'c' ]
+    assert list( dict_obj.values() ) == [ 1, 4, 3, 5 ]
 #
 if __name__ == '__main__' :
-   main()
-   print('dict_order: OK')
-   sys.exit(0)
+    main()
+    print('dict_order: OK')
+    sys.exit(0)

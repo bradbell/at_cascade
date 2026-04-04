@@ -171,7 +171,7 @@ For the age index *i* equal 0 through
 and time index *j* equal 0 through
 :ref:`n_omega_time-1<omega_grid@omega_time_grid Table@n_omega_time>` ::
 
-   omega_all_id + i * n_omega_time + j
+    omega_all_id + i * n_omega_time + j
 
 is the value of *omega_all_id* in the omega_all table where the
 *omega_all_value* is located
@@ -281,7 +281,7 @@ except for measurement noise multipliers.
 To be specific, the bound on the covariate multiplier is as large as possible
 under the condition
 
-   *max_abs_effect* <= | *mul_bnd* * ( *cov_value* - *cov_ref* ) |
+    *max_abs_effect* <= | *mul_bnd* * ( *cov_value* - *cov_ref* ) |
 
 where *mul_bnd* is the non-negative covariate multiplier bound,
 *cov_value* is a data table value of the covariate,

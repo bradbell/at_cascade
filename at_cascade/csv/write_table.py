@@ -15,8 +15,8 @@ Create A CSV File from a Table
 Prototype
 *********
 {xrst_literal
-   BEGIN_DEF
-   END_DEF
+    BEGIN_DEF
+    END_DEF
 }
 
 table
@@ -40,22 +40,22 @@ Upon return, this file has ``len(`` *table* ``)`` + 1 lines,
 
 .. list-table::
 
-   * - columns[0]
-     - columns[1]
-     - columns[2]
-     - ...
-   * - table[0][ columns[0] ]
-     - table[0][ columns[1] ]
-     - table[0][ columns[2] ]
-     - ...
-   * - table[1][ columns[0] ]
-     - table[1][ columns[1] ]
-     - table[1][ columns[2] ]
-     - ...
-   * - \:
-     - \:
-     - \:
-     - ...
+    * - columns[0]
+      - columns[1]
+      - columns[2]
+      - ...
+    * - table[0][ columns[0] ]
+      - table[0][ columns[1] ]
+      - table[0][ columns[2] ]
+      - ...
+    * - table[1][ columns[0] ]
+      - table[1][ columns[1] ]
+      - table[1][ columns[2] ]
+      - ...
+    * - \:
+      - \:
+      - \:
+      - ...
 
 Example
 *******
@@ -67,19 +67,19 @@ Example
 # BEGIN_DEF
 # at_cascade.csv.write_table
 def write_table(
-   file_name  = None,
-   table      = None,
-   columns    = None,
+    file_name  = None,
+    table      = None,
+    columns    = None,
 ) :
-   assert type(file_name)  == str
-   assert type(table)      == list
-   assert type(columns) == list or columns == None
-   if columns == None :
-      columns = table[0].keys()
-   # END_DEF
-   #
-   file_ptr    = open(file_name, 'w')
-   writer      = csv.DictWriter(file_ptr, fieldnames = columns)
-   writer.writeheader()
-   writer.writerows( table )
-   file_ptr.close()
+    assert type(file_name)  == str
+    assert type(table)      == list
+    assert type(columns) == list or columns == None
+    if columns == None :
+        columns = table[0].keys()
+    # END_DEF
+    #
+    file_ptr    = open(file_name, 'w')
+    writer      = csv.DictWriter(file_ptr, fieldnames = columns)
+    writer.writeheader()
+    writer.writerows( table )
+    file_ptr.close()

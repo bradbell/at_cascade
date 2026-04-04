@@ -12,21 +12,21 @@ import copy
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 # --------------------------------------------------------------------------
 # {xrst_begin csv.binomial}
 # {xrst_spell
-#     const
-#     dage
-#     def
-#     dtime
-#     eps
-#     iter
-#     num
-#     numpy
-#     sincidence
-#     std
+#       const
+#       dage
+#       def
+#       dtime
+#       eps
+#       iter
+#       num
+#       numpy
+#       sincidence
+#       std
 # }
 # {xrst_comment_ch #}
 #
@@ -39,9 +39,9 @@ import at_cascade
 # is the success rate in the binomial distribution:
 # {xrst_code py}
 def binomial_rate(sample_size, mean_rate) :
-   count = numpy.random.binomial(n = sample_size, p = mean_rate)
-   rate  = count / sample_size
-   return rate
+    count = numpy.random.binomial(n = sample_size, p = mean_rate)
+    rate  = count / sample_size
+    return rate
 # {xrst_code}
 #
 # random_seed
@@ -122,16 +122,16 @@ n0
 omega_truth = 0.01
 fit_file['covariate.csv'] = 'node_name,sex,age,time,omega\n'
 for sex in [ 'female', 'male' ] :
-   for age in age_grid :
-      for time in time_grid :
-         row   = f'n0,{sex},{age},{time},{omega_truth}\n'
-         fit_file['covariate.csv'] += row
+    for age in age_grid :
+        for time in time_grid :
+            row   = f'n0,{sex},{age},{time},{omega_truth}\n'
+            fit_file['covariate.csv'] += row
 # {xrst_code}
 #
 # prior.csv
 # =========
-# #. uniform_eps_0.1 is uniform on the interval [eps,.1] where eps = 1e-6
-# #. delta_prior is log Gaussian with mean 0, std 0.03, and eta=1e-5
+# #.  uniform_eps_0.1 is uniform on the interval [eps,.1] where eps = 1e-6
+# #.  delta_prior is log Gaussian with mean 0, std 0.03, and eta=1e-5
 # {xrst_code py}
 fit_file['prior.csv'] = \
 '''name,density,mean,std,eta,lower,upper
@@ -147,8 +147,8 @@ delta_prior,log_gaussian,0.0,0.03,1e-5,,
 # {xrst_code py}
 data = 'rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value\n'
 for age in age_grid :
-   for time in time_grid :
-      data += f'iota,{age},{time},uniform_eps_0.1,delta_prior,delta_prior,\n'
+    for time in time_grid :
+        data += f'iota,{age},{time},uniform_eps_0.1,delta_prior,delta_prior,\n'
 fit_file['parent_rate.csv'] = data
 # {xrst_code}
 #
@@ -184,8 +184,8 @@ fit_file['mulcov.csv'] = \
 # Rest of Source Code
 # *******************
 # {xrst_literal
-#  # BEGIN_REST_OF_SOURCE
-#  # END_REST_OF_SOURCE
+#   # BEGIN_REST_OF_SOURCE
+#   # END_REST_OF_SOURCE
 # }
 #
 # {xrst_end csv.binomial}
@@ -193,94 +193,94 @@ fit_file['mulcov.csv'] = \
 # BEGIN_REST_OF_SOURCE
 # fit
 def fit(fit_dir) :
-   #
-   # csv files in fit_file
-   for name in fit_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( fit_file[name] )
-      file_ptr.close()
-   #
-   # row
-   row = dict()
-   row['node_name']       = 'n0'
-   row['integrand_name']  = 'prevalence'
-   row['hold_out']        = 0
-   row['density_name']    = 'binomial'
-   #
-   # table
-   table   = list()
-   data_id = -1
-   for sex in [ 'female', 'male' ] :
-      for age in age_grid[1:] :
-         for time in time_grid :
-            data_id += 1
-            #
-            # row
-            row['sex']          = sex
-            row['age_lower']    = age
-            row['age_upper']    = age
-            row['time_lower']   = time
-            row['time_upper']   = time
-            row['data_id']      = data_id
-            relative_age        = age / age_grid[2]
-            prevalence          = 1.0 - math.exp( -no_effect_iota * age )
-            sample_size         =  relative_age**2 / prevalence
-            meas_value          = binomial_rate(sample_size, prevalence)
-            row['meas_value']   = meas_value
-            row['sample_size']  = sample_size
-            row['eta']          = None
-            row['nu']           = None
-            row['meas_std']     = None
-            #
-            table.append( copy.copy(row) )
-   #
-   # data_in.csv
-   at_cascade.csv.write_table(
-         file_name = f'{fit_dir}/data_in.csv' ,
-         table     = table ,
-   )
-   #
-   # fit, predict
-   at_cascade.csv.fit(fit_dir)
-   at_cascade.csv.predict(fit_dir)
-   #
-   # fit_predict_dict
-   fit_predict_table = at_cascade.csv.read_table(
-      file_name = f'{fit_dir}/fit_predict.csv'
-   )
-   #
-   # row
-   max_error  = 0.0
-   predict_node_set = set()
-   for row in fit_predict_table :
-      node_name = row['node_name']
-      assert node_name == 'n0'
-      sex            = row['sex']
-      age            = float( row['age'] )
-      integrand_name = row['integrand_name']
-      if integrand_name == 'Sincidence' :
-         node_name     = row['node_name']
-         time          = float( row['time'] )
-         avg_integrand = float( row['avg_integrand'] )
-         iota          = no_effect_iota
-         rel_error     = (1.0 - avg_integrand / iota )
-         max_error     = max(max_error, abs(rel_error) )
-   if max_error > 1e-1 :
-      msg  = f'max_error = {max_error}\n'
-      msg += 'binomial.py: Relative error is to large (see above)'
-      assert False, msg
+    #
+    # csv files in fit_file
+    for name in fit_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( fit_file[name] )
+        file_ptr.close()
+    #
+    # row
+    row = dict()
+    row['node_name']       = 'n0'
+    row['integrand_name']  = 'prevalence'
+    row['hold_out']        = 0
+    row['density_name']    = 'binomial'
+    #
+    # table
+    table   = list()
+    data_id = -1
+    for sex in [ 'female', 'male' ] :
+        for age in age_grid[1:] :
+            for time in time_grid :
+                data_id += 1
+                #
+                # row
+                row['sex']          = sex
+                row['age_lower']    = age
+                row['age_upper']    = age
+                row['time_lower']   = time
+                row['time_upper']   = time
+                row['data_id']      = data_id
+                relative_age        = age / age_grid[2]
+                prevalence          = 1.0 - math.exp( -no_effect_iota * age )
+                sample_size         =  relative_age**2 / prevalence
+                meas_value          = binomial_rate(sample_size, prevalence)
+                row['meas_value']   = meas_value
+                row['sample_size']  = sample_size
+                row['eta']          = None
+                row['nu']           = None
+                row['meas_std']     = None
+                #
+                table.append( copy.copy(row) )
+    #
+    # data_in.csv
+    at_cascade.csv.write_table(
+            file_name = f'{fit_dir}/data_in.csv' ,
+            table     = table ,
+    )
+    #
+    # fit, predict
+    at_cascade.csv.fit(fit_dir)
+    at_cascade.csv.predict(fit_dir)
+    #
+    # fit_predict_dict
+    fit_predict_table = at_cascade.csv.read_table(
+        file_name = f'{fit_dir}/fit_predict.csv'
+    )
+    #
+    # row
+    max_error  = 0.0
+    predict_node_set = set()
+    for row in fit_predict_table :
+        node_name = row['node_name']
+        assert node_name == 'n0'
+        sex            = row['sex']
+        age            = float( row['age'] )
+        integrand_name = row['integrand_name']
+        if integrand_name == 'Sincidence' :
+            node_name     = row['node_name']
+            time          = float( row['time'] )
+            avg_integrand = float( row['avg_integrand'] )
+            iota          = no_effect_iota
+            rel_error     = (1.0 - avg_integrand / iota )
+            max_error     = max(max_error, abs(rel_error) )
+    if max_error > 1e-1 :
+        msg  = f'max_error = {max_error}\n'
+        msg += 'binomial.py: Relative error is to large (see above)'
+        assert False, msg
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :
-   #
-   # fit_dir
-   fit_dir = 'build/example/csv/fit'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # fit
-   fit(fit_dir)
-   #
-   print('binomial.py: OK')
-   sys.exit(0)
+    #
+    # fit_dir
+    fit_dir = 'build/example/csv/fit'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # fit
+    fit(fit_dir)
+    #
+    print('binomial.py: OK')
+    sys.exit(0)
 # END_REST_OF_SOURCE

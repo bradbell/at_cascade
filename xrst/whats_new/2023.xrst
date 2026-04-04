@@ -273,12 +273,12 @@ to the directory where the primary database is located.
 #. There was a bug in :ref:`csv.predict-name` that would cause it to crash
    at unpredictable times with a message like::
 
-      ... /at_cascade/csv/read_table.py", line 49, in read_table
-      file_ptr   = open(file_name)
-                 ^^^^^^^^^^^^^^^
-      FileNotFoundError: [Errno 2] No such file ... /fit_predict.csv
+        ... /at_cascade/csv/read_table.py", line 49, in read_table
+        file_ptr   = open(file_name)
+                      ^^^^^^^^^^^^^^^
+        FileNotFoundError: [Errno 2] No such file ... /fit_predict.csv
 
-   This has been fixed.
+    This has been fixed.
 
 #. Sometime it takes a while for the trace.out file corresponding to a fit
    to have any information in it. The dismod_at initialization trace was
@@ -402,14 +402,14 @@ In the examples, move the assignment to ``new`` from just before a call to
 ``readonly`` to the call. For example,
 in :ref:`absolute_covariates.py-name` the text ::
 
-   new          = False
-   connection   = dismod_at.create_connection(root_database, new)
+    new          = False
+    connection   = dismod_at.create_connection(root_database, new)
 
 was changed to ::
 
-   connection   = dismod_at.create_connection(
-      root_database, new = False, readonly = False
-   )
+    connection   = dismod_at.create_connection(
+        root_database, new = False, readonly = False
+    )
 
 04-12
 =====

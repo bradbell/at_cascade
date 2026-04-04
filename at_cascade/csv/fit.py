@@ -48,8 +48,8 @@ Fit a CSV Specified Cascade
 Prototype
 *********
 {xrst_literal
-   # BEGIN_FIT
-   # END_FIT
+    # BEGIN_FIT
+    # END_FIT
 }
 
 Example
@@ -242,13 +242,13 @@ The following is a list of the rates and corresponding integrand
 that is a direct measurement of the rate:
 
 .. csv-table::
-   :widths: auto
-   :header-rows: 1
+    :widths: auto
+    :header-rows: 1
 
-   Rate,Integrand
-   iota,Sincidence
-   rho,remission
-   chi,mtexcess
+    Rate,Integrand
+    iota,Sincidence
+    rho,remission
+    chi,mtexcess
 
 The default value for *hold_out_integrand* is the empty string; i.e.,
 all of the data is real data and is included in the fits.
@@ -261,7 +261,7 @@ except for the measurement noise multipliers.
 To be specific, the bound on the covariate multiplier is as large as possible
 under the condition
 
-   *max_abs_effect* <= | *mul_bnd* * ( *cov_value* - *cov_ref* ) |
+    *max_abs_effect* <= | *mul_bnd* * ( *cov_value* - *cov_ref* ) |
 
 where *mul_bnd* is the non-negative covariate multiplier bound,
 *cov_value* is a data table value of the covariate,
@@ -306,7 +306,7 @@ sequentially, more output is printed to the screen, and the program
 can be cleanly stopped with a control-C.
 The default value for this option is
 {xrst_code py}
-   max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
+    max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
 {xrst_code}
 
 minimum_meas_cv
@@ -461,7 +461,7 @@ random_seed
 This integer is used to seed the random number generator.
 The default value for this option is
 {xrst_code py}
-   random_seed = int( time.time() )
+    random_seed = int( time.time() )
 {xrst_code}
 
 refit_split
@@ -548,12 +548,12 @@ and the amount of memory required by dismod_at.
 This depends on the values you choose in covariate.csv.
 The following summary of this savings is printed when csv.fit is run::
 
-   csv.fit: create_root_database: covariate counts
-   number (node, sex, covariate) combinations = ...
-   number of corresponding weights            = ...
-   number that are constant w.r.t. age        = ...
-   number that are constant w.r.t. time       = ...
-   number that are constant w.r.t. both       = ...
+    csv.fit: create_root_database: covariate counts
+    number (node, sex, covariate) combinations = ...
+    number of corresponding weights            = ...
+    number that are constant w.r.t. age        = ...
+    number that are constant w.r.t. time       = ...
+    number that are constant w.r.t. both       = ...
 
 
 population
@@ -764,7 +764,7 @@ The corresponding child rate as a function of age and time :math:`c(a, t)` is
 
 .. math::
 
-   c(a,t) = \exp(u) p(a,t)
+    c(a,t) = \exp(u) p(a,t)
 
 {xrst_comment ---------------------------------------------------------------}
 
@@ -863,10 +863,10 @@ This string is one of the following dismod_at density names:
 
 .. csv-table::
 
-   gaussian, cen_gaussian, log_gaussian, cen_log_gaussian
-   laplace,  cen_laplace,  log_laplace,  cen_log_laplace
-   students,            ,  log_students,
-   binomial,,,
+    gaussian, cen_gaussian, log_gaussian, cen_log_gaussian
+    laplace,  cen_laplace,  log_laplace,  cen_log_laplace
+    students,            ,  log_students,
+    binomial,,,
 
 
 node_name
@@ -930,18 +930,18 @@ Otherwise, it the sample size for a binomial distribution
 (see :ref:`csv.binomial-name` for an example):
 
 .. csv-table::
-   :widths: auto
+    :widths: auto
 
-   y,is the meas_value for this data
-   n,is the sample size
-   k,is the counts in the binomial distribution; k = y * n .
-   p,is the success rate; p is the mean of y
+    y,is the meas_value for this data
+    n,is the sample size
+    k,is the counts in the binomial distribution; k = y * n .
+    p,is the success rate; p is the mean of y
 
 The log of the binomial density function is:
 
 .. math::
 
-   \log {n \choose k} + k \log(p) + (n-k) \log(1 - p)
+    \log {n \choose k} + k \log(p) + (n-k) \log(1 - p)
 
 We suggest using gaussian approximation of the binomial when p * n
 is greater than 5.
@@ -1059,11 +1059,11 @@ each sample index.
 # Returns the node indices for the ancestors of the node specified by node_id.
 # The node specified by node_id is included in this set.
 def ancestor_set(node_table, node_id) :
-   result = { node_id }
-   while node_table[node_id]['parent'] != None :
-      node_id = node_table[node_id]['parent']
-      result.add(node_id)
-   return result
+    result = { node_id }
+    while node_table[node_id]['parent'] != None :
+        node_id = node_table[node_id]['parent']
+        result.add(node_id)
+    return result
 # ----------------------------------------------------------------------------
 # Sets global global_option_value to dict representation of option_fit.csv
 #
@@ -1087,108 +1087,108 @@ def ancestor_set(node_table, node_id) :
 #
 global_option_value = None
 def set_global_option_value(fit_dir, option_table, top_node_name) :
-   global global_option_value
-   assert type(global_option_value) == dict or global_option_value == None
-   assert type(option_table) == list
-   if len(option_table) > 0 :
-      assert type( option_table[0] ) == dict
-   #
-   # user
-   user = os.environ.get('USER')
-   if user == None :
-      user = 'none'
-   else :
-      user = user.replace(' ', '_')
-   #
-   # option_default
-   max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
-   random_seed    = int( time.time() )
-   # BEGIN_SORT_THIS_LINE_PLUS_2
-   option_default  = {
-      'absolute_covariates'           : (str,   None)               ,
-      'age_avg_split'                 : (str,   None)               ,
-      'asymptotic_rcond_lower'        : (float, 0.0)                ,
-      'balance_sex'                   : (bool,  True)               ,
-      'bound_random'                  : (float, float('inf'))       ,
-      'child_prior_dage'              : (bool, True)                ,
-      'child_prior_dtime'             : (bool, True)                ,
-      'child_prior_std_factor'        : (float,  2.0)               ,
-      'child_prior_std_factor_mulcov' : (float, None)               ,
-      'compress_interval'             : (str,   '100.0 100.0')      ,
-      'covariate_reference'           : (str,   'data_in.csv')      ,
-      'freeze_type'                   : (str,   'mean')             ,
-      'hold_out_integrand'            : (str,   None)               ,
-      'max_abs_effect'                : (float, 2.0)                ,
-      'max_fit'                       : (int,   250)                ,
-      'max_fit_parent'                : (int,   -1)                 ,
-      'max_num_iter_fixed'            : (int,   100)                ,
-      'max_number_cpu'                : (int,   max_number_cpu)     ,
-      'minimum_meas_cv'               : (float, 0.0)                ,
-      'no_ode_fit'                    : (bool,  True)               ,
-      'no_ode_ignore'                 : (str,   None)               ,
-      'number_sample'                 : (int,   20)                 ,
-      'ode_method'                    : (str,   'iota_pos_rho_zero'),
-      'ode_step_size'                 : (float, 10.0)               ,
-      'perturb_optimization_scale'    : (float, 0.3)                ,
-      'perturb_optimization_start'    : (float, 0.1)                ,
-      'quasi_fixed'                   : (bool,  True )              ,
-      'random_seed'                   : (int ,  random_seed )       ,
-      'refit_split'                   : (bool,  True )              ,
-      'root_node_name'                : (str,   top_node_name)      ,
-      'root_node_sex'                 : (str,   'both')             ,
-      'sample_method'                 : (str,   'asymptotic')       ,
-      'shared_memory_prefix'          : (str,   user)               ,
-      'tolerance_fixed'               : (float, 1e-4)               ,
-   }
-   # END_SORT_THIS_LINE_MINUS_2
-   #
-   # global_option_value
-   line_number      = 0
-   global_option_value = dict()
-   for row in option_table :
-      line_number += 1
-      name         = row['name']
-      if name in global_option_value :
-         msg  = f'csv.fit: Error: line {line_number} in option_fit.csv\n'
-         msg += f'the name {name} appears twice in this table'
-         assert False, msg
-      if not name in option_default :
-         msg  = f'csv.fit: Error: line {line_number} in option_fit.csv\n'
-         msg += f'{name} is not a valid option name'
-         assert False, msg
-      (option_type, default) = option_default[name]
-      value                  = row['value']
-      if value.strip() != '' :
-         if option_type == bool :
-            if value not in [ 'true', 'false' ] :
-               msg  = f'csv.fit: Error: line {line_number} in option_fit.csv\n'
-               msg += f'The value for {name} is not true or false'
-               assert False, msg
-            global_option_value[name] = value == 'true'
-         else :
-            global_option_value[name] = option_type( value )
-   #
-   # global_option_value
-   for name in option_default :
-      if name not in global_option_value :
-         (option_type, default) = option_default[name]
-         global_option_value[name] = default
-   #
-   # option_fit_out.csv
-   table = list()
-   for name in global_option_value :
-      value = global_option_value[name]
-      if type(value) == bool :
-         if value :
-            value = 'true'
-         else :
-            value = 'false'
-      row = { 'name' : name , 'value' : value }
-      table.append(row)
-   file_name = f'{fit_dir}/option_fit_out.csv'
-   at_cascade.csv.write_table(file_name, table)
-   #
-   assert type(global_option_value) == dict
+    global global_option_value
+    assert type(global_option_value) == dict or global_option_value == None
+    assert type(option_table) == list
+    if len(option_table) > 0 :
+        assert type( option_table[0] ) == dict
+    #
+    # user
+    user = os.environ.get('USER')
+    if user == None :
+        user = 'none'
+    else :
+        user = user.replace(' ', '_')
+    #
+    # option_default
+    max_number_cpu = max(1, multiprocessing.cpu_count() - 1)
+    random_seed    = int( time.time() )
+    # BEGIN_SORT_THIS_LINE_PLUS_2
+    option_default  = {
+        'absolute_covariates'           : (str,   None)               ,
+        'age_avg_split'                 : (str,   None)               ,
+        'asymptotic_rcond_lower'        : (float, 0.0)                ,
+        'balance_sex'                   : (bool,  True)               ,
+        'bound_random'                  : (float, float('inf'))       ,
+        'child_prior_dage'              : (bool, True)                ,
+        'child_prior_dtime'             : (bool, True)                ,
+        'child_prior_std_factor'        : (float,  2.0)               ,
+        'child_prior_std_factor_mulcov' : (float, None)               ,
+        'compress_interval'             : (str,   '100.0 100.0')      ,
+        'covariate_reference'           : (str,   'data_in.csv')      ,
+        'freeze_type'                   : (str,   'mean')             ,
+        'hold_out_integrand'            : (str,   None)               ,
+        'max_abs_effect'                : (float, 2.0)                ,
+        'max_fit'                       : (int,   250)                ,
+        'max_fit_parent'                : (int,   -1)                 ,
+        'max_num_iter_fixed'            : (int,   100)                ,
+        'max_number_cpu'                : (int,   max_number_cpu)     ,
+        'minimum_meas_cv'               : (float, 0.0)                ,
+        'no_ode_fit'                    : (bool,  True)               ,
+        'no_ode_ignore'                 : (str,   None)               ,
+        'number_sample'                 : (int,   20)                 ,
+        'ode_method'                    : (str,   'iota_pos_rho_zero'),
+        'ode_step_size'                 : (float, 10.0)               ,
+        'perturb_optimization_scale'    : (float, 0.3)                ,
+        'perturb_optimization_start'    : (float, 0.1)                ,
+        'quasi_fixed'                   : (bool,  True )              ,
+        'random_seed'                   : (int ,  random_seed )       ,
+        'refit_split'                   : (bool,  True )              ,
+        'root_node_name'                : (str,   top_node_name)      ,
+        'root_node_sex'                 : (str,   'both')             ,
+        'sample_method'                 : (str,   'asymptotic')       ,
+        'shared_memory_prefix'          : (str,   user)               ,
+        'tolerance_fixed'               : (float, 1e-4)               ,
+    }
+    # END_SORT_THIS_LINE_MINUS_2
+    #
+    # global_option_value
+    line_number      = 0
+    global_option_value = dict()
+    for row in option_table :
+        line_number += 1
+        name         = row['name']
+        if name in global_option_value :
+            msg  = f'csv.fit: Error: line {line_number} in option_fit.csv\n'
+            msg += f'the name {name} appears twice in this table'
+            assert False, msg
+        if not name in option_default :
+            msg  = f'csv.fit: Error: line {line_number} in option_fit.csv\n'
+            msg += f'{name} is not a valid option name'
+            assert False, msg
+        (option_type, default) = option_default[name]
+        value                  = row['value']
+        if value.strip() != '' :
+            if option_type == bool :
+                if value not in [ 'true', 'false' ] :
+                    msg  = f'csv.fit: Error: line {line_number} in option_fit.csv\n'
+                    msg += f'The value for {name} is not true or false'
+                    assert False, msg
+                global_option_value[name] = value == 'true'
+            else :
+                global_option_value[name] = option_type( value )
+    #
+    # global_option_value
+    for name in option_default :
+        if name not in global_option_value :
+            (option_type, default) = option_default[name]
+            global_option_value[name] = default
+    #
+    # option_fit_out.csv
+    table = list()
+    for name in global_option_value :
+        value = global_option_value[name]
+        if type(value) == bool :
+            if value :
+                value = 'true'
+            else :
+                value = 'false'
+        row = { 'name' : name , 'value' : value }
+        table.append(row)
+    file_name = f'{fit_dir}/option_fit_out.csv'
+    at_cascade.csv.write_table(file_name, table)
+    #
+    assert type(global_option_value) == dict
 # ----------------------------------------------------------------------------
 # Converts smoothing priors on a grid to a prior function
 #
@@ -1196,27 +1196,27 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
 # __call__: get the function value at one of the grid points
 #
 class smoothing_function :
-   def __init__(self, name) :
-      assert type(name) == str
-      self.name  = name
-      self.value = dict()
-   def set(self, age, time, value_prior, dage_prior, dtime_prior) :
-      assert type(age)         == float
-      assert type(time)        == float
-      assert type(value_prior) == str or type(value_prior) == float
-      assert type(dage_prior)  == str or dage_prior  == None
-      assert type(dtime_prior) == str or dtime_prior == None
-      if (age, time) in self.value :
-         msg  = f'name = {self.name}: '
-         msg += f'grid point with age = {age}, time = {time} '
-         msg += 'appears more than once'
-         assert False, msg
-      self.value[ (age, time) ] = (value_prior, dage_prior, dtime_prior)
-   def __call__(self, age, time) :
-      if (age, time) not in self.value :
-         msg = f'The grid for smoothing {self.name} is not rectangular'
-         assert False, msg
-      return self.value[ (age, time) ]
+    def __init__(self, name) :
+        assert type(name) == str
+        self.name  = name
+        self.value = dict()
+    def set(self, age, time, value_prior, dage_prior, dtime_prior) :
+        assert type(age)         == float
+        assert type(time)        == float
+        assert type(value_prior) == str or type(value_prior) == float
+        assert type(dage_prior)  == str or dage_prior  == None
+        assert type(dtime_prior) == str or dtime_prior == None
+        if (age, time) in self.value :
+            msg  = f'name = {self.name}: '
+            msg += f'grid point with age = {age}, time = {time} '
+            msg += 'appears more than once'
+            assert False, msg
+        self.value[ (age, time) ] = (value_prior, dage_prior, dtime_prior)
+    def __call__(self, age, time) :
+        if (age, time) not in self.value :
+            msg = f'The grid for smoothing {self.name} is not rectangular'
+            assert False, msg
+        return self.value[ (age, time) ]
 # ----------------------------------------------------------------------------
 # Converts weighting on a grid to a function
 #
@@ -1224,21 +1224,21 @@ class smoothing_function :
 # __call__: get the function value at one of the grid points
 #
 class weighting_function :
-   def __init__(self, index) :
-      assert type(index) == int
-      self.index  = index
-      self.value  = dict()
-      self.name   = f'weight_{index}'
-   def set(self, age, time, weight) :
-      assert type(age)         == float
-      assert type(time)        == float
-      assert type(weight)      == float
-      self.value[ (age, time) ] = weight
-   def __call__(self, age, time) :
-      if (age, time) not in self.value :
-         msg = f'The grid for weighting {self.name} is not rectangular'
-         assert False, msg
-      return self.value[ (age, time) ]
+    def __init__(self, index) :
+        assert type(index) == int
+        self.index  = index
+        self.value  = dict()
+        self.name   = f'weight_{index}'
+    def set(self, age, time, weight) :
+        assert type(age)         == float
+        assert type(time)        == float
+        assert type(weight)      == float
+        self.value[ (age, time) ] = weight
+    def __call__(self, age, time) :
+        if (age, time) not in self.value :
+            msg = f'The grid for weighting {self.name} is not rectangular'
+            assert False, msg
+        return self.value[ (age, time) ]
 # ----------------------------------------------------------------------------
 # Writes the root node data base
 #
@@ -1265,541 +1265,541 @@ class weighting_function :
 #
 # age_grid, time_grid, csv_covariate_table =
 def create_root_database(fit_dir) :
-   assert type(fit_dir) == str
-   #
-   # name_rate2integrand
-   name_rate2integrand = {
-      'pini':   'prevalence',
-      'iota':   'Sincidence',
-      'rho':    'remission',
-      'chi':    'mtexcess',
-   }
-   #
-   # output_file
-   output_file = f'{fit_dir}/root.db'
-   #
-   # input_table
-   input_table = dict()
-   input_list = [
-      'node',
-      'covariate',
-      'predict_integrand',
-      'prior',
-      'parent_rate',
-      'child_rate',
-      'mulcov',
-      'data_in',
-   ]
-   print('begin reading csv files')
-   for name in input_list :
-      file_name         = f'{fit_dir}/{name}.csv'
-      table             = at_cascade.csv.read_table(file_name)
-      input_table[name] = at_cascade.csv.empty_str(table, 'to_none')
-      at_cascade.csv.check_table(file_name, input_table[name])
-   print('begin creating root node database' )
-   #
-   # data_in_header
-   file_name      = f'{fit_dir}/data_in.csv'
-   data_in_header = at_cascade.csv.get_header(file_name)
-   #
-   # node_set
-   node_set       = set()
-   for row in input_table['node'] :
-      node_name   = row['node_name']
-      node_set.add( node_name )
-   #
-   # csv_covariate_table, covariate_list
-   # This is different from dismod_at_covariate table created below
-   csv_covariate_table = input_table['covariate']
-   exclude             = { 'node_name', 'sex', 'age', 'time', 'omega' }
-   covariate_list      = list( set( csv_covariate_table[0].keys() ) - exclude )
-   #
-   # cov_covariate_table
-   check_node_set      = set()
-   check_sex_set       = set()
-   for row in csv_covariate_table :
-      row['age']  = float( row['age'] )
-      row['time'] = float( row['time'] )
-      #
-      check_node_set.add( row['node_name'] )
-      check_sex_set.add(  row['sex'] )
-      #
-      row['omega'] = float( row['omega'] )
-      for covariate_name in covariate_list :
-         row[covariate_name] = float( row[covariate_name] )
-   if check_sex_set != { 'female', 'male' } :
-      print(check_sex_set)
-      msg  = 'The sexes above are in covariate.csv '
-      msg += 'but it should be female and male'
-      assert False, msg
-   if len(node_set - check_node_set) > 0 :
-      difference = node_set - check_node_set
-      msg  = f'{difference}\n'
-      msg += 'The nodes above are in node.csv but not in covariate.csv'
-      assert False, msg
-   if len(check_node_set - node_set) > 0 :
-      difference = check_node_set - node_set
-      msg  = f'{difference}\n'
-      msg += 'The nodes above are in covariate.csv but not in node.csv'
-      assert False, msg
-   #
-   # csv_covariate_table
-   csv_covariate_table = at_cascade.csv.covariate_both(csv_covariate_table)
-   #
-   # root_node_name, root_node_sex, random_seed
-   root_node_name = global_option_value['root_node_name']
-   root_node_sex  = global_option_value['root_node_sex']
-   random_seed    = global_option_value['random_seed']
-   #
-   # root_covariate_ref
-   root_covariate_ref = at_cascade.csv.covariate_avg(
-      csv_covariate_table, root_node_name, root_node_sex
-   )
-   assert set( covariate_list ) == set( root_covariate_ref.keys() )
-   #
-   # root_covariate_ref
-   absolute_covariates = global_option_value['absolute_covariates']
-   if absolute_covariates != None :
-      for covariate_name in absolute_covariates.split() :
-         if covariate_name not in covariate_list :
-            msg  = f'{covariate_name} is in option_fit absolute_covariates '
-            msg += 'but it is not in covariate.csv'
+    assert type(fit_dir) == str
+    #
+    # name_rate2integrand
+    name_rate2integrand = {
+        'pini':   'prevalence',
+        'iota':   'Sincidence',
+        'rho':    'remission',
+        'chi':    'mtexcess',
+    }
+    #
+    # output_file
+    output_file = f'{fit_dir}/root.db'
+    #
+    # input_table
+    input_table = dict()
+    input_list = [
+        'node',
+        'covariate',
+        'predict_integrand',
+        'prior',
+        'parent_rate',
+        'child_rate',
+        'mulcov',
+        'data_in',
+    ]
+    print('begin reading csv files')
+    for name in input_list :
+        file_name         = f'{fit_dir}/{name}.csv'
+        table             = at_cascade.csv.read_table(file_name)
+        input_table[name] = at_cascade.csv.empty_str(table, 'to_none')
+        at_cascade.csv.check_table(file_name, input_table[name])
+    print('begin creating root node database' )
+    #
+    # data_in_header
+    file_name      = f'{fit_dir}/data_in.csv'
+    data_in_header = at_cascade.csv.get_header(file_name)
+    #
+    # node_set
+    node_set       = set()
+    for row in input_table['node'] :
+        node_name   = row['node_name']
+        node_set.add( node_name )
+    #
+    # csv_covariate_table, covariate_list
+    # This is different from dismod_at_covariate table created below
+    csv_covariate_table = input_table['covariate']
+    exclude             = { 'node_name', 'sex', 'age', 'time', 'omega' }
+    covariate_list      = list( set( csv_covariate_table[0].keys() ) - exclude )
+    #
+    # cov_covariate_table
+    check_node_set      = set()
+    check_sex_set       = set()
+    for row in csv_covariate_table :
+        row['age']  = float( row['age'] )
+        row['time'] = float( row['time'] )
+        #
+        check_node_set.add( row['node_name'] )
+        check_sex_set.add(  row['sex'] )
+        #
+        row['omega'] = float( row['omega'] )
+        for covariate_name in covariate_list :
+            row[covariate_name] = float( row[covariate_name] )
+    if check_sex_set != { 'female', 'male' } :
+        print(check_sex_set)
+        msg  = 'The sexes above are in covariate.csv '
+        msg += 'but it should be female and male'
+        assert False, msg
+    if len(node_set - check_node_set) > 0 :
+        difference = node_set - check_node_set
+        msg  = f'{difference}\n'
+        msg += 'The nodes above are in node.csv but not in covariate.csv'
+        assert False, msg
+    if len(check_node_set - node_set) > 0 :
+        difference = check_node_set - node_set
+        msg  = f'{difference}\n'
+        msg += 'The nodes above are in covariate.csv but not in node.csv'
+        assert False, msg
+    #
+    # csv_covariate_table
+    csv_covariate_table = at_cascade.csv.covariate_both(csv_covariate_table)
+    #
+    # root_node_name, root_node_sex, random_seed
+    root_node_name = global_option_value['root_node_name']
+    root_node_sex  = global_option_value['root_node_sex']
+    random_seed    = global_option_value['random_seed']
+    #
+    # root_covariate_ref
+    root_covariate_ref = at_cascade.csv.covariate_avg(
+        csv_covariate_table, root_node_name, root_node_sex
+    )
+    assert set( covariate_list ) == set( root_covariate_ref.keys() )
+    #
+    # root_covariate_ref
+    absolute_covariates = global_option_value['absolute_covariates']
+    if absolute_covariates != None :
+        for covariate_name in absolute_covariates.split() :
+            if covariate_name not in covariate_list :
+                msg  = f'{covariate_name} is in option_fit absolute_covariates '
+                msg += 'but it is not in covariate.csv'
+                assert False, msg
+            root_covariate_ref[covariate_name] = 0.0
+    #
+    # forbidden_covariate
+    forbidden_covariate = set( data_in_header )
+    forbidden_covariate.add( "one" )
+    for covariate_name in covariate_list :
+        if covariate_name in forbidden_covariate :
+            msg  = f'cannot use the covariate name {covariate_name}\n'
+            msg += 'because it is "one" or a column in the data_in.csv file'
             assert False, msg
-         root_covariate_ref[covariate_name] = 0.0
-   #
-   # forbidden_covariate
-   forbidden_covariate = set( data_in_header )
-   forbidden_covariate.add( "one" )
-   for covariate_name in covariate_list :
-      if covariate_name in forbidden_covariate :
-         msg  = f'cannot use the covariate name {covariate_name}\n'
-         msg += 'because it is "one" or a column in the data_in.csv file'
-         assert False, msg
-   #
-   # dismod_at_covariate_table
-   value = at_cascade.csv.sex_name2value[root_node_sex]
-   dismod_at_covariate_table = [
-      { 'name': 'sex', 'reference': value, 'max_difference' : 0.5 }  ,
-      { 'name': 'one', 'reference': 0.0,   'max_difference' : None } ,
-   ]
-   for covariate_name in covariate_list :
-      dismod_at_covariate_table.append({
-         'name':            covariate_name,
-         'reference':       root_covariate_ref[covariate_name],
-         'max_difference' : None
-      })
-   #
-   # option_table
-   asymptotic_rcond_lower = global_option_value['asymptotic_rcond_lower']
-   age_avg_split      = global_option_value['age_avg_split']
-   bound_random       = global_option_value['bound_random']
-   compress_interval  = global_option_value['compress_interval']
-   hold_out_integrand = global_option_value['hold_out_integrand']
-   max_num_iter_fixed = global_option_value['max_num_iter_fixed']
-   ode_step_size      = global_option_value['ode_step_size']
-   tolerance_fixed    = global_option_value['tolerance_fixed']
-   minimum_meas_cv    = global_option_value['minimum_meas_cv']
-   ode_method         = global_option_value['ode_method']
-   #
-   quasi_fixed        = global_option_value['quasi_fixed'];
-   quasi_fixed        = str(quasi_fixed).lower()
-   #
-   #
-   if len(covariate_list) == 0 :
-      splitting_covariate = None
-   else :
-      splitting_covariate = 'sex'
-   option_table = [
-      { 'name' : 'asymptotic_rcond_lower', 'value' : asymptotic_rcond_lower },
-      { 'name' : 'age_avg_split',       'value' : age_avg_split             },
-      { 'name' : 'compress_interval',   'value' : compress_interval         },
-      { 'name' : 'hold_out_integrand',  'value' : hold_out_integrand        },
-      { 'name' : 'max_num_iter_fixed',  'value' : str( max_num_iter_fixed ) },
-      { 'name' : 'ode_step_size',       'value' : str( ode_step_size)       },
-      { 'name' : 'parent_node_name',    'value' : root_node_name            },
-      { 'name' : 'print_level_fixed',   'value' : '5'                       },
-      { 'name' : 'trace_init_fit_model','value' : 'true'                    },
-      { 'name' : 'random_seed',         'value' : str( random_seed )        },
-      { 'name' : 'tolerance_fixed',     'value' : str( tolerance_fixed)     },
-      { 'name' : 'meas_noise_effect',   'value' : 'add_std_scale_none'      },
-      { 'name' : 'quasi_fixed',         'value' : quasi_fixed               },
-      { 'name' : 'splitting_covariate', 'value' : splitting_covariate       },
-      { 'name' : 'rate_case'          , 'value' : ode_method                },
-   ]
-   if bound_random != float('inf') :
-      option_table['bound_random'] = bound_random
-   #
-   # spline_cov
-   age_grid, time_grid, spline_cov = at_cascade.csv.covariate_spline(
-      csv_covariate_table, node_set
-   )
-   #
-   # data_table
-   data_table     = input_table['data_in']
-   for (i_row, row) in enumerate(data_table) :
-      if i_row != int( row['data_id'] ) :
-         line = i_row + 2
-         msg  = f'Expected data_id = {i_row} in line {line} of data_in.csv'
-         assert False, msg
-      #
-      # age_mid
-      age_lower = float( row['age_lower'] )
-      age_upper = float( row['age_upper'] )
-      age_mid   = (age_lower + age_upper) / 2.0
-      #
-      # time_mid
-      time_lower = float( row['time_lower'] )
-      time_upper = float( row['time_upper'] )
-      time_mid   = (time_lower + time_upper) / 2.0
-      #
-      # row[c_j] for j = 0, ..., n_covariate - 1
-      node_name = row['node_name']
-      sex       = row['sex']
-      for index, covariate_name in enumerate( root_covariate_ref.keys() ) :
-         if sex != 'both' :
-            spline              = spline_cov[node_name][sex][covariate_name]
-            covariate_value     = spline(age_mid, time_mid)
-            row[covariate_name] = covariate_value
-         else :
-            row[covariate_name] = 0.0
-            for tmp in [ 'female', 'male' ] :
-               spline              = spline_cov[node_name][tmp][covariate_name]
-               covariate_value     = spline(age_mid, time_mid)
-               row[covariate_name] += covariate_value / 2.0
-      #
-      # row
-      row['node']       = row['node_name']
-      row['integrand']  = row['integrand_name']
-      row['density']    = row['density_name']
-      for key in [ 'eta', 'nu' ] :
-         if key in row :
-            if row[key] != None :
-               row[key] = float( row[key] )
-      row['age_lower']  = age_lower
-      row['age_upper']  = age_upper
-      row['time_lower'] = time_lower
-      row['time_upper'] = time_upper
-      row['weight']     = ''
-      row['subgroup']   = 'world'
-      row['sex']        = at_cascade.csv.sex_name2value[sex]
-      row['one']        = '1.0'
-   #
-   # integrand_table
-   integrand_set = set()
-   for row in data_table :
-      integrand_set.add( row['integrand_name'] )
-   for row in input_table['predict_integrand'] :
-      integrand_set.add( row['integrand_name'] )
-   for rate_name in name_rate2integrand :
-      integrand_set.add( name_rate2integrand[rate_name] )
-   integrand_table = list()
-   for integrand in integrand_set :
-      row = { 'name' : integrand , 'minimum_meas_cv'  : minimum_meas_cv }
-      integrand_table.append(row)
-   for mulcov_id in range( len( input_table['mulcov'] ) ) :
-      integrand_name = f'mulcov_{mulcov_id}'
-      if integrand_name not in integrand_set :
-         integrand_table.append( { 'name': integrand_name } )
-   #
-   # subgroup_table
-   subgroup_table = [{ 'subgroup' : 'world', 'group' : 'world' }]
-   #
-   # prior_table
-   prior_table = copy.copy( input_table['prior'] )
-   for row in prior_table :
-      for key in [ 'lower', 'upper', 'std', 'eta' ] :
-         if key in row :
-            if row[key] != None :
-               row[key] = float( row[key] )
-   #
-   # age_set, time_set
-   age_set  = set( age_grid )
-   time_set = set( time_grid )
-   for row in input_table['parent_rate'] :
-      age_set.add( float( row['age'] ) )
-      time_set.add( float( row['time'] ) )
-   #
-   # age_set, time_set
-   if len( data_table ) > 0 :
-      min_data_age  = data_table[0]['age_lower']
-      max_data_age  = data_table[0]['age_upper']
-      min_data_time = data_table[0]['time_lower']
-      max_data_time = data_table[0]['time_upper']
-      for row in data_table :
-         min_data_age  = min( min_data_age, row['age_lower'] )
-         max_data_age  = max( max_data_age, row['age_upper'] )
-         min_data_time = min( min_data_time, row['time_lower'] )
-         max_data_time = max( max_data_time, row['time_upper'] )
-      age_set.add(min_data_age)
-      age_set.add(max_data_age)
-      time_set.add(min_data_time)
-      time_set.add(max_data_time)
-   #
-   # arg_list, time_list
-   age_list  = sorted( list( age_set ) )
-   time_list = sorted( list( time_set ) )
-   #
-   # node_table, node_set
-   node_table = list()
-   for row_in in input_table['node'] :
-      row_out = { 'name' : row_in['node_name'] }
-      if row_in['parent_name'] == None :
-         row_out['parent'] = ''
-      else :
-         row_out['parent'] = row_in['parent_name']
-      node_table.append( row_out )
-   #
-   # cov_same
-   cov_same = at_cascade.csv.covariate_same(csv_covariate_table)
-   #
-   # weight_dict, weight_count
-   weight_dict    = dict()
-   weight_count   = 0
-   for row in csv_covariate_table :
-      node_name = row['node_name']
-      sex_name  = row['sex']
-      for covariate_name in covariate_list :
-         triple = (node_name, sex_name, covariate_name)
-         if cov_same[triple] == triple :
-            if triple not in weight_dict :
-               fun                 = weighting_function(weight_count, )
-               weight_count       += 1
-               weight_dict[triple] = fun
-            age    = row['age']
-            time   = row['time']
-            weight = row[covariate_name]
-            weight_dict[triple].set(age, time, weight)
-   #
-   # weight_dict
-   for node_name in node_set :
-      for sex in [ 'female', 'male', 'both' ] :
-         for cov_name in covariate_list :
-            triple = (node_name, sex, cov_name)
-            if cov_same[triple] != triple :
-               triple_other = cov_same[triple]
-               weight_dict[triple] = weight_dict[triple_other]
-   #
-   # weight_table, n_const
-   weight_table = list()
-   age_id_list  = [ age_list.index(age) for age in age_grid ]
-   time_id_list = [ time_list.index(time) for time in time_grid ]
-   age_0        = age_grid[0]
-   time_0       = time_grid[0]
-   n_const      = { 'age' : 0, 'time' : 0, 'both' : 0}
-   for triple in weight_dict :
-      if cov_same[triple] == triple :
-         fun        = weight_dict[triple]
-         index      = fun.index
-         name       = f'weight_{index}'
-         const_age  = True
-         const_time = True
-         for age in age_grid :
-            for time in time_grid :
-               const_age = const_age and fun(age_0, time)   == fun(age, time)
-               const_time= const_time and fun(age,  time_0) == fun(age, time)
-         row = {
-            'name'     : f'weight_{index}'   ,
-            'age_id'   : age_id_list         ,
-            'time_id'  : time_id_list        ,
-            'fun'      : fun                 ,
-         }
-         if const_age :
-            n_const['age']  += 1
-            row['age_id']    = [ age_list.index(age_0) ]
-         if const_time :
-            n_const['time'] += 1
-            row['time_id']   = [ time_list.index(time_0) ]
-         if const_age and const_time :
-            n_const['both'] += 1
-         weight_table.append(row)
-   #
-   # see csv.fit@Input Files@covarite.csv@Compression
-   print('csv.fit: create_root_database: covariate counts')
-   print('number (node, sex, covariate) combinations =', len(weight_dict) )
-   print('number of corresponding weights            =', weight_count)
-   print('number that are constant w.r.t. age        =', n_const['age'])
-   print('number that are constant w.r.t. time       =', n_const['time'])
-   print('number that are constant w.r.t. both       =', n_const['both'])
-   #
-   # rate_eff_cov_table
-   rate_eff_cov_table = list()
-   for triple in weight_dict :
-      #
-      fun         = weight_dict[triple]
-      index       = fun.index
-      weight_name = f'weight_{index}'
-      #
-      (node_name, sex_name, covariate_name) = triple
-      sex_value = at_cascade.csv.sex_name2value[sex_name]
-      #
-      row = {
-         'node_name'      : node_name       ,
-         'covariate_name' : covariate_name  ,
-         'split_value'    : sex_value       ,
-         'weight_name'    : weight_name     ,
-      }
-      rate_eff_cov_table.append(row)
-   #
-   # data_table
-   sex_value2name = dict()
-   for name in at_cascade.csv.sex_name2value :
-      value = at_cascade.csv.sex_name2value[name]
-      sex_value2name[value] = name
-   if 'population' in covariate_list :
-      for row in data_table :
-         age_lower     = float( row['age_lower'] )
-         age_upper     = float( row['age_upper'] )
-         if age_lower != age_upper :
-            sex_name      = sex_value2name[ row['sex'] ]
-            triple        = ( row['node_name'], sex_name, 'population' )
-            fun           = weight_dict[triple]
-            index         = fun.index
-            weight_name   = f'weight_{index}'
-            row['weight'] = weight_name
-   #
-   # smooth_dict
-   smooth_dict = dict()
-   for row in input_table['parent_rate'] :
-      name = row['rate_name'] + '_parent'
-      age  = float( row['age'] )
-      time = float( row['time'] )
-      if name not in smooth_dict :
-         fun = smoothing_function(name)
-         smooth_dict[name] = {
-            'age_id'  : set() ,
-            'time_id' : set() ,
-            'fun'     : fun    ,
-         }
-      age_id  = age_list.index( age )
-      time_id = time_list.index( time )
-      smooth_dict[name]['age_id'].add( age_id )
-      smooth_dict[name]['time_id'].add( time_id )
-      value_prior = row['value_prior']
-      dage_prior  = row['dage_prior']
-      dtime_prior = row['dtime_prior']
-      if row['const_value'] != None :
-         if row['value_prior'] != None :
-            rate_name = row['rate_name']
-            msg  = f'parent_rate.csv: '
-            msg += f'rate = {rate_name}, age = {age}, time = {time}\n'
-            msg += 'both const_value and value_prior are non-empty'
-            assert False, msg
-         const_value = float( row['const_value'] )
-         smooth_dict[name]['fun'].set(
-            age, time, const_value, dage_prior, dtime_prior
-         )
-      else :
-         if row['value_prior'] == None :
-            rate_name = row['rate_name']
-            msg  = f'parent_rate.csv: '
-            msg += f'rate = {rate_name}, age = {age}, time = {time}\n'
-            msg += 'both const_value and value_prior are empty'
-            assert False, msg
-         smooth_dict[name]['fun'].set(
-            age, time, value_prior, dage_prior, dtime_prior
-         )
-   #
-   # smooth_dict
-   for row in input_table['child_rate'] :
-      name = row['rate_name'] + '_child'
-      fun = smoothing_function(name)
-      smooth_dict[name] = {
-         'age_id'  : {0},
-         'time_id' : {0},
-         'fun'     : fun    ,
-      }
-      smooth_dict[name]['fun'].set(
-         age         = age_list[0]            ,
-         time        = time_list[0]           ,
-         value_prior = row['value_prior']     ,
-         dage_prior  = None                   ,
-         dtime_prior = None                   ,
-      )
-   #
-   # smooth_dict
-   for (i_row, row) in enumerate( input_table['mulcov'] ) :
-      name = f'mulcov_{i_row}'
-      fun = smoothing_function(name)
-      smooth_dict[name] = {
-         'age_id'  : {0},
-         'time_id' : {0},
-         'fun'     : fun    ,
-      }
-      if row['const_value'] != None :
-         value_prior = float( row['const_value'] )
-      else :
-         value_prior = row['value_prior']
-         if value_prior == None :
+    #
+    # dismod_at_covariate_table
+    value = at_cascade.csv.sex_name2value[root_node_sex]
+    dismod_at_covariate_table = [
+        { 'name': 'sex', 'reference': value, 'max_difference' : 0.5 }  ,
+        { 'name': 'one', 'reference': 0.0,   'max_difference' : None } ,
+    ]
+    for covariate_name in covariate_list :
+        dismod_at_covariate_table.append({
+            'name':            covariate_name,
+            'reference':       root_covariate_ref[covariate_name],
+            'max_difference' : None
+        })
+    #
+    # option_table
+    asymptotic_rcond_lower = global_option_value['asymptotic_rcond_lower']
+    age_avg_split      = global_option_value['age_avg_split']
+    bound_random       = global_option_value['bound_random']
+    compress_interval  = global_option_value['compress_interval']
+    hold_out_integrand = global_option_value['hold_out_integrand']
+    max_num_iter_fixed = global_option_value['max_num_iter_fixed']
+    ode_step_size      = global_option_value['ode_step_size']
+    tolerance_fixed    = global_option_value['tolerance_fixed']
+    minimum_meas_cv    = global_option_value['minimum_meas_cv']
+    ode_method         = global_option_value['ode_method']
+    #
+    quasi_fixed        = global_option_value['quasi_fixed'];
+    quasi_fixed        = str(quasi_fixed).lower()
+    #
+    #
+    if len(covariate_list) == 0 :
+        splitting_covariate = None
+    else :
+        splitting_covariate = 'sex'
+    option_table = [
+        { 'name' : 'asymptotic_rcond_lower', 'value' : asymptotic_rcond_lower },
+        { 'name' : 'age_avg_split',       'value' : age_avg_split             },
+        { 'name' : 'compress_interval',   'value' : compress_interval         },
+        { 'name' : 'hold_out_integrand',  'value' : hold_out_integrand        },
+        { 'name' : 'max_num_iter_fixed',  'value' : str( max_num_iter_fixed ) },
+        { 'name' : 'ode_step_size',       'value' : str( ode_step_size)       },
+        { 'name' : 'parent_node_name',    'value' : root_node_name            },
+        { 'name' : 'print_level_fixed',   'value' : '5'                       },
+        { 'name' : 'trace_init_fit_model','value' : 'true'                    },
+        { 'name' : 'random_seed',         'value' : str( random_seed )        },
+        { 'name' : 'tolerance_fixed',     'value' : str( tolerance_fixed)     },
+        { 'name' : 'meas_noise_effect',   'value' : 'add_std_scale_none'      },
+        { 'name' : 'quasi_fixed',         'value' : quasi_fixed               },
+        { 'name' : 'splitting_covariate', 'value' : splitting_covariate       },
+        { 'name' : 'rate_case'          , 'value' : ode_method                },
+    ]
+    if bound_random != float('inf') :
+        option_table['bound_random'] = bound_random
+    #
+    # spline_cov
+    age_grid, time_grid, spline_cov = at_cascade.csv.covariate_spline(
+        csv_covariate_table, node_set
+    )
+    #
+    # data_table
+    data_table     = input_table['data_in']
+    for (i_row, row) in enumerate(data_table) :
+        if i_row != int( row['data_id'] ) :
             line = i_row + 2
-            msg  = f'In line {line} of mulcov.csv\n'
-            msg += 'const_value and value_prior are both empty'
+            msg  = f'Expected data_id = {i_row} in line {line} of data_in.csv'
             assert False, msg
-      smooth_dict[name]['fun'].set(
-         age         = age_list[0]            ,
-         time        = time_list[0]           ,
-         value_prior = value_prior            ,
-         dage_prior  = None                   ,
-         dtime_prior = None                   ,
-      )
-   #
-   # smooth_table
-   smooth_table = list()
-   for name in smooth_dict :
-      row = {
-         'name'    : name                           ,
-         'age_id'  : smooth_dict[name]['age_id']    ,
-         'time_id' : smooth_dict[name]['time_id']   ,
-         'fun'     : smooth_dict[name]['fun']       ,
-      }
-      smooth_table.append( row )
-   #
-   # mulcov_table
-   mulcov_table = input_table['mulcov']
-   for (i_row, row) in enumerate(mulcov_table) :
-      del row['value_prior']
-      del row['const_value']
-      row['smooth'] = f'mulcov_{i_row}'
-      row['group'] = 'world'
-   #
-   # rate_table
-   rate_table = list()
-   for rate_name in [ 'pini', 'iota', 'rho', 'chi' ] :
-      parent_smooth = rate_name + '_parent'
-      if parent_smooth in smooth_dict :
-         child_smooth  = rate_name + '_child'
-         if child_smooth not in smooth_dict :
-            child_smooth = None
-         row = {
-            'name'          : rate_name      ,
-            'parent_smooth' : parent_smooth  ,
-            'child_smooth'  : child_smooth   ,
-         }
-         rate_table.append( row )
-   #
-   dismod_at.create_database(
-         file_name           = output_file,
-         age_list            = age_list,
-         time_list           = time_list,
-         integrand_table     = integrand_table,
-         node_table          = node_table,
-         subgroup_table      = subgroup_table,
-         weight_table        = weight_table,
-         covariate_table     = dismod_at_covariate_table,
-         avgint_table        = list(),
-         data_table          = data_table,
-         prior_table         = prior_table,
-         smooth_table        = smooth_table,
-         rate_table          = rate_table,
-         mulcov_table        = mulcov_table,
-         option_table        = option_table,
-         rate_eff_cov_table  = rate_eff_cov_table,
-   )
-   #
-   assert type(age_grid) == list
-   assert type(time_grid) == list
-   assert type(csv_covariate_table) == list
-   assert type( csv_covariate_table[0] ) == dict
-   return age_grid, time_grid, csv_covariate_table
+        #
+        # age_mid
+        age_lower = float( row['age_lower'] )
+        age_upper = float( row['age_upper'] )
+        age_mid   = (age_lower + age_upper) / 2.0
+        #
+        # time_mid
+        time_lower = float( row['time_lower'] )
+        time_upper = float( row['time_upper'] )
+        time_mid   = (time_lower + time_upper) / 2.0
+        #
+        # row[c_j] for j = 0, ..., n_covariate - 1
+        node_name = row['node_name']
+        sex       = row['sex']
+        for index, covariate_name in enumerate( root_covariate_ref.keys() ) :
+            if sex != 'both' :
+                spline              = spline_cov[node_name][sex][covariate_name]
+                covariate_value     = spline(age_mid, time_mid)
+                row[covariate_name] = covariate_value
+            else :
+                row[covariate_name] = 0.0
+                for tmp in [ 'female', 'male' ] :
+                    spline              = spline_cov[node_name][tmp][covariate_name]
+                    covariate_value     = spline(age_mid, time_mid)
+                    row[covariate_name] += covariate_value / 2.0
+        #
+        # row
+        row['node']       = row['node_name']
+        row['integrand']  = row['integrand_name']
+        row['density']    = row['density_name']
+        for key in [ 'eta', 'nu' ] :
+            if key in row :
+                if row[key] != None :
+                    row[key] = float( row[key] )
+        row['age_lower']  = age_lower
+        row['age_upper']  = age_upper
+        row['time_lower'] = time_lower
+        row['time_upper'] = time_upper
+        row['weight']     = ''
+        row['subgroup']   = 'world'
+        row['sex']        = at_cascade.csv.sex_name2value[sex]
+        row['one']        = '1.0'
+    #
+    # integrand_table
+    integrand_set = set()
+    for row in data_table :
+        integrand_set.add( row['integrand_name'] )
+    for row in input_table['predict_integrand'] :
+        integrand_set.add( row['integrand_name'] )
+    for rate_name in name_rate2integrand :
+        integrand_set.add( name_rate2integrand[rate_name] )
+    integrand_table = list()
+    for integrand in integrand_set :
+        row = { 'name' : integrand , 'minimum_meas_cv'  : minimum_meas_cv }
+        integrand_table.append(row)
+    for mulcov_id in range( len( input_table['mulcov'] ) ) :
+        integrand_name = f'mulcov_{mulcov_id}'
+        if integrand_name not in integrand_set :
+            integrand_table.append( { 'name': integrand_name } )
+    #
+    # subgroup_table
+    subgroup_table = [{ 'subgroup' : 'world', 'group' : 'world' }]
+    #
+    # prior_table
+    prior_table = copy.copy( input_table['prior'] )
+    for row in prior_table :
+        for key in [ 'lower', 'upper', 'std', 'eta' ] :
+            if key in row :
+                if row[key] != None :
+                    row[key] = float( row[key] )
+    #
+    # age_set, time_set
+    age_set  = set( age_grid )
+    time_set = set( time_grid )
+    for row in input_table['parent_rate'] :
+        age_set.add( float( row['age'] ) )
+        time_set.add( float( row['time'] ) )
+    #
+    # age_set, time_set
+    if len( data_table ) > 0 :
+        min_data_age  = data_table[0]['age_lower']
+        max_data_age  = data_table[0]['age_upper']
+        min_data_time = data_table[0]['time_lower']
+        max_data_time = data_table[0]['time_upper']
+        for row in data_table :
+            min_data_age  = min( min_data_age, row['age_lower'] )
+            max_data_age  = max( max_data_age, row['age_upper'] )
+            min_data_time = min( min_data_time, row['time_lower'] )
+            max_data_time = max( max_data_time, row['time_upper'] )
+        age_set.add(min_data_age)
+        age_set.add(max_data_age)
+        time_set.add(min_data_time)
+        time_set.add(max_data_time)
+    #
+    # arg_list, time_list
+    age_list  = sorted( list( age_set ) )
+    time_list = sorted( list( time_set ) )
+    #
+    # node_table, node_set
+    node_table = list()
+    for row_in in input_table['node'] :
+        row_out = { 'name' : row_in['node_name'] }
+        if row_in['parent_name'] == None :
+            row_out['parent'] = ''
+        else :
+            row_out['parent'] = row_in['parent_name']
+        node_table.append( row_out )
+    #
+    # cov_same
+    cov_same = at_cascade.csv.covariate_same(csv_covariate_table)
+    #
+    # weight_dict, weight_count
+    weight_dict    = dict()
+    weight_count   = 0
+    for row in csv_covariate_table :
+        node_name = row['node_name']
+        sex_name  = row['sex']
+        for covariate_name in covariate_list :
+            triple = (node_name, sex_name, covariate_name)
+            if cov_same[triple] == triple :
+                if triple not in weight_dict :
+                    fun                 = weighting_function(weight_count, )
+                    weight_count       += 1
+                    weight_dict[triple] = fun
+                age    = row['age']
+                time   = row['time']
+                weight = row[covariate_name]
+                weight_dict[triple].set(age, time, weight)
+    #
+    # weight_dict
+    for node_name in node_set :
+        for sex in [ 'female', 'male', 'both' ] :
+            for cov_name in covariate_list :
+                triple = (node_name, sex, cov_name)
+                if cov_same[triple] != triple :
+                    triple_other = cov_same[triple]
+                    weight_dict[triple] = weight_dict[triple_other]
+    #
+    # weight_table, n_const
+    weight_table = list()
+    age_id_list  = [ age_list.index(age) for age in age_grid ]
+    time_id_list = [ time_list.index(time) for time in time_grid ]
+    age_0        = age_grid[0]
+    time_0       = time_grid[0]
+    n_const      = { 'age' : 0, 'time' : 0, 'both' : 0}
+    for triple in weight_dict :
+        if cov_same[triple] == triple :
+            fun        = weight_dict[triple]
+            index      = fun.index
+            name       = f'weight_{index}'
+            const_age  = True
+            const_time = True
+            for age in age_grid :
+                for time in time_grid :
+                    const_age = const_age and fun(age_0, time)   == fun(age, time)
+                    const_time= const_time and fun(age,  time_0) == fun(age, time)
+            row = {
+                'name'     : f'weight_{index}'   ,
+                'age_id'   : age_id_list         ,
+                'time_id'  : time_id_list        ,
+                'fun'      : fun                 ,
+            }
+            if const_age :
+                n_const['age']  += 1
+                row['age_id']    = [ age_list.index(age_0) ]
+            if const_time :
+                n_const['time'] += 1
+                row['time_id']   = [ time_list.index(time_0) ]
+            if const_age and const_time :
+                n_const['both'] += 1
+            weight_table.append(row)
+    #
+    # see csv.fit@Input Files@covarite.csv@Compression
+    print('csv.fit: create_root_database: covariate counts')
+    print('number (node, sex, covariate) combinations =', len(weight_dict) )
+    print('number of corresponding weights            =', weight_count)
+    print('number that are constant w.r.t. age        =', n_const['age'])
+    print('number that are constant w.r.t. time       =', n_const['time'])
+    print('number that are constant w.r.t. both       =', n_const['both'])
+    #
+    # rate_eff_cov_table
+    rate_eff_cov_table = list()
+    for triple in weight_dict :
+        #
+        fun         = weight_dict[triple]
+        index       = fun.index
+        weight_name = f'weight_{index}'
+        #
+        (node_name, sex_name, covariate_name) = triple
+        sex_value = at_cascade.csv.sex_name2value[sex_name]
+        #
+        row = {
+            'node_name'      : node_name       ,
+            'covariate_name' : covariate_name  ,
+            'split_value'    : sex_value       ,
+            'weight_name'    : weight_name     ,
+        }
+        rate_eff_cov_table.append(row)
+    #
+    # data_table
+    sex_value2name = dict()
+    for name in at_cascade.csv.sex_name2value :
+        value = at_cascade.csv.sex_name2value[name]
+        sex_value2name[value] = name
+    if 'population' in covariate_list :
+        for row in data_table :
+            age_lower     = float( row['age_lower'] )
+            age_upper     = float( row['age_upper'] )
+            if age_lower != age_upper :
+                sex_name      = sex_value2name[ row['sex'] ]
+                triple        = ( row['node_name'], sex_name, 'population' )
+                fun           = weight_dict[triple]
+                index         = fun.index
+                weight_name   = f'weight_{index}'
+                row['weight'] = weight_name
+    #
+    # smooth_dict
+    smooth_dict = dict()
+    for row in input_table['parent_rate'] :
+        name = row['rate_name'] + '_parent'
+        age  = float( row['age'] )
+        time = float( row['time'] )
+        if name not in smooth_dict :
+            fun = smoothing_function(name)
+            smooth_dict[name] = {
+                'age_id'  : set() ,
+                'time_id' : set() ,
+                'fun'     : fun    ,
+            }
+        age_id  = age_list.index( age )
+        time_id = time_list.index( time )
+        smooth_dict[name]['age_id'].add( age_id )
+        smooth_dict[name]['time_id'].add( time_id )
+        value_prior = row['value_prior']
+        dage_prior  = row['dage_prior']
+        dtime_prior = row['dtime_prior']
+        if row['const_value'] != None :
+            if row['value_prior'] != None :
+                rate_name = row['rate_name']
+                msg  = f'parent_rate.csv: '
+                msg += f'rate = {rate_name}, age = {age}, time = {time}\n'
+                msg += 'both const_value and value_prior are non-empty'
+                assert False, msg
+            const_value = float( row['const_value'] )
+            smooth_dict[name]['fun'].set(
+                age, time, const_value, dage_prior, dtime_prior
+            )
+        else :
+            if row['value_prior'] == None :
+                rate_name = row['rate_name']
+                msg  = f'parent_rate.csv: '
+                msg += f'rate = {rate_name}, age = {age}, time = {time}\n'
+                msg += 'both const_value and value_prior are empty'
+                assert False, msg
+            smooth_dict[name]['fun'].set(
+                age, time, value_prior, dage_prior, dtime_prior
+            )
+    #
+    # smooth_dict
+    for row in input_table['child_rate'] :
+        name = row['rate_name'] + '_child'
+        fun = smoothing_function(name)
+        smooth_dict[name] = {
+            'age_id'  : {0},
+            'time_id' : {0},
+            'fun'     : fun    ,
+        }
+        smooth_dict[name]['fun'].set(
+            age         = age_list[0]            ,
+            time        = time_list[0]           ,
+            value_prior = row['value_prior']     ,
+            dage_prior  = None                   ,
+            dtime_prior = None                   ,
+        )
+    #
+    # smooth_dict
+    for (i_row, row) in enumerate( input_table['mulcov'] ) :
+        name = f'mulcov_{i_row}'
+        fun = smoothing_function(name)
+        smooth_dict[name] = {
+            'age_id'  : {0},
+            'time_id' : {0},
+            'fun'     : fun    ,
+        }
+        if row['const_value'] != None :
+            value_prior = float( row['const_value'] )
+        else :
+            value_prior = row['value_prior']
+            if value_prior == None :
+                line = i_row + 2
+                msg  = f'In line {line} of mulcov.csv\n'
+                msg += 'const_value and value_prior are both empty'
+                assert False, msg
+        smooth_dict[name]['fun'].set(
+            age         = age_list[0]            ,
+            time        = time_list[0]           ,
+            value_prior = value_prior            ,
+            dage_prior  = None                   ,
+            dtime_prior = None                   ,
+        )
+    #
+    # smooth_table
+    smooth_table = list()
+    for name in smooth_dict :
+        row = {
+            'name'    : name                           ,
+            'age_id'  : smooth_dict[name]['age_id']    ,
+            'time_id' : smooth_dict[name]['time_id']   ,
+            'fun'     : smooth_dict[name]['fun']       ,
+        }
+        smooth_table.append( row )
+    #
+    # mulcov_table
+    mulcov_table = input_table['mulcov']
+    for (i_row, row) in enumerate(mulcov_table) :
+        del row['value_prior']
+        del row['const_value']
+        row['smooth'] = f'mulcov_{i_row}'
+        row['group'] = 'world'
+    #
+    # rate_table
+    rate_table = list()
+    for rate_name in [ 'pini', 'iota', 'rho', 'chi' ] :
+        parent_smooth = rate_name + '_parent'
+        if parent_smooth in smooth_dict :
+            child_smooth  = rate_name + '_child'
+            if child_smooth not in smooth_dict :
+                child_smooth = None
+            row = {
+                'name'          : rate_name      ,
+                'parent_smooth' : parent_smooth  ,
+                'child_smooth'  : child_smooth   ,
+            }
+            rate_table.append( row )
+    #
+    dismod_at.create_database(
+            file_name           = output_file,
+            age_list            = age_list,
+            time_list           = time_list,
+            integrand_table     = integrand_table,
+            node_table          = node_table,
+            subgroup_table      = subgroup_table,
+            weight_table        = weight_table,
+            covariate_table     = dismod_at_covariate_table,
+            avgint_table        = list(),
+            data_table          = data_table,
+            prior_table         = prior_table,
+            smooth_table        = smooth_table,
+            rate_table          = rate_table,
+            mulcov_table        = mulcov_table,
+            option_table        = option_table,
+            rate_eff_cov_table  = rate_eff_cov_table,
+    )
+    #
+    assert type(age_grid) == list
+    assert type(time_grid) == list
+    assert type(csv_covariate_table) == list
+    assert type( csv_covariate_table[0] ) == dict
+    return age_grid, time_grid, csv_covariate_table
 # ----------------------------------------------------------------------------
 # Writes the all node data base.
 #
@@ -1831,353 +1831,353 @@ def create_root_database(fit_dir) :
 # This routine assumes that global_option_value has been set.
 #
 def create_all_node_database(
-   fit_dir, age_grid, time_grid, csv_covariate_table, fit_goal_table
+    fit_dir, age_grid, time_grid, csv_covariate_table, fit_goal_table
 ) :
-   assert type(fit_dir) == str
-   assert type(age_grid) == list
-   assert type(time_grid) == list
-   #
-   assert type(csv_covariate_table) == list
-   assert type( csv_covariate_table[0] ) == dict
-   #
-   assert type(fit_goal_table) == list
-   if len( fit_goal_table ) > 0 :
-      assert type( fit_goal_table[0] ) == dict
-   #
-   # root_database
-   root_database     = f'{fit_dir}/root.db'
-   #
-   # root_node_table
-   root_node_table = dict()
-   connection   = dismod_at.create_connection(
-      root_database, new = False, readonly = True
-   )
-   for name in [ 'mulcov', 'age', 'time', 'covariate', 'node' ] :
-      root_node_table[name] = dismod_at.get_table_dict(
-         connection, tbl_name = name
-      )
-   connection.close()
-   #
-   # root_node_sex
-   root_node_sex = global_option_value['root_node_sex']
-   #
-   # split_reference_table
-   split_reference_table = at_cascade.csv.split_reference_table
-   assert split_reference_table[0]['split_reference_name'] == 'female'
-   assert split_reference_table[1]['split_reference_name'] == 'both'
-   assert split_reference_table[2]['split_reference_name'] == 'male'
-   #
-   # root_split_reference_id
-   split_reference_table = at_cascade.csv.split_reference_table
-   root_split_reference_id = at_cascade.table_name2id(
-      table    = split_reference_table ,
-      tbl_name = 'split_reference'     ,
-      row_name = root_node_sex         ,
-   )
-   #
-   # root_node_name, root_node_id
-   root_node_name = at_cascade.get_parent_node(root_database)
-   assert root_node_name == global_option_value['root_node_name']
-   root_node_id   = at_cascade.table_name2id(
-      root_node_table['node'], 'node', root_node_name
-   )
-   #
-   # option_all
-   child_prior_std_factor = global_option_value['child_prior_std_factor']
-   shared_memory_prefix   = global_option_value['shared_memory_prefix']
-   absolute_covariates    = global_option_value['absolute_covariates']
-   number_sample          = global_option_value['number_sample']
-   balance_sex            = global_option_value['balance_sex']
-   max_fit_parent         = global_option_value['max_fit_parent']
-   no_ode_ignore          = global_option_value['no_ode_ignore']
-   perturb_optimization_scale = global_option_value["perturb_optimization_scale"]
-   perturb_optimization_start = global_option_value["perturb_optimization_start"]
-   #
-   convert = { True : 'true' , False : 'false' }
-   refit_split        = convert[ global_option_value['refit_split'] ]
-   child_prior_dage   = convert[ global_option_value['child_prior_dage'] ]
-   child_prior_dtime  = convert[ global_option_value['child_prior_dtime'] ]
-   #
-   child_prior_std_factor_mulcov = \
-      global_option_value['child_prior_std_factor_mulcov']
-   if child_prior_std_factor_mulcov == None :
-      child_prior_std_factor_mulcov = child_prior_std_factor
-   #
-   if absolute_covariates == None :
-      absolute_covariates = 'one'
-   else :
-      absolute_covariates += ' one'
-   # BEGIN_SORT_THIS_LINE_PLUS_2
-   option_all = {
-      'absolute_covariates'            : absolute_covariates ,
-      'freeze_type'                    : global_option_value['freeze_type'],
-      'max_abs_effect'                 : global_option_value['max_abs_effect'],
-      'max_fit'                        : global_option_value['max_fit'],
-      'max_number_cpu'                 : global_option_value['max_number_cpu'],
-      'number_sample'                  : number_sample,
-      'perturb_optimization_scale'     : perturb_optimization_scale,
-      'perturb_optimization_start'     : perturb_optimization_start,
-      'refit_split'                    : refit_split,
-      'result_dir'                     : fit_dir,
-      'root_database'                  : root_database,
-      'root_node_name'                 : root_node_name,
-      'root_split_reference_name'      : 'both',
-      'sample_method'                  : global_option_value['sample_method'],
-      'shared_memory_prefix'           : shared_memory_prefix,
-      'shift_prior_dage'               : child_prior_dage,
-      'shift_prior_dtime'              : child_prior_dtime,
-      'shift_prior_std_factor'         : child_prior_std_factor,
-      'shift_prior_std_factor_mulcov'  : child_prior_std_factor_mulcov,
-      'split_covariate_name'           : 'sex',
-   }
-   # END_SORT_THIS_LINE_MINUS_2
-   if max_fit_parent >= 0 :
-      option_all['max_fit_parent'] = max_fit_parent
-   if balance_sex :
-      option_all['balance_fit'] = 'sex -0.5 +0.5'
-   if no_ode_ignore != None :
-      if no_ode_ignore.strip() != 'all' :
-         option_all['no_ode_ignore'] = no_ode_ignore
-   #
-   # node_split_table
-   if root_node_sex == 'both' :
-      node_split_table = [ { 'node_name' : root_node_name } ]
-   else :
-      node_split_table = list()
-   #
-   # mulcov_freeze_table
-   mulcov_freeze_table = list()
-   for (mulcov_id, row) in enumerate(root_node_table['mulcov']) :
-      covariate_id    = row['covariate_id']
-      cov_row         = root_node_table['covariate'][covariate_id]
-      covariate_name = cov_row['covariate_name']
-      if covariate_name == 'sex' or root_node_sex != 'both' :
-         row = {
-            'fit_node_name'      : root_node_name           ,
-            'split_reference_id' : root_split_reference_id  ,
-            'mulcov_id'          : mulcov_id                ,
-         }
-         mulcov_freeze_table.append(row)
-      else :
-         if global_option_value['refit_split'] :
-            split_reference_id_list = [ 0 , 2 ]
-         else :
-            split_reference_id_list = [ 0 , 1, 2 ]
-         for split_reference_id in split_reference_id_list :
-            # split_reference_id 0 for female, 1 for both, 2 for male
+    assert type(fit_dir) == str
+    assert type(age_grid) == list
+    assert type(time_grid) == list
+    #
+    assert type(csv_covariate_table) == list
+    assert type( csv_covariate_table[0] ) == dict
+    #
+    assert type(fit_goal_table) == list
+    if len( fit_goal_table ) > 0 :
+        assert type( fit_goal_table[0] ) == dict
+    #
+    # root_database
+    root_database     = f'{fit_dir}/root.db'
+    #
+    # root_node_table
+    root_node_table = dict()
+    connection   = dismod_at.create_connection(
+        root_database, new = False, readonly = True
+    )
+    for name in [ 'mulcov', 'age', 'time', 'covariate', 'node' ] :
+        root_node_table[name] = dismod_at.get_table_dict(
+            connection, tbl_name = name
+        )
+    connection.close()
+    #
+    # root_node_sex
+    root_node_sex = global_option_value['root_node_sex']
+    #
+    # split_reference_table
+    split_reference_table = at_cascade.csv.split_reference_table
+    assert split_reference_table[0]['split_reference_name'] == 'female'
+    assert split_reference_table[1]['split_reference_name'] == 'both'
+    assert split_reference_table[2]['split_reference_name'] == 'male'
+    #
+    # root_split_reference_id
+    split_reference_table = at_cascade.csv.split_reference_table
+    root_split_reference_id = at_cascade.table_name2id(
+        table    = split_reference_table ,
+        tbl_name = 'split_reference'     ,
+        row_name = root_node_sex         ,
+    )
+    #
+    # root_node_name, root_node_id
+    root_node_name = at_cascade.get_parent_node(root_database)
+    assert root_node_name == global_option_value['root_node_name']
+    root_node_id   = at_cascade.table_name2id(
+        root_node_table['node'], 'node', root_node_name
+    )
+    #
+    # option_all
+    child_prior_std_factor = global_option_value['child_prior_std_factor']
+    shared_memory_prefix   = global_option_value['shared_memory_prefix']
+    absolute_covariates    = global_option_value['absolute_covariates']
+    number_sample          = global_option_value['number_sample']
+    balance_sex            = global_option_value['balance_sex']
+    max_fit_parent         = global_option_value['max_fit_parent']
+    no_ode_ignore          = global_option_value['no_ode_ignore']
+    perturb_optimization_scale = global_option_value["perturb_optimization_scale"]
+    perturb_optimization_start = global_option_value["perturb_optimization_start"]
+    #
+    convert = { True : 'true' , False : 'false' }
+    refit_split        = convert[ global_option_value['refit_split'] ]
+    child_prior_dage   = convert[ global_option_value['child_prior_dage'] ]
+    child_prior_dtime  = convert[ global_option_value['child_prior_dtime'] ]
+    #
+    child_prior_std_factor_mulcov = \
+        global_option_value['child_prior_std_factor_mulcov']
+    if child_prior_std_factor_mulcov == None :
+        child_prior_std_factor_mulcov = child_prior_std_factor
+    #
+    if absolute_covariates == None :
+        absolute_covariates = 'one'
+    else :
+        absolute_covariates += ' one'
+    # BEGIN_SORT_THIS_LINE_PLUS_2
+    option_all = {
+        'absolute_covariates'            : absolute_covariates ,
+        'freeze_type'                    : global_option_value['freeze_type'],
+        'max_abs_effect'                 : global_option_value['max_abs_effect'],
+        'max_fit'                        : global_option_value['max_fit'],
+        'max_number_cpu'                 : global_option_value['max_number_cpu'],
+        'number_sample'                  : number_sample,
+        'perturb_optimization_scale'     : perturb_optimization_scale,
+        'perturb_optimization_start'     : perturb_optimization_start,
+        'refit_split'                    : refit_split,
+        'result_dir'                     : fit_dir,
+        'root_database'                  : root_database,
+        'root_node_name'                 : root_node_name,
+        'root_split_reference_name'      : 'both',
+        'sample_method'                  : global_option_value['sample_method'],
+        'shared_memory_prefix'           : shared_memory_prefix,
+        'shift_prior_dage'               : child_prior_dage,
+        'shift_prior_dtime'              : child_prior_dtime,
+        'shift_prior_std_factor'         : child_prior_std_factor,
+        'shift_prior_std_factor_mulcov'  : child_prior_std_factor_mulcov,
+        'split_covariate_name'           : 'sex',
+    }
+    # END_SORT_THIS_LINE_MINUS_2
+    if max_fit_parent >= 0 :
+        option_all['max_fit_parent'] = max_fit_parent
+    if balance_sex :
+        option_all['balance_fit'] = 'sex -0.5 +0.5'
+    if no_ode_ignore != None :
+        if no_ode_ignore.strip() != 'all' :
+            option_all['no_ode_ignore'] = no_ode_ignore
+    #
+    # node_split_table
+    if root_node_sex == 'both' :
+        node_split_table = [ { 'node_name' : root_node_name } ]
+    else :
+        node_split_table = list()
+    #
+    # mulcov_freeze_table
+    mulcov_freeze_table = list()
+    for (mulcov_id, row) in enumerate(root_node_table['mulcov']) :
+        covariate_id    = row['covariate_id']
+        cov_row         = root_node_table['covariate'][covariate_id]
+        covariate_name = cov_row['covariate_name']
+        if covariate_name == 'sex' or root_node_sex != 'both' :
             row = {
-               'fit_node_name'      : root_node_name     ,
-               'split_reference_id' : split_reference_id ,
-               'mulcov_id'          : mulcov_id          ,
+                'fit_node_name'      : root_node_name           ,
+                'split_reference_id' : root_split_reference_id  ,
+                'mulcov_id'          : mulcov_id                ,
             }
             mulcov_freeze_table.append(row)
-   #
-   # omega_grid
-   age_list     = [ row['age'] for row  in root_node_table['age'] ]
-   age_id_grid  = [ age_list.index(age)  for age in age_grid ]
-   #
-   time_list    = [ row['time'] for row in root_node_table['time'] ]
-   time_id_grid = [ time_list.index(time) for time in time_grid ]
-   #
-   omega_grid = { 'age' : age_id_grid, 'time' : time_id_grid }
-   #
-   # omega_data
-   # This is set equal to the value of omega and is only used for the
-   # omega constraint.
-   n_age      = len( age_grid )
-   n_time     = len( time_grid )
-   none_list  = (n_age * n_time)  * [ None ]
-   omega_data = dict()
-   for row in csv_covariate_table :
-      node_name          = row['node_name']
-      sex                = row['sex']
-      age                = row['age']
-      time               = row['time']
-      omega              = row['omega']
-      #
-      if sex not in [ 'female', 'male', 'both' ] :
-         msg  = 'covariate.csv: sex is not female or male'
-         assert False, msg
-      split_reference_id = at_cascade.table_name2id(
-         split_reference_table, 'split_reference', sex
-      )
-      if node_name not in omega_data :
-         omega_data[node_name] = list()
-         for k in range( len(split_reference_table) ) :
-               row = list()
-               for ij in range( n_age * n_time ) :
-                  row.append(None)
-               omega_data[node_name].append(row)
-      #
-      k = split_reference_id
-      i = age_grid.index(age)
-      j = time_grid.index(time)
-      omega_data[node_name][k][i * n_time + j] = omega
-   #
-   # cov_reference_table
-   cov_reference_table = None
-   covariate_reference = global_option_value['covariate_reference']
-   if covariate_reference not in [ 'data_in.csv', 'covariate.csv' ] :
-      msg  = f'option_all table: covariate_reference = {covariate_reference} '
-      msg += 'is not data_in.csv or covariate.csv'
-      assert False, msg
-   if covariate_reference == 'covariate.csv' :
-      cov_reference_table = list()
-      n_covariate         = len(  root_node_table['covariate'] )
-      n_split             = len( at_cascade.csv.split_reference_table )
-      node_table          = root_node_table['node']
-      for node_id in range( len(node_table) ) :
-         ancestor      = node_id
-         while ancestor != root_node_id and ancestor != None :
-            ancestor = node_table[ancestor]['parent']
-         if ancestor == root_node_id :
-            for split_reference_id in range(n_split) :
-               row           = split_reference_table[split_reference_id]
-               sex           = row['split_reference_name']
-               sex_reference = row['split_reference_value']
-               node_name     = node_table[node_id]['node_name']
-               cov_average = at_cascade.csv.covariate_avg(
-                  csv_covariate_table, node_name, sex
-               )
-               reference_list = list()
-               for covariate_id in range( n_covariate ) :
-                  row             =  root_node_table['covariate'][covariate_id]
-                  covariate_name  = row['covariate_name']
-                  if covariate_name == 'sex' :
-                     reference_value = sex_reference
-                  elif covariate_name in absolute_covariates :
-                     reference_value = 0.0
-                  elif covariate_name in cov_average :
-                     reference_value = cov_average[covariate_name]
-                  else :
-                     msg = f'{covariate_name} is not "one" or in covariate.csv'
-                     msg += '\nThis looks like an bug in csv.fit'
-                     assert False, msg
-                  row = {
-                     'node_id'            : node_id ,
-                     'split_reference_id' : split_reference_id,
-                     'covariate_id'       : covariate_id,
-                     'reference_value'    : reference_value,
-                  }
-                  cov_reference_table.append(row)
-   #
-   # create_all_node_db
-   at_cascade.create_all_node_db(
-      all_node_database         = f'{fit_dir}/all_node.db'  ,
-      option_all                = option_all                ,
-      fit_goal_table            = fit_goal_table            ,
-      split_reference_table     = split_reference_table     ,
-      node_split_table          = node_split_table          ,
-      mulcov_freeze_table       = mulcov_freeze_table       ,
-      omega_grid                = omega_grid                ,
-      omega_data                = omega_data                ,
-      cov_reference_table       = cov_reference_table       ,
-   )
+        else :
+            if global_option_value['refit_split'] :
+                split_reference_id_list = [ 0 , 2 ]
+            else :
+                split_reference_id_list = [ 0 , 1, 2 ]
+            for split_reference_id in split_reference_id_list :
+                # split_reference_id 0 for female, 1 for both, 2 for male
+                row = {
+                    'fit_node_name'      : root_node_name     ,
+                    'split_reference_id' : split_reference_id ,
+                    'mulcov_id'          : mulcov_id          ,
+                }
+                mulcov_freeze_table.append(row)
+    #
+    # omega_grid
+    age_list     = [ row['age'] for row  in root_node_table['age'] ]
+    age_id_grid  = [ age_list.index(age)  for age in age_grid ]
+    #
+    time_list    = [ row['time'] for row in root_node_table['time'] ]
+    time_id_grid = [ time_list.index(time) for time in time_grid ]
+    #
+    omega_grid = { 'age' : age_id_grid, 'time' : time_id_grid }
+    #
+    # omega_data
+    # This is set equal to the value of omega and is only used for the
+    # omega constraint.
+    n_age      = len( age_grid )
+    n_time     = len( time_grid )
+    none_list  = (n_age * n_time)  * [ None ]
+    omega_data = dict()
+    for row in csv_covariate_table :
+        node_name          = row['node_name']
+        sex                = row['sex']
+        age                = row['age']
+        time               = row['time']
+        omega              = row['omega']
+        #
+        if sex not in [ 'female', 'male', 'both' ] :
+            msg  = 'covariate.csv: sex is not female or male'
+            assert False, msg
+        split_reference_id = at_cascade.table_name2id(
+            split_reference_table, 'split_reference', sex
+        )
+        if node_name not in omega_data :
+            omega_data[node_name] = list()
+            for k in range( len(split_reference_table) ) :
+                    row = list()
+                    for ij in range( n_age * n_time ) :
+                        row.append(None)
+                    omega_data[node_name].append(row)
+        #
+        k = split_reference_id
+        i = age_grid.index(age)
+        j = time_grid.index(time)
+        omega_data[node_name][k][i * n_time + j] = omega
+    #
+    # cov_reference_table
+    cov_reference_table = None
+    covariate_reference = global_option_value['covariate_reference']
+    if covariate_reference not in [ 'data_in.csv', 'covariate.csv' ] :
+        msg  = f'option_all table: covariate_reference = {covariate_reference} '
+        msg += 'is not data_in.csv or covariate.csv'
+        assert False, msg
+    if covariate_reference == 'covariate.csv' :
+        cov_reference_table = list()
+        n_covariate         = len(  root_node_table['covariate'] )
+        n_split             = len( at_cascade.csv.split_reference_table )
+        node_table          = root_node_table['node']
+        for node_id in range( len(node_table) ) :
+            ancestor      = node_id
+            while ancestor != root_node_id and ancestor != None :
+                ancestor = node_table[ancestor]['parent']
+            if ancestor == root_node_id :
+                for split_reference_id in range(n_split) :
+                    row           = split_reference_table[split_reference_id]
+                    sex           = row['split_reference_name']
+                    sex_reference = row['split_reference_value']
+                    node_name     = node_table[node_id]['node_name']
+                    cov_average = at_cascade.csv.covariate_avg(
+                        csv_covariate_table, node_name, sex
+                    )
+                    reference_list = list()
+                    for covariate_id in range( n_covariate ) :
+                        row             =  root_node_table['covariate'][covariate_id]
+                        covariate_name  = row['covariate_name']
+                        if covariate_name == 'sex' :
+                            reference_value = sex_reference
+                        elif covariate_name in absolute_covariates :
+                            reference_value = 0.0
+                        elif covariate_name in cov_average :
+                            reference_value = cov_average[covariate_name]
+                        else :
+                            msg = f'{covariate_name} is not "one" or in covariate.csv'
+                            msg += '\nThis looks like an bug in csv.fit'
+                            assert False, msg
+                        row = {
+                            'node_id'            : node_id ,
+                            'split_reference_id' : split_reference_id,
+                            'covariate_id'       : covariate_id,
+                            'reference_value'    : reference_value,
+                        }
+                        cov_reference_table.append(row)
+    #
+    # create_all_node_db
+    at_cascade.create_all_node_db(
+        all_node_database         = f'{fit_dir}/all_node.db'  ,
+        option_all                = option_all                ,
+        fit_goal_table            = fit_goal_table            ,
+        split_reference_table     = split_reference_table     ,
+        node_split_table          = node_split_table          ,
+        mulcov_freeze_table       = mulcov_freeze_table       ,
+        omega_grid                = omega_grid                ,
+        omega_data                = omega_data                ,
+        cov_reference_table       = cov_reference_table       ,
+    )
 # ----------------------------------------------------------------------------
 # BEGIN_FIT
 # at_cascade.csv.fit
 def fit(fit_dir, max_node_depth = None) :
-   assert type(fit_dir) == str
-   assert max_node_depth == None or type(max_node_depth) == int
-   # END_FIT
-   #
-   # top_node_name
-   node_table      = at_cascade.csv.read_table(f'{fit_dir}/node.csv')
-   top_node_name = None
-   for row in node_table :
-      if row['parent_name'] == '' :
-         if top_node_name != None :
-            msg = 'node.csv: more than one node has no parent node'
-            assert False, msg
-         top_node_name = row['node_name']
-   if top_node_name == None :
-      msg = 'node.csv: no node has an empty parent_name'
-      assert False, msg
-   #
-   # global_option_value
-   option_table = at_cascade.csv.read_table(f'{fit_dir}/option_fit.csv')
-   set_global_option_value(
-      fit_dir, option_table, top_node_name
-   )
-   #
-   # root_node_name
-   root_node_name = global_option_value['root_node_name']
-   file_name      = f'{fit_dir}/{root_node_name}'
-   if os.path.exists( file_name ) :
-      msg  = f'{file_name} already exists.\n'
-      msg += 'you must remove it before running this csv fit.'
-      assert False, msg
-   #
-   # fit_goal_table
-   file_name      = f'{fit_dir}/fit_goal.csv'
-   fit_goal_table = at_cascade.csv.read_table(file_name)
-   for row in fit_goal_table :
-      node_name      = row['node_name']
-      node_id        = at_cascade.table_name2id(node_table, 'node', node_name)
-      row['node_id'] = node_id
-   #
-   # root.db
-   age_grid, time_grid, covariate_table = create_root_database(fit_dir)
-   #
-   # all_node.db
-   create_all_node_database(
-      fit_dir, age_grid, time_grid, covariate_table, fit_goal_table
-   )
-   #
-   # node_table
-   database     = f'{fit_dir}/root.db'
-   connection   = dismod_at.create_connection(
-      database, new = False, readonly = True
-   )
-   node_table  = dismod_at.get_table_dict(connection, 'node')
-   connection.close()
-   #
-   # root_node_id
-   assert root_node_name == at_cascade.get_parent_node(database)
-   root_node_id   = at_cascade.table_name2id(node_table, 'node', root_node_name)
-   #
-   # fit_goal_set
-   if len(fit_goal_table) == 0 :
-      fit_goal_set = set( range( len(node_table) ) )
-   else :
-      fit_goal_set = set()
-      for row in fit_goal_table :
-         node_id = row['node_id']
-         if root_node_id in ancestor_set(node_table, node_id ) :
-            fit_goal_set.add(node_id)
-   #
-   # fit_goal_max_depth
-   fit_goal_max_depth = set()
-   for node_id in fit_goal_set :
-      # node_id is the root node or a descedant of the root node.
-      node_list = list()
-      node_list.append(node_id)
-      while node_id != root_node_id :
-         node_id = node_table[node_id]['parent']
-         node_list.append(node_id)
-         assert node_id != None
-      if node_id == root_node_id :
-         if max_node_depth == None :
-            fit_goal_max_depth.add( node_list[0] )
-         elif len(node_list) <= max_node_depth + 1 :
-            fit_goal_max_depth.add( node_list[0] )
-         else :
-            fit_goal_max_depth.add( node_list[ -max_node_depth - 1] )
-   if len(fit_goal_max_depth) == 0 :
-      msg  = f'Cannot find root_node_name = {root_node_name},\n'
-      msg += 'or any of its children, in fit_goal.csv'
-      assert False, msg
-   #
-   # no_ode_fit
-   no_ode_fit    = global_option_value['no_ode_fit']
-   no_ode_ignore = global_option_value['no_ode_ignore']
-   if no_ode_ignore != None :
-      no_ode_fit =  no_ode_ignore.strip() != 'all'
-   #
-   # cascade_root_node
-   at_cascade.cascade_root_node(
-      all_node_database  = f'{fit_dir}/all_node.db'  ,
-      fit_goal_set       = fit_goal_max_depth        ,
-      no_ode_fit         = no_ode_fit                ,
-      fit_type_list      = [ 'both', 'fixed']        ,
-   )
+    assert type(fit_dir) == str
+    assert max_node_depth == None or type(max_node_depth) == int
+    # END_FIT
+    #
+    # top_node_name
+    node_table      = at_cascade.csv.read_table(f'{fit_dir}/node.csv')
+    top_node_name = None
+    for row in node_table :
+        if row['parent_name'] == '' :
+            if top_node_name != None :
+                msg = 'node.csv: more than one node has no parent node'
+                assert False, msg
+            top_node_name = row['node_name']
+    if top_node_name == None :
+        msg = 'node.csv: no node has an empty parent_name'
+        assert False, msg
+    #
+    # global_option_value
+    option_table = at_cascade.csv.read_table(f'{fit_dir}/option_fit.csv')
+    set_global_option_value(
+        fit_dir, option_table, top_node_name
+    )
+    #
+    # root_node_name
+    root_node_name = global_option_value['root_node_name']
+    file_name      = f'{fit_dir}/{root_node_name}'
+    if os.path.exists( file_name ) :
+        msg  = f'{file_name} already exists.\n'
+        msg += 'you must remove it before running this csv fit.'
+        assert False, msg
+    #
+    # fit_goal_table
+    file_name      = f'{fit_dir}/fit_goal.csv'
+    fit_goal_table = at_cascade.csv.read_table(file_name)
+    for row in fit_goal_table :
+        node_name      = row['node_name']
+        node_id        = at_cascade.table_name2id(node_table, 'node', node_name)
+        row['node_id'] = node_id
+    #
+    # root.db
+    age_grid, time_grid, covariate_table = create_root_database(fit_dir)
+    #
+    # all_node.db
+    create_all_node_database(
+        fit_dir, age_grid, time_grid, covariate_table, fit_goal_table
+    )
+    #
+    # node_table
+    database     = f'{fit_dir}/root.db'
+    connection   = dismod_at.create_connection(
+        database, new = False, readonly = True
+    )
+    node_table  = dismod_at.get_table_dict(connection, 'node')
+    connection.close()
+    #
+    # root_node_id
+    assert root_node_name == at_cascade.get_parent_node(database)
+    root_node_id   = at_cascade.table_name2id(node_table, 'node', root_node_name)
+    #
+    # fit_goal_set
+    if len(fit_goal_table) == 0 :
+        fit_goal_set = set( range( len(node_table) ) )
+    else :
+        fit_goal_set = set()
+        for row in fit_goal_table :
+            node_id = row['node_id']
+            if root_node_id in ancestor_set(node_table, node_id ) :
+                fit_goal_set.add(node_id)
+    #
+    # fit_goal_max_depth
+    fit_goal_max_depth = set()
+    for node_id in fit_goal_set :
+        # node_id is the root node or a descedant of the root node.
+        node_list = list()
+        node_list.append(node_id)
+        while node_id != root_node_id :
+            node_id = node_table[node_id]['parent']
+            node_list.append(node_id)
+            assert node_id != None
+        if node_id == root_node_id :
+            if max_node_depth == None :
+                fit_goal_max_depth.add( node_list[0] )
+            elif len(node_list) <= max_node_depth + 1 :
+                fit_goal_max_depth.add( node_list[0] )
+            else :
+                fit_goal_max_depth.add( node_list[ -max_node_depth - 1] )
+    if len(fit_goal_max_depth) == 0 :
+        msg  = f'Cannot find root_node_name = {root_node_name},\n'
+        msg += 'or any of its children, in fit_goal.csv'
+        assert False, msg
+    #
+    # no_ode_fit
+    no_ode_fit    = global_option_value['no_ode_fit']
+    no_ode_ignore = global_option_value['no_ode_ignore']
+    if no_ode_ignore != None :
+        no_ode_fit =  no_ode_ignore.strip() != 'all'
+    #
+    # cascade_root_node
+    at_cascade.cascade_root_node(
+        all_node_database  = f'{fit_dir}/all_node.db'  ,
+        fit_goal_set       = fit_goal_max_depth        ,
+        no_ode_fit         = no_ode_fit                ,
+        fit_type_list      = [ 'both', 'fixed']        ,
+    )

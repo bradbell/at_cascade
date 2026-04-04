@@ -21,21 +21,21 @@ import numpy
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 """
 {xrst_comment csv.break_fit_pred}
 {xrst_spell
-   const
-   dage
-   delim
-   dtime
-   eps
-   haqi
-   meas
-   sincidence
-   std
-   uniform uniform
+    const
+    dage
+    delim
+    dtime
+    eps
+    haqi
+    meas
+    sincidence
+    std
+    uniform uniform
 }
 
 Freeze Posterior With Continue Cascade
@@ -84,10 +84,10 @@ csv_file['option_fit.csv'] += 'refit_split,false\n'
 csv_file['option_fit.csv'] += 'tolerance_fixed,1e-8\n'
 csv_file['option_fit.csv'] += 'freeze_type,posterior\n'
 csv_file['option_fit.csv'] += 'child_prior_std_factor_mulcov,' + \
-                              str(child_prior_std_factor_mulcov) + '\n'
+                                        str(child_prior_std_factor_mulcov) + '\n'
 csv_file['option_fit.csv'] += 'number_sample,' + str(number_sample) + '\n'
 if max_number_cpu == 1 :
-   csv_file['option_fit.csv'] += f'max_number_cpu,1\n'
+    csv_file['option_fit.csv'] += f'max_number_cpu,1\n'
 """{xrst_code}
 
 option_predict.csv
@@ -151,13 +151,13 @@ prior.csv
 We define three priors:
 
 .. csv-table::
-   :widths: auto
-   :delim: ;
+    :widths: auto
+    :delim: ;
 
-   uniform_1_1; a uniform distribution on [ -1, 1 ]
-   uniform_eps_1; a uniform distribution on [ 1e-6, 1 ]
-   gauss_01; a mean 0 standard deviation 1 Gaussian distribution
-   gauss_05, a mean 0.5 standard deviation 0.25 gaussian distribution for haqi
+    uniform_1_1; a uniform distribution on [ -1, 1 ]
+    uniform_eps_1; a uniform distribution on [ 1e-6, 1 ]
+    gauss_01; a mean 0 standard deviation 1 Gaussian distribution
+    gauss_05, a mean 0.5 standard deviation 0.25 gaussian distribution for haqi
 
 {xrst_code py}"""
 csv_file['prior.csv'] = \
@@ -248,8 +248,8 @@ csv_file['data_in.csv'] = csv_file['data_in.csv'].replace(' ', '')
 The measurement value meas_value is 0.0000 above and gets replaced by
 the following code:
 {xrst_literal
-   # BEGIN_MEAS_VALUE
-   # END_MEAS_VALUE
+    # BEGIN_MEAS_VALUE
+    # END_MEAS_VALUE
 }
 
 breakup_computation
@@ -265,8 +265,8 @@ breakup_computation = True
 Source Code
 ***********
 {xrst_literal
-   BEGIN_PROGRAM
-   END_PROGRAM
+    BEGIN_PROGRAM
+    END_PROGRAM
 }
 
 {xrst_end csv.break_fit_pred}
@@ -276,241 +276,241 @@ Source Code
 # n0_mulcov_posterior
 # mulcov_mean, mulcov_std =
 def n0_mulcov_posterior(fit_dir) :
-   #
-   # all_node_database, fit_database
-   root_database = f'{fit_dir}/root.db'
-   fit_database  = f'{fit_dir}/n0/dismod.db'
-   #
-   # fit_or_root
-   fit_or_root = at_cascade.fit_or_root_class(fit_database, root_database)
-   #
-   # fit_table
-   fit_table = dict()
-   for name in [
-      'integrand',
-      'c_shift_predict_fit_var' ,
-      'c_shift_predict_sample' ,
-      'c_shift_avgint'
-   ] :
-      fit_table[name] = fit_or_root.get_table(name)
-   #
-   # mulcov_mean
-   # A covariate multiplier does not depend on age, time, or other
-   # covarites, so predicting for it is simple.
-   mulcov_mean = None
-   for predict_row in fit_table['c_shift_predict_fit_var'] :
-      avgint_id          = predict_row['avgint_id']
-      avgint_row         = fit_table['c_shift_avgint'][avgint_id]
-      integrand_id       = avgint_row['integrand_id']
-      integrand_row      = fit_table['integrand'][integrand_id]
-      if integrand_row['integrand_name'] == 'mulcov_0' :
-         assert mulcov_mean == None
-         mulcov_mean = predict_row['avg_integrand']
-   assert mulcov_mean != None
-   #
-   # mulcov_sample
-   mulcov_sample = list()
-   for predict_row in fit_table['c_shift_predict_sample'] :
-      avgint_id          = predict_row['avgint_id']
-      avgint_row         = fit_table['c_shift_avgint'][avgint_id]
-      integrand_id       = avgint_row['integrand_id']
-      integrand_row      = fit_table['integrand'][integrand_id]
-      if integrand_row['integrand_name'] == 'mulcov_0' :
-         mulcov_sample.append( predict_row['avg_integrand'] )
-   assert len(mulcov_sample) == number_sample
-   #
-   # mulcov_std
-   mulcov_std = numpy.std(mulcov_sample, mean = mulcov_mean, ddof = 0)
-   #
-   return (mulcov_mean, mulcov_std)
+    #
+    # all_node_database, fit_database
+    root_database = f'{fit_dir}/root.db'
+    fit_database  = f'{fit_dir}/n0/dismod.db'
+    #
+    # fit_or_root
+    fit_or_root = at_cascade.fit_or_root_class(fit_database, root_database)
+    #
+    # fit_table
+    fit_table = dict()
+    for name in [
+        'integrand',
+        'c_shift_predict_fit_var' ,
+        'c_shift_predict_sample' ,
+        'c_shift_avgint'
+    ] :
+        fit_table[name] = fit_or_root.get_table(name)
+    #
+    # mulcov_mean
+    # A covariate multiplier does not depend on age, time, or other
+    # covarites, so predicting for it is simple.
+    mulcov_mean = None
+    for predict_row in fit_table['c_shift_predict_fit_var'] :
+        avgint_id          = predict_row['avgint_id']
+        avgint_row         = fit_table['c_shift_avgint'][avgint_id]
+        integrand_id       = avgint_row['integrand_id']
+        integrand_row      = fit_table['integrand'][integrand_id]
+        if integrand_row['integrand_name'] == 'mulcov_0' :
+            assert mulcov_mean == None
+            mulcov_mean = predict_row['avg_integrand']
+    assert mulcov_mean != None
+    #
+    # mulcov_sample
+    mulcov_sample = list()
+    for predict_row in fit_table['c_shift_predict_sample'] :
+        avgint_id          = predict_row['avgint_id']
+        avgint_row         = fit_table['c_shift_avgint'][avgint_id]
+        integrand_id       = avgint_row['integrand_id']
+        integrand_row      = fit_table['integrand'][integrand_id]
+        if integrand_row['integrand_name'] == 'mulcov_0' :
+            mulcov_sample.append( predict_row['avg_integrand'] )
+    assert len(mulcov_sample) == number_sample
+    #
+    # mulcov_std
+    mulcov_std = numpy.std(mulcov_sample, mean = mulcov_mean, ddof = 0)
+    #
+    return (mulcov_mean, mulcov_std)
 #
 # computation
 def computation(fit_dir) :
-   #
-   # csv.fit, csv.predict
-   if not breakup_computation:
-      at_cascade.csv.fit(fit_dir)
-      at_cascade.csv.predict(fit_dir)
-   else :
-      # csv.fit: Just fit the root node
-      # Since refit_split is false, this will only fit include n0.both.
-      at_cascade.csv.fit(fit_dir, max_node_depth = 0)
-      #
-      # all_node_database
-      all_node_database = f'{fit_dir}/all_node.db'
-      #
-      # Run two continues starting at n0.both.
-      # If max_number_cpu != 1, run them in parallel.
-      # p_fit
-      p_fit = dict()
-      fit_database      = f'{fit_dir}/n0/dismod.db'
-      fit_type          = [ 'both', 'fixed']
-      for node_name in [ 'n1' , 'n2' ] :
-         fit_goal_set  = { node_name }
-         shared_unique = '_' + node_name
-         args          = (
-            all_node_database,
-            fit_database,
-            fit_goal_set,
-            fit_type,
-            shared_unique,
-         )
-         if max_number_cpu == 1 :
-            at_cascade.continue_cascade( *args )
-         else :
-            p_fit[node_name] = multiprocessing.Process(
-               target = at_cascade.continue_cascade , args = args ,
-            )
-            p_fit[node_name].start()
-      # If max_number_cpu != 1, wait for parent continue jobs to finish
-      for key in p_fit :
-         p_fit[key].join()
-      # fit n3
-      for node_name in [ 'n3', 'n4' ]:
-         parent_node = 'n1' if node_name == 'n3' else 'n1/n3'
-         for sex in ['male', 'female']:
-            fit_database      = f'{fit_dir}/n0/{sex}/{parent_node}/dismod.db'
+    #
+    # csv.fit, csv.predict
+    if not breakup_computation:
+        at_cascade.csv.fit(fit_dir)
+        at_cascade.csv.predict(fit_dir)
+    else :
+        # csv.fit: Just fit the root node
+        # Since refit_split is false, this will only fit include n0.both.
+        at_cascade.csv.fit(fit_dir, max_node_depth = 0)
+        #
+        # all_node_database
+        all_node_database = f'{fit_dir}/all_node.db'
+        #
+        # Run two continues starting at n0.both.
+        # If max_number_cpu != 1, run them in parallel.
+        # p_fit
+        p_fit = dict()
+        fit_database      = f'{fit_dir}/n0/dismod.db'
+        fit_type          = [ 'both', 'fixed']
+        for node_name in [ 'n1' , 'n2' ] :
             fit_goal_set  = { node_name }
             shared_unique = '_' + node_name
             args          = (
-               all_node_database,
-               fit_database,
-               fit_goal_set,
-               fit_type,
-               shared_unique,
+                all_node_database,
+                fit_database,
+                fit_goal_set,
+                fit_type,
+                shared_unique,
             )
             if max_number_cpu == 1 :
-                  at_cascade.continue_cascade( *args )
+                at_cascade.continue_cascade( *args )
             else :
-               p_fit[f"{node_name}_{sex}"] = multiprocessing.Process(
-                  target = at_cascade.continue_cascade , args = args ,
-               )
-               p_fit[f"{node_name}_{sex}"].start()
-         # If max_number_cpu != 1, wait for continue jobs to finish
-         for key in p_fit :
-            p_fit[key].join()
-      #
-      # Run one predict for n0.both using this process
-      # If max_number_cpu != 1, this is in parallel with the continues above
-      p_predict      = dict()
-      sim_dir        = None
-      start_job_name = 'n0.both'
-      max_job_depth  = 0
-      args            = (fit_dir, sim_dir, start_job_name, max_job_depth)
-      at_cascade.csv.predict( *args )
-      #
-
-      #
-      #
-      # Run predict starting at
-      # n1.female, n1.male, n2.female, n2.male.
-      # If max_number_cpu != 1, run them in parallel.
-      sim_dir       = None
-      max_job_depth = 0
-      for node_name in [ 'n1', 'n2', 'n3', 'n4' ] :
-         for sex in [ 'female', 'male' ] :
-            start_job_name = f'{node_name}.{sex}'
-            args           = (fit_dir, sim_dir, start_job_name, max_job_depth)
-            if max_number_cpu == 1 :
-               at_cascade.csv.predict(*args)
-            else :
-               key            = (node_name, sex)
-               p_predict[key] = multiprocessing.Process(
-                  target = at_cascade.csv.predict, args = args,
+                p_fit[node_name] = multiprocessing.Process(
+                    target = at_cascade.continue_cascade , args = args ,
                 )
-               p_predict[key].start()
-      #
-      # If max_number_cpu != 1, wait for predict jobs to finish
-      for key in p_predict :
-         p_predict[key].join()
-   return
+                p_fit[node_name].start()
+        # If max_number_cpu != 1, wait for parent continue jobs to finish
+        for key in p_fit :
+            p_fit[key].join()
+        # fit n3
+        for node_name in [ 'n3', 'n4' ]:
+            parent_node = 'n1' if node_name == 'n3' else 'n1/n3'
+            for sex in ['male', 'female']:
+                fit_database      = f'{fit_dir}/n0/{sex}/{parent_node}/dismod.db'
+                fit_goal_set  = { node_name }
+                shared_unique = '_' + node_name
+                args          = (
+                    all_node_database,
+                    fit_database,
+                    fit_goal_set,
+                    fit_type,
+                    shared_unique,
+                )
+                if max_number_cpu == 1 :
+                        at_cascade.continue_cascade( *args )
+                else :
+                    p_fit[f"{node_name}_{sex}"] = multiprocessing.Process(
+                        target = at_cascade.continue_cascade , args = args ,
+                    )
+                    p_fit[f"{node_name}_{sex}"].start()
+            # If max_number_cpu != 1, wait for continue jobs to finish
+            for key in p_fit :
+                p_fit[key].join()
+        #
+        # Run one predict for n0.both using this process
+        # If max_number_cpu != 1, this is in parallel with the continues above
+        p_predict      = dict()
+        sim_dir        = None
+        start_job_name = 'n0.both'
+        max_job_depth  = 0
+        args            = (fit_dir, sim_dir, start_job_name, max_job_depth)
+        at_cascade.csv.predict( *args )
+        #
+
+        #
+        #
+        # Run predict starting at
+        # n1.female, n1.male, n2.female, n2.male.
+        # If max_number_cpu != 1, run them in parallel.
+        sim_dir       = None
+        max_job_depth = 0
+        for node_name in [ 'n1', 'n2', 'n3', 'n4' ] :
+            for sex in [ 'female', 'male' ] :
+                start_job_name = f'{node_name}.{sex}'
+                args           = (fit_dir, sim_dir, start_job_name, max_job_depth)
+                if max_number_cpu == 1 :
+                    at_cascade.csv.predict(*args)
+                else :
+                    key            = (node_name, sex)
+                    p_predict[key] = multiprocessing.Process(
+                        target = at_cascade.csv.predict, args = args,
+                     )
+                    p_predict[key].start()
+        #
+        # If max_number_cpu != 1, wait for predict jobs to finish
+        for key in p_predict :
+            p_predict[key].join()
+    return
 #
 # main
 def main() :
-   #
-   # fit_dir
-   fit_dir = 'build/test/csv'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # write csv files
-   for name in csv_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( csv_file[name] )
-      file_ptr.close()
-   #
-   # node2haqi, haqi_avg
-   node2haqi  = { 'n0' : 1.0, 'n1' : 0.5, 'n2' : 1.5, 'n3' : 1.0, 'n4' : 1.0 }
-   file_name  = f'{fit_dir}/covariate.csv'
-   table      = at_cascade.csv.read_table( file_name )
-   haqi_sum   = 0.0
-   for row in table :
-      node_name = row['node_name']
-      haqi      = float( row['haqi'] )
-      haqi_sum += haqi
-      assert haqi == node2haqi[node_name]
-   haqi_avg = haqi_sum / len(table)
-   #
-   # data_in.csv
-   float_format      = '{0:.5g}'
-   true_mulcov_haqi  = 0.5
-   no_effect_iota    = 0.1
-   file_name         = f'{fit_dir}/data_in.csv'
-   table             = at_cascade.csv.read_table( file_name )
-   for row in table :
-      node_name      = row['node_name']
-      integrand_name = row['integrand_name']
-      assert integrand_name == 'Sincidence'
-      #
-      # BEGIN_MEAS_VALUE
-      haqi              = node2haqi[node_name]
-      effect            = true_mulcov_haqi * (haqi - haqi_avg)
-      iota              = math.exp(effect) * no_effect_iota
-      row['meas_value'] = float_format.format( iota )
-      # END_MEAS_VALUE
-   at_cascade.csv.write_table(file_name, table)
-   #
-   # computation
-   computation(fit_dir)
-   #
-   # check priors on haqi match
-   variable_tables = dict()
-   node_path = ['n0/male/n1','n0/male/n1/n3/n4']
-   node_name = ['n1', 'n4']
-   for i in range(len(node_name)):
-      variable_tables[node_name[i]] = at_cascade.csv.read_table(
-         file_name = f'{fit_dir}/{node_path[i]}/variable.csv'
-      )
-   haqi_priors = dict()
-   for node, table in variable_tables.items():
-      for row in table:
-         if row['covariate'] == "haqi":
-            std_v = row['std_v']
-            mean_v = row['mean_v']
-            haqi_priors[node] = {
-               "std_v" : std_v,
-               "mean_v" : mean_v
-            }
-   assert haqi_priors['n1']['std_v'] == haqi_priors['n4']['std_v']
-   assert haqi_priors['n1']['mean_v'] == haqi_priors['n4']['mean_v']
-   #
-   # n0_mean, n0_std
-   n0_mean, n0_std = n0_mulcov_posterior(fit_dir)
-   n0_std          = n0_std * child_prior_std_factor_mulcov
-   #
-   # check mean
-   rel_error = float(haqi_priors['n1']['mean_v']) / n0_mean - 1.0
-   if  abs(rel_error) > 1e-4 :
-      print(haqi_priors['n1']['mean_v'], n0_mean)
-      assert False
-   #
-   # check_std
-   rel_error = float(haqi_priors['n1']['std_v']) / n0_std - 1.0
-   if abs(rel_error) > 1e-4 :
-      print(haqi_priors['n1']['std_v'], n0_std)
-      assert False
+    #
+    # fit_dir
+    fit_dir = 'build/test/csv'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # write csv files
+    for name in csv_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
+    #
+    # node2haqi, haqi_avg
+    node2haqi  = { 'n0' : 1.0, 'n1' : 0.5, 'n2' : 1.5, 'n3' : 1.0, 'n4' : 1.0 }
+    file_name  = f'{fit_dir}/covariate.csv'
+    table      = at_cascade.csv.read_table( file_name )
+    haqi_sum   = 0.0
+    for row in table :
+        node_name = row['node_name']
+        haqi      = float( row['haqi'] )
+        haqi_sum += haqi
+        assert haqi == node2haqi[node_name]
+    haqi_avg = haqi_sum / len(table)
+    #
+    # data_in.csv
+    float_format      = '{0:.5g}'
+    true_mulcov_haqi  = 0.5
+    no_effect_iota    = 0.1
+    file_name         = f'{fit_dir}/data_in.csv'
+    table             = at_cascade.csv.read_table( file_name )
+    for row in table :
+        node_name      = row['node_name']
+        integrand_name = row['integrand_name']
+        assert integrand_name == 'Sincidence'
+        #
+        # BEGIN_MEAS_VALUE
+        haqi              = node2haqi[node_name]
+        effect            = true_mulcov_haqi * (haqi - haqi_avg)
+        iota              = math.exp(effect) * no_effect_iota
+        row['meas_value'] = float_format.format( iota )
+        # END_MEAS_VALUE
+    at_cascade.csv.write_table(file_name, table)
+    #
+    # computation
+    computation(fit_dir)
+    #
+    # check priors on haqi match
+    variable_tables = dict()
+    node_path = ['n0/male/n1','n0/male/n1/n3/n4']
+    node_name = ['n1', 'n4']
+    for i in range(len(node_name)):
+        variable_tables[node_name[i]] = at_cascade.csv.read_table(
+            file_name = f'{fit_dir}/{node_path[i]}/variable.csv'
+        )
+    haqi_priors = dict()
+    for node, table in variable_tables.items():
+        for row in table:
+            if row['covariate'] == "haqi":
+                std_v = row['std_v']
+                mean_v = row['mean_v']
+                haqi_priors[node] = {
+                    "std_v" : std_v,
+                    "mean_v" : mean_v
+                }
+    assert haqi_priors['n1']['std_v'] == haqi_priors['n4']['std_v']
+    assert haqi_priors['n1']['mean_v'] == haqi_priors['n4']['mean_v']
+    #
+    # n0_mean, n0_std
+    n0_mean, n0_std = n0_mulcov_posterior(fit_dir)
+    n0_std          = n0_std * child_prior_std_factor_mulcov
+    #
+    # check mean
+    rel_error = float(haqi_priors['n1']['mean_v']) / n0_mean - 1.0
+    if  abs(rel_error) > 1e-4 :
+        print(haqi_priors['n1']['mean_v'], n0_mean)
+        assert False
+    #
+    # check_std
+    rel_error = float(haqi_priors['n1']['std_v']) / n0_std - 1.0
+    if abs(rel_error) > 1e-4 :
+        print(haqi_priors['n1']['std_v'], n0_std)
+        assert False
 #
 if __name__ == '__main__' :
-   main()
-   print('posterior_freeze.py: OK')
+    main()
+    print('posterior_freeze.py: OK')
 # END_PROGRAM

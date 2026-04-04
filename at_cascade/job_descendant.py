@@ -11,8 +11,8 @@ Check if A Job is a Descendant of Another
 Prototype
 *********
 {xrst_literal ,
-   # BEGIN_DEF, # END_DEF
-   # BEGIN_RETURN, # END_RETURN
+    # BEGIN_DEF, # END_DEF
+    # BEGIN_RETURN, # END_RETURN
 }
 
 job_table
@@ -40,14 +40,14 @@ Node Depth Versus Job Depth
 We use ancestor and descendant node to denote the nodes
 corresponding to:
 
-   |  *job_table* [ *ancestor_id*] ['fit_node_id']
-   |  *job_table* [ *descendant*] ['fit_node_id']
+    |  *job_table* [ *ancestor_id*] ['fit_node_id']
+    |  *job_table* [ *descendant*] ['fit_node_id']
 
 We use ancestor and descendant reference to denote the split reference
 values corresponding to:
 
-   |  *job_table* [ *ancestor_id*] ['split_reference_id']
-   |  *job_table* [ *descendant*] ['split_reference_id']
+    |  *job_table* [ *ancestor_id*] ['split_reference_id']
+    |  *job_table* [ *descendant*] ['split_reference_id']
 
 If the ancestor reference is equal to the descendant reference,
 or if :ref:`option_all_table@refit_split` is false,
@@ -63,21 +63,21 @@ ancestor and descendant nodes.
 # BEGIN_DEF
 # at_cascade.job_descendant
 def job_descendant(job_table, ancestor_id, descendant_id) :
-   assert type(job_table)   == list
-   assert type(ancestor_id)   == int
-   assert type(descendant_id) == int
-   # END_DEF
-   #
-   # generation
-   generation = 0
-   job_id     = descendant_id
-   while job_id != None and job_id != ancestor_id :
-      generation += 1
-      job_id      = job_table[job_id]['parent_job_id']
-   if job_id == None :
-      generation = None
-   #
-   # BEGIN_RETURN
-   assert generation == None or type(generation) == int
-   return generation
-   # END_RETURN
+    assert type(job_table)   == list
+    assert type(ancestor_id)   == int
+    assert type(descendant_id) == int
+    # END_DEF
+    #
+    # generation
+    generation = 0
+    job_id     = descendant_id
+    while job_id != None and job_id != ancestor_id :
+        generation += 1
+        job_id      = job_table[job_id]['parent_job_id']
+    if job_id == None :
+        generation = None
+    #
+    # BEGIN_RETURN
+    assert generation == None or type(generation) == int
+    return generation
+    # END_RETURN

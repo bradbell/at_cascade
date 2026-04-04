@@ -12,7 +12,7 @@ import multiprocessing
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 """
 {xrst_begin csv.population}
@@ -65,13 +65,13 @@ This example uses the default value for the options that are not
 listed below:
 
 .. csv-table::
-   :header: Name, Value
-   :delim: |
+    :header: Name, Value
+    :delim: |
 
-   random_seed| chosen using current seconds reported by python time package.
-   compress_interval| use zero so that no intervals get compressed.
-   tolerance_fixed| this is set small, 1e-8, so we can check accuracy.
-   ode_step_size| step size use to approximate averages w.r.t. age, time.
+    random_seed| chosen using current seconds reported by python time package.
+    compress_interval| use zero so that no intervals get compressed.
+    tolerance_fixed| this is set small, 1e-8, so we can check accuracy.
+    ode_step_size| step size use to approximate averages w.r.t. age, time.
 
 The population covariate is used to weight the data; see
 :ref:`csv.fit@Input Files@covariate.csv@population` in the covariate.csv table.
@@ -108,11 +108,11 @@ to make sure that the different population weights have a different effect.
 female_population_age_0   = 1e4
 female_population_age_100 = 1e3
 csv_file['covariate.csv'] = \
-   'node_name,sex,age,time,omega,population\n' + \
-   'n0,female,0,2000,0.02,'   + str(female_population_age_0) + '\n' \
-   'n0,female,100,2000,0.02,' + str(female_population_age_100) + '\n' \
-   'n0,male,0,2000,0.02,'     + str(female_population_age_100) + '\n' \
-   'n0,male,100,2000,0.02,'   + str(female_population_age_0) + '\n'
+    'node_name,sex,age,time,omega,population\n' + \
+    'n0,female,0,2000,0.02,'   + str(female_population_age_0) + '\n' \
+    'n0,female,100,2000,0.02,' + str(female_population_age_100) + '\n' \
+    'n0,male,0,2000,0.02,'     + str(female_population_age_100) + '\n' \
+    'n0,male,100,2000,0.02,'   + str(female_population_age_0) + '\n'
 """{xrst_code}
 
 fit_goal.csv
@@ -141,12 +141,12 @@ prior.csv
 We define three priors:
 
 .. csv-table::
-   :widths: auto
-   :delim: ;
+    :widths: auto
+    :delim: ;
 
-   uniform_1_1;   a uniform distribution on [ -1, 1 ]
-   uniform_eps_1; a uniform distribution on [ 1e-6, 1 ]
-   gauss_01;      a Gaussian with mean 0 standard deviation 1
+    uniform_1_1;   a uniform distribution on [ -1, 1 ]
+    uniform_eps_1; a uniform distribution on [ 1e-6, 1 ]
+    gauss_01;      a Gaussian with mean 0 standard deviation 1
 
 {xrst_code py}"""
 csv_file['prior.csv'] = \
@@ -218,15 +218,15 @@ csv_file['data_in.csv'] = csv_file['data_in.csv'].replace(' ', '')
 The measurement value meas_value is 0.0000 above and gets replaced by
 the following code:
 {xrst_literal
-   # BEGIN_MEAS_VALUE
-   # END_MEAS_VALUE
+    # BEGIN_MEAS_VALUE
+    # END_MEAS_VALUE
 }
 
 Source Code
 ***********
 {xrst_literal
-   BEGIN_PROGRAM
-   END_PROGRAM
+    BEGIN_PROGRAM
+    END_PROGRAM
 }
 
 {xrst_end csv.population}
@@ -235,104 +235,104 @@ Source Code
 #
 # no_effect_iota
 def no_effect_iota(age) :
-   age_0    = 0.01
-   age_100  = 0.03
-   iota     = ( age_0 * (100.0 - age) + age_100 * (age - 0.0) ) / 100.0
-   return iota
+    age_0    = 0.01
+    age_100  = 0.03
+    iota     = ( age_0 * (100.0 - age) + age_100 * (age - 0.0) ) / 100.0
+    return iota
 #
 # population
 def population(sex, age) :
-   male_population_age_0   = female_population_age_100
-   male_population_age_100 = female_population_age_0
-   if sex == 'female' :
-      age_0    = female_population_age_0
-      age_100  = female_population_age_100
-   elif sex == 'male' :
-      age_0    = male_population_age_0
-      age_100  = male_population_age_100
-   else :
-      assert sex == 'both'
-      age_0    = (female_population_age_0   + male_population_age_0) / 2
-      age_100  = (female_population_age_100 + male_population_age_100) / 2
-   pop = ( age_0 * (100.0 - age) + age_100 * (age - 0.0) ) / 100.0
-   return pop
+    male_population_age_0   = female_population_age_100
+    male_population_age_100 = female_population_age_0
+    if sex == 'female' :
+        age_0    = female_population_age_0
+        age_100  = female_population_age_100
+    elif sex == 'male' :
+        age_0    = male_population_age_0
+        age_100  = male_population_age_100
+    else :
+        assert sex == 'both'
+        age_0    = (female_population_age_0   + male_population_age_0) / 2
+        age_100  = (female_population_age_100 + male_population_age_100) / 2
+    pop = ( age_0 * (100.0 - age) + age_100 * (age - 0.0) ) / 100.0
+    return pop
 #
 # average_Sincidence
 def average_Sincidence(sex, age_lower, age_upper) :
-   if age_lower == age_upper :
-      return no_effect_iota(age_lower)
-   #
-   max_step = ode_step_size
-   n_step    = int( (age_upper - age_lower) / max_step ) + 1
-   step_size = (age_upper - age_lower) / n_step
-   #
-   average   = 0.0
-   sum_pop   = 0.0
-   for i_step in range(n_step + 1) :
-      age     = age_lower + i_step * step_size
-      pop     = population(sex, age)
-      iota    = no_effect_iota(age)
-      average += pop * iota
-      sum_pop += pop
-   average /= sum_pop
-   return average
+    if age_lower == age_upper :
+        return no_effect_iota(age_lower)
+    #
+    max_step = ode_step_size
+    n_step    = int( (age_upper - age_lower) / max_step ) + 1
+    step_size = (age_upper - age_lower) / n_step
+    #
+    average   = 0.0
+    sum_pop   = 0.0
+    for i_step in range(n_step + 1) :
+        age     = age_lower + i_step * step_size
+        pop     = population(sex, age)
+        iota    = no_effect_iota(age)
+        average += pop * iota
+        sum_pop += pop
+    average /= sum_pop
+    return average
 #
 # main
 def main() :
-   #
-   # fit_dir
-   fit_dir = 'build/example/csv'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # write csv files
-   for name in csv_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( csv_file[name] )
-      file_ptr.close()
-   #
-   # data_in.csv
-   float_format      = '{0:.5g}'
-   file_name         = f'{fit_dir}/data_in.csv'
-   table             = at_cascade.csv.read_table( file_name )
-   for row in table :
-      sex            = row['sex']
-      node_name      = row['node_name']
-      integrand_name = row['integrand_name']
-      age_lower      = float( row['age_lower'] )
-      age_upper      = float( row['age_upper'] )
-      assert integrand_name == 'Sincidence'
-      #
-      # BEGIN_MEAS_VALUE
-      row['meas_value'] = average_Sincidence(sex, age_lower, age_upper)
-      # END_MEAS_VALUE
-   at_cascade.csv.write_table(file_name, table)
-   #
-   # fit
-   at_cascade.csv.fit(fit_dir)
-   #
-   # predict
-   at_cascade.csv.predict(fit_dir)
-   #
-   #
-   # predict_table
-   file_name = f'{fit_dir}/fit_predict.csv'
-   predict_table = at_cascade.csv.read_table(file_name)
-   #
-   # row
-   for row in predict_table :
-      assert row['integrand_name'] == 'Sincidence'
-      assert row['node_name'] == 'n0'
-      age       = float( row['age'] )
-      iota      = float( row['avg_integrand'] )
-      check     = no_effect_iota(age)
-      rel_error = (iota - check) / check
-      if abs(rel_error) >= 1e-4 :
-        print(f'age={age}, iota={iota}, check={check}, rel_error={rel_error}')
-      assert abs(rel_error) < 1e-4
-   #
+    #
+    # fit_dir
+    fit_dir = 'build/example/csv'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # write csv files
+    for name in csv_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
+    #
+    # data_in.csv
+    float_format      = '{0:.5g}'
+    file_name         = f'{fit_dir}/data_in.csv'
+    table             = at_cascade.csv.read_table( file_name )
+    for row in table :
+        sex            = row['sex']
+        node_name      = row['node_name']
+        integrand_name = row['integrand_name']
+        age_lower      = float( row['age_lower'] )
+        age_upper      = float( row['age_upper'] )
+        assert integrand_name == 'Sincidence'
+        #
+        # BEGIN_MEAS_VALUE
+        row['meas_value'] = average_Sincidence(sex, age_lower, age_upper)
+        # END_MEAS_VALUE
+    at_cascade.csv.write_table(file_name, table)
+    #
+    # fit
+    at_cascade.csv.fit(fit_dir)
+    #
+    # predict
+    at_cascade.csv.predict(fit_dir)
+    #
+    #
+    # predict_table
+    file_name = f'{fit_dir}/fit_predict.csv'
+    predict_table = at_cascade.csv.read_table(file_name)
+    #
+    # row
+    for row in predict_table :
+        assert row['integrand_name'] == 'Sincidence'
+        assert row['node_name'] == 'n0'
+        age       = float( row['age'] )
+        iota      = float( row['avg_integrand'] )
+        check     = no_effect_iota(age)
+        rel_error = (iota - check) / check
+        if abs(rel_error) >= 1e-4 :
+          print(f'age={age}, iota={iota}, check={check}, rel_error={rel_error}')
+        assert abs(rel_error) < 1e-4
+    #
 #
 if __name__ == '__main__' :
-   main()
-   print('population.py: OK')
+    main()
+    print('population.py: OK')
 # END_PROGRAM

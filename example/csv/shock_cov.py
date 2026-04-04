@@ -10,7 +10,7 @@ import shutil
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 import dismod_at
 # --------------------------------------------------------------------------
@@ -65,8 +65,8 @@ covariate_reference = 'covariate.csv'
 '''{xrst_code}
 The following code, at the end of this example, checks the cov_reference table
 {xrst_literal
-   # BEGIN_CHECK_COV_REFERENCE
-   # END_CHECK_COV_REFERENCE
+    # BEGIN_CHECK_COV_REFERENCE
+    # END_CHECK_COV_REFERENCE
 }
 
 Simulation
@@ -97,9 +97,9 @@ the narrower the shock.
 shock_age  = age_grid[3]
 shock_time = time_grid[1]
 def shock_covariate(age, time) :
-   if age == shock_age and time == shock_time :
-      return 1.0
-   return 0.0
+    if age == shock_age and time == shock_time :
+        return 1.0
+    return 0.0
 '''{xrst_code}
 
 option_sim.csv
@@ -142,15 +142,15 @@ covariate.csv
 {xrst_code py}'''
 omega_truth      = 0.01
 sim_file['covariate.csv'] = \
-   'node_name,sex,age,time,omega,abs_shock,rel_shock\n'
+    'node_name,sex,age,time,omega,abs_shock,rel_shock\n'
 for node_name in [ 'n0', 'n1', 'n2' ] :
-   for sex in [ 'female', 'male' ] :
-      for age in age_grid :
-         for time in time_grid :
-            shock = shock_covariate(age, time)
-            row   = \
-            f'{node_name},{sex},{age},{time},{omega_truth},{shock},{shock}\n'
-            sim_file['covariate.csv'] += row
+    for sex in [ 'female', 'male' ] :
+        for age in age_grid :
+            for time in time_grid :
+                shock = shock_covariate(age, time)
+                row   = \
+                f'{node_name},{sex},{age},{time},{omega_truth},{shock},{shock}\n'
+                sim_file['covariate.csv'] += row
 '''{xrst_code}
 
 multiplier_sim.csv
@@ -190,17 +190,17 @@ simulate_id     = 0
 meas_std_cv     = 0.01
 meas_std_min    = 0.02
 for integrand_name in [ 'Sincidence', 'prevalence' ] :
-   for node_name in [ 'n0', 'n1', 'n2' ] :
-      for sex in [ 'female', 'male' ] :
-         for age in age_grid :
-            for time in time_grid :
-               if (age, time) != (shock_age, shock_time) :
-                  for i in range(n_repeat) :
-                     row  = f'{simulate_id},{integrand_name},{node_name},{sex},'
-                     row += f'{age},{age},{time},{time},'
-                     row += f'{meas_std_cv},{meas_std_min}\n'
-                     sim_file['simulate.csv'] += row
-                     simulate_id += 1
+    for node_name in [ 'n0', 'n1', 'n2' ] :
+        for sex in [ 'female', 'male' ] :
+            for age in age_grid :
+                for time in time_grid :
+                    if (age, time) != (shock_age, shock_time) :
+                        for i in range(n_repeat) :
+                            row  = f'{simulate_id},{integrand_name},{node_name},{sex},'
+                            row += f'{age},{age},{time},{time},'
+                            row += f'{meas_std_cv},{meas_std_min}\n'
+                            sim_file['simulate.csv'] += row
+                            simulate_id += 1
 '''{xrst_code}
 
 no_effect_rate.csv
@@ -303,14 +303,14 @@ in the log Gaussian distribution.
 The file prior.csv defines the following densities:
 
 .. csv-table::
-   :widths: auto
-   :header-rows: 1
+    :widths: auto
+    :header-rows: 1
 
-   Name,Description
-   uniform\_-1_1,"a uniform density on the interval [-1,1]"
-   uniform\_eps_1,"a uniform density on the interval [1e-6,1]"
-   delta_prior,a log Gaussian density with mean 0 std 0.1 and eta 1e-5
-   random_prior,a Gaussian density with mean 0 and std 0.2
+    Name,Description
+    uniform\_-1_1,"a uniform density on the interval [-1,1]"
+    uniform\_eps_1,"a uniform density on the interval [1e-6,1]"
+    delta_prior,a log Gaussian density with mean 0 std 0.1 and eta 1e-5
+    random_prior,a Gaussian density with mean 0 and std 0.2
 
 {xrst_code py}'''
 fit_file['prior.csv'] = \
@@ -340,12 +340,12 @@ and is rate vales is fit on this grid.
 data = 'rate_name,age,time,value_prior,dage_prior,dtime_prior,const_value\n'
 data += f'chi,0.0,0.0,,,,{no_effect_chi}\n'
 for age in age_grid :
-   for time in time_grid :
-      data += f'iota,{age},{time},uniform_eps_1,'
-      if age == 0.0 :
-         data += 'age_0_delta,delta_prior,\n'
-      else :
-         data += 'delta_prior,delta_prior,\n'
+    for time in time_grid :
+        data += f'iota,{age},{time},uniform_eps_1,'
+        if age == 0.0 :
+            data += 'age_0_delta,delta_prior,\n'
+        else :
+            data += 'delta_prior,delta_prior,\n'
 fit_file['parent_rate.csv'] = data
 '''{xrst_code}
 
@@ -410,8 +410,8 @@ Source Code
 ===========
 Below is the rest of the source code for this example:
 {xrst_literal
-   # BEGIN_SOURCE_CODE
-   # END_SOURCE_CODE
+    # BEGIN_SOURCE_CODE
+    # END_SOURCE_CODE
 }
 
 {xrst_end csv.shock_cov}
@@ -420,195 +420,195 @@ Below is the rest of the source code for this example:
 # -----------------------------------------------------------------------------
 # BEGIN_SOURCE_CODE
 def sim(sim_dir) :
-   #
-   # write input csv files
-   for name in sim_file :
-      file_name = f'{sim_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( sim_file[name] )
-      file_ptr.close()
-   #
-   # csv.simulate
-   at_cascade.csv.simulate(sim_dir)
-   #
-   # data_join.csv
-   at_cascade.csv.join_file(
-      left_file   = f'{sim_dir}/simulate.csv' ,
-      right_file  = f'{sim_dir}/data_sim.csv' ,
-      result_file = f'{sim_dir}/data_join.csv'     ,
-   )
+    #
+    # write input csv files
+    for name in sim_file :
+        file_name = f'{sim_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( sim_file[name] )
+        file_ptr.close()
+    #
+    # csv.simulate
+    at_cascade.csv.simulate(sim_dir)
+    #
+    # data_join.csv
+    at_cascade.csv.join_file(
+        left_file   = f'{sim_dir}/simulate.csv' ,
+        right_file  = f'{sim_dir}/data_sim.csv' ,
+        result_file = f'{sim_dir}/data_join.csv'     ,
+    )
 # -----------------------------------------------------------------------------
 # fit
 def fit(sim_dir, fit_dir) :
-   #
-   # node.csv, covarite.csv
-   for file_name in [ 'node.csv', 'covariate.csv' ] :
-      shutil.copyfile(
-         src = f'{sim_dir}/{file_name}' ,
-         dst = f'{fit_dir}/{file_name}' ,
-      )
-   #
-   # csv files in fit_file
-   for name in fit_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( fit_file[name] )
-      file_ptr.close()
-   #
-   # fit_goal_set
-   fit_goal_table = at_cascade.csv.read_table(
-      file_name = f'{fit_dir}/fit_goal.csv'
-   )
-   fit_goal_set = set()
-   for row in fit_goal_table :
-      node_name = row['node_name']
-      for sex in [ 'female', 'male' ] :
-         fit_goal_set.add( (node_name, sex) )
-   #
-   # data_join_table
-   # This is a join of simulate.csv and dats_sim.csv
-   data_join_table = at_cascade.csv.read_table(
-      file_name = f'{sim_dir}/data_join.csv'
-   )
-   #
-   # data_in.csv
-   table = list()
-   for row_join in data_join_table :
-      #
-      # row_in
-      row_in = dict()
-      copy_list  = [ 'integrand_name', 'node_name', 'sex' ]
-      copy_list += [ 'age_lower', 'age_upper', 'time_lower', 'time_upper' ]
-      row_in['data_id']   = row_join['simulate_id']
-      for key in copy_list :
-         row_in[key] = row_join[key]
-      row_in['meas_value']    = row_join['meas_value']
-      row_in['meas_std']      = row_join['meas_std']
-      row_in['hold_out']      = 0
-      row_in['density_name']  = 'gaussian'
-      #
-      table.append( row_in )
-   at_cascade.csv.write_table(
-         file_name = f'{fit_dir}/data_in.csv' ,
-         table     = table ,
-   )
-   #
-   # fit, predict
-   at_cascade.csv.fit(fit_dir)
-   at_cascade.csv.predict(fit_dir)
-   #
-   # fit_predict_dict
-   fit_predict_table = at_cascade.csv.read_table(
-      file_name = f'{fit_dir}/fit_predict.csv'
-   )
-   #
-   # random_effect_dict
-   random_effect_table = at_cascade.csv.read_table(
-      file_name = f'{sim_dir}/random_effect.csv'
-   )
-   random_effect_dict = { 'n0' : dict(), 'n1' : dict(), 'n2' : dict() }
-   for node_name in random_effect_dict :
-      for sex in [ 'female', 'male' ] :
-         random_effect_dict[node_name][sex] = dict()
-   for row in random_effect_table :
-      node_name     = row['node_name']
-      sex           = row['sex']
-      rate_name     = row['rate_name']
-      random_effect = float( row['random_effect'] )
-      random_effect_dict[node_name][sex][rate_name] = random_effect
-   #
-   # row
-   max_mul_error    = 0.0
-   max_iota_error   = 0.0
-   max_iota_age     = 0.0
-   predict_node_set = set()
-   for row in fit_predict_table :
-      node_name = row['node_name']
-      sex       = row['sex']
-      age       = float( row['age'] )
-      if (node_name,sex) in fit_goal_set :
-         predict_node_set.add( (node_name, sex) )
-         if row['integrand_name'] == 'mulcov_0' :
-            avg_integrand = float( row['avg_integrand'] )
-            rel_error     = (1.0 - avg_integrand / multiplier_truth)
-            max_mul_error = max(max_mul_error, abs(rel_error) )
-         if row['integrand_name'] == 'Sincidence' and age != age_grid[-1]:
-            # exclude last age because it has very little effect on prealence
-            node_name     = row['node_name']
-            time          = float( row['time'] )
-            avg_integrand = float( row['avg_integrand'] )
-            if sex == 'both' :
-               random_male   = random_effect_dict[node_name]['male']['iota']
-               random_female = random_effect_dict[node_name]['female']['iota']
-               random_effect = (random_male + random_female) / 2.0
+    #
+    # node.csv, covarite.csv
+    for file_name in [ 'node.csv', 'covariate.csv' ] :
+        shutil.copyfile(
+            src = f'{sim_dir}/{file_name}' ,
+            dst = f'{fit_dir}/{file_name}' ,
+        )
+    #
+    # csv files in fit_file
+    for name in fit_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( fit_file[name] )
+        file_ptr.close()
+    #
+    # fit_goal_set
+    fit_goal_table = at_cascade.csv.read_table(
+        file_name = f'{fit_dir}/fit_goal.csv'
+    )
+    fit_goal_set = set()
+    for row in fit_goal_table :
+        node_name = row['node_name']
+        for sex in [ 'female', 'male' ] :
+            fit_goal_set.add( (node_name, sex) )
+    #
+    # data_join_table
+    # This is a join of simulate.csv and dats_sim.csv
+    data_join_table = at_cascade.csv.read_table(
+        file_name = f'{sim_dir}/data_join.csv'
+    )
+    #
+    # data_in.csv
+    table = list()
+    for row_join in data_join_table :
+        #
+        # row_in
+        row_in = dict()
+        copy_list  = [ 'integrand_name', 'node_name', 'sex' ]
+        copy_list += [ 'age_lower', 'age_upper', 'time_lower', 'time_upper' ]
+        row_in['data_id']   = row_join['simulate_id']
+        for key in copy_list :
+            row_in[key] = row_join[key]
+        row_in['meas_value']    = row_join['meas_value']
+        row_in['meas_std']      = row_join['meas_std']
+        row_in['hold_out']      = 0
+        row_in['density_name']  = 'gaussian'
+        #
+        table.append( row_in )
+    at_cascade.csv.write_table(
+            file_name = f'{fit_dir}/data_in.csv' ,
+            table     = table ,
+    )
+    #
+    # fit, predict
+    at_cascade.csv.fit(fit_dir)
+    at_cascade.csv.predict(fit_dir)
+    #
+    # fit_predict_dict
+    fit_predict_table = at_cascade.csv.read_table(
+        file_name = f'{fit_dir}/fit_predict.csv'
+    )
+    #
+    # random_effect_dict
+    random_effect_table = at_cascade.csv.read_table(
+        file_name = f'{sim_dir}/random_effect.csv'
+    )
+    random_effect_dict = { 'n0' : dict(), 'n1' : dict(), 'n2' : dict() }
+    for node_name in random_effect_dict :
+        for sex in [ 'female', 'male' ] :
+            random_effect_dict[node_name][sex] = dict()
+    for row in random_effect_table :
+        node_name     = row['node_name']
+        sex           = row['sex']
+        rate_name     = row['rate_name']
+        random_effect = float( row['random_effect'] )
+        random_effect_dict[node_name][sex][rate_name] = random_effect
+    #
+    # row
+    max_mul_error    = 0.0
+    max_iota_error   = 0.0
+    max_iota_age     = 0.0
+    predict_node_set = set()
+    for row in fit_predict_table :
+        node_name = row['node_name']
+        sex       = row['sex']
+        age       = float( row['age'] )
+        if (node_name,sex) in fit_goal_set :
+            predict_node_set.add( (node_name, sex) )
+            if row['integrand_name'] == 'mulcov_0' :
+                avg_integrand = float( row['avg_integrand'] )
+                rel_error     = (1.0 - avg_integrand / multiplier_truth)
+                max_mul_error = max(max_mul_error, abs(rel_error) )
+            if row['integrand_name'] == 'Sincidence' and age != age_grid[-1]:
+                # exclude last age because it has very little effect on prealence
+                node_name     = row['node_name']
+                time          = float( row['time'] )
+                avg_integrand = float( row['avg_integrand'] )
+                if sex == 'both' :
+                    random_male   = random_effect_dict[node_name]['male']['iota']
+                    random_female = random_effect_dict[node_name]['female']['iota']
+                    random_effect = (random_male + random_female) / 2.0
+                else :
+                    random_effect = random_effect_dict[node_name][sex]['iota']
+                cov_effect    = multiplier_truth * shock_covariate(age, time)
+                total_effect  = random_effect + cov_effect
+                iota          = math.exp(total_effect) * no_effect_iota
+                rel_error     = (1.0 - avg_integrand / iota )
+                if abs(rel_error) > max_iota_error :
+                    max_iota_error = abs(rel_error)
+                    max_iota_age   = age
+    if max_mul_error > 0.1 or max_iota_error > 0.1 :
+        print( f'max_mul_error  = {max_mul_error}' )
+        print( f'max_iota_error = {max_iota_error}' )
+        msg = 'cov_shock.py: Relative error is to large (see above)'
+        assert False, msg
+    if fit_goal_set != predict_node_set :
+        difference  = list( fit_goal_set.difference(predict_node_set) )
+        (node, sex) = difference[0]
+        msg  = f'cov_shock.py: the file {fit_dir}/predict.csv\n'
+        msg += f'missing results for the fit gloal node.sex = {node}.{sex}'
+        assert False, msg
+    #
+    # cov_reference_table
+    file_name =  f'{fit_dir}/all_node.db'
+    connection = dismod_at.create_connection(
+        file_name, new = False, readonly = True
+    )
+    cov_reference_table = dismod_at.get_table_dict(connection, 'cov_reference')
+    connection.close()
+    #
+    # covariate_table
+    file_name =  f'{fit_dir}/root.db'
+    connection = dismod_at.create_connection(
+        file_name, new = False, readonly = True
+    )
+    covariate_table = dismod_at.get_table_dict(connection, 'covariate')
+    connection.close()
+    #
+    # BEGIN_CHECK_COV_REFERENCE_TABLE
+    for cov_reference_id in range( len(cov_reference_table) ) :
+        row             = cov_reference_table[cov_reference_id]
+        reference_value = row['reference_value']
+        covariate_id    = row['covariate_id']
+        covariate_name  = covariate_table[covariate_id]['covariate_name']
+        if covariate_name == 'abs_shock' :
+            assert reference_value == 0.0
+        elif covariate_name == 'rel_shock' :
+            if covariate_reference == 'data_in.csv' :
+                assert  reference_value == 0.0
             else :
-               random_effect = random_effect_dict[node_name][sex]['iota']
-            cov_effect    = multiplier_truth * shock_covariate(age, time)
-            total_effect  = random_effect + cov_effect
-            iota          = math.exp(total_effect) * no_effect_iota
-            rel_error     = (1.0 - avg_integrand / iota )
-            if abs(rel_error) > max_iota_error :
-               max_iota_error = abs(rel_error)
-               max_iota_age   = age
-   if max_mul_error > 0.1 or max_iota_error > 0.1 :
-      print( f'max_mul_error  = {max_mul_error}' )
-      print( f'max_iota_error = {max_iota_error}' )
-      msg = 'cov_shock.py: Relative error is to large (see above)'
-      assert False, msg
-   if fit_goal_set != predict_node_set :
-      difference  = list( fit_goal_set.difference(predict_node_set) )
-      (node, sex) = difference[0]
-      msg  = f'cov_shock.py: the file {fit_dir}/predict.csv\n'
-      msg += f'missing results for the fit gloal node.sex = {node}.{sex}'
-      assert False, msg
-   #
-   # cov_reference_table
-   file_name =  f'{fit_dir}/all_node.db'
-   connection = dismod_at.create_connection(
-      file_name, new = False, readonly = True
-   )
-   cov_reference_table = dismod_at.get_table_dict(connection, 'cov_reference')
-   connection.close()
-   #
-   # covariate_table
-   file_name =  f'{fit_dir}/root.db'
-   connection = dismod_at.create_connection(
-      file_name, new = False, readonly = True
-   )
-   covariate_table = dismod_at.get_table_dict(connection, 'covariate')
-   connection.close()
-   #
-   # BEGIN_CHECK_COV_REFERENCE_TABLE
-   for cov_reference_id in range( len(cov_reference_table) ) :
-      row             = cov_reference_table[cov_reference_id]
-      reference_value = row['reference_value']
-      covariate_id    = row['covariate_id']
-      covariate_name  = covariate_table[covariate_id]['covariate_name']
-      if covariate_name == 'abs_shock' :
-         assert reference_value == 0.0
-      elif covariate_name == 'rel_shock' :
-         if covariate_reference == 'data_in.csv' :
-            assert  reference_value == 0.0
-         else :
-            assert  reference_value > 0.0
-   # END_CHECK_COV_REFERENCE_TABLE
+                assert  reference_value > 0.0
+    # END_CHECK_COV_REFERENCE_TABLE
 # -----------------------------------------------------------------------------
 # Without this, the mac will try to execute main on each processor.
 if __name__ == '__main__' :
-   #
-   # sim_dir
-   sim_dir = 'build/example/csv/sim'
-   at_cascade.empty_directory(sim_dir)
-   #
-   # fit_dir
-   fit_dir = 'build/example/csv/fit'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # sim
-   sim(sim_dir)
-   #
-   # fit
-   fit(sim_dir, fit_dir)
-   #
-   print('shock_cov.py: OK')
+    #
+    # sim_dir
+    sim_dir = 'build/example/csv/sim'
+    at_cascade.empty_directory(sim_dir)
+    #
+    # fit_dir
+    fit_dir = 'build/example/csv/fit'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # sim
+    sim(sim_dir)
+    #
+    # fit
+    fit(sim_dir, fit_dir)
+    #
+    print('shock_cov.py: OK')
 # END_SOURCE_CODE

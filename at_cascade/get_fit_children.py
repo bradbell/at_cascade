@@ -14,8 +14,8 @@ Determine the Set of Nodes to Fit
 Prototype
 *********
 {xrst_literal ,
-   # BEGIN_DEF, # END_DEF
-   # BEGIN_RETURN, # END_RETURN
+    # BEGIN_DEF, # END_DEF
+    # BEGIN_RETURN, # END_RETURN
 }
 
 root_node_id
@@ -56,48 +56,48 @@ import at_cascade
 # BEGIN_DEF
 # at_cascade.get_fit_children
 def get_fit_children(
-   root_node_id  ,
-   fit_goal_set  ,
-   node_table    ,
+    root_node_id  ,
+    fit_goal_set  ,
+    node_table    ,
 ) :
-   assert type( root_node_id ) == int
-   assert type( fit_goal_set ) == set
-   assert type( node_table ) == list
-   # END_DEF
-   #
-   # number of nodes
-   n_node       = len( node_table )
-   #
-   # fit_children
-   fit_children = list()
-   for i in range(n_node) :
-      fit_children.append( set() )
-   #
-   # goal_node_id
-   for goal_node_id in fit_goal_set :
-      assert type(goal_node_id) == int
-      #
-      # parend_id_list
-      parent_id_list = list()
-      parent_id  = node_table[goal_node_id]['parent']
-      while parent_id != root_node_id and parent_id != None :
-         parent_id_list.append( parent_id )
-         parent_id  = node_table[parent_id]['parent']
-      #
-      # fit_children
-      if parent_id == root_node_id :
-         node_id = goal_node_id
-         for parent_id in parent_id_list :
-            fit_children[parent_id].add( node_id )
-            node_id = parent_id
-         fit_children[root_node_id].add( node_id )
-   #
-   # BEGIN_RETURN
-   # ...
-   assert type(fit_children) == list
-   ok = False
-   for node_id in fit_goal_set :
-      ok = ok or len( fit_children[node_id] ) == 0
-   assert ok
-   return fit_children
-   # END_RETURN
+    assert type( root_node_id ) == int
+    assert type( fit_goal_set ) == set
+    assert type( node_table ) == list
+    # END_DEF
+    #
+    # number of nodes
+    n_node       = len( node_table )
+    #
+    # fit_children
+    fit_children = list()
+    for i in range(n_node) :
+        fit_children.append( set() )
+    #
+    # goal_node_id
+    for goal_node_id in fit_goal_set :
+        assert type(goal_node_id) == int
+        #
+        # parend_id_list
+        parent_id_list = list()
+        parent_id  = node_table[goal_node_id]['parent']
+        while parent_id != root_node_id and parent_id != None :
+            parent_id_list.append( parent_id )
+            parent_id  = node_table[parent_id]['parent']
+        #
+        # fit_children
+        if parent_id == root_node_id :
+            node_id = goal_node_id
+            for parent_id in parent_id_list :
+                fit_children[parent_id].add( node_id )
+                node_id = parent_id
+            fit_children[root_node_id].add( node_id )
+    #
+    # BEGIN_RETURN
+    # ...
+    assert type(fit_children) == list
+    ok = False
+    for node_id in fit_goal_set :
+        ok = ok or len( fit_children[node_id] ) == 0
+    assert ok
+    return fit_children
+    # END_RETURN

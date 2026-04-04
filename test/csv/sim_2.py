@@ -27,7 +27,7 @@ import numpy
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 # BEGIN_PYTHON
 #
@@ -93,74 +93,74 @@ csv_file['simulate.csv'] = header + \
 '''
 #
 def run_test() :
-   from math import exp
-   #
-   # eps99
-   eps99 = 99.0 * numpy.finfo(float).eps
-   #
-   # sim_dir
-   sim_dir = 'build/test'
-   if not os.path.exists(sim_dir) :
-      os.mkdir(sim_dir)
-   #
-   # write csv files
-   for name in csv_file :
-      file_name = f'{sim_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( csv_file[name] )
-      file_ptr.close()
-   #
-   # simulate command
-   command = 'simulate'
-   at_cascade.csv.simulate(sim_dir)
-   #
-   # csv_table
-   csv_table = dict()
-   for name in csv_file :
-      file_name       = f'{sim_dir}/{name}'
-      csv_table[name] = at_cascade.csv.read_table( file_name )
-   #
-   name            = 'data_sim.csv'
-   file_name       = f'{sim_dir}/{name}'
-   csv_table[name] = at_cascade.csv.read_table( file_name )
-   #
-   # no_effect_iota, no_effect_pini
-   for row in csv_table['no_effect_rate.csv'] :
-      if row['rate_name'] == 'iota' :
-         no_effect_iota = float( row['rate_truth'] )
-      if row['rate_name'] == 'pini' :
-         no_effect_pini = float( row['rate_truth'] )
-   #
-   # data_row
-   for data_row in csv_table['data_sim.csv'] :
-      #
-      # sim_row
-      simulate_id    = int( data_row['simulate_id'] )
-      sim_row        = csv_table['simulate.csv'][simulate_id]
-      #
-      # iota, pini
-      iota = no_effect_iota
-      pini = no_effect_pini
-      #
-      # age_lower, age_upper
-      age_lower = float( sim_row['age_lower'] )
-      age_upper = float( sim_row['age_upper'] )
-      #
-      # average_withC
-      if age_lower == age_upper :
-         average_withC = 1.0 - (1.0 - pini) * exp(-iota * age_lower)
-      else :
-         term = exp(-iota * age_lower) - exp(-iota * age_upper)
-         term =  term / (iota * (age_upper - age_lower) )
-         average_withC = 1 - (1 - pini) * term
-      #
-      # meas_mean
-      meas_mean = float( data_row['meas_mean'] )
-      #
-      rel_error = meas_mean / average_withC - 1.0
-      assert abs( rel_error ) < 1e-3
+    from math import exp
+    #
+    # eps99
+    eps99 = 99.0 * numpy.finfo(float).eps
+    #
+    # sim_dir
+    sim_dir = 'build/test'
+    if not os.path.exists(sim_dir) :
+        os.mkdir(sim_dir)
+    #
+    # write csv files
+    for name in csv_file :
+        file_name = f'{sim_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
+    #
+    # simulate command
+    command = 'simulate'
+    at_cascade.csv.simulate(sim_dir)
+    #
+    # csv_table
+    csv_table = dict()
+    for name in csv_file :
+        file_name       = f'{sim_dir}/{name}'
+        csv_table[name] = at_cascade.csv.read_table( file_name )
+    #
+    name            = 'data_sim.csv'
+    file_name       = f'{sim_dir}/{name}'
+    csv_table[name] = at_cascade.csv.read_table( file_name )
+    #
+    # no_effect_iota, no_effect_pini
+    for row in csv_table['no_effect_rate.csv'] :
+        if row['rate_name'] == 'iota' :
+            no_effect_iota = float( row['rate_truth'] )
+        if row['rate_name'] == 'pini' :
+            no_effect_pini = float( row['rate_truth'] )
+    #
+    # data_row
+    for data_row in csv_table['data_sim.csv'] :
+        #
+        # sim_row
+        simulate_id    = int( data_row['simulate_id'] )
+        sim_row        = csv_table['simulate.csv'][simulate_id]
+        #
+        # iota, pini
+        iota = no_effect_iota
+        pini = no_effect_pini
+        #
+        # age_lower, age_upper
+        age_lower = float( sim_row['age_lower'] )
+        age_upper = float( sim_row['age_upper'] )
+        #
+        # average_withC
+        if age_lower == age_upper :
+            average_withC = 1.0 - (1.0 - pini) * exp(-iota * age_lower)
+        else :
+            term = exp(-iota * age_lower) - exp(-iota * age_upper)
+            term =  term / (iota * (age_upper - age_lower) )
+            average_withC = 1 - (1 - pini) * term
+        #
+        # meas_mean
+        meas_mean = float( data_row['meas_mean'] )
+        #
+        rel_error = meas_mean / average_withC - 1.0
+        assert abs( rel_error ) < 1e-3
 #
 if __name__ == '__main__' :
-   run_test()
-   print('simulte_xam.py: OK')
+    run_test()
+    print('simulte_xam.py: OK')
 # END_PYTHON

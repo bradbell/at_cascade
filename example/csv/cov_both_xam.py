@@ -42,8 +42,8 @@ but given sex it is the same for all nodes.
 Source
 ******
 {xrst_literal
-   # BEGIN_SOURCE
-   # END_SOURCE
+    # BEGIN_SOURCE
+    # END_SOURCE
 }
 
 {xrst_end csv.cov_both_xam}
@@ -56,66 +56,66 @@ import sys
 import random
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 #
 # haqi
 def haqi(node, sex, age, time) :
-   value = age / 100.0 + (time - 2000) / 20.0 + 0.01
-   value = round(value, 4)
-   return value
+    value = age / 100.0 + (time - 2000) / 20.0 + 0.01
+    value = round(value, 4)
+    return value
 #
 # income
 def income(node, sex, age, time) :
-   value = age / 100.0 + (2000 - time) / 20.0
-   if sex == 'female' :
-      value += 1.0
-   else :
-      value += 2.0
-   value = round(value, 4)
-   return value
+    value = age / 100.0 + (2000 - time) / 20.0
+    if sex == 'female' :
+        value += 1.0
+    else :
+        value += 2.0
+    value = round(value, 4)
+    return value
 #
 # main
 def main() :
-   #
-   age_list  = [ 20.0, 80.0 ]
-   time_list = [ 1980.0, 2020.0 ]
-   node_list = [ 'n0', 'n1', 'n2' ]
-   sex_list  = [ 'female', 'male' ]
-   cov_list  = [ 'haqi', 'income' ]
-   omega     = 0.02
-   #
-   # covariate_table_in
-   covariate_table_in = list()
-   for node_name in node_list :
-      for sex in sex_list :
-         for age in age_list :
-            for time in time_list :
-               row = {
-                  'node_name' : node_name ,
-                  'sex'       : sex ,
-                  'age'       : age ,
-                  'time'      : time ,
-                  'omega'     : omega ,
-                  'haqi'      : haqi(  node_name, sex, age, time) ,
-                  'income'    : income(node_name, sex, age, time) ,
-               }
-               covariate_table_in.append(row)
-   random.shuffle(covariate_table_in)
-   #
-   # same cov
-   covariate_table_out = at_cascade.csv.covariate_both(covariate_table_in)
-   #
-   # count
-   count = { 'female' : 0, 'male' : 0 , 'both' : 0 }
-   for row in covariate_table_out :
-      count[ row['sex'] ] += 1
-   #
-   for sex in count :
-      assert count[sex] == len(node_list) * len(age_list) * len(time_list)
-   #
-   print('cov_both_xam.py: OK')
+    #
+    age_list  = [ 20.0, 80.0 ]
+    time_list = [ 1980.0, 2020.0 ]
+    node_list = [ 'n0', 'n1', 'n2' ]
+    sex_list  = [ 'female', 'male' ]
+    cov_list  = [ 'haqi', 'income' ]
+    omega     = 0.02
+    #
+    # covariate_table_in
+    covariate_table_in = list()
+    for node_name in node_list :
+        for sex in sex_list :
+            for age in age_list :
+                for time in time_list :
+                    row = {
+                        'node_name' : node_name ,
+                        'sex'       : sex ,
+                        'age'       : age ,
+                        'time'      : time ,
+                        'omega'     : omega ,
+                        'haqi'      : haqi(  node_name, sex, age, time) ,
+                        'income'    : income(node_name, sex, age, time) ,
+                    }
+                    covariate_table_in.append(row)
+    random.shuffle(covariate_table_in)
+    #
+    # same cov
+    covariate_table_out = at_cascade.csv.covariate_both(covariate_table_in)
+    #
+    # count
+    count = { 'female' : 0, 'male' : 0 , 'both' : 0 }
+    for row in covariate_table_out :
+        count[ row['sex'] ] += 1
+    #
+    for sex in count :
+        assert count[sex] == len(node_list) * len(age_list) * len(time_list)
+    #
+    print('cov_both_xam.py: OK')
 #
 if __name__ == '__main__' :
-   main()
+    main()
 # END_SOURCE

@@ -10,7 +10,7 @@ import shutil
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 import dismod_at
 # BEGIN_PYTHON
@@ -114,53 +114,53 @@ csv_file['data_in.csv'] = header + \
 #
 #
 def main() :
-   #
-   # fit_dir
-   fit_dir = 'build/test/csv'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # write csv files
-   for name in csv_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( csv_file[name] )
-      file_ptr.close()
-   #
-   # table
-   file_name  = f'{fit_dir}/covariate.csv'
-   table      = at_cascade.csv.read_table( file_name )
-   #
-   # data_in.csv
-   float_format        = '{0:.8g}'
-   mulcov_young_true   = 0.5
-   file_name           = f'{fit_dir}/data_in.csv'
-   table               = at_cascade.csv.read_table( file_name )
-   for row in table :
-      age            = float(row['age_lower'])
-      young          = float( age < 20 )
-      integrand_name = row['integrand_name']
-      assert integrand_name == 'Sincidence'
-      #
-      effect            = mulcov_young_true * young
-      Sincidence        = math.exp(effect) * no_effect_iota_true
-      row['meas_value'] = float_format.format( Sincidence )
-      row['meas_std']   = float_format.format( Sincidence / 10.0 )
-   at_cascade.csv.write_table(file_name, table)
-   #
-   # csv.fit, csv.predict
-   at_cascade.csv.fit(fit_dir)
-   at_cascade.csv.predict(fit_dir)
-   #
-   # predict_table
-   file_name = f'{fit_dir}/fit_predict.csv'
-   predict_table = at_cascade.csv.read_table(file_name)
-   #
-   # node
-   for row in predict_table :
-      avg_integrand = float( row['avg_integrand'] )
-      assert abs( 1.0 - avg_integrand / no_effect_iota_true ) < 1e-5
+    #
+    # fit_dir
+    fit_dir = 'build/test/csv'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # write csv files
+    for name in csv_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
+    #
+    # table
+    file_name  = f'{fit_dir}/covariate.csv'
+    table      = at_cascade.csv.read_table( file_name )
+    #
+    # data_in.csv
+    float_format        = '{0:.8g}'
+    mulcov_young_true   = 0.5
+    file_name           = f'{fit_dir}/data_in.csv'
+    table               = at_cascade.csv.read_table( file_name )
+    for row in table :
+        age            = float(row['age_lower'])
+        young          = float( age < 20 )
+        integrand_name = row['integrand_name']
+        assert integrand_name == 'Sincidence'
+        #
+        effect            = mulcov_young_true * young
+        Sincidence        = math.exp(effect) * no_effect_iota_true
+        row['meas_value'] = float_format.format( Sincidence )
+        row['meas_std']   = float_format.format( Sincidence / 10.0 )
+    at_cascade.csv.write_table(file_name, table)
+    #
+    # csv.fit, csv.predict
+    at_cascade.csv.fit(fit_dir)
+    at_cascade.csv.predict(fit_dir)
+    #
+    # predict_table
+    file_name = f'{fit_dir}/fit_predict.csv'
+    predict_table = at_cascade.csv.read_table(file_name)
+    #
+    # node
+    for row in predict_table :
+        avg_integrand = float( row['avg_integrand'] )
+        assert abs( 1.0 - avg_integrand / no_effect_iota_true ) < 1e-5
 #
 if __name__ == '__main__' :
-   main()
-   print('csv_fit.py: OK')
+    main()
+    print('csv_fit.py: OK')
 # END_PYTHON

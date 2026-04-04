@@ -11,7 +11,7 @@ import shutil
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 import dismod_at
 # BEGIN_PYTHON
@@ -59,11 +59,11 @@ n3,n2
 # covariate.csv
 csv_file['covariate.csv'] = 'node_name,sex,income,age,time,omega\n'
 for node in node_list :
-   for sex in sex_list :
-      for age in age_list :
-         income = age / 100.
-         line   = f'{node},{sex},{income},{age},2000,0.02\n'
-         csv_file['covariate.csv'] += line
+    for sex in sex_list :
+        for age in age_list :
+            income = age / 100.
+            line   = f'{node},{sex},{income},{age},2000,0.02\n'
+            csv_file['covariate.csv'] += line
 #
 # fit_goal.csv
 csv_file['fit_goal.csv'] = \
@@ -108,84 +108,84 @@ header += 'density_name,eta,nu\n'
 csv_file['data_in.csv'] = header
 data_id = 0
 for node in node_list :
-   # age_range
-   # Only node n0 has income variation. Hence the fits below n0
-   # will have the prior and posterior for alpha equal.
-   age_range = age_list if node == 'n0' else [ 50.0 ]
-   for sex in sex_list :
-      for age in age_range :
-         income     = age / 100.
-         meas_value = no_effect_iota * math.exp(- alpha_true * income)
-         meas_std   = meas_value
-         line   = f'{data_id},Sincidence,{node},{sex},{age},{age},'
-         line  += f'2000,2000,{meas_value:.5g},{meas_std},0,'
-         line  += 'gaussian,,\n'
-         csv_file['data_in.csv'] += line
-         data_id += 1
+    # age_range
+    # Only node n0 has income variation. Hence the fits below n0
+    # will have the prior and posterior for alpha equal.
+    age_range = age_list if node == 'n0' else [ 50.0 ]
+    for sex in sex_list :
+        for age in age_range :
+            income     = age / 100.
+            meas_value = no_effect_iota * math.exp(- alpha_true * income)
+            meas_std   = meas_value
+            line   = f'{data_id},Sincidence,{node},{sex},{age},{age},'
+            line  += f'2000,2000,{meas_value:.5g},{meas_std},0,'
+            line  += 'gaussian,,\n'
+            csv_file['data_in.csv'] += line
+            data_id += 1
 #
 def main() :
-   #
-   # fit_dir
-   fit_dir = 'build/test/csv'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # write csv files
-   for name in csv_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( csv_file[name] )
-      file_ptr.close()
-   #
-   # csv.fit, csv.predict
-   at_cascade.csv.fit(fit_dir)
-   at_cascade.csv.predict(fit_dir)
-   #
-   # sam_predict_table
-   file_name = f'{fit_dir}/sam_predict.csv'
-   sam_predict_table = at_cascade.csv.read_table(file_name)
-   #
-   # sex
-   for sex in sex_list :
-      #
-      # sample_list
-      sample_list = dict()
-      for node in node_list :
-         sample_list[node] = list()
-      for row in sam_predict_table :
-         if int(row['avgint_id']) == 0 :
-            node = row['node_name']
-            if node == row['fit_node_name'] and sex == row['fit_sex'] :
-               sample_list[node].append( float( row['avg_integrand'] ) )
+    #
+    # fit_dir
+    fit_dir = 'build/test/csv'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # write csv files
+    for name in csv_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
+    #
+    # csv.fit, csv.predict
+    at_cascade.csv.fit(fit_dir)
+    at_cascade.csv.predict(fit_dir)
+    #
+    # sam_predict_table
+    file_name = f'{fit_dir}/sam_predict.csv'
+    sam_predict_table = at_cascade.csv.read_table(file_name)
+    #
+    # sex
+    for sex in sex_list :
+        #
+        # sample_list
+        sample_list = dict()
+        for node in node_list :
+            sample_list[node] = list()
+        for row in sam_predict_table :
+            if int(row['avgint_id']) == 0 :
+                node = row['node_name']
+                if node == row['fit_node_name'] and sex == row['fit_sex'] :
+                    sample_list[node].append( float( row['avg_integrand'] ) )
 
-      # sample_mean, sample_std
-      sample_std = dict()
-      sample_mean = dict()
-      for node in node_list :
-         sample_mean[node] = numpy.mean(sample_list[node])
-         sample_std[node]  = numpy.std(sample_list[node])
-      #
-      # check
-      for node in [ 'n1', 'n2', 'n3' ] :
-         relative_difference = 1.0 - sample_std[node] / sample_std['n0']
-         if abs(relative_difference) > 0.2 :
-            print(relative_difference)
-            assert False
-      #
-      # 2DO:
-      # The simulations for n1, n2, n3, and n4 are using the exact
-      # same random seed. This should be fixed
-      eps99 = numpy.finfo(float).eps
-      for node in [ 'n2', 'n3' ] :
-         relative_difference = 1.0 - sample_std[node] / sample_std['n1']
-         if abs( relative_difference ) > eps99 :
-            print(relative_difference)
-            assert False
-      #
-      # 2DO:
-      # The simulations for n1, n2, n3, and n4 are using the exact
+        # sample_mean, sample_std
+        sample_std = dict()
+        sample_mean = dict()
+        for node in node_list :
+            sample_mean[node] = numpy.mean(sample_list[node])
+            sample_std[node]  = numpy.std(sample_list[node])
+        #
+        # check
+        for node in [ 'n1', 'n2', 'n3' ] :
+            relative_difference = 1.0 - sample_std[node] / sample_std['n0']
+            if abs(relative_difference) > 0.2 :
+                print(relative_difference)
+                assert False
+        #
+        # 2DO:
+        # The simulations for n1, n2, n3, and n4 are using the exact
+        # same random seed. This should be fixed
+        eps99 = numpy.finfo(float).eps
+        for node in [ 'n2', 'n3' ] :
+            relative_difference = 1.0 - sample_std[node] / sample_std['n1']
+            if abs( relative_difference ) > eps99 :
+                print(relative_difference)
+                assert False
+        #
+        # 2DO:
+        # The simulations for n1, n2, n3, and n4 are using the exact
 
 #
 if __name__ == '__main__' :
-   main()
-   print('mulcov_freeze.py: OK')
+    main()
+    print('mulcov_freeze.py: OK')
 # END_PYTHON

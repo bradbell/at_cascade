@@ -10,7 +10,7 @@ import shutil
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 # BEGIN_PYTHON
 #
@@ -45,7 +45,7 @@ db2csv,true
 plot,true
 '''
 csv_file['option_predict.csv'] += \
-   f'number_sample_predict,{number_sample_predict}\n'
+    f'number_sample_predict,{number_sample_predict}\n'
 #
 # node.csv
 csv_file['node.csv'] = \
@@ -110,55 +110,55 @@ csv_file['data_in.csv'] = header + \
 #
 #
 def main() :
-   #
-   # fit_dir
-   fit_dir = 'build/test/csv'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # write csv files
-   for name in csv_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( csv_file[name] )
-      file_ptr.close()
-   #
-   # table
-   file_name  = f'{fit_dir}/covariate.csv'
-   table      = at_cascade.csv.read_table( file_name )
-   #
-   # data_in.csv
-   float_format        = '{0:.8g}'
-   file_name           = f'{fit_dir}/data_in.csv'
-   table               = at_cascade.csv.read_table( file_name )
-   for row in table :
-      age            = float(row['age_lower'])
-      integrand_name = row['integrand_name']
-      assert integrand_name == 'Sincidence'
-      #
-      row['meas_value'] = float_format.format( no_effect_iota_true )
-      row['meas_std']   = float_format.format( no_effect_iota_true / 10.0 )
-   at_cascade.csv.write_table(file_name, table)
-   #
-   # csv.fit, csv.predict
-   at_cascade.csv.fit(fit_dir)
-   at_cascade.csv.predict(fit_dir)
-   #
-   # predict_table
-   file_name = f'{fit_dir}/sam_predict.csv'
-   predict_table = at_cascade.csv.read_table(file_name)
-   #
-   # check
-   max_sample_id = 0
-   for row in predict_table :
-      sample_index = int( row['sample_index'] )
-      if sample_index > max_sample_id:
-         max_sample_id = sample_index
-   if max_sample_id + 1 != number_sample_predict :
-      msg  = f'Number of samples = {max_sample_id + 1}, '
-      msg += f'number_sample_predict = {number_sample_predict}'
-      assert False, msg
+    #
+    # fit_dir
+    fit_dir = 'build/test/csv'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # write csv files
+    for name in csv_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
+    #
+    # table
+    file_name  = f'{fit_dir}/covariate.csv'
+    table      = at_cascade.csv.read_table( file_name )
+    #
+    # data_in.csv
+    float_format        = '{0:.8g}'
+    file_name           = f'{fit_dir}/data_in.csv'
+    table               = at_cascade.csv.read_table( file_name )
+    for row in table :
+        age            = float(row['age_lower'])
+        integrand_name = row['integrand_name']
+        assert integrand_name == 'Sincidence'
+        #
+        row['meas_value'] = float_format.format( no_effect_iota_true )
+        row['meas_std']   = float_format.format( no_effect_iota_true / 10.0 )
+    at_cascade.csv.write_table(file_name, table)
+    #
+    # csv.fit, csv.predict
+    at_cascade.csv.fit(fit_dir)
+    at_cascade.csv.predict(fit_dir)
+    #
+    # predict_table
+    file_name = f'{fit_dir}/sam_predict.csv'
+    predict_table = at_cascade.csv.read_table(file_name)
+    #
+    # check
+    max_sample_id = 0
+    for row in predict_table :
+        sample_index = int( row['sample_index'] )
+        if sample_index > max_sample_id:
+            max_sample_id = sample_index
+    if max_sample_id + 1 != number_sample_predict :
+        msg  = f'Number of samples = {max_sample_id + 1}, '
+        msg += f'number_sample_predict = {number_sample_predict}'
+        assert False, msg
 #
 if __name__ == '__main__' :
-   main()
-   print('number_sample_predict.py: OK')
+    main()
+    print('number_sample_predict.py: OK')
 # END_PYTHON

@@ -10,7 +10,7 @@ import shutil
 # import at_cascade with a preference current directory version
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 import dismod_at
 #
@@ -90,28 +90,28 @@ header += 'density_name,eta,nu'
 csv_file['data_in.csv'] = header
 #
 def main() :
-   #
-   # fit_dir
-   fit_dir = 'build/test/csv'
-   at_cascade.empty_directory(fit_dir)
-   #
-   # write csv files
-   for name in csv_file :
-      file_name = f'{fit_dir}/{name}'
-      file_ptr  = open(file_name, 'w')
-      file_ptr.write( csv_file[name] )
-      file_ptr.close()
-   #
-   # csv.fit
-   at_cascade.csv.fit(fit_dir)
-   #
-   database= f'{fit_dir}/n0/dismod.db'
-   connection = dismod_at.create_connection(
-      database, new = False, readonly = True
-   )
-   sample_exists = at_cascade.table_exists(connection, 'sample')
-   assert not sample_exists
-   connection.close()
+    #
+    # fit_dir
+    fit_dir = 'build/test/csv'
+    at_cascade.empty_directory(fit_dir)
+    #
+    # write csv files
+    for name in csv_file :
+        file_name = f'{fit_dir}/{name}'
+        file_ptr  = open(file_name, 'w')
+        file_ptr.write( csv_file[name] )
+        file_ptr.close()
+    #
+    # csv.fit
+    at_cascade.csv.fit(fit_dir)
+    #
+    database= f'{fit_dir}/n0/dismod.db'
+    connection = dismod_at.create_connection(
+        database, new = False, readonly = True
+    )
+    sample_exists = at_cascade.table_exists(connection, 'sample')
+    assert not sample_exists
+    connection.close()
 #
 main()
 print( 'rcond_lower.py: OK' )

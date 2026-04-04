@@ -11,8 +11,8 @@ Create an Empty Directory
 Prototype
 *********
 {xrst_literal ,
-   # BEGIN_DEF ,    # END_DEF
-   # BEGIN_RETURN , # END_RETURN
+    # BEGIN_DEF ,    # END_DEF
+    # BEGIN_RETURN , # END_RETURN
 }
 
 root_database
@@ -34,30 +34,30 @@ import at_cascade
 # BEGIN_DEF
 # at_cascade.extract_avgint
 def extract_avgint(root_database) :
-   assert type(root_database) == str
-   # END_DEF
-   #
-   # connection
-   connection = dismod_at.create_connection(
-      root_database, new = False, readonly = False
-   )
-   #
-   # avgint_table
-   avgint_table = dismod_at.get_table_dict(connection, 'avgint')
-   #
-   # root_database
-   empty_table = list()
-   message     = 'erase avgint table'
-   tbl_name    = 'avgint'
-   dismod_at.replace_table(connection, tbl_name, empty_table)
-   at_cascade.add_log_entry(connection, message)
-   #
-   # connection
-   connection.close()
-   #
-   # BEGIN_RETURN
-   #
-   assert type( avgint_table ) == list
-   assert type( avgint_table[0] ) == dict
-   return avgint_table
-   # END_RETURN
+    assert type(root_database) == str
+    # END_DEF
+    #
+    # connection
+    connection = dismod_at.create_connection(
+        root_database, new = False, readonly = False
+    )
+    #
+    # avgint_table
+    avgint_table = dismod_at.get_table_dict(connection, 'avgint')
+    #
+    # root_database
+    empty_table = list()
+    message     = 'erase avgint table'
+    tbl_name    = 'avgint'
+    dismod_at.replace_table(connection, tbl_name, empty_table)
+    at_cascade.add_log_entry(connection, message)
+    #
+    # connection
+    connection.close()
+    #
+    # BEGIN_RETURN
+    #
+    assert type( avgint_table ) == list
+    assert type( avgint_table[0] ) == dict
+    return avgint_table
+    # END_RETURN

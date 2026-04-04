@@ -15,8 +15,8 @@ Move Table
 Prototype
 *********
 {xrst_literal
-   # BEGIN_DEF
-   # END_DEF
+    # BEGIN_DEF
+    # END_DEF
 }
 
 Purpose
@@ -56,22 +56,22 @@ import at_cascade
 # BEGIN_DEF
 # at_cascade.move_table
 def move_table(
-   connection, src_name, dst_name
+    connection, src_name, dst_name
 ) :
-   assert type(src_name) == str
-   assert type(dst_name) == str
-   # END_DEF
-   #
-   command     = 'DROP TABLE IF EXISTS ' + dst_name
-   dismod_at.sql_command(connection, command)
-   #
-   command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
-   command    += src_name + '_id TO ' + dst_name + '_id'
-   dismod_at.sql_command(connection, command)
-   #
-   command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
-   dismod_at.sql_command(connection, command)
-   #
-   # log table
-   message      = f'move table {src_name} to {dst_name}'
-   at_cascade.add_log_entry(connection, message)
+    assert type(src_name) == str
+    assert type(dst_name) == str
+    # END_DEF
+    #
+    command     = 'DROP TABLE IF EXISTS ' + dst_name
+    dismod_at.sql_command(connection, command)
+    #
+    command     = 'ALTER TABLE ' + src_name + ' RENAME COLUMN '
+    command    += src_name + '_id TO ' + dst_name + '_id'
+    dismod_at.sql_command(connection, command)
+    #
+    command     = 'ALTER TABLE ' + src_name + ' RENAME TO ' + dst_name
+    dismod_at.sql_command(connection, command)
+    #
+    # log table
+    message      = f'move table {src_name} to {dst_name}'
+    at_cascade.add_log_entry(connection, message)

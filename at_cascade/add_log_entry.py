@@ -14,8 +14,8 @@ Add Log Table Entry
 Prototype
 *********
 {xrst_literal
-   # BEGIN_DEF
-   # END_DEF
+    # BEGIN_DEF
+    # END_DEF
 }
 
 Purpose
@@ -51,35 +51,35 @@ import dismod_at
 # BEGIN_DEF
 # at_cascade.add_log_entry
 def add_log_entry(connection, message) :
-   assert type(message) == str
-   # END_DEF
-   #
-   # cmd
-   cmd  = 'create table if not exists log('
-   cmd += 'log_id       integer primary key,'
-   cmd += 'message_type text,'
-   cmd += 'table_name   text,'
-   cmd += 'row_id       integer,'
-   cmd += 'unix_time    integer,'
-   cmd += 'message      text)'
-   dismod_at.sql_command(connection, cmd)
-   #
-   # log_table
-   log_table = dismod_at.get_table_dict(connection, 'log')
-   #
-   # seconds
-   seconds   = int( time.time() )
-   #
-   # message_type
-   message_type = 'at_cascade'
-   #
-   # cmd
-   cmd = 'insert into log'
-   cmd += ' (log_id,message_type,table_name,row_id,unix_time,message) values('
-   cmd += str( len(log_table) ) + ','     # log_id
-   cmd += f'"{message_type}",'            # message_type
-   cmd += 'null,'                         # table_name
-   cmd += 'null,'                         # row_id
-   cmd += str(seconds) + ','              # unix_time
-   cmd += f'"{message}")'                 # message
-   dismod_at.sql_command(connection, cmd)
+    assert type(message) == str
+    # END_DEF
+    #
+    # cmd
+    cmd  = 'create table if not exists log('
+    cmd += 'log_id       integer primary key,'
+    cmd += 'message_type text,'
+    cmd += 'table_name   text,'
+    cmd += 'row_id       integer,'
+    cmd += 'unix_time    integer,'
+    cmd += 'message      text)'
+    dismod_at.sql_command(connection, cmd)
+    #
+    # log_table
+    log_table = dismod_at.get_table_dict(connection, 'log')
+    #
+    # seconds
+    seconds   = int( time.time() )
+    #
+    # message_type
+    message_type = 'at_cascade'
+    #
+    # cmd
+    cmd = 'insert into log'
+    cmd += ' (log_id,message_type,table_name,row_id,unix_time,message) values('
+    cmd += str( len(log_table) ) + ','     # log_id
+    cmd += f'"{message_type}",'            # message_type
+    cmd += 'null,'                         # table_name
+    cmd += 'null,'                         # row_id
+    cmd += str(seconds) + ','              # unix_time
+    cmd += f'"{message}")'                 # message
+    dismod_at.sql_command(connection, cmd)

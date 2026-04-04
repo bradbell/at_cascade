@@ -46,8 +46,8 @@ but given sex it is the same for all nodes.
 Source
 ******
 {xrst_literal
-   # BEGIN_SOURCE
-   # END_SOURCE
+    # BEGIN_SOURCE
+    # END_SOURCE
 }
 
 {xrst_end csv.cov_same_xam}
@@ -60,87 +60,87 @@ import sys
 import random
 current_directory = os.getcwd()
 if os.path.isfile( current_directory + '/at_cascade/__init__.py' ) :
-   sys.path.insert(0, current_directory)
+    sys.path.insert(0, current_directory)
 import at_cascade
 #
 # haqi
 def haqi(node, sex, age, time) :
-   value = age / 100.0 + (time - 2000) / 20.0 + 0.01
-   value = round(value, 4)
-   return value
+    value = age / 100.0 + (time - 2000) / 20.0 + 0.01
+    value = round(value, 4)
+    return value
 #
 # income
 def income(node, sex, age, time) :
-   value = age / 100.0 + (2000 - time) / 20.0
-   if sex == 'female' :
-      value += 1.0
-   else :
-      value += 2.0
-   value = round(value, 4)
-   return value
+    value = age / 100.0 + (2000 - time) / 20.0
+    if sex == 'female' :
+        value += 1.0
+    else :
+        value += 2.0
+    value = round(value, 4)
+    return value
 #
 # main
 def main() :
-   #
-   age_list  = [ 20.0, 80.0 ]
-   time_list = [ 1980.0, 2020.0 ]
-   node_list = [ 'n0', 'n1', 'n2' ]
-   sex_list  = [ 'female', 'male' ]
-   cov_list  = [ 'haqi', 'income' ]
-   omega     = 0.02
-   #
-   # covariate_table
-   covariate_table = list()
-   for node_name in node_list :
-      for sex in sex_list :
-         for age in age_list :
-            for time in time_list :
-               row = {
-                  'node_name' : node_name ,
-                  'sex'       : sex ,
-                  'age'       : age ,
-                  'time'      : time ,
-                  'omega'     : omega ,
-                  'haqi'      : haqi(  node_name, sex, age, time) ,
-                  'income'    : income(node_name, sex, age, time) ,
-               }
-               covariate_table.append(row)
-   covariate_table = at_cascade.csv.covariate_both(covariate_table)
-   random.shuffle(covariate_table)
-   #
-   # same cov
-   cov_same = at_cascade.csv.covariate_same(covariate_table)
-   #
-   # sex_list
-   sex_list = sex_list + [ 'both' ]
-   #
-   # check that omega and haqi are same for all nodes and all sexes
-   for cov_name in { 'omega', 'haqi' } :
-      triple_other = None
-      for node_name in node_list :
-         for sex in sex_list :
-            triple = (node_name, sex, cov_name)
+    #
+    age_list  = [ 20.0, 80.0 ]
+    time_list = [ 1980.0, 2020.0 ]
+    node_list = [ 'n0', 'n1', 'n2' ]
+    sex_list  = [ 'female', 'male' ]
+    cov_list  = [ 'haqi', 'income' ]
+    omega     = 0.02
+    #
+    # covariate_table
+    covariate_table = list()
+    for node_name in node_list :
+        for sex in sex_list :
+            for age in age_list :
+                for time in time_list :
+                    row = {
+                        'node_name' : node_name ,
+                        'sex'       : sex ,
+                        'age'       : age ,
+                        'time'      : time ,
+                        'omega'     : omega ,
+                        'haqi'      : haqi(  node_name, sex, age, time) ,
+                        'income'    : income(node_name, sex, age, time) ,
+                    }
+                    covariate_table.append(row)
+    covariate_table = at_cascade.csv.covariate_both(covariate_table)
+    random.shuffle(covariate_table)
+    #
+    # same cov
+    cov_same = at_cascade.csv.covariate_same(covariate_table)
+    #
+    # sex_list
+    sex_list = sex_list + [ 'both' ]
+    #
+    # check that omega and haqi are same for all nodes and all sexes
+    for cov_name in { 'omega', 'haqi' } :
+        triple_other = None
+        for node_name in node_list :
+            for sex in sex_list :
+                triple = (node_name, sex, cov_name)
+                if cov_same[triple] == triple :
+                        assert triple_other == None
+                        triple_other = triple
+        for node_name in node_list :
+            for sex in sex_list :
+                assert cov_same[ (node_name, sex, cov_name) ] == triple_other
+    #
+    # income
+    # same for all nodes, different for each sex
+    triple_other = dict()
+    for node_name in node_list :
+        for sex in sex_list :
+            triple = (node_name, sex, 'income')
             if cov_same[triple] == triple :
-                  assert triple_other == None
-                  triple_other = triple
-      for node_name in node_list :
-         for sex in sex_list :
-            assert cov_same[ (node_name, sex, cov_name) ] == triple_other
-   #
-   # income
-   # same for all nodes, different for each sex
-   triple_other = dict()
-   for node_name in node_list :
-      for sex in sex_list :
-         triple = (node_name, sex, 'income')
-         if cov_same[triple] == triple :
-               assert sex not in triple_other
-               triple_other[sex] = triple
-   for node_name in node_list :
-      for sex in sex_list :
-         assert cov_same[ (node_name, sex, 'income') ] == triple_other[sex]
-   print('cov_same_xam: OK')
+                    assert sex not in triple_other
+                    triple_other[sex] = triple
+    for node_name in node_list :
+        for sex in sex_list :
+            assert cov_same[ (node_name, sex, 'income') ] == triple_other[sex]
+    print('cov_same_xam: OK')
 #
 if __name__ == '__main__' :
-   main()
+    main()
 # END_SOURCE
