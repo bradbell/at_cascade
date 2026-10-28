@@ -5,7 +5,7 @@
 # SPDX-FileContributor: 2021-26 Bradley M. Bell
 # -----------------------------------------------------------------------------
 #
-# The python program ``bin/check_test.py`` runs of the *.py files in the
+# The python program ``tools/check_test.py`` runs of the *.py files in the
 # example and test directories.
 #
 # If one of these tests fails,
@@ -27,10 +27,10 @@ import time
 def main() :
     #
     # subdir
-    if sys.argv[0] != 'bin/check_py_test.py' :
-        sys.exit( 'bin/check_py_test.py must be run from its parent directory' )
+    if sys.argv[0] != 'tools/check_py_test.py' :
+        sys.exit( 'tools/check_py_test.py must be run from its parent directory' )
     if len(sys.argv) != 1 :
-        sys.exit( 'bin/check_py_test.py does not expect any arguments' )
+        sys.exit( 'tools/check_py_test.py does not expect any arguments' )
     #
     # max_try
     # maximum number of times to try to pass each test
@@ -107,6 +107,6 @@ def main() :
     end_check = time.time()
     minutes = ( end_check - start_check) / 60.0
     minutes = round(minutes, 2)
-    print(f'bin/check_py_test.py: minutes = {minutes}: OK')
+    print(f'tools/check_py_test.py: minutes = {minutes}: OK')
 #
 main()

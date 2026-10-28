@@ -1,11 +1,11 @@
 #! /usr/bin/env bash
 set -e -u
-# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/bin/dev_tools.sh !!
+# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/tools/dev_tools.sh !!
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 # SPDX-FileContributor: 2020-25 Bradley M. Bell
 # -----------------------------------------------------------------------------
-# bin/twine.sh branch_or_tag
+# tools/twine.sh branch_or_tag
 # 1. This program muse be executed from the main or master branch
 # 2. branch_or_tag can be a branch or a tag. If it is a branch, it must be
 #    main or master.
@@ -18,21 +18,21 @@ echo_eval() {
     eval $*
 }
 # -----------------------------------------------------------------------------
-if [ "$0" != "bin/twine.sh" ]
+if [ ! -e "tools/twine.sh" ]
 then
-    echo "bin/twine.sh: must be executed from its parent directory"
+    echo "tools/twine.sh: must be executed from its parent directory"
     exit 1
 fi
 if [ ! -e .git ]
 then
-    echo 'bin/twine.sh: Cannot find .git in current working directory'
+    echo 'tools/twine.sh: Cannot find .git in current working directory'
     exit 1
 fi
 #
 # branch_or_tag
 if [ $# != 1 ]
 then
-    echo 'usage: bin/twine.sh: branch_or_tag'
+    echo 'usage: tools/twine.sh: branch_or_tag'
     echo 'where branch_or_tag is master, main, or a git tag'
     exit 1
 fi
@@ -42,7 +42,7 @@ branch_or_tag="$1"
 branch=$(git branch --show-current)
 if [ "$branch" != 'master' ] && [ "$branch" != 'main' ]
 then
-    echo 'bin/twine.sh: must execute on the main or master branch'
+    echo 'tools/twine.sh: must execute on the main or master branch'
     exit 1
 fi
 #
@@ -57,7 +57,7 @@ fi
 # TOKEN
 if [ -z "${TOKEN+x}" ]
 then
-    echo echo "bin/twine.sh: must export TOKEN=<API token for $repository>"
+    echo echo "tools/twine.sh: must export TOKEN=<API token for $repository>"
     echo 'see https://pypi.org/help/#apitoken'
     exit 1
 fi
@@ -73,7 +73,7 @@ then
 else
     if ! git show-ref $branch_or_tag | grep '/tags/' > /dev/null
     then
-        echo "bin/twine.sh: $branch_or_tag is not the current branch or a tag"
+        echo "tools/twine.sh: $branch_or_tag is not the current branch or a tag"
         exit 1
     fi
     git checkout --quiet $branch_or_tag

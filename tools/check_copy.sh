@@ -1,19 +1,19 @@
 #! /usr/bin/env bash
 set -e -u
-# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/bin/dev_tools.sh !!
+# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/tools/dev_tools.sh !!
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 # SPDX-FileContributor: 2023-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
-# bin/check_copy.sh
+# tools/check_copy.sh
 # Checks that the copyright message, in all the source files,
 # is correct and up to date. If there were any errors, a message is printed,
 # it is automatically corrected, and this script exits with an error.
-# Files that are not checked can be specified in bin/dev_setting.sh
+# Files that are not checked can be specified in tools/dev_setting.sh
 # ----------------------------------------------------------------------------
-if [ "$0" != "bin/check_copy.sh" ]
+if [ ! -e "tools/check_copy.sh" ]
 then
-    echo "bin/check_copy.sh: must be executed from its parent directory"
+    echo "tools/check_copy.sh: must be executed from its parent directory"
     exit 1
 fi
 if [ "$#" != 0 ]
@@ -23,10 +23,10 @@ then
 fi
 #
 # grep, sed
-source bin/grep_and_sed.sh
+source tools/grep_and_sed.sh
 #
 # spdx_license_id, no_copyright_list
-source bin/dev_settings.sh
+source tools/dev_settings.sh
 #
 # yy
 yy=$(date +%y)
@@ -34,17 +34,17 @@ yy=$(date +%y)
 # ----------------------------------------------------------------------------
 if [ $# != 0 ]
 then
-    echo 'bin/check_copy.sh does not expect any arguments'
+    echo 'tools/check_copy.sh does not expect any arguments'
     exit 1
 fi
-if [ "$0" != 'bin/check_copy.sh' ]
+if [ ! -e 'tools/check_copy.sh' ]
 then
-    echo 'bin/check_copy.sh: must be executed from its parent directory'
+    echo 'tools/check_copy.sh: must be executed from its parent directory'
     exit 1
 fi
 if [ ! -e './.git' ]
 then
-    echo 'bin/check_copy.sh: cannot find ./.git'
+    echo 'tools/check_copy.sh: cannot find ./.git'
     exit 1
 fi
 # ---------------------------------------------------------------------------
@@ -61,7 +61,7 @@ then
     done
     if [ "$fullname" == '' ] && [ "${USER+x}" != '' ]
     then
-        echo "Cannot user name = $USER in bin/dev_settings.sh contributor_list"
+        echo "Cannot user name = $USER in tools/dev_settings.sh contributor_list"
         exit 1
     fi
 fi
@@ -162,8 +162,8 @@ done
 if [ "$missing" = 'yes' ] || [ "$changed" == 'yes' ]
 then
     echo 'check_copy.sh: The copyright messages above were updated.'
-    echo 'Re-execute bin/check_copy.sh ?'
+    echo 'Re-execute tools/check_copy.sh ?'
     exit 1
 fi
-echo 'bin/check_copy.sh: OK'
+echo 'tools/check_copy.sh: OK'
 exit 0

@@ -10,9 +10,9 @@ echo_eval() {
     eval $*
 }
 # -----------------------------------------------------------------------------
-if [ "$0" != 'bin/check_all.sh' ]
+if [ ! -e 'tools/check_all.sh' ]
 then
-    echo 'bin/check_all.sh must be run from its parent directory.'
+    echo 'tools/check_all.sh must be run from its parent directory.'
     exit 1
 fi
 #
@@ -30,7 +30,7 @@ then
 fi
 #
 # grep, sed
-source bin/grep_and_sed.sh
+source tools/grep_and_sed.sh
 # -----------------------------------------------------------------------------
 #
 if [ $# == 1 ]
@@ -38,7 +38,7 @@ then
     if [ "$1" == --help ]
     then
 cat << EOF
-bin/check_all.sh flags
+tools/check_all.sh flags
 possible flags
 --help                     print this help message
 --skip_check_copy          do not check copyright check
@@ -70,7 +70,7 @@ do
         ;;
 
         *)
-        echo "bin/check_all.sh: command line argument "$1" is not valid"
+        echo "tools/check_all.sh: command line argument "$1" is not valid"
         exit 1
         ;;
 
@@ -93,11 +93,11 @@ done
 # -----------------------------------------------------------------------------
 if [ "$skip_check_copy" == 'no' ]
 then
-    bin/check_copy.sh
+    tools/check_copy.sh
 fi
 #
-# bin/check_*.sh
-list=$(ls bin/check_*.sh | \
+# tools/check_*.sh
+list=$(ls tools/check_*.sh | \
     $sed -e '/check_all.sh/d' -e '/check_install.sh/d' -e '/check_copy.sh/d' \
 )
 for check in $list
@@ -117,17 +117,17 @@ then
     then
         xrst_flags+=' --suppress_spell_warnings'
     fi
-    bin/run_xrst.sh $xrst_flags
+    tools/run_xrst.sh $xrst_flags
 fi
 #
 # check_connection.py
-echo_eval bin/check_connection.py
+echo_eval tools/check_connection.py
 #
 # check_py_test.py
-echo_eval bin/check_py_test.py
+echo_eval tools/check_py_test.py
 #
 # check_install.py
-echo_eval bin/check_install.sh
+echo_eval tools/check_install.sh
 # -----------------------------------------------------------------------------
 echo 'check_all.sh: OK'
 exit 0

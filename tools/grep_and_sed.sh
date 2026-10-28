@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 # SPDX-FileContributor: 2003-25 Bradley M. Bell
 # ---------------------------------------------------------------------------
-# source bin/grep_and_sed
+# source tools/grep_and_sed
 # Sets the shell variables grep and sed to the gnu version for this system
 # ---------------------------------------------------------------------------
 #

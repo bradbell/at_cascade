@@ -3,9 +3,9 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
-if [ "$0" != 'bin/clear_shared.sh' ] || [ "$#" != 2 ]
+if [ ! -e 'tools/clear_shared.sh' ] || [ "$#" != 2 ]
 then
-    echo 'bin/clear_shared.sh all_node_dir job_name'
+    echo 'tools/clear_shared.sh all_node_dir job_name'
     echo 'all_node_dir: directory where all_node.db is located'
     echo 'job_name:     is the node_name.sex_name'
     exit 1

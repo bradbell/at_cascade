@@ -3,14 +3,14 @@
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
 # SPDX-FileContributor: 2021-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
-if [ "$0" != 'bin/run_test.sh' ]
+if [ ! -e 'tools/run_test.sh' ]
 then
-    echo 'bin/run_test.sh: must be executed from its parent directory'
+    echo 'tools/run_test.sh: must be executed from its parent directory'
     exit 1
 fi
 if [ ! -e "$1" ]
 then
-    echo 'usage: bin/run_test.sh test_file'
+    echo 'usage: tools/run_test.sh test_file'
     echo "The test_file '$1' does not exist."
     exit 1
 fi

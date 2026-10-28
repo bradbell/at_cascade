@@ -5,9 +5,9 @@
 # ----------------------------------------------------------------------------
 # test install of python module and executable
 # ---------------------------------------------------------------------------
-if [ "$0" != "bin/check_install.sh" ]
+if [ ! -e "tools/check_install.sh" ]
 then
-    echo "bin/check_install.sh: must be executed from its parent directory"
+    echo "tools/check_install.sh: must be executed from its parent directory"
     exit 1
 fi
 # -----------------------------------------------------------------------------

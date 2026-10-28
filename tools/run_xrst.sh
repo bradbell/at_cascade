@@ -1,11 +1,11 @@
 #! /usr/bin/env bash
 set -e -u
-# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/bin/dev_tools.sh !!
+# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/tools/dev_tools.sh !!
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 # SPDX-FileContributor: 2020-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
-# bin/run_xrst.sh flags
+# tools/run_xrst.sh flags
 # possible flags
 # --help                     print the run_xrst.sh help message
 # --target_tex               create tex (instead of html) files
@@ -28,14 +28,14 @@ echo_eval() {
 }
 #
 # grep, sed
-source bin/grep_and_sed.sh
+source tools/grep_and_sed.sh
 #
 # index_page_name
-source bin/dev_settings.sh
+source tools/dev_settings.sh
 # -----------------------------------------------------------------------------
-if [ "$0" != 'bin/run_xrst.sh' ]
+if [ ! -e 'tools/run_xrst.sh' ]
 then
-    echo 'bin/run_xrst.sh must be run from its parent directory.'
+    echo 'tools/run_xrst.sh must be run from its parent directory.'
     exit 1
 fi
 if [ $# == 1 ]
@@ -43,7 +43,7 @@ then
     if [ "$1" == --help ]
     then
 cat << EOF
-bin/run_xrst.sh flags
+tools/run_xrst.sh flags
 possible flags
 --help                     print the run_xrst.sh help message
 --target_tex               create tex (instead of html) files
@@ -82,7 +82,7 @@ do
         ;;
 
         *)
-        echo "bin/run_xrst.sh: command line argument "$1" is not valid"
+        echo "tools/run_xrst.sh: command line argument "$1" is not valid"
         exit 1
         ;;
 
@@ -106,7 +106,7 @@ then
 fi
 #
 # group_list
-group_list=$(bin/group_list.sh | $sed -e 's|^| |' -e 's|$| |' )
+group_list=$(tools/group_list.sh | $sed -e 's|^| |' -e 's|$| |' )
 if [ "$exclude_dev" == 'yes' ]
 then
     group_list=$( echo "$group_list" | $sed -e 's| dev | |' )

@@ -1,17 +1,17 @@
 #! /usr/bin/env bash
 set -e -u
-# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/bin/dev_tools.sh !!
+# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/tools/dev_tools.sh !!
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 # SPDX-FileContributor: 2020-25 Bradley M. Bell
 # -----------------------------------------------------------------------------
-# bin/check_tab.sh
+# tools/check_tab.sh
 # Checks for tabs in the source and returns an error if it finds any.
-# Files that are not checked can be specified in bin/dev_settings.sh.
+# Files that are not checked can be specified in tools/dev_settings.sh.
 # -----------------------------------------------------------------------------
-if [ "$0" != "bin/check_tab.sh" ]
+if [ ! -e "tools/check_tab.sh" ]
 then
-    echo "bin/check_tab.sh: must be executed from its parent directory"
+    echo "tools/check_tab.sh: must be executed from its parent directory"
     exit 1
 fi
 if [ "$#" == 0 ]
@@ -21,15 +21,15 @@ elif [ "$#" == 1 ] && [ "$1" == 'all' ]
 then
     all='true'
 else
-    echo 'usage: bin/check_tab [all]'
+    echo 'usage: tools/check_tab [all]'
     exit 1
 fi
 #
 # sed
-source bin/grep_and_sed.sh
+source tools/grep_and_sed.sh
 #
 # invisible_and_tab_ok
-source bin/dev_settings.sh
+source tools/dev_settings.sh
 # ----------------------------------------------------------------------------
 #
 # sed.$$

@@ -1,14 +1,14 @@
 #! /usr/bin/env bash
 set -e -u
-# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/bin/dev_tools.sh !!
+# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/tools/dev_tools.sh !!
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 # SPDX-FileContributor: 2020-26 Bradley M. Bell
 # -----------------------------------------------------------------------------
-# bin/new_release.sh  [--skip_stable_check_all]
+# tools/new_release.sh  [--skip_stable_check_all]
 # Creates and check a release for the year and release number specified below.
 #
-# bin/check_all.sh [--skip_external_links]
+# tools/check_all.sh [--skip_external_links]
 # is used by new_release to skip checking external links.
 # new_release.sh uses --skip_external_links when testing before the
 # new release (tag)  exists.
@@ -16,14 +16,14 @@ set -e -u
 year='2026' # Year for this stable version
 release='0' # first release for each year starts with 0
 # -----------------------------------------------------------------------------
-if [ "$0" != 'bin/new_release.sh' ]
+if [ ! -e 'tools/new_release.sh' ]
 then
-    echo 'bin/new_release.sh: must be executed from its parent directory'
+    echo 'tools/new_release.sh: must be executed from its parent directory'
     exit 1
 fi
 if [ ! -e './.git' ]
 then
-    echo 'bin/new_release.sh: cannot find ./.git'
+    echo 'tools/new_release.sh: cannot find ./.git'
     exit 1
 fi
 if [[ "$year" =~ ^[0-9]{4}$ ]]
@@ -49,7 +49,7 @@ do
     then
         skip_stable_check_all='yes'
     else
-        echo 'bin/new_release.sh [--skip_stable_check_all]'
+        echo 'tools/new_release.sh [--skip_stable_check_all]'
         echo "$1 is not a valid argument"
         exit 1
     fi
@@ -67,15 +67,15 @@ echo_eval() {
 main_branch=$(git branch --show-current)
 if [ "$main_branch" != 'master' ] && [ "$main_branch" != 'main' ]
 then
-    echo 'bin/new_release.sh: execute using master or main branch'
+    echo 'tools/new_release.sh: execute using master or main branch'
     exit 1
 fi
 #
 # sed
-source bin/grep_and_sed.sh
+source tools/grep_and_sed.sh
 #
 # version_file_list
-source bin/dev_settings.sh
+source tools/dev_settings.sh
 #
 # first_version_file
 first_version_file=$(echo $version_file_list | $sed -e 's|^ *||' -e 's| .*||')
@@ -180,17 +180,17 @@ done
 # run_xrst.sh
 if [ "$tag_committed" == 'yes' ]
 then
-    echo_eval bin/run_xrst.sh --external_links
+    echo_eval tools/run_xrst.sh --external_links
 else
-    echo_eval bin/run_xrst.sh
+    echo_eval tools/run_xrst.sh
 fi
 #
 # git_status
 git_status=$(git status --porcelain)
 if [ "$git_status" != '' ]
 then
-    echo "bin/new_release: git status is not empty for $main_branch branch"
-    echo 'use bin/git_commit.sh to commit its changes ?'
+    echo "tools/new_release: git status is not empty for $main_branch branch"
+    echo 'use tools/git_commit.sh to commit its changes ?'
     exit 1
 fi
 # ----------------------------------------------------------------------------
@@ -198,14 +198,14 @@ fi
 # ----------------------------------------------------------------------------
 if ! git show-ref $stable_branch > /dev/null
 then
-    echo "bin/new_release: neither local or remove $stable_branch exists."
+    echo "tools/new_release: neither local or remove $stable_branch exists."
     echo 'Use the following to create it ?'
     echo "   git branch $stable_branch"
     exit 1
 fi
 if ! git checkout $stable_branch
 then
-    echo "bin/new_release: should be able to checkout $stable_branch"
+    echo "tools/new_release: should be able to checkout $stable_branch"
     exit 1
 fi
 #
@@ -241,19 +241,19 @@ EOF
 $sed -r -f temp.sed -i $first_version_file
 if ! grep "['\"]$tag['\"]" $first_version_file > /dev/null
 then
-    echo "bin/rew_release: branch = $stable_branch"
+    echo "tools/rew_release: branch = $stable_branch"
     echo "Version number should be $tag in $first_version_file"
     exit 1
 fi
 #
 # check_version
 # changes to version ?
-if ! bin/check_version.sh
+if ! tools/check_version.sh
 then
-    echo 'Continuing even though bin/check_version made changes.'
-    if ! bin/check_version.sh
+    echo 'Continuing even though tools/check_version made changes.'
+    if ! tools/check_version.sh
     then
-        echo 'Continuing even though bin/check_version made more changes.'
+        echo 'Continuing even though tools/check_version made more changes.'
     fi
 fi
 #
@@ -262,9 +262,9 @@ if [ "$skip_stable_check_all" == 'no' ]
 then
     if [ "$tag_committed" == 'yes' ]
     then
-        echo_eval bin/check_all.sh --suppress_spell_warnings
+        echo_eval tools/check_all.sh --suppress_spell_warnings
     else
-        echo_eval bin/check_all.sh \
+        echo_eval tools/check_all.sh \
             --suppress_spell_warnings --skip_external_links
     fi
 fi
@@ -273,8 +273,8 @@ fi
 git_status=$(git status --porcelain)
 if [ "$git_status" != '' ]
 then
-    echo "bin/new_release: git status --porcelean not empty for $stable_branch"
-    echo 'use bin/git_commit.sh to commit its changes ?'
+    echo "tools/new_release: git status --porcelean not empty for $stable_branch"
+    echo 'use tools/git_commit.sh to commit its changes ?'
     exit 1
 fi
 # -----------------------------------------------------------------------------
@@ -283,7 +283,7 @@ fi
 if [ "$stable_remote_hash" == '' ]
 then
     empty_hash='yes'
-    echo "bin/new_release: remote $stable_branch does not exist."
+    echo "tools/new_release: remote $stable_branch does not exist."
     echo 'Use the following to create it ?'
     echo "   git push origin $stable_branch"
     exit 1
@@ -291,7 +291,7 @@ fi
 if [ "$stable_local_hash" != "$stable_remote_hash" ]
 then
     empty_hash='yes'
-    echo "bin/new_release: local and remote $stable_branch differ."
+    echo "tools/new_release: local and remote $stable_branch differ."
     echo "local  $stable_local_hash"
     echo "remote $stable_remote_hash"
     echo 'Use git push to fix this ?'
@@ -312,7 +312,7 @@ then
     echo "git push origin $tag"
     git push origin $tag
     #
-    echo 'bin/new_release.sh: must be re-run to check external links'
+    echo 'tools/new_release.sh: must be re-run to check external links'
     exit 1
 fi
 #
@@ -321,12 +321,12 @@ git checkout $main_branch
 if [ "$main_local_hash" != "$main_remote_hash" ]
 then
     empty_hash='yes'
-    echo "bin/new_release: local and remote $main_branch differ."
+    echo "tools/new_release: local and remote $main_branch differ."
     echo "local  $main_local_hash"
     echo "remote $main_remote_hash"
     echo 'Use git push to fix this ?'
     exit 1
 fi
 # ----------------------------------------------------------------------------
-echo 'bin/new_release.sh: OK'
+echo 'tools/new_release.sh: OK'
 exit 0

@@ -1,12 +1,12 @@
 #! /usr/bin/env bash
 set -e -u
-# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/bin/dev_tools.sh !!
+# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/tools/dev_tools.sh !!
 # ---------------------------------------------------------------------------
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 # SPDX-FileContributor: 2003-25 Bradley M. Bell
 # ---------------------------------------------------------------------------
-# bin/git_commit.sh
+# tools/git_commit.sh
 # Opens your editor with comments about this git commit.
 # 1.  The git commit log message will not include comment lines.
 # 2.  The file git_commit.log contains the message for the previous commit
@@ -17,7 +17,7 @@ set -e -u
 # 4.  The branch of the commit is automatically placed a the beginning
 #     of the first line for the message.
 # 5.  All the modified files are automatically included in the commit.
-# 6.  The variable check_git_commit in bin/dev_settings.sh can be used
+# 6.  The variable check_git_commit in tools/dev_settings.sh can be used
 #     to selectively revert certain files before the commit.
 # ---------------------------------------------------------------------------
 # bash function that echos and executes a command
@@ -28,31 +28,31 @@ echo_eval() {
 # -----------------------------------------------------------------------------
 if [ $# != 0 ]
 then
-    echo 'usage: bin/git_commit.sh: does not expect arguments'
+    echo 'usage: tools/git_commit.sh: does not expect arguments'
     exit 1
 fi
-if [ "$0" != 'bin/git_commit.sh' ]
+if [ ! -e 'tools/git_commit.sh' ]
 then
-    echo 'bin/git_commit.sh: must execute this script from its parent directory'
+    echo 'tools/git_commit.sh: must execute this script from its parent directory'
     exit 1
 fi
 if [ ! -e './.git' ]
 then
-    echo 'bin/git_commit.sh: cannot find ./.git'
+    echo 'tools/git_commit.sh: cannot find ./.git'
     exit 1
 fi
 #
 # grep, sed
-source bin/grep_and_sed.sh
+source tools/grep_and_sed.sh
 #
 # check_git_commit
-source bin/dev_settings.sh
+source tools/dev_settings.sh
 # -----------------------------------------------------------------------------
 # EDITOR
 set +u
 if [ "$EDITOR" == '' ]
 then
-    echo 'bin/git_commit.sh: EDITOR is not defined.'
+    echo 'tools/git_commit.sh: EDITOR is not defined.'
     exit 1
 fi
 set -u
@@ -111,7 +111,7 @@ do
         rm "$file"
     elif [ "$res" == 'abort' ]
     then
-        echo 'bin/git_commit.sh: aborting'
+        echo 'tools/git_commit.sh: aborting'
         exit 1
     else
         git add "$file"
@@ -159,5 +159,5 @@ echo_eval git add --all
 # git commit
 git commit --file=git_commit.log
 #
-echo 'bin/git_commit.sh: OK'
+echo 'tools/git_commit.sh: OK'
 exit 0
