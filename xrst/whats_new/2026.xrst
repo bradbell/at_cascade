@@ -8,6 +8,7 @@
     dd
     py
     rst
+    dev
 }
 
 Release Notes for 2026
@@ -17,12 +18,23 @@ Release Notes for 2026
 mm-dd
 *****
 
+10-28
+=====
+#.  The csv.fit :ref:`csv.fit@Input Files@option_fit.csv@mulcov_freeze_csv`
+    option was added.
+    If this is true, the mulcov_freeze.csv table enables you to specify
+    (node, sex) pairs, that depends on covariate multiplier,
+    at which to freeze covariate multipliers.
+#.  The development tools were moved from the bin to tools subdirectory.
+    In addition they were updated to the current version using
+    xrst.git/tools/dev_tools.sh .
+
 04-04
 =====
 Change the at_cascade source code and documentation to use 4 spaces for
-one tab; i.e., one level of indentation. 
+one tab; i.e., one level of indentation.
 This used to be 3 spaces because that works well with rst lists
-(the at_cascade documentation uses rst), 
+(the at_cascade documentation uses rst),
 but 4 spaces is the most common choice used by programmers.
 
 02-09

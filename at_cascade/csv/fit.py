@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-25 Bradley M. Bell
+# SPDX-FileContributor: 2021-26 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import multiprocessing
 import queue
@@ -432,6 +432,15 @@ Finer resolution for specific ages can be achieved using the
 :ref:`csv.fit@Input Files@option_fit.csv@age_avg_split` option.
 The default value for this option is 10.0.
 
+mulcov_freeze_csv
+-----------------
+If this boolean option is true,
+the ref:`csv.fit@Input Files@mulcov_freeze.csv` file determines
+where each covariate multiplier is frozen.
+Otherwise, the covariate multipliers are frozen after the
+fit (fits if refit_split is true) at the root level.
+The default value for option is false.
+
 perturb_optimization_scale
 --------------------------
 This is the standard deviation of the log of a random multiplier
@@ -835,6 +844,34 @@ Either *value_prior* or *const_value* must be non-empty but not both.
 
 {xrst_comment ---------------------------------------------------------------}
 
+mulcov_freeze.csv
+=================
+If :ref:`csv.fit@Input Files@option_fit.csv@mulcov_freeze_csv` is true,
+the file mulcov_freeze.csv is used to freeze a covariate multipliers
+at specific node, sex pairs in the cascade.
+
+mulcov_id
+---------
+This specifies the covariate multiplier that is frozen.
+This is its index in the :ref:`csv.fit@Input Files@mulcov.csv` file
+where the first covariate multiplier corresponds to index 0.
+Note that the first covariate multiplier is specified on
+the second line of mulcov.csv.
+This multiplier cannot multiply the sex covariates because
+the sex covariates are frozen at the root level; see
+:ref:`csv.fit@Input Files@option_fit.csv@refit_split` .
+
+fit_node_name
+-------------
+is the name of the node that the freeze should occur at.
+
+sex
+---
+is female, male, or both and specifies the sex that the freeze should
+occur at.
+
+{xrst_comment ---------------------------------------------------------------}
+
 data_in.csv
 ===========
 This csv file specifies the data set
@@ -1124,6 +1161,7 @@ def set_global_option_value(fit_dir, option_table, top_node_name) :
         'max_num_iter_fixed'            : (int,   100)                ,
         'max_number_cpu'                : (int,   max_number_cpu)     ,
         'minimum_meas_cv'               : (float, 0.0)                ,
+        'mulcov_freeze_csv'             : (bool,  False)              ,
         'no_ode_fit'                    : (bool,  True)               ,
         'no_ode_ignore'                 : (str,   None)               ,
         'number_sample'                 : (int,   20)                 ,
@@ -1946,31 +1984,56 @@ def create_all_node_database(
         node_split_table = list()
     #
     # mulcov_freeze_table
-    mulcov_freeze_table = list()
-    for (mulcov_id, row) in enumerate(root_node_table['mulcov']) :
-        covariate_id    = row['covariate_id']
-        cov_row         = root_node_table['covariate'][covariate_id]
-        covariate_name = cov_row['covariate_name']
-        if covariate_name == 'sex' or root_node_sex != 'both' :
-            row = {
-                'fit_node_name'      : root_node_name           ,
-                'split_reference_id' : root_split_reference_id  ,
-                'mulcov_id'          : mulcov_id                ,
-            }
-            mulcov_freeze_table.append(row)
-        else :
-            if global_option_value['refit_split'] :
-                split_reference_id_list = [ 0 , 2 ]
-            else :
-                split_reference_id_list = [ 0 , 1, 2 ]
-            for split_reference_id in split_reference_id_list :
-                # split_reference_id 0 for female, 1 for both, 2 for male
+    mulcov_freeze_csv = global_option_value['mulcov_freeze_csv'];
+    if mulcov_freeze_csv :
+        file_name           = f'{fit_dir}/mulcov_freeze.csv'
+        mulcov_freeze_table = at_cascade.csv.read_table(file_name)
+        file_name           = f'{fit_dir}/mulcov.csv'
+        mulcov_table        = at_cascade.csv.read_table(file_name)
+        for row in mulcov_freeze_table :
+            row['split_reference_name'] = row['sex']
+            del row['sex']
+            mulcov_id      = int( row['mulcov_id'] )
+            covariate_name = mulcov_table[mulcov_id]['covariate']
+            if covariate_name == 'sex' :
+                msg = 'mulcov_freeze.csv: mulcov_id = ' + row['mulcov_id']
+                msg = ': sex covariate multiplers not allowed in this file'
+                assert False, msg
+        for (mulcov_id, row) in enumerate(mulcov_table) :
+            covariate_name = row['covariate']
+            if covariate_name == 'sex' :
                 row = {
-                    'fit_node_name'      : root_node_name     ,
-                    'split_reference_id' : split_reference_id ,
-                    'mulcov_id'          : mulcov_id          ,
+                    'fit_node_name'      : root_node_name           ,
+                    'split_reference_id' : root_split_reference_id  ,
+                    'mulcov_id'          : mulcov_id                ,
                 }
                 mulcov_freeze_table.append(row)
+    else :
+        mulcov_freeze_table = list()
+        for (mulcov_id, row) in enumerate(root_node_table['mulcov']) :
+            covariate_id    = row['covariate_id']
+            cov_row         = root_node_table['covariate'][covariate_id]
+            covariate_name = cov_row['covariate_name']
+            if covariate_name == 'sex' or root_node_sex != 'both' :
+                row = {
+                    'fit_node_name'      : root_node_name           ,
+                    'split_reference_id' : root_split_reference_id  ,
+                    'mulcov_id'          : mulcov_id                ,
+                }
+                mulcov_freeze_table.append(row)
+            else :
+                if global_option_value['refit_split'] :
+                    split_reference_id_list = [ 0 , 2 ]
+                else :
+                    split_reference_id_list = [ 0 , 1, 2 ]
+                for split_reference_id in split_reference_id_list :
+                    # split_reference_id 0 for female, 1 for both, 2 for male
+                    row = {
+                        'fit_node_name'      : root_node_name     ,
+                        'split_reference_id' : split_reference_id ,
+                        'mulcov_id'          : mulcov_id          ,
+                    }
+                    mulcov_freeze_table.append(row)
     #
     # omega_grid
     age_list     = [ row['age'] for row  in root_node_table['age'] ]

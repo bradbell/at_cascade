@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-26 Bradley M. Bell
 # ----------------------------------------------------------------------------
 r'''
 {xrst_begin create_all_node_db}
@@ -77,12 +77,12 @@ fit_node_id, fit_node_name
 #. Otherwise *row*\ ``["fit_node_name"]`` is a
    ``str`` representation of the corresponding node name.
 
-split_reference_id
-==================
-The value *row*\ ``["split_reference_id"]`` is an
-``int`` representation of the split_reference_id for this job or
-*row*\ ``["split_reference_name"]`` is a
-``str`` representation of the corresponding split reference name.
+split_reference_id, split_reference_name
+========================================
+#.  If *row*\ ``["split_reference_id"]`` exists, it is an
+    ``int`` representation of the split_reference_id for this job or
+#.  Otherwise *row*\ ``["split_reference_name"]`` is a
+    ``str`` representation of the corresponding split reference name.
 
 mulcov_id
 =========

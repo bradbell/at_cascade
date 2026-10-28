@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: University of Washington <https://www.washington.edu>
-# SPDX-FileContributor: 2021-24 Bradley M. Bell
+# SPDX-FileContributor: 2021-26 Bradley M. Bell
 # ----------------------------------------------------------------------------
 import os
 import sys
@@ -37,6 +37,7 @@ number_sample,100
 freeze_type,posterior
 tolerance_fixed,1e-8
 child_prior_std_factor,1.0
+mulcov_freeze_csv,true
 '''
 #
 # option_predict.csv
@@ -99,6 +100,13 @@ csv_file['child_rate.csv'] = \
 csv_file['mulcov.csv'] = \
 '''covariate,type,effected,value_prior,const_value
 income,rate_value,iota,gaussian_0_100,
+'''
+#
+# mulcov_freeze.csv
+csv_file['mulcov_freeze.csv'] = \
+'''mulcov_id,fit_node_name,sex
+0,n0,female
+0,n0,male
 '''
 #
 # data_in.csv
