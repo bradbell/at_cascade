@@ -435,7 +435,7 @@ The default value for this option is 10.0.
 mulcov_freeze_csv
 -----------------
 If this boolean option is true,
-the ref:`csv.fit@Input Files@mulcov_freeze.csv` file determines
+the :ref:`csv.fit@Input Files@mulcov_freeze.csv` file determines
 where each covariate multiplier is frozen.
 Otherwise, the covariate multipliers are frozen after the
 fit (fits if refit_split is true) at the root level.
